@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -77,9 +77,7 @@ type VariantPropType = keyof PlasmicUnknownCityDialog__VariantsArgs;
 export const PlasmicUnknownCityDialog__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicUnknownCityDialog__ArgsType = {
-  searchCity?: any;
-};
+export type PlasmicUnknownCityDialog__ArgsType = { searchCity?: any };
 type ArgPropType = keyof PlasmicUnknownCityDialog__ArgsType;
 export const PlasmicUnknownCityDialog__ArgProps = new Array<ArgPropType>(
   "searchCity"

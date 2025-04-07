@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import LauncherWrapper from "../../LauncherWrapper"; // plasmic-import: 3TTnoIEhqXMk/component
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
 import LauncherComponentsService from "../../LauncherComponentsService"; // plasmic-import: 51AmRlCgKgNN/component
@@ -83,6 +84,7 @@ export const PlasmicLauncherServices__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicLauncherServices__OverridesType = {
   root?: Flex__<"div">;
+  launcherWrapper?: Flex__<typeof LauncherWrapper>;
 };
 
 export interface DefaultLauncherServicesProps {
@@ -144,6 +146,12 @@ function PlasmicLauncherServices__RenderFunc(props: {
         sty.root
       )}
     >
+      <LauncherWrapper
+        data-plasmic-name={"launcherWrapper"}
+        data-plasmic-override={overrides.launcherWrapper}
+        className={classNames("__wab_instance", sty.launcherWrapper)}
+      />
+
       <Reveal
         className={classNames("__wab_instance", sty.reveal__cm1K)}
         triggerOnce={true}
@@ -283,13 +291,13 @@ function PlasmicLauncherServices__RenderFunc(props: {
 
           {(() => {
             try {
-              return $ctx.Growthbook.features["hamdast::wallet"].hide == true;
+              return $ctx.Growthbook.features["hamdast::katibe"]?.hide == false;
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return true;
+                return false;
               }
               throw e;
             }
@@ -381,13 +389,13 @@ function PlasmicLauncherServices__RenderFunc(props: {
           ) : null}
           {(() => {
             try {
-              return $ctx.Growthbook.features["hamdast::wallet"].hide == false;
+              return $ctx.Growthbook.features["hamdast::katibe"]?.hide == true;
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return true;
+                return false;
               }
               throw e;
             }
@@ -588,13 +596,15 @@ function PlasmicLauncherServices__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root"]
+  root: ["root", "launcherWrapper"],
+  launcherWrapper: ["launcherWrapper"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  launcherWrapper: typeof LauncherWrapper;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -657,6 +667,7 @@ export const PlasmicLauncherServices = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    launcherWrapper: makeNodeComponent("launcherWrapper"),
 
     // Metadata about props expected for PlasmicLauncherServices
     internalVariantProps: PlasmicLauncherServices__VariantProps,

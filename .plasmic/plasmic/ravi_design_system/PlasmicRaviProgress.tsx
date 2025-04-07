@@ -72,10 +72,7 @@ export type PlasmicRaviProgress__VariantsArgs = {};
 type VariantPropType = keyof PlasmicRaviProgress__VariantsArgs;
 export const PlasmicRaviProgress__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicRaviProgress__ArgsType = {
-  lable?: string;
-  value?: number;
-};
+export type PlasmicRaviProgress__ArgsType = { lable?: string; value?: number };
 type ArgPropType = keyof PlasmicRaviProgress__ArgsType;
 export const PlasmicRaviProgress__ArgProps = new Array<ArgPropType>(
   "lable",

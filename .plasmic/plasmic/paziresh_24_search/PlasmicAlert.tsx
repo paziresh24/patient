@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -88,9 +88,7 @@ export const PlasmicAlert__VariantProps = new Array<VariantPropType>(
   "hasIcon"
 );
 
-export type PlasmicAlert__ArgsType = {
-  text?: string;
-};
+export type PlasmicAlert__ArgsType = { text?: string };
 type ArgPropType = keyof PlasmicAlert__ArgsType;
 export const PlasmicAlert__ArgProps = new Array<ArgPropType>("text");
 

@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -283,7 +283,9 @@ function PlasmicRecentSearch__RenderFunc(props: {
                   <React.Fragment>
                     {(() => {
                       try {
-                        return currentItem.name || currentItem.title;
+                        return typeof currentItem == "string"
+                          ? currentItem
+                          : currentItem.name || currentItem.title;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||

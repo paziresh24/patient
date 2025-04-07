@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -76,9 +76,7 @@ type VariantPropType = keyof PlasmicSearchFooterSecondaryTasks__VariantsArgs;
 export const PlasmicSearchFooterSecondaryTasks__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicSearchFooterSecondaryTasks__ArgsType = {
-  taskObject?: any;
-};
+export type PlasmicSearchFooterSecondaryTasks__ArgsType = { taskObject?: any };
 type ArgPropType = keyof PlasmicSearchFooterSecondaryTasks__ArgsType;
 export const PlasmicSearchFooterSecondaryTasks__ArgProps =
   new Array<ArgPropType>("taskObject");

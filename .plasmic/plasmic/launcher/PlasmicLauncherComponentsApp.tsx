@@ -180,37 +180,38 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["goToPage"] = !!$props.link
-          ? (() => {
-              const actionArgs = {
-                destination: (() => {
-                  try {
-                    return $props.link;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
+        $steps["goToPage"] =
+          !!$props.link && !$state.soon
+            ? (() => {
+                const actionArgs = {
+                  destination: (() => {
+                    try {
+                      return $props.link;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
                     }
-                    throw e;
+                  })()
+                };
+                return (({ destination }) => {
+                  if (
+                    typeof destination === "string" &&
+                    destination.startsWith("#")
+                  ) {
+                    document
+                      .getElementById(destination.substr(1))
+                      .scrollIntoView({ behavior: "smooth" });
+                  } else {
+                    __nextRouter?.push(destination);
                   }
-                })()
-              };
-              return (({ destination }) => {
-                if (
-                  typeof destination === "string" &&
-                  destination.startsWith("#")
-                ) {
-                  document
-                    .getElementById(destination.substr(1))
-                    .scrollIntoView({ behavior: "smooth" });
-                } else {
-                  __nextRouter?.push(destination);
-                }
-              })?.apply(null, [actionArgs]);
-            })()
-          : undefined;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
         if (
           $steps["goToPage"] != null &&
           typeof $steps["goToPage"] === "object" &&

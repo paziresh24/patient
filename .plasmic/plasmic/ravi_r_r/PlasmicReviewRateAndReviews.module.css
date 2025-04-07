@@ -20,16 +20,17 @@
 .root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
   margin-top: var(--token-vMUQwr5Jto1d);
 }
-.text {
+.h2 {
   position: relative;
   width: auto;
   height: auto;
   max-width: 100%;
   font-size: var(--token-tM2Vh4zTir7U);
   font-weight: 700;
+  color: var(--token-u3OudfMChOo3);
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .text {
+  .h2 {
     padding-right: var(--token-Fv8-L_kN-2Ma);
     padding-left: var(--token-Fv8-L_kN-2Ma);
   }

@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import LauncherWrapper from "../../LauncherWrapper"; // plasmic-import: 3TTnoIEhqXMk/component
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherComponentsCategory from "../../LauncherComponentsCategory"; // plasmic-import: 0KB-vfelIleY/component
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
@@ -83,6 +84,7 @@ export const PlasmicLauncherApps__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicLauncherApps__OverridesType = {
   root?: Flex__<"div">;
+  launcherWrapper?: Flex__<typeof LauncherWrapper>;
   launcherComponentsCategory?: Flex__<typeof LauncherComponentsCategory>;
 };
 
@@ -161,6 +163,12 @@ function PlasmicLauncherApps__RenderFunc(props: {
         sty.root
       )}
     >
+      <LauncherWrapper
+        data-plasmic-name={"launcherWrapper"}
+        data-plasmic-override={overrides.launcherWrapper}
+        className={classNames("__wab_instance", sty.launcherWrapper)}
+      />
+
       <Reveal
         className={classNames("__wab_instance", sty.reveal__hxDkw)}
         triggerOnce={true}
@@ -173,21 +181,38 @@ function PlasmicLauncherApps__RenderFunc(props: {
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
             (() => {
               try {
-                return [
-                  { name: "همه", value: "all" },
-                  {
-                    name: "اطلاع رسانی",
-                    value: "notifications"
-                  },
-                  {
-                    name: "افزونه پروفایل",
-                    value: "profile-plugin"
-                  },
-                  {
-                    name: "خودتشخیصی",
-                    value: "self-diagnosis"
+                return (() => {
+                  if ($ctx.auth.info?.provider?.job_title === "doctor") {
+                    return [
+                      {
+                        name: "همه",
+                        value: "all"
+                      },
+                      {
+                        name: "اطلاع رسانی",
+                        value: "notifications"
+                      },
+                      {
+                        name: "افزونه پروفایل",
+                        value: "profile-plugin"
+                      },
+                      {
+                        name: "خودتشخیصی",
+                        value: "self-diagnosis"
+                      }
+                    ];
                   }
-                ];
+                  return [
+                    {
+                      name: "همه",
+                      value: "all"
+                    },
+                    {
+                      name: "خودتشخیصی",
+                      value: "self-diagnosis"
+                    }
+                  ];
+                })();
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -294,7 +319,10 @@ function PlasmicLauncherApps__RenderFunc(props: {
         >
           {(() => {
             try {
-              return ["all", "notifications"].includes($state.selectedCategory);
+              return (
+                ["all", "notifications"].includes($state.selectedCategory) &&
+                $ctx.auth.info?.provider?.job_title === "doctor"
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -353,7 +381,10 @@ function PlasmicLauncherApps__RenderFunc(props: {
           ) : null}
           {(() => {
             try {
-              return $state.selectedCategory === "all";
+              return (
+                $state.selectedCategory === "all" &&
+                $ctx.auth.info?.provider?.job_title === "doctor"
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -373,15 +404,16 @@ function PlasmicLauncherApps__RenderFunc(props: {
           ) : null}
           {(() => {
             try {
-              return ["all", "profile-plugin"].includes(
-                $state.selectedCategory
+              return (
+                ["all", "profile-plugin"].includes($state.selectedCategory) &&
+                $ctx.auth.info?.provider?.job_title === "doctor"
               );
             } catch (e) {
               if (
                 e instanceof TypeError ||
                 e?.plasmicType === "PlasmicUndefinedDataError"
               ) {
-                return true;
+                return false;
               }
               throw e;
             }
@@ -425,10 +457,21 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 description={
                   "\u0627\u0641\u0632\u0648\u062f\u0646 \u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u067e\u0627\u06cc\u0647 \u0648 \u062a\u06a9\u0645\u06cc\u0644\u06cc \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
                 }
-                name={
-                  "\u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u0645\u0646"
-                }
-                soon={true}
+                link={"/_/bimehnama/setting/"}
+                name={"\u0628\u06cc\u0645\u0647 \u0646\u0645\u0627"}
+                soon={(() => {
+                  try {
+                    return !$ctx.Growthbook.features["hamdast::bimehnama"];
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "soon";
+                    }
+                    throw e;
+                  }
+                })()}
               />
 
               <LauncherComponentsApp
@@ -468,7 +511,10 @@ function PlasmicLauncherApps__RenderFunc(props: {
           ) : null}
           {(() => {
             try {
-              return $state.selectedCategory === "all";
+              return (
+                $state.selectedCategory === "all" &&
+                $ctx.auth.info?.provider?.job_title === "doctor"
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -557,10 +603,10 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 description={
                   "\u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u0631\u0627\u06cc\u06af\u0627\u0646 \u0635\u062d\u0628\u062a \u06a9\u0646\u06cc\u062f."
                 }
+                link={"/_/roshan/salamat/?origin=launcher-apps"}
                 name={
                   "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9"
                 }
-                soon={true}
               />
             </Stack__>
           ) : null}
@@ -571,7 +617,8 @@ function PlasmicLauncherApps__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "launcherComponentsCategory"],
+  root: ["root", "launcherWrapper", "launcherComponentsCategory"],
+  launcherWrapper: ["launcherWrapper"],
   launcherComponentsCategory: ["launcherComponentsCategory"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -579,6 +626,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  launcherWrapper: typeof LauncherWrapper;
   launcherComponentsCategory: typeof LauncherComponentsCategory;
 };
 
@@ -642,6 +690,7 @@ export const PlasmicLauncherApps = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    launcherWrapper: makeNodeComponent("launcherWrapper"),
     launcherComponentsCategory: makeNodeComponent("launcherComponentsCategory"),
 
     // Metadata about props expected for PlasmicLauncherApps

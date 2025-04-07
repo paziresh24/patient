@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -79,9 +79,7 @@ type VariantPropType = keyof PlasmicSeoBoxBreadcrumbs__VariantsArgs;
 export const PlasmicSeoBoxBreadcrumbs__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicSeoBoxBreadcrumbs__ArgsType = {
-  breadcrumbs?: any;
-};
+export type PlasmicSeoBoxBreadcrumbs__ArgsType = { breadcrumbs?: any };
 type ArgPropType = keyof PlasmicSeoBoxBreadcrumbs__ArgsType;
 export const PlasmicSeoBoxBreadcrumbs__ArgProps = new Array<ArgPropType>(
   "breadcrumbs"

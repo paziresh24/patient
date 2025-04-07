@@ -83,8 +83,6 @@ export const PlasmicLauncherBlocksShortcuts__ArgProps =
 export type PlasmicLauncherBlocksShortcuts__OverridesType = {
   root?: Flex__<"div">;
   launcherComponentsTitle?: Flex__<typeof LauncherComponentsTitle>;
-  freeBox?: Flex__<"div">;
-  launcherComponentsService?: Flex__<typeof LauncherComponentsService>;
 };
 
 export interface DefaultLauncherBlocksShortcutsProps {
@@ -151,121 +149,239 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
         data-plasmic-override={overrides.launcherComponentsTitle}
         className={classNames("__wab_instance", sty.launcherComponentsTitle)}
         moreLink={"/_/services"}
-        moreTitle={"\u0647\u0645\u0647 \u062e\u062f\u0645\u0627\u062a"}
+        moreTitle={(() => {
+          try {
+            return $ctx.auth.info?.provider?.job_title === "doctor"
+              ? "همه خدمات"
+              : null;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         title={
-          "\u062e\u062f\u0645\u0627\u062a \u067e\u0631\u06a9\u0627\u0628\u0631\u062f"
+          "\u062e\u062f\u0645\u0627\u062a \u067e\u0631\u06a9\u0627\u0631\u0628\u0631\u062f"
         }
       />
 
-      <div
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        className={classNames(projectcss.all, sty.freeBox)}
-      >
-        {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-          (() => {
-            try {
-              return [
-                {
-                  name: "مراجعین من",
-                  icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fmy-patients.svg?versionId=",
-                  url: "/dashboard/apps/drapp/appointments/"
-                },
-                {
-                  name: "ساعت کاری",
-                  icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fworking-hours.svg?versionId=",
-                  url: "/dashboard/apps/drapp/workhours/"
-                },
-                {
-                  name: "مرخصی",
-                  icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fvacation.svg?versionId=",
-                  url: "/dashboard/apps/drapp/vacation/"
-                },
-                {
-                  name: "نظرات",
-                  icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Freviews.svg?versionId=",
-                  url: "/dashboard/apps/ravi/my_prifile_feedbacks/"
+      {(() => {
+        try {
+          return $ctx.auth.info?.provider?.job_title === "doctor";
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <div className={classNames(projectcss.all, sty.freeBox___9RuOc)}>
+          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+            (() => {
+              try {
+                return [
+                  {
+                    name: "مراجعین من",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fmy-patients.svg?versionId=",
+                    url: "/dashboard/apps/drapp/appointments/"
+                  },
+                  {
+                    name: "ساعت کاری",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fworking-hours.svg?versionId=",
+                    url: "/dashboard/apps/drapp/workhours/"
+                  },
+                  {
+                    name: "مرخصی",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fvacation.svg?versionId=",
+                    url: "/dashboard/apps/drapp/vacation/"
+                  },
+                  {
+                    name: "نظرات",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Freviews.svg?versionId=",
+                    url: "/dashboard/apps/ravi/my_prifile_feedbacks/"
+                  }
+                ];
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
                 }
-              ];
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return [];
+                throw e;
               }
-              throw e;
-            }
-          })()
-        ).map((__plasmic_item_0, __plasmic_idx_0) => {
-          const currentItem = __plasmic_item_0;
-          const currentIndex = __plasmic_idx_0;
-          return (
-            <LauncherComponentsService
-              data-plasmic-name={"launcherComponentsService"}
-              data-plasmic-override={overrides.launcherComponentsService}
-              className={classNames(
-                "__wab_instance",
-                sty.launcherComponentsService
-              )}
-              icon={(() => {
-                try {
-                  return currentItem.icon;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
+            })()
+          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+            const currentItem = __plasmic_item_0;
+            const currentIndex = __plasmic_idx_0;
+            return (
+              <LauncherComponentsService
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsService__cIyhr
+                )}
+                icon={(() => {
+                  try {
+                    return currentItem.icon;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
                   }
-                  throw e;
-                }
-              })()}
-              key={currentIndex}
-              link={(() => {
-                try {
-                  return currentItem.url;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
+                })()}
+                key={currentIndex}
+                link={(() => {
+                  try {
+                    return currentItem.url;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
                   }
-                  throw e;
-                }
-              })()}
-              name={(() => {
-                try {
-                  return currentItem.name;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
+                })()}
+                name={(() => {
+                  try {
+                    return currentItem.name;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
                   }
-                  throw e;
+                })()}
+              />
+            );
+          })}
+        </div>
+      ) : null}
+      {(() => {
+        try {
+          return $ctx.auth.info?.provider?.job_title !== "doctor";
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <div className={classNames(projectcss.all, sty.freeBox__pfGz1)}>
+          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+            (() => {
+              try {
+                return [
+                  {
+                    name: "نوبت های من",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-appointments.svg?versionId=",
+                    url: "/dashboard/appointments/"
+                  },
+                  {
+                    name: "دوستان من",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-friends.svg?versionId=",
+                    url: "/dashboard/subuser/"
+                  },
+                  {
+                    name: "پزشکان من",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-doctors.svg?versionId=",
+                    url: "/dashboard/bookmarks/"
+                  },
+                  {
+                    name: "نظرات من",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-reviews.svg?versionId=",
+                    url: "/dashboard/apps/ravi/my_feedbacks/"
+                  }
+                ];
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
                 }
-              })()}
-            />
-          );
-        })}
-      </div>
+                throw e;
+              }
+            })()
+          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+            const currentItem = __plasmic_item_0;
+            const currentIndex = __plasmic_idx_0;
+            return (
+              <LauncherComponentsService
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsService__vrQg
+                )}
+                icon={(() => {
+                  try {
+                    return currentItem.icon;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                key={currentIndex}
+                link={(() => {
+                  try {
+                    return currentItem.url;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                name={(() => {
+                  try {
+                    return currentItem.name;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+            );
+          })}
+        </div>
+      ) : null}
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "launcherComponentsTitle",
-    "freeBox",
-    "launcherComponentsService"
-  ],
-  launcherComponentsTitle: ["launcherComponentsTitle"],
-  freeBox: ["freeBox", "launcherComponentsService"],
-  launcherComponentsService: ["launcherComponentsService"]
+  root: ["root", "launcherComponentsTitle"],
+  launcherComponentsTitle: ["launcherComponentsTitle"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -273,8 +389,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   launcherComponentsTitle: typeof LauncherComponentsTitle;
-  freeBox: "div";
-  launcherComponentsService: typeof LauncherComponentsService;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -338,8 +452,6 @@ export const PlasmicLauncherBlocksShortcuts = Object.assign(
   {
     // Helper components rendering sub-elements
     launcherComponentsTitle: makeNodeComponent("launcherComponentsTitle"),
-    freeBox: makeNodeComponent("freeBox"),
-    launcherComponentsService: makeNodeComponent("launcherComponentsService"),
 
     // Metadata about props expected for PlasmicLauncherBlocksShortcuts
     internalVariantProps: PlasmicLauncherBlocksShortcuts__VariantProps,

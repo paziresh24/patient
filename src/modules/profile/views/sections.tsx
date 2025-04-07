@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import classNames from '@/common/utils/classNames';
+import Hamdast from '@/modules/hamdast/render';
 
 const { publicRuntimeConfig } = config();
 
@@ -52,6 +53,8 @@ export const sections = (data: any) => {
     seo,
     onlineVisit,
     fragmentComponents,
+    hamdastWidgetsData,
+    hamdastWidgets,
   } = data;
 
   const profileData = pick(data, [
@@ -89,6 +92,16 @@ export const sections = (data: any) => {
           <Text fontWeight="medium">نوشتن بیوگرافی</Text>
         </div>
       ),
+    },
+    {
+      isShow: !customize?.partnerKey,
+      noWrapper: true,
+      children: () =>
+        hamdastWidgets
+          .filter((widget: any) => widget?.placement?.includes?.('section_one'))
+          .map((widget: any) => (
+            <Hamdast key={widget.id} id={widget.id} backendData={hamdastWidgetsData?.[widget.id] ?? undefined} profileData={profileData} />
+          )),
     },
     // Video
     {
@@ -163,6 +176,16 @@ export const sections = (data: any) => {
       noWrapper: true,
       children: () => <Fragment name="Claim" props={{ ...profileData }} />,
     },
+    {
+      isShow: !customize?.partnerKey,
+      noWrapper: true,
+      children: () =>
+        hamdastWidgets
+          .filter((widget: any) => widget?.placement?.includes('section_two'))
+          .map((widget: any) => (
+            <Hamdast key={widget.id} id={widget.id} backendData={hamdastWidgetsData?.[widget.id] ?? undefined} profileData={profileData} />
+          )),
+    },
     // Reviews
     {
       id: 'reviews',
@@ -177,6 +200,16 @@ export const sections = (data: any) => {
           <FragmentRateReview fragmentComponents={fragmentComponents} profileData={profileData} />
         </div>
       ),
+    },
+    {
+      isShow: !customize?.partnerKey,
+      noWrapper: true,
+      children: () =>
+        hamdastWidgets
+          .filter((widget: any) => widget?.placement?.includes('section_three'))
+          .map((widget: any) => (
+            <Hamdast key={widget.id} id={widget.id} backendData={hamdastWidgetsData?.[widget.id] ?? undefined} profileData={profileData} />
+          )),
     },
     // Seo Box
     {

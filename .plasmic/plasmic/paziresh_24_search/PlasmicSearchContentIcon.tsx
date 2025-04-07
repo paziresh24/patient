@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -86,9 +86,7 @@ type VariantPropType = keyof PlasmicSearchContentIcon__VariantsArgs;
 export const PlasmicSearchContentIcon__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicSearchContentIcon__ArgsType = {
-  iconType?: string;
-};
+export type PlasmicSearchContentIcon__ArgsType = { iconType?: string };
 type ArgPropType = keyof PlasmicSearchContentIcon__ArgsType;
 export const PlasmicSearchContentIcon__ArgProps = new Array<ArgPropType>(
   "iconType"

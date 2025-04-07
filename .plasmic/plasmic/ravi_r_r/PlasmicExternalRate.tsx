@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -83,9 +83,7 @@ export type PlasmicExternalRate__VariantsArgs = {};
 type VariantPropType = keyof PlasmicExternalRate__VariantsArgs;
 export const PlasmicExternalRate__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicExternalRate__ArgsType = {
-  doctorSlug?: string;
-};
+export type PlasmicExternalRate__ArgsType = { doctorSlug?: string };
 type ArgPropType = keyof PlasmicExternalRate__ArgsType;
 export const PlasmicExternalRate__ArgProps = new Array<ArgPropType>(
   "doctorSlug"

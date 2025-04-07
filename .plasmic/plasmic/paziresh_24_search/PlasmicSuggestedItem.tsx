@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -81,9 +81,7 @@ export const PlasmicSuggestedItem__VariantProps = new Array<VariantPropType>(
   "selected"
 );
 
-export type PlasmicSuggestedItem__ArgsType = {
-  name?: string;
-};
+export type PlasmicSuggestedItem__ArgsType = { name?: string };
 type ArgPropType = keyof PlasmicSuggestedItem__ArgsType;
 export const PlasmicSuggestedItem__ArgProps = new Array<ArgPropType>("name");
 

@@ -85,7 +85,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
 
   try {
     const queryClient = new QueryClient();
-    let fullProfileData;
+    let fullProfileData: any;
     try {
       const { redirect, fullProfileData: data } = await getProfile({ slug: slugFormmated, university });
       fullProfileData = data;
@@ -424,6 +424,43 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       console.error(error);
     }
 
+    let widgets: any;
+    let widgetsData: any = {};
+
+    try {
+      widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets', {
+        params: {
+          user_id: information.user_id,
+          id: fullProfileData!.id,
+          slug: slugFormmated,
+        },
+        timeout: 1000,
+      });
+
+      if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
+        await Promise.allSettled(
+          widgets?.data
+            ?.filter((item: any) => item?.data_endpoint)
+            ?.map((item: any) =>
+              axios
+                .get(item.data_endpoint, {
+                  params: {
+                    user_id: information.user_id,
+                    id: fullProfileData!.id,
+                    slug: slugFormmated,
+                  },
+                  timeout: 1000,
+                })
+                .then(res => {
+                  widgetsData = { ...widgetsData, [item?.id]: res?.data };
+                }),
+            ),
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     const doctorCity = centers?.find?.((center: any) => center.id !== '5532')?.city;
 
     const title = `${information.prefix} ${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${
@@ -465,6 +502,10 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         },
         getOnlyHasuraProfileData,
         status: context.res.statusCode,
+        hamdastWidgets: widgets?.data?.filter?.((item: any) => (item.data_endpoint ? !isEmpty(widgetsData[item?.id]) : true)) ?? [],
+        hamdastWidgetsData: {
+          ...widgetsData,
+        },
       },
     };
   } catch (error) {

@@ -14,7 +14,10 @@ export const AppBar = ({ title, backButton, titleLoading = false, className, ...
   const router = useRouter();
   return (
     <div
-      className={classNames('flex sticky top-0 justify-center items-center h-16 px-6 bg-white border-b border-[#EBECEE] z-40', className)}
+      className={classNames(
+        'flex sticky top-0 justify-center items-center min-h-16 h-16 px-6 bg-white border-b border-[#EBECEE] z-40',
+        className,
+      )}
       {...rest}
     >
       {backButton && (

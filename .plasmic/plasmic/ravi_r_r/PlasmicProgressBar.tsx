@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -74,10 +74,7 @@ export type PlasmicProgressBar__VariantsArgs = {};
 type VariantPropType = keyof PlasmicProgressBar__VariantsArgs;
 export const PlasmicProgressBar__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicProgressBar__ArgsType = {
-  label?: string;
-  value?: number;
-};
+export type PlasmicProgressBar__ArgsType = { label?: string; value?: number };
 type ArgPropType = keyof PlasmicProgressBar__ArgsType;
 export const PlasmicProgressBar__ArgProps = new Array<ArgPropType>(
   "label",

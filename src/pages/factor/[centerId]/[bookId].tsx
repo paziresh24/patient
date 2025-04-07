@@ -22,6 +22,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo } from 'react';
+import { growthbook } from 'src/pages/_app';
 const { publicRuntimeConfig } = getConfig();
 
 const Factor = () => {
@@ -45,8 +46,21 @@ const Factor = () => {
       });
   }, [bookId, isLogin, userPending]);
 
+  useEffect(() => {
+    if (getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0]) {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        center_id: centerId,
+        book_id: bookId,
+        service_id: getBookDetails.data?.data?.result?.[0]?.services?.[0]?.service_id,
+        user_center_id: getBookDetails.data?.data?.result?.[0]?.user_center_id,
+      });
+    }
+  }, [getBookDetails.isSuccess, getBookDetails.data?.data?.result?.[0]]);
+
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
-  const doctorName = bookDetailsData?.doctor_display_name ?? '';
+  const doctorName = `${bookDetailsData?.doctor_name} ${bookDetailsData?.doctor_family}`;
+
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const convertTime = (time: string) => {
     return moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.calendar(undefined, {

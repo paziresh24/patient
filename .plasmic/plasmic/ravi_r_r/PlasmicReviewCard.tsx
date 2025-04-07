@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -2872,12 +2872,32 @@ function PlasmicReviewCard__RenderFunc(props: {
             onClick={async event => {
               const $steps = {};
 
-              $steps["request"] = $ctx.auth.isLogin
+              $steps["invokeGlobalAction"] =
+                $ctx.auth.isLogin == false
+                  ? (() => {
+                      const actionArgs = { args: [] };
+                      return $globalActions["AuthGlobalContext.login"]?.apply(
+                        null,
+                        [...actionArgs.args]
+                      );
+                    })()
+                  : undefined;
+              if (
+                $steps["invokeGlobalAction"] != null &&
+                typeof $steps["invokeGlobalAction"] === "object" &&
+                typeof $steps["invokeGlobalAction"].then === "function"
+              ) {
+                $steps["invokeGlobalAction"] = await $steps[
+                  "invokeGlobalAction"
+                ];
+              }
+
+              $steps["runCode"] = $ctx.auth.isLogin
                 ? (() => {
                     const actionArgs = {
                       customFunction: async () => {
                         return (() => {
-                          const formData = new FormData();
+                          const formData = new globalThis.FormData();
                           formData.append("feedback_id", $props.feedbackId);
                           formData.append(
                             "description",
@@ -2901,11 +2921,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                   })()
                 : undefined;
               if (
-                $steps["request"] != null &&
-                typeof $steps["request"] === "object" &&
-                typeof $steps["request"].then === "function"
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
               ) {
-                $steps["request"] = await $steps["request"];
+                $steps["runCode"] = await $steps["runCode"];
               }
 
               $steps["toast"] = $ctx.auth.isLogin
@@ -2929,6 +2949,36 @@ function PlasmicReviewCard__RenderFunc(props: {
                 typeof $steps["toast"].then === "function"
               ) {
                 $steps["toast"] = await $steps["toast"];
+              }
+
+              $steps["splunk"] = $ctx.auth.isLogin
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return $$.splunkEvent({
+                          group: "feedback",
+                          data: {
+                            doctor_id: $props.doctorId,
+                            comment_id: $props.feedbackId,
+                            reply_text: $state.multilineTextInput.value
+                          },
+                          type: "reply_comment",
+                          token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                          api_host: "https://splunk-ravi-hec.paziresh24.com"
+                        });
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["splunk"] != null &&
+                typeof $steps["splunk"] === "object" &&
+                typeof $steps["splunk"].then === "function"
+              ) {
+                $steps["splunk"] = await $steps["splunk"];
               }
 
               $steps["multiline"] = $ctx.auth.isLogin
@@ -2957,89 +3007,6 @@ function PlasmicReviewCard__RenderFunc(props: {
                 typeof $steps["multiline"].then === "function"
               ) {
                 $steps["multiline"] = await $steps["multiline"];
-              }
-
-              $steps["invokeGlobalAction"] =
-                $ctx.auth.isLogin == false
-                  ? (() => {
-                      const actionArgs = { args: [] };
-                      return $globalActions["AuthGlobalContext.login"]?.apply(
-                        null,
-                        [...actionArgs.args]
-                      );
-                    })()
-                  : undefined;
-              if (
-                $steps["invokeGlobalAction"] != null &&
-                typeof $steps["invokeGlobalAction"] === "object" &&
-                typeof $steps["invokeGlobalAction"].then === "function"
-              ) {
-                $steps["invokeGlobalAction"] = await $steps[
-                  "invokeGlobalAction"
-                ];
-              }
-
-              $steps["sendToN8N"] = true
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return fetch(
-                          "https://apigw.paziresh24.com/ravi/v1/reply-webhook?id=" +
-                            $props.feedbackId,
-                          {
-                            headers: { "content-type": "application/json" },
-                            body: JSON.stringify({
-                              doctor_id: $props.doctorId,
-                              comment_id: $props.feedbackId,
-                              reply_text: $state.multilineTextInput.value
-                            }),
-                            method: "POST",
-                            credentials: "include"
-                          }
-                        );
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["sendToN8N"] != null &&
-                typeof $steps["sendToN8N"] === "object" &&
-                typeof $steps["sendToN8N"].then === "function"
-              ) {
-                $steps["sendToN8N"] = await $steps["sendToN8N"];
-              }
-
-              $steps["splunk"] = true
-                ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return $$.splunkEvent({
-                          group: "feedback",
-                          data: {
-                            doctor_id: $props.doctorId,
-                            comment_id: $props.feedbackId,
-                            reply_text: $state.multilineTextInput.value
-                          },
-                          type: "reply_comment",
-                          token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                          api_host: "https://splunk-ravi-hec.paziresh24.com"
-                        });
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["splunk"] != null &&
-                typeof $steps["splunk"] === "object" &&
-                typeof $steps["splunk"].then === "function"
-              ) {
-                $steps["splunk"] = await $steps["splunk"];
               }
             }}
           >

@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -66,6 +66,8 @@ import projectcss from './plasmic.module.css'; // plasmic-import: sMdpLWyxbzDCru
 import sty from './PlasmicSearchResultQs.module.css'; // plasmic-import: 4t5SBkIXsA5h/css
 
 import Icon14Icon from './icons/PlasmicIcon__Icon14'; // plasmic-import: eKLBqU_Fr5SV/icon
+
+import { uniqBy as __lib_lodash__uniqBy } from 'lodash';
 
 import { uniqBy as __lib_lodash__uniqBy } from 'lodash';
 
@@ -326,6 +328,36 @@ function PlasmicSearchResultQs__RenderFunc(props: {
             ) {
               $steps['runOnClick'] = await $steps['runOnClick'];
             }
+
+            $steps['runOnClick'] = true
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props['onClick'],
+                    args: [
+                      (() => {
+                        try {
+                          return value;
+                        } catch (e) {
+                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })(),
+                    ],
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps['runOnClick'] != null &&
+              typeof $steps['runOnClick'] === 'object' &&
+              typeof $steps['runOnClick'].then === 'function'
+            ) {
+              $steps['runOnClick'] = await $steps['runOnClick'];
+            }
           }}
           topQuerySuggestions={(() => {
             try {
@@ -425,4 +457,3 @@ export const PlasmicSearchResultQs = Object.assign(
 
 export default PlasmicSearchResultQs;
 /* prettier-ignore-end */
-

@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+
 import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -82,6 +84,7 @@ export const PlasmicHomePageShortcuts__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicHomePageShortcuts__OverridesType = {
   root?: Flex__<"div">;
+  sideEffect?: Flex__<typeof SideEffect>;
   link?: Flex__<"a"> & Partial<LinkProps>;
   img?: Flex__<typeof PlasmicImg__>;
 };
@@ -128,133 +131,58 @@ function PlasmicHomePageShortcuts__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const globalVariants = ensureGlobalVariants({
     screen: useScreenVariantsbr2UhI7UlpvR()
   });
 
   return (
-    (
-      hasVariant(globalVariants, "screen", "mobileOnly")
-        ? (() => {
-            try {
-              return !!$ctx.Growthbook.features?.[
-                `theme-config:${globalThis.location.host}`
-              ]?.["homePageShortcuts"];
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
+    <div
+      data-plasmic-name={"root"}
+      data-plasmic-override={overrides.root}
+      data-plasmic-root={true}
+      data-plasmic-for-node={forNode}
+      className={classNames(
+        projectcss.all,
+        projectcss.root_reset,
+        projectcss.plasmic_default_styles,
+        projectcss.plasmic_mixins,
+        projectcss.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_antd_5_hostless_css.plasmic_tokens,
+        sty.root
+      )}
+    >
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        deps={(() => {
+          try {
+            return [$ctx?.auth?.info?.id, $ctx?.Growthbook?.isReady];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
             }
-          })()
-        : (() => {
-            try {
-              return !!$ctx.Growthbook.features?.[
-                `theme-config:${globalThis.location.host}`
-              ]?.["homePageShortcuts"];
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })()
-    ) ? (
-      <Stack__
-        as={"div"}
-        data-plasmic-name={"root"}
-        data-plasmic-override={overrides.root}
-        data-plasmic-root={true}
-        data-plasmic-for-node={forNode}
-        hasGap={true}
-        className={classNames(
-          projectcss.all,
-          projectcss.root_reset,
-          projectcss.plasmic_default_styles,
-          projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens,
-          plasmic_antd_5_hostless_css.plasmic_tokens,
-          sty.root
-        )}
-      >
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text___0ThdV
-          )}
-        >
-          {"\u062f\u0633\u062a\u0631\u0633\u06cc \u0633\u0631\u06cc\u0639"}
-        </div>
-        <div className={classNames(projectcss.all, sty.freeBox__fOgx)}>
-          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-            (() => {
-              try {
-                return $ctx.Growthbook.features?.[
-                  `theme-config:${globalThis.location.host}`
-                ]?.["shortcuts"];
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return [];
-                }
-                throw e;
-              }
-            })()
-          ).map((__plasmic_item_0, __plasmic_idx_0) => {
-            const currentItem = __plasmic_item_0;
-            const currentIndex = __plasmic_idx_0;
-            return (
-              <Stack__
-                as={PlasmicLink__}
-                data-plasmic-name={"link"}
-                data-plasmic-override={overrides.link}
-                hasGap={true}
-                className={classNames(projectcss.all, projectcss.a, sty.link)}
-                component={Link}
-                href={(() => {
-                  try {
-                    return currentItem.link;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                key={currentIndex}
-                platform={"nextjs"}
-              >
-                <div
-                  className={classNames(projectcss.all, sty.freeBox___3MuYb)}
-                >
-                  <PlasmicImg__
-                    data-plasmic-name={"img"}
-                    data-plasmic-override={overrides.img}
-                    alt={""}
-                    className={classNames(sty.img)}
-                    displayHeight={"100%"}
-                    displayMaxHeight={"none"}
-                    displayMaxWidth={"100%"}
-                    displayMinHeight={"0"}
-                    displayMinWidth={"0"}
-                    displayWidth={"100%"}
-                    loading={"lazy"}
-                    src={(() => {
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["invokeGlobalAction"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
                       try {
-                        return currentItem.icon;
+                        return {
+                          user_id: $ctx?.auth?.info?.id
+                        };
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -264,43 +192,200 @@ function PlasmicHomePageShortcuts__RenderFunc(props: {
                         }
                         throw e;
                       }
-                    })()}
-                  />
-                </div>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__cf4Vq
-                  )}
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["invokeGlobalAction"] != null &&
+            typeof $steps["invokeGlobalAction"] === "object" &&
+            typeof $steps["invokeGlobalAction"].then === "function"
+          ) {
+            $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+          }
+        }}
+      />
+
+      {(() => {
+        try {
+          return !!$ctx.Growthbook.features?.[
+            `theme-config:${globalThis.location.host}`
+          ]?.["homePageShortcuts"];
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__tyXdw)}
+        >
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text___0ThdV
+            )}
+          >
+            {"\u062f\u0633\u062a\u0631\u0633\u06cc \u0633\u0631\u06cc\u0639"}
+          </div>
+          <div className={classNames(projectcss.all, sty.freeBox__fOgx)}>
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return $ctx.Growthbook.features?.[
+                    `theme-config:${globalThis.location.host}`
+                  ]?.["shortcuts"];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <Stack__
+                  as={PlasmicLink__}
+                  data-plasmic-name={"link"}
+                  data-plasmic-override={overrides.link}
+                  hasGap={true}
+                  className={classNames(projectcss.all, projectcss.a, sty.link)}
+                  component={Link}
+                  href={(() => {
+                    try {
+                      return currentItem.link;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  key={currentIndex}
+                  platform={"nextjs"}
                 >
-                  <React.Fragment>
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox___3MuYb)}
+                  >
                     {(() => {
                       try {
-                        return currentItem.title;
+                        return !!currentItem?.badge_text;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
                           e?.plasmicType === "PlasmicUndefinedDataError"
                         ) {
-                          return "\u067e\u0632\u0634\u06a9\u0627\u0646 MRI";
+                          return true;
                         }
                         throw e;
                       }
-                    })()}
-                  </React.Fragment>
-                </div>
-              </Stack__>
-            );
-          })}
-        </div>
-      </Stack__>
-    ) : null
+                    })() ? (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__tHwKq
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return currentItem?.badge_text;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "-";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </div>
+                    ) : null}
+                    <PlasmicImg__
+                      data-plasmic-name={"img"}
+                      data-plasmic-override={overrides.img}
+                      alt={""}
+                      className={classNames(sty.img)}
+                      displayHeight={"100%"}
+                      displayMaxHeight={"none"}
+                      displayMaxWidth={"100%"}
+                      displayMinHeight={"0"}
+                      displayMinWidth={"0"}
+                      displayWidth={"100%"}
+                      loading={"lazy"}
+                      src={(() => {
+                        try {
+                          return currentItem.icon;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                    />
+                  </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__cf4Vq
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return currentItem.title;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u067e\u0632\u0634\u06a9\u0627\u0646 MRI";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                </Stack__>
+              );
+            })}
+          </div>
+        </Stack__>
+      ) : null}
+    </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "link", "img"],
+  root: ["root", "sideEffect", "link", "img"],
+  sideEffect: ["sideEffect"],
   link: ["link", "img"],
   img: ["img"]
 } as const;
@@ -309,6 +394,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  sideEffect: typeof SideEffect;
   link: "a";
   img: typeof PlasmicImg__;
 };
@@ -373,6 +459,7 @@ export const PlasmicHomePageShortcuts = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    sideEffect: makeNodeComponent("sideEffect"),
     link: makeNodeComponent("link"),
     img: makeNodeComponent("img"),
 

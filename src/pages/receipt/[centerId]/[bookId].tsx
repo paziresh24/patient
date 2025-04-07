@@ -80,6 +80,7 @@ const Receipt = () => {
     modalProps: notificationGrantAccsesModalProps,
   } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
+  const [hasHolidays, setHasHolidays] = useState(false);
 
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -214,6 +215,7 @@ const Receipt = () => {
         national_code: bookDetailsData.patient?.national_code,
         reference_code: bookDetailsData.reference_code,
         book_id: bookId as string,
+        isBookRequest: turnStatus.requestedTurn,
       },
       {
         onSuccess: data => {
@@ -240,7 +242,13 @@ const Receipt = () => {
             router.push('/patient/appointments');
             return;
           }
-          toast.error(data.data.message ?? data.data?.[0]?.message);
+          if (data.data?.status) {
+            toast.error(data.data.message ?? data.data?.[0]?.message);
+          } else {
+            handleCloseRemoveModal();
+            toast.success(data.data.message ?? data.data?.[0]?.message);
+            router.push('/patient/appointments');
+          }
         },
         onError: (error: any) => {
           if (axios.isAxiosError(error)) {
@@ -269,6 +277,9 @@ const Receipt = () => {
   const handleMyTrunButtonAction = () => {
     router.push({
       pathname: '/patient/appointments',
+      query: {
+        type: turnStatus.requestedTurn ? 'book_request' : 'book',
+      },
     });
   };
 
@@ -311,9 +322,11 @@ const Receipt = () => {
   };
 
   const statusText = useMemo(() => {
+    if (turnStatus.deletedTurn && turnStatus.requestedTurn) return 'درخواست شما لغو شده است';
     if (turnStatus.deletedTurn) return 'نوبت شما لغو شده است';
     if (turnStatus.expiredTurn && centerType !== 'consult') return 'زمان نوبت شما به پایان رسیده است';
     if (turnStatus.expiredTurn && centerType === 'consult') return '';
+    if (turnStatus.requestedTurn) return '';
     return 'نوبت شما با موفقیت ثبت شد';
   }, [turnStatus, centerType]);
 
@@ -327,6 +340,61 @@ const Receipt = () => {
       };
     }
   }, [isLogin]);
+
+  useEffect(() => {
+    if (bookDetailsData?.book_time && centerId !== CENTERS.CONSULT) {
+      const bookDate = moment(bookDetailsData.book_time * 1000);
+      const bookDateStr = bookDate.format('YYYY-MM-DD');
+      const startDate = bookDate.clone().subtract(3, 'days').format('YYYY-MM-DD');
+      const endDate = bookDate.clone().add(3, 'days').format('YYYY-MM-DD');
+
+      axios
+        .get(`https://apigw.paziresh24.com/v1/holidays?start_date=${startDate}&end_date=${endDate}`)
+        .then(response => {
+          // Get the appointment date as a moment object for comparison
+          const appointmentDate = moment(bookDateStr);
+
+          // Create an array of all dates in the range
+          const allDates = [];
+          const currentDate = moment(startDate);
+          const lastDate = moment(endDate);
+
+          while (currentDate.isSameOrBefore(lastDate)) {
+            allDates.push(currentDate.format('YYYY-MM-DD'));
+            currentDate.add(1, 'days');
+          }
+
+          // Get holidays from API response
+          const apiHolidays = response.data && response.data.length > 0 ? response.data.map((holiday: any) => holiday.date) : [];
+
+          // Add Fridays (Iranian weekend) to the holiday list
+          const allHolidays = [...apiHolidays];
+
+          allDates.forEach(date => {
+            const dayOfWeek = moment(date).day();
+            // In moment.js, Friday is day 5 (0 is Sunday, 1 is Monday, etc.)
+            if (dayOfWeek === 5 && !allHolidays.includes(date)) {
+              allHolidays.push(date);
+            }
+          });
+
+          if (allHolidays.length > 0) {
+            // Find if there are holidays before and after the appointment date
+            const holidaysBeforeAppointment = allHolidays.some((date: string) => moment(date).isBefore(appointmentDate));
+
+            const holidaysAfterAppointment = allHolidays.some((date: string) => moment(date).isAfter(appointmentDate));
+
+            // Set hasHolidays to true only if the appointment is between holidays
+            if (holidaysBeforeAppointment && holidaysAfterAppointment) {
+              setHasHolidays(true);
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching holidays:', error);
+        });
+    }
+  }, [bookDetailsData?.book_time]);
 
   return (
     <>
@@ -352,7 +420,7 @@ const Receipt = () => {
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full bg-white md:basis-4/6 md:rounded-lg shadow-card">
           <div id="receipt" className="flex flex-col px-5 pt-5 space-y-4">
-            {!turnStatus.requestedTurn && !!statusText && (
+            {!!statusText && (
               <>
                 {getReceiptDetails.isSuccess ? (
                   <div className="flex flex-col items-center justify-center space-y-3">
@@ -379,6 +447,12 @@ const Receipt = () => {
                   </>
                 )}
               </>
+            )}
+            {hasHolidays && (
+              <Alert severity="info" className="p-3 font-medium text-cyan-800 text-sm">
+                به دلیل اینکه نوبت شما در بازه‌ی بین التعطیلی است، لطفا پیش از مراجعه، از طریق شماره تلفن مطب، از حضور پزشک در مطب اطمینان
+                حاصل کنید.
+              </Alert>
             )}
             <BookInfo
               turnData={bookDetailsData}
@@ -432,9 +506,16 @@ const Receipt = () => {
                 </>
               )}
               {turnStatus.requestedTurn && (
-                <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
-                  نوبت های من
-                </Button>
+                <div className="flex flex-col space-y-3">
+                  <Button block variant="secondary" onClick={handleMyTrunButtonAction}>
+                    درخواست‌های من
+                  </Button>
+                  {!turnStatus.deletedTurn && (
+                    <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                      لغو درخواست
+                    </Button>
+                  )}
+                </div>
               )}
               {centerType === 'consult' && !shouldUsePlasmicActionButtons && (
                 <div className="grid gap-2">
@@ -553,6 +634,8 @@ const Receipt = () => {
           title={
             centerType === 'consult'
               ? `لطفا دلیل ${turnStatus.notVisitedTurn ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
+              : turnStatus.requestedTurn
+              ? 'آیا از لغو درخواست اطمینان دارید؟'
               : 'آیا از لغو نوبت اطمینان دارید؟'
           }
           {...removeModalProps}
@@ -570,7 +653,7 @@ const Receipt = () => {
           </div>
           <div className="flex space-s-2">
             <Button theme="error" block onClick={handleRemoveBookTurn} loading={removeBookApi.isLoading}>
-              لغو نوبت
+              {turnStatus.requestedTurn ? 'لغو درخواست' : 'لغو نوبت'}
             </Button>
             <Button theme="error" variant="secondary" block onClick={handleCloseRemoveModal}>
               انصراف

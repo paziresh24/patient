@@ -199,7 +199,7 @@
   background: #fff1ec;
   min-width: 0;
   border-radius: 6px;
-  margin: var(--token-_c276Gs_1FIE) 0px 1rem;
+  margin: var(--token-vMUQwr5Jto1d);
   border: 1px solid #c5885e;
 }
 .freeBox__apXlz {
@@ -384,4 +384,7 @@
 }
 .externalBookSurveyPopup:global(.__wab_instance) {
   max-width: 100%;
+}
+.debugMode:global(.__wab_instance) {
+  position: relative;
 }

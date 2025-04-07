@@ -78,6 +78,7 @@ import { growthbook } from 'src/pages/_app';
 import { template, templateSettings } from 'lodash';
 import { useProviders } from '@/modules/profile/apis/providers';
 import { useGetServices } from '@/common/apis/services/profile/services';
+import { toastActionble } from '@/common/utils/toastActionble';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -419,7 +420,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     }
     setBookRequestLoading(false);
 
-    toast.error(data.message);
+    toast.error(toastActionble({ ...data }), { duration: data?.duration ?? 10000 });
   };
 
   const handleChangeStep = (

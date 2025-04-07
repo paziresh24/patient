@@ -106,6 +106,7 @@ export type PlasmicRaviReviewCard__ArgsType = {
   feedbackId?: string;
   likeCount?: number;
   doctorLink?: any;
+  onClickDoctorLink?: (value: string) => void;
   options?: React.ReactNode;
   replyCard?: React.ReactNode;
   replies2?: React.ReactNode;
@@ -133,6 +134,7 @@ export const PlasmicRaviReviewCard__ArgProps = new Array<ArgPropType>(
   "feedbackId",
   "likeCount",
   "doctorLink",
+  "onClickDoctorLink",
   "options",
   "replyCard",
   "replies2",
@@ -170,6 +172,7 @@ export interface DefaultRaviReviewCardProps {
   feedbackId?: string;
   likeCount?: number;
   doctorLink?: any;
+  onClickDoctorLink?: (value: string) => void;
   options?: React.ReactNode;
   replyCard?: React.ReactNode;
   replies2?: React.ReactNode;
@@ -349,6 +352,7 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                 throw e;
               }
             })()}
+            onClickDoctorLink={args.onClickDoctorLink}
             onlyDoctor={(() => {
               try {
                 return $props.onlyDoctor;

@@ -10,9 +10,13 @@ interface Params {
   reference_code: string;
   national_code: string;
   book_id: string;
+  isBookRequest?: boolean;
 }
 
-export const removeBook = ({ book_id, ...params }: Params, useMoshirDeleteBook: boolean) => {
+export const removeBook = ({ book_id, isBookRequest, ...params }: Params, useMoshirDeleteBook: boolean) => {
+  if (isBookRequest) {
+    return apiGatewayClient.delete(`/core-booking/v1/book-requests/${book_id}`);
+  }
   if (useMoshirDeleteBook) {
     return apiGatewayClient.post(
       '/moshir/v1/deleteBook',

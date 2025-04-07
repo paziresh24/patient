@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -66,6 +66,7 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import PeopleAlsoSearchForBox from "../../PeopleAlsoSearchForBox"; // plasmic-import: ThD_BqtT1Qyx/component
 import SearchFooterSecondaryTasks from "../../SearchFooterSecondaryTasks"; // plasmic-import: H6s7UfVqSPjE/component
 import ExternalBookSurveyPopup from "../../ExternalBookSurveyPopup"; // plasmic-import: YHypsyWp2tOf/component
+import DebugMode from "../../DebugMode"; // plasmic-import: t_GYTnthnuf9/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -137,6 +138,7 @@ export type PlasmicSearchResults__OverridesType = {
   peopleAlsoSearchForBox?: Flex__<typeof PeopleAlsoSearchForBox>;
   searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
   externalBookSurveyPopup?: Flex__<typeof ExternalBookSurveyPopup>;
+  debugMode?: Flex__<typeof DebugMode>;
 };
 
 export interface DefaultSearchResultsProps {
@@ -1252,11 +1254,20 @@ function PlasmicSearchResults__RenderFunc(props: {
                             }
                             style={{ fontWeight: 700 }}
                           >
-                            {" \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f. "}
+                            {" \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f."}
+                          </span>
+                          <React.Fragment>{"\n"}</React.Fragment>
+                          <span
+                            className={
+                              "plasmic_default__all plasmic_default__span"
+                            }
+                            style={{ fontWeight: 700 }}
+                          >
+                            {" "}
                           </span>
                           <React.Fragment>
                             {
-                              "\n\u062f\u0631 \u0627\u062f\u0627\u0645\u0647 \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0627\u0632 \u0628\u06cc\u0646 \u0646\u062a\u0627\u06cc\u062c \u0633\u0627\u06cc\u0631 \u0645\u0646\u0627\u0637\u0642 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f."
+                              "\n\u062f\u0631 \u0627\u062f\u0627\u0645\u0647 \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0627\u0632 \u0628\u06cc\u0646 \u0646\u062a\u0627\u06cc\u062c \u0633\u0627\u06cc\u0631 \u0645\u0646\u0627\u0637\u0642 \u0627\u0646\u062a\u062e\u0627\u0628 \u06a9\u0646\u06cc\u062f.\n"
                             }
                           </React.Fragment>
                         </React.Fragment>
@@ -2472,6 +2483,26 @@ function PlasmicSearchResults__RenderFunc(props: {
           className={classNames("__wab_instance", sty.externalBookSurveyPopup)}
         />
       ) : null}
+      {(() => {
+        try {
+          return true;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <DebugMode
+          data-plasmic-name={"debugMode"}
+          data-plasmic-override={overrides.debugMode}
+          className={classNames("__wab_instance", sty.debugMode)}
+          searchResultResponse={args.searchResultResponse}
+        />
+      ) : null}
     </Stack__>
   ) as React.ReactElement | null;
 }
@@ -2493,7 +2524,8 @@ const PlasmicDescendants = {
     "sideEffect",
     "peopleAlsoSearchForBox",
     "searchFooterSecondaryTasks",
-    "externalBookSurveyPopup"
+    "externalBookSurveyPopup",
+    "debugMode"
   ],
   setGrowthbookAttributes: ["setGrowthbookAttributes"],
   showMySearchPerformance: ["showMySearchPerformance"],
@@ -2518,7 +2550,8 @@ const PlasmicDescendants = {
   sideEffect: ["sideEffect"],
   peopleAlsoSearchForBox: ["peopleAlsoSearchForBox"],
   searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"],
-  externalBookSurveyPopup: ["externalBookSurveyPopup"]
+  externalBookSurveyPopup: ["externalBookSurveyPopup"],
+  debugMode: ["debugMode"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2540,6 +2573,7 @@ type NodeDefaultElementType = {
   peopleAlsoSearchForBox: typeof PeopleAlsoSearchForBox;
   searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
   externalBookSurveyPopup: typeof ExternalBookSurveyPopup;
+  debugMode: typeof DebugMode;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2621,6 +2655,7 @@ export const PlasmicSearchResults = Object.assign(
     peopleAlsoSearchForBox: makeNodeComponent("peopleAlsoSearchForBox"),
     searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
     externalBookSurveyPopup: makeNodeComponent("externalBookSurveyPopup"),
+    debugMode: makeNodeComponent("debugMode"),
 
     // Metadata about props expected for PlasmicSearchResults
     internalVariantProps: PlasmicSearchResults__VariantProps,

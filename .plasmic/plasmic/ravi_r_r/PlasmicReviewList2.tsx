@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -1155,10 +1155,6 @@ function PlasmicReviewList2__RenderFunc(props: {
                         throw e;
                       }
                     })()}
-                  />
-
-                  <div
-                    className={classNames(projectcss.all, sty.freeBox__oRu6)}
                   />
                 </Stack__>
               );
