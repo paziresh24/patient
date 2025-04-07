@@ -90,6 +90,20 @@ export const Suggestion = (props: SuggestionProps) => {
   };
 
   useEffect(() => {
+    if (city.is_aroundme) {
+      navigator.geolocation.getCurrentPosition(position => {
+        let lat = position.coords.latitude;
+        let long = position.coords.longitude;
+
+        setGeoLocation({
+          lat,
+          lon: long,
+        });
+      });
+    }
+  }, [city]);
+
+  useEffect(() => {
     if (defaultOpen) setIsOpenSuggestion(true);
     try {
       const getCityInCookie = JSON.parse(getCookie('new-city') as string);
@@ -148,17 +162,14 @@ export const Suggestion = (props: SuggestionProps) => {
       navigator.geolocation.getCurrentPosition(position => {
         let lat = position.coords.latitude;
         let long = position.coords.longitude;
-        setGeoLocation({
-          lat,
-          lon: long,
-        });
         router.pathname.startsWith('/s/') &&
           changeRoute({
-            params: { city: 'ir' },
+            params: { city: city.en_slug },
             query: {
               ...(router.query.city_id && { city_id: city.id }),
               lat,
               lon: long,
+              previousQueries: false,
             },
           });
       });

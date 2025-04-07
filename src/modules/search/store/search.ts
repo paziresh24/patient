@@ -92,7 +92,7 @@ export const useSearchStore = create<SearchStore>(set => ({
       ...state,
       city,
     }));
-    if (city?.id !== '-1') {
+    if (city?.id !== '-1' || city.is_aroundme) {
       try {
         if (new URLSearchParams(location.search).get('isWebView') && window.Android) window.Android.updateCity(city.id, city.province_id);
       } catch (error) {

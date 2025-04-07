@@ -11,11 +11,11 @@
 // Plasmic Project: sMdpLWyxbzDCruwMRffW2m
 // Component: 4t5SBkIXsA5h
 
-import * as React from "react";
+import * as React from 'react';
 
-import Head from "next/head";
-import Link, { LinkProps } from "next/link";
-import { useRouter } from "next/router";
+import Head from 'next/head';
+import Link, { LinkProps } from 'next/link';
+import { useRouter } from 'next/router';
 
 import {
   Flex as Flex__,
@@ -51,27 +51,25 @@ import {
   useDollarState,
   usePlasmicTranslator,
   useTrigger,
-  wrapWithClassName
-} from "@plasmicapp/react-web";
-import {
-  DataCtxReader as DataCtxReader__,
-  useDataEnv,
-  useGlobalActions
-} from "@plasmicapp/react-web/lib/host";
+  wrapWithClassName,
+} from '@plasmicapp/react-web';
+import { DataCtxReader as DataCtxReader__, useDataEnv, useGlobalActions } from '@plasmicapp/react-web/lib/host';
 
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
-import SearchContentSuggestion from "../../SearchContentSuggestion"; // plasmic-import: 6MD8zdNphdeG/component
+import { ApiRequest } from '@/common/fragment/components/api-request'; // plasmic-import: vW4UBuHCFshJ/codeComponent
+import SearchContentSuggestion from '../../SearchContentSuggestion'; // plasmic-import: 6MD8zdNphdeG/component
 
-import "@plasmicapp/react-web/lib/plasmic.css";
+import '@plasmicapp/react-web/lib/plasmic.css';
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
-import sty from "./PlasmicSearchResultQs.module.css"; // plasmic-import: 4t5SBkIXsA5h/css
+import plasmic_fragment_design_system_css from '../fragment_design_system/plasmic.module.css'; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_antd_5_hostless_css from '../antd_5_hostless/plasmic.module.css'; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
+import projectcss from './plasmic.module.css'; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
+import sty from './PlasmicSearchResultQs.module.css'; // plasmic-import: 4t5SBkIXsA5h/css
 
-import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: eKLBqU_Fr5SV/icon
+import Icon14Icon from './icons/PlasmicIcon__Icon14'; // plasmic-import: eKLBqU_Fr5SV/icon
 
-import { uniqBy as __lib_lodash__uniqBy } from "lodash";
+import { uniqBy as __lib_lodash__uniqBy } from 'lodash';
+
+import { uniqBy as __lib_lodash__uniqBy } from 'lodash';
 
 createPlasmicElementProxy;
 
@@ -86,17 +84,13 @@ export type PlasmicSearchResultQs__ArgsType = {
   citySlug?: string;
 };
 type ArgPropType = keyof PlasmicSearchResultQs__ArgsType;
-export const PlasmicSearchResultQs__ArgProps = new Array<ArgPropType>(
-  "terms",
-  "onClick",
-  "citySlug"
-);
+export const PlasmicSearchResultQs__ArgProps = new Array<ArgPropType>('terms', 'onClick', 'citySlug');
 
 export type PlasmicSearchResultQs__OverridesType = {
-  root?: Flex__<"div">;
+  root?: Flex__<'div'>;
   serchiaSuggestion?: Flex__<typeof ApiRequest>;
-  freeBox?: Flex__<"div">;
-  svg?: Flex__<"svg">;
+  freeBox?: Flex__<'div'>;
+  svg?: Flex__<'svg'>;
   searchContentSuggestion?: Flex__<typeof SearchContentSuggestion>;
 };
 
@@ -109,8 +103,8 @@ export interface DefaultSearchResultQsProps {
 
 const $$ = {
   lodash: {
-    uniqBy: __lib_lodash__uniqBy
-  }
+    uniqBy: __lib_lodash__uniqBy,
+  },
 };
 
 function useNextRouter() {
@@ -132,18 +126,16 @@ function PlasmicSearchResultQs__RenderFunc(props: {
     () =>
       Object.assign(
         {
-          terms: ""
+          terms: '',
         },
-        Object.fromEntries(
-          Object.entries(props.args).filter(([_, v]) => v !== undefined)
-        )
+        Object.fromEntries(Object.entries(props.args).filter(([_, v]) => v !== undefined)),
       ),
-    [props.args]
+    [props.args],
   );
 
   const $props = {
     ...args,
-    ...variants
+    ...variants,
   };
 
   const __nextRouter = useNextRouter();
@@ -154,36 +146,36 @@ function PlasmicSearchResultQs__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "serchiaSuggestion.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        path: 'serchiaSuggestion.data',
+        type: 'private',
+        variableType: 'object',
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
       },
       {
-        path: "serchiaSuggestion.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        path: 'serchiaSuggestion.error',
+        type: 'private',
+        variableType: 'object',
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
       },
       {
-        path: "serchiaSuggestion.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      }
+        path: 'serchiaSuggestion.loading',
+        type: 'private',
+        variableType: 'boolean',
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+      },
     ],
-    [$props, $ctx, $refs]
+    [$props, $ctx, $refs],
   );
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
-    $refs
+    $refs,
   });
 
   return (
     <div
-      data-plasmic-name={"root"}
+      data-plasmic-name={'root'}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
@@ -195,24 +187,21 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
         plasmic_antd_5_hostless_css.plasmic_tokens,
-        sty.root
+        sty.root,
       )}
     >
       <ApiRequest
-        data-plasmic-name={"serchiaSuggestion"}
+        data-plasmic-name={'serchiaSuggestion'}
         data-plasmic-override={overrides.serchiaSuggestion}
-        className={classNames("__wab_instance", sty.serchiaSuggestion)}
+        className={classNames('__wab_instance', sty.serchiaSuggestion)}
         config={(() => {
           try {
             return {
               ...$ctx.Fragment.apiConfig,
-              headers: { apikey: "gwiuATzYDmeayT7eqmbHG2obv6lGpqJa" }
+              headers: { apikey: 'gwiuATzYDmeayT7eqmbHG2obv6lGpqJa' },
             };
           } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
+            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
               return undefined;
             }
             throw e;
@@ -220,50 +209,32 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         })()}
         errorDisplay={null}
         loadingDisplay={
-          <div
-            data-plasmic-name={"freeBox"}
-            data-plasmic-override={overrides.freeBox}
-            className={classNames(projectcss.all, sty.freeBox)}
-          >
+          <div data-plasmic-name={'freeBox'} data-plasmic-override={overrides.freeBox} className={classNames(projectcss.all, sty.freeBox)}>
             <Icon14Icon
-              data-plasmic-name={"svg"}
+              data-plasmic-name={'svg'}
               data-plasmic-override={overrides.svg}
               className={classNames(projectcss.all, sty.svg)}
-              role={"img"}
+              role={'img'}
             />
           </div>
         }
-        method={"GET"}
+        method={'GET'}
         onError={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, [
-            "serchiaSuggestion",
-            "error"
-          ]).apply(null, eventArgs);
+          generateStateOnChangeProp($state, ['serchiaSuggestion', 'error']).apply(null, eventArgs);
         }}
         onLoading={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, [
-            "serchiaSuggestion",
-            "loading"
-          ]).apply(null, eventArgs);
+          generateStateOnChangeProp($state, ['serchiaSuggestion', 'loading']).apply(null, eventArgs);
         }}
         onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, [
-            "serchiaSuggestion",
-            "data"
-          ]).apply(null, eventArgs);
+          generateStateOnChangeProp($state, ['serchiaSuggestion', 'data']).apply(null, eventArgs);
         }}
         url={(() => {
           try {
             return (() => {
-              return `https://searchia.ir/api/v2/qs/index/slim_clinic_query_su?query=${
-                $props.terms || ""
-              }`;
+              return `https://searchia.ir/api/v2/qs/index/slim_clinic_query_su?query=${$props.terms || ''}`;
             })();
           } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
+            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
               return undefined;
             }
             throw e;
@@ -271,30 +242,22 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         })()}
       >
         <SearchContentSuggestion
-          data-plasmic-name={"searchContentSuggestion"}
+          data-plasmic-name={'searchContentSuggestion'}
           data-plasmic-override={overrides.searchContentSuggestion}
-          className={classNames("__wab_instance", sty.searchContentSuggestion)}
+          className={classNames('__wab_instance', sty.searchContentSuggestion)}
           onClick={async value => {
             const $steps = {};
 
-            $steps["localstorage"] = true
+            $steps['localstorage'] = true
               ? (() => {
                   const actionArgs = {
                     customFunction: async () => {
                       return (() => {
-                        const history = $$.lodash.uniqBy(
-                          JSON.parse(localStorage.getItem("history") ?? "[]"),
-                          "name"
-                        );
-                        const newHistory = history.filter(
-                          historyItem => historyItem.name !== value.name
-                        );
-                        return localStorage.setItem(
-                          "history",
-                          JSON.stringify([...newHistory, value])
-                        );
+                        const history = $$.lodash.uniqBy(JSON.parse(localStorage.getItem('history') ?? '[]'), 'name');
+                        const newHistory = history.filter(historyItem => historyItem.name !== value.name);
+                        return localStorage.setItem('history', JSON.stringify([...newHistory, value]));
                       })();
-                    }
+                    },
                   };
                   return (({ customFunction }) => {
                     return customFunction();
@@ -302,73 +265,56 @@ function PlasmicSearchResultQs__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps["localstorage"] != null &&
-              typeof $steps["localstorage"] === "object" &&
-              typeof $steps["localstorage"].then === "function"
+              $steps['localstorage'] != null &&
+              typeof $steps['localstorage'] === 'object' &&
+              typeof $steps['localstorage'].then === 'function'
             ) {
-              $steps["localstorage"] = await $steps["localstorage"];
+              $steps['localstorage'] = await $steps['localstorage'];
             }
 
-            $steps["goToPage"] = true
+            $steps['goToPage'] = true
               ? (() => {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `/s/${
-                          $props.citySlug ? $props.citySlug + "/" : ""
-                        }?text=${value}`;
+                        return `/s/${$props.citySlug ? $props.citySlug + '/' : ''}?text=${value}`;
                       } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
+                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
                           return undefined;
                         }
                         throw e;
                       }
-                    })()
+                    })(),
                   };
                   return (({ destination }) => {
-                    if (
-                      typeof destination === "string" &&
-                      destination.startsWith("#")
-                    ) {
-                      document
-                        .getElementById(destination.substr(1))
-                        .scrollIntoView({ behavior: "smooth" });
+                    if (typeof destination === 'string' && destination.startsWith('#')) {
+                      document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
                     } else {
                       __nextRouter?.push(destination);
                     }
                   })?.apply(null, [actionArgs]);
                 })()
               : undefined;
-            if (
-              $steps["goToPage"] != null &&
-              typeof $steps["goToPage"] === "object" &&
-              typeof $steps["goToPage"].then === "function"
-            ) {
-              $steps["goToPage"] = await $steps["goToPage"];
+            if ($steps['goToPage'] != null && typeof $steps['goToPage'] === 'object' && typeof $steps['goToPage'].then === 'function') {
+              $steps['goToPage'] = await $steps['goToPage'];
             }
 
-            $steps["runOnClick"] = true
+            $steps['runOnClick'] = true
               ? (() => {
                   const actionArgs = {
-                    eventRef: $props["onClick"],
+                    eventRef: $props['onClick'],
                     args: [
                       (() => {
                         try {
                           return value;
                         } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
+                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
                             return undefined;
                           }
                           throw e;
                         }
-                      })()
-                    ]
+                      })(),
+                    ],
                   };
                   return (({ eventRef, args }) => {
                     return eventRef?.(...(args ?? []));
@@ -376,21 +322,48 @@ function PlasmicSearchResultQs__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps["runOnClick"] != null &&
-              typeof $steps["runOnClick"] === "object" &&
-              typeof $steps["runOnClick"].then === "function"
+              $steps['runOnClick'] != null &&
+              typeof $steps['runOnClick'] === 'object' &&
+              typeof $steps['runOnClick'].then === 'function'
             ) {
-              $steps["runOnClick"] = await $steps["runOnClick"];
+              $steps['runOnClick'] = await $steps['runOnClick'];
+            }
+
+            $steps['runOnClick'] = true
+              ? (() => {
+                  const actionArgs = {
+                    eventRef: $props['onClick'],
+                    args: [
+                      (() => {
+                        try {
+                          return value;
+                        } catch (e) {
+                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })(),
+                    ],
+                  };
+                  return (({ eventRef, args }) => {
+                    return eventRef?.(...(args ?? []));
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps['runOnClick'] != null &&
+              typeof $steps['runOnClick'] === 'object' &&
+              typeof $steps['runOnClick'].then === 'function'
+            ) {
+              $steps['runOnClick'] = await $steps['runOnClick'];
             }
           }}
           topQuerySuggestions={(() => {
             try {
               return $state.serchiaSuggestion.data.entity.topQuerySuggestions;
             } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
+              if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
                 return undefined;
               }
               throw e;
@@ -403,39 +376,24 @@ function PlasmicSearchResultQs__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "serchiaSuggestion",
-    "freeBox",
-    "svg",
-    "searchContentSuggestion"
-  ],
-  serchiaSuggestion: [
-    "serchiaSuggestion",
-    "freeBox",
-    "svg",
-    "searchContentSuggestion"
-  ],
-  freeBox: ["freeBox", "svg"],
-  svg: ["svg"],
-  searchContentSuggestion: ["searchContentSuggestion"]
+  root: ['root', 'serchiaSuggestion', 'freeBox', 'svg', 'searchContentSuggestion'],
+  serchiaSuggestion: ['serchiaSuggestion', 'freeBox', 'svg', 'searchContentSuggestion'],
+  freeBox: ['freeBox', 'svg'],
+  svg: ['svg'],
+  searchContentSuggestion: ['searchContentSuggestion'],
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
-type DescendantsType<T extends NodeNameType> =
-  (typeof PlasmicDescendants)[T][number];
+type DescendantsType<T extends NodeNameType> = typeof PlasmicDescendants[T][number];
 type NodeDefaultElementType = {
-  root: "div";
+  root: 'div';
   serchiaSuggestion: typeof ApiRequest;
-  freeBox: "div";
-  svg: "svg";
+  freeBox: 'div';
+  svg: 'svg';
   searchContentSuggestion: typeof SearchContentSuggestion;
 };
 
-type ReservedPropsType = "variants" | "args" | "overrides";
-type NodeOverridesType<T extends NodeNameType> = Pick<
-  PlasmicSearchResultQs__OverridesType,
-  DescendantsType<T>
->;
+type ReservedPropsType = 'variants' | 'args' | 'overrides';
+type NodeOverridesType<T extends NodeNameType> = Pick<PlasmicSearchResultQs__OverridesType, DescendantsType<T>>;
 type NodeComponentProps<T extends NodeNameType> =
   // Explicitly specify variants, args, and overrides as objects
   {
@@ -443,10 +401,7 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchResultQs__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchResultQs__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchResultQs__ArgsType,
-      ReservedPropsType
-    > &
+    /* Specify args directly as props*/ Omit<PlasmicSearchResultQs__ArgsType, ReservedPropsType> &
     /* Specify overrides for each element directly as props*/ Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
@@ -458,28 +413,26 @@ type NodeComponentProps<T extends NodeNameType> =
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };
-  const func = function <T extends PropsType>(
-    props: T & StrictProps<T, PropsType>
-  ) {
+  const func = function <T extends PropsType>(props: T & StrictProps<T, PropsType>) {
     const { variants, args, overrides } = React.useMemo(
       () =>
         deriveRenderOpts(props, {
           name: nodeName,
           descendantNames: PlasmicDescendants[nodeName],
           internalArgPropNames: PlasmicSearchResultQs__ArgProps,
-          internalVariantPropNames: PlasmicSearchResultQs__VariantProps
+          internalVariantPropNames: PlasmicSearchResultQs__VariantProps,
         }),
-      [props, nodeName]
+      [props, nodeName],
     );
     return PlasmicSearchResultQs__RenderFunc({
       variants,
       args,
       overrides,
-      forNode: nodeName
+      forNode: nodeName,
     });
   };
-  if (nodeName === "root") {
-    func.displayName = "PlasmicSearchResultQs";
+  if (nodeName === 'root') {
+    func.displayName = 'PlasmicSearchResultQs';
   } else {
     func.displayName = `PlasmicSearchResultQs.${nodeName}`;
   }
@@ -488,18 +441,18 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 
 export const PlasmicSearchResultQs = Object.assign(
   // Top-level PlasmicSearchResultQs renders the root element
-  makeNodeComponent("root"),
+  makeNodeComponent('root'),
   {
     // Helper components rendering sub-elements
-    serchiaSuggestion: makeNodeComponent("serchiaSuggestion"),
-    freeBox: makeNodeComponent("freeBox"),
-    svg: makeNodeComponent("svg"),
-    searchContentSuggestion: makeNodeComponent("searchContentSuggestion"),
+    serchiaSuggestion: makeNodeComponent('serchiaSuggestion'),
+    freeBox: makeNodeComponent('freeBox'),
+    svg: makeNodeComponent('svg'),
+    searchContentSuggestion: makeNodeComponent('searchContentSuggestion'),
 
     // Metadata about props expected for PlasmicSearchResultQs
     internalVariantProps: PlasmicSearchResultQs__VariantProps,
-    internalArgProps: PlasmicSearchResultQs__ArgProps
-  }
+    internalArgProps: PlasmicSearchResultQs__ArgProps,
+  },
 );
 
 export default PlasmicSearchResultQs;
