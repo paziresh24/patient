@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -97,6 +97,7 @@ export type PlasmicAddressesCard__ArgsType = {
   userCenterId?: string;
   centerName?: string;
   slug?: string;
+  children?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicAddressesCard__ArgsType;
 export const PlasmicAddressesCard__ArgProps = new Array<ArgPropType>(
@@ -110,7 +111,8 @@ export const PlasmicAddressesCard__ArgProps = new Array<ArgPropType>(
   "centerId",
   "userCenterId",
   "centerName",
-  "slug"
+  "slug",
+  "children"
 );
 
 export type PlasmicAddressesCard__OverridesType = {
@@ -131,6 +133,7 @@ export interface DefaultAddressesCardProps {
   userCenterId?: string;
   centerName?: string;
   slug?: string;
+  children?: React.ReactNode;
   className?: string;
 }
 
@@ -403,6 +406,10 @@ function PlasmicAddressesCard__RenderFunc(props: {
           </div>
         </Collapsible>
       ) : null}
+      {renderPlasmicSlot({
+        defaultContents: null,
+        value: args.children
+      })}
       <Schedules
         data-plasmic-name={"schedules"}
         data-plasmic-override={overrides.schedules}
