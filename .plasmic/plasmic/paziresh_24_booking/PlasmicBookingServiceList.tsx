@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -62,8 +62,8 @@ import {
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: -32RqKI9mlfN/codeComponent
 import BookingService from "../../BookingService"; // plasmic-import: Fbeul3tjKryJ/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
-import CenterList from "../../CenterList"; // plasmic-import: 4Y4p7schjdHw/component
-import CenterListService from "../../CenterListService"; // plasmic-import: oxKPcE6Kc5i3/component
+import BookingCenterList from "../../BookingCenterList"; // plasmic-import: 4Y4p7schjdHw/component
+import BookingCenterListService from "../../BookingCenterListService"; // plasmic-import: oxKPcE6Kc5i3/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -84,9 +84,7 @@ type VariantPropType = keyof PlasmicBookingServiceList__VariantsArgs;
 export const PlasmicBookingServiceList__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicBookingServiceList__ArgsType = {
-  slug?: string;
-};
+export type PlasmicBookingServiceList__ArgsType = { slug?: string };
 type ArgPropType = keyof PlasmicBookingServiceList__ArgsType;
 export const PlasmicBookingServiceList__ArgProps = new Array<ArgPropType>(
   "slug"
@@ -98,9 +96,9 @@ export type PlasmicBookingServiceList__OverridesType = {
   svg?: Flex__<"svg">;
   waitingApi?: Flex__<typeof ApiRequest>;
   centerListDialog?: Flex__<typeof Dialog>;
-  centerList?: Flex__<typeof CenterList>;
+  bookingCenterList?: Flex__<typeof BookingCenterList>;
   serviceListDialog?: Flex__<typeof Dialog>;
-  centerListService?: Flex__<typeof CenterListService>;
+  bookingCenterListService?: Flex__<typeof BookingCenterListService>;
   mashhadBookingDialog?: Flex__<typeof Dialog>;
   link?: Flex__<"a"> & Partial<LinkProps>;
   applicationDialog?: Flex__<typeof Dialog>;
@@ -887,9 +885,9 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         data-plasmic-name={"centerListDialog"}
         data-plasmic-override={overrides.centerListDialog}
         body={
-          <CenterList
-            data-plasmic-name={"centerList"}
-            data-plasmic-override={overrides.centerList}
+          <BookingCenterList
+            data-plasmic-name={"bookingCenterList"}
+            data-plasmic-override={overrides.bookingCenterList}
             centers={(() => {
               try {
                 return $state.getFullProfileData.data.data.centers
@@ -925,7 +923,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                 throw e;
               }
             })()}
-            className={classNames("__wab_instance", sty.centerList)}
+            className={classNames("__wab_instance", sty.bookingCenterList)}
             onClick={async id => {
               const $steps = {};
 
@@ -1166,10 +1164,13 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         data-plasmic-name={"serviceListDialog"}
         data-plasmic-override={overrides.serviceListDialog}
         body={
-          <CenterListService
-            data-plasmic-name={"centerListService"}
-            data-plasmic-override={overrides.centerListService}
-            className={classNames("__wab_instance", sty.centerListService)}
+          <BookingCenterListService
+            data-plasmic-name={"bookingCenterListService"}
+            data-plasmic-override={overrides.bookingCenterListService}
+            className={classNames(
+              "__wab_instance",
+              sty.bookingCenterListService
+            )}
             onClick={async id => {
               const $steps = {};
 
@@ -1417,9 +1418,9 @@ const PlasmicDescendants = {
     "svg",
     "waitingApi",
     "centerListDialog",
-    "centerList",
+    "bookingCenterList",
     "serviceListDialog",
-    "centerListService",
+    "bookingCenterListService",
     "mashhadBookingDialog",
     "link",
     "applicationDialog"
@@ -1427,10 +1428,10 @@ const PlasmicDescendants = {
   getFullProfileData: ["getFullProfileData", "svg", "waitingApi"],
   svg: ["svg"],
   waitingApi: ["waitingApi"],
-  centerListDialog: ["centerListDialog", "centerList"],
-  centerList: ["centerList"],
-  serviceListDialog: ["serviceListDialog", "centerListService"],
-  centerListService: ["centerListService"],
+  centerListDialog: ["centerListDialog", "bookingCenterList"],
+  bookingCenterList: ["bookingCenterList"],
+  serviceListDialog: ["serviceListDialog", "bookingCenterListService"],
+  bookingCenterListService: ["bookingCenterListService"],
   mashhadBookingDialog: ["mashhadBookingDialog", "link"],
   link: ["link"],
   applicationDialog: ["applicationDialog"]
@@ -1444,9 +1445,9 @@ type NodeDefaultElementType = {
   svg: "svg";
   waitingApi: typeof ApiRequest;
   centerListDialog: typeof Dialog;
-  centerList: typeof CenterList;
+  bookingCenterList: typeof BookingCenterList;
   serviceListDialog: typeof Dialog;
-  centerListService: typeof CenterListService;
+  bookingCenterListService: typeof BookingCenterListService;
   mashhadBookingDialog: typeof Dialog;
   link: "a";
   applicationDialog: typeof Dialog;
@@ -1516,9 +1517,9 @@ export const PlasmicBookingServiceList = Object.assign(
     svg: makeNodeComponent("svg"),
     waitingApi: makeNodeComponent("waitingApi"),
     centerListDialog: makeNodeComponent("centerListDialog"),
-    centerList: makeNodeComponent("centerList"),
+    bookingCenterList: makeNodeComponent("bookingCenterList"),
     serviceListDialog: makeNodeComponent("serviceListDialog"),
-    centerListService: makeNodeComponent("centerListService"),
+    bookingCenterListService: makeNodeComponent("bookingCenterListService"),
     mashhadBookingDialog: makeNodeComponent("mashhadBookingDialog"),
     link: makeNodeComponent("link"),
     applicationDialog: makeNodeComponent("applicationDialog"),
