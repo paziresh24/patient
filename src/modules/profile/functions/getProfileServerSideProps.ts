@@ -434,7 +434,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           id: fullProfileData!.id,
           slug: slugFormmated,
         },
-        timeout: 1000,
+        timeout: 2000,
       });
 
       if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
@@ -449,7 +449,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                     id: fullProfileData!.id,
                     slug: slugFormmated,
                   },
-                  timeout: 1000,
+                  timeout: 2000,
                 })
                 .then(res => {
                   widgetsData = { ...widgetsData, [item?.id]: res?.data };
