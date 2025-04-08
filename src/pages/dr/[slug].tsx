@@ -413,6 +413,10 @@ const DoctorProfile = ({
                               id={widget.id}
                               backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
                               profileData={profileData}
+                              widgetData={{
+                                placement: widget?.placement,
+                                placement_metadata: widget.placements_metadata,
+                              }}
                             />
                           ))}
                         <RaviGlobalContextsProvider>

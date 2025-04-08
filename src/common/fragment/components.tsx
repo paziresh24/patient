@@ -29,9 +29,14 @@ import { PlasmicAbout__ArgProps } from '.plasmic/plasmic/paziresh_24/PlasmicAbou
 import { PlasmicLocationSelectionScript__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript';
 import PlasmicProductCard, { PlasmicProductCard__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicProductCard';
 import PlasmicSearchResults, { PlasmicSearchResults__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults';
-import PlasmicSchedules, { PlasmicSchedules__ArgProps } from '.plasmic/plasmic/paziresh_24_booking/PlasmicSchedules';
+import PlasmicBookingSchedules, { PlasmicBookingSchedules__ArgProps } from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingSchedules';
 import PlasmicSearchRequest, { PlasmicSearchRequest__ArgProps } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchRequest';
-import PlasmicAddresses, { PlasmicAddresses__ArgProps } from '.plasmic/plasmic/paziresh_24_booking/PlasmicAddresses';
+import PlasmicBookingAddressesWrapper, {
+  PlasmicBookingAddressesWrapper__ArgProps,
+} from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper';
+import PlasmicBookingAddressesCard, {
+  PlasmicBookingAddressesCard__ArgProps,
+} from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard';
 import PlasmicBookingServiceList, {
   PlasmicBookingServiceList__ArgProps,
 } from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingServiceList';
@@ -139,9 +144,9 @@ export const Components = {
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
   Schedules: {
-    Component: PlasmicSchedules,
+    Component: PlasmicBookingSchedules,
     id: 'Mt_WMP6AHSGv',
-    propsAllowed: PlasmicSchedules__ArgProps,
+    propsAllowed: PlasmicBookingSchedules__ArgProps,
     projectId: '8NbkXymcLwvMUC2yXeRrWk',
   },
   SearchRequest: {
@@ -150,10 +155,16 @@ export const Components = {
     propsAllowed: PlasmicSearchRequest__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
-  Addresses: {
-    Component: PlasmicAddresses,
-    id: 'xUh1xJ9SUAar',
-    propsAllowed: PlasmicAddresses__ArgProps,
+  AddressesWrapper: {
+    Component: PlasmicBookingAddressesWrapper,
+    id: 'Z7E4nvI5-Dtv',
+    propsAllowed: PlasmicBookingAddressesWrapper__ArgProps,
+    projectId: '8NbkXymcLwvMUC2yXeRrWk',
+  },
+  AddressesCard: {
+    Component: PlasmicBookingAddressesCard,
+    id: 'z1k0-vbkFtby',
+    propsAllowed: PlasmicBookingAddressesCard__ArgProps,
     projectId: '8NbkXymcLwvMUC2yXeRrWk',
   },
   BookingServiceList: {

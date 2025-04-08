@@ -99,9 +99,18 @@ export const aside = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          .filter((widget: any) => widget?.placement?.includes?.('aside_one'))
+          .filter((widget: any) => widget?.placement?.includes?.('services'))
           .map((widget: any) => (
-            <Hamdast key={widget.id} id={widget.id} backendData={hamdastWidgetsData?.[widget.id] ?? undefined} profileData={profileData} />
+            <Hamdast
+              key={widget.id}
+              id={widget.id}
+              backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+              profileData={profileData}
+              widgetData={{
+                placement: widget?.placement,
+                placement_metadata: widget.placements_metadata,
+              }}
+            />
           )),
     },
     // Rcommend
@@ -235,10 +244,57 @@ export const aside = (data: any) => {
         fragmentComponents?.addresses?.hide === false ? (
           <BookingGlobalContextsProvider>
             <Fragment
-              name="Addresses"
+              name="AddressesWrapper"
               props={{
-                centers: centers,
                 slug: seo.slug,
+                children: centers
+                  .filter((center: any) => center.id !== CENTERS.CONSULT)
+                  .map((center: any) => (
+                    <Fragment
+                      key={center.id}
+                      name="AddressesCard"
+                      props={{
+                        title: center.name,
+                        map: center.map,
+                        id: center.id,
+                        address: center.address,
+                        city: center.city,
+                        displayNumberArray: center.display_number_array,
+                        slug: center.slug,
+                        centerType: center.center_type == 1 ? 'office' : 'hospital',
+                        description: center.description?.trim(),
+                        userCenterId: center.user_center_id,
+                        centerName: center.name,
+                        children: hamdastWidgets.some(
+                          (widget: any) =>
+                            widget?.placement?.includes?.('center_info') &&
+                            widget.placements_metadata?.center_info?.center_ids?.includes(center.id),
+                        ) ? (
+                          <div className="flex flex-col w-full gap-2">
+                            {hamdastWidgets
+                              .filter(
+                                (widget: any) =>
+                                  widget?.placement?.includes?.('center_info') &&
+                                  widget.placements_metadata?.center_info?.center_ids?.includes(center.id),
+                              )
+                              .map((widget: any) => (
+                                <Hamdast
+                                  key={widget.id}
+                                  id={widget.id}
+                                  backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                                  profileData={profileData}
+                                  widgetData={{
+                                    placement: widget?.placement,
+                                    placement_metadata: widget.placements_metadata,
+                                    center_id: center.id,
+                                  }}
+                                />
+                              ))}
+                          </div>
+                        ) : null,
+                      }}
+                    />
+                  )),
               }}
             />
           </BookingGlobalContextsProvider>
@@ -251,9 +307,18 @@ export const aside = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          .filter((widget: any) => widget?.placement?.includes?.('aside_two'))
+          .filter((widget: any) => widget?.placement?.includes?.('sidebar'))
           .map((widget: any) => (
-            <Hamdast key={widget.id} id={widget.id} backendData={hamdastWidgetsData?.[widget.id] ?? undefined} profileData={profileData} />
+            <Hamdast
+              key={widget.id}
+              id={widget.id}
+              backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+              profileData={profileData}
+              widgetData={{
+                placement: widget?.placement,
+                placement_metadata: widget.placements_metadata,
+              }}
+            />
           )),
     },
   ];
