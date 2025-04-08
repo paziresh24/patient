@@ -24,6 +24,7 @@ function SearchPage2() {
   // variant context providers. These wrappers may be moved to
   // Next.js Custom App component
   // (https://nextjs.org/docs/advanced-features/custom-app).
+
   return (
     <GlobalContextsProvider>
       <PageParamsProvider__

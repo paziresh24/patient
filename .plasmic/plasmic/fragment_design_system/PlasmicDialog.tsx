@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -92,17 +92,17 @@ export const PlasmicDialog__VariantProps = new Array<VariantPropType>(
 export type PlasmicDialog__ArgsType = {
   open?: boolean;
   onOpenChange?: (val: boolean) => void;
-  trigger?: React.ReactNode;
-  title?: React.ReactNode;
   body?: React.ReactNode;
+  title?: React.ReactNode;
+  trigger?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicDialog__ArgsType;
 export const PlasmicDialog__ArgProps = new Array<ArgPropType>(
   "open",
   "onOpenChange",
-  "trigger",
+  "body",
   "title",
-  "body"
+  "trigger"
 );
 
 export type PlasmicDialog__OverridesType = {
@@ -117,9 +117,9 @@ export type PlasmicDialog__OverridesType = {
 export interface DefaultDialogProps {
   open?: boolean;
   onOpenChange?: (val: boolean) => void;
-  trigger?: React.ReactNode;
-  title?: React.ReactNode;
   body?: React.ReactNode;
+  title?: React.ReactNode;
+  trigger?: React.ReactNode;
   noTrigger?: SingleBooleanChoiceArg<"noTrigger">;
   className?: string;
 }

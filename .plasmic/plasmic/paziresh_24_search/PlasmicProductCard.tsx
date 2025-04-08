@@ -1699,435 +1699,160 @@ function PlasmicProductCard__RenderFunc(props: {
           })}
         </Stack__>
       ) : null}
-      <div
-        data-plasmic-name={"actionButtonsContainer"}
-        data-plasmic-override={overrides.actionButtonsContainer}
-        className={classNames(projectcss.all, sty.actionButtonsContainer)}
-      >
-        {(() => {
-          try {
-            return $ctx.Growthbook.features["theme-config"][
-              "search_result:show_card_action_sdui_v2"
-            ]
-              ? true
-              : false;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
+      {(() => {
+        try {
+          return !!$props.actionButtons;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
           }
-        })() ? (
-          <ApiRequest
-            data-plasmic-name={"cardActionSduiV2UiRequest"}
-            data-plasmic-override={overrides.cardActionSduiV2UiRequest}
-            className={classNames(
-              "__wab_instance",
-              sty.cardActionSduiV2UiRequest
-            )}
-            config={(() => {
-              try {
-                return {
-                  test: $props.searchCardId
-                };
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
+          throw e;
+        }
+      })() ? (
+        <div
+          data-plasmic-name={"actionButtonsContainer"}
+          data-plasmic-override={overrides.actionButtonsContainer}
+          className={classNames(projectcss.all, sty.actionButtonsContainer)}
+        >
+          {(() => {
+            try {
+              return $ctx.Growthbook.features["theme-config"][
+                "search_result:show_card_action_sdui_v2"
+              ]
+                ? true
+                : false;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
               }
-            })()}
-            errorDisplay={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__s4JDx
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return "بروز خطا در دریافت اطلاعات ";
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "Error fetching data";
-                      }
-                      throw e;
-                    }
-                  })()}
-                </React.Fragment>
-              </div>
+              throw e;
             }
-            loadingDisplay={null}
-            method={"GET"}
-            onError={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "cardActionSduiV2UiRequest",
-                "error"
-              ]).apply(null, eventArgs);
-            }}
-            onLoading={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "cardActionSduiV2UiRequest",
-                "loading"
-              ]).apply(null, eventArgs);
-            }}
-            onSuccess={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "cardActionSduiV2UiRequest",
-                "data"
-              ]).apply(null, eventArgs);
-
-              (async data => {
-                const $steps = {};
-              }).apply(null, eventArgs);
-            }}
-            params={undefined}
-            url={(() => {
-              try {
-                return `https://apigw.paziresh24.com/v1/ui-jahannama/search-result-card-ui/${$props.searchCardId}`;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-          >
-            {(() => {
-              try {
-                return (
-                  $ctx.Growthbook.features["theme-config"][
-                    "search_result:show_card_action_sdui_v2"
-                  ] &&
-                  $state.cardActionSduiV2UiRequest.data.search_result_card_ui[0]
-                    ?.data.actions?.length > 0
-                );
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
-            })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__ybVvU, {
-                  [sty.freeBox_5StarRatingMode3__5StarA__ybVvUfZd0]: hasVariant(
-                    $state,
-                    "_5StarRatingMode3",
-                    "_5StarA"
-                  )
-                })}
-              >
-                {(() => {
-                  try {
-                    return $state.cardActionSduiV2UiRequest.data
-                      .search_result_card_ui[0]?.data?.actions
-                      ? true
-                      : false;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })()
-                  ? (_par =>
-                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                      (() => {
-                        try {
-                          return $state.cardActionSduiV2UiRequest.data
-                            .search_result_card_ui[0].data.actions;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
-                          }
-                          throw e;
-                        }
-                      })()
-                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                      const actionButton = __plasmic_item_0;
-                      const currentIndex = __plasmic_idx_0;
-                      return (
-                        <Stack__
-                          as={"div"}
-                          hasGap={true}
-                          className={classNames(
-                            projectcss.all,
-                            sty.freeBox__mf4Qz
-                          )}
-                          key={currentIndex}
-                        >
-                          {(() => {
-                            try {
-                              return actionButton.top_title;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return true;
-                              }
-                              throw e;
-                            }
-                          })() ? (
-                            <span
-                              className={classNames(
-                                projectcss.all,
-                                projectcss.span,
-                                projectcss.__wab_text,
-                                sty.span___0BetQ
-                              )}
-                            >
-                              <div
-                                className={projectcss.__wab_expr_html_text}
-                                dangerouslySetInnerHTML={{
-                                  __html: (() => {
-                                    try {
-                                      return actionButton.top_title;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return "";
-                                      }
-                                      throw e;
-                                    }
-                                  })()
-                                }}
-                              />
-                            </span>
-                          ) : null}
-                          <Button
-                            children2={
-                              <div
-                                className={classNames(
-                                  projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text__fuNx4
-                                )}
-                              >
-                                <React.Fragment>
-                                  {(() => {
-                                    try {
-                                      return actionButton.title;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return "Button";
-                                      }
-                                      throw e;
-                                    }
-                                  })()}
-                                </React.Fragment>
-                              </div>
-                            }
-                            className={classNames(
-                              "__wab_instance",
-                              sty.button__j7YzP
-                            )}
-                            endIcon={
-                              <ChevronLeftIcon
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg__ptUpu
-                                )}
-                                role={"img"}
-                              />
-                            }
-                            link={(() => {
-                              try {
-                                return actionButton.url.startsWith(
-                                  "/center/https"
-                                )
-                                  ? actionButton.url.slice(8, -1)
-                                  : actionButton.url;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()}
-                            onClick={async event => {
-                              const $steps = {};
-
-                              $steps["runEventTrigger"] = true
-                                ? (() => {
-                                    const actionArgs = {
-                                      eventRef: $props["eventTrigger"],
-                                      args: [
-                                        "action-button",
-                                        (() => {
-                                          try {
-                                            return actionButton.title;
-                                          } catch (e) {
-                                            if (
-                                              e instanceof TypeError ||
-                                              e?.plasmicType ===
-                                                "PlasmicUndefinedDataError"
-                                            ) {
-                                              return undefined;
-                                            }
-                                            throw e;
-                                          }
-                                        })()
-                                      ]
-                                    };
-                                    return (({ eventRef, args }) => {
-                                      return eventRef?.(...(args ?? []));
-                                    })?.apply(null, [actionArgs]);
-                                  })()
-                                : undefined;
-                              if (
-                                $steps["runEventTrigger"] != null &&
-                                typeof $steps["runEventTrigger"] === "object" &&
-                                typeof $steps["runEventTrigger"].then ===
-                                  "function"
-                              ) {
-                                $steps["runEventTrigger"] = await $steps[
-                                  "runEventTrigger"
-                                ];
-                              }
-                            }}
-                            outline={(() => {
-                              try {
-                                return actionButton.outline;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return [];
-                                }
-                                throw e;
-                              }
-                            })()}
-                            startIcon={
-                              <ChevronRightIcon
-                                className={classNames(
-                                  projectcss.all,
-                                  sty.svg__fAvHp
-                                )}
-                                role={"img"}
-                              />
-                            }
-                            target={false}
-                          />
-                        </Stack__>
-                      );
-                    })
-                  : null}
-              </Stack__>
-            ) : null}
-          </ApiRequest>
-        ) : null}
-        {(() => {
-          try {
-            return (
-              $props.actionButtons.length > 0 &&
-              !(
-                $ctx.Growthbook.features["theme-config"][
-                  "search_result:show_card_action_sdui_v2"
-                ] &&
-                $state.cardActionSduiV2UiRequest.data?.search_result_card_ui[0]
-                  ?.data?.actions !== undefined
-              )
-            );
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
-          }
-        })() ? (
-          <Stack__
-            as={"div"}
-            data-plasmic-name={"oldActionButtonsHorizontalStack"}
-            data-plasmic-override={overrides.oldActionButtonsHorizontalStack}
-            hasGap={true}
-            className={classNames(
-              projectcss.all,
-              sty.oldActionButtonsHorizontalStack
-            )}
-          >
-            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-              (() => {
+          })() ? (
+            <ApiRequest
+              data-plasmic-name={"cardActionSduiV2UiRequest"}
+              data-plasmic-override={overrides.cardActionSduiV2UiRequest}
+              className={classNames(
+                "__wab_instance",
+                sty.cardActionSduiV2UiRequest
+              )}
+              config={(() => {
                 try {
-                  return $props.actionButtons;
+                  return {
+                    test: $props.searchCardId
+                  };
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return [];
+                    return undefined;
                   }
                   throw e;
                 }
-              })()
-            ).map((__plasmic_item_0, __plasmic_idx_0) => {
-              const actionButton = __plasmic_item_0;
-              const currentIndex = __plasmic_idx_0;
-              return (
+              })()}
+              errorDisplay={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__s4JDx
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return "بروز خطا در دریافت اطلاعات ";
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "Error fetching data";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
+              }
+              loadingDisplay={null}
+              method={"GET"}
+              onError={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "cardActionSduiV2UiRequest",
+                  "error"
+                ]).apply(null, eventArgs);
+              }}
+              onLoading={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "cardActionSduiV2UiRequest",
+                  "loading"
+                ]).apply(null, eventArgs);
+              }}
+              onSuccess={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "cardActionSduiV2UiRequest",
+                  "data"
+                ]).apply(null, eventArgs);
+
+                (async data => {
+                  const $steps = {};
+                }).apply(null, eventArgs);
+              }}
+              params={undefined}
+              url={(() => {
+                try {
+                  return `https://apigw.paziresh24.com/v1/ui-jahannama/search-result-card-ui/${$props.searchCardId}`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+            >
+              {(() => {
+                try {
+                  return (
+                    $ctx.Growthbook.features["theme-config"][
+                      "search_result:show_card_action_sdui_v2"
+                    ] &&
+                    $state.cardActionSduiV2UiRequest.data
+                      .search_result_card_ui[0]?.data.actions?.length > 0
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return false;
+                  }
+                  throw e;
+                }
+              })() ? (
                 <Stack__
                   as={"div"}
                   hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__xozVc)}
-                  key={currentIndex}
+                  className={classNames(projectcss.all, sty.freeBox__ybVvU, {
+                    [sty.freeBox_5StarRatingMode3__5StarA__ybVvUfZd0]:
+                      hasVariant($state, "_5StarRatingMode3", "_5StarA")
+                  })}
                 >
                   {(() => {
                     try {
-                      return (() => {
-                        if (
-                          $ctx.Growthbook.attributes?.url &&
-                          !!$ctx.Growthbook.isReady &&
-                          !!$ctx.Growthbook.features["theme-config"] &&
-                          actionButton.top_title.trim() !== "" &&
-                          actionButton.top_title &&
-                          !$ctx.Growthbook.features["theme-config"][
-                            "search_result:first_free_time_data_src_from_availability-status_api"
-                          ]
-                        ) {
-                          return true;
-                        } else {
-                          return false;
-                        }
-                      })();
+                      return $state.cardActionSduiV2UiRequest.data
+                        .search_result_card_ui[0]?.data?.actions
+                        ? true
+                        : false;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -2137,156 +1862,364 @@ function PlasmicProductCard__RenderFunc(props: {
                       }
                       throw e;
                     }
-                  })() ? (
-                    <span
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.span,
-                        projectcss.__wab_text,
-                        sty.span__mY5Gg
-                      )}
-                    >
-                      <div
-                        className={projectcss.__wab_expr_html_text}
-                        dangerouslySetInnerHTML={{
-                          __html: (() => {
-                            try {
-                              return actionButton.top_title;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
-                              }
-                              throw e;
+                  })()
+                    ? (_par =>
+                        !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                        (() => {
+                          try {
+                            return $state.cardActionSduiV2UiRequest.data
+                              .search_result_card_ui[0].data.actions;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
                             }
-                          })()
-                        }}
-                      />
-                    </span>
-                  ) : null}
-                  {(() => {
-                    try {
-                      return (
-                        $ctx.Growthbook.features["theme-config"][
-                          "search_result:first_free_time_data_src_from_availability-status_api"
-                        ] !== undefined &&
-                        $ctx.Growthbook.features["theme-config"][
-                          "search_result:first_free_time_data_src_from_availability-status_api"
-                        ] === true
-                      );
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return false;
-                      }
-                      throw e;
-                    }
-                  })() ? (
-                    <div
-                      className={classNames(projectcss.all, sty.freeBox__xzb64)}
-                    >
-                      <ApiRequest
-                        data-plasmic-name={"getProviderFromSlugApiRequest"}
-                        data-plasmic-override={
-                          overrides.getProviderFromSlugApiRequest
-                        }
-                        className={classNames(
-                          "__wab_instance",
-                          sty.getProviderFromSlugApiRequest
-                        )}
-                        errorDisplay={
-                          <div
+                            throw e;
+                          }
+                        })()
+                      ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                        const actionButton = __plasmic_item_0;
+                        const currentIndex = __plasmic_idx_0;
+                        return (
+                          <Stack__
+                            as={"div"}
+                            hasGap={true}
                             className={classNames(
                               projectcss.all,
-                              projectcss.__wab_text,
-                              sty.text__lq4Dj
+                              sty.freeBox__mf4Qz
                             )}
+                            key={currentIndex}
                           >
-                            <React.Fragment>
-                              {(() => {
+                            {(() => {
+                              try {
+                                return actionButton.top_title;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return true;
+                                }
+                                throw e;
+                              }
+                            })() ? (
+                              <span
+                                className={classNames(
+                                  projectcss.all,
+                                  projectcss.span,
+                                  projectcss.__wab_text,
+                                  sty.span___0BetQ
+                                )}
+                              >
+                                <div
+                                  className={projectcss.__wab_expr_html_text}
+                                  dangerouslySetInnerHTML={{
+                                    __html: (() => {
+                                      try {
+                                        return actionButton.top_title;
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return "";
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  }}
+                                />
+                              </span>
+                            ) : null}
+                            <Button
+                              children2={
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text__fuNx4
+                                  )}
+                                >
+                                  <React.Fragment>
+                                    {(() => {
+                                      try {
+                                        return actionButton.title;
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return "Button";
+                                        }
+                                        throw e;
+                                      }
+                                    })()}
+                                  </React.Fragment>
+                                </div>
+                              }
+                              className={classNames(
+                                "__wab_instance",
+                                sty.button__j7YzP
+                              )}
+                              endIcon={
+                                <ChevronLeftIcon
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.svg__ptUpu
+                                  )}
+                                  role={"img"}
+                                />
+                              }
+                              link={(() => {
                                 try {
-                                  return "بروز خطا در دریافت اطلاعات ";
+                                  return actionButton.url.startsWith(
+                                    "/center/https"
+                                  )
+                                    ? actionButton.url.slice(8, -1)
+                                    : actionButton.url;
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
                                     e?.plasmicType ===
                                       "PlasmicUndefinedDataError"
                                   ) {
-                                    return "Error fetching data";
+                                    return undefined;
                                   }
                                   throw e;
                                 }
                               })()}
-                            </React.Fragment>
-                          </div>
-                        }
-                        loadingDisplay={
-                          <div
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.__wab_text,
-                              sty.text__c1SLh
-                            )}
-                          >
-                            {"Loading..."}
-                          </div>
-                        }
-                        method={"GET"}
-                        onError={async (...eventArgs: any) => {
-                          generateStateOnChangeProp($state, [
-                            "getProviderFromSlugApiRequest",
-                            __plasmic_idx_0,
-                            "error"
-                          ]).apply(null, eventArgs);
-                        }}
-                        onLoading={async (...eventArgs: any) => {
-                          generateStateOnChangeProp($state, [
-                            "getProviderFromSlugApiRequest",
-                            __plasmic_idx_0,
-                            "loading"
-                          ]).apply(null, eventArgs);
-                        }}
-                        onSuccess={async (...eventArgs: any) => {
-                          generateStateOnChangeProp($state, [
-                            "getProviderFromSlugApiRequest",
-                            __plasmic_idx_0,
-                            "data"
-                          ]).apply(null, eventArgs);
-                        }}
-                        url={(() => {
-                          try {
-                            return (
-                              "https://apigw.paziresh24.com/v1/providers?slug=" +
-                              $props.slug
-                            );
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
+                              onClick={async event => {
+                                const $steps = {};
+
+                                $steps["runEventTrigger"] = true
+                                  ? (() => {
+                                      const actionArgs = {
+                                        eventRef: $props["eventTrigger"],
+                                        args: [
+                                          "action-button",
+                                          (() => {
+                                            try {
+                                              return actionButton.title;
+                                            } catch (e) {
+                                              if (
+                                                e instanceof TypeError ||
+                                                e?.plasmicType ===
+                                                  "PlasmicUndefinedDataError"
+                                              ) {
+                                                return undefined;
+                                              }
+                                              throw e;
+                                            }
+                                          })()
+                                        ]
+                                      };
+                                      return (({ eventRef, args }) => {
+                                        return eventRef?.(...(args ?? []));
+                                      })?.apply(null, [actionArgs]);
+                                    })()
+                                  : undefined;
+                                if (
+                                  $steps["runEventTrigger"] != null &&
+                                  typeof $steps["runEventTrigger"] ===
+                                    "object" &&
+                                  typeof $steps["runEventTrigger"].then ===
+                                    "function"
+                                ) {
+                                  $steps["runEventTrigger"] = await $steps[
+                                    "runEventTrigger"
+                                  ];
+                                }
+                              }}
+                              outline={(() => {
+                                try {
+                                  return actionButton.outline;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return [];
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                              startIcon={
+                                <ChevronRightIcon
+                                  className={classNames(
+                                    projectcss.all,
+                                    sty.svg__fAvHp
+                                  )}
+                                  role={"img"}
+                                />
+                              }
+                              target={false}
+                            />
+                          </Stack__>
+                        );
+                      })
+                    : null}
+                </Stack__>
+              ) : null}
+            </ApiRequest>
+          ) : null}
+          {(() => {
+            try {
+              return (
+                $props.actionButtons.length > 0 &&
+                !(
+                  $ctx.Growthbook.features["theme-config"][
+                    "search_result:show_card_action_sdui_v2"
+                  ] &&
+                  $state.cardActionSduiV2UiRequest.data
+                    ?.search_result_card_ui[0]?.data?.actions !== undefined
+                )
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <Stack__
+              as={"div"}
+              data-plasmic-name={"oldActionButtonsHorizontalStack"}
+              data-plasmic-override={overrides.oldActionButtonsHorizontalStack}
+              hasGap={true}
+              className={classNames(
+                projectcss.all,
+                sty.oldActionButtonsHorizontalStack
+              )}
+            >
+              {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                (() => {
+                  try {
+                    return $props.actionButtons;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()
+              ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                const actionButton = __plasmic_item_0;
+                const currentIndex = __plasmic_idx_0;
+                return (
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__xozVc)}
+                    key={currentIndex}
+                  >
+                    {(() => {
+                      try {
+                        return (() => {
+                          if (
+                            $ctx.Growthbook.attributes?.url &&
+                            !!$ctx.Growthbook.isReady &&
+                            !!$ctx.Growthbook.features["theme-config"] &&
+                            actionButton.top_title.trim() !== "" &&
+                            actionButton.top_title &&
+                            !$ctx.Growthbook.features["theme-config"][
+                              "search_result:first_free_time_data_src_from_availability-status_api"
+                            ]
+                          ) {
+                            return true;
+                          } else {
+                            return false;
                           }
-                        })()}
+                        })();
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <span
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.span,
+                          projectcss.__wab_text,
+                          sty.span__mY5Gg
+                        )}
+                      >
+                        <div
+                          className={projectcss.__wab_expr_html_text}
+                          dangerouslySetInnerHTML={{
+                            __html: (() => {
+                              try {
+                                return actionButton.top_title;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
+                              }
+                            })()
+                          }}
+                        />
+                      </span>
+                    ) : null}
+                    {(() => {
+                      try {
+                        return (
+                          $ctx.Growthbook.features["theme-config"][
+                            "search_result:first_free_time_data_src_from_availability-status_api"
+                          ] !== undefined &&
+                          $ctx.Growthbook.features["theme-config"][
+                            "search_result:first_free_time_data_src_from_availability-status_api"
+                          ] === true
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox__xzb64
+                        )}
                       >
                         <ApiRequest
-                          data-plasmic-name={"availabilityStatus"}
-                          data-plasmic-override={overrides.availabilityStatus}
+                          data-plasmic-name={"getProviderFromSlugApiRequest"}
+                          data-plasmic-override={
+                            overrides.getProviderFromSlugApiRequest
+                          }
                           className={classNames(
                             "__wab_instance",
-                            sty.availabilityStatus
+                            sty.getProviderFromSlugApiRequest
                           )}
                           errorDisplay={
                             <div
                               className={classNames(
                                 projectcss.all,
                                 projectcss.__wab_text,
-                                sty.text__utvuQ
+                                sty.text__lq4Dj
                               )}
                             >
                               <React.Fragment>
@@ -2312,7 +2245,7 @@ function PlasmicProductCard__RenderFunc(props: {
                               className={classNames(
                                 projectcss.all,
                                 projectcss.__wab_text,
-                                sty.text__emhrt
+                                sty.text__c1SLh
                               )}
                             >
                               {"Loading..."}
@@ -2321,21 +2254,21 @@ function PlasmicProductCard__RenderFunc(props: {
                           method={"GET"}
                           onError={async (...eventArgs: any) => {
                             generateStateOnChangeProp($state, [
-                              "availabilityStatus",
+                              "getProviderFromSlugApiRequest",
                               __plasmic_idx_0,
                               "error"
                             ]).apply(null, eventArgs);
                           }}
                           onLoading={async (...eventArgs: any) => {
                             generateStateOnChangeProp($state, [
-                              "availabilityStatus",
+                              "getProviderFromSlugApiRequest",
                               __plasmic_idx_0,
                               "loading"
                             ]).apply(null, eventArgs);
                           }}
                           onSuccess={async (...eventArgs: any) => {
                             generateStateOnChangeProp($state, [
-                              "availabilityStatus",
+                              "getProviderFromSlugApiRequest",
                               __plasmic_idx_0,
                               "data"
                             ]).apply(null, eventArgs);
@@ -2343,11 +2276,8 @@ function PlasmicProductCard__RenderFunc(props: {
                           url={(() => {
                             try {
                               return (
-                                "https://apigw.paziresh24.com/core-booking/v1/providers/" +
-                                $state.getProviderFromSlugApiRequest[
-                                  currentIndex
-                                ].data.providers[0].user_id +
-                                "/availability-status"
+                                "https://apigw.paziresh24.com/v1/providers?slug=" +
+                                $props.slug
                               );
                             } catch (e) {
                               if (
@@ -2360,197 +2290,289 @@ function PlasmicProductCard__RenderFunc(props: {
                             }
                           })()}
                         >
-                          <span
+                          <ApiRequest
+                            data-plasmic-name={"availabilityStatus"}
+                            data-plasmic-override={overrides.availabilityStatus}
                             className={classNames(
-                              projectcss.all,
-                              projectcss.span,
-                              projectcss.__wab_text,
-                              sty.span__dqNWz
+                              "__wab_instance",
+                              sty.availabilityStatus
                             )}
-                          >
-                            <div
-                              className={projectcss.__wab_expr_html_text}
-                              dangerouslySetInnerHTML={{
-                                __html: (() => {
-                                  try {
-                                    return (() => {
-                                      const centerIds = $props.centers.map(
-                                        center => center.id
-                                      );
-                                      const availabilities =
-                                        $state.availabilityStatus[currentIndex]
-                                          .data.availability;
-                                      const filteredAvailabilities =
-                                        availabilities.filter(availability =>
-                                          centerIds.includes(
-                                            availability.center_id
-                                          )
-                                        );
-                                      if (filteredAvailabilities.length > 0) {
-                                        const nearestAvailability =
-                                          filteredAvailabilities.reduce(
-                                            (earliest, current) =>
-                                              new Date(current.freeturn) <
-                                              new Date(earliest.freeturn)
-                                                ? current
-                                                : earliest
-                                          );
-                                        const presence_freeturn = new Date(
-                                          nearestAvailability.freeturn
-                                        );
-                                        const now = new Date();
-                                        const timeDifference =
-                                          (presence_freeturn - now) / 1000;
-                                        const formatTimeToFarsi =
-                                          timeDifference => {
-                                            if (timeDifference <= 0) {
-                                              return "هم‌اکنون";
-                                            } else if (timeDifference < 3600) {
-                                              return "کمتر از ۱ ساعت دیگر";
-                                            } else if (timeDifference < 86400) {
-                                              const hours = Math.floor(
-                                                timeDifference / 3600
-                                              );
-                                              return `حدود ${hours} ساعت دیگر`;
-                                            } else {
-                                              const days = Math.floor(
-                                                timeDifference / 86400
-                                              );
-                                              return `حدود ${days} روز دیگر`;
-                                            }
-                                          };
-                                        const timeText =
-                                          formatTimeToFarsi(timeDifference);
-                                        const inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
-                                        return inPersonTopTitle;
-                                      } else {
-                                        return null;
+                            errorDisplay={
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  projectcss.__wab_text,
+                                  sty.text__utvuQ
+                                )}
+                              >
+                                <React.Fragment>
+                                  {(() => {
+                                    try {
+                                      return "بروز خطا در دریافت اطلاعات ";
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return "Error fetching data";
                                       }
-                                    })();
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return "";
+                                      throw e;
                                     }
-                                    throw e;
-                                  }
-                                })()
-                              }}
-                            />
-                          </span>
-                        </ApiRequest>
-                      </ApiRequest>
-                    </div>
-                  ) : null}
-                  <Button
-                    children2={
-                      <React.Fragment>
-                        {(() => {
-                          try {
-                            return actionButton.title;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return "Button";
+                                  })()}
+                                </React.Fragment>
+                              </div>
                             }
-                            throw e;
-                          }
-                        })()}
-                      </React.Fragment>
-                    }
-                    className={classNames("__wab_instance", sty.button__kYXz)}
-                    endIcon={
-                      <ChevronLeftIcon
-                        className={classNames(projectcss.all, sty.svg__b1Zmp)}
-                        role={"img"}
-                      />
-                    }
-                    link={(() => {
-                      try {
-                        return actionButton.url.startsWith("/center/https")
-                          ? actionButton.url.slice(8, -1)
-                          : actionButton.url;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    onClick={async event => {
-                      const $steps = {};
-
-                      $steps["runEventTrigger"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              eventRef: $props["eventTrigger"],
-                              args: [
-                                "action-button",
-                                (() => {
-                                  try {
-                                    return actionButton.title;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return undefined;
+                            loadingDisplay={
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  projectcss.__wab_text,
+                                  sty.text__emhrt
+                                )}
+                              >
+                                {"Loading..."}
+                              </div>
+                            }
+                            method={"GET"}
+                            onError={async (...eventArgs: any) => {
+                              generateStateOnChangeProp($state, [
+                                "availabilityStatus",
+                                __plasmic_idx_0,
+                                "error"
+                              ]).apply(null, eventArgs);
+                            }}
+                            onLoading={async (...eventArgs: any) => {
+                              generateStateOnChangeProp($state, [
+                                "availabilityStatus",
+                                __plasmic_idx_0,
+                                "loading"
+                              ]).apply(null, eventArgs);
+                            }}
+                            onSuccess={async (...eventArgs: any) => {
+                              generateStateOnChangeProp($state, [
+                                "availabilityStatus",
+                                __plasmic_idx_0,
+                                "data"
+                              ]).apply(null, eventArgs);
+                            }}
+                            url={(() => {
+                              try {
+                                return (
+                                  "https://apigw.paziresh24.com/core-booking/v1/providers/" +
+                                  $state.getProviderFromSlugApiRequest[
+                                    currentIndex
+                                  ].data.providers[0].user_id +
+                                  "/availability-status"
+                                );
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()}
+                          >
+                            <span
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.span,
+                                projectcss.__wab_text,
+                                sty.span__dqNWz
+                              )}
+                            >
+                              <div
+                                className={projectcss.__wab_expr_html_text}
+                                dangerouslySetInnerHTML={{
+                                  __html: (() => {
+                                    try {
+                                      return (() => {
+                                        const centerIds = $props.centers.map(
+                                          center => center.id
+                                        );
+                                        const availabilities =
+                                          $state.availabilityStatus[
+                                            currentIndex
+                                          ].data.availability;
+                                        const filteredAvailabilities =
+                                          availabilities.filter(availability =>
+                                            centerIds.includes(
+                                              availability.center_id
+                                            )
+                                          );
+                                        if (filteredAvailabilities.length > 0) {
+                                          const nearestAvailability =
+                                            filteredAvailabilities.reduce(
+                                              (earliest, current) =>
+                                                new Date(current.freeturn) <
+                                                new Date(earliest.freeturn)
+                                                  ? current
+                                                  : earliest
+                                            );
+                                          const presence_freeturn = new Date(
+                                            nearestAvailability.freeturn
+                                          );
+                                          const now = new Date();
+                                          const timeDifference =
+                                            (presence_freeturn - now) / 1000;
+                                          const formatTimeToFarsi =
+                                            timeDifference => {
+                                              if (timeDifference <= 0) {
+                                                return "هم‌اکنون";
+                                              } else if (
+                                                timeDifference < 3600
+                                              ) {
+                                                return "کمتر از ۱ ساعت دیگر";
+                                              } else if (
+                                                timeDifference < 86400
+                                              ) {
+                                                const hours = Math.floor(
+                                                  timeDifference / 3600
+                                                );
+                                                return `حدود ${hours} ساعت دیگر`;
+                                              } else {
+                                                const days = Math.floor(
+                                                  timeDifference / 86400
+                                                );
+                                                return `حدود ${days} روز دیگر`;
+                                              }
+                                            };
+                                          const timeText =
+                                            formatTimeToFarsi(timeDifference);
+                                          const inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
+                                          return inPersonTopTitle;
+                                        } else {
+                                          return null;
+                                        }
+                                      })();
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return "";
+                                      }
+                                      throw e;
                                     }
-                                    throw e;
-                                  }
-                                })()
-                              ]
-                            };
-                            return (({ eventRef, args }) => {
-                              return eventRef?.(...(args ?? []));
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["runEventTrigger"] != null &&
-                        typeof $steps["runEventTrigger"] === "object" &&
-                        typeof $steps["runEventTrigger"].then === "function"
-                      ) {
-                        $steps["runEventTrigger"] = await $steps[
-                          "runEventTrigger"
-                        ];
+                                  })()
+                                }}
+                              />
+                            </span>
+                          </ApiRequest>
+                        </ApiRequest>
+                      </div>
+                    ) : null}
+                    <Button
+                      children2={
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return actionButton.title;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "Button";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
                       }
-                    }}
-                    outline={(() => {
-                      try {
-                        return actionButton.outline;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
+                      className={classNames("__wab_instance", sty.button__kYXz)}
+                      endIcon={
+                        <ChevronLeftIcon
+                          className={classNames(projectcss.all, sty.svg__b1Zmp)}
+                          role={"img"}
+                        />
+                      }
+                      link={(() => {
+                        try {
+                          return actionButton.url.startsWith("/center/https")
+                            ? actionButton.url.slice(8, -1)
+                            : actionButton.url;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
                         }
-                        throw e;
+                      })()}
+                      onClick={async event => {
+                        const $steps = {};
+
+                        $steps["runEventTrigger"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                eventRef: $props["eventTrigger"],
+                                args: [
+                                  "action-button",
+                                  (() => {
+                                    try {
+                                      return actionButton.title;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                ]
+                              };
+                              return (({ eventRef, args }) => {
+                                return eventRef?.(...(args ?? []));
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["runEventTrigger"] != null &&
+                          typeof $steps["runEventTrigger"] === "object" &&
+                          typeof $steps["runEventTrigger"].then === "function"
+                        ) {
+                          $steps["runEventTrigger"] = await $steps[
+                            "runEventTrigger"
+                          ];
+                        }
+                      }}
+                      outline={(() => {
+                        try {
+                          return actionButton.outline;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()}
+                      startIcon={
+                        <ChevronRightIcon
+                          className={classNames(projectcss.all, sty.svg__dDPe)}
+                          role={"img"}
+                        />
                       }
-                    })()}
-                    startIcon={
-                      <ChevronRightIcon
-                        className={classNames(projectcss.all, sty.svg__dDPe)}
-                        role={"img"}
-                      />
-                    }
-                  />
-                </Stack__>
-              );
-            })}
-          </Stack__>
-        ) : null}
-      </div>
+                    />
+                  </Stack__>
+                );
+              })}
+            </Stack__>
+          ) : null}
+        </div>
+      ) : null}
       {(() => {
         try {
           return Object.keys($props.debugModeResult).length > 2;

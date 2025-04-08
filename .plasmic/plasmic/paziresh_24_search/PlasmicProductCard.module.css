@@ -582,7 +582,7 @@
   max-width: 100%;
   justify-content: flex-start;
   align-items: center;
-  min-height: 4.5em;
+  min-height: 2.5em;
   min-width: 0;
 }
 .cardActionSduiV2UiRequest:global(.__wab_instance) {
