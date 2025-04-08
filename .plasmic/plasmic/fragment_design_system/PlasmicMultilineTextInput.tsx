@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -59,14 +59,10 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
-
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import sty from "./PlasmicMultilineTextInput.module.css"; // plasmic-import: CZBpNouNw7Ui/css
-
-import { nanoid as __lib_nanoid__nanoid } from "nanoid";
 
 createPlasmicElementProxy;
 
@@ -78,14 +74,14 @@ export const PlasmicMultilineTextInput__VariantProps =
 
 export type PlasmicMultilineTextInput__ArgsType = {
   value?: string;
-  onValueChange2?: (val: string) => void;
+  onValueChange?: (val: string) => void;
   placeholder?: string;
   autoSize?: boolean;
 };
 type ArgPropType = keyof PlasmicMultilineTextInput__ArgsType;
 export const PlasmicMultilineTextInput__ArgProps = new Array<ArgPropType>(
   "value",
-  "onValueChange2",
+  "onValueChange",
   "placeholder",
   "autoSize"
 );
@@ -97,17 +93,13 @@ export type PlasmicMultilineTextInput__OverridesType = {
 
 export interface DefaultMultilineTextInputProps {
   value?: string;
-  onValueChange2?: (val: string) => void;
+  onValueChange?: (val: string) => void;
   placeholder?: string;
   autoSize?: boolean;
   className?: string;
 }
 
-const $$ = {
-  nanoid: {
-    nanoid: __lib_nanoid__nanoid
-  }
-};
+const $$ = {};
 
 function useNextRouter() {
   try {
@@ -174,19 +166,13 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
         variableType: "text",
 
         valueProp: "value",
-        onChangeProp: "onValueChange2"
+        onChangeProp: "onValueChange"
       },
       {
         path: "height",
         type: "private",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) => "2.5rem"
-      },
-      {
-        path: "elementId",
-        type: "private",
-        variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
       }
     ],
     [$props, $ctx, $refs]
@@ -213,96 +199,6 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
         sty.root
       )}
     >
-      <SideEffect
-        className={classNames("__wab_instance", sty.sideEffect___0TAbp)}
-        onMount={async () => {
-          const $steps = {};
-
-          $steps["updateElementId"] = true
-            ? (() => {
-                const actionArgs = {
-                  variable: {
-                    objRoot: $state,
-                    variablePath: ["elementId"]
-                  },
-                  operation: 0,
-                  value: $$.nanoid.nanoid(5)
-                };
-                return (({ variable, value, startIndex, deleteCount }) => {
-                  if (!variable) {
-                    return;
-                  }
-                  const { objRoot, variablePath } = variable;
-
-                  $stateSet(objRoot, variablePath, value);
-                  return value;
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["updateElementId"] != null &&
-            typeof $steps["updateElementId"] === "object" &&
-            typeof $steps["updateElementId"].then === "function"
-          ) {
-            $steps["updateElementId"] = await $steps["updateElementId"];
-          }
-        }}
-      />
-
-      <SideEffect
-        className={classNames("__wab_instance", sty.sideEffect__leWB)}
-        deps={(() => {
-          try {
-            return [$state.elementId];
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        onMount={async () => {
-          const $steps = {};
-
-          $steps["updateHeight"] =
-            !!$state.elementId &&
-            !!$props.autoSize &&
-            !!globalThis.document.getElementById($state.elementId)
-              ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["height"]
-                    },
-                    operation: 0,
-                    value:
-                      globalThis.document.getElementById($state.elementId)
-                        .scrollHeight + "px"
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
-
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-          if (
-            $steps["updateHeight"] != null &&
-            typeof $steps["updateHeight"] === "object" &&
-            typeof $steps["updateHeight"].then === "function"
-          ) {
-            $steps["updateHeight"] = await $steps["updateHeight"];
-          }
-        }}
-      />
-
       <textarea
         data-plasmic-name={"textarea"}
         data-plasmic-override={overrides.textarea}
@@ -311,19 +207,6 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
           projectcss.textarea,
           sty.textarea
         )}
-        id={(() => {
-          try {
-            return $state.elementId;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
         onChange={async (...eventArgs: any) => {
           (e => {
             generateStateOnChangeProp($state, ["textarea", "value"])(
@@ -372,8 +255,8 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
                 const actionArgs = {
                   customFunction: async () => {
                     return (() => {
-                      $state.height = "2.5rem";
-                      return ($state.height =
+                      event.currentTarget.style.height = "2.5rem";
+                      return (event.currentTarget.style.height =
                         event.currentTarget.scrollHeight + "px");
                     })();
                   }
@@ -407,23 +290,7 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
         ref={ref => {
           $refs["textarea"] = ref;
         }}
-        style={(() => {
-          try {
-            return {
-              resize: "none",
-              overflow: "hidden",
-              height: $state.height
-            };
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return { resize: "none", overflow: "hidden" };
-            }
-            throw e;
-          }
-        })()}
+        style={{ resize: "none", overflow: "hidden" }}
         value={generateStateValueProp($state, ["textarea", "value"]) ?? ""}
       />
     </div>

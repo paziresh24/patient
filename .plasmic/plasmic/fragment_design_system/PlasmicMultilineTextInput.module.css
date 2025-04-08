@@ -8,14 +8,6 @@
   align-items: center;
   min-width: 0;
 }
-.sideEffect___0TAbp:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
-.sideEffect__leWB:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
 .textarea {
   position: relative;
   width: 100%;

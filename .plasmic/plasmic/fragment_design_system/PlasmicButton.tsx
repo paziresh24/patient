@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -139,21 +139,21 @@ export const PlasmicButton__VariantProps = new Array<VariantPropType>(
 );
 
 export type PlasmicButton__ArgsType = {
+  children2?: React.ReactNode;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
   link?: string;
   submitsForm?: boolean;
   target?: boolean;
-  startIcon?: React.ReactNode;
-  children2?: React.ReactNode;
-  endIcon?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicButton__ArgsType;
 export const PlasmicButton__ArgProps = new Array<ArgPropType>(
+  "children2",
+  "startIcon",
+  "endIcon",
   "link",
   "submitsForm",
-  "target",
-  "startIcon",
-  "children2",
-  "endIcon"
+  "target"
 );
 
 export type PlasmicButton__OverridesType = {
@@ -165,9 +165,9 @@ export type PlasmicButton__OverridesType = {
 };
 
 export interface DefaultButtonProps extends pp.BaseButtonProps {
+  children2?: React.ReactNode;
   submitsForm?: boolean;
   target?: boolean;
-  children2?: React.ReactNode;
   outline?: SingleBooleanChoiceArg<"outline">;
   shape?: SingleChoiceArg<"rounded" | "round" | "sharp">;
   size?: SingleChoiceArg<"compact" | "minimal">;
