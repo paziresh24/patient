@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -78,10 +78,7 @@ export type PlasmicAddresses__VariantsArgs = {};
 type VariantPropType = keyof PlasmicAddresses__VariantsArgs;
 export const PlasmicAddresses__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicAddresses__ArgsType = {
-  centers?: any;
-  slug?: string;
-};
+export type PlasmicAddresses__ArgsType = { centers?: any; slug?: string };
 type ArgPropType = keyof PlasmicAddresses__ArgsType;
 export const PlasmicAddresses__ArgProps = new Array<ArgPropType>(
   "centers",
@@ -306,6 +303,7 @@ function PlasmicAddresses__RenderFunc(props: {
                   throw e;
                 }
               })()}
+              children={null}
               city={(() => {
                 try {
                   return currentItem.city;

@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -84,9 +84,7 @@ type VariantPropType = keyof PlasmicBookingServiceList__VariantsArgs;
 export const PlasmicBookingServiceList__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicBookingServiceList__ArgsType = {
-  slug?: string;
-};
+export type PlasmicBookingServiceList__ArgsType = { slug?: string };
 type ArgPropType = keyof PlasmicBookingServiceList__ArgsType;
 export const PlasmicBookingServiceList__ArgProps = new Array<ArgPropType>(
   "slug"
