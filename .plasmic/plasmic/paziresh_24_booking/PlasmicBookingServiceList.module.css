@@ -61,13 +61,13 @@
 .centerListDialog:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
 }
-.centerList:global(.__wab_instance) {
+.bookingCenterList:global(.__wab_instance) {
   max-width: 100%;
 }
 .serviceListDialog:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
 }
-.centerListService:global(.__wab_instance) {
+.bookingCenterListService:global(.__wab_instance) {
   max-width: 100%;
 }
 .mashhadBookingDialog:global(.__wab_instance):global(.__wab_instance) {
