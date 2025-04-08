@@ -15,7 +15,7 @@ const OauthEmbed = () => {
     const code = router.query?.code as string;
     if (code) {
       setCookie('gozargah_logged_in_user_id', info?.id, {
-        maxAge: dayToSecond(30),
+        maxAge: 60 * 20,
       });
     }
   }, [router.query, info]);
