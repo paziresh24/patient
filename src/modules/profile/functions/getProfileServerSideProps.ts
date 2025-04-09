@@ -434,26 +434,27 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           id: fullProfileData!.id,
           slug: slugFormmated,
         },
-        timeout: 2000,
+        timeout: 3000,
       });
 
       if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
         await Promise.allSettled(
           widgets?.data
             ?.filter((item: any) => item?.data_endpoint)
-            ?.map((item: any) =>
-              axios
-                .get(item.data_endpoint, {
-                  params: {
-                    user_id: information.user_id,
-                    id: fullProfileData!.id,
-                    slug: slugFormmated,
-                  },
-                  timeout: 2000,
-                })
-                .then(res => {
-                  widgetsData = { ...widgetsData, [item?.id]: res?.data };
-                }),
+            ?.map(
+              async (item: any) =>
+                await axios
+                  .get(item.data_endpoint, {
+                    params: {
+                      user_id: information.user_id,
+                      id: fullProfileData!.id,
+                      slug: slugFormmated,
+                    },
+                    timeout: 3000,
+                  })
+                  .then(res => {
+                    widgetsData = { ...widgetsData, [item?.id]: res?.data };
+                  }),
             ),
         );
       }
