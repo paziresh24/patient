@@ -59,7 +59,7 @@ export const SelectedFilters = (props: CategoriesProps) => {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-full md:rounded-lg md:p-5 md:space-y-5 md:bg-white md:shadow-card">
+    <div className="flex-col hidden md:flex overflow-hidden rounded-full md:rounded-lg md:p-5 md:space-y-5 md:bg-white md:shadow-card">
       <div className="items-center justify-between hidden md:flex">
         <Text fontWeight="bold">فیلتر های انتخاب شده</Text>
         <Button
