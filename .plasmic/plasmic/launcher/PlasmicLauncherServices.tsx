@@ -185,7 +185,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
                       url: "/dashboard/apps/drapp/workhours/"
                     },
                     {
-                      name: "مرخصی",
+                      name: "اعلام تعطیلی",
                       icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fvacation.svg?versionId=",
                       url: "/dashboard/apps/drapp/vacation/"
                     },
@@ -290,7 +290,9 @@ function PlasmicLauncherServices__RenderFunc(props: {
               "__wab_instance",
               sty.launcherComponentsTitle__rqL6X
             )}
-            title={"\u067e\u0631\u062f\u0627\u062e\u062a"}
+            title={
+              "\u0645\u062f\u06cc\u0631\u06cc\u062a \u0645\u0627\u0644\u06cc"
+            }
           />
 
           {(() => {

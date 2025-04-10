@@ -198,7 +198,7 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
                     url: "/dashboard/apps/drapp/workhours/"
                   },
                   {
-                    name: "مرخصی",
+                    name: "اعلام تعطیلی",
                     icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fvacation.svg?versionId=",
                     url: "/dashboard/apps/drapp/vacation/"
                   },
