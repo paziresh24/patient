@@ -430,9 +430,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     try {
       widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets', {
         params: {
-          user_id: information.user_id,
           id: fullProfileData!.id,
-          slug: slugFormmated,
         },
         timeout: 3000,
       });
