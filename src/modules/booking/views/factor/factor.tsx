@@ -46,8 +46,9 @@ export const Factor = (props: FactorProps) => {
   } = props;
 
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
+  const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
   const { data: balance, isLoading: balanceLoading } = useGetBalance({
-    enabled: !!newVisitInvoice,
+    enabled: !!newVisitInvoice || !!useKatibePaymentForEarnestFactor,
   });
 
   return (
@@ -62,10 +63,10 @@ export const Factor = (props: FactorProps) => {
           priceText={centerId === CENTERS.CONSULT || newVisitInvoice ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
           price={price}
           totalPrice={totalPrice}
-          walletAmount={newVisitInvoice ? balance?.data?.data?.balance : null}
+          walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor ? balance?.data?.data?.balance : null}
           tax={tax}
           discount={discount}
-          loading={loading || (newVisitInvoice ? balanceLoading : false)}
+          loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor ? balanceLoading : false)}
         />
         {centerId === CENTERS.CONSULT && (
           <Chips

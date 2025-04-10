@@ -256,7 +256,7 @@ export const aside = (data: any) => {
                       props={{
                         title: center.name,
                         map: center.map,
-                        id: center.id,
+                        centerId: center.id,
                         address: center.address,
                         city: center.city,
                         displayNumberArray: center.display_number_array,
