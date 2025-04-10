@@ -195,7 +195,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
           color={"text"}
           link={(() => {
             try {
-              return `https://www.paziresh24.com/patient/contribute/?slug=${$props.slug}&test_src=profile_eslah`;
+              return `https://survey.porsline.ir/s/35ggjRX?slug=${$props.slug}&test_src=profile_eslah`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
