@@ -68,6 +68,7 @@
   width: 100%;
   height: auto;
   max-width: 100%;
+  grid-row-gap: 24px;
   min-width: 0;
 }
 .launcherComponentsService__irck1:global(.__wab_instance) {
