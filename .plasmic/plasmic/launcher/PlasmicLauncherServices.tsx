@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -166,6 +166,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
               "__wab_instance",
               sty.launcherComponentsTitle__yVrls
             )}
+            title={"\u0646\u0648\u0628\u062a \u062f\u0647\u06cc"}
           />
 
           <div className={classNames(projectcss.all, sty.freeBox___86G0H)}>
@@ -187,6 +188,11 @@ function PlasmicLauncherServices__RenderFunc(props: {
                       name: "مرخصی",
                       icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fvacation.svg?versionId=",
                       url: "/dashboard/apps/drapp/vacation/"
+                    },
+                    {
+                      name: "خدمات",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fservices.svg?versionId=",
+                      url: "/dashboard/apps/drapp/service/"
                     },
                     {
                       name: "تنظیمات",
@@ -284,9 +290,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
               "__wab_instance",
               sty.launcherComponentsTitle__rqL6X
             )}
-            title={
-              "\u062e\u062f\u0645\u0627\u062a \u067e\u0631\u062f\u0627\u062e\u062a"
-            }
+            title={"\u067e\u0631\u062f\u0627\u062e\u062a"}
           />
 
           {(() => {
