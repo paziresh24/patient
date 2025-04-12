@@ -4,7 +4,7 @@ import PlasmicHamdastBimehnamaWidget, {
 
 import PlasmicHamdastViraWidget, { PlasmicHamdastViraWidget__ArgProps } from '.plasmic/plasmic/hamdast_vira/PlasmicHamdastViraWidget';
 
-import PlasmicHamdastCywok24Widget, { PlasmicHamdastCywok24Widget__ArgProps } from '.plasmic/plasmic/hamdast_cywok24/PlasmicHamdastCywok24Widget';
+import PlasmicHamdastCywok24Widget, { PlasmicHamdastCywok24Widget__ArgProps } from '.plasmic/plasmic/hamdast_cywok_24/PlasmicHamdastCywok24Widget';
 
 export const Components = {
   hhhzbbsffq0nlna: {
