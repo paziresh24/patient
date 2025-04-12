@@ -360,7 +360,19 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
                 <PlasmicImg__
                   data-plasmic-name={"img"}
                   data-plasmic-override={overrides.img}
-                  alt={""}
+                  alt={(() => {
+                    try {
+                      return currentItem.title;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   className={classNames(sty.img)}
                   displayHeight={"170px"}
                   displayMaxHeight={"none"}
