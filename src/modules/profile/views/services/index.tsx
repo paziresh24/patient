@@ -40,6 +40,7 @@ export const Services = ({
   waitingTimeInfo,
   profileData,
   isBulk,
+  enabledWidgets,
 }: {
   id: string;
   expertises: any;
@@ -50,6 +51,7 @@ export const Services = ({
   waitingTimeInfo: any;
   profileData: any;
   isBulk: boolean;
+  enabledWidgets?: string[];
 }) => {
   const router = useRouter();
   const [servicesRef, inViewServices] = useInView({
@@ -80,6 +82,7 @@ export const Services = ({
           features: {
             ravi_show_external_rate: dontShowRateDetails,
           },
+          enabled_widgets: enabledWidgets,
         },
       },
     });
