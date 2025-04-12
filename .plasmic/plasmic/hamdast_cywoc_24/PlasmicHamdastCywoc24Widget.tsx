@@ -360,7 +360,19 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
                 <PlasmicImg__
                   data-plasmic-name={"img"}
                   data-plasmic-override={overrides.img}
-                  alt={""}
+                  alt={(() => {
+                    try {
+                      return currentItem.title;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   className={classNames(sty.img)}
                   displayHeight={"170px"}
                   displayMaxHeight={"none"}
@@ -411,7 +423,15 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
                         <React.Fragment>
                           {(() => {
                             try {
-                              return currentItem.like_count?.toLocaleString();
+                              return (() => {
+                                return new globalThis.Intl.NumberFormat(
+                                  "en-US",
+                                  {
+                                    notation: "compact",
+                                    compactDisplay: "short"
+                                  }
+                                ).format(currentItem.like_count);
+                              })();
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -425,40 +445,65 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
                         </React.Fragment>
                       </div>
                     </Stack__>
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
-                      className={classNames(projectcss.all, sty.freeBox__uHyL2)}
-                    >
-                      <IconIcon
-                        className={classNames(projectcss.all, sty.svg__mIZud)}
-                        role={"img"}
-                      />
-
-                      <div
+                    {(() => {
+                      try {
+                        return !!currentItem.view_count;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <Stack__
+                        as={"div"}
+                        hasGap={true}
                         className={classNames(
                           projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__i9Xnp
+                          sty.freeBox__uHyL2
                         )}
                       >
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return currentItem.view_count?.toLocaleString();
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
+                        <IconIcon
+                          className={classNames(projectcss.all, sty.svg__mIZud)}
+                          role={"img"}
+                        />
+
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__i9Xnp
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return (() => {
+                                  return new globalThis.Intl.NumberFormat(
+                                    "en-US",
+                                    {
+                                      notation: "compact",
+                                      compactDisplay: "short"
+                                    }
+                                  ).format(currentItem.view_count);
+                                })();
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
-                      </div>
-                    </Stack__>
+                            })()}
+                          </React.Fragment>
+                        </div>
+                      </Stack__>
+                    ) : null}
                   </Stack__>
                 </div>
                 {(() => {
