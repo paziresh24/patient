@@ -269,97 +269,95 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       },
     };
 
-    if (shouldUseProvider || getOnlyHasuraProfileData) {
-      try {
-        const parallelRequests = [await getProviderData({ slug: slugFormmated })];
+    try {
+      const parallelRequests = [await getProviderData({ slug: slugFormmated })];
 
-        const [providerData] = await Promise.allSettled(parallelRequests);
+      const [providerData] = await Promise.allSettled(parallelRequests);
 
-        if (providerData.status === 'fulfilled' && providerData.value?.user_id) {
+      if (providerData.status === 'fulfilled' && providerData.value?.user_id) {
+        profileData.provider = {
+          ...profileData.provider,
+          provider_id: providerData.value.id,
+          user_id: providerData.value.user_id,
+          biography: providerData.value.biography,
+          employee_id: providerData.value.employee_id,
+          // prefix: providerData.value?.prefix,
+          experience: providerData.value?.field_start_date
+            ? Math.ceil(moment().diff(providerData.value?.field_start_date, 'months') / 12).toString()
+            : '',
+        };
+        profileData.history = {
+          insert_at_age: formatDurationInMonths(providerData.value?.created_at),
+          ...((shouldUsePageView || getOnlyHasuraProfileData) && {
+            count_of_page_view: providerData.value?.page_view,
+          }),
+        };
+
+        const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
+        const [specialitiesData] = await Promise.allSettled(parallelRequests);
+
+        if (specialitiesData.status === 'fulfilled') {
           profileData.provider = {
             ...profileData.provider,
-            provider_id: providerData.value.id,
-            user_id: providerData.value.user_id,
-            biography: providerData.value.biography,
-            employee_id: providerData.value.employee_id,
-            // prefix: providerData.value?.prefix,
-            experience: providerData.value?.field_start_date
-              ? Math.ceil(moment().diff(providerData.value?.field_start_date, 'months') / 12).toString()
-              : '',
+            expertises: Object.values(specialitiesData?.value ?? {}),
           };
-          profileData.history = {
-            insert_at_age: formatDurationInMonths(providerData.value?.created_at),
-            ...((shouldUsePageView || getOnlyHasuraProfileData) && {
-              count_of_page_view: providerData.value?.page_view,
-            }),
-          };
+        }
 
-          const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
-          const [specialitiesData] = await Promise.allSettled(parallelRequests);
+        if (shouldUseUser || getOnlyHasuraProfileData) {
+          const parallelRequests = [await getUserData({ user_id: providerData.value?.user_id, slug: slugFormmated })];
+          const [userData] = await Promise.allSettled(parallelRequests);
 
-          if (specialitiesData.status === 'fulfilled') {
+          if (userData.status === 'fulfilled' && userData.value?.name) {
             profileData.provider = {
               ...profileData.provider,
-              expertises: Object.values(specialitiesData?.value ?? {}),
-            };
-          }
-
-          if (shouldUseUser || getOnlyHasuraProfileData) {
-            const parallelRequests = [await getUserData({ user_id: providerData.value?.user_id, slug: slugFormmated })];
-            const [userData] = await Promise.allSettled(parallelRequests);
-
-            if (userData.status === 'fulfilled' && userData.value?.name) {
-              profileData.provider = {
-                ...profileData.provider,
-                name: userData.value?.name,
-                family: userData.value?.family,
-                prefix: providerData.value?.prefix ?? '',
-                display_name: `${userData.value?.name} ${userData.value?.family}`,
-              };
-            }
-          }
-
-          if (shouldUseAverageWaitingTime) {
-            const parallelRequests = [
-              await getAverageWaitingTime({
-                slug: slugFormmated,
-              }),
-            ];
-            const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
-
-            if (averageWaitingTimeData.status === 'fulfilled') {
-              profileData.feedbacks = {
-                ...profileData.feedbacks,
-                waiting_time_info: averageWaitingTimeData?.value,
-              };
-            }
-          }
-
-          // waiting statistics
-          if (shouldUseWaitingTimeStatistics) {
-            const parallelRequests = [
-              await getWaitingTimeStatistics({
-                slug: slugFormmated,
-                start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-                end_date: moment().format('YYYY-MM-DD'),
-              }),
-            ];
-            const [waitingTimeStatisticsData] = await Promise.allSettled(parallelRequests);
-
-            if (waitingTimeStatisticsData.status === 'fulfilled') {
-              profileData.feedbacks.waiting_time_statistics = waitingTimeStatisticsData.value?.result || null;
-            }
-          }
-        } else {
-          if (getOnlyHasuraProfileData) {
-            return {
-              notFound: true,
+              name: userData.value?.name,
+              family: userData.value?.family,
+              prefix: providerData.value?.prefix ?? '',
+              display_name: `${userData.value?.name} ${userData.value?.family}`,
             };
           }
         }
-      } catch (error) {
-        console.error(error);
+
+        if (shouldUseAverageWaitingTime) {
+          const parallelRequests = [
+            await getAverageWaitingTime({
+              slug: slugFormmated,
+            }),
+          ];
+          const [averageWaitingTimeData] = await Promise.allSettled(parallelRequests);
+
+          if (averageWaitingTimeData.status === 'fulfilled') {
+            profileData.feedbacks = {
+              ...profileData.feedbacks,
+              waiting_time_info: averageWaitingTimeData?.value,
+            };
+          }
+        }
+
+        // waiting statistics
+        if (shouldUseWaitingTimeStatistics) {
+          const parallelRequests = [
+            await getWaitingTimeStatistics({
+              slug: slugFormmated,
+              start_date: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+              end_date: moment().format('YYYY-MM-DD'),
+            }),
+          ];
+          const [waitingTimeStatisticsData] = await Promise.allSettled(parallelRequests);
+
+          if (waitingTimeStatisticsData.status === 'fulfilled') {
+            profileData.feedbacks.waiting_time_statistics = waitingTimeStatisticsData.value?.result || null;
+          }
+        }
+      } else {
+        if (getOnlyHasuraProfileData) {
+          return {
+            notFound: true,
+          };
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
 
     const rateDetails = await getRateDetailsData({
@@ -436,24 +434,31 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       });
 
       if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
-        await Promise.allSettled(
+        const respnoses = await Promise.allSettled(
           widgets?.data
             ?.filter((item: any) => item?.data_endpoint)
             ?.map(
               async (item: any) =>
-                await axios
-                  .get(item.data_endpoint, {
-                    params: {
-                      user_id: information.user_id,
-                      id: fullProfileData!.id,
-                      slug: slugFormmated,
-                    },
-                    timeout: 3000,
-                  })
-                  .then(res => {
-                    widgetsData = { ...widgetsData, [item?.id]: res?.data };
-                  }),
+                await axios.get(item.data_endpoint, {
+                  params: {
+                    user_id: information.user_id,
+                    profile_id: fullProfileData!.id,
+                    slug: slugFormmated,
+                    widget_id: item?.id,
+                  },
+                  timeout: 3000,
+                }),
             ),
+        );
+        widgetsData = respnoses?.reduce(
+          (prev, current) => {
+            if (current.status === 'rejected') return { ...prev };
+            return {
+              ...prev,
+              [current.value?.config?.params?.widget_id]: current?.value?.data,
+            };
+          },
+          { ...widgetsData },
         );
       }
     } catch (error) {
