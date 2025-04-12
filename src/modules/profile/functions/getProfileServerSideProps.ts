@@ -377,6 +377,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         profileData,
         getOnlyHasuraProfileData
           ? {
+              id: fullProfileData?.id,
               online_visit_channel_types: fullProfileData?.online_visit_channel_types,
               consult_active_booking: fullProfileData?.consult_active_booking,
               centers: fullProfileData?.centers,

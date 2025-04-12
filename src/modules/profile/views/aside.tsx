@@ -80,7 +80,7 @@ export const aside = (data: any) => {
             />
           </BookingGlobalContextsProvider>
         ) : (
-          <Services {...props} />
+          <Services {...props} enabledWidgets={hamdastWidgets?.map((item: any) => item.id) ?? []} />
         ),
     },
     {

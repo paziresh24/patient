@@ -128,6 +128,8 @@ const DoctorProfile = ({
             ravi_show_external_rate: dontShowRateDetails,
           },
           viewer_user_id: userInfo?.id,
+          enabledWidgets: hamdastWidgets?.map((item: any) => item?.id) ?? [],
+          slug,
         });
       }
     }

@@ -16,6 +16,8 @@ export const pageViewEvent = async ({
   isBulk,
   features,
   viewer_user_id,
+  enabledWidgets,
+  slug,
 }: {
   centers: any;
   information: any;
@@ -26,6 +28,8 @@ export const pageViewEvent = async ({
   isBulk: boolean;
   features?: any;
   viewer_user_id?: string;
+  enabledWidgets?: string[];
+  slug: string;
 }) => {
   await setTerminal();
   if (centers.every((center: any) => !center.is_active)) {
@@ -91,6 +95,8 @@ export const pageViewEvent = async ({
           ...features,
         },
         viewer_user_id,
+        enabled_widgets: enabledWidgets,
+        slug,
       },
     },
   });
