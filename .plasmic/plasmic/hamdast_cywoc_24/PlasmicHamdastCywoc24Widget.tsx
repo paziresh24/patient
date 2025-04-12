@@ -342,6 +342,19 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
                   $steps["goToPage"] = await $steps["goToPage"];
                 }
               }}
+              title={(() => {
+                try {
+                  return `${currentItem.title} ${currentItem.short_intro}`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
             >
               <div className={classNames(projectcss.all, sty.freeBox__pTbBa)}>
                 <PlasmicImg__

@@ -94,7 +94,13 @@
   overflow: auto;
   background: #ffffff;
   min-width: 0;
+  border-radius: 8px;
   padding: 16px 16px 16px 0px;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox__hDmYn {
+    border-radius: 0px;
+  }
 }
 .freeBox__kgCa {
   display: flex;
@@ -106,7 +112,11 @@
   cursor: pointer;
   padding-right: 0px;
   padding-left: 16px;
+  transition-duration: 0.5s;
+  transition-property: all;
   flex-shrink: 0;
+  -webkit-transition-property: all;
+  -webkit-transition-duration: 0.5s;
 }
 .freeBox__kgCa > :global(.__wab_flex-container) {
   flex-direction: column;
@@ -124,6 +134,16 @@
   > picture
   > img {
   margin-top: 6px;
+}
+.root .freeBox__kgCa:hover {
+  transform: translateX(0px) translateY(-3px) translateZ(0px);
+  filter: saturate(50%);
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .root .freeBox__kgCa:hover {
+    opacity: 1;
+    isolation: auto;
+  }
 }
 .freeBox__pTbBa {
   display: flex;
