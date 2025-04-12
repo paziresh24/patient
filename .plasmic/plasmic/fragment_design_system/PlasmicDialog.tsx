@@ -92,17 +92,17 @@ export const PlasmicDialog__VariantProps = new Array<VariantPropType>(
 export type PlasmicDialog__ArgsType = {
   open?: boolean;
   onOpenChange?: (val: boolean) => void;
-  body?: React.ReactNode;
-  title?: React.ReactNode;
   trigger?: React.ReactNode;
+  title?: React.ReactNode;
+  body?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicDialog__ArgsType;
 export const PlasmicDialog__ArgProps = new Array<ArgPropType>(
   "open",
   "onOpenChange",
-  "body",
+  "trigger",
   "title",
-  "trigger"
+  "body"
 );
 
 export type PlasmicDialog__OverridesType = {
@@ -117,9 +117,9 @@ export type PlasmicDialog__OverridesType = {
 export interface DefaultDialogProps {
   open?: boolean;
   onOpenChange?: (val: boolean) => void;
-  body?: React.ReactNode;
-  title?: React.ReactNode;
   trigger?: React.ReactNode;
+  title?: React.ReactNode;
+  body?: React.ReactNode;
   noTrigger?: SingleBooleanChoiceArg<"noTrigger">;
   className?: string;
 }
