@@ -271,7 +271,9 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
           />
         </div>
       </div>
-      <div className={classNames(projectcss.all, sty.freeBox__hDmYn)}>
+      <div
+        className={classNames(projectcss.all, sty.freeBox__hDmYn, "no-scroll")}
+      >
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
           (() => {
             try {
@@ -293,11 +295,7 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
             <Stack__
               as={"div"}
               hasGap={true}
-              className={classNames(
-                projectcss.all,
-                sty.freeBox__kgCa,
-                "no-scroll"
-              )}
+              className={classNames(projectcss.all, sty.freeBox__kgCa, ``)}
               key={currentIndex}
               onClick={async event => {
                 const $steps = {};
@@ -355,8 +353,8 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
                   displayMaxHeight={"none"}
                   displayMaxWidth={"100%"}
                   displayMinHeight={"0"}
-                  displayMinWidth={"150px"}
-                  displayWidth={"150px"}
+                  displayMinWidth={"160px"}
+                  displayWidth={"160px"}
                   loading={"lazy"}
                   src={(() => {
                     try {
