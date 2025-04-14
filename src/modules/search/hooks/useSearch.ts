@@ -110,6 +110,15 @@ export const useSearch = () => {
     },
   });
 
+  const searchConsultEnabled =
+    !!searchRequest?.data &&
+    !searchRequest?.data?.search.result[0]?.actions?.find((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
+    (!searchRequest?.data?.selected_filters?.turn_type || searchRequest?.data?.selected_filters?.turn_type !== 'consult') &&
+    !searchRequest?.data?.selected_filters?.result_type &&
+    (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
+    !searchRequest?.data?.search.is_landing &&
+    params?.length !== 1;
+
   const searchConsultRequest = useConsultSearch(
     {
       route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
@@ -119,16 +128,7 @@ export const useSearch = () => {
       timeout: 700,
     },
     {
-      enabled:
-        !!searchRequest?.data &&
-        !searchRequest?.data?.search.result[0]?.actions?.find((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) ===
-          true &&
-        (!searchRequest?.data?.selected_filters?.turn_type || searchRequest?.data?.selected_filters?.turn_type !== 'consult') &&
-        !searchRequest?.data?.selected_filters?.result_type &&
-        (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
-        searchRequest?.data?.search.is_landing &&
-        params?.length !== 1 &&
-        query.text === undefined,
+      enabled: searchConsultEnabled,
     },
   );
 
@@ -217,6 +217,6 @@ export const useSearch = () => {
     isConsult,
     search,
     responseData: searchRequest?.data ?? {},
-    searchConsultResponseData: isLanding ? {} : searchConsultRequest?.data ?? {},
+    searchConsultResponseData: !searchConsultEnabled ? {} : searchConsultRequest?.data ?? {},
   };
 };
