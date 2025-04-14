@@ -42,12 +42,9 @@
   position: relative;
   flex-direction: column;
   max-width: 100%;
-  margin-right: 0px;
   background: none;
   width: 100%;
   min-width: 0;
-  border-radius: var(--token-fhaz6q6bl-fW);
-  border: 1px solid var(--token-zGjeYJZOhQzx);
 }
 .topSuggestedCardVerticalStack > :global(.__wab_flex-container) {
   flex-direction: column;
@@ -71,21 +68,6 @@
   > picture
   > img {
   margin-top: var(--token-_c276Gs_1FIE);
-}
-.apiRequest:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
-.text__oSJu {
-  margin-bottom: 354px;
-  margin-top: 2px;
-}
-.text__ffikx {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
 }
 .topSuggestedCard:global(.__wab_instance) {
   max-width: 100%;
