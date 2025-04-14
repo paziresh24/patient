@@ -305,10 +305,9 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     try {
       const queryClient = new QueryClient();
 
-      const headers = context?.req?.headers?.cookie ? { cookie: context.req.headers.cookie } : undefined;
       const university = themeConfing?.partnerKey;
 
-      await queryClient.fetchQuery(
+      const searchData = await queryClient.fetchQuery(
         [
           ServerStateKeysEnum.Search,
           {
@@ -326,9 +325,37 @@ export const getServerSideProps: GetServerSideProps = withCSR(
               ...query,
               ...(university && { university }),
             },
-            headers,
           }),
       );
+
+      if (
+        !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
+        (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
+        !searchData?.selected_filters?.result_type &&
+        (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
+        !searchData?.search?.is_landing
+      ) {
+        await queryClient.fetchQuery(
+          [
+            ServerStateKeysEnum.SearchConsult,
+            {
+              route: ['ir', (params as string[])[1]]?.join('/') ?? '',
+              query: {
+                turn_type: 'consult',
+              },
+              timeout: 700,
+            },
+          ],
+          () =>
+            searchApi({
+              route: ['ir', (params as string[])[1]]?.join('/') ?? '',
+              query: {
+                turn_type: 'consult',
+              },
+              timeout: 700,
+            }),
+        );
+      }
 
       const host = context.req.headers.host;
       const path = context.resolvedUrl;
