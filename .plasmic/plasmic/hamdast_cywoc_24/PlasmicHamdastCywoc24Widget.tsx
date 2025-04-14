@@ -219,7 +219,7 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
                     destination: (() => {
                       try {
                         return $props.data.full_blog_url?.replace(
-                          "http://162.223.88.39",
+                          "https://cywoc24.ir",
                           "https://www.paziresh24.com/_/cywoc24/posts"
                         );
                       } catch (e) {
@@ -306,7 +306,7 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
                         destination: (() => {
                           try {
                             return currentItem.full_url?.replace(
-                              "http://162.223.88.39",
+                              "https://cywoc24.ir",
                               "https://www.paziresh24.com/_/cywoc24/posts"
                             );
                           } catch (e) {
