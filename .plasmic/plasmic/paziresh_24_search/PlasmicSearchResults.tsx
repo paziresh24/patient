@@ -60,7 +60,6 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import ProductCard from "../../ProductCard"; // plasmic-import: ZuA2HO8MLBhh/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import PeopleAlsoSearchForBox from "../../PeopleAlsoSearchForBox"; // plasmic-import: ThD_BqtT1Qyx/component
@@ -105,6 +104,7 @@ export type PlasmicSearchResults__ArgsType = {
   showMyPerformanceMetricsBox?: any;
   topSuggestedCardFeature?: any;
   onlineVisitButtonsCustomDestination?: any;
+  searchConsultResponse?: any;
 };
 type ArgPropType = keyof PlasmicSearchResults__ArgsType;
 export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
@@ -117,7 +117,8 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
   "searchFooterQuerySuggestionResponseObject",
   "showMyPerformanceMetricsBox",
   "topSuggestedCardFeature",
-  "onlineVisitButtonsCustomDestination"
+  "onlineVisitButtonsCustomDestination",
+  "searchConsultResponse"
 );
 
 export type PlasmicSearchResults__OverridesType = {
@@ -125,7 +126,6 @@ export type PlasmicSearchResults__OverridesType = {
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
   showMySearchPerformance?: Flex__<"a"> & Partial<LinkProps>;
   topSuggestedCardVerticalStack?: Flex__<"div">;
-  apiRequest?: Flex__<typeof ApiRequest>;
   topSuggestedCard?: Flex__<typeof ProductCard>;
   resultCardsVerticalStack2?: Flex__<"div">;
   noItemFound?: Flex__<"div">;
@@ -151,6 +151,7 @@ export interface DefaultSearchResultsProps {
   showMyPerformanceMetricsBox?: any;
   topSuggestedCardFeature?: any;
   onlineVisitButtonsCustomDestination?: any;
+  searchConsultResponse?: any;
   isHorizental?: SingleBooleanChoiceArg<"isHorizental">;
   className?: string;
 }
@@ -207,24 +208,6 @@ function PlasmicSearchResults__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
-      },
-      {
-        path: "apiRequest.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "apiRequest.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
-        path: "apiRequest.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
         path: "isHorizental",
@@ -387,18 +370,7 @@ function PlasmicSearchResults__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
-          return (
-            $props.topSuggestedCardFeature.enable &&
-            !$props.searchResultResponse.search.result[0]?.actions.find(
-              action => action.top_title.includes("آنلاین و آماده مشاوره")
-            ) === true &&
-            (!$props.searchResultResponse.selected_filters.turn_type ||
-              $props.searchResultResponse.selected_filters.turn_type !==
-                "consult") &&
-            !$props.searchResultResponse.selected_filters.result_type &&
-            (!$props.searchResultResponse.search.pagination.page ||
-              $props.searchResultResponse.search.pagination.page === 1)
-          );
+          return $props.searchConsultResponse.search.result;
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -419,71 +391,186 @@ function PlasmicSearchResults__RenderFunc(props: {
             sty.topSuggestedCardVerticalStack
           )}
         >
-          <ApiRequest
-            data-plasmic-name={"apiRequest"}
-            data-plasmic-override={overrides.apiRequest}
-            className={classNames("__wab_instance", sty.apiRequest)}
-            errorDisplay={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__ffikx
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return "بروز خطا در دریافت نتایج جست و جو";
-                    } catch (e) {
+          {(() => {
+            try {
+              return (
+                $props.searchConsultResponse?.search?.result?.[0]?.title
+                  ?.length >= 3 &&
+                $props.searchConsultResponse.search.result[0].title !==
+                  $props.searchResultResponse.search.result[0].title
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <ProductCard
+              data-plasmic-name={"topSuggestedCard"}
+              data-plasmic-override={overrides.topSuggestedCard}
+              actionButtons={(() => {
+                try {
+                  return (() => {
+                    if (
+                      typeof $ctx.Growthbook?.features?.["theme-config"]?.[
+                        "search_result:show_first_free_time"
+                      ] !== "undefined"
+                    ) {
                       if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
+                        !$ctx.Growthbook?.features?.["theme-config"]?.[
+                          "search_result:show_first_free_time"
+                        ]
                       ) {
-                        return "Error fetching data";
+                        $props.searchConsultResponse.search.result[0].actions =
+                          $props.searchConsultResponse.search.result[0].actions.map(
+                            action => ({
+                              ...action,
+                              top_title: ""
+                            })
+                          );
                       }
-                      throw e;
+                      if (
+                        $props.searchConsultResponse.search.result[0].actions[0]
+                          ?.title === "ویزیت آنلاین" &&
+                        $props.onlineVisitButtonsCustomDestination?.enable
+                      ) {
+                        $props.searchConsultResponse.search.result[0].actions[0].url =
+                          $props.onlineVisitButtonsCustomDestination.url_template.replace(
+                            "dr-slug-variable",
+                            $props.searchConsultResponse.search.result[0].slug
+                          );
+                      }
                     }
-                  })()}
-                </React.Fragment>
-              </div>
-            }
-            loadingDisplay={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__oSJu
-                )}
-              >
-                {
-                  "\u062f\u0631 \u062d\u0627\u0644 \u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a ..."
+                    return $props.searchConsultResponse.search.result[0]
+                      .actions;
+                  })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-              </div>
-            }
-            method={"GET"}
-            onError={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
-                null,
-                eventArgs
-              );
-            }}
-            onLoading={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "apiRequest",
-                "loading"
-              ]).apply(null, eventArgs);
-            }}
-            onSuccess={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
-                null,
-                eventArgs
-              );
-
-              (async data => {
+              })()}
+              address={(() => {
+                try {
+                  return $props.searchConsultResponse.search.result[0]
+                    ?.display_address;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              avatarAltText={(() => {
+                try {
+                  return `${
+                    $props.searchConsultResponse.search.result[0].prefix
+                      ? $props.searchConsultResponse.search.result[0].prefix +
+                        " "
+                      : ""
+                  }${
+                    $props.searchConsultResponse.search.result[0].title
+                      ? $props.searchConsultResponse.search.result[0].title +
+                        " "
+                      : ""
+                  }${
+                    $props.searchConsultResponse.search.result[0]
+                      .display_expertise
+                      ? $props.searchConsultResponse.search.result[0]
+                          .display_expertise
+                      : ""
+                  }`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              avatarRingColor={(() => {
+                try {
+                  return !$props.searchConsultResponse.search.result[0]
+                    .is_bulk &&
+                    $props.searchConsultResponse.search.result[0].is_bulk !==
+                      undefined
+                    ? "blue"
+                    : undefined;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              avatarSrc={`${$props.imageSrcPrefix}${$props.searchConsultResponse.search.result[0]?.image}`}
+              avatarVerifiedTick={(() => {
+                try {
+                  return (
+                    !$props.searchConsultResponse.search.result[0].is_bulk &&
+                    $props.searchConsultResponse.search.result[0].is_bulk !==
+                      undefined
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return false;
+                  }
+                  throw e;
+                }
+              })()}
+              badges={(() => {
+                try {
+                  return (() => {
+                    if (
+                      typeof $ctx.Growthbook?.features?.["theme-config"]?.[
+                        "search_result:show_available_time"
+                      ] === "undefined"
+                    ) {
+                      return $props.searchConsultResponse.search.result[0]
+                        .badges;
+                    }
+                    return $ctx.Growthbook?.features?.["theme-config"]?.[
+                      "search_result:show_available_time"
+                    ]
+                      ? $props.searchConsultResponse.search.result[0].badges
+                      : $props.searchConsultResponse.search.result[0].badges.filter(
+                          badge => !badge.title.includes("فعال شدن نوبت")
+                        );
+                  })();
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              className={classNames("__wab_instance", sty.topSuggestedCard)}
+              eventTrigger={async (elementName, elementContent) => {
                 const $steps = {};
 
-                $steps["sendEvent"] = true
+                $steps["clickEvent"] = true
                   ? (() => {
                       const actionArgs = {
                         args: [
@@ -491,11 +578,11 @@ function PlasmicSearchResults__RenderFunc(props: {
                             try {
                               return {
                                 group: "search_metrics",
-                                type: "search_top_suggested_card_view",
+                                type: "search_top_suggested_card_click",
                                 data: {
                                   card_data: {
                                     action:
-                                      $state?.apiRequest?.data?.search?.result?.[0].actions?.map?.(
+                                      $props?.searchConsultResponse?.search?.result?.[0].actions?.map?.(
                                         item =>
                                           JSON.stringify({
                                             outline: item.outline,
@@ -506,23 +593,23 @@ function PlasmicSearchResults__RenderFunc(props: {
                                             )
                                           })
                                       ),
-                                    _id: $state?.apiRequest?.data?.search
+                                    _id: $props?.searchConsultResponse?.search
                                       ?.result?.[0]._id,
                                     server_id:
-                                      $state?.apiRequest?.data?.search
+                                      $props?.searchConsultResponse?.search
                                         ?.result?.[0].server_id,
                                     title:
-                                      $state?.apiRequest?.data?.search
+                                      $props?.searchConsultResponse?.search
                                         ?.result?.[0].title,
-                                    type: $state?.apiRequest?.data?.search
+                                    type: $props?.searchConsultResponse?.search
                                       ?.result?.[0].type,
-                                    url: $state?.apiRequest?.data?.search
+                                    url: $props?.searchConsultResponse?.search
                                       ?.result?.[0].url,
                                     rates_count:
-                                      $state?.apiRequest?.data?.search
+                                      $props?.searchConsultResponse?.search
                                         ?.result?.[0].rates_count,
                                     satisfaction:
-                                      $state?.apiRequest?.data?.search
+                                      $props?.searchConsultResponse?.search
                                         ?.result?.[0].satisfaction
                                   },
                                   filters:
@@ -557,508 +644,229 @@ function PlasmicSearchResults__RenderFunc(props: {
                     })()
                   : undefined;
                 if (
-                  $steps["sendEvent"] != null &&
-                  typeof $steps["sendEvent"] === "object" &&
-                  typeof $steps["sendEvent"].then === "function"
+                  $steps["clickEvent"] != null &&
+                  typeof $steps["clickEvent"] === "object" &&
+                  typeof $steps["clickEvent"].then === "function"
                 ) {
-                  $steps["sendEvent"] = await $steps["sendEvent"];
+                  $steps["clickEvent"] = await $steps["clickEvent"];
                 }
-              }).apply(null, eventArgs);
-            }}
-            url={(() => {
-              try {
-                return `https://apigw.paziresh24.com/seapi/v1/search/ir/${
-                  $props.searchResultResponse.selected_filters.sub_category
-                    ? $props.searchResultResponse.selected_filters.sub_category
-                    : "" ||
-                      $props.searchResultResponse.selected_filters.category
-                    ? $props.searchResultResponse.selected_filters.category
-                    : ""
-                }?turn_type=consult${
-                  $props.searchResultResponse.selected_filters.text
-                    ? `&text=${$props.searchResultResponse.selected_filters.text}`
-                    : ""
-                }`;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-          >
-            {(() => {
-              try {
-                return (
-                  $state.apiRequest?.data?.search?.result?.[0]?.title?.length >=
-                    3 &&
-                  $props?.topSuggestedCardFeature?.enable &&
-                  $state.apiRequest.data.search.result[0].title !==
-                    $props.searchResultResponse.search.result[0].title
-                );
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
-            })() ? (
-              <ProductCard
-                data-plasmic-name={"topSuggestedCard"}
-                data-plasmic-override={overrides.topSuggestedCard}
-                actionButtons={(() => {
-                  try {
-                    return (() => {
-                      if (
-                        typeof $ctx.Growthbook?.features?.["theme-config"]?.[
-                          "search_result:show_first_free_time"
-                        ] !== "undefined"
-                      ) {
-                        if (
-                          !$ctx.Growthbook?.features?.["theme-config"]?.[
-                            "search_result:show_first_free_time"
-                          ]
-                        ) {
-                          $state.apiRequest.data.search.result[0].actions =
-                            $state.apiRequest.data.search.result[0].actions.map(
-                              action => ({
-                                ...action,
-                                top_title: ""
-                              })
-                            );
+
+                $steps["runCodeSplunkEvent"] = false
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return $$.splunkEvent({
+                            token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
+                            group: "search_metrics",
+                            type: "search_top_suggested_card_click",
+                            data: {
+                              card_data: {
+                                action:
+                                  $props.searchConsultResponse.search.result[0].actions?.map?.(
+                                    item =>
+                                      JSON.stringify({
+                                        outline: item.outline,
+                                        title: item.title,
+                                        top_title: item.top_title.replace(
+                                          /(<([^>]+)>)/gi,
+                                          ""
+                                        )
+                                      })
+                                  ),
+                                online_visit_buttons_custom_destination:
+                                  $props.onlineVisitButtonsCustomDestination &&
+                                  $props.onlineVisitButtonsCustomDestination
+                                    .enable
+                                    ? $props.onlineVisitButtonsCustomDestination
+                                        .url_template
+                                    : undefined,
+                                _id: $props.searchConsultResponse.search
+                                  .result[0]._id,
+                                position:
+                                  $props.searchConsultResponse.search.result[0]
+                                    .position,
+                                server_id:
+                                  $props.searchConsultResponse.search.result[0]
+                                    .server_id,
+                                title:
+                                  $props.searchConsultResponse.search.result[0]
+                                    .title,
+                                type: $props.searchConsultResponse.search
+                                  .result[0].type,
+                                url: $props.searchConsultResponse.search
+                                  .result[0].url,
+                                rates_count:
+                                  $props.searchConsultResponse.search.result[0]
+                                    .rates_count,
+                                satisfaction:
+                                  $props.searchConsultResponse.search.result[0]
+                                    .satisfaction
+                              },
+                              filters:
+                                $props.searchResultResponse.selected_filters,
+                              result_count: $props.searchResultResponse.lent,
+                              location: $props.location.city_name,
+                              city_id: $props.location.city_id,
+                              lat: $props.location.lat,
+                              lon: $props.location.lon,
+                              query_id:
+                                $props.searchResultResponse.search.query_id
+                            }
+                          });
                         }
-                        if (
-                          $state.apiRequest.data.search.result[0].actions[0]
-                            ?.title === "ویزیت آنلاین" &&
-                          $props.onlineVisitButtonsCustomDestination?.enable
-                        ) {
-                          $state.apiRequest.data.search.result[0].actions[0].url =
-                            $props.onlineVisitButtonsCustomDestination.url_template.replace(
-                              "dr-slug-variable",
-                              $state.apiRequest.data.search.result[0].slug
-                            );
-                        }
-                      }
-                      return $state.apiRequest.data.search.result[0].actions;
-                    })();
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCodeSplunkEvent"] != null &&
+                  typeof $steps["runCodeSplunkEvent"] === "object" &&
+                  typeof $steps["runCodeSplunkEvent"].then === "function"
+                ) {
+                  $steps["runCodeSplunkEvent"] = await $steps[
+                    "runCodeSplunkEvent"
+                  ];
+                }
+              }}
+              externalBookDesign={(() => {
+                try {
+                  return $ctx.Growthbook.features[
+                    "search-card-externalbook-variant"
+                  ];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
                   }
-                })()}
-                address={(() => {
-                  try {
-                    return $state.apiRequest.data.search.result[0]
-                      ?.display_address;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
+                  throw e;
+                }
+              })()}
+              price={(() => {
+                try {
+                  return $props.searchConsultResponse.search.result[0]?.price;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
                   }
-                })()}
-                avatarAltText={(() => {
-                  try {
-                    return `${
-                      $state.apiRequest.data.search.result[0].prefix
-                        ? $state.apiRequest.data.search.result[0].prefix + " "
+                  throw e;
+                }
+              })()}
+              rateCount={(() => {
+                try {
+                  return $props.searchConsultResponse.search.result[0]
+                    .rates_count;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              satisfactionPercent={(() => {
+                try {
+                  return $props.searchConsultResponse.search.result[0]
+                    .satisfaction;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              subTitle={(() => {
+                try {
+                  return $props.searchConsultResponse.search.result[0]
+                    ?.display_expertise;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              title={(() => {
+                try {
+                  return $props.searchConsultResponse.search.result[0]?.title;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              topBadge={(() => {
+                try {
+                  return [
+                    {
+                      title: "پیشنهاد ویزیت آنلاین پذیرش24",
+                      description: "",
+                      type: "success"
+                    }
+                  ];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [{ title: "", description: "", type: "success" }];
+                  }
+                  throw e;
+                }
+              })()}
+              url={(() => {
+                try {
+                  return {
+                    destination:
+                      $props.searchConsultResponse.search.result[0].url,
+                    title: `${
+                      $props.searchConsultResponse.search.result[0].prefix
+                        ? $props.searchConsultResponse.search.result[0].prefix +
+                          " "
                         : ""
                     }${
-                      $state.apiRequest.data.search.result[0].title
-                        ? $state.apiRequest.data.search.result[0].title + " "
+                      $props.searchConsultResponse.search.result[0].title
+                        ? $props.searchConsultResponse.search.result[0].title +
+                          " "
                         : ""
                     }${
-                      $state.apiRequest.data.search.result[0].display_expertise
-                        ? $state.apiRequest.data.search.result[0]
+                      $props.searchConsultResponse.search.result[0]
+                        .display_expertise
+                        ? $props.searchConsultResponse.search.result[0]
                             .display_expertise
                         : ""
-                    }`;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                avatarRingColor={(() => {
-                  try {
-                    return !$state.apiRequest.data.search.result[0].is_bulk &&
-                      $state.apiRequest.data.search.result[0].is_bulk !==
-                        undefined
-                      ? "blue"
-                      : undefined;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                avatarSrc={`${$props.imageSrcPrefix}${$state.apiRequest.data.search.result[0]?.image}`}
-                avatarVerifiedTick={(() => {
-                  try {
-                    return (
-                      !$state.apiRequest.data.search.result[0].is_bulk &&
-                      $state.apiRequest.data.search.result[0].is_bulk !==
-                        undefined
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })()}
-                badges={(() => {
-                  try {
-                    return (() => {
-                      if (
-                        typeof $ctx.Growthbook?.features?.["theme-config"]?.[
-                          "search_result:show_available_time"
-                        ] === "undefined"
-                      ) {
-                        return $state.apiRequest.data.search.result[0].badges;
-                      }
-                      return $ctx.Growthbook?.features?.["theme-config"]?.[
-                        "search_result:show_available_time"
-                      ]
-                        ? $state.apiRequest.data.search.result[0].badges
-                        : $state.apiRequest.data.search.result[0].badges.filter(
-                            badge => !badge.title.includes("فعال شدن نوبت")
-                          );
-                    })();
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                className={classNames("__wab_instance", sty.topSuggestedCard)}
-                eventTrigger={async (elementName, elementContent) => {
-                  const $steps = {};
-
-                  $steps["clickEvent"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
-                                return {
-                                  group: "search_metrics",
-                                  type: "search_top_suggested_card_click",
-                                  data: {
-                                    card_data: {
-                                      action:
-                                        $state?.apiRequest?.data?.search?.result?.[0].actions?.map?.(
-                                          item =>
-                                            JSON.stringify({
-                                              outline: item.outline,
-                                              title: item.title,
-                                              top_title: item.top_title.replace(
-                                                /(<([^>]+)>)/gi,
-                                                ""
-                                              )
-                                            })
-                                        ),
-                                      _id: $state?.apiRequest?.data?.search
-                                        ?.result?.[0]._id,
-                                      server_id:
-                                        $state?.apiRequest?.data?.search
-                                          ?.result?.[0].server_id,
-                                      title:
-                                        $state?.apiRequest?.data?.search
-                                          ?.result?.[0].title,
-                                      type: $state?.apiRequest?.data?.search
-                                        ?.result?.[0].type,
-                                      url: $state?.apiRequest?.data?.search
-                                        ?.result?.[0].url,
-                                      rates_count:
-                                        $state?.apiRequest?.data?.search
-                                          ?.result?.[0].rates_count,
-                                      satisfaction:
-                                        $state?.apiRequest?.data?.search
-                                          ?.result?.[0].satisfaction
-                                    },
-                                    filters:
-                                      $props.searchResultResponse
-                                        .selected_filters,
-                                    result_count:
-                                      $props.searchResultResponse?.search
-                                        ?.result?.length,
-                                    location: $props.location.city_name,
-                                    city_id: $props.location.city_id,
-                                    lat: $props.location.lat,
-                                    lon: $props.location.lon,
-                                    query_id:
-                                      $props.searchResultResponse.search
-                                        .query_id
-                                  }
-                                };
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Splunk.sendLog"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
-                    : undefined;
+                    }`
+                  };
+                } catch (e) {
                   if (
-                    $steps["clickEvent"] != null &&
-                    typeof $steps["clickEvent"] === "object" &&
-                    typeof $steps["clickEvent"].then === "function"
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    $steps["clickEvent"] = await $steps["clickEvent"];
+                    return undefined;
                   }
-
-                  $steps["runCodeSplunkEvent"] = false
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return $$.splunkEvent({
-                              token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
-                              group: "search_metrics",
-                              type: "search_top_suggested_card_click",
-                              data: {
-                                card_data: {
-                                  action:
-                                    $state.apiRequest.data.search.result[0].actions?.map?.(
-                                      item =>
-                                        JSON.stringify({
-                                          outline: item.outline,
-                                          title: item.title,
-                                          top_title: item.top_title.replace(
-                                            /(<([^>]+)>)/gi,
-                                            ""
-                                          )
-                                        })
-                                    ),
-                                  online_visit_buttons_custom_destination:
-                                    $props.onlineVisitButtonsCustomDestination &&
-                                    $props.onlineVisitButtonsCustomDestination
-                                      .enable
-                                      ? $props
-                                          .onlineVisitButtonsCustomDestination
-                                          .url_template
-                                      : undefined,
-                                  _id: $state.apiRequest.data.search.result[0]
-                                    ._id,
-                                  position:
-                                    $state.apiRequest.data.search.result[0]
-                                      .position,
-                                  server_id:
-                                    $state.apiRequest.data.search.result[0]
-                                      .server_id,
-                                  title:
-                                    $state.apiRequest.data.search.result[0]
-                                      .title,
-                                  type: $state.apiRequest.data.search.result[0]
-                                    .type,
-                                  url: $state.apiRequest.data.search.result[0]
-                                    .url,
-                                  rates_count:
-                                    $state.apiRequest.data.search.result[0]
-                                      .rates_count,
-                                  satisfaction:
-                                    $state.apiRequest.data.search.result[0]
-                                      .satisfaction
-                                },
-                                filters:
-                                  $props.searchResultResponse.selected_filters,
-                                result_count: $props.searchResultResponse.lent,
-                                location: $props.location.city_name,
-                                city_id: $props.location.city_id,
-                                lat: $props.location.lat,
-                                lon: $props.location.lon,
-                                query_id:
-                                  $props.searchResultResponse.search.query_id
-                              }
-                            });
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["runCodeSplunkEvent"] != null &&
-                    typeof $steps["runCodeSplunkEvent"] === "object" &&
-                    typeof $steps["runCodeSplunkEvent"].then === "function"
-                  ) {
-                    $steps["runCodeSplunkEvent"] = await $steps[
-                      "runCodeSplunkEvent"
-                    ];
-                  }
-                }}
-                externalBookDesign={(() => {
-                  try {
-                    return $ctx.Growthbook.features[
-                      "search-card-externalbook-variant"
-                    ];
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return [];
-                    }
-                    throw e;
-                  }
-                })()}
-                price={(() => {
-                  try {
-                    return $state.apiRequest.data.search.result[0]?.price;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                rateCount={(() => {
-                  try {
-                    return $state.apiRequest.data.search.result[0].rates_count;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                satisfactionPercent={(() => {
-                  try {
-                    return $state.apiRequest.data.search.result[0].satisfaction;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                subTitle={(() => {
-                  try {
-                    return $state.apiRequest.data.search.result[0]
-                      ?.display_expertise;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                title={(() => {
-                  try {
-                    return $state.apiRequest.data.search.result[0]?.title;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                topBadge={(() => {
-                  try {
-                    return [
-                      {
-                        title: $props.topSuggestedCardFeature.badge_lable,
-                        description: "",
-                        type: "success"
-                      }
-                    ];
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return [{ title: "", description: "", type: "success" }];
-                    }
-                    throw e;
-                  }
-                })()}
-                url={(() => {
-                  try {
-                    return {
-                      destination: $state.apiRequest.data.search.result[0].url,
-                      title: `${
-                        $state.apiRequest.data.search.result[0].prefix
-                          ? $state.apiRequest.data.search.result[0].prefix + " "
-                          : ""
-                      }${
-                        $state.apiRequest.data.search.result[0].title
-                          ? $state.apiRequest.data.search.result[0].title + " "
-                          : ""
-                      }${
-                        $state.apiRequest.data.search.result[0]
-                          .display_expertise
-                          ? $state.apiRequest.data.search.result[0]
-                              .display_expertise
-                          : ""
-                      }`
-                    };
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-              />
-            ) : null}
-          </ApiRequest>
+                  throw e;
+                }
+              })()}
+            />
+          ) : null}
         </Stack__>
       ) : null}
       {(() => {
@@ -1096,9 +904,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                       0,
                       3
                     ),
-                    $state?.apiRequest?.data?.search?.result?.[1]
+                    $props?.searchConsultResponse?.search?.result?.[1]
                       ? {
-                          ...$state?.apiRequest?.data?.search?.result?.[1],
+                          ...$props?.searchConsultResponse?.search?.result?.[1],
                           topSuggestedCardFeature:
                             $props.topSuggestedCardFeature
                         }
@@ -1690,8 +1498,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                           currentItem.rates_count !== undefined &&
                           (!$ctx.Growthbook ||
                             !$ctx.Growthbook.isReady ||
-                            ($ctx.Growthbook.attributes?.url &&
-                              $ctx.Growthbook.features?.["theme-config"] &&
+                            !$ctx.Growthbook.attributes?.url ||
+                            Object.keys($ctx.Growthbook.features).length == 0 ||
+                            ($ctx.Growthbook.features?.["theme-config"] &&
                               $ctx.Growthbook.features["theme-config"]?.[
                                 "search_result:show_rate_and_reviews"
                               ]))
@@ -2507,7 +2316,6 @@ const PlasmicDescendants = {
     "setGrowthbookAttributes",
     "showMySearchPerformance",
     "topSuggestedCardVerticalStack",
-    "apiRequest",
     "topSuggestedCard",
     "resultCardsVerticalStack2",
     "noItemFound",
@@ -2525,10 +2333,8 @@ const PlasmicDescendants = {
   showMySearchPerformance: ["showMySearchPerformance"],
   topSuggestedCardVerticalStack: [
     "topSuggestedCardVerticalStack",
-    "apiRequest",
     "topSuggestedCard"
   ],
-  apiRequest: ["apiRequest", "topSuggestedCard"],
   topSuggestedCard: ["topSuggestedCard"],
   resultCardsVerticalStack2: [
     "resultCardsVerticalStack2",
@@ -2555,7 +2361,6 @@ type NodeDefaultElementType = {
   setGrowthbookAttributes: typeof SideEffect;
   showMySearchPerformance: "a";
   topSuggestedCardVerticalStack: "div";
-  apiRequest: typeof ApiRequest;
   topSuggestedCard: typeof ProductCard;
   resultCardsVerticalStack2: "div";
   noItemFound: "div";
@@ -2635,7 +2440,6 @@ export const PlasmicSearchResults = Object.assign(
     topSuggestedCardVerticalStack: makeNodeComponent(
       "topSuggestedCardVerticalStack"
     ),
-    apiRequest: makeNodeComponent("apiRequest"),
     topSuggestedCard: makeNodeComponent("topSuggestedCard"),
     resultCardsVerticalStack2: makeNodeComponent("resultCardsVerticalStack2"),
     noItemFound: makeNodeComponent("noItemFound"),
