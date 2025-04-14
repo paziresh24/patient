@@ -3,6 +3,7 @@ export enum ServerStateKeysEnum {
   DoctorFullProfile = 'doctorFullProfile',
   SearchSuggestion = 'searchSuggestion',
   Search = 'search',
+  SearchConsult = 'searchConsult',
   MenuExpertise = 'menuExpertise',
   BaseInfo = 'baseInfo',
   CurrentDateTime = 'currentDateTime',

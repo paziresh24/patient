@@ -1,5 +1,5 @@
 import { useGetBaseInfo } from '@/common/apis/services/config/baseInfo';
-import { useSearch as useSearchRequest } from '@/common/apis/services/search/search';
+import { useConsultSearch, useSearch as useSearchRequest } from '@/common/apis/services/search/search';
 import { Center } from '@/common/types/doctorParams';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -110,6 +110,25 @@ export const useSearch = () => {
     },
   });
 
+  const searchConsultRequest = useConsultSearch(
+    {
+      route: ['ir', (params as string[])[1]]?.join('/') ?? '',
+      query: {
+        turn_type: 'consult',
+      },
+      timeout: 700,
+    },
+    {
+      enabled:
+        !searchRequest?.data?.search.result[0]?.actions?.find((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) ===
+          true &&
+        (!searchRequest?.data?.selected_filters?.turn_type || searchRequest?.data?.selected_filters?.turn_type !== 'consult') &&
+        !searchRequest?.data?.selected_filters?.result_type &&
+        (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
+        !searchRequest?.data?.search?.is_landing,
+    },
+  );
+
   const {
     search = { result: [], is_landing: false, pagination: { limit: 20, page: 1 }, total: 0, query_id: '' },
     filters = [],
@@ -131,7 +150,7 @@ export const useSearch = () => {
   }, [searchRequest.data]);
 
   const [result, setResult] = useState(search?.result ?? []);
-  const [isLoading, setIsLoading] = useState(searchRequest.isLoading);
+  const [isLoading, setIsLoading] = useState(searchRequest.isLoading || searchConsultRequest.isLoading);
 
   useEffect(() => {
     setIsLoading(true);
@@ -195,5 +214,6 @@ export const useSearch = () => {
     isConsult,
     search,
     responseData: searchRequest?.data ?? {},
+    searchConsultResponseData: searchConsultRequest?.data ?? {},
   };
 };

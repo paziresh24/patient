@@ -13,7 +13,7 @@ export const Result = () => {
     query: { params, ...query },
   } = useRouter();
 
-  const { result, isLanding, isLoading, search, responseData } = useSearch();
+  const { result, isLanding, isLoading, search, responseData, searchConsultResponseData } = useSearch();
   const { changeRoute } = useSearchRouting();
   const city = useSearchStore(state => state.city);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -46,6 +46,9 @@ export const Result = () => {
                   ...search,
                   result,
                 },
+              },
+              searchConsultResponse: {
+                ...searchConsultResponseData,
               },
               nextPageTrigger: handleNextPage,
               imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
