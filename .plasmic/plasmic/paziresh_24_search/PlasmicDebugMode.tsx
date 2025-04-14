@@ -59,12 +59,16 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicDebugMode.module.css"; // plasmic-import: t_GYTnthnuf9/css
+
+import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -81,6 +85,7 @@ export const PlasmicDebugMode__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicDebugMode__OverridesType = {
   showDebugData?: Flex__<"div">;
+  button?: Flex__<typeof Button>;
 };
 
 export interface DefaultDebugModeProps {
@@ -126,6 +131,8 @@ function PlasmicDebugMode__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   return (
     <div
       data-plasmic-name={"showDebugData"}
@@ -139,145 +146,69 @@ function PlasmicDebugMode__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.showDebugData
       )}
     >
-      {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-        (() => {
-          try {
-            return $props.searchResultResponse.debug_mode_result
-              .search_engine_response.entity.results;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return [];
-            }
-            throw e;
-          }
-        })()
-      ).map((__plasmic_item_0, __plasmic_idx_0) => {
-        const currentResultItem = __plasmic_item_0;
-        const currentResultIndex = __plasmic_idx_0;
-        return (
-          <div
-            className={classNames(projectcss.all, sty.freeBox__jifA6)}
-            key={currentResultIndex}
-          >
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__z9Chk
-              )}
-            >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return currentResultItem.source.display_name;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "";
-                    }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
-            </div>
-            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-              (() => {
-                try {
-                  return Object.entries(currentResultItem.documentInfo).map(
-                    ([key, value]) => ({ name: key, value })
-                  );
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return [];
-                  }
-                  throw e;
-                }
+      <Button
+        data-plasmic-name={"button"}
+        data-plasmic-override={overrides.button}
+        children2={"search-debug"}
+        className={classNames("__wab_instance", sty.button)}
+        link={""}
+        onClick={async event => {
+          const $steps = {};
+
+          $steps["invokeGlobalAction"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    "POST",
+                    "http://apigw.paziresh24.com/v1/n8n-search/webhook/search-debug-api",
+                    undefined,
+                    (() => {
+                      try {
+                        return $props.searchResultResponse;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
               })()
-            ).map((__plasmic_item_1, __plasmic_idx_1) => {
-              const docInfoCurrentItem = __plasmic_item_1;
-              const docInfoCurrentIndex = __plasmic_idx_1;
-              return (
-                <div
-                  className={classNames(projectcss.all, sty.freeBox___7Nb0T)}
-                  key={docInfoCurrentIndex}
-                >
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__tFgFw
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return docInfoCurrentItem.name;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return "";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </div>
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__lxMbc
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return docInfoCurrentItem.value;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return "";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-      <div className={classNames(projectcss.all, sty.freeBox__zhXc1)} />
+            : undefined;
+          if (
+            $steps["invokeGlobalAction"] != null &&
+            typeof $steps["invokeGlobalAction"] === "object" &&
+            typeof $steps["invokeGlobalAction"].then === "function"
+          ) {
+            $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+          }
+        }}
+        submitsForm={true}
+      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  showDebugData: ["showDebugData"]
+  showDebugData: ["showDebugData", "button"],
+  button: ["button"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   showDebugData: "div";
+  button: typeof Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -340,6 +271,7 @@ export const PlasmicDebugMode = Object.assign(
   makeNodeComponent("showDebugData"),
   {
     // Helper components rendering sub-elements
+    button: makeNodeComponent("button"),
 
     // Metadata about props expected for PlasmicDebugMode
     internalVariantProps: PlasmicDebugMode__VariantProps,

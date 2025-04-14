@@ -9,7 +9,6 @@ import { hasVariant, ensureGlobalVariants } from "@plasmicapp/react-web";
 import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: qyJQby9Pzcoc/codeComponent
 import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: 3GeFj3s3tzRm/codeComponent
 import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: p_3q3KAjUnHO/codeComponent
-import { AntdConfigProvider } from "@plasmicpkgs/antd5/skinny/registerConfigProvider";
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: wuGBHXYibkGk/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: -ndasJXDpxzQ/codeComponent
 import { EmbedCss } from "@plasmicpkgs/plasmic-embed-css";
@@ -19,19 +18,12 @@ export interface GlobalContextsProviderProps {
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
-  antdConfigProviderProps?: Partial<
-    Omit<React.ComponentProps<typeof AntdConfigProvider>, "children">
-  >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
   embedCssProps?: Partial<
@@ -47,7 +39,6 @@ export default function GlobalContextsProvider(
     authGlobalContextProps,
     fragmentProps,
     growthbookGlobalContextProps,
-    antdConfigProviderProps,
     splunkProps,
     pwaProps,
     embedCssProps
@@ -96,135 +87,32 @@ export default function GlobalContextsProvider(
               : undefined
           }
         >
-          <AntdConfigProvider
-            {...antdConfigProviderProps}
-            borderRadius={
-              antdConfigProviderProps &&
-              "borderRadius" in antdConfigProviderProps
-                ? antdConfigProviderProps.borderRadius!
-                : 6
+          <Splunk
+            {...splunkProps}
+            defaultApiHost={
+              splunkProps && "defaultApiHost" in splunkProps
+                ? splunkProps.defaultApiHost!
+                : "https://rokhdad-splunk-hec.paziresh24.com"
             }
-            colorBgBase={
-              antdConfigProviderProps &&
-              "colorBgBase" in antdConfigProviderProps
-                ? antdConfigProviderProps.colorBgBase!
-                : "#ffffff"
-            }
-            colorError={
-              antdConfigProviderProps && "colorError" in antdConfigProviderProps
-                ? antdConfigProviderProps.colorError!
-                : "#ff4d4f"
-            }
-            colorInfo={
-              antdConfigProviderProps && "colorInfo" in antdConfigProviderProps
-                ? antdConfigProviderProps.colorInfo!
-                : "#1677ff"
-            }
-            colorPrimary={
-              antdConfigProviderProps &&
-              "colorPrimary" in antdConfigProviderProps
-                ? antdConfigProviderProps.colorPrimary!
-                : "#1677ff"
-            }
-            colorSuccess={
-              antdConfigProviderProps &&
-              "colorSuccess" in antdConfigProviderProps
-                ? antdConfigProviderProps.colorSuccess!
-                : "#52c41a"
-            }
-            colorWarning={
-              antdConfigProviderProps &&
-              "colorWarning" in antdConfigProviderProps
-                ? antdConfigProviderProps.colorWarning!
-                : "#faad14"
-            }
-            controlHeight={
-              antdConfigProviderProps &&
-              "controlHeight" in antdConfigProviderProps
-                ? antdConfigProviderProps.controlHeight!
-                : 32
-            }
-            defaultDark={
-              antdConfigProviderProps &&
-              "defaultDark" in antdConfigProviderProps
-                ? antdConfigProviderProps.defaultDark!
-                : false
-            }
-            lineWidth={
-              antdConfigProviderProps && "lineWidth" in antdConfigProviderProps
-                ? antdConfigProviderProps.lineWidth!
-                : 1
-            }
-            loadingText={
-              antdConfigProviderProps &&
-              "loadingText" in antdConfigProviderProps
-                ? antdConfigProviderProps.loadingText!
-                : undefined
-            }
-            removeLoading={
-              antdConfigProviderProps &&
-              "removeLoading" in antdConfigProviderProps
-                ? antdConfigProviderProps.removeLoading!
-                : true
-            }
-            sizeStep={
-              antdConfigProviderProps && "sizeStep" in antdConfigProviderProps
-                ? antdConfigProviderProps.sizeStep!
-                : 4
-            }
-            sizeUnit={
-              antdConfigProviderProps && "sizeUnit" in antdConfigProviderProps
-                ? antdConfigProviderProps.sizeUnit!
-                : 4
-            }
-            themeStyles={
-              antdConfigProviderProps &&
-              "themeStyles" in antdConfigProviderProps
-                ? antdConfigProviderProps.themeStyles!
-                : true
-                ? {
-                    fontFamily: "initial",
-                    fontSize: "1rem",
-                    fontWeight: "400",
-                    lineHeight: "1.5",
-                    color: "#2B2F33",
-                    letterSpacing: "normal"
-                  }
-                : undefined
-            }
-            wireframe={
-              antdConfigProviderProps && "wireframe" in antdConfigProviderProps
-                ? antdConfigProviderProps.wireframe!
-                : false
+            defaultApiKey={
+              splunkProps && "defaultApiKey" in splunkProps
+                ? splunkProps.defaultApiKey!
+                : "1e490c2c-d98b-4777-816d-cf7f09b21888"
             }
           >
-            <Splunk
-              {...splunkProps}
-              defaultApiHost={
-                splunkProps && "defaultApiHost" in splunkProps
-                  ? splunkProps.defaultApiHost!
-                  : "https://rokhdad-splunk-hec.paziresh24.com"
-              }
-              defaultApiKey={
-                splunkProps && "defaultApiKey" in splunkProps
-                  ? splunkProps.defaultApiKey!
-                  : "1e490c2c-d98b-4777-816d-cf7f09b21888"
-              }
-            >
-              <PWA {...pwaProps}>
-                <EmbedCss
-                  {...embedCssProps}
-                  css={
-                    embedCssProps && "css" in embedCssProps
-                      ? embedCssProps.css!
-                      : "/* CSS snippet */\n\n.suggestion_content em{\n  color:#00acac;\n  font-style: normal;\n}\n.seo_box_content h1, h2, h3{\n  font-weight: 600;\n  font-size: 16px;\n}\n.default-styles span {\n  font-size: 0.875rem !important;\n}\n.locations-container .PlasmicTextInput_root__fvrci:focus{\n  box-shadow: none !important;\n  border-color: #3861FB !important;\n}\n.locations-container .PlasmicTextInput_root__fvrci:focus-within{\n  box-shadow: none !important;\n  border-color: #3861FB !important;\n}\n.pl__z-50{\n  z-index: 99 !important;\n}"
-                  }
-                >
-                  {children}
-                </EmbedCss>
-              </PWA>
-            </Splunk>
-          </AntdConfigProvider>
+            <PWA {...pwaProps}>
+              <EmbedCss
+                {...embedCssProps}
+                css={
+                  embedCssProps && "css" in embedCssProps
+                    ? embedCssProps.css!
+                    : "/* CSS snippet */\n\n.suggestion_content em{\n  color:#00acac;\n  font-style: normal;\n}\n.seo_box_content h1, h2, h3{\n  font-weight: 600;\n  font-size: 16px;\n}\n.default-styles span {\n  font-size: 0.875rem !important;\n}\n.locations-container .PlasmicTextInput_root__fvrci:focus{\n  box-shadow: none !important;\n  border-color: #3861FB !important;\n}\n.locations-container .PlasmicTextInput_root__fvrci:focus-within{\n  box-shadow: none !important;\n  border-color: #3861FB !important;\n}\n.pl__z-50{\n  z-index: 99 !important;\n}"
+                }
+              >
+                {children}
+              </EmbedCss>
+            </PWA>
+          </Splunk>
         </GrowthbookGlobalContext>
       </Fragment>
     </AuthGlobalContext>
