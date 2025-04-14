@@ -112,7 +112,7 @@ export const useSearch = () => {
 
   const searchConsultRequest = useConsultSearch(
     {
-      route: ['ir', (params as string[])[1]]?.join('/') ?? '',
+      route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
       query: {
         turn_type: 'consult',
       },
@@ -120,12 +120,15 @@ export const useSearch = () => {
     },
     {
       enabled:
+        !!searchRequest?.data &&
         !searchRequest?.data?.search.result[0]?.actions?.find((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) ===
           true &&
         (!searchRequest?.data?.selected_filters?.turn_type || searchRequest?.data?.selected_filters?.turn_type !== 'consult') &&
         !searchRequest?.data?.selected_filters?.result_type &&
         (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
-        !searchRequest?.data?.search?.is_landing,
+        searchRequest?.data?.search.is_landing &&
+        params?.length !== 1 &&
+        query.text === undefined,
     },
   );
 
@@ -214,6 +217,6 @@ export const useSearch = () => {
     isConsult,
     search,
     responseData: searchRequest?.data ?? {},
-    searchConsultResponseData: searchConsultRequest?.data ?? {},
+    searchConsultResponseData: isLanding ? {} : searchConsultRequest?.data ?? {},
   };
 };
