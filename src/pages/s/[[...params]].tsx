@@ -335,26 +335,30 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
         !searchData?.search?.is_landing
       ) {
-        await queryClient.fetchQuery(
-          [
-            ServerStateKeysEnum.SearchConsult,
-            {
-              route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-              query: {
-                turn_type: 'consult',
+        try {
+          await queryClient.fetchQuery(
+            [
+              ServerStateKeysEnum.SearchConsult,
+              {
+                route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
+                query: {
+                  turn_type: 'consult',
+                },
+                timeout: 700,
               },
-              timeout: 700,
-            },
-          ],
-          () =>
-            searchApi({
-              route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-              query: {
-                turn_type: 'consult',
-              },
-              timeout: 700,
-            }),
-        );
+            ],
+            () =>
+              searchApi({
+                route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
+                query: {
+                  turn_type: 'consult',
+                },
+                timeout: 700,
+              }),
+          );
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       const host = context.req.headers.host;
