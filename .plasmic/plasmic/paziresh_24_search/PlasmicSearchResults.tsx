@@ -1713,11 +1713,11 @@ function PlasmicSearchResults__RenderFunc(props: {
                   })()}
                   satisfactionPercent={(() => {
                     try {
-                      return (
-                        $ctx.Growthbook.features["theme-config"][
-                          "search_result:show_rate_and_reviews"
-                        ] && currentItem.satisfaction
-                      );
+                      return !$ctx.Growthbook || !$ctx.Growthbook.isReady
+                        ? currentItem.satisfaction
+                        : $ctx.Growthbook.features["theme-config"][
+                            "search_result:show_rate_and_reviews"
+                          ] && currentItem.satisfaction;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||

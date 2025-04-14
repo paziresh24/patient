@@ -210,7 +210,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
               link={(() => {
                 try {
                   return (() => {
-                    const encodedUrl = window.location.href
+                    const encodedUrl = globalThis.location.href
                       .replace(/#/g, "%23")
                       .replace(/&/g, "%26")
                       .replace(/:/g, "%3A")
