@@ -68,7 +68,6 @@ import MenuSection from "../../MenuSection"; // plasmic-import: V-WvFI1-67qQ/com
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicMenuPopover.module.css"; // plasmic-import: zeBQW6VT5smo/css
 
@@ -164,26 +163,6 @@ function PlasmicMenuPopover__RenderFunc(props: {
     $refs
   });
 
-  const [$ccVariants, setDollarCcVariants] = React.useState<
-    Record<string, boolean>
-  >({
-    placementTop: false,
-    placementBottom: false,
-    placementLeft: false,
-    placementRight: false
-  });
-  const updateVariant = React.useCallback(
-    (changes: Record<string, boolean>) => {
-      setDollarCcVariants(prev => {
-        if (!Object.keys(changes).some(k => prev[k] !== changes[k])) {
-          return prev;
-        }
-        return { ...prev, ...changes };
-      });
-    },
-    []
-  );
-
   return (
     <BasePopover
       data-plasmic-name={"root"}
@@ -197,20 +176,17 @@ function PlasmicMenuPopover__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root
       )}
       matchTriggerWidth={true}
       offset={args.offset}
       placement={"bottom"}
-      plasmicUpdateVariant={updateVariant}
       resetClassName={classNames(
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens
+        plasmic_fragment_design_system_css.plasmic_tokens
       )}
       shouldFlip={true}
     >

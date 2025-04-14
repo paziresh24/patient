@@ -311,6 +311,16 @@
       }
     },
     {
+      "name": "Basic/Ring",
+      "type": "color",
+      "value": "#9CA3AF",
+      "category": "color",
+      "meta": {
+        "projectId": "sMdpLWyxbzDCruwMRffW2m",
+        "id": "a_njNq7L_hpJ"
+      }
+    },
+    {
       "name": "Basic/Text-Primary",
       "type": "color",
       "value": "#030712",
@@ -578,6 +588,16 @@
       "meta": {
         "projectId": "pkMLinFwM9pzwv5S5KpiAu",
         "id": "n_6ucod1rCgS"
+      }
+    },
+    {
+      "name": "Size-20",
+      "type": "spacing",
+      "value": "1.25rem",
+      "category": "spacing",
+      "meta": {
+        "projectId": "sMdpLWyxbzDCruwMRffW2m",
+        "id": "OIZRJqOjTrh5"
       }
     },
     {
@@ -2448,6 +2468,16 @@
       "meta": {
         "projectId": "jkU633o1Cz7HrJdwdxhVHk",
         "id": "qlDkklux5JrT"
+      }
+    },
+    {
+      "name": "System: Text Secondary",
+      "type": "color",
+      "value": "var(--antd-colorTextSecondary)",
+      "category": "color",
+      "meta": {
+        "projectId": "sMdpLWyxbzDCruwMRffW2m",
+        "id": "mlpFD9INNnro"
       }
     },
     {

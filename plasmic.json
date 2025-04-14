@@ -549,8 +549,7 @@
           "componentImportPath": "@plasmicpkgs/react-aria/skinny/registerDialog"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -2088,6 +2087,32 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicDebugMode.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "FGQGJZRNQszk",
+          "name": "Checkbox2",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicCheckbox2.tsx",
+          "importSpec": {
+            "modulePath": "Checkbox2.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicCheckbox2.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "8TNEz20WM3iW",
+          "name": "CheckboxGroup",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicCheckboxGroup.tsx",
+          "importSpec": {
+            "modulePath": "CheckboxGroup.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicCheckboxGroup.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -2345,6 +2370,16 @@
           "id": "mnMqeXnQZuQo",
           "name": "Icon44Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon44.tsx"
+        },
+        {
+          "id": "ot1jbogF9x17",
+          "name": "CheckIcon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Check.tsx"
+        },
+        {
+          "id": "Jf_IDqTgfQ3Z",
+          "name": "MinusIcon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Minus.tsx"
         }
       ],
       "images": [
@@ -2462,8 +2497,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -3334,7 +3368,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {

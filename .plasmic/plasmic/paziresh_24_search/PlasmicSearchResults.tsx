@@ -72,7 +72,6 @@ import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchResults.module.css"; // plasmic-import: XhSI4pxMLR3L/css
 
@@ -258,7 +257,6 @@ function PlasmicSearchResults__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_antd_5_hostless_css.plasmic_tokens,
         sty.root,
         {
           [sty.rootisHorizental]: hasVariant(
@@ -1688,20 +1686,15 @@ function PlasmicSearchResults__RenderFunc(props: {
                   rateCount={(() => {
                     try {
                       return (() => {
-                        console.log(
-                          $ctx.Growthbook.features["theme-config"][
-                            "search_result:show_rate_and_reviews"
-                          ],
-                          $ctx.Growthbook.features["theme-config"]
-                        );
                         if (
-                          $ctx.Growthbook.attributes?.url &&
-                          !!$ctx.Growthbook.isReady &&
-                          !!$ctx.Growthbook.features["theme-config"] &&
-                          !!$ctx.Growthbook.features["theme-config"][
-                            "search_result:show_rate_and_reviews"
-                          ] &&
-                          currentItem.rates_count !== undefined
+                          currentItem.rates_count !== undefined &&
+                          (!$ctx.Growthbook ||
+                            !$ctx.Growthbook.isReady ||
+                            ($ctx.Growthbook.attributes?.url &&
+                              $ctx.Growthbook.features?.["theme-config"] &&
+                              $ctx.Growthbook.features["theme-config"]?.[
+                                "search_result:show_rate_and_reviews"
+                              ]))
                         ) {
                           return currentItem.rates_count;
                         } else {
@@ -2485,13 +2478,14 @@ function PlasmicSearchResults__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
-          return true;
+          return !!$props.searchResultResponse.debug_mode_result
+            .search_engine_response.entity;
         } catch (e) {
           if (
             e instanceof TypeError ||
             e?.plasmicType === "PlasmicUndefinedDataError"
           ) {
-            return true;
+            return false;
           }
           throw e;
         }
