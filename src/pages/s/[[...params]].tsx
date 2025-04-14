@@ -339,7 +339,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           [
             ServerStateKeysEnum.SearchConsult,
             {
-              route: ['ir', (params as string[])[1]]?.join('/') ?? '',
+              route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
               query: {
                 turn_type: 'consult',
               },
@@ -348,7 +348,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           ],
           () =>
             searchApi({
-              route: ['ir', (params as string[])[1]]?.join('/') ?? '',
+              route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
               query: {
                 turn_type: 'consult',
               },
