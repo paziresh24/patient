@@ -125,10 +125,11 @@ export const getServerSideProps: GetServerSideProps = withServerUtils(
     const { app_key, params, ...query } = context.query;
 
     const getOneApp = await oneApp({ appKey: app_key as string, pageKey: params?.[0] as string });
+
     const app = getOneApp?.data;
     const page = app?.fragments
       ?.find((item: any) => item.type === 'pages')
-      ?.options?.find((item: any) => item.key == params?.[0] && item.parameters?.length == (params?.length ?? 1) - 1);
+      ?.options?.find((item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1);
 
     return {
       props: {
