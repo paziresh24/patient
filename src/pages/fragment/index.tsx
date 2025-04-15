@@ -14,6 +14,7 @@ import { Portal, portalMeta } from '@/common/fragment/components/portal';
 import { Accordion, accordionMeta } from '@/common/fragment/components/accordion';
 import { Gallery, galleryMeta } from '@/common/fragment/components/gallery';
 import { Popover, popoverMeta } from '@/common/fragment/components/popover';
+import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -113,6 +114,18 @@ registerGlobalContext(PWA, fragmentPWAMeta);
 registerComponent(Portal, portalMeta);
 registerComponent(Accordion, accordionMeta);
 registerComponent(Popover, popoverMeta);
+registerComponent(FactorWrapper, {
+  name: 'Factor',
+  displayName: 'Paziresh24/Factor',
+  importPath: '@/modules/booking/views/factor/wrapper',
+  figmaMappings: [{ figmaComponentName: 'Factor' }],
+  props: {
+    bookId: 'string',
+    userCenterId: 'string',
+    serviceId: 'string',
+    centerId: 'string',
+  },
+});
 
 registerComponent(LayoutWithHeaderAndFooter, {
   name: 'LayoutWithHeaderAndFooter',

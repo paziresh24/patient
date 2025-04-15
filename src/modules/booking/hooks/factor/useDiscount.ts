@@ -2,7 +2,17 @@ import { useDiscountInquiry } from '@/common/apis/services/factor/discountInquir
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useState } from 'react';
 
-export const useDiscount = ({ bookId }: { bookId: string }) => {
+export const useDiscount = ({
+  bookId,
+  centerId,
+  serviceId,
+  userCenterId,
+}: {
+  bookId: string;
+  centerId?: string;
+  serviceId?: string;
+  userCenterId?: string;
+}) => {
   const discountInquiry = useDiscountInquiry();
   const [invoiceDetails, setInvoiceDetails] = useState<{
     totalPrice?: string;
@@ -16,6 +26,9 @@ export const useDiscount = ({ bookId }: { bookId: string }) => {
   const handleDiscountSubmit = async (code: string) => {
     const { data } = await discountInquiry.mutateAsync({
       book_id: bookId,
+      centerId,
+      serviceId,
+      userCenterId,
       code,
     });
     if (data?.status === ClinicStatus.SUCCESS) {

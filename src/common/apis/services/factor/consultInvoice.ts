@@ -4,7 +4,8 @@ import { useMutation } from '@tanstack/react-query';
 import { growthbook } from 'src/pages/_app';
 
 interface Params {
-  book_id: string;
+  book_id?: string;
+  service_id?: string;
 }
 
 type Response = {
