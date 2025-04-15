@@ -37,9 +37,7 @@ interface UserCardProps {
 const LoadingWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <div className="relative">
-      <div className="absolute w-full h-[calc(100%+1px)] backdrop-blur-sm rounded-md overflow-hidden grid place-content-center">
-        <Loading />
-      </div>
+      <div className="absolute w-full h-[calc(100%+1px)] backdrop-blur-sm rounded-md overflow-hidden grid place-content-center"></div>
       {children}
     </div>
   );

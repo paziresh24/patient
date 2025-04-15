@@ -6,6 +6,9 @@ import { setTerminal } from '../auth/setTerminal';
 interface Params {
   book_id: string;
   code: string;
+  centerId?: string;
+  serviceId?: string;
+  userCenterId?: string;
 }
 
 type Response = {

@@ -53,12 +53,15 @@ import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
 import Script from 'next/script';
 import axios from 'axios';
+import SelectUserWrapper from '@/modules/booking/views/selectUser/wrapper';
+import { useProfileDataStore } from '@/modules/profile/store/profileData';
+import { apiGatewayClient } from '@/common/apis/client';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
   const shouldUsePlasmicActionButtons = useFeatureIsOn('plasmic:receipt-action-buttons|enabled');
   const {
-    query: { bookId, centerId, pincode },
+    query: { bookId, centerId, pincode, action },
     ...router
   } = useRouter();
   const { appDownloadSource, getRatingAppLink } = usePwa();
@@ -66,6 +69,7 @@ const Receipt = () => {
   const customize = useCustomize(state => state.customize);
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
   const { handleOpen: handleOpenRateAppModal, handleClose: handleCloseRateAppModal, modalProps: rateAppModal } = useModal();
+  const { handleOpen: handleOpenSelectUserModal, handleClose: handleCloseSelectUserModal, modalProps: selectUserModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
@@ -105,7 +109,10 @@ const Receipt = () => {
   const serverTime = useGetServerTime();
   const { handleOpenLoginModal } = useLoginModalContext();
   const centerType = centerId === '5532' ? CenterType.consult : CenterType.clinic;
-  const bookDetailsData = useMemo(() => getReceiptDetails.isSuccess && getReceiptDetails.data?.data?.data, [getReceiptDetails.status]);
+  const bookDetailsData = useMemo(
+    () => getReceiptDetails.isSuccess && getReceiptDetails.data?.data?.data,
+    [getReceiptDetails.status, getReceiptDetails?.data],
+  );
   const possibilityBeingVisited = !isAfterPastDaysFromTimestamp({
     numberDay: 3,
     currentTime: serverTime?.data?.data?.data.timestamp,
@@ -153,7 +160,7 @@ const Receipt = () => {
         return;
       }
     }
-  }, [getReceiptDetails.status]);
+  }, [getReceiptDetails.status, getReceiptDetails?.data]);
 
   useEffect(() => {
     if (document.referrer.includes('shaparak.ir') && bookDetailsData) {
@@ -395,6 +402,69 @@ const Receipt = () => {
         });
     }
   }, [bookDetailsData?.book_time]);
+  const setProfileData = useProfileDataStore(state => state.setData);
+  const [updateBookDetailsLoading, setUpdateBookDetailsLoading] = useState(false);
+
+  useEffect(() => {
+    if (action === 'select_user') {
+      handleOpenSelectUserModal();
+    }
+  }, [action]);
+
+  useEffect(() => {
+    setProfileData({
+      online_visit_channel_types: bookDetailsData?.doctor?.online_visit_channels.map((item: any) => item.type),
+    });
+  }, [bookDetailsData?.doctor]);
+
+  const handleUpdateBookDetails = async (userInfo: any) => {
+    setUpdateBookDetailsLoading(true);
+    try {
+      await toast.promise(
+        apiGatewayClient.patch(`/v1/book/${bookId}`, {
+          name: userInfo.name,
+          family: userInfo.family,
+          ...(userInfo.national_code && { national_code: userInfo.national_code }),
+          cell: userInfo.cell ? (!userInfo.cell?.startsWith('0') ? `0${userInfo.cell}` : userInfo.cell) : null,
+          online_channel: userInfo.messengerType,
+          ...(!user.cell && { cell_country_prefix: 1 }),
+        }),
+        {
+          loading: 'درحال نهایی سازی...',
+        },
+        {
+          id: 'handleUpdateBookDetails',
+        },
+      );
+
+      await toast.promise(
+        getReceiptDetails.refetch,
+        {
+          loading: 'درحال نهایی سازی...',
+        },
+        {
+          id: 'handleUpdateBookDetails',
+        },
+      );
+      const newQuery = { centerId, bookId, ...(pincode && { pincode }) };
+      router.replace(
+        {
+          pathname: router.pathname,
+
+          query: newQuery,
+        },
+        undefined,
+        { shallow: true },
+      );
+      handleCloseSelectUserModal();
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.message);
+      }
+    } finally {
+      setUpdateBookDetailsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -716,13 +786,35 @@ const Receipt = () => {
             <Button block onClick={handleRedirectToStore}>
               {rateAppModalInfo?.button_rate_app_text}
             </Button>
-            <Button variant="secondary" block onClick={handleCloseRateAppModal}>
+            <Button variant="secondary" className="" block onClick={handleCloseRateAppModal}>
               {rateAppModalInfo?.button_show_receipt_text}
             </Button>
           </div>
         </Modal>
         <Modal {...notificationGrantAccsesModalProps} noHeader>
           <span className="text-base font-bold leading-7">{notificationGrantAccsesModalText}</span>
+        </Modal>
+        <Modal noHeader {...selectUserModalProps} onClose={() => {}} bodyClassName="max-h-[40rem] p-0">
+          <SelectUserWrapper
+            loading={updateBookDetailsLoading || bookDetailsData.isLoading}
+            className="p-5"
+            onSubmit={(userInfo: any) => {
+              if (
+                !userInfo?.messengerType &&
+                bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => item.type !== 'secure_call')?.length > 1
+              ) {
+                toast.error('لطفا پیام رسان را انتخاب کنید.');
+                return;
+              }
+              handleUpdateBookDetails(userInfo);
+            }}
+            shouldShowMessengers={
+              bookDetailsData?.doctor?.online_visit_channels?.filter((item: any) => item.type !== 'secure_call')?.length > 1
+            }
+            submitButtonText="نهایی سازی و آغاز گفتگو"
+            showTermsAndConditions={false}
+            buttonSticky
+          />
         </Modal>
       </div>
     </>

@@ -446,6 +446,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                     profile_id: fullProfileData!.id,
                     slug: slugFormmated,
                     widget_id: item?.id,
+                    paziresh24_pk: fullProfileData!.id,
                   },
                   timeout: 3000,
                 }),

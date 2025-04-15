@@ -12,10 +12,11 @@ interface SelectTimeWrapperProps {
   className?: string;
   showTermsAndConditions?: boolean;
   shouldShowMessengers: boolean;
+  buttonSticky?: boolean;
 }
 
 export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
-  const { onSubmit, loading, submitButtonText, className, showTermsAndConditions = true, shouldShowMessengers } = props;
+  const { onSubmit, loading, submitButtonText, className, showTermsAndConditions = true, shouldShowMessengers, buttonSticky } = props;
   const [userSelected, setUserSelected] = useState<UserInfo>({});
 
   const handleSubmit = (info: UserInfo) => {
@@ -35,9 +36,12 @@ export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
       <SelectUser loading={loading} shouldShowMessengers={shouldShowMessengers} className={className} onSelect={handleSelect} />
       <div
         className={classNames(
-          'fixed bottom-0 right-0 flex flex-col w-full p-4 space-y-3 bg-white border-t md:border-none border-slate-100 md:space-y-0 md:items-center md:justify-between md:flex-row md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none',
+          'fixed bottom-0 right-0 flex flex-col w-full p-4 space-y-3 bg-white border-t border-slate-100 md:space-y-0 md:items-center md:justify-between md:flex-row md:p-0 md:static md:w-auto md:bg-transparent shadow-card',
           {
             'md:!justify-end': !showTermsAndConditions,
+            'md:sticky md:!bottom-0 md:right-0 md:w-full md:h-full md:!bg-white md:!p-5 md:!border-t md:!border-slate-100 md:!shadow-card':
+              buttonSticky,
+            'md:border-none  md:shadow-none': !buttonSticky,
           },
         )}
       >
@@ -46,7 +50,11 @@ export const SelectUserWrapper = (props: SelectTimeWrapperProps) => {
             شرایط کلی استفاده از خدمات پذیرش 24 را می پذیرم
           </a>
         )}
-        <Button loading={loading} className="self-end w-full md:w-1/5" onClick={() => handleSubmit(userSelected)}>
+        <Button
+          loading={loading}
+          className={classNames('self-end w-full md:w-1/5', { '!w-full': !showTermsAndConditions })}
+          onClick={() => handleSubmit(userSelected)}
+        >
           {submitButtonText}
         </Button>
       </div>
