@@ -3,13 +3,13 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import classNames from '@/common/utils/classNames';
-import { LoadingApps } from '@/modules/dashboard/components/loading';
 import { Wrapper } from '@/modules/dashboard/components/wrapper';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useState } from 'react';
 import PatinetProfile from '../patient/profile';
+import Loading from '@/common/components/atom/loading';
 
 export const AppointmentsPage = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
@@ -19,7 +19,11 @@ export const AppointmentsPage = () => {
       {user.provider?.job_title === 'doctor' ? (
         <>
           <Seo title="ویرایش پروفایل" noIndex />
-          {isAppLoading && <LoadingApps />}
+          {isAppLoading && (
+            <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
+              <Loading />
+            </div>
+          )}
           <iframe
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full h-full', { hidden: isAppLoading })}
@@ -29,7 +33,11 @@ export const AppointmentsPage = () => {
       ) : (
         <>
           <Seo title="ویرایش پروفایل" noIndex />
-          {isAppLoading && <LoadingApps />}
+          {isAppLoading && (
+            <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
+              <Loading />
+            </div>
+          )}
           <iframe
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full h-full', { hidden: isAppLoading })}

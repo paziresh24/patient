@@ -66,7 +66,7 @@ const Home = ({ fragmentComponents }: any) => {
         ></div>
       )}
       <main
-        className={classNames('h-[92.3vh] md:mb-0 md:h-[92vh] flex flex-col justify-center items-center p-4 pb-48 space-y-6', {
+        className={classNames('h-[92.3vh] md:mb-0 md:h-[92vh] flex flex-col justify-center items-center p-4 space-y-6', {
           'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': customize?.partnerKey,
           'bg-white': !customize.backgroundImage,
         })}

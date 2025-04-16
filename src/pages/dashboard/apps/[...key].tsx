@@ -1,3 +1,4 @@
+import Loading from '@/common/components/atom/loading';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
@@ -7,7 +8,6 @@ import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useApps } from '@/modules/dashboard/apis/apps';
-import { LoadingApps } from '@/modules/dashboard/components/loading';
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
@@ -80,6 +80,12 @@ export const Dashboard = (props: any) => {
     };
   }, [app, selctedMenu, user?.id, isReady]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsAppLoading(false);
+    }, 6000);
+  }, []);
+
   return (
     <LayoutWithHeaderAndFooter
       {...props.config}
@@ -92,12 +98,15 @@ export const Dashboard = (props: any) => {
       <SideBar className="hidden md:flex">
         <div className="flex flex-grow flex-col w-full">
           <Seo title={appName} noIndex />
-          {appsData.isSuccess && selctedMenu?.embed_src && <AppBar title={appName} className="hidden pwa:!flex" />}
           <div
             key={selctedMenu?.key}
             className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto h-full flex-col flex-grow w-full relative"
           >
-            {(!appsData.isSuccess || isAppLoading) && <LoadingApps />}
+            {(!appsData.isSuccess || isAppLoading) && (
+              <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
+                <Loading />
+              </div>
+            )}
             {appsData.isSuccess && user?.id && selctedMenu?.embed_src && (
               <iframe
                 ref={iframeRef}
