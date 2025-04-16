@@ -56,11 +56,11 @@
 .freeBox__fOgx {
   display: grid;
   position: relative;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(66px, 1fr));
   width: 100%;
   height: auto;
   max-width: 100%;
-  grid-column-gap: 10px;
+  grid-column-gap: 20px;
   grid-row-gap: 20px;
   min-width: 0;
 }
