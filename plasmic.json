@@ -2498,7 +2498,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -3359,6 +3360,12 @@
           "name": "PWA",
           "displayName": "PWA",
           "componentImportPath": "@/common/fragment/pwa"
+        },
+        {
+          "id": "8rzkfaPG72vK",
+          "name": "Factor",
+          "displayName": "Factor",
+          "componentImportPath": "@/modules/booking/views/factor/wrapper"
         }
       ],
       "customFunctions": [
@@ -3369,8 +3376,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     }
   ],
   "globalVariants": {
