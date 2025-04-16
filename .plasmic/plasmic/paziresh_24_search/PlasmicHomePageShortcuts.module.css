@@ -56,11 +56,11 @@
 .freeBox__fOgx {
   display: grid;
   position: relative;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   width: 100%;
   height: auto;
   max-width: 100%;
-  grid-column-gap: 20px;
+  grid-column-gap: 10px;
   grid-row-gap: 20px;
   min-width: 0;
 }
@@ -98,8 +98,8 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   max-width: 100%;
   justify-content: flex-start;
   align-items: center;
@@ -111,7 +111,7 @@
   position: absolute;
   width: auto;
   height: auto;
-  font-size: var(--token-VrIY9r5RDQZ_);
+  font-size: 9px;
   background: var(--token-1jTXKEDkeRHC);
   color: #ffffff;
   padding-right: 10px;
@@ -139,6 +139,6 @@
   max-width: 100%;
   text-align: center;
   font-weight: 500;
-  font-size: var(--token-6NbVMeD6zQwn);
+  font-size: var(--token-VrIY9r5RDQZ_);
   min-width: 0;
 }
