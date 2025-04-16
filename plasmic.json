@@ -2488,6 +2488,12 @@
           "name": "Popover",
           "displayName": "Popover",
           "componentImportPath": "@/common/fragment/components/popover"
+        },
+        {
+          "id": "mfaiXZwrYRAY",
+          "name": "Factor",
+          "displayName": "Factor",
+          "componentImportPath": "@/modules/booking/views/factor/wrapper"
         }
       ],
       "customFunctions": [
