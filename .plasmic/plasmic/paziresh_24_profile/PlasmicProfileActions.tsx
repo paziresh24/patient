@@ -72,7 +72,7 @@ import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: SeX7ttg98yl
 import Icon8Icon from "./icons/PlasmicIcon__Icon8"; // plasmic-import: W5EXYp30CPhG/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: MoYSGvL5CZhO/icon
-import Icon3Icon from "./icons/PlasmicIcon__Icon3"; // plasmic-import: K8fKsJPldTZe/icon
+import Icon18Icon from "./icons/PlasmicIcon__Icon18"; // plasmic-import: jjh8AKTP6EWp/icon
 
 createPlasmicElementProxy;
 
@@ -605,7 +605,7 @@ function PlasmicProfileActions__RenderFunc(props: {
               hasGap={true}
               className={classNames(projectcss.all, sty.freeBox__ccKef)}
             >
-              <Icon3Icon
+              <Icon18Icon
                 className={classNames(projectcss.all, sty.svg__mdGYz)}
                 role={"img"}
               />
@@ -617,7 +617,7 @@ function PlasmicProfileActions__RenderFunc(props: {
                   sty.text__dgMxy
                 )}
               >
-                {"\u06af\u0632\u0627\u0631\u0634"}
+                {"\u06af\u0632\u0627\u0631\u0634 \u062e\u0637\u0627"}
               </div>
             </Stack__>
           }
@@ -631,7 +631,7 @@ function PlasmicProfileActions__RenderFunc(props: {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `/patient/contribute?slug=${$props.slug}`;
+                        return `https://survey.porsline.ir/s/35ggjRX?slug=${$props.slug}&test_src=profile_eslah`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
