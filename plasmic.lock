@@ -1561,12 +1561,12 @@
         {
           "type": "renderModule",
           "assetId": "Z7E4nvI5-Dtv",
-          "checksum": "2c365e74d056e1c73005eb4370e713d7"
+          "checksum": "1cb78950a3f9331ff555ea245bc3872b"
         },
         {
           "type": "cssRules",
           "assetId": "Z7E4nvI5-Dtv",
-          "checksum": "2c365e74d056e1c73005eb4370e713d7"
+          "checksum": "1cb78950a3f9331ff555ea245bc3872b"
         },
         {
           "type": "icon",
@@ -1667,6 +1667,11 @@
           "assetId": "8NbkXymcLwvMUC2yXeRrWk",
           "type": "projectCss",
           "checksum": "928724c7f24bb50812d50a05bd5950a8"
+        },
+        {
+          "type": "icon",
+          "assetId": "808a21QqaoxC",
+          "checksum": "8611c472737b21be8a145a1eaaf9bab6"
         }
       ],
       "codegenVersion": "0.0.1"

@@ -2504,7 +2504,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -2752,6 +2753,11 @@
           "id": "ShAkS10pD69-",
           "name": "Icon16Icon",
           "moduleFilePath": "plasmic/paziresh_24_booking/icons/PlasmicIcon__Icon16.tsx"
+        },
+        {
+          "id": "808a21QqaoxC",
+          "name": "Icon17Icon",
+          "moduleFilePath": "plasmic/paziresh_24_booking/icons/PlasmicIcon__Icon17.tsx"
         }
       ],
       "images": [],
@@ -2848,6 +2854,12 @@
           "name": "Popover",
           "displayName": "Popover",
           "componentImportPath": "@/common/fragment/components/popover"
+        },
+        {
+          "id": "iM0_5-GR1Fwy",
+          "name": "Factor",
+          "displayName": "Factor",
+          "componentImportPath": "@/modules/booking/views/factor/wrapper"
         }
       ],
       "customFunctions": [
@@ -2858,8 +2870,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
