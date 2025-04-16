@@ -14,7 +14,18 @@ export const GrowthbookGlobalContext = ({
   apiHost,
   clientKey,
 }: React.PropsWithChildren<GrowthbookGlobalContextProps>) => {
-  const [growthbook, setGrowthbook] = useState<any>();
+  console.log({
+    apiHost,
+    clientKey,
+  });
+  const [growthbook, setGrowthbook] = useState<any>(
+    new GrowthBook({
+      apiHost,
+      clientKey,
+      enabled: true,
+      subscribeToChanges: true,
+    }),
+  );
   const [isReady, setIsReady] = useState(false);
   const [attr, setAttr] = useState({});
 
@@ -32,8 +43,14 @@ export const GrowthbookGlobalContext = ({
   }, [apiHost, clientKey]);
 
   useEffect(() => {
-    growthbook?.refreshFeatures?.();
-    growthbook?.loadFeatures?.({ autoRefresh: true });
+    if (apiHost && clientKey) {
+      growthbook?.refreshFeatures?.();
+      growthbook?.loadFeatures?.({ autoRefresh: true });
+      growthbook.setAttributes({
+        ...attr,
+        ...previewAttributes,
+      });
+    }
   }, [previewAttributes, apiHost, clientKey, isReady, attr]);
 
   useEffect(() => {
@@ -57,28 +74,24 @@ export const GrowthbookGlobalContext = ({
   const actions = useMemo(
     () => ({
       setAttributes: (attributes: Record<string, any>) => {
-        setTimeout(() => {
-          growthbook.setAttributes({
-            ...attributes,
-            ...previewAttributes,
-          });
+        growthbook.setAttributes({
+          ...attributes,
+          ...previewAttributes,
+        });
 
-          setAttr(attributes);
-        }, 500);
+        setAttr(attributes);
       },
       setAttributeOverrides: (attributes: Record<string, any>) => {
-        setTimeout(() => {
-          growthbook.setAttributes({
-            ...growthbook.getAttributes(),
-            ...attributes,
-            ...previewAttributes,
-          });
+        growthbook.setAttributes({
+          ...growthbook.getAttributes(),
+          ...attributes,
+          ...previewAttributes,
+        });
 
-          setAttr(attributes);
-        }, 500);
+        setAttr(attributes);
       },
     }),
-    [isReady, growthbook?.isReady],
+    [isReady, growthbook?.isReady, apiHost, clientKey],
   );
 
   const features = useMemo(() => {

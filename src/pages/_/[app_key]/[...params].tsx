@@ -1,4 +1,5 @@
 import Loading from '@/common/components/atom/loading';
+import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
@@ -83,7 +84,7 @@ const Page = ({ page, app }: any) => {
   useEffect(() => {
     setTimeout(() => {
       setIsAppLoading(false);
-    }, 3000);
+    }, 6000);
   }, []);
 
   return (
@@ -95,13 +96,14 @@ const Page = ({ page, app }: any) => {
       showBottomNavigation={page?.layout?.show_bottom_navigation ?? false}
       className="!h-svh !min-h-svh !max-h-svh:"
     >
+      {page?.layout?.show_appbar && <AppBar title={page.name?.fa} backButton={true} />}
       <Seo title={page.name?.fa} noIndex />
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <div className="w-full flex-grow flex flex-col">
         {(!showIframe || isAppLoading) && (
-          <div className="w-full justify-center flex items-center h-full flex-grow">
+          <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
             <Loading />
           </div>
         )}

@@ -91,12 +91,6 @@ export const UserProfile = () => {
           shouldShow: userInfo.provider?.job_title === 'doctor',
         },
         {
-          name: 'نظرات من',
-          icon: <CommentIcon width={22} height={22} />,
-          link: `/dr/${userInfo.provider?.slug}/#reviews`,
-          shouldShow: userInfo.provider?.job_title === 'doctor',
-        },
-        {
           name: 'مشاهده پروفایل عمومی',
           icon: <EyeIcon width={22} height={22} />,
           link: `/dr/${userInfo.provider?.slug}?@timestamp=${new Date().getTime()}`,

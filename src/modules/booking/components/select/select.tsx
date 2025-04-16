@@ -56,7 +56,7 @@ export const Select = (props: SelectProps) => {
           </div>
           <div className="flex flex-col space-y-1">
             {topTitle && <Text fontSize="sm">{topTitle}</Text>}
-            {isLoading && <Loading width={25} className="!mt-3" />}
+            {isLoading && <Loading width={20} height={20} />}
             {!isLoading && (
               <Text fontWeight="bold" fontSize="sm" className={classNames(titleClassName)}>
                 {title}
