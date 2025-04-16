@@ -617,7 +617,9 @@ function PlasmicProfileActions__RenderFunc(props: {
                   sty.text__dgMxy
                 )}
               >
-                {"\u06af\u0632\u0627\u0631\u0634 \u062e\u0637\u0627"}
+                {
+                  "\u06af\u0632\u0627\u0631\u0634 \u0627\u0634\u062a\u0628\u0627\u0647"
+                }
               </div>
             </Stack__>
           }
