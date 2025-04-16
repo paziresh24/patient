@@ -1507,7 +1507,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                         ) {
                           return currentItem.rates_count;
                         } else {
-                          return false;
+                          return 0;
                         }
                       })();
                     } catch (e) {
@@ -1522,11 +1522,23 @@ function PlasmicSearchResults__RenderFunc(props: {
                   })()}
                   satisfactionPercent={(() => {
                     try {
-                      return !$ctx.Growthbook || !$ctx.Growthbook.isReady
-                        ? currentItem.satisfaction
-                        : $ctx.Growthbook.features["theme-config"][
-                            "search_result:show_rate_and_reviews"
-                          ] && currentItem.satisfaction;
+                      return (() => {
+                        if (
+                          currentItem.satisfaction !== undefined &&
+                          (!$ctx.Growthbook ||
+                            !$ctx.Growthbook.isReady ||
+                            !$ctx.Growthbook.attributes?.url ||
+                            Object.keys($ctx.Growthbook.features).length == 0 ||
+                            ($ctx.Growthbook.features?.["theme-config"] &&
+                              $ctx.Growthbook.features["theme-config"]?.[
+                                "search_result:show_rate_and_reviews"
+                              ]))
+                        ) {
+                          return currentItem.satisfaction;
+                        } else {
+                          return 0;
+                        }
+                      })();
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
