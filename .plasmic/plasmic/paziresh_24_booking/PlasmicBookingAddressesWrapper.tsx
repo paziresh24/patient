@@ -67,7 +67,7 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicBookingAddressesWrapper.module.css"; // plasmic-import: Z7E4nvI5-Dtv/css
 
-import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: B-8Hh4cFrk03/icon
+import Icon17Icon from "./icons/PlasmicIcon__Icon17"; // plasmic-import: 808a21QqaoxC/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
@@ -187,7 +187,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
               )}
             >
               {
-                "\u06af\u0632\u0627\u0631\u0634 \u062a\u0644\u0641\u0646 \u0648 \u0622\u062f\u0631\u0633 \u0635\u062d\u06cc\u062d"
+                "\u06af\u0632\u0627\u0631\u0634 \u0627\u0634\u062a\u0628\u0627\u0647 \u062f\u0631 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0645\u0631\u06a9\u0632"
               }
             </div>
           }
@@ -208,7 +208,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
           })()}
           showStartIcon={true}
           startIcon={
-            <Icon14Icon
+            <Icon17Icon
               data-plasmic-name={"svg"}
               data-plasmic-override={overrides.svg}
               className={classNames(projectcss.all, sty.svg)}
