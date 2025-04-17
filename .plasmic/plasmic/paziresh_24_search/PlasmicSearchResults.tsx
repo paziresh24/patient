@@ -312,7 +312,7 @@ function PlasmicSearchResults__RenderFunc(props: {
       {(() => {
         try {
           return (
-            $state.visibilityOfShowMySearchPerformance &&
+            !!globalThis.user.provider.slug &&
             $props.showMyPerformanceMetricsBox.enable
           );
         } catch (e) {
@@ -1088,6 +1088,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                   actionButtons={(() => {
                     try {
                       return (() => {
+                        if (typeof $ctx.Growthbook === "undefined") {
+                          return currentItem.actions;
+                        }
                         if (
                           typeof $ctx.Growthbook?.features?.["theme-config"]?.[
                             "search_result:show_first_free_time"
@@ -1984,35 +1987,33 @@ function PlasmicSearchResults__RenderFunc(props: {
             ];
           }
 
-          $steps["visibleShowMySearchPerformanceVisibilityByFetchUrl"] = true
+          $steps["visibleShowMySearchPerformanceVisibilityByFetchUrl"] = false
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
-                    return (() => {
-                      return fetch(
-                        "https://api.paziresh24.com/V1/doctor/profile",
-                        { credentials: "include" }
-                      )
-                        .then(response => {
-                          if (!response.ok) {
-                            throw new Error("Network response was not ok");
-                          }
-                          return response.json();
-                        })
-                        .then(data => {
-                          console.log(data);
-                          if (data.data.id) {
-                            $state.visibilityOfShowMySearchPerformance = true;
-                            console.log(
-                              "Visibility of Show My Search Performance:",
-                              $state.visibilityOfShowMySearchPerformance
-                            );
-                          }
-                        })
-                        .catch(error => {
-                          console.error("Fetch error:", error);
-                        });
-                    })();
+                    return fetch(
+                      "https://api.paziresh24.com/V1/doctor/profile",
+                      { credentials: "include" }
+                    )
+                      .then(response => {
+                        if (!response.ok) {
+                          throw new Error("Network response was not ok");
+                        }
+                        return response.json();
+                      })
+                      .then(data => {
+                        console.log(data);
+                        if (data.data.id) {
+                          $state.visibilityOfShowMySearchPerformance = true;
+                          console.log(
+                            "Visibility of Show My Search Performance:",
+                            $state.visibilityOfShowMySearchPerformance
+                          );
+                        }
+                      })
+                      .catch(error => {
+                        console.error("Fetch error:", error);
+                      });
                   }
                 };
                 return (({ customFunction }) => {

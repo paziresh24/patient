@@ -2068,16 +2068,24 @@ function PlasmicProductCard__RenderFunc(props: {
           ) : null}
           {(() => {
             try {
-              return (
-                $props.actionButtons.length > 0 &&
-                !(
-                  $ctx.Growthbook.features["theme-config"][
-                    "search_result:show_card_action_sdui_v2"
-                  ] &&
-                  $state.cardActionSduiV2UiRequest.data
-                    ?.search_result_card_ui[0]?.data?.actions !== undefined
-                )
-              );
+              return (() => {
+                if (
+                  typeof $ctx.Growthbook === "undefined" &&
+                  $props.actionButtons.length > 0
+                ) {
+                  return true;
+                }
+                return (
+                  $props.actionButtons.length > 0 &&
+                  !(
+                    $ctx.Growthbook.features["theme-config"][
+                      "search_result:show_card_action_sdui_v2"
+                    ] &&
+                    $state.cardActionSduiV2UiRequest.data
+                      ?.search_result_card_ui[0]?.data?.actions !== undefined
+                  )
+                );
+              })();
             } catch (e) {
               if (
                 e instanceof TypeError ||
