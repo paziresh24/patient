@@ -301,6 +301,25 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     let showPlasmicResult: boolean = false;
     let showPlasmicSort: boolean = false;
     let showPlasmicConsultBanner: boolean = false;
+    let showSuggestedDoctor: any = {};
+
+    const host = context.req.headers.host;
+    const path = context.resolvedUrl;
+    const url = `https://${host}${path}`;
+    try {
+      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+      const growthbook = new GrowthBook(growthbookContext);
+      growthbook.setAttributes({ url });
+      await growthbook.loadFeatures({ timeout: 1000 });
+      // Plasmic
+      showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
+      showPlasmicResult = growthbook.isOn('search_plasmic_result');
+      showPlasmicSort = growthbook.isOn('search_plasmic_sort');
+      showPlasmicConsultBanner = growthbook.isOn('search_plasmic_consult_banner');
+      showSuggestedDoctor = growthbook.getFeatureValue('fragment::top-suggested-card-feature', { enable: true });
+    } catch (error) {
+      console.error(error);
+    }
 
     try {
       const queryClient = new QueryClient();
@@ -333,7 +352,8 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
         !searchData?.selected_filters?.result_type &&
         (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
-        !searchData?.search?.is_landing
+        !searchData?.search?.is_landing &&
+        showSuggestedDoctor?.enable
       ) {
         try {
           await queryClient.fetchQuery(
@@ -342,6 +362,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
               {
                 route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
                 query: {
+                  ...query,
                   turn_type: 'consult',
                 },
                 timeout: 700,
@@ -351,6 +372,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
               searchApi({
                 route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
                 query: {
+                  ...query,
                   turn_type: 'consult',
                 },
                 timeout: 700,
@@ -359,23 +381,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         } catch (error) {
           console.error(error);
         }
-      }
-
-      const host = context.req.headers.host;
-      const path = context.resolvedUrl;
-      const url = `https://${host}${path}`;
-      try {
-        const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-        const growthbook = new GrowthBook(growthbookContext);
-        growthbook.setAttributes({ url });
-        await growthbook.loadFeatures({ timeout: 1000 });
-        // Plasmic
-        showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
-        showPlasmicResult = growthbook.isOn('search_plasmic_result');
-        showPlasmicSort = growthbook.isOn('search_plasmic_sort');
-        showPlasmicConsultBanner = growthbook.isOn('search_plasmic_consult_banner');
-      } catch (error) {
-        console.error(error);
       }
 
       return {

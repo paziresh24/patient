@@ -14,10 +14,6 @@ export const GrowthbookGlobalContext = ({
   apiHost,
   clientKey,
 }: React.PropsWithChildren<GrowthbookGlobalContextProps>) => {
-  console.log({
-    apiHost,
-    clientKey,
-  });
   const [growthbook, setGrowthbook] = useState<any>(
     new GrowthBook({
       apiHost,
@@ -46,12 +42,15 @@ export const GrowthbookGlobalContext = ({
     if (apiHost && clientKey) {
       growthbook?.refreshFeatures?.();
       growthbook?.loadFeatures?.({ autoRefresh: true });
-      growthbook.setAttributes({
-        ...attr,
-        ...previewAttributes,
-      });
     }
-  }, [previewAttributes, apiHost, clientKey, isReady, attr]);
+  }, [previewAttributes, apiHost, clientKey, isReady]);
+
+  useEffect(() => {
+    growthbook.setAttributes({
+      ...attr,
+      ...previewAttributes,
+    });
+  }, [attr, previewAttributes]);
 
   useEffect(() => {
     setIsReady(growthbook?.ready);
@@ -74,24 +73,28 @@ export const GrowthbookGlobalContext = ({
   const actions = useMemo(
     () => ({
       setAttributes: (attributes: Record<string, any>) => {
-        growthbook.setAttributes({
-          ...attributes,
-          ...previewAttributes,
-        });
+        setTimeout(() => {
+          growthbook.setAttributes({
+            ...attributes,
+            ...previewAttributes,
+          });
 
-        setAttr(attributes);
+          setAttr(attributes);
+        }, 100);
       },
       setAttributeOverrides: (attributes: Record<string, any>) => {
-        growthbook.setAttributes({
-          ...growthbook.getAttributes(),
-          ...attributes,
-          ...previewAttributes,
-        });
+        setTimeout(() => {
+          growthbook.setAttributes({
+            ...growthbook.getAttributes(),
+            ...attributes,
+            ...previewAttributes,
+          });
 
-        setAttr(attributes);
+          setAttr(attributes);
+        }, 100);
       },
     }),
-    [isReady, growthbook?.isReady, apiHost, clientKey],
+    [isReady, growthbook, apiHost, clientKey],
   );
 
   const features = useMemo(() => {
