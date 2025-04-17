@@ -5,40 +5,35 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type IconIconProps = React.ComponentProps<"svg"> & {
+export type InfoIconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function IconIcon(props: IconIconProps) {
+export function InfoIcon(props: InfoIconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
       xmlns={"http://www.w3.org/2000/svg"}
       fill={"none"}
-      stroke={"currentColor"}
-      strokeWidth={"2"}
-      strokeLinecap={"round"}
-      strokeLinejoin={"round"}
-      className={classNames(
-        "plasmic-default__svg",
-        className,
-        "lucide lucide-pencil"
-      )}
       viewBox={"0 0 24 24"}
       height={"1em"}
+      className={classNames("plasmic-default__svg", className)}
       style={style}
       {...restProps}
     >
       {title && <title>{title}</title>}
 
       <path
+        fillRule={"evenodd"}
+        clipRule={"evenodd"}
         d={
-          "M21.174 6.812a1 1 0 00-3.986-3.987L3.842 16.174a2 2 0 00-.5.83l-1.321 4.352a.5.5 0 00.623.622l4.353-1.32a2 2 0 00.83-.497zM15 5l4 4"
+          "M12 3.75a8.25 8.25 0 100 16.5 8.25 8.25 0 000-16.5zM2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 10.25a.75.75 0 01.75.75v5a.75.75 0 01-1.5 0v-5a.75.75 0 01.75-.75zM12 9a1 1 0 100-2 1 1 0 000 2z"
         }
+        fill={"currentColor"}
       ></path>
     </svg>
   );
 }
 
-export default IconIcon;
+export default InfoIcon;
 /* prettier-ignore-end */

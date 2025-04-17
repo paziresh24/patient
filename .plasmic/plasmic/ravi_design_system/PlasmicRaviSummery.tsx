@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -69,8 +69,8 @@ import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviSummery.module.css"; // plasmic-import: n51CDSNkGtxF/css
 
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronRightIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
+import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 
 createPlasmicElementProxy;
 

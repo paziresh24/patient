@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -100,7 +100,6 @@ export const PlasmicRaviFilters__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicRaviFilters__OverridesType = {
   root?: Flex__<"div">;
-  freeBox?: Flex__<"div">;
   filters?: Flex__<typeof CustomSelect>;
   select?: Flex__<typeof CustomSelect>;
   textInput?: Flex__<typeof TextInput>;
@@ -234,10 +233,8 @@ function PlasmicRaviFilters__RenderFunc(props: {
     >
       <Stack__
         as={"div"}
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
         hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox)}
+        className={classNames(projectcss.all, sty.freeBox__dCt28)}
         dir={"rtl"}
       >
         <CustomSelect
@@ -390,74 +387,81 @@ function PlasmicRaviFilters__RenderFunc(props: {
           value={generateStateValueProp($state, ["select", "value"])}
         />
       </Stack__>
-      <TextInput
-        data-plasmic-name={"textInput"}
-        data-plasmic-override={overrides.textInput}
-        className={classNames("__wab_instance", sty.textInput)}
-        onChange={async (...eventArgs: any) => {
-          ((...eventArgs) => {
-            generateStateOnChangeProp($state, ["textInput", "value"])(
-              (e => e.target?.value).apply(null, eventArgs)
-            );
-          }).apply(null, eventArgs);
+      <div
+        className={classNames(
+          projectcss.all,
+          sty.freeBox__t7QIi,
+          "search-input-reviews"
+        )}
+      >
+        <TextInput
+          data-plasmic-name={"textInput"}
+          data-plasmic-override={overrides.textInput}
+          className={classNames("__wab_instance", sty.textInput)}
+          onChange={async (...eventArgs: any) => {
+            ((...eventArgs) => {
+              generateStateOnChangeProp($state, ["textInput", "value"])(
+                (e => e.target?.value).apply(null, eventArgs)
+              );
+            }).apply(null, eventArgs);
 
-          if (
-            eventArgs.length > 1 &&
-            eventArgs[1] &&
-            eventArgs[1]._plasmic_state_init_
-          ) {
-            return;
-          }
-
-          (async event => {
-            const $steps = {};
-
-            $steps["runOnChangeSearch"] = true
-              ? (() => {
-                  const actionArgs = {
-                    eventRef: $props["onChangeSearch"],
-                    args: [
-                      (() => {
-                        try {
-                          return $state.textInput.value;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()
-                    ]
-                  };
-                  return (({ eventRef, args }) => {
-                    return eventRef?.(...(args ?? []));
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
             if (
-              $steps["runOnChangeSearch"] != null &&
-              typeof $steps["runOnChangeSearch"] === "object" &&
-              typeof $steps["runOnChangeSearch"].then === "function"
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
             ) {
-              $steps["runOnChangeSearch"] = await $steps["runOnChangeSearch"];
+              return;
             }
-          }).apply(null, eventArgs);
-        }}
-        placeholder={
-          "\u062c\u0633\u062a\u062c\u0648 \u062f\u0631 \u0646\u0638\u0631\u0627\u062a \u0628\u06cc\u0645\u0627\u0631\u0627\u0646"
-        }
-        value={generateStateValueProp($state, ["textInput", "value"]) ?? ""}
-      />
+
+            (async event => {
+              const $steps = {};
+
+              $steps["runOnChangeSearch"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["onChangeSearch"],
+                      args: [
+                        (() => {
+                          try {
+                            return $state.textInput.value;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runOnChangeSearch"] != null &&
+                typeof $steps["runOnChangeSearch"] === "object" &&
+                typeof $steps["runOnChangeSearch"].then === "function"
+              ) {
+                $steps["runOnChangeSearch"] = await $steps["runOnChangeSearch"];
+              }
+            }).apply(null, eventArgs);
+          }}
+          placeholder={
+            "\u062c\u0633\u062a\u062c\u0648 \u062f\u0631 \u0646\u0638\u0631\u0627\u062a \u0628\u06cc\u0645\u0627\u0631\u0627\u0646"
+          }
+          value={generateStateValueProp($state, ["textInput", "value"]) ?? ""}
+        />
+      </div>
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "filters", "select", "textInput"],
-  freeBox: ["freeBox", "filters", "select"],
+  root: ["root", "filters", "select", "textInput"],
   filters: ["filters"],
   select: ["select"],
   textInput: ["textInput"]
@@ -467,7 +471,6 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  freeBox: "div";
   filters: typeof CustomSelect;
   select: typeof CustomSelect;
   textInput: typeof TextInput;
@@ -533,7 +536,6 @@ export const PlasmicRaviFilters = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    freeBox: makeNodeComponent("freeBox"),
     filters: makeNodeComponent("filters"),
     select: makeNodeComponent("select"),
     textInput: makeNodeComponent("textInput"),

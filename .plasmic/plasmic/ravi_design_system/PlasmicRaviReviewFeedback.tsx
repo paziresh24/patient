@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -74,9 +74,10 @@ import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviReviewFeedback.module.css"; // plasmic-import: lZJoIJWYs8o9/css
 
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronRightIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
+import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: 2uzLLHig1Vpp/icon
+import Icon5Icon from "./icons/PlasmicIcon__Icon5"; // plasmic-import: xTYazYoaptk0/icon
 
 createPlasmicElementProxy;
 
@@ -92,6 +93,7 @@ export type PlasmicRaviReviewFeedback__ArgsType = {
   timeList?: any;
   onSubmit?: (values: string) => void;
   onClickSendComment?: (value: string) => void;
+  alert?: any;
 };
 type ArgPropType = keyof PlasmicRaviReviewFeedback__ArgsType;
 export const PlasmicRaviReviewFeedback__ArgProps = new Array<ArgPropType>(
@@ -99,14 +101,14 @@ export const PlasmicRaviReviewFeedback__ArgProps = new Array<ArgPropType>(
   "negativeList",
   "timeList",
   "onSubmit",
-  "onClickSendComment"
+  "onClickSendComment",
+  "alert"
 );
 
 export type PlasmicRaviReviewFeedback__OverridesType = {
   root?: Flex__<"div">;
   raviRateStar?: Flex__<typeof RaviRateStar>;
   raviTabs?: Flex__<typeof RaviTabs>;
-  svg?: Flex__<"svg">;
   commentDialog?: Flex__<typeof Paziresh24Dialog>;
   checkbox?: Flex__<typeof Checkbox>;
   multilineTextInput?: Flex__<typeof Paziresh24MultilineTextInput>;
@@ -118,6 +120,7 @@ export interface DefaultRaviReviewFeedbackProps {
   timeList?: any;
   onSubmit?: (values: string) => void;
   onClickSendComment?: (value: string) => void;
+  alert?: any;
   className?: string;
 }
 
@@ -208,6 +211,12 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "isLoading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -262,7 +271,11 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
           <Stack__
             as={"div"}
             hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__giY)}
+            className={classNames(
+              projectcss.all,
+              sty.freeBox__giY,
+              "rating-stars"
+            )}
             dir={"ltr"}
           >
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -916,9 +929,7 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
                     }
                   </div>
                   <IconIcon
-                    data-plasmic-name={"svg"}
-                    data-plasmic-override={overrides.svg}
-                    className={classNames(projectcss.all, sty.svg)}
+                    className={classNames(projectcss.all, sty.svg___1W4Rg)}
                     role={"img"}
                   />
                 </Stack__>
@@ -970,6 +981,57 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
               }}
             />
 
+            {(() => {
+              try {
+                return !!$props?.alert?.text;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__xBXdG)}
+                style={{
+                  ...($props.alert.type == "error" && { color: "red" })
+                }}
+              >
+                <Icon5Icon
+                  className={classNames(projectcss.all, sty.svg__qtxDh)}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__bVjan
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.alert.text;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
+              </Stack__>
+            ) : null}
             <Paziresh24Button
               children2={"\u062b\u0628\u062a \u0646\u0638\u0631"}
               className={classNames(
@@ -992,6 +1054,40 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
               onClick={async event => {
                 const $steps = {};
 
+                $steps["updateIsLoading"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoading"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLoading"] != null &&
+                  typeof $steps["updateIsLoading"] === "object" &&
+                  typeof $steps["updateIsLoading"].then === "function"
+                ) {
+                  $steps["updateIsLoading"] = await $steps["updateIsLoading"];
+                }
+
                 $steps["runOnSubmit"] = true
                   ? (() => {
                       const actionArgs = {
@@ -999,7 +1095,13 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
                         args: [
                           (() => {
                             try {
-                              return undefined;
+                              return {
+                                rate: $state.rate,
+                                waitingTime: $state.selectedTime,
+                                details: $state.selected,
+                                private: $state.checkbox.isSelected,
+                                commentText: $state.multilineTextInput.value
+                              };
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -1023,6 +1125,40 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
                   typeof $steps["runOnSubmit"].then === "function"
                 ) {
                   $steps["runOnSubmit"] = await $steps["runOnSubmit"];
+                }
+
+                $steps["updateIsLoading2"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isLoading"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsLoading2"] != null &&
+                  typeof $steps["updateIsLoading2"] === "object" &&
+                  typeof $steps["updateIsLoading2"].then === "function"
+                ) {
+                  $steps["updateIsLoading2"] = await $steps["updateIsLoading2"];
                 }
               }}
             />
@@ -1107,6 +1243,19 @@ function PlasmicRaviReviewFeedback__RenderFunc(props: {
                 "__wab_instance",
                 sty.paziresh24Button___56OIw
               )}
+              loading={(() => {
+                try {
+                  return $state.isLoadingComment;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()}
               onClick={async event => {
                 const $steps = {};
 
@@ -1287,14 +1436,12 @@ const PlasmicDescendants = {
     "root",
     "raviRateStar",
     "raviTabs",
-    "svg",
     "commentDialog",
     "checkbox",
     "multilineTextInput"
   ],
   raviRateStar: ["raviRateStar"],
   raviTabs: ["raviTabs"],
-  svg: ["svg"],
   commentDialog: ["commentDialog", "checkbox", "multilineTextInput"],
   checkbox: ["checkbox"],
   multilineTextInput: ["multilineTextInput"]
@@ -1306,7 +1453,6 @@ type NodeDefaultElementType = {
   root: "div";
   raviRateStar: typeof RaviRateStar;
   raviTabs: typeof RaviTabs;
-  svg: "svg";
   commentDialog: typeof Paziresh24Dialog;
   checkbox: typeof Checkbox;
   multilineTextInput: typeof Paziresh24MultilineTextInput;
@@ -1374,7 +1520,6 @@ export const PlasmicRaviReviewFeedback = Object.assign(
     // Helper components rendering sub-elements
     raviRateStar: makeNodeComponent("raviRateStar"),
     raviTabs: makeNodeComponent("raviTabs"),
-    svg: makeNodeComponent("svg"),
     commentDialog: makeNodeComponent("commentDialog"),
     checkbox: makeNodeComponent("checkbox"),
     multilineTextInput: makeNodeComponent("multilineTextInput"),

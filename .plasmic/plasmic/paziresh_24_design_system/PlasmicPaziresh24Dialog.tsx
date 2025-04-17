@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -72,9 +72,9 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import sty from "./PlasmicPaziresh24Dialog.module.css"; // plasmic-import: ZGdhyEBPJSmH/css
 
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
-import XIcon from "../fragment_icons/icons/PlasmicIcon__X"; // plasmic-import: zb1oqVXdrxPK/icon
+import ChevronRightIcon from "./icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
+import ChevronLeftIcon from "./icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
+import XIcon from "./icons/PlasmicIcon__X"; // plasmic-import: TbYkPSJXy2Wa/icon
 
 createPlasmicElementProxy;
 
@@ -92,17 +92,17 @@ export const PlasmicPaziresh24Dialog__VariantProps = new Array<VariantPropType>(
 export type PlasmicPaziresh24Dialog__ArgsType = {
   open?: boolean;
   onOpenChange?: (val: boolean) => void;
-  body?: React.ReactNode;
-  title?: React.ReactNode;
   trigger?: React.ReactNode;
+  title?: React.ReactNode;
+  body?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicPaziresh24Dialog__ArgsType;
 export const PlasmicPaziresh24Dialog__ArgProps = new Array<ArgPropType>(
   "open",
   "onOpenChange",
-  "body",
+  "trigger",
   "title",
-  "trigger"
+  "body"
 );
 
 export type PlasmicPaziresh24Dialog__OverridesType = {
@@ -117,9 +117,9 @@ export type PlasmicPaziresh24Dialog__OverridesType = {
 export interface DefaultPaziresh24DialogProps {
   open?: boolean;
   onOpenChange?: (val: boolean) => void;
-  body?: React.ReactNode;
-  title?: React.ReactNode;
   trigger?: React.ReactNode;
+  title?: React.ReactNode;
+  body?: React.ReactNode;
   noTrigger?: SingleBooleanChoiceArg<"noTrigger">;
   className?: string;
 }

@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   PlasmicCustomSelect__Option,
   DefaultCustomSelect__OptionProps
-} from "./plasmic/ravi_design_system/PlasmicCustomSelect__Option";
+} from "./plasmic/ravi_r_r/PlasmicCustomSelect__Option";
 
 import { SelectOptionRef } from "@plasmicapp/react-web";
 

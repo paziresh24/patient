@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -73,7 +73,7 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv
 import sty from "./PlasmicRaviReviewCard.module.css"; // plasmic-import: mdyuGePDb8Fy/css
 
 import RepliesIcon from "../fragment_icons/icons/PlasmicIcon__Replies"; // plasmic-import: BamIPHX72k5k/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 import ThumbUpIcon from "../fragment_icons/icons/PlasmicIcon__ThumbUp"; // plasmic-import: GRY2zHJ6uxOn/icon
 import ShareIcon from "../fragment_icons/icons/PlasmicIcon__Share"; // plasmic-import: NSxX1Iy4jDVL/icon
 import Icon17Icon from "../paziresh_24_design_system/icons/PlasmicIcon__Icon17"; // plasmic-import: K0KrVjcOVNaS/icon
@@ -107,6 +107,7 @@ export type PlasmicRaviReviewCard__ArgsType = {
   likeCount?: number;
   doctorLink?: any;
   onClickDoctorLink?: (value: string) => void;
+  hideActions?: boolean;
   options?: React.ReactNode;
   replyCard?: React.ReactNode;
   replies2?: React.ReactNode;
@@ -135,6 +136,7 @@ export const PlasmicRaviReviewCard__ArgProps = new Array<ArgPropType>(
   "likeCount",
   "doctorLink",
   "onClickDoctorLink",
+  "hideActions",
   "options",
   "replyCard",
   "replies2",
@@ -173,6 +175,7 @@ export interface DefaultRaviReviewCardProps {
   likeCount?: number;
   doctorLink?: any;
   onClickDoctorLink?: (value: string) => void;
+  hideActions?: boolean;
   options?: React.ReactNode;
   replyCard?: React.ReactNode;
   replies2?: React.ReactNode;
@@ -206,7 +209,8 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
           isLoadingSendReport: false,
           isDoctor: false,
           showReplies: false,
-          doctorLink: {}
+          doctorLink: {},
+          hideActions: false
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -479,54 +483,352 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
             }}
           />
         </div>
-        <div
-          className={classNames(projectcss.all, sty.freeBox__b7MAv)}
-          onClick={async event => {
-            const $steps = {};
-          }}
-        >
-          <div className={classNames(projectcss.all, sty.freeBox__lbidY)}>
-            {(() => {
-              try {
-                return $props.showReplies;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
+        {(() => {
+          try {
+            return !$props.hideActions;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <div
+            className={classNames(projectcss.all, sty.freeBox__b7MAv)}
+            onClick={async event => {
+              const $steps = {};
+            }}
+          >
+            <div className={classNames(projectcss.all, sty.freeBox__lbidY)}>
+              {(() => {
+                try {
+                  return $props.showReplies;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })() ? (
+              })() ? (
+                <Paziresh24Button
+                  children2={
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__zMbEi
+                      )}
+                    >
+                      {
+                        "\u0646\u0645\u0627\u06cc\u0634 \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646"
+                      }
+                    </div>
+                  }
+                  className={classNames(
+                    "__wab_instance",
+                    sty.paziresh24Button__e0FnY
+                  )}
+                  color={"clear"}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["updateRepliesDialogOpen"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["repliesDialog", "open"]
+                            },
+                            operation: 4
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            const oldValue = $stateGet(objRoot, variablePath);
+                            $stateSet(objRoot, variablePath, !oldValue);
+                            return !oldValue;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateRepliesDialogOpen"] != null &&
+                      typeof $steps["updateRepliesDialogOpen"] === "object" &&
+                      typeof $steps["updateRepliesDialogOpen"].then ===
+                        "function"
+                    ) {
+                      $steps["updateRepliesDialogOpen"] = await $steps[
+                        "updateRepliesDialogOpen"
+                      ];
+                    }
+                  }}
+                  showStartIcon={true}
+                  startIcon={
+                    <RepliesIcon
+                      className={classNames(projectcss.all, sty.svg__lzAa)}
+                      role={"img"}
+                    />
+                  }
+                />
+              ) : null}
+            </div>
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__kv2Iy)}
+            >
+              <Popover
+                data-plasmic-name={"popoverCore"}
+                data-plasmic-override={overrides.popoverCore}
+                className={classNames("__wab_instance", sty.popoverCore)}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "popoverCore",
+                    "open"
+                  ]).apply(null, eventArgs);
+                }}
+                open={generateStateValueProp($state, ["popoverCore", "open"])}
+                overlay={
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(
+                      projectcss.all,
+                      sty.freeBox__fBedF,
+                      "rating-stars"
+                    )}
+                    dir={"ltr"}
+                  >
+                    {(_par =>
+                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                      (() => {
+                        try {
+                          return [1, 2, 3, 4, 5];
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()
+                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                      const currentItem = __plasmic_item_0;
+                      const currentIndex = __plasmic_idx_0;
+                      return (
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__vNfI
+                          )}
+                          key={currentIndex}
+                          onClick={async event => {
+                            const $steps = {};
+
+                            $steps["runOnClickLike"] = true
+                              ? (() => {
+                                  const actionArgs = {
+                                    eventRef: $props["onRate"],
+                                    args: [
+                                      (() => {
+                                        try {
+                                          return currentItem;
+                                        } catch (e) {
+                                          if (
+                                            e instanceof TypeError ||
+                                            e?.plasmicType ===
+                                              "PlasmicUndefinedDataError"
+                                          ) {
+                                            return undefined;
+                                          }
+                                          throw e;
+                                        }
+                                      })()
+                                    ]
+                                  };
+                                  return (({ eventRef, args }) => {
+                                    return eventRef?.(...(args ?? []));
+                                  })?.apply(null, [actionArgs]);
+                                })()
+                              : undefined;
+                            if (
+                              $steps["runOnClickLike"] != null &&
+                              typeof $steps["runOnClickLike"] === "object" &&
+                              typeof $steps["runOnClickLike"].then ===
+                                "function"
+                            ) {
+                              $steps["runOnClickLike"] = await $steps[
+                                "runOnClickLike"
+                              ];
+                            }
+                          }}
+                        >
+                          <RaviRateStar
+                            data-plasmic-name={"raviRateStar"}
+                            data-plasmic-override={overrides.raviRateStar}
+                            className={classNames(
+                              "__wab_instance",
+                              sty.raviRateStar
+                            )}
+                            isSelected={(() => {
+                              try {
+                                return currentItem <= $state.rate;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return [];
+                                }
+                                throw e;
+                              }
+                            })()}
+                          />
+                        </div>
+                      );
+                    })}
+                  </Stack__>
+                }
+                themeResetClass={classNames(
+                  projectcss.root_reset,
+                  projectcss.plasmic_default_styles,
+                  projectcss.plasmic_mixins,
+                  projectcss.plasmic_tokens,
+                  plasmic_paziresh_24_design_system_css.plasmic_tokens
+                )}
+              >
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox___3LcFx)}
+                >
+                  {(() => {
+                    try {
+                      return $props.likeCount > 0;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__ykqG3
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return $props.likeCount;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                  ) : null}
+                  {(() => {
+                    try {
+                      return $state.rate == 0;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <ThumbUpIcon
+                      className={classNames(projectcss.all, sty.svg__qxVr8)}
+                      role={"img"}
+                    />
+                  ) : null}
+                  {(() => {
+                    try {
+                      return $state.rate > 0;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <ThumbUpIcon
+                      className={classNames(projectcss.all, sty.svg__uc4Ku)}
+                      role={"img"}
+                    />
+                  ) : null}
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__t6Ixd
+                    )}
+                  >
+                    {
+                      "\u0686\u0642\u062f\u0631 \u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
+                    }
+                  </div>
+                </Stack__>
+              </Popover>
               <Paziresh24Button
                 children2={
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__zMbEi
+                      sty.text__rKbaW
                     )}
                   >
-                    {
-                      "\u0646\u0645\u0627\u06cc\u0634 \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646"
-                    }
+                    {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646"}
                   </div>
                 }
                 className={classNames(
                   "__wab_instance",
-                  sty.paziresh24Button__e0FnY
+                  sty.paziresh24Button__ae33Y
                 )}
                 color={"clear"}
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["updateRepliesDialogOpen"] = true
+                  $steps["updateShareDialogOpen"] = true
                     ? (() => {
                         const actionArgs = {
                           variable: {
                             objRoot: $state,
-                            variablePath: ["repliesDialog", "open"]
+                            variablePath: ["shareDialog", "open"]
                           },
                           operation: 4
                         };
@@ -548,303 +850,26 @@ function PlasmicRaviReviewCard__RenderFunc(props: {
                       })()
                     : undefined;
                   if (
-                    $steps["updateRepliesDialogOpen"] != null &&
-                    typeof $steps["updateRepliesDialogOpen"] === "object" &&
-                    typeof $steps["updateRepliesDialogOpen"].then === "function"
+                    $steps["updateShareDialogOpen"] != null &&
+                    typeof $steps["updateShareDialogOpen"] === "object" &&
+                    typeof $steps["updateShareDialogOpen"].then === "function"
                   ) {
-                    $steps["updateRepliesDialogOpen"] = await $steps[
-                      "updateRepliesDialogOpen"
+                    $steps["updateShareDialogOpen"] = await $steps[
+                      "updateShareDialogOpen"
                     ];
                   }
                 }}
                 showStartIcon={true}
                 startIcon={
-                  <RepliesIcon
-                    className={classNames(projectcss.all, sty.svg__lzAa)}
+                  <ShareIcon
+                    className={classNames(projectcss.all, sty.svg__ejx0Y)}
                     role={"img"}
                   />
                 }
               />
-            ) : null}
+            </Stack__>
           </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__kv2Iy)}
-          >
-            <Popover
-              data-plasmic-name={"popoverCore"}
-              data-plasmic-override={overrides.popoverCore}
-              className={classNames("__wab_instance", sty.popoverCore)}
-              onOpenChange={async (...eventArgs: any) => {
-                generateStateOnChangeProp($state, [
-                  "popoverCore",
-                  "open"
-                ]).apply(null, eventArgs);
-              }}
-              open={generateStateValueProp($state, ["popoverCore", "open"])}
-              overlay={
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__fBedF)}
-                  dir={"ltr"}
-                >
-                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                    (() => {
-                      try {
-                        return [1, 2, 3, 4, 5];
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()
-                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                    const currentItem = __plasmic_item_0;
-                    const currentIndex = __plasmic_idx_0;
-                    return (
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__vNfI
-                        )}
-                        key={currentIndex}
-                        onClick={async event => {
-                          const $steps = {};
-
-                          $steps["runOnClickLike"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  eventRef: $props["onRate"],
-                                  args: [
-                                    (() => {
-                                      try {
-                                        return currentItem;
-                                      } catch (e) {
-                                        if (
-                                          e instanceof TypeError ||
-                                          e?.plasmicType ===
-                                            "PlasmicUndefinedDataError"
-                                        ) {
-                                          return undefined;
-                                        }
-                                        throw e;
-                                      }
-                                    })()
-                                  ]
-                                };
-                                return (({ eventRef, args }) => {
-                                  return eventRef?.(...(args ?? []));
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["runOnClickLike"] != null &&
-                            typeof $steps["runOnClickLike"] === "object" &&
-                            typeof $steps["runOnClickLike"].then === "function"
-                          ) {
-                            $steps["runOnClickLike"] = await $steps[
-                              "runOnClickLike"
-                            ];
-                          }
-                        }}
-                      >
-                        <RaviRateStar
-                          data-plasmic-name={"raviRateStar"}
-                          data-plasmic-override={overrides.raviRateStar}
-                          className={classNames(
-                            "__wab_instance",
-                            sty.raviRateStar
-                          )}
-                          isSelected={(() => {
-                            try {
-                              return currentItem <= $state.rate;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return [];
-                              }
-                              throw e;
-                            }
-                          })()}
-                        />
-                      </div>
-                    );
-                  })}
-                </Stack__>
-              }
-              themeResetClass={classNames(
-                projectcss.root_reset,
-                projectcss.plasmic_default_styles,
-                projectcss.plasmic_mixins,
-                projectcss.plasmic_tokens,
-                plasmic_paziresh_24_design_system_css.plasmic_tokens
-              )}
-            >
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox___3LcFx)}
-              >
-                {(() => {
-                  try {
-                    return $props.likeCount > 0;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__ykqG3
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return $props.likeCount;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return "";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </div>
-                ) : null}
-                {(() => {
-                  try {
-                    return $state.rate == 0;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <ThumbUpIcon
-                    className={classNames(projectcss.all, sty.svg__qxVr8)}
-                    role={"img"}
-                  />
-                ) : null}
-                {(() => {
-                  try {
-                    return $state.rate > 0;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <ThumbUpIcon
-                    className={classNames(projectcss.all, sty.svg__uc4Ku)}
-                    role={"img"}
-                  />
-                ) : null}
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__t6Ixd
-                  )}
-                >
-                  {
-                    "\u0686\u0642\u062f\u0631 \u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
-                  }
-                </div>
-              </Stack__>
-            </Popover>
-            <Paziresh24Button
-              children2={
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__rKbaW
-                  )}
-                >
-                  {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646"}
-                </div>
-              }
-              className={classNames(
-                "__wab_instance",
-                sty.paziresh24Button__ae33Y
-              )}
-              color={"clear"}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["updateShareDialogOpen"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["shareDialog", "open"]
-                        },
-                        operation: 4
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
-
-                        const oldValue = $stateGet(objRoot, variablePath);
-                        $stateSet(objRoot, variablePath, !oldValue);
-                        return !oldValue;
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps["updateShareDialogOpen"] != null &&
-                  typeof $steps["updateShareDialogOpen"] === "object" &&
-                  typeof $steps["updateShareDialogOpen"].then === "function"
-                ) {
-                  $steps["updateShareDialogOpen"] = await $steps[
-                    "updateShareDialogOpen"
-                  ];
-                }
-              }}
-              showStartIcon={true}
-              startIcon={
-                <ShareIcon
-                  className={classNames(projectcss.all, sty.svg__ejx0Y)}
-                  role={"img"}
-                />
-              }
-            />
-          </Stack__>
-        </div>
+        ) : null}
         {(() => {
           try {
             return $props.isDoctor;

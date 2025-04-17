@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -68,8 +68,8 @@ import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviUser.module.css"; // plasmic-import: LGI_uX8bDUNt/css
 
-import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
-import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
+import SmileIcon from "../paziresh_24_design_system/icons/PlasmicIcon__Smile"; // plasmic-import: YJPbEKZET-zw/icon
+import InfoIcon from "../paziresh_24_design_system/icons/PlasmicIcon__Info"; // plasmic-import: 3hBkBVfsYtbt/icon
 
 createPlasmicElementProxy;
 
@@ -199,7 +199,7 @@ function PlasmicRaviUser__RenderFunc(props: {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `/ravi/${$props.userId}`;
+                        return `/_/ravi/profile/${$props.userId}`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -480,6 +480,19 @@ function PlasmicRaviUser__RenderFunc(props: {
                   sty.link__xAgss
                 )}
                 component={Link}
+                href={(() => {
+                  try {
+                    return $props.doctorLink.url;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 onClick={async event => {
                   const $steps = {};
 
@@ -519,6 +532,7 @@ function PlasmicRaviUser__RenderFunc(props: {
                   }
                 }}
                 platform={"nextjs"}
+                target={"_blank"}
               >
                 <React.Fragment>
                   {(() => {

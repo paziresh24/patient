@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -64,8 +64,8 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import sty from "./PlasmicPaziresh24Chip.module.css"; // plasmic-import: df-BFL5jhiFc/css
 
-import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
-import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
+import SmileIcon from "./icons/PlasmicIcon__Smile"; // plasmic-import: YJPbEKZET-zw/icon
+import InfoIcon from "./icons/PlasmicIcon__Info"; // plasmic-import: 3hBkBVfsYtbt/icon
 
 createPlasmicElementProxy;
 

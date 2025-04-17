@@ -175,13 +175,13 @@
   width: 100%;
   min-width: 0;
 }
-.svg__qy0Zr {
+.svg___5UXur {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
 }
-.svg___85X6D {
+.svg___3Y03H {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -192,13 +192,13 @@
   width: 100%;
   min-width: 0;
 }
-.svg__xH10I {
+.svg__ahzIe {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
 }
-.svg__piyto {
+.svg__uh4Y6 {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -300,7 +300,7 @@
 .paziresh24Button__bHSuU:global(.__wab_instance) {
   max-width: 100%;
 }
-.svg__xaFd6 {
+.svg__ekWUr {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -309,7 +309,7 @@
 .text__wo6DO {
   font-weight: 400;
 }
-.svg__pp5XZ {
+.svg__c6Rq5 {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -384,7 +384,7 @@
 .paziresh24Button__sgucu:global(.__wab_instance) {
   max-width: 100%;
 }
-.svg__p8QH {
+.svg__q9WC9 {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -393,7 +393,7 @@
 .text__r0Gau {
   font-weight: 400;
 }
-.svg__wgGa {
+.svg__mlp18 {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -437,7 +437,7 @@
   max-width: 100%;
   width: auto;
 }
-.svg__wszOu {
+.svg__ca7Rq {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -471,24 +471,68 @@
   > img {
   margin-left: var(--token-omrXvBNBcWTN);
 }
-.svg {
+.svg___1W4Rg {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
+}
+.freeBox__xBXdG {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0px;
+}
+.freeBox__xBXdG > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-omrXvBNBcWTN));
+  width: calc(100% + var(--token-omrXvBNBcWTN));
+}
+.freeBox__xBXdG > :global(.__wab_flex-container) > *,
+.freeBox__xBXdG > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__xBXdG > :global(.__wab_flex-container) > picture > img,
+.freeBox__xBXdG
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-omrXvBNBcWTN);
+}
+.svg__qtxDh {
+  object-fit: cover;
+  max-width: 100%;
+  width: 16px;
+  height: 100%;
+  flex-shrink: 0;
+  min-height: 0;
+}
+.text__bVjan {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-size: var(--token-KUiXUfHPkqkm);
+  align-self: auto;
 }
 .paziresh24Button__q1Rv7:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
   min-width: 0;
 }
-.svg__iXr27 {
+.svg__uA1Yr {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
 }
-.svg__mt1Q {
+.svg__c5B2Q {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -571,13 +615,13 @@
   width: 100%;
   min-width: 0;
 }
-.svg__xJozM {
+.svg__z71O {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
 }
-.svg__c9Kd6 {
+.svg__zX5ZJ {
   position: relative;
   object-fit: cover;
   width: auto;
