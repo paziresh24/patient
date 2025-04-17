@@ -5,40 +5,35 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type IconIconProps = React.ComponentProps<"svg"> & {
+export type ChevronRightIconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function IconIcon(props: IconIconProps) {
+export function ChevronRightIcon(props: ChevronRightIconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
       xmlns={"http://www.w3.org/2000/svg"}
       fill={"none"}
-      stroke={"currentColor"}
-      strokeWidth={"2"}
-      strokeLinecap={"round"}
-      strokeLinejoin={"round"}
-      className={classNames(
-        "plasmic-default__svg",
-        className,
-        "lucide lucide-pencil"
-      )}
       viewBox={"0 0 24 24"}
       height={"1em"}
+      className={classNames("plasmic-default__svg", className)}
       style={style}
       {...restProps}
     >
       {title && <title>{title}</title>}
 
       <path
+        fillRule={"evenodd"}
+        clipRule={"evenodd"}
         d={
-          "M21.174 6.812a1 1 0 00-3.986-3.987L3.842 16.174a2 2 0 00-.5.83l-1.321 4.352a.5.5 0 00.623.622l4.353-1.32a2 2 0 00.83-.497zM15 5l4 4"
+          "M9.47 5.47a.75.75 0 011.06 0l6 6a.75.75 0 010 1.06l-6 6a.75.75 0 11-1.06-1.06L14.94 12 9.47 6.53a.75.75 0 010-1.06z"
         }
+        fill={"currentColor"}
       ></path>
     </svg>
   );
 }
 
-export default IconIcon;
+export default ChevronRightIcon;
 /* prettier-ignore-end */

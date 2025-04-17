@@ -41,7 +41,7 @@ function EditAndReport_(
   // By default, we are just piping all EditAndReportProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicEditAndReport {...props} />;
+  return <PlasmicEditAndReport editAndReportStack={{ ref }} {...props} />;
 }
 
 const EditAndReport = React.forwardRef(EditAndReport_);

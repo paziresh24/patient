@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&display=swap");
 
 .plasmic_tokens {
   --plsmc-standard-width: 800px;
@@ -11,19 +11,9 @@
 }
 
 .plasmic_default_styles {
-  --mixin-7BGmCcvcZSXH_font-family: "Inter", sans-serif;
-  --mixin-7BGmCcvcZSXH_font-size: 16px;
-  --mixin-7BGmCcvcZSXH_font-weight: 400;
-  --mixin-7BGmCcvcZSXH_font-style: normal;
-  --mixin-7BGmCcvcZSXH_color: #535353;
-  --mixin-7BGmCcvcZSXH_text-align: left;
-  --mixin-7BGmCcvcZSXH_text-transform: none;
-  --mixin-7BGmCcvcZSXH_line-height: 1.5;
-  --mixin-7BGmCcvcZSXH_letter-spacing: normal;
-  --mixin-7BGmCcvcZSXH_white-space: pre-wrap;
-  --mixin-7BGmCcvcZSXH_user-select: text;
   --mixin-7BGmCcvcZSXH_text-decoration-line: none;
   --mixin-7BGmCcvcZSXH_text-overflow: clip;
+  --mixin-7BGmCcvcZSXH_white-space: pre-wrap;
   --mixin-FtJ2KK2L2ecl_color: #000000;
   --mixin-FtJ2KK2L2ecl_font-weight: 700;
   --mixin-FtJ2KK2L2ecl_font-size: 64px;
@@ -442,15 +432,6 @@
   white-space: normal;
 }
 :where(.root_reset) {
-  font-family: var(--mixin-7BGmCcvcZSXH_font-family);
-  font-size: var(--mixin-7BGmCcvcZSXH_font-size);
-  font-weight: var(--mixin-7BGmCcvcZSXH_font-weight);
-  font-style: var(--mixin-7BGmCcvcZSXH_font-style);
-  color: var(--mixin-7BGmCcvcZSXH_color);
-  text-align: var(--mixin-7BGmCcvcZSXH_text-align);
-  text-transform: var(--mixin-7BGmCcvcZSXH_text-transform);
-  line-height: var(--mixin-7BGmCcvcZSXH_line-height);
-  letter-spacing: var(--mixin-7BGmCcvcZSXH_letter-spacing);
   white-space: var(--mixin-7BGmCcvcZSXH_white-space);
 }
 

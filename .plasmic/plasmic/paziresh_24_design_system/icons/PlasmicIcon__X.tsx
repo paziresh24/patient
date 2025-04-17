@@ -5,11 +5,11 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type IconIconProps = React.ComponentProps<"svg"> & {
+export type XIconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function IconIcon(props: IconIconProps) {
+export function XIcon(props: XIconProps) {
   const { className, style, title, ...restProps } = props;
   return (
     <svg
@@ -22,7 +22,7 @@ export function IconIcon(props: IconIconProps) {
       className={classNames(
         "plasmic-default__svg",
         className,
-        "lucide lucide-pencil"
+        "lucide lucide-x"
       )}
       viewBox={"0 0 24 24"}
       height={"1em"}
@@ -31,14 +31,10 @@ export function IconIcon(props: IconIconProps) {
     >
       {title && <title>{title}</title>}
 
-      <path
-        d={
-          "M21.174 6.812a1 1 0 00-3.986-3.987L3.842 16.174a2 2 0 00-.5.83l-1.321 4.352a.5.5 0 00.623.622l4.353-1.32a2 2 0 00.83-.497zM15 5l4 4"
-        }
-      ></path>
+      <path d={"M18 6L6 18M6 6l12 12"}></path>
     </svg>
   );
 }
 
-export default IconIcon;
+export default XIcon;
 /* prettier-ignore-end */

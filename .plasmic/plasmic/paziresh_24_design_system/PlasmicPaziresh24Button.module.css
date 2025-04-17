@@ -366,6 +366,9 @@
 .svgoutline_loading {
   color: var(--token-s_XuzePAGmOh);
 }
+.svgcolor_softSand_loading {
+  color: #000000;
+}
 .svgloading_color_link {
   color: var(--token-aWDgJo5BrkPj);
 }

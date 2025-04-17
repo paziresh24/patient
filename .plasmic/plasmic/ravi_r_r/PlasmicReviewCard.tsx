@@ -2833,7 +2833,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 "raviExpFroDrakam"
               )
             })}
-            onValueChange={async (...eventArgs: any) => {
+            onValueChange2={async (...eventArgs: any) => {
               generateStateOnChangeProp($state, [
                 "multilineTextInput",
                 "value"
