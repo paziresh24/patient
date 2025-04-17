@@ -1088,7 +1088,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                   actionButtons={(() => {
                     try {
                       return (() => {
-                        if (typeof $ctx.Growthbook === "undefined") {
+                        if (!$ctx.Growthbook) {
                           return currentItem.actions;
                         }
                         if (
