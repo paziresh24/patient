@@ -2070,7 +2070,8 @@ function PlasmicProductCard__RenderFunc(props: {
             try {
               return (() => {
                 if (
-                  typeof $ctx.Growthbook === "undefined" &&
+                  (!$ctx.Growthbook ||
+                    !$state.cardActionSduiV2UiRequest.data) &&
                   $props.actionButtons.length > 0
                 ) {
                   return true;
