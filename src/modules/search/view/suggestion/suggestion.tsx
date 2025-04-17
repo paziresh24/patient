@@ -204,7 +204,7 @@ export const Suggestion = (props: SuggestionProps) => {
                 onChangeCity({ ...val });
               },
               selectedCity: city,
-              defaultValue: defaultInputValue || selectedFilters?.text || '',
+              defaultValue: debouncedSearchTerm || defaultInputValue || selectedFilters?.text || '',
               onClickOverlay: handleClickOverlay,
               inputVal: debouncedSearchTerm,
               onChangeInputVal: setUserSearchValue,
@@ -265,4 +265,3 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
-

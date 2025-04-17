@@ -4,6 +4,7 @@ import { Center } from '@/common/types/doctorParams';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchStore } from '../store/search';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 
 type Filter = {
   items: {
@@ -98,6 +99,7 @@ export const useSearch = () => {
     asPath,
   } = useRouter();
   const geoLocation = useSearchStore(state => state.geoLocation);
+  const showSuggestedDoctor = useFeatureValue('fragment::top-suggested-card-feature', { enable: true });
 
   const baseInfo = useGetBaseInfo({ table: ['city', 'province'] });
   const searchRequest = useSearchRequest({
@@ -117,12 +119,14 @@ export const useSearch = () => {
     !searchRequest?.data?.selected_filters?.result_type &&
     (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
     !searchRequest?.data?.search.is_landing &&
-    params?.length !== 1;
+    params?.length !== 1 &&
+    showSuggestedDoctor?.enable;
 
   const searchConsultRequest = useConsultSearch(
     {
       route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
       query: {
+        ...query,
         turn_type: 'consult',
       },
       timeout: 700,
@@ -217,6 +221,7 @@ export const useSearch = () => {
     isConsult,
     search,
     responseData: searchRequest?.data ?? {},
-    searchConsultResponseData: !searchConsultEnabled ? {} : searchConsultRequest?.data ?? {},
+    searchConsultResponseData:
+      searchConsultEnabled && !searchConsultRequest?.data?.search?.is_landing ? searchConsultRequest?.data ?? {} : {},
   };
 };
