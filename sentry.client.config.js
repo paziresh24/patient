@@ -8,7 +8,7 @@ Sentry.init({
   dsn: SENTRY_DSN,
   // We recommend adjusting this value in production, or using tracesSampler
   // for finer control
-  tracesSampleRate: 0.01,
+  tracesSampleRate: 0.5,
   // ...
   // Note: if you want to override the automatic release value, do not set a
   // `release` value here - use the environment variable `SENTRY_RELEASE`, so
