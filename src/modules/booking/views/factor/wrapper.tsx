@@ -18,6 +18,8 @@ import { splunkInstance } from '@/common/services/splunk';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import useFirstFreeTime from '../../hooks/selectTime/useFirstFreeTime';
 import useBooking from '../../hooks/booking';
+import { growthbook } from 'src/pages/_app';
+import { useDiscountInquiry } from '@/common/apis/services/factor/discountInquiry';
 
 interface FactorWrapperProps {
   bookId?: string;
@@ -58,6 +60,16 @@ const FactorWrapper = (props: FactorWrapperProps) => {
     serviceId,
     userCenterId: userCenterId,
   });
+  const discountInquiry = useDiscountInquiry();
+
+  useEffect(() => {
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      center_id: centerId,
+      ...(serviceId && { service_id: serviceId }),
+      ...(userCenterId && { user_center_id: userCenterId }),
+    });
+  }, [userCenterId, serviceId, centerId]);
 
   const isApplyPremiumDiscount = useMemo(
     () =>
@@ -109,6 +121,17 @@ const FactorWrapper = (props: FactorWrapperProps) => {
           {
             async onSuccess(data) {
               if (data.payment.reqiure_payment === '1') {
+                let discountToken;
+                if (discount?.isValidDiscount && discount?.code) {
+                  const discountInquiryForToken = await discountInquiry.mutateAsync({
+                    book_id: data?.book_info?.id,
+                    centerId,
+                    serviceId,
+                    userCenterId,
+                    code: discount?.code!,
+                  });
+                  discountToken = discountInquiryForToken?.data.result?.token;
+                }
                 const { data: paymentData } = await [centerId === CENTERS.CONSULT ? consultPayment : centerPayment][0].mutateAsync({
                   book_id: data?.book_info?.id as string,
                   ...(discountToken && { discount_token: discountToken }),
