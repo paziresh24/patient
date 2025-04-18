@@ -98,8 +98,6 @@ const Booking = () => {
     }
   };
 
-  console.log(profile);
-
   return (
     <>
       <Seo title={`دریافت نوبت ${bookDetailsData?.doctor_name ? `از ${doctorName}` : ''}`} noIndex />
