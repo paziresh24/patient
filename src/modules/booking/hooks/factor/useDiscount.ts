@@ -1,3 +1,4 @@
+import { apiGatewayClient } from '@/common/apis/client';
 import { useDiscountInquiry } from '@/common/apis/services/factor/discountInquiry';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { useState } from 'react';
@@ -21,9 +22,39 @@ export const useDiscount = ({
     tax?: string;
     isValidDiscount?: boolean;
     discountErrorMessage?: string;
+    code?: string;
   }>({});
 
   const handleDiscountSubmit = async (code: string) => {
+    if (!bookId && serviceId && centerId && userCenterId) {
+      const { data } = await apiGatewayClient.get('https://apigw.paziresh24.com/v1/discount/inquiry', {
+        params: {
+          user_center_id: userCenterId,
+          center_id: centerId,
+          code: code,
+          service_id: serviceId,
+        },
+      });
+
+      if (data?.status == 1) {
+        setInvoiceDetails(prev => ({
+          ...prev,
+          totalPrice: data.result?.payable_cost,
+          discount: data.result?.discount_price,
+          tax: data.result?.vat,
+          isValidDiscount: true,
+          code: code,
+        }));
+        return;
+      }
+      setInvoiceDetails(prev => ({
+        ...prev,
+        isValidDiscount: false,
+        discountErrorMessage: data.message,
+      }));
+
+      return;
+    }
     const { data } = await discountInquiry.mutateAsync({
       book_id: bookId,
       centerId,

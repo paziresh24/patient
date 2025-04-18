@@ -30,26 +30,8 @@ const Factor = () => {
   const {
     query: { slug, service_id },
   } = useRouter();
-  const isLogin = useUserInfoStore(state => state.isLogin);
-  const userPending = useUserInfoStore(state => state.pending);
-  const { handleOpenLoginModal } = useLoginModalContext();
-  const getBookDetails = useGetBookDetails();
-  const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const { isLoading, data: profile } = useGetProfileData({ slug: slug as string });
 
-  useEffect(() => {
-    if (getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0]) {
-      growthbook.setAttributes({
-        ...growthbook.getAttributes(),
-        center_id: '5532',
-        slug: slug,
-        service_id: service_id,
-        user_center_id: getBookDetails.data?.data?.result?.[0]?.user_center_id,
-      });
-    }
-  }, [getBookDetails.isSuccess, getBookDetails.data?.data?.result?.[0]]);
-
-  const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
   const doctorName = `${profile?.data?.name} ${profile?.data?.family}`;
 
   const isOnlineVisitTurn = true;

@@ -9,6 +9,7 @@ import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useGetBalance } from '@/common/apis/services/wallet/getBalance';
+import { growthbook } from 'src/pages/_app';
 interface FactorProps {
   bookId: string;
   centerId: string;
@@ -50,6 +51,8 @@ export const Factor = (props: FactorProps) => {
   const { data: balance, isLoading: balanceLoading } = useGetBalance({
     enabled: !!newVisitInvoice || !!useKatibePaymentForEarnestFactor,
   });
+
+  console.log(newVisitInvoice, growthbook.getAttributes());
 
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
