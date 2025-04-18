@@ -83,9 +83,9 @@ function MyApp(props: AppProps) {
   }, [asPath]);
 
   useEffect(() => {
-    useCustomize.getState().setCustomize(pageProps.themeConfing);
-    useServerQuery.getState().setQueries(pageProps.query);
-  }, [pageProps.query, pageProps.themeConfing]);
+    useCustomize.getState().setCustomize(pageProps?.themeConfing);
+    useServerQuery.getState().setQueries(pageProps?.query);
+  }, [pageProps?.query, pageProps?.themeConfing]);
 
   useEffect(() => {
     if (isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted'))) {

@@ -42,7 +42,7 @@
     "@plasmicpkgs/react-awesome-reveal": "3.8.189",
     "@plasmicpkgs/react-chartjs-2": "1.0.92",
     "@radix-ui/react-popover": "1.1.6",
-    "@sentry/nextjs": "7.64.0",
+    "@sentry/nextjs": "9.13.0",
     "@socialgouv/matomo-next": "1.6.1",
     "@tanstack/react-query": "4.29.5",
     "axios": "1.1.3",
