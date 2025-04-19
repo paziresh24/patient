@@ -172,8 +172,6 @@ const DoctorProfile = ({
     }
   }, [userInfo, slug]);
 
-  const toolBarItems = useToolBarController({ slug, displayName: information?.display_name, documentTitle: title, editable });
-
   const handleViewAs = (key: 'information' | 'gallery' | 'biography' | 'services' | 'workHours') => {
     const views = {
       information: {
@@ -266,7 +264,6 @@ const DoctorProfile = ({
                 title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
                 subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
                 serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
-                toolBarItems={toolBarItems as ToolBarItems}
                 className="w-full shadow-card md:rounded-lg"
                 satisfaction={
                   customize.showRateAndReviews &&
