@@ -67,9 +67,9 @@ const Factor = () => {
         </div>
         <div
           className={classNames(
-            'w-full p-3 mb-[0.6rem] space-y-1 bg-white border border-solid border-[#d0d2d6] shadow-card rounded-lg  md:mb-0 md:w-2/5 relative',
+            'w-full p-3 space-y-2 bg-white border border-solid border-[#d0d2d6] shadow-card rounded-lg  md:mb-0 md:w-2/5 relative',
             {
-              'border-primary/50  shadow-xl shadow-primary/10': isOnlineVisitTurn,
+              'shadow-2xl shadow-slate-400/30': isOnlineVisitTurn,
             },
           )}
         >
@@ -86,16 +86,8 @@ const Factor = () => {
             })}
             isLoading={isLoading}
           />
-          {isLoading && <Skeleton w="100%" h="8rem" className="!mt-2" rounded="md" />}
-          {isOnlineVisitTurn && (
-            <Badge
-              text="ویزیت آنلاین"
-              fontWeight="medium"
-              fontSize="xs"
-              className="bg-slate-200/50 !rounded-md text-secondary p-2 whitespace-nowrap absolute top-2 left-2"
-            />
-          )}
           {isOnlineVisitTurn && <Divider />}
+          {isLoading && <Skeleton w="100%" h="5em" className="!mt-2" rounded="md" />}
           {!isLoading && isOnlineVisitTurn && (
             <div className="flex flex-col p-2 space-y-1">
               <Text fontSize="sm" as="p">

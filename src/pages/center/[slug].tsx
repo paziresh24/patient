@@ -130,7 +130,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
       }))[0];
 
     return (
-      data ?? {
+      data?.label ?? {
         label: 'همه تخصص ها',
         value: '',
       }
