@@ -6,16 +6,6 @@ type GetProviderData = { slug: string };
 export const getProviderData = async ({ slug }: GetProviderData) => {
   const providerData: Record<string, string> = await providers({ slug });
 
-  if (!providerData?.user_id) {
-    splunkInstance('rokhnama').sendEvent({
-      group: 'empty-providers',
-      type: 'empty-providers-profile',
-      event: {
-        slug,
-      },
-    });
-  }
-
   return {
     ...providerData,
   };

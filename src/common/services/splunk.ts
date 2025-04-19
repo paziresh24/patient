@@ -6,7 +6,6 @@ type Index =
   | 'doctor-profile'
   | 'booking-v2'
   | 'gozargah'
-  | 'rokhnama'
   | 'search'
   | 'center-profile'
   | 'booking'
@@ -43,17 +42,6 @@ export const splunkInstance = (index: Index) => {
       return splunk.create({
         baseUrl: 'https://p24-shelter-splunk-hec.paziresh24.com',
         token: '49a5600c-e81d-4b55-8e32-c668f0faf4f0',
-        constant: {
-          current_url: typeof window !== 'undefined' ? window.location.href : null,
-          terminal_id: getCookie('terminal_id'),
-          is_application: isPWA(),
-        },
-      });
-    }
-    case 'rokhnama': {
-      return splunk.create({
-        baseUrl: 'https://slpunk-rokhnama.paziresh24.com',
-        token: '5c2a7141-bbfc-41c1-8e92-5c0c924b9125',
         constant: {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
