@@ -132,7 +132,11 @@ const Booking = () => {
                       toast.error('لطفا پیام رسان را انتخاب کنید.');
                       return;
                     }
-                    handleUpdateBookDetails(userInfo);
+                    handleUpdateBookDetails({
+                      ...userInfo,
+                      messengerType:
+                        userInfo?.messengerType ?? profile?.online_visit_channel_types?.filter((item: any) => item !== 'secure_call')[0],
+                    });
                   }}
                   shouldShowMessengers={profile?.online_visit_channel_types?.filter((item: any) => item !== 'secure_call')?.length > 1}
                   submitButtonText="نهایی سازی و آغاز گفتگو"
