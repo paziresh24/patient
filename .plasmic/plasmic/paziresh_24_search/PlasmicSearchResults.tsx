@@ -1109,14 +1109,31 @@ function PlasmicSearchResults__RenderFunc(props: {
                             );
                           }
                           if (
-                            currentItem.actions[0]?.title === "ویزیت آنلاین" &&
-                            $props.onlineVisitButtonsCustomDestination?.enable
+                            currentItem.actions[0]?.title === "ویزیت آنلاین"
                           ) {
-                            currentItem.actions[0].url =
-                              $props.onlineVisitButtonsCustomDestination.url_template.replace(
-                                "dr-slug-variable",
-                                currentItem.slug
-                              );
+                            let enabledSlugs =
+                              $ctx.Growthbook?.features?.[
+                                "fragment::online-visit-buttons-to-factor-destination-b"
+                              ]?.enabled_dr_slugs;
+                            if (typeof enabledSlugs === "string") {
+                              try {
+                                enabledSlugs = JSON.parse(enabledSlugs);
+                              } catch {
+                                enabledSlugs = [];
+                              }
+                            }
+                            const shouldReplace =
+                              Array.isArray(enabledSlugs) &&
+                              enabledSlugs.length &&
+                              enabledSlugs.includes(currentItem.slug);
+                            if (shouldReplace) {
+                              const oldUrl = currentItem.actions[0].url || "";
+                              const match = oldUrl.match(/serviceId=([^&]+)/);
+                              const serviceId = match ? match[1] : null;
+                              if (serviceId) {
+                                currentItem.actions[0].url = `https://www.paziresh24.com/factor/v2/${currentItem.slug}/${serviceId}/`;
+                              }
+                            }
                           }
                         }
                         return currentItem.actions;

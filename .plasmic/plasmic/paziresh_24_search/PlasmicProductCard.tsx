@@ -2135,11 +2135,15 @@ function PlasmicProductCard__RenderFunc(props: {
                       try {
                         return (() => {
                           if (
-                            $ctx.Growthbook.attributes?.url &&
-                            !!$ctx.Growthbook.isReady &&
+                            !$ctx.Growthbook ||
+                            !$ctx.Growthbook.attributes?.url ||
+                            !$ctx.Growthbook.isReady
+                          ) {
+                            return true;
+                          } else if (
                             !!$ctx.Growthbook.features["theme-config"] &&
-                            actionButton.top_title.trim() !== "" &&
                             actionButton.top_title &&
+                            actionButton.top_title.trim() !== "" &&
                             !$ctx.Growthbook.features["theme-config"][
                               "search_result:first_free_time_data_src_from_availability-status_api"
                             ]
