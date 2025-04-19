@@ -1,4 +1,4 @@
-import { useGetUser } from '@/common/apis/services/auth/getUser';
+import { apiGatewayClient } from '@/common/apis/client';
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useProviders } from '@/modules/profile/apis/providers';
@@ -15,7 +15,6 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const info = useUserInfoStore(state => state.info);
   const autoLoginToGozargah = useFeatureIsOn('auto-login-to-gozargah');
 
-  const getUser = useGetUser();
   const getMe = useGetMe();
   const getProvider = useProviders();
 
@@ -27,11 +26,9 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
     try {
       setPending(true);
       const userData = await getMe.mutateAsync();
-      const { data } = await getUser.mutateAsync();
       const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
 
       setUserInfo({
-        image: data?.result?.image,
         provider: providerData,
         ...userData,
       });
@@ -45,6 +42,17 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isLogin && info?.id) {
+      apiGatewayClient.get('https://apigw.paziresh24.com/v1/users/image', { params: { user_id: info?.id } }).then(data => {
+        setUserInfo({
+          ...info,
+          image: data?.data?.data?.image_url,
+        });
+      });
+    }
+  }, [isLogin]);
 
   return (
     <>

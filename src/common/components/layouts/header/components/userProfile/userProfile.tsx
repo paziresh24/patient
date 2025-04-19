@@ -1,4 +1,3 @@
-import { useGetUser } from '@/common/apis/services/auth/getUser';
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
 import Avatar from '@/common/components/atom/avatar';
@@ -142,7 +141,6 @@ export const UserProfile = () => {
   };
 
   const getMe = useGetMe();
-  const getUser = useGetUser();
   const getProvider = useProviders();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const setPending = useUserInfoStore(state => state.setPending);
@@ -151,13 +149,12 @@ export const UserProfile = () => {
     setPending(true);
     const userData = await getMe.mutateAsync();
     const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
-    const { data: imageData } = await getUser.mutateAsync();
 
     setUserInfo({
-      image: imageData?.result?.image,
       provider: providerData,
       ...userData,
     });
+
     setPending(false);
   };
 

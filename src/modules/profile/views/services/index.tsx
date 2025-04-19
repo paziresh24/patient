@@ -19,11 +19,7 @@ import moment from 'jalali-moment';
 import { sortBy } from 'lodash';
 import { splunkInstance } from '@/common/services/splunk';
 import useCustomize from '@/common/hooks/useCustomize';
-const Presence = dynamic(() => import('./presence'), {
-  loading(loadingProps) {
-    return <Skeleton w="100%" h="198px" rounded="lg" />;
-  },
-});
+import Presence from './presence';
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -117,15 +113,11 @@ export const Services = ({
     router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
   };
 
-  if (!growthbook.ready || (useAvailabilityStatusApi ? alabilityStatus.isLoading : false)) {
-    return <Skeleton w="full" h="10rem" rounded="lg" />;
-  }
-
-  if (!customize?.partnerKey && showHamdastGa && useAvailabilityStatusApi ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
+  if (!customize?.partnerKey && showHamdastGa && alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
     return null;
   }
 
-  if (useAvailabilityStatusApi ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
+  if (alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
     const sortedAvalaibleTime = () => {
       const centers = alabilityStatus.data?.data?.availability?.filter((item: any) => item?.status === 'FUTURE_AVAILABLE');
       const availableTime = sortBy(centers, 'available_time')[0]?.available_time;
