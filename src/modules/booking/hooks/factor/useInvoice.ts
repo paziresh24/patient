@@ -76,7 +76,7 @@ export const useInvoice = ({
         });
       });
     }
-  }, [bookId, centerId, isLogin]);
+  }, [bookId, centerId, isLogin, userCenterId, serviceId]);
 
   return { ...invoiceDetails, isLoading: getBookDetails.isLoading || getConsultInvoice.isLoading };
 };
