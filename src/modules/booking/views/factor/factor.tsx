@@ -10,6 +10,7 @@ import Invoice from '../../components/factor/invoice';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useGetBalance } from '@/common/apis/services/wallet/getBalance';
 import { growthbook } from 'src/pages/_app';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 interface FactorProps {
   bookId: string;
   centerId: string;
@@ -48,8 +49,9 @@ export const Factor = (props: FactorProps) => {
 
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
+  const isLogin = useUserInfoStore(state => state.isLogin);
   const { data: balance, isLoading: balanceLoading } = useGetBalance({
-    enabled: !!newVisitInvoice || !!useKatibePaymentForEarnestFactor,
+    enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor) && isLogin,
   });
 
   return (

@@ -31,6 +31,9 @@ const Factor = () => {
     query: { slug, service_id },
   } = useRouter();
   const { isLoading, data: profile } = useGetProfileData({ slug: slug as string });
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const isPending = useUserInfoStore(state => state.pending);
+  const { handleOpenLoginModal } = useLoginModalContext();
 
   const doctorName = `${profile?.data?.name} ${profile?.data?.family}`;
 
@@ -43,6 +46,12 @@ const Factor = () => {
       nextDay: 'فردا حدود ساعت HH:mm',
     });
   };
+
+  useEffect(() => {
+    if (!isPending && !isLogin) {
+      handleOpenLoginModal({ state: true, closable: false });
+    }
+  }, [isLogin, isPending]);
 
   return (
     <>
