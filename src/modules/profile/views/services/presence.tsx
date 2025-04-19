@@ -46,8 +46,8 @@ export const Presence = memo((props: PresenceProps) => {
   const { handleOpen: handleOpenSelectExternalBookingModal, modalProps: externalBookingModalProps } = useModal();
   const { handleOpen: handleOpenSelectDownloadAppModal, modalProps: downloadAppModalProps } = useModal();
   const isShowCenterAvailableBox =
-    centers[0]?.freeturns_info.length === centers[0].services.length
-      ? centers[0]?.freeturns_info.every((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000))
+    centers[0]?.freeturns_info?.length === centers[0].services.length
+      ? centers[0]?.freeturns_info?.every((freeTurn: any) => freeTurn?.available_time > Math.floor(new Date().getTime() / 1000))
       : false;
 
   const handleOnBook = () => {

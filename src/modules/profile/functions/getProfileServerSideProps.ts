@@ -427,7 +427,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let widgetsData: any = {};
 
     try {
-      widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets', {
+      widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets/', {
         params: {
           id: fullProfileData!.id,
         },
