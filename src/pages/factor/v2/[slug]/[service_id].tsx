@@ -57,26 +57,17 @@ const Factor = () => {
     <>
       <Seo title="فاکتور نوبت" noIndex />
 
-      <div className="flex flex-col-reverse items-start p-3 w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 mb-[5rem]">
-        <div className="w-full md:basis-4/6">
+      <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 mb-[5rem]">
+        <div className="w-full md:basis-4/6 z-10">
           <FactorWrapper
             centerId={'5532'}
             serviceId={service_id as string}
             userCenterId={profile?.data?.centers?.find((item: any) => item.id == CENTERS.CONSULT)?.user_center_id}
           />
         </div>
-        <div
-          className={classNames(
-            'w-full p-3 space-y-2 bg-white border border-solid border-[#d0d2d6] shadow-card rounded-lg  md:mb-0 md:w-2/5 relative',
-            {
-              'shadow-2xl shadow-slate-400/30': isOnlineVisitTurn,
-            },
-          )}
-        >
+        <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
-            className={classNames('rounded-lg', {
-              '!p-0': isOnlineVisitTurn,
-            })}
+            className="p-4 rounded-lg bg-slate-100"
             avatar={publicRuntimeConfig.CDN_BASE_URL + profile?.data?.image}
             fullName={doctorName}
             expertise={getDisplayDoctorExpertise({
@@ -86,10 +77,9 @@ const Factor = () => {
             })}
             isLoading={isLoading}
           />
-          {isOnlineVisitTurn && <Divider />}
           {isLoading && <Skeleton w="100%" h="5em" className="!mt-2" rounded="md" />}
           {!isLoading && isOnlineVisitTurn && (
-            <div className="flex flex-col p-2 space-y-1">
+            <div className="flex flex-col p-2 space-y-1  border-r-2 border-slate-200">
               <Text fontSize="sm" as="p">
                 سلام. من {doctorName} هستم.
               </Text>
@@ -98,7 +88,7 @@ const Factor = () => {
                 <Text className="text-primary" fontWeight="semiBold">
                   {convertTime(profile?.data?.centers?.find((item: any) => item.id == CENTERS.CONSULT)?.freeturn * 1000)}
                 </Text>{' '}
-                شما را ویزیت خواهم کرد.
+                شما را آنلاین ویزیت خواهم کرد.
               </Text>
             </div>
           )}

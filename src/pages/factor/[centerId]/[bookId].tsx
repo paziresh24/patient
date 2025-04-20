@@ -73,7 +73,7 @@ const Factor = () => {
     <>
       <Seo title="فاکتور نوبت" noIndex />
 
-      <div className="flex flex-col-reverse items-start p-3 w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 mb-[5rem]">
+      <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10 mb-[5rem]">
         <div className="w-full md:basis-4/6">
           <FactorWrapper
             bookId={bookId as string}
@@ -81,19 +81,9 @@ const Factor = () => {
             respiteToRefundAfterDelete={bookDetailsData?.settings?.booking_respite_to_refund_after_delete ?? '5'}
           />
         </div>
-        <div
-          className={classNames(
-            'w-full p-3 mb-[0.6rem] space-y-1 bg-white border border-solid border-[#d0d2d6] shadow-card rounded-lg  md:mb-0 md:w-2/5 relative',
-            {
-              'border-primary/50  shadow-xl shadow-primary/10': isOnlineVisitTurn,
-            },
-          )}
-        >
+        <div className="w-full p-3 mb-2 space-y-1 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
-            className={classNames('rounded-lg', {
-              'bg-slate-50 p-4': centerId !== CENTERS.CONSULT,
-              '!p-0': isOnlineVisitTurn,
-            })}
+            className="p-4 rounded-lg bg-slate-100"
             avatar={publicRuntimeConfig.CDN_BASE_URL + bookDetailsData?.doctor_image}
             fullName={doctorName}
             expertise={getDisplayDoctorExpertise({
@@ -104,19 +94,18 @@ const Factor = () => {
             isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData}
           />
           {centerId === CENTERS.CONSULT && (getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
-            <Skeleton w="100%" h="8rem" className="!mt-2" rounded="md" />
+            <Skeleton w="100%" h="5em" className="!mt-2" rounded="md" />
           )}
           {isOnlineVisitTurn && (
             <Badge
               text="ویزیت آنلاین"
               fontWeight="medium"
               fontSize="xs"
-              className="bg-slate-200/50 !rounded-md text-secondary p-2 whitespace-nowrap absolute top-2 left-2"
+              parentClassName="bg-slate-200/50 !rounded-md text-secondary p-2 whitespace-nowrap absolute top-4 left-4"
             />
           )}
-          {isOnlineVisitTurn && <Divider />}
           {!!bookDetailsData && centerId === CENTERS.CONSULT && isOnlineVisitTurn && (
-            <div className="flex flex-col p-2 space-y-1">
+            <div className="flex flex-col p-2 space-y-1  border-r-2 border-slate-200">
               <Text fontSize="sm" as="p">
                 سلام. من {bookDetailsData?.doctor_name + ' ' + bookDetailsData?.doctor_family} هستم.
               </Text>

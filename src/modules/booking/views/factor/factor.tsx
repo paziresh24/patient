@@ -60,7 +60,7 @@ export const Factor = (props: FactorProps) => {
 
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
-      <div className="flex flex-col justify-center p-5 space-y-3 bg-white  border border-solid border-[#d0d2d6] rounded-lg shadow-card">
+      <div className="flex flex-col justify-center p-5 space-y-3 bg-white md:rounded-lg shadow-card">
         <Text fontWeight="bold" fontSize="sm">
           اطلاعات پرداخت
         </Text>
@@ -125,7 +125,7 @@ export const Factor = (props: FactorProps) => {
         <iframe src="https://www.paziresh24.com/home/online-visit-refund-terms/" className="h-full w-full" />
       </Modal>
       {!isEmpty(rules) && !loading && (
-        <Alert severity="warning" className="p-5">
+        <Alert severity="warning" className="p-5 rounded-none md:rounded-lg">
           <div className="flex items-strat gap-2 mb-2">
             <WarningIcon className="-translate-y-1 text-[#975b2a]" />
             <Text fontWeight="bold">لطفا دقت کنید!</Text>

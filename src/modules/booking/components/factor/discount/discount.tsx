@@ -22,7 +22,7 @@ export const Discount = (props: DiscountProps) => {
   };
 
   return (
-    <Accordion title="کدتخفیف" className="px-1 !bg-white rounded-lg border border-solid border-[#d0d2d6] shadow-card">
+    <Accordion title="کدتخفیف" className="px-1 !bg-white rounded-none md:rounded-lg shadow-card">
       <div className="flex w-full !bg-white items-top space-s-2">
         <TextField
           helperText={(status === 'unSuccessful' && errorMessage) || ''}

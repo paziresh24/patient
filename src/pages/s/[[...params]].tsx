@@ -282,7 +282,11 @@ const Search = ({ host, fragmentComponents }: any) => {
 };
 
 Search.getLayout = function getLayout(page: ReactElement) {
-  return <LayoutWithHeaderAndFooter {...page.props.config}>{page}</LayoutWithHeaderAndFooter>;
+  return (
+    <LayoutWithHeaderAndFooter {...page.props.config} shouldShowPromoteApp={false}>
+      {page}
+    </LayoutWithHeaderAndFooter>
+  );
 };
 
 export const getServerSideProps: GetServerSideProps = withCSR(
@@ -365,7 +369,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
                   ...query,
                   turn_type: 'consult',
                 },
-                timeout: 700,
               },
             ],
             () =>
@@ -375,7 +378,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
                   ...query,
                   turn_type: 'consult',
                 },
-                timeout: 700,
               }),
           );
         } catch (error) {

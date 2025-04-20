@@ -126,7 +126,7 @@ const Booking = () => {
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
-            className="p-4 rounded-lg bg-slate-50"
+            className="p-4 rounded-lg bg-slate-100"
             isLoading={isLoading || !profileData}
             avatar={publicRuntimeConfig.CDN_BASE_URL + profileData?.image}
             fullName={doctorName}

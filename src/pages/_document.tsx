@@ -24,7 +24,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <Script strategy="afterInteractive" src="https://gozargah.paziresh24.com/assets/js/gozar.js" />
       </Head>
       <body
-        className={classNames('bg-slate-100 antialiased  pwa:select-none', {
+        className={classNames('bg-[#f2f3f5] antialiased  pwa:select-none', {
           'dont-fa-number-font': dir === 'ltr',
         })}
         style={{ direction: dir }}

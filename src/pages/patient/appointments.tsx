@@ -161,12 +161,9 @@ export const Appointments = () => {
 
       <div className="flex flex-col self-center w-full p-0 pt-3 space-y-2 md:p-5" data-testid="appointments-container">
         {isLoading && (
-          <>
-            <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
-            <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
-            <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
-            <Skeleton w="100%" h="15rem" className="rounded-none md:rounded-lg" />
-          </>
+          <div className="flex justify-center py-10">
+            <Loading />
+          </div>
         )}
         {books.length > 0 &&
           books.map(turn => (
