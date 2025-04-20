@@ -2504,7 +2504,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -3096,6 +3097,19 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherWrapper.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "rMG1ZGZR_tFC",
+          "name": "LauncherMobileApps",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherMobileApps.tsx",
+          "importSpec": {
+            "modulePath": "LauncherMobileApps.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherMobileApps.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -3220,6 +3234,12 @@
           "name": "PWA",
           "displayName": "PWA",
           "componentImportPath": "@/common/fragment/pwa"
+        },
+        {
+          "id": "zBa4GH9qUTai",
+          "name": "Factor",
+          "displayName": "Factor",
+          "componentImportPath": "@/modules/booking/views/factor/wrapper"
         }
       ],
       "customFunctions": [
@@ -3230,8 +3250,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",

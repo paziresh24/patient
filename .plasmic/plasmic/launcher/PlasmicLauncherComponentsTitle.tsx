@@ -79,13 +79,15 @@ export type PlasmicLauncherComponentsTitle__ArgsType = {
   moreTitle?: string;
   moreLink?: string;
   isNew?: boolean;
+  subTitle?: string;
 };
 type ArgPropType = keyof PlasmicLauncherComponentsTitle__ArgsType;
 export const PlasmicLauncherComponentsTitle__ArgProps = new Array<ArgPropType>(
   "title",
   "moreTitle",
   "moreLink",
-  "isNew"
+  "isNew",
+  "subTitle"
 );
 
 export type PlasmicLauncherComponentsTitle__OverridesType = {
@@ -98,6 +100,7 @@ export interface DefaultLauncherComponentsTitleProps {
   moreTitle?: string;
   moreLink?: string;
   isNew?: boolean;
+  subTitle?: string;
   className?: string;
 }
 
@@ -163,58 +166,181 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
         const $steps = {};
       }}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__qeAnl)}
-      >
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__uEnbX
-          )}
+      {(() => {
+        try {
+          return !!$props.subTitle;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__iwcwy)}
         >
-          <React.Fragment>
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox__wfqSr)}
+          >
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__jHwly
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.title;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </div>
             {(() => {
               try {
-                return $props.title;
+                return $props.isNew;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return "";
+                  return true;
                 }
                 throw e;
               }
-            })()}
-          </React.Fragment>
-        </div>
-        {(() => {
-          try {
-            return $props.isNew;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
+            })() ? (
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__iPlZd
+                )}
+              >
+                {"\u062c\u062f\u06cc\u062f"}
+              </div>
+            ) : null}
+          </Stack__>
           <div
             className={classNames(
               projectcss.all,
               projectcss.__wab_text,
-              sty.text__euOlJ
+              sty.text__hSjXq
             )}
           >
-            {"\u062c\u062f\u06cc\u062f"}
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $props.subTitle;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "";
+                  }
+                  throw e;
+                }
+              })()}
+            </React.Fragment>
           </div>
-        ) : null}
-      </Stack__>
+        </Stack__>
+      ) : null}
+      {(() => {
+        try {
+          return !$props.subTitle;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__qeAnl)}
+        >
+          {(() => {
+            try {
+              return !$props.subTitle;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__uEnbX
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.title;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </div>
+          ) : null}
+          {(() => {
+            try {
+              return $props.isNew;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__euOlJ
+              )}
+            >
+              {"\u062c\u062f\u06cc\u062f"}
+            </div>
+          ) : null}
+        </Stack__>
+      ) : null}
       {(() => {
         try {
           return !!$props.moreTitle;
