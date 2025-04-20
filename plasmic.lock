@@ -1712,12 +1712,12 @@
         {
           "type": "renderModule",
           "assetId": "zKD4DmZLEtqh",
-          "checksum": "99b1339d2616dd8fde0d4ca605d5396b"
+          "checksum": "e1eaa4797e4c3d1b670ef8d873998acd"
         },
         {
           "type": "cssRules",
           "assetId": "zKD4DmZLEtqh",
-          "checksum": "99b1339d2616dd8fde0d4ca605d5396b"
+          "checksum": "e1eaa4797e4c3d1b670ef8d873998acd"
         },
         {
           "type": "renderModule",
@@ -1875,14 +1875,19 @@
           "checksum": "3c45df9f63e1ae8aa8a8827e00860db4"
         },
         {
-          "type": "icon",
-          "assetId": "yHLOWiNKZiaE",
-          "checksum": "1ea2d57389c88a79a5a6cbf56a71356f"
-        },
-        {
           "type": "image",
           "assetId": "ok_csAiGiEdj",
           "checksum": "c4c8fe61bfc01a5f6a739ab2debadc66"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "rMG1ZGZR_tFC",
+          "checksum": "1838c1d57b9f37aba1c66ed1329e7462"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "rMG1ZGZR_tFC",
+          "checksum": "1838c1d57b9f37aba1c66ed1329e7462"
         },
         {
           "assetId": "grxNYctbMek6PL66cujx3u",
@@ -1891,13 +1896,23 @@
         },
         {
           "type": "renderModule",
-          "assetId": "rMG1ZGZR_tFC",
-          "checksum": "4d5deace620399b298e2ac4b6b50b780"
+          "assetId": "AdXQLu7KAuFc",
+          "checksum": "4fa8924e926f4663809ab7bf83899261"
         },
         {
           "type": "cssRules",
-          "assetId": "rMG1ZGZR_tFC",
-          "checksum": "4d5deace620399b298e2ac4b6b50b780"
+          "assetId": "AdXQLu7KAuFc",
+          "checksum": "4fa8924e926f4663809ab7bf83899261"
+        },
+        {
+          "type": "icon",
+          "assetId": "eow8yltFJJyP",
+          "checksum": "603d3cc8ac35fcf4e1ec870f685e755c"
+        },
+        {
+          "type": "icon",
+          "assetId": "GtRDVu6zRFVG",
+          "checksum": "e738cf4c24b109cfc2f0825feb12a7a1"
         }
       ],
       "codegenVersion": "0.0.1"
