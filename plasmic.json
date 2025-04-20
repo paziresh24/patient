@@ -3100,14 +3100,27 @@
         },
         {
           "id": "rMG1ZGZR_tFC",
-          "name": "LauncherMobileApps",
+          "name": "LauncherDesktopApps",
           "type": "managed",
           "projectId": "grxNYctbMek6PL66cujx3u",
-          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherMobileApps.tsx",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherDesktopApps.tsx",
           "importSpec": {
-            "modulePath": "LauncherMobileApps.tsx"
+            "modulePath": "LauncherDesktopApps.tsx"
           },
-          "cssFilePath": "plasmic/launcher/PlasmicLauncherMobileApps.module.css",
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherDesktopApps.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "AdXQLu7KAuFc",
+          "name": "LauncherBlocksProfile",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksProfile.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksProfile.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksProfile.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
@@ -3129,9 +3142,14 @@
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsLoader.tsx"
         },
         {
-          "id": "yHLOWiNKZiaE",
-          "name": "CircleIcon",
-          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Circle.tsx"
+          "id": "eow8yltFJJyP",
+          "name": "LauncherIconsEyeIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsEye.tsx"
+        },
+        {
+          "id": "GtRDVu6zRFVG",
+          "name": "LauncherIconsEditIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsEdit.tsx"
         }
       ],
       "images": [
