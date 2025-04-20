@@ -15,7 +15,7 @@ export const AppBar = ({ title, backButton, titleLoading = false, className, ...
   return (
     <div
       className={classNames(
-        'flex sticky top-0 justify-center items-center min-h-16 h-16 px-6 bg-white border-b border-[#EBECEE] z-40',
+        'flex sticky top-0 justify-center items-center min-h-14 h-14 px-6 bg-white border-b border-[#EBECEE] z-40',
         className,
       )}
       {...rest}
