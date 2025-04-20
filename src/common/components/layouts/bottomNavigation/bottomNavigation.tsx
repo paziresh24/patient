@@ -56,7 +56,7 @@ export const BottomNavigation = () => {
       };
     }
 
-    if (isEnabledLauncher)
+    if (isEnabledLauncher && localStorage.getItem('use-dashboard') != user.id)
       return {
         name: 'خدمات',
         icon: <ElementIcon />,
@@ -65,7 +65,12 @@ export const BottomNavigation = () => {
         privateRoute: true,
         exact: false,
       };
-    if (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
+    if (
+      isEnabledDashboard ||
+      dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') ||
+      dashboardDoctorList.ids.includes('*') ||
+      localStorage.getItem('use-dashboard') == user.id
+    )
       return {
         name: 'داشبورد',
         icon: <ElementIcon />,
