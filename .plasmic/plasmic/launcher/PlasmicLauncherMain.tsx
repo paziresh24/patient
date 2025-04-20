@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import LauncherWrapper from "../../LauncherWrapper"; // plasmic-import: 3TTnoIEhqXMk/component
+import LauncherBlocksProfile from "../../LauncherBlocksProfile"; // plasmic-import: AdXQLu7KAuFc/component
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherBlocksWallet from "../../LauncherBlocksWallet"; // plasmic-import: h-1safqUkN1a/component
 import LauncherBlocksShortcuts from "../../LauncherBlocksShortcuts"; // plasmic-import: SALc6_vQPXlG/component
@@ -89,6 +90,7 @@ export const PlasmicLauncherMain__ArgProps = new Array<ArgPropType>();
 export type PlasmicLauncherMain__OverridesType = {
   root?: Flex__<"div">;
   launcherWrapper?: Flex__<typeof LauncherWrapper>;
+  launcherBlocksProfile?: Flex__<typeof LauncherBlocksProfile>;
   launcherBlocksWallet?: Flex__<typeof LauncherBlocksWallet>;
   launcherBlocksShortcuts?: Flex__<typeof LauncherBlocksShortcuts>;
   launcherBlocksWidgetsSanje?: Flex__<typeof LauncherBlocksWidgetsSanje>;
@@ -163,7 +165,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
             e instanceof TypeError ||
             e?.plasmicType === "PlasmicUndefinedDataError"
           ) {
-            return false;
+            return true;
           }
           throw e;
         }
@@ -179,6 +181,28 @@ function PlasmicLauncherMain__RenderFunc(props: {
             className={classNames("__wab_instance", sty.launcherWrapper)}
           />
 
+          {(() => {
+            try {
+              return $ctx.auth.info?.provider?.job_title === "doctor";
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <LauncherBlocksProfile
+              data-plasmic-name={"launcherBlocksProfile"}
+              data-plasmic-override={overrides.launcherBlocksProfile}
+              className={classNames(
+                "__wab_instance",
+                sty.launcherBlocksProfile
+              )}
+            />
+          ) : null}
           {(() => {
             try {
               return (() => {
@@ -339,6 +363,7 @@ const PlasmicDescendants = {
   root: [
     "root",
     "launcherWrapper",
+    "launcherBlocksProfile",
     "launcherBlocksWallet",
     "launcherBlocksShortcuts",
     "launcherBlocksWidgetsSanje",
@@ -348,6 +373,7 @@ const PlasmicDescendants = {
     "svg"
   ],
   launcherWrapper: ["launcherWrapper"],
+  launcherBlocksProfile: ["launcherBlocksProfile"],
   launcherBlocksWallet: ["launcherBlocksWallet"],
   launcherBlocksShortcuts: ["launcherBlocksShortcuts"],
   launcherBlocksWidgetsSanje: ["launcherBlocksWidgetsSanje"],
@@ -362,6 +388,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   launcherWrapper: typeof LauncherWrapper;
+  launcherBlocksProfile: typeof LauncherBlocksProfile;
   launcherBlocksWallet: typeof LauncherBlocksWallet;
   launcherBlocksShortcuts: typeof LauncherBlocksShortcuts;
   launcherBlocksWidgetsSanje: typeof LauncherBlocksWidgetsSanje;
@@ -432,6 +459,7 @@ export const PlasmicLauncherMain = Object.assign(
   {
     // Helper components rendering sub-elements
     launcherWrapper: makeNodeComponent("launcherWrapper"),
+    launcherBlocksProfile: makeNodeComponent("launcherBlocksProfile"),
     launcherBlocksWallet: makeNodeComponent("launcherBlocksWallet"),
     launcherBlocksShortcuts: makeNodeComponent("launcherBlocksShortcuts"),
     launcherBlocksWidgetsSanje: makeNodeComponent("launcherBlocksWidgetsSanje"),
