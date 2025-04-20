@@ -251,6 +251,36 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
         ) : null}
         {(() => {
           try {
+            return $ctx.auth.info?.provider?.job_title === "doctor";
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <LauncherComponentsApp
+            avatar={
+              "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finstagram-plugin.png?versionId="
+            }
+            className={classNames(
+              "__wab_instance",
+              sty.launcherComponentsApp__kHecn
+            )}
+            description={
+              "\u0627\u0641\u0632\u0648\u062f\u0646 \u067e\u0633\u062a\u200c\u0647\u0627\u06cc \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645 \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
+            }
+            link={"/_/cywoc24/setting/"}
+            name={
+              "\u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645"
+            }
+          />
+        ) : null}
+        {(() => {
+          try {
             return $ctx.auth.info?.provider?.job_title !== "doctor";
           } catch (e) {
             if (
