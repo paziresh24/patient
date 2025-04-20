@@ -153,6 +153,21 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
         moreTitle={
           "\u0647\u0645\u0647 \u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627"
         }
+        subTitle={(() => {
+          try {
+            return $ctx.auth.info?.provider?.job_title === "doctor"
+              ? "حرفه‌ای‌‌تر در پذیرش۲۴"
+              : "";
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         title={"\u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627"}
       />
 
