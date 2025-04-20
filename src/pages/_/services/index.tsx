@@ -2,13 +2,16 @@ import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWit
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { ThemeConfig } from '@/common/hooks/useCustomize';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import LauncherServices from '.plasmic/LauncherServices';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import AppBar from '@/common/components/layouts/appBar';
 import Seo from '@/common/components/layouts/seo';
 
 const Page = () => {
+  useEffect(() => {
+    window?.clarity?.('upgrade', 'LauncherServices');
+  }, []);
   return (
     <>
       <Seo title="همه خدمات" noIndex />
