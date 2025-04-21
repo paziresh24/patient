@@ -255,7 +255,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
             return (() => {
               return `https://searchia.ir/api/v2/qs/index/slim_clinic_query_su?query=${
                 $props.terms || ""
-              }`;
+              }&inContent=true&spellCheckEnabled=true`;
             })();
           } catch (e) {
             if (
