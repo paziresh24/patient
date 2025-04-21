@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -222,365 +222,545 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
             </React.Fragment>
           </React.Fragment>
         </div>
-        <Collapsible
-          data-plasmic-name={"collapsible"}
-          data-plasmic-override={overrides.collapsible}
-          className={classNames("__wab_instance", sty.collapsible)}
-          defaultMaxHeight={"200px"}
-          slot={
+        {(() => {
+          try {
+            return $props.data.supplement?.length > 0;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <Collapsible
+            data-plasmic-name={"collapsible"}
+            data-plasmic-override={overrides.collapsible}
+            className={classNames("__wab_instance", sty.collapsible)}
+            defaultMaxHeight={"200px"}
+            slot={
+              <Button
+                children2={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__wE20V
+                    )}
+                  >
+                    {
+                      "\u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0645\u062a\u0631"
+                    }
+                  </div>
+                }
+                className={classNames("__wab_instance", sty.button__ttCeL)}
+                color={"text"}
+                showStartIcon={true}
+                size={"compact"}
+                startIcon={
+                  <ChevronUpIcon
+                    className={classNames(projectcss.all, sty.svg__rkwxx)}
+                    role={"img"}
+                  />
+                }
+              />
+            }
+            slot2={
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__nj0VK)}
+              >
+                {(() => {
+                  try {
+                    return $props.data.base?.length > 0;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__deuB)}
+                  >
+                    <IconIcon
+                      className={classNames(projectcss.all, sty.svg__dzgeE)}
+                      role={"img"}
+                    />
+
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__ldvzA
+                      )}
+                    >
+                      {"\u0628\u06cc\u0645\u0647 \u067e\u0627\u06cc\u0647"}
+                    </div>
+                  </Stack__>
+                ) : null}
+                {(() => {
+                  try {
+                    return $props.data.base?.length > 0;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox___94J2U)}
+                  >
+                    {(_par =>
+                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                      (() => {
+                        try {
+                          return $props.data.base;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()
+                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                      const currentItem = __plasmic_item_0;
+                      const currentIndex = __plasmic_idx_0;
+                      return (
+                        <Stack__
+                          as={"div"}
+                          hasGap={true}
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__x3O2J
+                          )}
+                          key={currentIndex}
+                        >
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              sty.freeBox___3F6Ny
+                            )}
+                          >
+                            <PlasmicImg__
+                              alt={""}
+                              className={classNames(sty.img__n9TZl)}
+                              displayHeight={"30px"}
+                              displayMaxHeight={"none"}
+                              displayMaxWidth={"100%"}
+                              displayMinHeight={"0"}
+                              displayMinWidth={"0"}
+                              displayWidth={"30px"}
+                              height={"28"}
+                              loading={"lazy"}
+                              src={(() => {
+                                try {
+                                  return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/base%2F${currentItem.key}-insurance.svg`;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                              width={"28"}
+                            />
+                          </div>
+                          <LineClamp
+                            className={classNames(
+                              "__wab_instance",
+                              sty.lineClamp__qUhPu
+                            )}
+                          >
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__yoRr8
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return currentItem.name;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </div>
+                          </LineClamp>
+                        </Stack__>
+                      );
+                    })}
+                  </div>
+                ) : null}
+                {(() => {
+                  try {
+                    return $props.data.supplement?.length > 0;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__hoqek)}
+                  >
+                    <IconIcon
+                      className={classNames(projectcss.all, sty.svg__bYm2)}
+                      role={"img"}
+                    />
+
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__jq2AA
+                      )}
+                    >
+                      {
+                        "\u0628\u06cc\u0645\u0647 \u062a\u06a9\u0645\u06cc\u0644\u06cc"
+                      }
+                    </div>
+                  </Stack__>
+                ) : null}
+                {(() => {
+                  try {
+                    return $props.data.supplement?.length > 0;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__s2Td7)}
+                  >
+                    {(_par =>
+                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                      (() => {
+                        try {
+                          return $props.data.supplement;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()
+                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                      const currentItem = __plasmic_item_0;
+                      const currentIndex = __plasmic_idx_0;
+                      return (
+                        <Stack__
+                          as={"div"}
+                          hasGap={true}
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__vZmO1
+                          )}
+                          key={currentIndex}
+                        >
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              sty.freeBox__d2Onp
+                            )}
+                          >
+                            <PlasmicImg__
+                              alt={""}
+                              className={classNames(sty.img___84T5Y)}
+                              displayHeight={"30px"}
+                              displayMaxHeight={"none"}
+                              displayMaxWidth={"100%"}
+                              displayMinHeight={"0"}
+                              displayMinWidth={"0"}
+                              displayWidth={"30px"}
+                              height={"28"}
+                              loading={"lazy"}
+                              src={(() => {
+                                try {
+                                  return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/insurances%2F${currentItem.key}-insurance.svg`;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                              width={"28"}
+                            />
+                          </div>
+                          <LineClamp
+                            className={classNames(
+                              "__wab_instance",
+                              sty.lineClamp__liG8T
+                            )}
+                          >
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__lNgPl
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return currentItem.name;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </div>
+                          </LineClamp>
+                        </Stack__>
+                      );
+                    })}
+                  </div>
+                ) : null}
+              </Stack__>
+            }
+          >
             <Button
               children2={
                 <div
                   className={classNames(
                     projectcss.all,
                     projectcss.__wab_text,
-                    sty.text__wE20V
+                    sty.text__dtYqv
                   )}
                 >
                   {
-                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0645\u062a\u0631"
+                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
                   }
                 </div>
               }
-              className={classNames("__wab_instance", sty.button__ttCeL)}
+              className={classNames("__wab_instance", sty.button__qCs72)}
               color={"text"}
               showStartIcon={true}
               size={"compact"}
               startIcon={
-                <ChevronUpIcon
-                  className={classNames(projectcss.all, sty.svg__rkwxx)}
+                <ChevronDownIcon
+                  className={classNames(projectcss.all, sty.svg__nHqj7)}
                   role={"img"}
                 />
               }
             />
+          </Collapsible>
+        ) : null}
+        {(() => {
+          try {
+            return $props.data.supplement?.length == 0;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
           }
-          slot2={
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__nj0VK)}
-            >
-              {(() => {
-                try {
-                  return $props.data.base?.length > 0;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return false;
-                  }
-                  throw e;
+        })() ? (
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox__q4QJr)}
+          >
+            {(() => {
+              try {
+                return $props.data.base?.length > 0;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
                 }
-              })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__deuB)}
-                >
-                  <IconIcon
-                    className={classNames(projectcss.all, sty.svg__dzgeE)}
-                    role={"img"}
-                  />
-
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__ldvzA
-                    )}
-                  >
-                    {"\u0628\u06cc\u0645\u0647 \u067e\u0627\u06cc\u0647"}
-                  </div>
-                </Stack__>
-              ) : null}
-              {(() => {
-                try {
-                  return $props.data.base?.length > 0;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return false;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <div
-                  className={classNames(projectcss.all, sty.freeBox___94J2U)}
-                >
-                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                    (() => {
-                      try {
-                        return $props.data.base;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()
-                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                    const currentItem = __plasmic_item_0;
-                    const currentIndex = __plasmic_idx_0;
-                    return (
-                      <Stack__
-                        as={"div"}
-                        hasGap={true}
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__x3O2J
-                        )}
-                        key={currentIndex}
-                      >
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            sty.freeBox___3F6Ny
-                          )}
-                        >
-                          <PlasmicImg__
-                            alt={""}
-                            className={classNames(sty.img__n9TZl)}
-                            displayHeight={"30px"}
-                            displayMaxHeight={"none"}
-                            displayMaxWidth={"100%"}
-                            displayMinHeight={"0"}
-                            displayMinWidth={"0"}
-                            displayWidth={"30px"}
-                            height={"28"}
-                            loading={"lazy"}
-                            src={(() => {
-                              try {
-                                return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/base%2F${currentItem.key}-insurance.svg`;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()}
-                            width={"28"}
-                          />
-                        </div>
-                        <LineClamp
-                          className={classNames(
-                            "__wab_instance",
-                            sty.lineClamp__qUhPu
-                          )}
-                        >
-                          <div
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.__wab_text,
-                              sty.text__yoRr8
-                            )}
-                          >
-                            <React.Fragment>
-                              {(() => {
-                                try {
-                                  return currentItem.name;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return "";
-                                  }
-                                  throw e;
-                                }
-                              })()}
-                            </React.Fragment>
-                          </div>
-                        </LineClamp>
-                      </Stack__>
-                    );
-                  })}
-                </div>
-              ) : null}
-              {(() => {
-                try {
-                  return $props.data.supplement?.length > 0;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return false;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__hoqek)}
-                >
-                  <IconIcon
-                    className={classNames(projectcss.all, sty.svg__bYm2)}
-                    role={"img"}
-                  />
-
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__jq2AA
-                    )}
-                  >
-                    {
-                      "\u0628\u06cc\u0645\u0647 \u062a\u06a9\u0645\u06cc\u0644\u06cc"
-                    }
-                  </div>
-                </Stack__>
-              ) : null}
-              {(() => {
-                try {
-                  return $props.data.supplement?.length > 0;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return false;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <div className={classNames(projectcss.all, sty.freeBox__s2Td7)}>
-                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                    (() => {
-                      try {
-                        return $props.data.supplement;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()
-                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                    const currentItem = __plasmic_item_0;
-                    const currentIndex = __plasmic_idx_0;
-                    return (
-                      <Stack__
-                        as={"div"}
-                        hasGap={true}
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__vZmO1
-                        )}
-                        key={currentIndex}
-                      >
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            sty.freeBox__d2Onp
-                          )}
-                        >
-                          <PlasmicImg__
-                            alt={""}
-                            className={classNames(sty.img___84T5Y)}
-                            displayHeight={"30px"}
-                            displayMaxHeight={"none"}
-                            displayMaxWidth={"100%"}
-                            displayMinHeight={"0"}
-                            displayMinWidth={"0"}
-                            displayWidth={"30px"}
-                            height={"28"}
-                            loading={"lazy"}
-                            src={(() => {
-                              try {
-                                return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/insurances%2F${currentItem.key}-insurance.svg`;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()}
-                            width={"28"}
-                          />
-                        </div>
-                        <LineClamp
-                          className={classNames(
-                            "__wab_instance",
-                            sty.lineClamp__liG8T
-                          )}
-                        >
-                          <div
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.__wab_text,
-                              sty.text__lNgPl
-                            )}
-                          >
-                            <React.Fragment>
-                              {(() => {
-                                try {
-                                  return currentItem.name;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return "";
-                                  }
-                                  throw e;
-                                }
-                              })()}
-                            </React.Fragment>
-                          </div>
-                        </LineClamp>
-                      </Stack__>
-                    );
-                  })}
-                </div>
-              ) : null}
-            </Stack__>
-          }
-        >
-          <Button
-            children2={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__dtYqv
-                )}
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__zlFK)}
               >
-                {
-                  "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
+                <IconIcon
+                  className={classNames(projectcss.all, sty.svg__idcSb)}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__clxWi
+                  )}
+                >
+                  {"\u0628\u06cc\u0645\u0647 \u067e\u0627\u06cc\u0647"}
+                </div>
+              </Stack__>
+            ) : null}
+            {(() => {
+              try {
+                return $props.data.base?.length > 0;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
                 }
+                throw e;
+              }
+            })() ? (
+              <div className={classNames(projectcss.all, sty.freeBox__idhz2)}>
+                {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                  (() => {
+                    try {
+                      return $props.data.base;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()
+                ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                  const currentItem = __plasmic_item_0;
+                  const currentIndex = __plasmic_idx_0;
+                  return (
+                    <Stack__
+                      as={"div"}
+                      hasGap={true}
+                      className={classNames(projectcss.all, sty.freeBox__on7Fg)}
+                      key={currentIndex}
+                    >
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox__wty8W
+                        )}
+                      >
+                        <PlasmicImg__
+                          alt={""}
+                          className={classNames(sty.img__vJyYy)}
+                          displayHeight={"30px"}
+                          displayMaxHeight={"none"}
+                          displayMaxWidth={"100%"}
+                          displayMinHeight={"0"}
+                          displayMinWidth={"0"}
+                          displayWidth={"30px"}
+                          height={"28"}
+                          loading={"lazy"}
+                          src={(() => {
+                            try {
+                              return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/base%2F${currentItem.key}-insurance.svg`;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                          width={"28"}
+                        />
+                      </div>
+                      <LineClamp
+                        className={classNames(
+                          "__wab_instance",
+                          sty.lineClamp__urpwr
+                        )}
+                      >
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__rJCk
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return currentItem.name;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        </div>
+                      </LineClamp>
+                    </Stack__>
+                  );
+                })}
               </div>
-            }
-            className={classNames("__wab_instance", sty.button__qCs72)}
-            color={"text"}
-            showStartIcon={true}
-            size={"compact"}
-            startIcon={
-              <ChevronDownIcon
-                className={classNames(projectcss.all, sty.svg__nHqj7)}
-                role={"img"}
-              />
-            }
-          />
-        </Collapsible>
+            ) : null}
+          </Stack__>
+        ) : null}
       </Stack__>
     </Stack__>
   ) as React.ReactElement | null;
