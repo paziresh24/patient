@@ -64,6 +64,7 @@ import LauncherComponentsApp from "../../LauncherComponentsApp"; // plasmic-impo
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherBlocksApps.module.css"; // plasmic-import: 1JVvWgQsicxr/css
 
@@ -141,6 +142,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -216,7 +218,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
               e instanceof TypeError ||
               e?.plasmicType === "PlasmicUndefinedDataError"
             ) {
-              return false;
+              return true;
             }
             throw e;
           }
@@ -247,6 +249,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                 throw e;
               }
             })()}
+            widgetId={"hhhzbbsffq0nlna"}
           />
         ) : null}
         {(() => {
@@ -277,6 +280,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             name={
               "\u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645"
             }
+            widgetId={"aed80eahprc1qs0"}
           />
         ) : null}
         {(() => {

@@ -59,8 +59,12 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
+import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherComponentsApp.module.css"; // plasmic-import: 25u6_6Q-fQwp/css
 
@@ -81,18 +85,22 @@ export type PlasmicLauncherComponentsApp__ArgsType = {
   link?: string;
   avatar?: string;
   description?: string;
+  widgetId?: string;
 };
 type ArgPropType = keyof PlasmicLauncherComponentsApp__ArgsType;
 export const PlasmicLauncherComponentsApp__ArgProps = new Array<ArgPropType>(
   "name",
   "link",
   "avatar",
-  "description"
+  "description",
+  "widgetId"
 );
 
 export type PlasmicLauncherComponentsApp__OverridesType = {
   root?: Flex__<"div">;
-  img?: Flex__<typeof PlasmicImg__>;
+  apiRequest?: Flex__<typeof ApiRequest>;
+  dialog?: Flex__<typeof Dialog>;
+  span?: Flex__<"span">;
 };
 
 export interface DefaultLauncherComponentsAppProps {
@@ -100,6 +108,7 @@ export interface DefaultLauncherComponentsAppProps {
   link?: string;
   avatar?: string;
   description?: string;
+  widgetId?: string;
   soon?: SingleBooleanChoiceArg<"soon">;
   className?: string;
 }
@@ -149,6 +158,30 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.soon
+      },
+      {
+        path: "apiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "dialog.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -174,6 +207,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
         sty.root,
         { [sty.rootsoon]: hasVariant($state, "soon", "soon") }
       )}
@@ -221,61 +255,109 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
         }
       }}
     >
-      <PlasmicImg__
-        data-plasmic-name={"img"}
-        data-plasmic-override={overrides.img}
-        alt={""}
-        className={classNames(sty.img, {
-          [sty.imgsoon]: hasVariant($state, "soon", "soon")
-        })}
-        displayHeight={"46px"}
-        displayMaxHeight={"none"}
-        displayMaxWidth={"100%"}
-        displayMinHeight={"0"}
-        displayMinWidth={"0"}
-        displayWidth={"46px"}
-        height={"46"}
-        loading={"lazy"}
-        src={(() => {
-          try {
-            return $props.avatar;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        width={"46"}
-      />
-
-      <div
-        className={classNames(projectcss.all, sty.freeBox___94WL, {
-          [sty.freeBoxsoon___94WLwdK6]: hasVariant($state, "soon", "soon")
-        })}
+      <Stack__
+        as={"div"}
+        hasGap={true}
+        className={classNames(projectcss.all, sty.freeBox___3Yal5)}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox___9RkNp, {
-            [sty.freeBoxsoon___9RkNPwdK6]: hasVariant($state, "soon", "soon")
+        <PlasmicImg__
+          alt={""}
+          className={classNames(sty.img__vnPue, {
+            [sty.imgsoon__vnPuewdK6]: hasVariant($state, "soon", "soon")
+          })}
+          displayHeight={"46px"}
+          displayMaxHeight={"none"}
+          displayMaxWidth={"100%"}
+          displayMinHeight={"0"}
+          displayMinWidth={"0"}
+          displayWidth={"46px"}
+          height={"46"}
+          loading={"lazy"}
+          src={(() => {
+            try {
+              return $props.avatar;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          width={"46"}
+        />
+
+        <div
+          className={classNames(projectcss.all, sty.freeBox___94WL, {
+            [sty.freeBoxsoon___94WLwdK6]: hasVariant($state, "soon", "soon")
           })}
         >
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox___9RkNp, {
+              [sty.freeBoxsoon___9RkNPwdK6]: hasVariant($state, "soon", "soon")
+            })}
+          >
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__wwO2O,
+                {
+                  [sty.textsoon__wwO2OwdK6]: hasVariant($state, "soon", "soon")
+                }
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.name;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "";
+                    }
+                    throw e;
+                  }
+                })()}
+              </React.Fragment>
+            </div>
+            {(hasVariant($state, "soon", "soon") ? true : false) ? (
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__rrEuk,
+                  {
+                    [sty.textsoon__rrEukwdK6]: hasVariant(
+                      $state,
+                      "soon",
+                      "soon"
+                    )
+                  }
+                )}
+              >
+                {"\u0628\u0632\u0648\u062f\u06cc"}
+              </div>
+            ) : null}
+          </Stack__>
           <div
             className={classNames(
               projectcss.all,
               projectcss.__wab_text,
-              sty.text__wwO2O,
-              { [sty.textsoon__wwO2OwdK6]: hasVariant($state, "soon", "soon") }
+              sty.text__xiGce,
+              { [sty.textsoon__xiGcewdK6]: hasVariant($state, "soon", "soon") }
             )}
           >
             <React.Fragment>
               {(() => {
                 try {
-                  return $props.name;
+                  return $props.description;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -288,60 +370,323 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
               })()}
             </React.Fragment>
           </div>
-          {(hasVariant($state, "soon", "soon") ? true : false) ? (
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__rrEuk,
-                {
-                  [sty.textsoon__rrEukwdK6]: hasVariant($state, "soon", "soon")
-                }
-              )}
-            >
-              {"\u0628\u0632\u0648\u062f\u06cc"}
-            </div>
-          ) : null}
-        </Stack__>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__xiGce,
-            { [sty.textsoon__xiGcewdK6]: hasVariant($state, "soon", "soon") }
-          )}
+        </div>
+      </Stack__>
+      {(() => {
+        try {
+          return !!$props.widgetId;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__tPtNx)}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["runCode"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return event?.stopPropagation();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
+            }
+          }}
         >
-          <React.Fragment>
-            {(() => {
+          <ApiRequest
+            data-plasmic-name={"apiRequest"}
+            data-plasmic-override={overrides.apiRequest}
+            className={classNames("__wab_instance", sty.apiRequest)}
+            errorDisplay={null}
+            loadingDisplay={null}
+            method={"GET"}
+            onError={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
+                null,
+                eventArgs
+              );
+            }}
+            onLoading={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "apiRequest",
+                "loading"
+              ]).apply(null, eventArgs);
+            }}
+            onSuccess={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+                null,
+                eventArgs
+              );
+            }}
+            url={(() => {
               try {
-                return $props.description;
+                return $props.widgetId
+                  ? `https://apigw.paziresh24.com/v1/hamdast/widget/activated_users?widget_id=${$props.widgetId}`
+                  : "";
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return "";
+                  return undefined;
                 }
                 throw e;
               }
             })()}
-          </React.Fragment>
-        </div>
-      </div>
+          >
+            <Dialog
+              data-plasmic-name={"dialog"}
+              data-plasmic-override={overrides.dialog}
+              body={
+                <div className={classNames(projectcss.all, sty.freeBox__kd4UO)}>
+                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                    (() => {
+                      try {
+                        return $state.apiRequest.data?.data;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()
+                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                    const currentItem = __plasmic_item_0;
+                    const currentIndex = __plasmic_idx_0;
+                    return (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox___5RuoT
+                        )}
+                        key={currentIndex}
+                      >
+                        <PlasmicImg__
+                          alt={""}
+                          className={classNames(sty.img___3SBa, "bg-white")}
+                          displayHeight={"70px"}
+                          displayMaxHeight={"none"}
+                          displayMaxWidth={"100%"}
+                          displayMinHeight={"0"}
+                          displayMinWidth={"0"}
+                          displayWidth={"70px"}
+                          loading={"eager"}
+                          onClick={async event => {
+                            const $steps = {};
+
+                            $steps["runCode"] = true
+                              ? (() => {
+                                  const actionArgs = {
+                                    customFunction: async () => {
+                                      return globalThis.open(
+                                        `/dr/${currentItem?.slug}`,
+                                        "_blank"
+                                      );
+                                    }
+                                  };
+                                  return (({ customFunction }) => {
+                                    return customFunction();
+                                  })?.apply(null, [actionArgs]);
+                                })()
+                              : undefined;
+                            if (
+                              $steps["runCode"] != null &&
+                              typeof $steps["runCode"] === "object" &&
+                              typeof $steps["runCode"].then === "function"
+                            ) {
+                              $steps["runCode"] = await $steps["runCode"];
+                            }
+                          }}
+                          src={(() => {
+                            try {
+                              return `https://apigw.paziresh24.com/v1/rokhnama/image?slug=${currentItem.slug}`;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                          width={``}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              }
+              className={classNames("__wab_instance", sty.dialog)}
+              onOpenChange={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+                  null,
+                  eventArgs
+                );
+
+                if (
+                  eventArgs.length > 1 &&
+                  eventArgs[1] &&
+                  eventArgs[1]._plasmic_state_init_
+                ) {
+                  return;
+                }
+              }}
+              open={generateStateValueProp($state, ["dialog", "open"])}
+              title={
+                <div className={classNames(projectcss.all, sty.freeBox__fMt0R)}>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__inJen
+                    )}
+                  >
+                    {"\u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u0647\u0627"}
+                  </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__ppt68
+                    )}
+                  >
+                    <React.Fragment>
+                      <React.Fragment>
+                        {
+                          "\u0628\u0627 \u06a9\u0644\u06cc\u06a9 \u0628\u0631 \u0631\u0648\u06cc \u0647\u0631 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u0628\u0632\u0627\u0631\u06a9 "
+                        }
+                      </React.Fragment>
+                      {
+                        <span
+                          data-plasmic-name={"span"}
+                          data-plasmic-override={overrides.span}
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.span,
+                            projectcss.__wab_text,
+                            projectcss.plasmic_default__inline,
+                            sty.span
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return $props.name;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "-";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        </span>
+                      }
+                      <React.Fragment>
+                        {
+                          " \u0631\u0627 \u0645\u0634\u0627\u0647\u062f\u0647 \u06a9\u0646\u06cc\u062f."
+                        }
+                      </React.Fragment>
+                    </React.Fragment>
+                  </div>
+                </div>
+              }
+              trigger={(_par =>
+                !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                (() => {
+                  try {
+                    return $state.apiRequest.data?.data?.slice(0, 4)?.reverse();
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()
+              ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                const currentItem = __plasmic_item_0;
+                const currentIndex = __plasmic_idx_0;
+                return (
+                  <PlasmicImg__
+                    alt={""}
+                    className={classNames(sty.img__aw4Eh, "bg-white")}
+                    displayHeight={"28px"}
+                    displayMaxHeight={"none"}
+                    displayMaxWidth={"100%"}
+                    displayMinHeight={"0"}
+                    displayMinWidth={"0"}
+                    displayWidth={"28px"}
+                    key={currentIndex}
+                    loading={"eager"}
+                    src={(() => {
+                      try {
+                        return `https://apigw.paziresh24.com/v1/rokhnama/image?slug=${currentItem.slug}`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    width={``}
+                  />
+                );
+              })}
+            />
+          </ApiRequest>
+        </Stack__>
+      ) : null}
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "img"],
-  img: ["img"]
+  root: ["root", "apiRequest", "dialog", "span"],
+  apiRequest: ["apiRequest", "dialog", "span"],
+  dialog: ["dialog", "span"],
+  span: ["span"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  img: typeof PlasmicImg__;
+  apiRequest: typeof ApiRequest;
+  dialog: typeof Dialog;
+  span: "span";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -404,7 +749,9 @@ export const PlasmicLauncherComponentsApp = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    img: makeNodeComponent("img"),
+    apiRequest: makeNodeComponent("apiRequest"),
+    dialog: makeNodeComponent("dialog"),
+    span: makeNodeComponent("span"),
 
     // Metadata about props expected for PlasmicLauncherComponentsApp
     internalVariantProps: PlasmicLauncherComponentsApp__VariantProps,

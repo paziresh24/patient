@@ -11,23 +11,24 @@ import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasm
 import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: Lh7MsDRxKvrC/codeComponent
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: dI_F7URPFmvR/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: 6WQFMgFgcDau/codeComponent
+import { EmbedCss } from "@plasmicpkgs/plasmic-embed-css";
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
+  embedCssProps?: Partial<
+    Omit<React.ComponentProps<typeof EmbedCss>, "children">
+  >;
 }
 
 export default function GlobalContextsProvider(
@@ -39,7 +40,8 @@ export default function GlobalContextsProvider(
     fragmentProps,
     growthbookGlobalContextProps,
     splunkProps,
-    pwaProps
+    pwaProps,
+    embedCssProps
   } = props;
 
   return (
@@ -98,7 +100,18 @@ export default function GlobalContextsProvider(
                 : undefined
             }
           >
-            <PWA {...pwaProps}>{children}</PWA>
+            <PWA {...pwaProps}>
+              <EmbedCss
+                {...embedCssProps}
+                css={
+                  embedCssProps && "css" in embedCssProps
+                    ? embedCssProps.css!
+                    : ".pl__z-50{\r\n  z-index: 9999 !important;\r\n}"
+                }
+              >
+                {children}
+              </EmbedCss>
+            </PWA>
           </Splunk>
         </GrowthbookGlobalContext>
       </Fragment>
