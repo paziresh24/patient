@@ -645,7 +645,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                         displayMaxHeight={"none"}
                         displayMaxWidth={"100%"}
                         displayMinHeight={"0"}
-                        displayMinWidth={"0"}
+                        displayMinWidth={"28px"}
                         displayWidth={"28px"}
                         key={currentIndex}
                         loading={"eager"}
