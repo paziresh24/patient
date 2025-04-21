@@ -1,6 +1,7 @@
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
+import TextField from '@/common/components/atom/textField';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
@@ -12,6 +13,7 @@ import toast from 'react-hot-toast';
 export const Report = ({ app_key, page_key }: { app_key: string; page_key: string }) => {
   const { handleOpen, handleClose, modalProps } = useModal();
   const [reportItemSelected, setReportItemSelected] = useState('empty');
+  const [reason, setReason] = useState('');
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -37,6 +39,7 @@ export const Report = ({ app_key, page_key }: { app_key: string; page_key: strin
       type: 'apps-report',
       event: {
         report: reportItemSelected ?? 'empty',
+        reason: reason,
         app_key: app_key,
         page_key: page_key,
         user_id: user_id ?? user?.id,
@@ -84,6 +87,9 @@ export const Report = ({ app_key, page_key }: { app_key: string; page_key: strin
               </label>
             ))}
           </div>
+          {reportItemSelected === 'others' && (
+            <TextField onChange={e => setReason(e.target?.value)} multiLine className="h-36" placeholder="دلیل گزارش خود را بنویسید..." />
+          )}
           <div className="fixed md:static md:p-0 md:border-none bottom-0 w-full right-0 p-5 bg-white border border-t border-slate-100">
             <Button className="w-full" onClick={() => handleReportSubmit()}>
               ثبت گزارش

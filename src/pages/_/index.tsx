@@ -89,7 +89,7 @@ const Page = () => {
                 group: 'back-to-dashboard-reason',
                 type: 'back-to-dashboard-reason',
                 event: {
-                  resaon: reason,
+                  reason: reason,
                   user_id: info?.id,
                   provider: info?.provider,
                 },
