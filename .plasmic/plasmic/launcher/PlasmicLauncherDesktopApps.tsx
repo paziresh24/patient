@@ -61,6 +61,7 @@ import {
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherDesktopApps.module.css"; // plasmic-import: rMG1ZGZR_tFC/css
 
@@ -134,6 +135,7 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
+        plasmic_fragment_design_system_css.plasmic_tokens,
         sty.root
       )}
     />
