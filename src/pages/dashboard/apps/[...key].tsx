@@ -9,6 +9,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useApps } from '@/modules/dashboard/apis/apps';
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
+import { Report } from '@/modules/hamdast/components/report';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -94,7 +95,13 @@ export const Dashboard = (props: any) => {
       showHeader={!isMobile}
       className="!h-svh !min-h-svh !max-h-svh:"
     >
-      <AppBar title={appName} className="md:hidden" titleLoading={!appsData.isSuccess} backButton={true} />
+      <AppBar
+        title={appName}
+        className="md:hidden"
+        titleLoading={!appsData.isSuccess}
+        backButton={true}
+        actionButton={<Report app_key={appKey as string} page_key={menuKey} />}
+      />
       <SideBar className="hidden md:flex">
         <div className="flex flex-grow flex-col w-full">
           <Seo title={appName} noIndex />
