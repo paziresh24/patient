@@ -1,21 +1,29 @@
+import Button from '@/common/components/atom/button';
 import Loading from '@/common/components/atom/loading';
+import Modal from '@/common/components/atom/modal';
+import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { ThemeConfig } from '@/common/hooks/useCustomize';
+import useModal from '@/common/hooks/useModal';
+import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { oneApp, useOneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
 import { HamdastPayment } from '@/modules/hamdast/components/payment';
+import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import RadioFilter from '@/modules/search/components/filters/advancedSearch/sections/radio';
 import { isEmpty } from 'lodash';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 
 function replaceKeysInString(template: string, keys: string[], values: string[]) {
   // Create a regular expression to find placeholders like {{key}}
@@ -96,7 +104,9 @@ const Page = ({ page, app }: any) => {
       showBottomNavigation={page?.layout?.show_bottom_navigation ?? false}
       className="!h-svh !min-h-svh !max-h-svh:"
     >
-      {page?.layout?.show_appbar && <AppBar title={page.name?.fa} backButton={true} />}
+      {page?.layout?.show_appbar && (
+        <AppBar title={page.name?.fa} backButton={true} actionButton={<Report app_key={app_key as string} page_key={page?.key} />} />
+      )}
       <Seo title={page.name?.fa} noIndex />
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
