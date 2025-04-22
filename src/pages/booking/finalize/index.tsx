@@ -65,7 +65,7 @@ const Booking = () => {
 
   useEffect(() => {
     setProfileData({
-      online_visit_channel_types: bookDetailsData?.doctor?.online_visit_channels.map((item: any) => item.type),
+      online_visit_channel_types: profile?.online_visit_channel_types,
     });
   }, [bookDetailsData?.doctor]);
 
