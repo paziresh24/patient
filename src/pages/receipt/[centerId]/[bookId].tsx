@@ -345,7 +345,7 @@ const Receipt = () => {
   }, [isLogin]);
 
   useEffect(() => {
-    if (bookDetailsData?.book_time && centerId !== CENTERS.CONSULT) {
+    if (bookDetailsData?.book_time && centerId !== CENTERS.CONSULT && bookDetailsData?.center?.type_id == 1) {
       const bookDate = moment(bookDetailsData.book_time * 1000);
       const bookDateStr = bookDate.format('YYYY-MM-DD');
       const startDate = bookDate.clone().subtract(3, 'days').format('YYYY-MM-DD');
