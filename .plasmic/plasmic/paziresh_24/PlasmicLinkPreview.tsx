@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -72,9 +72,7 @@ export type PlasmicLinkPreview__VariantsArgs = {};
 type VariantPropType = keyof PlasmicLinkPreview__VariantsArgs;
 export const PlasmicLinkPreview__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicLinkPreview__ArgsType = {
-  url?: string;
-};
+export type PlasmicLinkPreview__ArgsType = { url?: string };
 type ArgPropType = keyof PlasmicLinkPreview__ArgsType;
 export const PlasmicLinkPreview__ArgProps = new Array<ArgPropType>("url");
 

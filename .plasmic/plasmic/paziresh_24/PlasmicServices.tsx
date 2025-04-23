@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -97,6 +97,7 @@ export type PlasmicServices__ArgsType = {
   expertises?: any;
   seo?: any;
   onEvent?: () => void;
+  onlineVisitButtonsToFactorDestinationB?: any;
 };
 type ArgPropType = keyof PlasmicServices__ArgsType;
 export const PlasmicServices__ArgProps = new Array<ArgPropType>(
@@ -106,7 +107,8 @@ export const PlasmicServices__ArgProps = new Array<ArgPropType>(
   "waitingTimeInfo",
   "expertises",
   "seo",
-  "onEvent"
+  "onEvent",
+  "onlineVisitButtonsToFactorDestinationB"
 );
 
 export type PlasmicServices__OverridesType = {
@@ -123,6 +125,7 @@ export interface DefaultServicesProps {
   expertises?: any;
   seo?: any;
   onEvent?: () => void;
+  onlineVisitButtonsToFactorDestinationB?: any;
   type?: SingleChoiceArg<"onlineVisit">;
   className?: string;
 }
@@ -1069,43 +1072,88 @@ function PlasmicServices__RenderFunc(props: {
               $steps["runOnEvent"] = await $steps["runOnEvent"];
             }
 
-            $steps["goToPage"] = true
-              ? (() => {
-                  const actionArgs = {
-                    destination: (() => {
-                      try {
-                        return `/booking/${$props.seo.slug}?centerId=5532&skipTimeSelectStep=true`;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
+            $steps["goToPage"] =
+              !$props.onlineVisitButtonsToFactorDestinationB.enabled_dr_slugs?.includes(
+                $props.seo?.slug
+              )
+                ? (() => {
+                    const actionArgs = {
+                      destination: (() => {
+                        try {
+                          return `/booking/${$props.seo.slug}?centerId=5532&skipTimeSelectStep=true`;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
                         }
-                        throw e;
+                      })()
+                    };
+                    return (({ destination }) => {
+                      if (
+                        typeof destination === "string" &&
+                        destination.startsWith("#")
+                      ) {
+                        document
+                          .getElementById(destination.substr(1))
+                          .scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        __nextRouter?.push(destination);
                       }
-                    })()
-                  };
-                  return (({ destination }) => {
-                    if (
-                      typeof destination === "string" &&
-                      destination.startsWith("#")
-                    ) {
-                      document
-                        .getElementById(destination.substr(1))
-                        .scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      __nextRouter?.push(destination);
-                    }
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
             if (
               $steps["goToPage"] != null &&
               typeof $steps["goToPage"] === "object" &&
               typeof $steps["goToPage"].then === "function"
             ) {
               $steps["goToPage"] = await $steps["goToPage"];
+            }
+
+            $steps["goToFactorV2"] =
+              $props.onlineVisitButtonsToFactorDestinationB.enabled_dr_slugs?.includes(
+                $props.seo?.slug
+              )
+                ? (() => {
+                    const actionArgs = {
+                      destination: (() => {
+                        try {
+                          return `https://www.paziresh24.com/factor/v2/${$props.seo.slug}/${$props.service.id}/`;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    };
+                    return (({ destination }) => {
+                      if (
+                        typeof destination === "string" &&
+                        destination.startsWith("#")
+                      ) {
+                        document
+                          .getElementById(destination.substr(1))
+                          .scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        __nextRouter?.push(destination);
+                      }
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+            if (
+              $steps["goToFactorV2"] != null &&
+              typeof $steps["goToFactorV2"] === "object" &&
+              typeof $steps["goToFactorV2"].then === "function"
+            ) {
+              $steps["goToFactorV2"] = await $steps["goToFactorV2"];
             }
 
             $steps["sendEvent"] = true
