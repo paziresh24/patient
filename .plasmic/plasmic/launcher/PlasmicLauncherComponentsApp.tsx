@@ -520,7 +520,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                           }}
                           src={(() => {
                             try {
-                              return `https://apigw.paziresh24.com/v1/rokhnama/image?slug=${currentItem.slug}`;
+                              return currentItem.image_url;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -651,7 +651,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                         loading={"eager"}
                         src={(() => {
                           try {
-                            return `https://apigw.paziresh24.com/v1/rokhnama/image?slug=${currentItem.slug}`;
+                            return currentItem.image_url;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
