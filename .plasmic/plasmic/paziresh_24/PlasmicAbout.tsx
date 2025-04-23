@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -74,9 +74,7 @@ export type PlasmicAbout__VariantsArgs = {};
 type VariantPropType = keyof PlasmicAbout__VariantsArgs;
 export const PlasmicAbout__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicAbout__ArgsType = {
-  information?: any;
-};
+export type PlasmicAbout__ArgsType = { information?: any };
 type ArgPropType = keyof PlasmicAbout__ArgsType;
 export const PlasmicAbout__ArgProps = new Array<ArgPropType>("information");
 

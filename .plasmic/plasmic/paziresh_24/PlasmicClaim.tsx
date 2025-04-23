@@ -1,6 +1,6 @@
-// @ts-nocheck
 /* eslint-disable */
 /* tslint:disable */
+// @ts-nocheck
 /* prettier-ignore-start */
 
 /** @jsxRuntime classic */
@@ -77,10 +77,7 @@ export type PlasmicClaim__VariantsArgs = {};
 type VariantPropType = keyof PlasmicClaim__VariantsArgs;
 export const PlasmicClaim__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicClaim__ArgsType = {
-  information?: any;
-  centers?: any;
-};
+export type PlasmicClaim__ArgsType = { information?: any; centers?: any };
 type ArgPropType = keyof PlasmicClaim__ArgsType;
 export const PlasmicClaim__ArgProps = new Array<ArgPropType>(
   "information",
