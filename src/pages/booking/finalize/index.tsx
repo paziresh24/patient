@@ -67,7 +67,7 @@ const Booking = () => {
     setProfileData({
       online_visit_channel_types: profile?.online_visit_channel_types,
     });
-  }, [bookDetailsData?.doctor]);
+  }, [profile?.online_visit_channel_types]);
 
   const handleUpdateBookDetails = async (userInfo: any) => {
     setUpdateBookDetailsLoading(true);

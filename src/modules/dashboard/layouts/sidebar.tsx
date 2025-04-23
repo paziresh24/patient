@@ -199,13 +199,6 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       shouldShow: true,
     },
     {
-      icon: <CommentIcon />,
-      label: 'نظرات من',
-      url: `/dr/${user.provider?.slug}/#reviews`,
-      shouldShowDoctor: true,
-      shouldShow: user.provider?.job_title === 'doctor',
-    },
-    {
       icon: <BookmarksIcon />,
       label: 'لیست پزشکان من',
       url: '/dashboard/bookmarks',
