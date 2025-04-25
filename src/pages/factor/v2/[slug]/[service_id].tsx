@@ -86,7 +86,11 @@ const Factor = () => {
               <Text as="p" fontSize="sm" align="justify" className="leading-6">
                 پس از نهایی شدن نوبت،{' '}
                 <Text className="text-primary" fontWeight="semiBold">
-                  {convertTime(profile?.data?.centers?.find((item: any) => item.id == CENTERS.CONSULT)?.freeturn * 1000)}
+                  {convertTime(
+                    profile?.data?.centers
+                      ?.find((item: any) => item.id == CENTERS.CONSULT)
+                      ?.freeturns_info?.find((item: any) => item.service_id == service_id)?.freeturn * 1000,
+                  )}
                 </Text>{' '}
                 شما را آنلاین ویزیت خواهم کرد.
               </Text>
