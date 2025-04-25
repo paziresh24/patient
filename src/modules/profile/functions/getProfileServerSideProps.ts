@@ -431,7 +431,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         params: {
           id: fullProfileData!.id,
         },
-        timeout: 3000,
       });
 
       if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
