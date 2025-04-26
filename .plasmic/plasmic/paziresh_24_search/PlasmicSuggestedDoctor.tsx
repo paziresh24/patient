@@ -104,6 +104,7 @@ export type PlasmicSuggestedDoctor__OverridesType = {
 export interface DefaultSuggestedDoctorProps {
   categoryTitle?: string;
   categoryValue?: string;
+  className?: string;
 }
 
 const $$ = {

@@ -2004,6 +2004,46 @@ function PlasmicSearchResults__RenderFunc(props: {
             ];
           }
 
+          $steps["topSuggestedCardViewSplunkEvent"] = false
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return setTimeout(() => {
+                      if (document.querySelector(".top-suggested-card")) {
+                        $$.splunkEvent({
+                          token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
+                          group: "search_metrics",
+                          type: "search_top_suggested_card_view",
+                          data: {
+                            filters:
+                              $props.searchResultResponse.selected_filters,
+                            result_count: $props.searchResultResponse.length,
+                            location: $props.location.city_name,
+                            city_id: $props.location.city_id,
+                            lat: $props.location.lat,
+                            lon: $props.location.lon,
+                            query: "..."
+                          }
+                        });
+                      }
+                    }, 2000);
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["topSuggestedCardViewSplunkEvent"] != null &&
+            typeof $steps["topSuggestedCardViewSplunkEvent"] === "object" &&
+            typeof $steps["topSuggestedCardViewSplunkEvent"].then === "function"
+          ) {
+            $steps["topSuggestedCardViewSplunkEvent"] = await $steps[
+              "topSuggestedCardViewSplunkEvent"
+            ];
+          }
+
           $steps["visibleShowMySearchPerformanceVisibilityByFetchUrl"] = false
             ? (() => {
                 const actionArgs = {
@@ -2051,46 +2091,6 @@ function PlasmicSearchResults__RenderFunc(props: {
               await $steps[
                 "visibleShowMySearchPerformanceVisibilityByFetchUrl"
               ];
-          }
-
-          $steps["topSuggestedCardViewSplunkEvent"] = false
-            ? (() => {
-                const actionArgs = {
-                  customFunction: async () => {
-                    return setTimeout(() => {
-                      if (document.querySelector(".top-suggested-card")) {
-                        $$.splunkEvent({
-                          token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
-                          group: "search_metrics",
-                          type: "search_top_suggested_card_view",
-                          data: {
-                            filters:
-                              $props.searchResultResponse.selected_filters,
-                            result_count: $props.searchResultResponse.length,
-                            location: $props.location.city_name,
-                            city_id: $props.location.city_id,
-                            lat: $props.location.lat,
-                            lon: $props.location.lon,
-                            query: "..."
-                          }
-                        });
-                      }
-                    }, 2000);
-                  }
-                };
-                return (({ customFunction }) => {
-                  return customFunction();
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["topSuggestedCardViewSplunkEvent"] != null &&
-            typeof $steps["topSuggestedCardViewSplunkEvent"] === "object" &&
-            typeof $steps["topSuggestedCardViewSplunkEvent"].then === "function"
-          ) {
-            $steps["topSuggestedCardViewSplunkEvent"] = await $steps[
-              "topSuggestedCardViewSplunkEvent"
-            ];
           }
         }}
       />
