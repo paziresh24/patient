@@ -1,6 +1,7 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useGetBookDetails } from '@/common/apis/services/booking/getBookDetails';
 import { useGetReceiptDetails } from '@/common/apis/services/booking/getReceiptDetails';
+import { useGetOnlineChannels } from '@/common/apis/services/booking/onlineChannels';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import Loading from '@/common/components/atom/loading/loading';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
@@ -42,9 +43,9 @@ const Booking = () => {
   const getBookDetails = useGetBookDetails();
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
   const messengers = useFeatureValue<any>('channeldescription', defaultMessengers);
-  const { isLoading: profileLoading, data } = useGetProfileData({ slug: bookDetailsData?.doctor_slug as string });
-  const profile = data?.data ?? {};
-  const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
+  const { data: onlineChannelsData, isLoading: onlineChannelLoading } = useGetOnlineChannels({ book_id: bookId as string });
+  const onlineChannels = (onlineChannelsData?.data as string[]) ?? [];
+  const doctorMessenger = uniqMessengers(onlineChannels, Object.keys(messengers));
 
   useEffect(() => {
     if (!isLogin && !userPending) {
@@ -59,15 +60,15 @@ const Booking = () => {
 
   const doctorName = `${bookDetailsData?.doctor_name} ${bookDetailsData?.doctor_family}`;
 
-  const isLoading = getBookDetails.isLoading || getBookDetails?.isIdle || profileLoading;
+  const isLoading = getBookDetails.isLoading || getBookDetails?.isIdle || onlineChannelLoading;
 
   const [updateBookDetailsLoading, setUpdateBookDetailsLoading] = useState(false);
 
   useEffect(() => {
     setProfileData({
-      online_visit_channel_types: profile?.online_visit_channel_types,
+      online_visit_channel_types: onlineChannels,
     });
-  }, [profile?.online_visit_channel_types]);
+  }, [onlineChannels]);
 
   const handleUpdateBookDetails = async (userInfo: any) => {
     setUpdateBookDetailsLoading(true);
@@ -111,7 +112,7 @@ const Booking = () => {
           <Transition match={!isLoading} animation="bottom">
             <div className="p-5 bg-white rounded-lg">
               <div className="flex flex-col space-y-3">
-                {profile?.online_visit_channel_types?.filter((item: any) => item !== 'secure_call')?.length <= 1 && (
+                {onlineChannels?.filter((item: any) => item !== 'secure_call')?.length <= 1 && (
                   <div className="p-2 mb-3 rounded-md bg-slate-100">
                     <Text
                       fontSize="sm"
@@ -125,20 +126,16 @@ const Booking = () => {
                 <SelectUserWrapper
                   loading={updateBookDetailsLoading || isLoading}
                   onSubmit={(userInfo: any) => {
-                    if (
-                      !userInfo?.messengerType &&
-                      profile?.online_visit_channel_types?.filter((item: any) => item !== 'secure_call')?.length > 1
-                    ) {
+                    if (!userInfo?.messengerType && onlineChannels?.filter((item: any) => item !== 'secure_call')?.length > 1) {
                       toast.error('لطفا پیام رسان را انتخاب کنید.');
                       return;
                     }
                     handleUpdateBookDetails({
                       ...userInfo,
-                      messengerType:
-                        userInfo?.messengerType ?? profile?.online_visit_channel_types?.filter((item: any) => item !== 'secure_call')[0],
+                      messengerType: userInfo?.messengerType ?? onlineChannels?.filter((item: any) => item !== 'secure_call')[0],
                     });
                   }}
-                  shouldShowMessengers={profile?.online_visit_channel_types?.filter((item: any) => item !== 'secure_call')?.length > 1}
+                  shouldShowMessengers={onlineChannels?.filter((item: any) => item !== 'secure_call')?.length > 1}
                   submitButtonText="نهایی سازی و آغاز گفتگو"
                   showTermsAndConditions={false}
                 />

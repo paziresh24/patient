@@ -426,44 +426,46 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let widgets: any;
     let widgetsData: any = {};
 
-    try {
-      widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets/', {
-        params: {
-          id: fullProfileData!.id,
-        },
-      });
-
-      if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
-        const respnoses = await Promise.allSettled(
-          widgets?.data
-            ?.filter((item: any) => item?.data_endpoint)
-            ?.map(
-              async (item: any) =>
-                await axios.get(item.data_endpoint, {
-                  params: {
-                    user_id: information.user_id,
-                    profile_id: fullProfileData!.id,
-                    slug: slugFormmated,
-                    widget_id: item?.id,
-                    paziresh24_pk: fullProfileData!.id,
-                  },
-                  timeout: 3000,
-                }),
-            ),
-        );
-        widgetsData = respnoses?.reduce(
-          (prev, current) => {
-            if (current.status === 'rejected') return { ...prev };
-            return {
-              ...prev,
-              [current.value?.config?.params?.widget_id]: current?.value?.data,
-            };
+    if (profileData?.provider?.provider_id) {
+      try {
+        widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets/', {
+          params: {
+            provider_id: profileData?.provider?.provider_id,
           },
-          { ...widgetsData },
-        );
+          timeout: 3000,
+        });
+
+        if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
+          const respnoses = await Promise.allSettled(
+            widgets?.data
+              ?.filter((item: any) => item?.data_endpoint)
+              ?.map(
+                async (item: any) =>
+                  await axios.get(item.data_endpoint, {
+                    params: {
+                      user_id: information.user_id,
+                      profile_id: fullProfileData!.id,
+                      provider_id: profileData?.provider?.provider_id,
+                      widget_id: item?.id,
+                    },
+                    timeout: 3000,
+                  }),
+              ),
+          );
+          widgetsData = respnoses?.reduce(
+            (prev, current) => {
+              if (current.status === 'rejected') return { ...prev };
+              return {
+                ...prev,
+                [current.value?.config?.params?.widget_id]: current?.value?.data,
+              };
+            },
+            { ...widgetsData },
+          );
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
 
     const doctorCity = centers?.find?.((center: any) => center.id !== '5532')?.city;
