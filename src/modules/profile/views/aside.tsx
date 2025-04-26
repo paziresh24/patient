@@ -13,6 +13,7 @@ import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import { ActionButton } from './centersInfo/actionButton';
 import Hamdast from '@/modules/hamdast/render';
+import IframeHamdast from '@/modules/hamdast/iframe-render';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 
@@ -87,11 +88,11 @@ export const aside = (data: any) => {
       id: 'ga',
       isShow: !customize.partnerKey && !!hamdast.ga && isBulk,
       children: (props: any) => (
-        <iframe
-          src={`https://hamdast.paziresh24.com/bridge/?app=xxdfcqqubwkgo5d&page=n3nhsc879uzzh9z&src=${encodeURIComponent(
-            `https://ga.fragm.site/?doctor_id=${information.id}&slug=${seo.slug}`,
-          )}`}
-        ></iframe>
+        <IframeHamdast
+          appId="xxdfcqqubwkgo5d"
+          pageId="n3nhsc879uzzh9z"
+          src={`https://ga.fragm.site/?doctor_id=${information.id}&slug=${seo.slug}`}
+        />
       ),
     },
     {

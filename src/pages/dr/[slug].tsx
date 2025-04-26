@@ -241,16 +241,17 @@ const DoctorProfile = ({
   return (
     <RaviGlobalContextsProvider>
       <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
-        <main key={information.id} className="grid grid-cols-1 lg:grid-cols-[2fr_470px] gap-x-5 md:py-10 pwa:pb-24">
-          <section className="flex flex-col w-full space-y-3 max-w-full overflow-hidden">
-            {editable && (
-              <div className="flex items-center p-2 -mb-3 bg-slate-200 md:mb-0 md:rounded-md text-slate-600 space-s-1">
-                <InfoIcon className="min-w-6" />
-                <Text fontSize="sm" fontWeight="medium">
-                  پزشک گرامی؛ تغییرات شما بعد از <strong className="font-bold">2 ساعت</strong> در پروفایل نمایش داده می‌شود.
-                </Text>
-              </div>
-            )}
+        <main key={information.id} className="lg:py-10 pwa:pb-24">
+          {editable && (
+            <div className="flex items-center p-2 !mb-4 bg-slate-200 lg:mb-0 lg:rounded-md text-slate-600 space-s-1">
+              <InfoIcon className="min-w-6" />
+              <Text fontSize="sm" fontWeight="medium">
+                پزشک گرامی؛ تغییرات شما بعد از <strong className="font-bold">2 ساعت</strong> در پروفایل نمایش داده می‌شود.
+              </Text>
+            </div>
+          )}
+
+          <div className="lg:float-right lg:w-[670px] mb-3">
             {fragmentComponents?.headInfo?.hide && (
               <Head
                 pageViewCount={profileData.history?.count_of_page_view}
@@ -264,7 +265,7 @@ const DoctorProfile = ({
                 title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
                 subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
                 serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
-                className="w-full shadow-card md:rounded-lg"
+                className="w-full shadow-card lg:rounded-lg"
                 satisfaction={
                   customize.showRateAndReviews &&
                   !dontShowRateAndReviewMessage &&
@@ -329,7 +330,7 @@ const DoctorProfile = ({
               </Head>
             )}
             {!!fragmentComponents?.headInfo?.hide && (
-              <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-10 !mt-0 bg-white">
+              <nav className="lg:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-10 !mt-0 bg-white">
                 <ul className="flex justify-around">
                   <li>
                     <a
@@ -469,27 +470,9 @@ const DoctorProfile = ({
                 />
               </ProfileGlobalContextsProvider>
             )}
+          </div>
 
-            <div className="flex flex-col w-full space-y-3 md:hidden">
-              {aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
-                .filter(({ isShow }: any) => Boolean(isShow))
-                .map((section: any, index: number) => (
-                  <Section key={index} {...section}>
-                    {section.children(section?.function?.())}
-                  </Section>
-                ))}
-            </div>
-
-            {sections({ ...profileData, fragmentComponents })
-              .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
-              .map((section: any, index: number) => (
-                <Section key={index} {...section}>
-                  {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
-                </Section>
-              ))}
-          </section>
-
-          <aside className="flex-col hidden space-y-3 md:flex">
+          <div className="flex flex-col space-y-3 lg:float-left lg:w-[calc(100%_-_690px)]">
             {aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (
@@ -497,7 +480,19 @@ const DoctorProfile = ({
                   {section.children(section?.function?.())}
                 </Section>
               ))}
-          </aside>
+          </div>
+
+          <div className="lg:float-right lg:w-[670px] flex flex-col space-y-3">
+            {sections({ ...profileData, fragmentComponents })
+              .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
+              .map((section: any, index: number) => (
+                <Section key={index} {...section}>
+                  {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
+                </Section>
+              ))}
+          </div>
+
+          <div className="clear-both"></div>
         </main>
         <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
           <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
