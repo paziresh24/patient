@@ -140,6 +140,8 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   return (
     <Stack__
       as={"div"}
@@ -193,19 +195,66 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
           }
           className={classNames("__wab_instance", sty.button)}
           color={"text"}
-          link={(() => {
-            try {
-              return `https://survey.porsline.ir/s/35ggjRX?slug=${$props.slug}&test_src=profile_eslah`;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return "";
-              }
-              throw e;
+          link={""}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["login"] = !$ctx.auth.isLogin
+              ? (() => {
+                  const actionArgs = { args: [] };
+                  return $globalActions["AuthGlobalContext.login"]?.apply(
+                    null,
+                    [...actionArgs.args]
+                  );
+                })()
+              : undefined;
+            if (
+              $steps["login"] != null &&
+              typeof $steps["login"] === "object" &&
+              typeof $steps["login"].then === "function"
+            ) {
+              $steps["login"] = await $steps["login"];
             }
-          })()}
+
+            $steps["goToPage"] = $ctx.auth.isLogin
+              ? (() => {
+                  const actionArgs = {
+                    destination: (() => {
+                      try {
+                        return `https://survey.porsline.ir/s/35ggjRX?slug=${$props.slug}&user_id=${$ctx.auth?.info?.id}`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  };
+                  return (({ destination }) => {
+                    if (
+                      typeof destination === "string" &&
+                      destination.startsWith("#")
+                    ) {
+                      document
+                        .getElementById(destination.substr(1))
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      __nextRouter?.push(destination);
+                    }
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["goToPage"] != null &&
+              typeof $steps["goToPage"] === "object" &&
+              typeof $steps["goToPage"].then === "function"
+            ) {
+              $steps["goToPage"] = await $steps["goToPage"];
+            }
+          }}
           showStartIcon={true}
           startIcon={
             <Icon17Icon

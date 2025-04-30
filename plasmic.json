@@ -2504,7 +2504,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -2869,8 +2870,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
