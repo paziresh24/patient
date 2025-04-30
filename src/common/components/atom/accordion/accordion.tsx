@@ -5,11 +5,12 @@ import Text from '../text';
 
 interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
+  isOpen?: boolean;
 }
 
 const Accordion: React.FC<AccordionProps> = props => {
-  const { title, children, className } = props;
-  const [open, setOpen] = useState(false);
+  const { title, children, className, isOpen } = props;
+  const [open, setOpen] = useState(isOpen);
   return (
     <div className={classNames('rounded-lg bg-slate-100 flex flex-col', className)}>
       <div className="flex items-center justify-between select-none cursor-pointer p-4" onClick={() => setOpen(!open)}>
