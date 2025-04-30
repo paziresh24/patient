@@ -57,6 +57,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               turnStatus: turnData?.book_status,
               isDeleted: turnData?.is_deleted,
               durationConversation: turnData?.duration_conversation_doctor,
+              doctorName: turnData?.doctor?.display_name,
               doctorPhone: turnData.selected_online_visit_channel?.type
                 ? turnData.selected_online_visit_channel.channel
                 : turnData.doctor?.online_visit_channels?.[0]?.channel,

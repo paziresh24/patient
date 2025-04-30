@@ -14,6 +14,7 @@ export type Data = {
   shouldShow?: boolean;
   isBoldValue?: boolean;
   copyable?: boolean;
+  isOpen?: boolean;
 };
 
 interface BaseRowProps {
@@ -60,7 +61,11 @@ export const BaseRow = (props: BaseRowProps) => {
             </div>
           ))}
         {data.type === 'Accordion' && (
-          <Accordion className="-mt-1 [&>div]:!p-0 [&>div>h3]:!font-medium !bg-transparent space-y-2" title={data.name ?? ''}>
+          <Accordion
+            className="-mt-1 [&>div]:!p-0 [&>div>h3]:!font-medium !bg-transparent space-y-2"
+            title={data.name ?? ''}
+            isOpen={data?.isOpen}
+          >
             {
               <div className="flex flex-col gap-4">
                 {data.value?.map((item: Omit<Data, 'shouldShow'>) =>

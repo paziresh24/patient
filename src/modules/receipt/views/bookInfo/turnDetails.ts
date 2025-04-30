@@ -35,6 +35,7 @@ interface TurnDetailsDataParam {
     messengerList?: Record<string, MessengerDataType>;
     selectedChannel?: any;
     isDeleted?: boolean;
+    doctorName?: string;
   };
   centerType: CenterType;
   metaData?: {
@@ -62,6 +63,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     messengerList,
     selectedChannel,
     isDeleted,
+    doctorName,
   } = data;
 
   const lists = [
@@ -151,6 +153,14 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
       isBoldValue: false,
     },
     {
+      id: 6,
+      name: 'نام پزشک',
+      value: doctorName,
+      shouldShow: centerType !== CenterType.consult,
+      type: 'Text',
+      isBoldValue: false,
+    },
+    {
       id: 7,
       name: 'تماس با مرکز درمانی',
       value: centerPhone,
@@ -207,6 +217,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
       ],
       shouldShow: turnStatus !== BookStatus.requested,
       type: 'Accordion',
+      isOpen: true,
     },
     {
       id: 15,
