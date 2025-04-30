@@ -30,8 +30,12 @@ export const UnknownCity = () => {
   }, [searchCity]);
 
   const handleCheckUserCity = () => {
-    if (!isEmpty(currentCity) && !isEmpty(searchCity) && currentCity.en_slug !== 'ir' && searchCity.en_slug !== currentCity?.en_slug)
+    if (!isEmpty(currentCity) && !isEmpty(searchCity) && currentCity.en_slug !== 'ir' && searchCity?.en_slug !== currentCity?.en_slug)
       handleOpen();
+
+    if (currentCity.en_slug == 'ir' && searchCity?.en_slug !== currentCity?.en_slug && !isEmpty(currentCity) && !isEmpty(searchCity)) {
+      setCity(searchCity);
+    }
   };
 
   return (
