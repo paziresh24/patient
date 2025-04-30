@@ -80,6 +80,13 @@
     border-radius: 15px 15px 0px 0px;
   }
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .dialogContentfullScreen:global(.__wab_instance) {
+    height: 100%;
+    min-height: 100%;
+    overflow: auto;
+  }
+}
 .freeBox__nMxG {
   display: flex;
   flex-direction: column;

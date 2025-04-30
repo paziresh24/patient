@@ -1592,6 +1592,11 @@ function PlasmicSearch__RenderFunc(props: {
               "isFocus"
             )
           })}
+          fullScreen={
+            hasVariant(globalVariants, "screen", "mobileOnly")
+              ? true
+              : undefined
+          }
           noTrigger={true}
           onOpenChange={async (...eventArgs: any) => {
             generateStateOnChangeProp($state, [
