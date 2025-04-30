@@ -628,12 +628,29 @@ function PlasmicProfileActions__RenderFunc(props: {
           onClick={async event => {
             const $steps = {};
 
-            $steps["goToPage"] = true
+            $steps["login"] = !$ctx.auth?.isLogin
+              ? (() => {
+                  const actionArgs = { args: [] };
+                  return $globalActions["AuthGlobalContext.login"]?.apply(
+                    null,
+                    [...actionArgs.args]
+                  );
+                })()
+              : undefined;
+            if (
+              $steps["login"] != null &&
+              typeof $steps["login"] === "object" &&
+              typeof $steps["login"].then === "function"
+            ) {
+              $steps["login"] = await $steps["login"];
+            }
+
+            $steps["goToPage"] = $ctx.auth?.isLogin
               ? (() => {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `https://survey.porsline.ir/s/35ggjRX?slug=${$props.slug}&test_src=profile_eslah`;
+                        return `https://survey.porsline.ir/s/35ggjRX?slug=${$props.slug}&user_id=${$ctx.auth?.info?.id}`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
