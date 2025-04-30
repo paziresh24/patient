@@ -272,7 +272,7 @@ const Search = ({ host, fragmentComponents }: any) => {
             </div>
           )}
         </div>
-        <div className="!mb-16">
+        <div>
           <SearchSeoBox />
         </div>
       </div>
