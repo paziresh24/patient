@@ -80,13 +80,16 @@ createPlasmicElementProxy;
 
 export type PlasmicDialog__VariantMembers = {
   noTrigger: "noTrigger";
+  fullScreen: "fullScreen";
 };
 export type PlasmicDialog__VariantsArgs = {
   noTrigger?: SingleBooleanChoiceArg<"noTrigger">;
+  fullScreen?: SingleBooleanChoiceArg<"fullScreen">;
 };
 type VariantPropType = keyof PlasmicDialog__VariantsArgs;
 export const PlasmicDialog__VariantProps = new Array<VariantPropType>(
-  "noTrigger"
+  "noTrigger",
+  "fullScreen"
 );
 
 export type PlasmicDialog__ArgsType = {
@@ -121,6 +124,7 @@ export interface DefaultDialogProps {
   title?: React.ReactNode;
   body?: React.ReactNode;
   noTrigger?: SingleBooleanChoiceArg<"noTrigger">;
+  fullScreen?: SingleBooleanChoiceArg<"fullScreen">;
   className?: string;
 }
 
@@ -177,6 +181,12 @@ function PlasmicDialog__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.noTrigger
+      },
+      {
+        path: "fullScreen",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.fullScreen
       }
     ],
     [$props, $ctx, $refs]
@@ -205,7 +215,14 @@ function PlasmicDialog__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         sty.dialog,
-        { [sty.dialognoTrigger]: hasVariant($state, "noTrigger", "noTrigger") }
+        {
+          [sty.dialogfullScreen]: hasVariant(
+            $state,
+            "fullScreen",
+            "fullScreen"
+          ),
+          [sty.dialognoTrigger]: hasVariant($state, "noTrigger", "noTrigger")
+        }
       )}
       modal={true}
       onOpenChange={async (...eventArgs: any) => {
@@ -268,7 +285,13 @@ function PlasmicDialog__RenderFunc(props: {
       <DialogContent
         data-plasmic-name={"dialogContent"}
         data-plasmic-override={overrides.dialogContent}
-        className={classNames("__wab_instance", sty.dialogContent)}
+        className={classNames("__wab_instance", sty.dialogContent, {
+          [sty.dialogContentfullScreen]: hasVariant(
+            $state,
+            "fullScreen",
+            "fullScreen"
+          )
+        })}
         themeResetClass={classNames(
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
