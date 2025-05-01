@@ -47,6 +47,11 @@ const Factor = () => {
     });
   };
 
+  const freeturn =
+    profile?.data?.centers
+      ?.find((item: any) => item.id == CENTERS.CONSULT)
+      ?.freeturns_info?.find((item: any) => item.service_id == service_id)?.freeturn * 1000;
+
   useEffect(() => {
     if (!isPending && !isLogin) {
       handleOpenLoginModal({ state: true, closable: false });
@@ -86,11 +91,7 @@ const Factor = () => {
               <Text as="p" fontSize="sm" align="justify" className="leading-6">
                 پس از نهایی شدن نوبت،{' '}
                 <Text className="text-primary" fontWeight="semiBold">
-                  {convertTime(
-                    profile?.data?.centers
-                      ?.find((item: any) => item.id == CENTERS.CONSULT)
-                      ?.freeturns_info?.find((item: any) => item.service_id == service_id)?.freeturn * 1000,
-                  )}
+                  {freeturn < new Date().getTime() ? 'در کمتر از ۱۵ دقیقه آینده' : convertTime(freeturn)}
                 </Text>{' '}
                 شما را آنلاین ویزیت خواهم کرد.
               </Text>
