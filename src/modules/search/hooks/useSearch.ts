@@ -128,6 +128,7 @@ export const useSearch = () => {
       query: {
         ...query,
         turn_type: 'consult',
+        limit: 2,
       },
       timeout: 700,
     },

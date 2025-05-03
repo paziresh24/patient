@@ -45,10 +45,9 @@ export const useConsultSearch = ({ route, query, timeout }: Params, option?: any
     query: {
       ...query,
     },
-    timeout,
   };
 
-  return useQuery([ServerStateKeysEnum.SearchConsult, searchParams], () => search(searchParams), {
+  return useQuery([ServerStateKeysEnum.SearchConsult, searchParams], () => search({ ...searchParams, timeout }), {
     keepPreviousData: true,
     refetchOnMount: false,
     ...option,
