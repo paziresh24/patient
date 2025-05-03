@@ -368,6 +368,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
                 query: {
                   ...query,
                   turn_type: 'consult',
+                  limit: 2,
                 },
               },
             ],
@@ -377,6 +378,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
                 query: {
                   ...query,
                   turn_type: 'consult',
+                  limit: 2,
                 },
               }),
           );
