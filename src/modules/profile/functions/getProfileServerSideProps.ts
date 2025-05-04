@@ -287,7 +287,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
             : '',
         };
         profileData.history = {
-          insert_at_age: formatDurationInMonths(providerData.value?.created_at),
           ...((shouldUsePageView || getOnlyHasuraProfileData) && {
             count_of_page_view: providerData.value?.page_view,
           }),
