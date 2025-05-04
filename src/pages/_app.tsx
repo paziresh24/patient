@@ -60,18 +60,6 @@ function MyApp(props: AppProps) {
   const user = useUserInfoStore(state => state.info);
 
   useEffect(() => {
-    if (window.matchMedia) {
-      splunkInstance('dashboard').sendEvent({
-        group: 'user-theme',
-        type: `user-theme`,
-        event: {
-          theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-        },
-      });
-    }
-  }, []);
-
-  useEffect(() => {
     if (isEnabledGrowthbook) {
       growthbook.loadFeatures({ autoRefresh: true, skipCache: router.query.skipFlagsCache === 'true' });
       growthbook.setAttributes({
