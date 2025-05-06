@@ -239,6 +239,7 @@ function PlasmicProductCard__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -955,29 +956,33 @@ function PlasmicProductCard__RenderFunc(props: {
                 />
               </PlasmicLink__>
             ) : null}
-            {(() => {
-              try {
-                return $ctx.Growthbook.isReady
-                  ? $ctx.Growthbook.features.search_cards_edit_suggestion_button
-                  : true;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
+            <MoreOptionsMenu
+              data-plasmic-name={"moreOptionsMenu"}
+              data-plasmic-override={overrides.moreOptionsMenu}
+              className={classNames("__wab_instance", sty.moreOptionsMenu)}
+              destinationPageUrl={(() => {
+                try {
+                  return (
+                    globalThis.location.protocol +
+                    "//" +
+                    globalThis.location.host +
+                    ($props.url?.destination.startsWith("/center/https")
+                      ? $props.url?.destination.slice(8, -1)
+                      : $props.url?.destination)
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })() ? (
-              <MoreOptionsMenu
-                data-plasmic-name={"moreOptionsMenu"}
-                data-plasmic-override={overrides.moreOptionsMenu}
-                className={classNames("__wab_instance", sty.moreOptionsMenu)}
-                searchCardId={args.searchCardId}
-                title={args.title}
-              />
-            ) : null}
+              })()}
+              searchCardId={args.searchCardId}
+              title={args.title}
+            />
           </div>
           {(() => {
             try {

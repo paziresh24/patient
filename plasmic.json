@@ -2381,6 +2381,11 @@
           "id": "Jf_IDqTgfQ3Z",
           "name": "MinusIcon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Minus.tsx"
+        },
+        {
+          "id": "ndjBgkfafmiq",
+          "name": "Icon45Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon45.tsx"
         }
       ],
       "images": [
@@ -2504,8 +2509,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -3773,7 +3777,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
