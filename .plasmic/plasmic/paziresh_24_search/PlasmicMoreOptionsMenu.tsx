@@ -71,6 +71,7 @@ import sty from "./PlasmicMoreOptionsMenu.module.css"; // plasmic-import: v0iNnw
 import MenuIcon from "../fragment_icons/icons/PlasmicIcon__Menu"; // plasmic-import: dmfb3Ga2IoVt/icon
 import Icon43Icon from "./icons/PlasmicIcon__Icon43"; // plasmic-import: yKa-YpcgLEXS/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import Icon45Icon from "./icons/PlasmicIcon__Icon45"; // plasmic-import: ndjBgkfafmiq/icon
 
 createPlasmicElementProxy;
 
@@ -83,24 +84,25 @@ export const PlasmicMoreOptionsMenu__VariantProps =
 export type PlasmicMoreOptionsMenu__ArgsType = {
   searchCardId?: string;
   title?: string;
+  destinationPageUrl?: string;
 };
 type ArgPropType = keyof PlasmicMoreOptionsMenu__ArgsType;
 export const PlasmicMoreOptionsMenu__ArgProps = new Array<ArgPropType>(
   "searchCardId",
-  "title"
+  "title",
+  "destinationPageUrl"
 );
 
 export type PlasmicMoreOptionsMenu__OverridesType = {
   actionMenu?: Flex__<"div">;
   popover?: Flex__<typeof Popover>;
   freeBox?: Flex__<"div">;
-  button?: Flex__<typeof Button>;
-  text?: Flex__<"div">;
 };
 
 export interface DefaultMoreOptionsMenuProps {
   searchCardId?: string;
   title?: string;
+  destinationPageUrl?: string;
   className?: string;
 }
 
@@ -138,6 +140,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -183,22 +186,20 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
         data-plasmic-override={overrides.popover}
         className={classNames("__wab_instance", sty.popover)}
         content={
-          <div
+          <Stack__
+            as={"div"}
             data-plasmic-name={"freeBox"}
             data-plasmic-override={overrides.freeBox}
+            hasGap={true}
             className={classNames(projectcss.all, sty.freeBox)}
           >
             <Button
-              data-plasmic-name={"button"}
-              data-plasmic-override={overrides.button}
               children2={
                 <div
-                  data-plasmic-name={"text"}
-                  data-plasmic-override={overrides.text}
                   className={classNames(
                     projectcss.all,
                     projectcss.__wab_text,
-                    sty.text
+                    sty.text___4CuTj
                   )}
                 >
                   {
@@ -206,7 +207,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
                   }
                 </div>
               }
-              className={classNames("__wab_instance", sty.button)}
+              className={classNames("__wab_instance", sty.button__cCw8U)}
               link={(() => {
                 try {
                   return (() => {
@@ -239,7 +240,113 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
               }
               target={true}
             />
-          </div>
+
+            {(() => {
+              try {
+                return !!$props.destinationPageUrl;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <Button
+                children2={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__u1CbF
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return "اشتراک گذاری" + $props.title + " با بقیه";
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc \u0627\u06cc\u0646 \u0646\u062a\u06cc\u062c\u0647 \u0628\u0627 \u0628\u0642\u06cc\u0647";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                }
+                className={classNames("__wab_instance", sty.button___4N5QR)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["runCode"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return (() => {
+                              return (function () {
+                                const textToShare =
+                                  "مشاهده " + $props.title + " در پذیرش24";
+                                const urlToShare =
+                                  $props.destinationPageUrl +
+                                  "?utm_source=paziresh24&utm_medium=share_button&utm_campaign=search_results";
+                                if (navigator.share) {
+                                  navigator
+                                    .share({
+                                      title: $props.title,
+                                      text: textToShare,
+                                      url: urlToShare
+                                    })
+                                    .then(() => {
+                                      console.log(
+                                        "Content shared successfully"
+                                      );
+                                    })
+                                    .catch(error => {
+                                      console.error(
+                                        "Error sharing content:",
+                                        error
+                                      );
+                                    });
+                                } else {
+                                  alert(
+                                    "Web Share API is not supported on this browser or platform."
+                                  );
+                                }
+                              })();
+                            })();
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runCode"] != null &&
+                    typeof $steps["runCode"] === "object" &&
+                    typeof $steps["runCode"].then === "function"
+                  ) {
+                    $steps["runCode"] = await $steps["runCode"];
+                  }
+                }}
+                outline={true}
+                showStartIcon={true}
+                startIcon={
+                  <Icon45Icon
+                    className={classNames(projectcss.all, sty.svg__ykHkg)}
+                    role={"img"}
+                  />
+                }
+                target={true}
+              />
+            ) : null}
+          </Stack__>
         }
         onOpenChange={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, ["popover", "open"]).apply(
@@ -263,11 +370,9 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  actionMenu: ["actionMenu", "popover", "freeBox", "button", "text"],
-  popover: ["popover", "freeBox", "button", "text"],
-  freeBox: ["freeBox", "button", "text"],
-  button: ["button", "text"],
-  text: ["text"]
+  actionMenu: ["actionMenu", "popover", "freeBox"],
+  popover: ["popover", "freeBox"],
+  freeBox: ["freeBox"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -276,8 +381,6 @@ type NodeDefaultElementType = {
   actionMenu: "div";
   popover: typeof Popover;
   freeBox: "div";
-  button: typeof Button;
-  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -342,8 +445,6 @@ export const PlasmicMoreOptionsMenu = Object.assign(
     // Helper components rendering sub-elements
     popover: makeNodeComponent("popover"),
     freeBox: makeNodeComponent("freeBox"),
-    button: makeNodeComponent("button"),
-    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicMoreOptionsMenu
     internalVariantProps: PlasmicMoreOptionsMenu__VariantProps,
