@@ -284,6 +284,7 @@
 .moreOptionsMenu:global(.__wab_instance) {
   position: relative;
   width: auto;
+  min-width: var(--token-W6cMLA0AZVBO);
 }
 .link__xjBwH {
   display: flex;

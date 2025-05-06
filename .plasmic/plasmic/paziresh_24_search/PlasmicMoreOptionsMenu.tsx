@@ -145,6 +145,8 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -266,7 +268,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
                     <React.Fragment>
                       {(() => {
                         try {
-                          return "اشتراک گذاری" + $props.title + " با بقیه";
+                          return "اشتراک گذاری " + $props.title + " با بقیه";
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -284,41 +286,75 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
+                  $steps["shortenurl"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            "POST",
+                            "https://apigw.paziresh24.com/v1/n8n-search/webhook/shorten_url",
+                            undefined,
+                            (() => {
+                              try {
+                                return {
+                                  url:
+                                    $props.destinationPageUrl +
+                                    "?utm_source=paziresh24&utm_medium=share_button&utm_campaign=search_results"
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Fragment.apiRequest"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
+                    : undefined;
+                  if (
+                    $steps["shortenurl"] != null &&
+                    typeof $steps["shortenurl"] === "object" &&
+                    typeof $steps["shortenurl"].then === "function"
+                  ) {
+                    $steps["shortenurl"] = await $steps["shortenurl"];
+                  }
+
                   $steps["runCode"] = true
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return (() => {
-                              return (function () {
-                                const textToShare =
-                                  "مشاهده " + $props.title + " در پذیرش24";
-                                const urlToShare =
-                                  $props.destinationPageUrl +
-                                  "?utm_source=paziresh24&utm_medium=share_button&utm_campaign=search_results";
-                                if (navigator.share) {
-                                  navigator
-                                    .share({
-                                      title: $props.title,
-                                      text: textToShare,
-                                      url: urlToShare
-                                    })
-                                    .then(() => {
-                                      console.log(
-                                        "Content shared successfully"
-                                      );
-                                    })
-                                    .catch(error => {
-                                      console.error(
-                                        "Error sharing content:",
-                                        error
-                                      );
-                                    });
-                                } else {
-                                  alert(
-                                    "Web Share API is not supported on this browser or platform."
-                                  );
-                                }
-                              })();
+                            return (function () {
+                              const textToShare =
+                                "مشاهده " + $props.title + " در پذیرش24";
+                              const urlToShare = $steps.shortenurl.data.link;
+                              if (navigator.share) {
+                                navigator
+                                  .share({
+                                    title: $props.title,
+                                    text: textToShare,
+                                    url: urlToShare
+                                  })
+                                  .then(() => {
+                                    console.log("Content shared successfully");
+                                  })
+                                  .catch(error => {
+                                    console.error(
+                                      "Error sharing content:",
+                                      error
+                                    );
+                                  });
+                              } else {
+                                alert(
+                                  "Web Share API is not supported on this browser or platform."
+                                );
+                              }
                             })();
                           }
                         };
