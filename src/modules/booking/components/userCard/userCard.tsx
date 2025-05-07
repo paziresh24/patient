@@ -32,6 +32,7 @@ interface UserCardProps {
   type: 'user' | 'subUser';
   shouldShowMessengers: boolean;
   loading?: boolean;
+  editable?: boolean;
 }
 
 const LoadingWrapper = ({ children }: { children: ReactNode }) => {
@@ -59,6 +60,7 @@ export const UserCard = (props: UserCardProps) => {
     type,
     shouldShowMessengers,
     loading,
+    editable,
   } = props;
 
   const editSubuser = useEditSubuser();
@@ -136,7 +138,7 @@ export const UserCard = (props: UserCardProps) => {
       subTitle={cell ? cell : email}
       selected={select}
       onSelect={() => !loading && handleSelect()}
-      actionText="ویرایش"
+      actionText={editable ? 'ویرایش' : undefined}
       actionIcon={<EditIcon width={18} height={18} />}
       action={() => {
         handleOpen();

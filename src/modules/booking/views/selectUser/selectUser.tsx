@@ -115,6 +115,7 @@ export const SelectUser = (props: SelectUserProps) => {
               select={userInfo.id === userSelected}
               type="user"
               shouldShowMessengers={shouldShowMessengers}
+              editable={userInfo?.provider?.job_title != 'doctor'}
             />
             {orderBy(data?.data?.result, 'created_at', 'desc')?.map((item: any) => (
               <UserCard
@@ -132,6 +133,7 @@ export const SelectUser = (props: SelectUserProps) => {
                 select={item.id === userSelected}
                 type="subUser"
                 shouldShowMessengers={shouldShowMessengers}
+                editable
               />
             ))}
           </>

@@ -466,7 +466,7 @@ const Receipt = () => {
           </div>
           {bookDetailsData.book_id && growthbook.ready && !userPednding && (
             <div className="p-5">
-              {shouldUsePlasmicActionButtons && (
+              {centerType === 'consult' && (
                 <Fragment
                   name="ReceiptActionButtons"
                   props={{
@@ -520,7 +520,7 @@ const Receipt = () => {
                   )}
                 </div>
               )}
-              {centerType === 'consult' && !shouldUsePlasmicActionButtons && (
+              {/* {centerType === 'consult' && !shouldUsePlasmicActionButtons && (
                 <div className="grid gap-2">
                   {!!bookDetailsData && !turnStatus.deletedTurn && possibilityBeingVisited && (
                     <div className="flex flex-col gap-2 md:flex-row md:justify-between md:gap-2">
@@ -615,7 +615,7 @@ const Receipt = () => {
                       </>
                     )}
                 </div>
-              )}
+              )} */}
             </div>
           )}
           {(!bookDetailsData.book_id || !growthbook.ready || userPednding) && (
