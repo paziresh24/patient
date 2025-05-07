@@ -15,6 +15,7 @@ import { Accordion, accordionMeta } from '@/common/fragment/components/accordion
 import { Gallery, galleryMeta } from '@/common/fragment/components/gallery';
 import { Popover, popoverMeta } from '@/common/fragment/components/popover';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
+import DoctorInvoiceNotice from '@/modules/booking/components/factor/doctorInvoiceNotice';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -124,6 +125,16 @@ registerComponent(FactorWrapper, {
     userCenterId: 'string',
     serviceId: 'string',
     centerId: 'string',
+  },
+});
+registerComponent(DoctorInvoiceNotice, {
+  name: 'DoctorInvoiceNotice',
+  displayName: 'Paziresh24/DoctorInvoiceNotice',
+  importPath: '@/modules/booking/components/factor/doctorInvoiceNotice',
+  figmaMappings: [{ figmaComponentName: 'DoctorInvoiceNotice' }],
+  props: {
+    slug: 'string',
+    serviceId: 'string',
   },
 });
 
