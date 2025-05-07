@@ -432,7 +432,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                           const actionArgs = {
                             destination: (() => {
                               try {
-                                return `/_/drgram/channel/center_id=5532&book_id=${$props.bookDetailsData.book_id}`;
+                                return `/_/drgram/channel/?center_id=5532&book_id=${$props.bookDetailsData.book_id}`;
                               } catch (e) {
                                 if (
                                   e instanceof TypeError ||
