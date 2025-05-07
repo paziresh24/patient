@@ -164,6 +164,7 @@ function PlasmicServices__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -1117,6 +1118,9 @@ function PlasmicServices__RenderFunc(props: {
             $steps["goToFactorV2"] =
               $props.onlineVisitButtonsToFactorDestinationB.enabled_dr_slugs?.includes(
                 $props.seo?.slug
+              ) ||
+              $props.onlineVisitButtonsToFactorDestinationB.enabled_dr_slugs?.includes(
+                "*"
               )
                 ? (() => {
                     const actionArgs = {

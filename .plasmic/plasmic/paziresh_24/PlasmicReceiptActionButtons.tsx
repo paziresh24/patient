@@ -178,6 +178,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -371,6 +372,102 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 )
               })}
             >
+              {(
+                hasVariant($state, "type", "visitOnline")
+                  ? (() => {
+                      try {
+                        return (
+                          $props.bookDetailsData.doctor.id ===
+                          "6eb14e4f-e0dc-4497-b327-c525ae962338"
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()
+                  : true
+              ) ? (
+                <Button
+                  children2={
+                    <React.Fragment>
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__mwEoy
+                        )}
+                      >
+                        {
+                          "\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631"
+                        }
+                      </div>
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__vs10R
+                        )}
+                      >
+                        {"\u062a\u0644\u06af\u0631\u0627\u0645"}
+                      </div>
+                    </React.Fragment>
+                  }
+                  className={classNames("__wab_instance", sty.button__mx2D, {
+                    [sty.buttontype_visitOnline__mx2DlbrEa]: hasVariant(
+                      $state,
+                      "type",
+                      "visitOnline"
+                    )
+                  })}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["goToPage"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            destination: (() => {
+                              try {
+                                return `/_/drgram/channel/center_id=5532&book_id=${$props.bookDetailsData.book_id}`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          };
+                          return (({ destination }) => {
+                            if (
+                              typeof destination === "string" &&
+                              destination.startsWith("#")
+                            ) {
+                              document
+                                .getElementById(destination.substr(1))
+                                .scrollIntoView({ behavior: "smooth" });
+                            } else {
+                              __nextRouter?.push(destination);
+                            }
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["goToPage"] != null &&
+                      typeof $steps["goToPage"] === "object" &&
+                      typeof $steps["goToPage"].then === "function"
+                    ) {
+                      $steps["goToPage"] = await $steps["goToPage"];
+                    }
+                  }}
+                />
+              ) : null}
               <Button
                 children2={
                   <React.Fragment>
