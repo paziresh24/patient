@@ -36,13 +36,9 @@ export const AppFrame = ({ appKey, params, queries }: { appKey: string; params: 
   const { handleOpenLoginModal } = useLoginModalContext();
 
   const embedSrc = useMemo(() => {
-    console.log(page);
-
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
     return page?.embed_src ? constructUrlWithQuery(replaceParameters, queries) : null;
   }, [page, params, queries]);
-
-  console.log(embedSrc);
 
   const showIframe = page?.is_protected_route ? !!user.id : true;
 
@@ -66,14 +62,12 @@ export const AppFrame = ({ appKey, params, queries }: { appKey: string; params: 
     setTimeout(() => {
       setIsAppLoading(false);
     }, 6000);
-  }, []);
-
-  console.log(showIframe);
+  }, [appKey, params]);
 
   return (
     <div className="flex flex-col h-full w-full">
       <AppBar
-        title={page.name?.fa}
+        title={page?.name?.fa}
         backButton={false}
         titleLoading={!page?.name}
         actionButton={<Report app_key={appKey as string} page_key={page?.key} />}
@@ -82,7 +76,7 @@ export const AppFrame = ({ appKey, params, queries }: { appKey: string; params: 
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <div className="w-full flex-grow flex flex-col">
-        {(!showIframe || isAppLoading) && !embedSrc && (
+        {(!showIframe || isAppLoading) && (
           <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
             <Loading />
           </div>

@@ -18,6 +18,9 @@ const MegaMenuContent = dynamic(() => import('./components/megaMenu/megaMenuCont
 const SubMenu = dynamic(() => import('./components/subMenu'));
 const UserProfile = dynamic(() => import('./components/userProfile'));
 const PromoteAppBanner = dynamic(() => import('../promoteAppBanner'));
+import LauncherDesktopApps from '.plasmic/LauncherDesktopApps';
+import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 enum MegaMenuItem {
   CONSULT = 'consult',
@@ -40,6 +43,8 @@ const Header = (props: HeaderProps) => {
   const menuItemExpertise = useGetMegaMenu();
   const { t } = useTranslation('common');
   const customize = useCustomize(state => state.customize);
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const user = useUserInfoStore(state => state.info);
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -147,6 +152,11 @@ const Header = (props: HeaderProps) => {
           )}
           <div className="flex items-center space-s-4">
             <SupportButtonBamdad />
+            {isLogin && user.provider?.job_title === 'doctor' && (
+              <GlobalContextsProvider>
+                <LauncherDesktopApps />
+              </GlobalContextsProvider>
+            )}
             {showSearchSuggestionButton && <ButtonSuggestion />}
             {customize.showUserProfile && <UserProfile />}
           </div>
