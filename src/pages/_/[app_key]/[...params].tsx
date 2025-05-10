@@ -25,7 +25,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
-function replaceKeysInString(template: string, keys: string[], values: string[]) {
+export function replaceKeysInString(template: string, keys: string[], values: string[]) {
   // Create a regular expression to find placeholders like {{key}}
   const regex = /{{(.*?)}}/g;
 
@@ -38,7 +38,7 @@ function replaceKeysInString(template: string, keys: string[], values: string[])
     return index !== -1 ? values[index] : match;
   });
 }
-function constructUrlWithQuery(template: string, queryParams: any) {
+export function constructUrlWithQuery(template: string, queryParams: any) {
   const [_, queryPart] = template.split('?');
 
   if (isEmpty(queryParams)) return template;
