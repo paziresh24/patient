@@ -124,6 +124,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -236,19 +237,6 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             }
             link={"/_/bimehnama/setting/"}
             name={"\u0628\u06cc\u0645\u0647 \u0646\u0645\u0627"}
-            soon={(() => {
-              try {
-                return !$ctx.Growthbook.features["hamdast::bimehnama"];
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "soon";
-                }
-                throw e;
-              }
-            })()}
             widgetId={"hhhzbbsffq0nlna"}
           />
         ) : null}

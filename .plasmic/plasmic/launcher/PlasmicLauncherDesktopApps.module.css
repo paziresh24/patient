@@ -1,10 +1,82 @@
 .root {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   position: relative;
-  width: 100%;
+  width: auto;
   height: auto;
   justify-content: flex-start;
   align-items: center;
+  justify-self: flex-start;
+}
+.text {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
   min-width: 0;
+}
+.svg__xgXVv {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__uWsjP {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.fragmentPortal:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.reveal__lN8Uc:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+}
+.freeBox__zUrnO {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  background: #0f172a99;
+  padding: 30px;
+}
+.reveal__rgO5E:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.freeBox__p3Im9 {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 30rem;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: auto;
+  background: #ffffff;
+  max-height: 100%;
+  border-radius: 10px;
+  padding: 8px;
+}
+.launcherApps:global(.__wab_instance) {
+  max-width: 100%;
 }
