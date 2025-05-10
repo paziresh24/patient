@@ -79,9 +79,15 @@ export type PlasmicLauncherApps__VariantsArgs = {};
 type VariantPropType = keyof PlasmicLauncherApps__VariantsArgs;
 export const PlasmicLauncherApps__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicLauncherApps__ArgsType = {};
+export type PlasmicLauncherApps__ArgsType = {
+  widgetFrames?: boolean;
+  onEvent?: () => void;
+};
 type ArgPropType = keyof PlasmicLauncherApps__ArgsType;
-export const PlasmicLauncherApps__ArgProps = new Array<ArgPropType>();
+export const PlasmicLauncherApps__ArgProps = new Array<ArgPropType>(
+  "widgetFrames",
+  "onEvent"
+);
 
 export type PlasmicLauncherApps__OverridesType = {
   root?: Flex__<"div">;
@@ -90,6 +96,8 @@ export type PlasmicLauncherApps__OverridesType = {
 };
 
 export interface DefaultLauncherAppsProps {
+  widgetFrames?: boolean;
+  onEvent?: () => void;
   className?: string;
 }
 
@@ -113,7 +121,9 @@ function PlasmicLauncherApps__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          widgetFrames: false
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -127,6 +137,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -364,6 +375,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 />
               ) : null}
               <LauncherComponentsApp
+                appkey={"drapp"}
                 avatar={
                   "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fnelson-notification.png?versionId="
                 }
@@ -378,6 +390,39 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 name={
                   "\u0627\u0631\u0633\u0627\u0644 \u067e\u06cc\u0627\u0645\u06a9"
                 }
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pagekey={"notification"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
               />
             </Stack__>
           ) : null}
@@ -449,6 +494,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 />
               ) : null}
               <LauncherComponentsApp
+                appkey={"bimehnama"}
                 avatar={
                   "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finsurance-plugin.png?versionId="
                 }
@@ -461,15 +507,36 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 }
                 link={"/_/bimehnama/setting/"}
                 name={"\u0628\u06cc\u0645\u0647 \u0646\u0645\u0627"}
-                soon={(() => {
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pagekey={"setting"}
+                soon={undefined}
+                widgetFrame={(() => {
                   try {
-                    return !$ctx.Growthbook.features["hamdast::bimehnama"];
+                    return $props.widgetFrames;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return "soon";
+                      return false;
                     }
                     throw e;
                   }
@@ -581,6 +648,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 />
               ) : null}
               <LauncherComponentsApp
+                appkey={"liom"}
                 avatar={
                   "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom%2Ficon.png?versionId="
                 }
@@ -595,9 +663,43 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 name={
                   "\u062a\u0634\u062e\u06cc\u0635 \u062f\u0647\u0646\u062f\u0647 \u0639\u0644\u062a \u067e\u0631\u06cc\u0648\u062f \u0646\u0627\u0645\u0646\u0638\u0645"
                 }
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pagekey={"irregularities"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
               />
 
               <LauncherComponentsApp
+                appkey={"roshan"}
                 avatar={
                   "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
                 }
@@ -612,6 +714,39 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 name={
                   "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9"
                 }
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pagekey={"salamat"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
               />
             </Stack__>
           ) : null}

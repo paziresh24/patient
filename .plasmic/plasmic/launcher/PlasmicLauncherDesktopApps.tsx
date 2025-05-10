@@ -59,11 +59,19 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { Portal } from "@/common/fragment/components/portal"; // plasmic-import: 8JnrBOuqUY30/codeComponent
+import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
+import LauncherApps from "../../LauncherApps"; // plasmic-import: Qz6g1T5BaK7n/component
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherDesktopApps.module.css"; // plasmic-import: rMG1ZGZR_tFC/css
+
+import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: SGzD5_1b_OtM/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
 
@@ -79,6 +87,10 @@ export const PlasmicLauncherDesktopApps__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicLauncherDesktopApps__OverridesType = {
   root?: Flex__<"div">;
+  button?: Flex__<typeof Button>;
+  text?: Flex__<"div">;
+  fragmentPortal?: Flex__<typeof Portal>;
+  launcherApps?: Flex__<typeof LauncherApps>;
 };
 
 export interface DefaultLauncherDesktopAppsProps {
@@ -119,9 +131,28 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "isOpen",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
 
   return (
     <div
@@ -138,18 +169,252 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
         plasmic_fragment_design_system_css.plasmic_tokens,
         sty.root
       )}
-    />
+    >
+      <Button
+        data-plasmic-name={"button"}
+        data-plasmic-override={overrides.button}
+        children2={
+          <div
+            data-plasmic-name={"text"}
+            data-plasmic-override={overrides.text}
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text
+            )}
+          >
+            {"\u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627"}
+          </div>
+        }
+        endIcon={
+          <ChevronLeftIcon
+            className={classNames(projectcss.all, sty.svg__uWsjP)}
+            role={"img"}
+          />
+        }
+        onClick={async event => {
+          const $steps = {};
+
+          $steps["updateIsOpen"] = true
+            ? (() => {
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["isOpen"]
+                  },
+                  operation: 4
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
+
+                  const oldValue = $stateGet(objRoot, variablePath);
+                  $stateSet(objRoot, variablePath, !oldValue);
+                  return !oldValue;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["updateIsOpen"] != null &&
+            typeof $steps["updateIsOpen"] === "object" &&
+            typeof $steps["updateIsOpen"].then === "function"
+          ) {
+            $steps["updateIsOpen"] = await $steps["updateIsOpen"];
+          }
+
+          $steps["updateIsOpen2"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (globalThis.document.body.style.overflow = "hidden");
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["updateIsOpen2"] != null &&
+            typeof $steps["updateIsOpen2"] === "object" &&
+            typeof $steps["updateIsOpen2"].then === "function"
+          ) {
+            $steps["updateIsOpen2"] = await $steps["updateIsOpen2"];
+          }
+        }}
+        outline={true}
+        showStartIcon={true}
+        size={"compact"}
+        startIcon={
+          <IconIcon
+            className={classNames(projectcss.all, sty.svg__xgXVv)}
+            role={"img"}
+          />
+        }
+      />
+
+      <Portal
+        data-plasmic-name={"fragmentPortal"}
+        data-plasmic-override={overrides.fragmentPortal}
+        className={classNames("__wab_instance", sty.fragmentPortal)}
+        container={(() => {
+          try {
+            return globalThis.document.body;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+      >
+        {(() => {
+          try {
+            return $state.isOpen;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <Reveal
+            className={classNames("__wab_instance", sty.reveal__lN8Uc)}
+            duration={400}
+            triggerOnce={false}
+          >
+            <div
+              className={classNames(projectcss.all, sty.freeBox__wNyAd)}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (globalThis.document.body.style.overflow = "");
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+
+                $steps["updateIsOpen"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["isOpen"]
+                        },
+                        operation: 4
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        const oldValue = $stateGet(objRoot, variablePath);
+                        $stateSet(objRoot, variablePath, !oldValue);
+                        return !oldValue;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateIsOpen"] != null &&
+                  typeof $steps["updateIsOpen"] === "object" &&
+                  typeof $steps["updateIsOpen"].then === "function"
+                ) {
+                  $steps["updateIsOpen"] = await $steps["updateIsOpen"];
+                }
+              }}
+            >
+              <Reveal
+                className={classNames("__wab_instance", sty.reveal__rgO5E)}
+                direction={"up"}
+                duration={500}
+                triggerOnce={true}
+              >
+                <div
+                  className={classNames(projectcss.all, sty.freeBox__p3Im9)}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["runCode"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return event.stopPropagation();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCode"] != null &&
+                      typeof $steps["runCode"] === "object" &&
+                      typeof $steps["runCode"].then === "function"
+                    ) {
+                      $steps["runCode"] = await $steps["runCode"];
+                    }
+                  }}
+                >
+                  <LauncherApps
+                    data-plasmic-name={"launcherApps"}
+                    data-plasmic-override={overrides.launcherApps}
+                    className={classNames("__wab_instance", sty.launcherApps)}
+                    widgetFrames={true}
+                  />
+                </div>
+              </Reveal>
+            </div>
+          </Reveal>
+        ) : null}
+      </Portal>
+    </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root"]
+  root: ["root", "button", "text", "fragmentPortal", "launcherApps"],
+  button: ["button", "text"],
+  text: ["text"],
+  fragmentPortal: ["fragmentPortal", "launcherApps"],
+  launcherApps: ["launcherApps"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  button: typeof Button;
+  text: "div";
+  fragmentPortal: typeof Portal;
+  launcherApps: typeof LauncherApps;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -212,6 +477,10 @@ export const PlasmicLauncherDesktopApps = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    button: makeNodeComponent("button"),
+    text: makeNodeComponent("text"),
+    fragmentPortal: makeNodeComponent("fragmentPortal"),
+    launcherApps: makeNodeComponent("launcherApps"),
 
     // Metadata about props expected for PlasmicLauncherDesktopApps
     internalVariantProps: PlasmicLauncherDesktopApps__VariantProps,
