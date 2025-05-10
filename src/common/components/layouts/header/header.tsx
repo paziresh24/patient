@@ -152,12 +152,12 @@ const Header = (props: HeaderProps) => {
           )}
           <div className="flex items-center space-s-4">
             <SupportButtonBamdad />
+            {showSearchSuggestionButton && <ButtonSuggestion />}
             {isLogin && user.provider?.job_title === 'doctor' && (
               <GlobalContextsProvider>
                 <LauncherDesktopApps />
               </GlobalContextsProvider>
             )}
-            {showSearchSuggestionButton && <ButtonSuggestion />}
             {customize.showUserProfile && <UserProfile />}
           </div>
         </div>
