@@ -72,9 +72,13 @@ export const AppFrame = ({ appKey, params, queries }: { appKey: string; params: 
         titleLoading={!page?.name}
         actionButton={<Report app_key={appKey as string} page_key={page?.key} />}
       />
-      <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
-      <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
-      <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+      {app?.id && (
+        <>
+          <HamdastPayment app_key={appKey} iframeRef={iframeRef} />
+          <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
+          <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+        </>
+      )}
       <div className="w-full flex-grow flex flex-col">
         {(!showIframe || isAppLoading) && (
           <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
