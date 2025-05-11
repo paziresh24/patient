@@ -410,7 +410,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                 (() => {
                   try {
-                    return $state.apiRequest.data[0];
+                    return $state.apiRequest.data;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
