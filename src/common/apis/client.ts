@@ -19,18 +19,18 @@ export const feedbacksClient = axios.create({
 });
 
 export const apiGatewayClient = axios.create({
-  baseURL: publicRuntimeConfig.API_GATEWAY_BASE_URL,
+  baseURL: publicRuntimeConfig.API_GATEWAY_BASE_URL ? publicRuntimeConfig.API_GATEWAY_BASE_URL : 'https://apigw.paziresh24.com',
   withCredentials: true,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
 });
 
 export const searchClient = axios.create({
-  baseURL: publicRuntimeConfig.SEARCH_BASE_URL,
+  baseURL: publicRuntimeConfig.SEARCH_BASE_URL ? publicRuntimeConfig.SEARCH_BASE_URL : 'https://apigw.paziresh24.com',
   withCredentials: true,
 });
 
 export const clinicClient = axios.create({
-  baseURL: publicRuntimeConfig.CLINIC_BASE_URL,
+  baseURL: publicRuntimeConfig.CLINIC_BASE_URL ? publicRuntimeConfig.CLINIC_BASE_URL : 'https://www.paziresh24.com',
   withCredentials: true,
 });
 
