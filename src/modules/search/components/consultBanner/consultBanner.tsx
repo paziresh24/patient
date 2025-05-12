@@ -20,7 +20,7 @@ export const ConsultBanner = () => {
 
   const searchData = useSearch(
     {
-      route: decodeURIComponent(`/${searchCity.en_slug ?? "ir"}/${selectedCategory?.value}`),
+      route: decodeURIComponent(`${searchCity?.en_slug ?? 'ir'}/${selectedCategory?.value}`),
       query: {
         turn_type: 'consult',
       },
