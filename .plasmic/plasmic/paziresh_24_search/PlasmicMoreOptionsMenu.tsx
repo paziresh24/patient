@@ -268,7 +268,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
                     <React.Fragment>
                       {(() => {
                         try {
-                          return "اشتراک گذاری " + $props.title + " با بقیه";
+                          return "اشتراک گذاری این نتیجه";
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
