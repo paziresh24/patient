@@ -69,7 +69,7 @@ import LauncherComponentsSeparator from "../../LauncherComponentsSeparator"; // 
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherApps.module.css"; // plasmic-import: Qz6g1T5BaK7n/css
 
@@ -192,7 +192,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
     >
@@ -384,29 +384,16 @@ function PlasmicLauncherApps__RenderFunc(props: {
               hasGap={true}
               className={classNames(projectcss.all, sty.freeBox__wtXm5)}
             >
-              {(() => {
-                try {
-                  return $state.selectedCategory === "all";
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
+              <LauncherComponentsTitle
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsTitle__fsOfS
+                )}
+                title={
+                  "\u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627\u06cc \u062f\u0631\u062d\u0627\u0644 \u062a\u0648\u0633\u0639\u0647 \u0634\u0645\u0627"
                 }
-              })() ? (
-                <LauncherComponentsTitle
-                  className={classNames(
-                    "__wab_instance",
-                    sty.launcherComponentsTitle__fsOfS
-                  )}
-                  title={
-                    "\u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627\u06cc \u062f\u0631\u062d\u0627\u0644 \u062a\u0648\u0633\u0639\u0647 \u0634\u0645\u0627"
-                  }
-                />
-              ) : null}
+              />
+
               {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                 (() => {
                   try {

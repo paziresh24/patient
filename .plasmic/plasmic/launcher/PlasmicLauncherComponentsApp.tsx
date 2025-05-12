@@ -63,15 +63,15 @@ import { Portal } from "@/common/fragment/components/portal"; // plasmic-import:
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import { AppFrame } from "@/modules/hamdast/appFrame"; // plasmic-import: m7qJ9qUrvaxd/codeComponent
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
-import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
+import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherComponentsApp.module.css"; // plasmic-import: 25u6_6Q-fQwp/css
 
-import XIcon from "../fragment_icons/icons/PlasmicIcon__X"; // plasmic-import: zb1oqVXdrxPK/icon
+import XIcon from "./icons/PlasmicIcon__X"; // plasmic-import: vvmOP9mnVRyD/icon
 
 createPlasmicElementProxy;
 
@@ -115,7 +115,7 @@ export type PlasmicLauncherComponentsApp__OverridesType = {
   svg?: Flex__<"svg">;
   hamdastAppFrame?: Flex__<typeof AppFrame>;
   apiRequest?: Flex__<typeof ApiRequest>;
-  dialog?: Flex__<typeof Dialog>;
+  modal?: Flex__<typeof Paziresh24Modal>;
   span?: Flex__<"span">;
 };
 
@@ -201,16 +201,16 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
-        path: "dialog.open",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      },
-      {
         path: "isOpen",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "modal.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -234,7 +234,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root,
         { [sty.rootsoon]: hasVariant($state, "soon", "soon") }
       )}
@@ -689,12 +689,12 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                 }
               })()}
             >
-              <Dialog
-                data-plasmic-name={"dialog"}
-                data-plasmic-override={overrides.dialog}
+              <Paziresh24Modal
+                data-plasmic-name={"modal"}
+                data-plasmic-override={overrides.modal}
                 body={
                   <div
-                    className={classNames(projectcss.all, sty.freeBox__kd4UO)}
+                    className={classNames(projectcss.all, sty.freeBox__ki5Y)}
                   >
                     {(_par =>
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
@@ -718,13 +718,13 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                         <div
                           className={classNames(
                             projectcss.all,
-                            sty.freeBox___5RuoT
+                            sty.freeBox__ptGgo
                           )}
                           key={currentIndex}
                         >
                           <PlasmicImg__
                             alt={""}
-                            className={classNames(sty.img___3SBa, "bg-white")}
+                            className={classNames(sty.img__ndDfE, "bg-white")}
                             displayHeight={"70px"}
                             displayMaxHeight={"none"}
                             displayMaxWidth={"100%"}
@@ -778,9 +778,9 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                     })}
                   </div>
                 }
-                className={classNames("__wab_instance", sty.dialog)}
+                className={classNames("__wab_instance", sty.modal)}
                 onOpenChange={async (...eventArgs: any) => {
-                  generateStateOnChangeProp($state, ["dialog", "open"]).apply(
+                  generateStateOnChangeProp($state, ["modal", "open"]).apply(
                     null,
                     eventArgs
                   );
@@ -793,16 +793,16 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                     return;
                   }
                 }}
-                open={generateStateValueProp($state, ["dialog", "open"])}
+                open={generateStateValueProp($state, ["modal", "open"])}
                 title={
                   <div
-                    className={classNames(projectcss.all, sty.freeBox__fMt0R)}
+                    className={classNames(projectcss.all, sty.freeBox__qxIby)}
                   >
                     <div
                       className={classNames(
                         projectcss.all,
                         projectcss.__wab_text,
-                        sty.text__inJen
+                        sty.text___0FQhl
                       )}
                     >
                       {
@@ -813,7 +813,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                       className={classNames(
                         projectcss.all,
                         projectcss.__wab_text,
-                        sty.text__ppt68
+                        sty.text__bEsud
                       )}
                     >
                       <React.Fragment>
@@ -863,7 +863,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                 }
                 trigger={
                   <div
-                    className={classNames(projectcss.all, sty.freeBox__q5Aq)}
+                    className={classNames(projectcss.all, sty.freeBox__ld5Zl)}
                   >
                     {(_par =>
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
@@ -888,7 +888,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                       return (
                         <PlasmicImg__
                           alt={""}
-                          className={classNames(sty.img__aw4Eh, "bg-white")}
+                          className={classNames(sty.img__tUwbH, "bg-white")}
                           displayHeight={"28px"}
                           displayMaxHeight={"none"}
                           displayMaxWidth={"100%"}
@@ -932,14 +932,14 @@ const PlasmicDescendants = {
     "svg",
     "hamdastAppFrame",
     "apiRequest",
-    "dialog",
+    "modal",
     "span"
   ],
   fragmentPortal: ["fragmentPortal", "svg", "hamdastAppFrame"],
   svg: ["svg"],
   hamdastAppFrame: ["hamdastAppFrame"],
-  apiRequest: ["apiRequest", "dialog", "span"],
-  dialog: ["dialog", "span"],
+  apiRequest: ["apiRequest", "modal", "span"],
+  modal: ["modal", "span"],
   span: ["span"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -951,7 +951,7 @@ type NodeDefaultElementType = {
   svg: "svg";
   hamdastAppFrame: typeof AppFrame;
   apiRequest: typeof ApiRequest;
-  dialog: typeof Dialog;
+  modal: typeof Paziresh24Modal;
   span: "span";
 };
 
@@ -1019,7 +1019,7 @@ export const PlasmicLauncherComponentsApp = Object.assign(
     svg: makeNodeComponent("svg"),
     hamdastAppFrame: makeNodeComponent("hamdastAppFrame"),
     apiRequest: makeNodeComponent("apiRequest"),
-    dialog: makeNodeComponent("dialog"),
+    modal: makeNodeComponent("modal"),
     span: makeNodeComponent("span"),
 
     // Metadata about props expected for PlasmicLauncherComponentsApp
