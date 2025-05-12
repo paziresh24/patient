@@ -67,6 +67,9 @@ import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { DoctorInvoiceNotice } from "@/modules/booking/components/factor/doctorInvoiceNotice"; // plasmic-import: KwkSEMDcuddG/codeComponent
+import { Factor } from "@/modules/booking/views/factor/wrapper"; // plasmic-import: mfaiXZwrYRAY/codeComponent
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -172,6 +175,9 @@ export type PlasmicProductCard__OverridesType = {
   oldActionButtonsHorizontalStack?: Flex__<"div">;
   getProviderFromSlugApiRequest?: Flex__<typeof ApiRequest>;
   availabilityStatus?: Flex__<typeof ApiRequest>;
+  dialog2?: Flex__<typeof Dialog>;
+  paziresh24DoctorInvoiceNotice?: Flex__<typeof DoctorInvoiceNotice>;
+  paziresh24Factor?: Flex__<typeof Factor>;
 };
 
 export interface DefaultProductCardProps {
@@ -324,6 +330,12 @@ function PlasmicProductCard__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSingleCard
+      },
+      {
+        path: "dialog2.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -2510,9 +2522,18 @@ function PlasmicProductCard__RenderFunc(props: {
                       }
                       link={(() => {
                         try {
-                          return actionButton.url.startsWith("/center/https")
-                            ? actionButton.url.slice(8, -1)
-                            : actionButton.url;
+                          return (() => {
+                            if (
+                              $ctx.Growthbook.features[
+                                "search-online-visit-factor-modal"
+                              ]?.includes?.(actionButton.url)
+                            ) {
+                              return "";
+                            }
+                            return actionButton.url.startsWith("/center/https")
+                              ? actionButton.url.slice(8, -1)
+                              : actionButton.url;
+                          })();
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -2560,6 +2581,44 @@ function PlasmicProductCard__RenderFunc(props: {
                         ) {
                           $steps["runEventTrigger"] = await $steps[
                             "runEventTrigger"
+                          ];
+                        }
+
+                        $steps["updateDialog2Open"] = $ctx.Growthbook.features[
+                          "search-online-visit-factor-modal"
+                        ].includes(actionButton.url)
+                          ? (() => {
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ["dialog2", "open"]
+                                },
+                                operation: 0,
+                                value: true
+                              };
+                              return (({
+                                variable,
+                                value,
+                                startIndex,
+                                deleteCount
+                              }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
+
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateDialog2Open"] != null &&
+                          typeof $steps["updateDialog2Open"] === "object" &&
+                          typeof $steps["updateDialog2Open"].then === "function"
+                        ) {
+                          $steps["updateDialog2Open"] = await $steps[
+                            "updateDialog2Open"
                           ];
                         }
                       }}
@@ -2684,6 +2743,160 @@ function PlasmicProductCard__RenderFunc(props: {
           </div>
         </div>
       ) : null}
+      <Dialog
+        data-plasmic-name={"dialog2"}
+        data-plasmic-override={overrides.dialog2}
+        body={
+          <div className={classNames(projectcss.all, sty.freeBox___9VOzO)}>
+            <DoctorInvoiceNotice
+              data-plasmic-name={"paziresh24DoctorInvoiceNotice"}
+              data-plasmic-override={overrides.paziresh24DoctorInvoiceNotice}
+              className={classNames(
+                "__wab_instance",
+                sty.paziresh24DoctorInvoiceNotice
+              )}
+              serviceId={(() => {
+                try {
+                  return $props.actionButtons[0].url
+                    .split("/")
+                    .slice(-2, -1)[0];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              slug={(() => {
+                try {
+                  return $props.slug;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+            />
+
+            <Factor
+              data-plasmic-name={"paziresh24Factor"}
+              data-plasmic-override={overrides.paziresh24Factor}
+              centerId={"5532"}
+              className={classNames("__wab_instance", sty.paziresh24Factor)}
+              serviceId={(() => {
+                try {
+                  return $props.actionButtons[0].url
+                    .split("/")
+                    .slice(-2, -1)[0];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              userCenterId={(() => {
+                try {
+                  return $props.centers.find(center => center.id === "5532")
+                    .user_center_id;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+            />
+          </div>
+        }
+        className={classNames("__wab_instance", sty.dialog2)}
+        noTrigger={true}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["dialog2", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+
+          (async val => {
+            const $steps = {};
+
+            $steps["runCode"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        if (val) {
+                          globalThis.history.pushState(
+                            { factorModal: true },
+                            "Modal Opened",
+                            "?modal=true"
+                          );
+                        }
+                        if (!val) {
+                          globalThis.history.back();
+                        }
+                        return globalThis.addEventListener(
+                          "popstate",
+                          event => {
+                            if (event.state && event.state.factorModal) {
+                              $state.dialog2.open = true;
+                            } else {
+                              $state.dialog2.open = false;
+                            }
+                          }
+                        );
+                      })();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
+            }
+          }).apply(null, eventArgs);
+        }}
+        open={generateStateValueProp($state, ["dialog2", "open"])}
+        title={
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__kr9Zz
+            )}
+          >
+            {"Dialog title"}
+          </div>
+        }
+        trigger={null}
+      />
     </Stack__>
   ) as React.ReactElement | null;
 }
@@ -2705,7 +2918,10 @@ const PlasmicDescendants = {
     "cardActionSduiV2UiRequest",
     "oldActionButtonsHorizontalStack",
     "getProviderFromSlugApiRequest",
-    "availabilityStatus"
+    "availabilityStatus",
+    "dialog2",
+    "paziresh24DoctorInvoiceNotice",
+    "paziresh24Factor"
   ],
   avatar: ["avatar"],
   classificationApi: ["classificationApi", "classificationTitle"],
@@ -2734,7 +2950,10 @@ const PlasmicDescendants = {
     "getProviderFromSlugApiRequest",
     "availabilityStatus"
   ],
-  availabilityStatus: ["availabilityStatus"]
+  availabilityStatus: ["availabilityStatus"],
+  dialog2: ["dialog2", "paziresh24DoctorInvoiceNotice", "paziresh24Factor"],
+  paziresh24DoctorInvoiceNotice: ["paziresh24DoctorInvoiceNotice"],
+  paziresh24Factor: ["paziresh24Factor"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2756,6 +2975,9 @@ type NodeDefaultElementType = {
   oldActionButtonsHorizontalStack: "div";
   getProviderFromSlugApiRequest: typeof ApiRequest;
   availabilityStatus: typeof ApiRequest;
+  dialog2: typeof Dialog;
+  paziresh24DoctorInvoiceNotice: typeof DoctorInvoiceNotice;
+  paziresh24Factor: typeof Factor;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2837,6 +3059,11 @@ export const PlasmicProductCard = Object.assign(
       "getProviderFromSlugApiRequest"
     ),
     availabilityStatus: makeNodeComponent("availabilityStatus"),
+    dialog2: makeNodeComponent("dialog2"),
+    paziresh24DoctorInvoiceNotice: makeNodeComponent(
+      "paziresh24DoctorInvoiceNotice"
+    ),
+    paziresh24Factor: makeNodeComponent("paziresh24Factor"),
 
     // Metadata about props expected for PlasmicProductCard
     internalVariantProps: PlasmicProductCard__VariantProps,

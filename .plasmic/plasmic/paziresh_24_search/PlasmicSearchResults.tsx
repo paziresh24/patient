@@ -1501,7 +1501,33 @@ function PlasmicSearchResults__RenderFunc(props: {
                   })()}
                   price={(() => {
                     try {
-                      return currentItem.price;
+                      return (() => {
+                        function formatPrice(currentItem, ctx) {
+                          const explicitPrice = currentItem?.price;
+                          if (explicitPrice) {
+                            return explicitPrice;
+                          }
+                          const showOnlineVisitPrice = Boolean(
+                            ctx?.Growthbook?.features?.[
+                              "search-show-online-visit-price-in-result-cards"
+                            ]
+                          );
+                          const freePriceRaw =
+                            currentItem?.consult_services?.[0]?.free_price;
+                          if (showOnlineVisitPrice && freePriceRaw) {
+                            const freePriceRial = parseInt(freePriceRaw, 10);
+                            const freePriceToman = Math.floor(
+                              freePriceRial / 10
+                            );
+                            return (
+                              freePriceToman.toLocaleString("fa-IR") + " تومان"
+                            );
+                          }
+                          return "";
+                        }
+                        const displayPrice = formatPrice(currentItem, $ctx);
+                        return displayPrice;
+                      })();
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
