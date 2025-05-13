@@ -14,6 +14,7 @@ import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import { ActionButton } from './centersInfo/actionButton';
 import Hamdast from '@/modules/hamdast/render';
 import IframeHamdast from '@/modules/hamdast/iframe-render';
+import { isEmpty } from 'lodash';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 
@@ -81,7 +82,7 @@ export const aside = (data: any) => {
             />
           </BookingGlobalContextsProvider>
         ) : (
-          <Services {...props} enabledWidgets={hamdastWidgets?.map((item: any) => item.id) ?? []} />
+          <Services {...props} enabledWidgets={hamdastWidgets} />
         ),
     },
     {
@@ -100,7 +101,13 @@ export const aside = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          .filter((widget: any) => widget?.placement?.includes?.('services'))
+          .filter(
+            (widget: any) =>
+              widget?.placement?.includes?.('services') &&
+              (!isEmpty(widget?.display_conditions) && widget?.display_conditions?.includes?.('BOOKING_DISABLED_ALL_CENTERS')
+                ? isBulk
+                : true),
+          )
           .map((widget: any) => (
             <Hamdast
               key={widget.id}
