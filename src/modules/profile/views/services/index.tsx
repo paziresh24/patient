@@ -16,7 +16,7 @@ import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { growthbook } from 'src/pages/_app';
 import moment from 'jalali-moment';
-import { sortBy } from 'lodash';
+import { isEmpty, sortBy } from 'lodash';
 import { splunkInstance } from '@/common/services/splunk';
 import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
@@ -47,7 +47,7 @@ export const Services = ({
   waitingTimeInfo: any;
   profileData: any;
   isBulk: boolean;
-  enabledWidgets?: string[];
+  enabledWidgets?: any[];
 }) => {
   const router = useRouter();
   const [servicesRef, inViewServices] = useInView({
@@ -78,7 +78,7 @@ export const Services = ({
           features: {
             ravi_show_external_rate: dontShowRateDetails,
           },
-          enabled_widgets: enabledWidgets,
+          enabled_widgets: enabledWidgets?.map((item: any) => item.id) ?? [],
         },
       },
     });
@@ -113,7 +113,19 @@ export const Services = ({
     router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
   };
 
-  if (!customize?.partnerKey && showHamdastGa && alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
+  if (
+    !customize?.partnerKey &&
+    (showHamdastGa ||
+      enabledWidgets?.some(
+        (widget: any) =>
+          widget?.placement?.includes?.('services') &&
+          !isEmpty(widget?.display_conditions) &&
+          widget?.display_conditions?.includes?.('BOOKING_DISABLED_ALL_CENTERS'),
+      )) &&
+    alabilityStatus.data?.data
+      ? !alabilityStatus.data?.data?.has_available_booking
+      : isBulk
+  ) {
     return null;
   }
 

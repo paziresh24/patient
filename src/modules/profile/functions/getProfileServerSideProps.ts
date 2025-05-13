@@ -443,6 +443,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
                   await axios.get(item.data_endpoint, {
                     params: {
                       user_id: information.user_id,
+                      doctor_id: information?.id,
                       provider_id: profileData?.provider?.provider_id,
                       widget_id: item?.id,
                     },
