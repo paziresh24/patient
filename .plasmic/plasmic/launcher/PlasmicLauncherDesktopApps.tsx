@@ -59,19 +59,19 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { Portal } from "@/common/fragment/components/portal"; // plasmic-import: 8JnrBOuqUY30/codeComponent
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherApps from "../../LauncherApps"; // plasmic-import: Qz6g1T5BaK7n/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherDesktopApps.module.css"; // plasmic-import: rMG1ZGZR_tFC/css
 
 import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: SGzD5_1b_OtM/icon
-import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 
 createPlasmicElementProxy;
 
@@ -87,7 +87,8 @@ export const PlasmicLauncherDesktopApps__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicLauncherDesktopApps__OverridesType = {
   root?: Flex__<"div">;
-  button?: Flex__<typeof Button>;
+  paziresh24Button?: Flex__<typeof Paziresh24Button>;
+  svg?: Flex__<"svg">;
   text?: Flex__<"div">;
   fragmentPortal?: Flex__<typeof Portal>;
   launcherApps?: Flex__<typeof LauncherApps>;
@@ -166,13 +167,13 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
     >
-      <Button
-        data-plasmic-name={"button"}
-        data-plasmic-override={overrides.button}
+      <Paziresh24Button
+        data-plasmic-name={"paziresh24Button"}
+        data-plasmic-override={overrides.paziresh24Button}
         children2={
           <div
             data-plasmic-name={"text"}
@@ -186,12 +187,7 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
             {"\u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627"}
           </div>
         }
-        endIcon={
-          <ChevronLeftIcon
-            className={classNames(projectcss.all, sty.svg__uWsjP)}
-            role={"img"}
-          />
-        }
+        className={classNames("__wab_instance", sty.paziresh24Button)}
         onClick={async event => {
           const $steps = {};
 
@@ -249,7 +245,9 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
         size={"compact"}
         startIcon={
           <IconIcon
-            className={classNames(projectcss.all, sty.svg__xgXVv)}
+            data-plasmic-name={"svg"}
+            data-plasmic-override={overrides.svg}
+            className={classNames(projectcss.all, sty.svg)}
             role={"img"}
           />
         }
@@ -400,8 +398,16 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "button", "text", "fragmentPortal", "launcherApps"],
-  button: ["button", "text"],
+  root: [
+    "root",
+    "paziresh24Button",
+    "svg",
+    "text",
+    "fragmentPortal",
+    "launcherApps"
+  ],
+  paziresh24Button: ["paziresh24Button", "svg", "text"],
+  svg: ["svg"],
   text: ["text"],
   fragmentPortal: ["fragmentPortal", "launcherApps"],
   launcherApps: ["launcherApps"]
@@ -411,7 +417,8 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  button: typeof Button;
+  paziresh24Button: typeof Paziresh24Button;
+  svg: "svg";
   text: "div";
   fragmentPortal: typeof Portal;
   launcherApps: typeof LauncherApps;
@@ -477,7 +484,8 @@ export const PlasmicLauncherDesktopApps = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    button: makeNodeComponent("button"),
+    paziresh24Button: makeNodeComponent("paziresh24Button"),
+    svg: makeNodeComponent("svg"),
     text: makeNodeComponent("text"),
     fragmentPortal: makeNodeComponent("fragmentPortal"),
     launcherApps: makeNodeComponent("launcherApps"),

@@ -3181,6 +3181,16 @@
       }
     },
     {
+      "name": "primary",
+      "type": "color",
+      "value": "#3861FB",
+      "category": "color",
+      "meta": {
+        "projectId": "grxNYctbMek6PL66cujx3u",
+        "id": "IFYe29KCwQQV"
+      }
+    },
+    {
       "name": "primary-dark",
       "type": "color",
       "value": "#2B4DCC",
@@ -3498,6 +3508,16 @@
       "meta": {
         "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
         "id": "KUiXUfHPkqkm"
+      }
+    },
+    {
+      "name": "small",
+      "type": "fontsize",
+      "value": "0.875rem",
+      "category": "fontsize",
+      "meta": {
+        "projectId": "grxNYctbMek6PL66cujx3u",
+        "id": "0D6VF35kZC-C"
       }
     },
     {

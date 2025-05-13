@@ -3171,6 +3171,11 @@
           "id": "SGzD5_1b_OtM",
           "name": "IconIcon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon.tsx"
+        },
+        {
+          "id": "vvmOP9mnVRyD",
+          "name": "XIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__X.tsx"
         }
       ],
       "images": [
@@ -3855,19 +3860,6 @@
           "plumeType": "button"
         },
         {
-          "id": "ZGdhyEBPJSmH",
-          "name": "Paziresh24Dialog",
-          "type": "managed",
-          "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
-          "renderModuleFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24Dialog.tsx",
-          "importSpec": {
-            "modulePath": "Paziresh24Dialog.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24Dialog.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
           "id": "df-BFL5jhiFc",
           "name": "Paziresh24Chip",
           "type": "managed",
@@ -3916,6 +3908,84 @@
             "modulePath": "Paziresh24Collapsible.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24Collapsible.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "ZGdhyEBPJSmH",
+          "name": "Paziresh24Modal",
+          "type": "managed",
+          "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
+          "renderModuleFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24Modal.tsx",
+          "importSpec": {
+            "modulePath": "Paziresh24Modal.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24Modal.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "pOApINRkmgnb",
+          "name": "Paziresh24AtomsLabel",
+          "type": "managed",
+          "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
+          "renderModuleFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24AtomsLabel.tsx",
+          "importSpec": {
+            "modulePath": "Paziresh24AtomsLabel.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24AtomsLabel.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "PTeLKP71vIWx",
+          "name": "Paziresh24AtomsTextInput",
+          "type": "managed",
+          "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
+          "renderModuleFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24AtomsTextInput.tsx",
+          "importSpec": {
+            "modulePath": "Paziresh24AtomsTextInput.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24AtomsTextInput.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "HOBObNXYC7Oc",
+          "name": "Paziresh24AtomsTextAreaInput",
+          "type": "managed",
+          "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
+          "renderModuleFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24AtomsTextAreaInput.tsx",
+          "importSpec": {
+            "modulePath": "Paziresh24AtomsTextAreaInput.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24AtomsTextAreaInput.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "54F0s7A58MP4",
+          "name": "Paziresh24AtomsDescription",
+          "type": "managed",
+          "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
+          "renderModuleFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24AtomsDescription.tsx",
+          "importSpec": {
+            "modulePath": "Paziresh24AtomsDescription.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24AtomsDescription.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "hp93_av_kmlL",
+          "name": "Paziresh24TextField",
+          "type": "managed",
+          "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
+          "renderModuleFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24TextField.tsx",
+          "importSpec": {
+            "modulePath": "Paziresh24TextField.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_design_system/PlasmicPaziresh24TextField.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
@@ -3970,6 +4040,11 @@
           "id": "3hBkBVfsYtbt",
           "name": "InfoIcon",
           "moduleFilePath": "plasmic/paziresh_24_design_system/icons/PlasmicIcon__Info.tsx"
+        },
+        {
+          "id": "jRmZqHMZZXGp",
+          "name": "CircleIcon",
+          "moduleFilePath": "plasmic/paziresh_24_design_system/icons/PlasmicIcon__Circle.tsx"
         }
       ],
       "images": [],
@@ -3990,8 +4065,7 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "pkMLinFwM9pzwv5S5KpiAu",

@@ -80,17 +80,17 @@ export const PlasmicPaziresh24Collapsible__VariantProps =
 export type PlasmicPaziresh24Collapsible__ArgsType = {
   defaultMaxHeight?: string;
   color?: string;
-  slot2?: React.ReactNode;
-  children?: React.ReactNode;
-  slot?: React.ReactNode;
+  content?: React.ReactNode;
+  expandTrigger?: React.ReactNode;
+  collapseTrigger?: React.ReactNode;
 };
 type ArgPropType = keyof PlasmicPaziresh24Collapsible__ArgsType;
 export const PlasmicPaziresh24Collapsible__ArgProps = new Array<ArgPropType>(
   "defaultMaxHeight",
   "color",
-  "slot2",
-  "children",
-  "slot"
+  "content",
+  "expandTrigger",
+  "collapseTrigger"
 );
 
 export type PlasmicPaziresh24Collapsible__OverridesType = {
@@ -100,9 +100,9 @@ export type PlasmicPaziresh24Collapsible__OverridesType = {
 export interface DefaultPaziresh24CollapsibleProps {
   defaultMaxHeight?: string;
   color?: string;
-  slot2?: React.ReactNode;
-  children?: React.ReactNode;
-  slot?: React.ReactNode;
+  content?: React.ReactNode;
+  expandTrigger?: React.ReactNode;
+  collapseTrigger?: React.ReactNode;
   className?: string;
 }
 
@@ -143,6 +143,7 @@ function PlasmicPaziresh24Collapsible__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -214,7 +215,7 @@ function PlasmicPaziresh24Collapsible__RenderFunc(props: {
               }
             </div>
           ),
-          value: args.slot2
+          value: args.content
         })}
         {(() => {
           try {
@@ -333,7 +334,7 @@ function PlasmicPaziresh24Collapsible__RenderFunc(props: {
               />
             ),
 
-            value: args.children
+            value: args.expandTrigger
           })}
         </div>
       ) : null}
@@ -419,7 +420,7 @@ function PlasmicPaziresh24Collapsible__RenderFunc(props: {
               />
             ),
 
-            value: args.slot
+            value: args.collapseTrigger
           })}
         </div>
       ) : null}
