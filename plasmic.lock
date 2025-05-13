@@ -3861,6 +3861,76 @@
         }
       ],
       "codegenVersion": "0.0.1"
+    },
+    {
+      "projectId": "bN5uNsAhTefwW3S14VjvMG",
+      "version": "latest",
+      "dependencies": {
+        "gmeH6XgPaBtkt51HunAo4g": "18.17.0",
+        "6HBcNwr8dz9LuS1Qe36xa5": "1.0.1",
+        "sqPBLwEBBKHA2WDuGb17eV": "2.4.0",
+        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.40.0",
+        "9UibdRruyX43DxnB8Q1QXF": "0.4.0"
+      },
+      "lang": "ts",
+      "fileLocks": [
+        {
+          "type": "globalVariant",
+          "assetId": "lOnE5KA9fHKn",
+          "checksum": "da59a829a0c7098d4bdda80049762f86"
+        },
+        {
+          "assetId": "bN5uNsAhTefwW3S14VjvMG",
+          "type": "projectCss",
+          "checksum": "fa69459846cb454bb2cb17de0eef73e3"
+        },
+        {
+          "assetId": "bN5uNsAhTefwW3S14VjvMG",
+          "checksum": "96cc05dd28f7804d8dc8391bd39e684b",
+          "type": "globalContexts"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "KinPlL1Jj1j3",
+          "checksum": "8c66d0352afbfa71ad13d7f7053e1421"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "KinPlL1Jj1j3",
+          "checksum": "8c66d0352afbfa71ad13d7f7053e1421"
+        },
+        {
+          "type": "icon",
+          "assetId": "0NKMwJ8LXDRT",
+          "checksum": "279f23baef234d85285fab638c045b03"
+        },
+        {
+          "type": "icon",
+          "assetId": "q0ms6pQBrG-J",
+          "checksum": "25951f037371eae2cc967c6a0ef0de8e"
+        },
+        {
+          "type": "icon",
+          "assetId": "G0iSeeSY_mIt",
+          "checksum": "0d11653645e585d3ba9b876b0c2a6783"
+        },
+        {
+          "type": "icon",
+          "assetId": "ed6cHGzaBU3L",
+          "checksum": "d9e1bdc68938af798ebfc43787bf6e36"
+        },
+        {
+          "type": "icon",
+          "assetId": "82FgHzvCu1qc",
+          "checksum": "11ddf21d06bdd2fd7355f2c43b8e8524"
+        },
+        {
+          "type": "icon",
+          "assetId": "TqfC35KxBjuO",
+          "checksum": "6a56b49e1d3af160ce08a79d5f945daa"
+        }
+      ],
+      "codegenVersion": "0.0.1"
     }
   ],
   "cliVersion": "0.1.327"
