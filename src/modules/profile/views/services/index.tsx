@@ -118,13 +118,9 @@ export const Services = ({
     (showHamdastGa ||
       enabledWidgets?.some(
         (widget: any) =>
-          widget?.placement?.includes?.('services') &&
-          !isEmpty(widget?.display_conditions) &&
-          widget?.display_conditions?.includes?.('BOOKING_DISABLED_ALL_CENTERS'),
+          widget?.placement?.includes?.('services') && widget?.display_conditions?.includes?.('BOOKING_DISABLED_ALL_CENTERS'),
       )) &&
-    alabilityStatus.data?.data
-      ? !alabilityStatus.data?.data?.has_available_booking
-      : isBulk
+    (alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk)
   ) {
     return null;
   }
