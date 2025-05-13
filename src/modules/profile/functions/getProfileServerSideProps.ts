@@ -425,46 +425,44 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let widgets: any;
     let widgetsData: any = {};
 
-    if (profileData?.provider?.provider_id) {
-      try {
-        widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets/', {
-          params: {
-            provider_id: profileData?.provider?.provider_id,
-          },
-          timeout: 3000,
-        });
+    try {
+      widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets/', {
+        params: {
+          provider_id: profileData?.provider?.provider_id ?? `doctor_${information?.id}_${information.server_id}`,
+        },
+        timeout: 3000,
+      });
 
-        if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
-          const respnoses = await Promise.allSettled(
-            widgets?.data
-              ?.filter((item: any) => item?.data_endpoint)
-              ?.map(
-                async (item: any) =>
-                  await axios.get(item.data_endpoint, {
-                    params: {
-                      user_id: information.user_id,
-                      doctor_id: information?.id,
-                      provider_id: profileData?.provider?.provider_id,
-                      widget_id: item?.id,
-                    },
-                    timeout: 3000,
-                  }),
-              ),
-          );
-          widgetsData = respnoses?.reduce(
-            (prev, current) => {
-              if (current.status === 'rejected') return { ...prev };
-              return {
-                ...prev,
-                [current.value?.config?.params?.widget_id]: current?.value?.data,
-              };
-            },
-            { ...widgetsData },
-          );
-        }
-      } catch (error) {
-        console.error(error);
+      if (widgets?.data?.length > 0 && widgets?.data?.some((item: any) => item?.data_endpoint)) {
+        const respnoses = await Promise.allSettled(
+          widgets?.data
+            ?.filter((item: any) => item?.data_endpoint)
+            ?.map(
+              async (item: any) =>
+                await axios.get(item.data_endpoint, {
+                  params: {
+                    user_id: information.user_id,
+                    doctor_id: information?.id,
+                    provider_id: profileData?.provider?.provider_id,
+                    widget_id: item?.id,
+                  },
+                  timeout: 3000,
+                }),
+            ),
+        );
+        widgetsData = respnoses?.reduce(
+          (prev, current) => {
+            if (current.status === 'rejected') return { ...prev };
+            return {
+              ...prev,
+              [current.value?.config?.params?.widget_id]: current?.value?.data,
+            };
+          },
+          { ...widgetsData },
+        );
       }
+    } catch (error) {
+      console.error(error);
     }
 
     const doctorCity = centers?.find?.((center: any) => center.id !== '5532')?.city;
