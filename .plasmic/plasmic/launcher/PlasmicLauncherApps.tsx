@@ -459,7 +459,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                     key={currentIndex}
                     link={(() => {
                       try {
-                        return `/dashboard/apps/${currentItem.key}/launcher/`;
+                        return `/_/${currentItem.key}/launcher/`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
