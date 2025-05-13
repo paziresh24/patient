@@ -136,6 +136,7 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -167,11 +168,7 @@ function PlasmicHamdastCywoc24Widget__RenderFunc(props: {
           )}
         >
           <React.Fragment>
-            <React.Fragment>
-              {
-                "\u0627\u0632 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645 "
-              }
-            </React.Fragment>
+            <React.Fragment>{"\u0628\u0644\u0627\u06af "}</React.Fragment>
             {
               <span
                 data-plasmic-name={"span"}
