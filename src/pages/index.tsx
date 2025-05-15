@@ -41,6 +41,14 @@ const Home = ({ fragmentComponents }: any) => {
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
 
   useEffect(() => {
+    if (window.location.host === 'p24-patient.darkube.app') {
+      window?.document
+        ?.querySelector('head')
+        ?.insertAdjacentHTML('beforeend', `<meta name="google-site-verification" content="RJ60Kgi1_GMYv3iQi1h04XK4pkP-0vSYcyWYQVAdxXE" />`);
+    }
+  }, []);
+
+  useEffect(() => {
     // Prefetch the search page
     router.prefetch('/s/[[...params]]');
   }, []);
