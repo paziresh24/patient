@@ -1,7 +1,7 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useGetMe } from '@/common/apis/services/auth/me';
+import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useProviders } from '@/modules/profile/apis/providers';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
@@ -10,13 +10,12 @@ import { ReactElement, useEffect } from 'react';
 export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const setPending = useUserInfoStore(state => state.setPending);
-  const logout = useUserInfoStore(state => state.logout);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const info = useUserInfoStore(state => state.info);
   const autoLoginToGozargah = useFeatureIsOn('auto-login-to-gozargah');
 
   const getMe = useGetMe();
-  const getProvider = useProviders();
+  const getDoctorProfile = useGetDoctorProfile();
 
   useEffect(() => {
     handleUserLogin();
@@ -26,10 +25,10 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
     try {
       setPending(true);
       const userData = await getMe.mutateAsync();
-      const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
+      const doctorProfileData = await getDoctorProfile.mutateAsync();
 
       setUserInfo({
-        provider: providerData,
+        provider: doctorProfileData,
         ...userData,
       });
 
@@ -45,14 +44,18 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
   useEffect(() => {
     if (isLogin && info?.id) {
-      apiGatewayClient.get('https://apigw.paziresh24.com/v1/users/image', { params: { user_id: info?.id } }).then(data => {
-        setUserInfo({
-          ...info,
-          image: data?.data?.data?.image_url,
+      try {
+        apiGatewayClient.get('https://apigw.paziresh24.com/v1/users/image', { params: { user_id: info?.id } })?.then(image => {
+          setUserInfo({
+            ...info,
+            image: image?.data?.data?.image_url,
+          });
         });
-      });
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, [isLogin]);
+  }, [isLogin, info?.id]);
 
   return (
     <>
