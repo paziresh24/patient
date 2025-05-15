@@ -38,7 +38,7 @@ export type UserInfo = {
   birth_date?: string;
   email?: string;
   provider?: {
-    job_title?: 'doctor';
+    job_title?: 'doctor' | string | null;
     slug?: string;
   };
 };
@@ -52,17 +52,27 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   },
   setUserInfo: info => {
     set(() => {
+      const infoCopy = {
+        ...get().info,
+        ...info,
+        is_doctor: info.provider?.slug ? true : false,
+        provider: {
+          job_title: info.provider?.slug ? 'doctor' : null,
+          ...info?.provider,
+        },
+      };
+
+      console.log(infoCopy);
+
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
-        user_id: info.id,
-        is_doctor: info.provider?.job_title === 'doctor',
+        user_id: infoCopy.id,
+        is_doctor: infoCopy.provider?.job_title === 'doctor',
       });
-      window.user = info;
+      window.user = infoCopy;
       return {
         info: {
-          ...info,
-          cell: info.cell,
-          is_foreigner: info.is_foreigner == '1',
+          ...infoCopy,
         },
         isLogin: true,
       };

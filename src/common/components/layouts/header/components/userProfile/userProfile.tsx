@@ -1,5 +1,6 @@
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
+import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import Avatar from '@/common/components/atom/avatar';
 import Button from '@/common/components/atom/button';
 import Chips from '@/common/components/atom/chips';
@@ -25,7 +26,6 @@ import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFea
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useProviders } from '@/modules/profile/apis/providers';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
@@ -141,17 +141,17 @@ export const UserProfile = () => {
   };
 
   const getMe = useGetMe();
-  const getProvider = useProviders();
+  const getDoctorProfile = useGetDoctorProfile();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const setPending = useUserInfoStore(state => state.setPending);
 
   const handlePostLogin = async () => {
     setPending(true);
     const userData = await getMe.mutateAsync();
-    const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
+    const doctorProfileData = await getDoctorProfile.mutateAsync();
 
     setUserInfo({
-      provider: providerData,
+      provider: doctorProfileData,
       ...userData,
     });
 

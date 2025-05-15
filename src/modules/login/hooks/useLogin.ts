@@ -4,19 +4,18 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import useCustomize from '@/common/hooks/useCustomize';
 import { dayToSecond } from '@/common/utils/dayToSecond';
-import { isPWA } from '@/common/utils/isPwa';
-import { useProviders } from '@/modules/profile/apis/providers';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import { useUserInfoStore } from '../store/userInfo';
+import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const logout = useUserInfoStore(state => state.logout);
   const getMe = useGetMe();
-  const getProvider = useProviders();
+  const getDoctorProfile = useGetDoctorProfile();
   const university = useCustomize(state => state.customize?.partnerKey);
   const webPushNotificationUserList = useFeatureValue<{ ids: string[] }>('notification:web-push|enabled', { ids: [] });
 
@@ -35,18 +34,18 @@ export const useLogin = () => {
           });
 
         const userData = await getMe.mutateAsync();
-        const providerData = await getProvider.mutateAsync({ user_id: userData?.id });
+        const doctorProfileData = await getDoctorProfile.mutateAsync();
 
         if (window?.Android) window.Android.login(data.certificate);
 
         setUserInfo({
-          provider: providerData,
+          provider: doctorProfileData,
           ...userData,
         });
 
         const shouldUseWebPushNotification = newApiFeatureFlaggingCondition(webPushNotificationUserList.ids, userData?.id);
 
-        return Promise.resolve({ provider: providerData, ...userData });
+        return Promise.resolve({ provider: doctorProfileData, ...userData });
       }
       return Promise.reject(data);
     } catch (error) {
@@ -60,5 +59,5 @@ export const useLogin = () => {
     }
   };
 
-  return { login: handleLogin, isLoading: loginRequest.isLoading || getMe.isLoading || getProvider.isLoading };
+  return { login: handleLogin, isLoading: loginRequest.isLoading || getMe.isLoading || getDoctorProfile.isLoading };
 };
