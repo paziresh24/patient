@@ -62,8 +62,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         },
       };
 
-      console.log(infoCopy);
-
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
         user_id: infoCopy.id,
