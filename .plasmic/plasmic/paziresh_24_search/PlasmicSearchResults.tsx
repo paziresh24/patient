@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import ProductCard from "../../ProductCard"; // plasmic-import: ZuA2HO8MLBhh/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import PeopleAlsoSearchForBox from "../../PeopleAlsoSearchForBox"; // plasmic-import: ThD_BqtT1Qyx/component
@@ -125,6 +126,7 @@ export type PlasmicSearchResults__OverridesType = {
   root?: Flex__<"div">;
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
   showMySearchPerformance?: Flex__<"a"> & Partial<LinkProps>;
+  apiRequest?: Flex__<typeof ApiRequest>;
   topSuggestedCardVerticalStack?: Flex__<"div">;
   topSuggestedCard?: Flex__<typeof ProductCard>;
   resultCardsVerticalStack2?: Flex__<"div">;
@@ -215,6 +217,24 @@ function PlasmicSearchResults__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.isHorizental
+      },
+      {
+        path: "apiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -313,7 +333,7 @@ function PlasmicSearchResults__RenderFunc(props: {
       {(() => {
         try {
           return (
-            !!globalThis.user.provider.slug &&
+            !!globalThis.window.user.provider &&
             $props.showMyPerformanceMetricsBox.enable
           );
         } catch (e) {
@@ -326,48 +346,125 @@ function PlasmicSearchResults__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <PlasmicLink__
-          data-plasmic-name={"showMySearchPerformance"}
-          data-plasmic-override={overrides.showMySearchPerformance}
-          className={classNames(
-            projectcss.all,
-            projectcss.a,
-            projectcss.__wab_text,
-            sty.showMySearchPerformance
-          )}
-          component={Link}
-          href={(() => {
-            try {
-              return $props.showMyPerformanceMetricsBox.destination;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return "https://survey.porsline.ir/s/Lg6WdWV?tid=xxxx&url=xxxx";
-              }
-              throw e;
-            }
-          })()}
-          platform={"nextjs"}
-          target={"_blank"}
-        >
-          <React.Fragment>
-            {(() => {
+        <div className={classNames(projectcss.all, sty.freeBox___7EYwI)}>
+          <PlasmicLink__
+            data-plasmic-name={"showMySearchPerformance"}
+            data-plasmic-override={overrides.showMySearchPerformance}
+            className={classNames(
+              projectcss.all,
+              projectcss.a,
+              projectcss.__wab_text,
+              sty.showMySearchPerformance
+            )}
+            component={Link}
+            href={(() => {
               try {
-                return $props.showMyPerformanceMetricsBox.link_title;
+                return $props.showMyPerformanceMetricsBox.destination;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return "\u0645\u0634\u0627\u0647\u062f\u0647 \u0639\u0645\u0644\u06a9\u0631\u062f \u0634\u0645\u0627 \u062f\u0631 \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648\u0647\u0627\u06cc \u06a9\u0627\u0631\u0628\u0631\u0627\u0646 \u067e\u0630\u06cc\u0631\u063424";
+                  return "";
                 }
                 throw e;
               }
             })()}
-          </React.Fragment>
-        </PlasmicLink__>
+            platform={"nextjs"}
+            target={"_blank"}
+          >
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $props.showMyPerformanceMetricsBox.link_title;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "\u0645\u0634\u0627\u0647\u062f\u0647 \u0639\u0645\u0644\u06a9\u0631\u062f \u0634\u0645\u0627 \u062f\u0631 \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648\u0647\u0627\u06cc \u06a9\u0627\u0631\u0628\u0631\u0627\u0646 \u067e\u0630\u06cc\u0631\u063424";
+                  }
+                  throw e;
+                }
+              })()}
+            </React.Fragment>
+          </PlasmicLink__>
+          {false ? (
+            <ApiRequest
+              data-plasmic-name={"apiRequest"}
+              data-plasmic-override={overrides.apiRequest}
+              className={classNames("__wab_instance", sty.apiRequest)}
+              errorDisplay={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__qSkg
+                  )}
+                >
+                  {"Error fetching data"}
+                </div>
+              }
+              loadingDisplay={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__mXeqV
+                  )}
+                >
+                  {"Loading..."}
+                </div>
+              }
+              method={"GET"}
+              onError={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest",
+                  "error"
+                ]).apply(null, eventArgs);
+              }}
+              onLoading={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest",
+                  "loading"
+                ]).apply(null, eventArgs);
+              }}
+              onSuccess={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+                  null,
+                  eventArgs
+                );
+              }}
+              url={
+                "https://apigw.paziresh24.com/v1/n8n-search/webhook/growth-opportunities"
+              }
+            >
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__fbeKy
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return $state.apiRequest.data;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+            </ApiRequest>
+          ) : null}
+        </div>
       ) : null}
       {(() => {
         try {
@@ -1507,11 +1604,14 @@ function PlasmicSearchResults__RenderFunc(props: {
                           if (explicitPrice) {
                             return "ویزیت آنلاین: " + explicitPrice;
                           }
-                          const showOnlineVisitPrice = Boolean(
-                            ctx?.Growthbook?.features?.[
-                              "search-show-online-visit-price-in-result-cards"
-                            ]
-                          );
+                          const href = globalThis.window.location.href;
+                          const showOnlineVisitPrice =
+                            /.*paziresh24\.com\/s.*/.test(href) ||
+                            /^https:\/\/www\.paziresh24\.com\/(?:\?.*)?$/.test(
+                              href
+                            ) ||
+                            /.*apphome.*/.test(href) ||
+                            /.*plasmic\.app.*/.test(href);
                           const freePriceRaw =
                             currentItem?.consult_services?.[0]?.free_price;
                           if (showOnlineVisitPrice && freePriceRaw) {
@@ -2346,6 +2446,7 @@ const PlasmicDescendants = {
     "root",
     "setGrowthbookAttributes",
     "showMySearchPerformance",
+    "apiRequest",
     "topSuggestedCardVerticalStack",
     "topSuggestedCard",
     "resultCardsVerticalStack2",
@@ -2362,6 +2463,7 @@ const PlasmicDescendants = {
   ],
   setGrowthbookAttributes: ["setGrowthbookAttributes"],
   showMySearchPerformance: ["showMySearchPerformance"],
+  apiRequest: ["apiRequest"],
   topSuggestedCardVerticalStack: [
     "topSuggestedCardVerticalStack",
     "topSuggestedCard"
@@ -2391,6 +2493,7 @@ type NodeDefaultElementType = {
   root: "div";
   setGrowthbookAttributes: typeof SideEffect;
   showMySearchPerformance: "a";
+  apiRequest: typeof ApiRequest;
   topSuggestedCardVerticalStack: "div";
   topSuggestedCard: typeof ProductCard;
   resultCardsVerticalStack2: "div";
@@ -2468,6 +2571,7 @@ export const PlasmicSearchResults = Object.assign(
     // Helper components rendering sub-elements
     setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
     showMySearchPerformance: makeNodeComponent("showMySearchPerformance"),
+    apiRequest: makeNodeComponent("apiRequest"),
     topSuggestedCardVerticalStack: makeNodeComponent(
       "topSuggestedCardVerticalStack"
     ),

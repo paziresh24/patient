@@ -1323,7 +1323,8 @@ function PlasmicProductCard__RenderFunc(props: {
                         if (cutIndex === -1) {
                           cutIndex = maxLength;
                         }
-                        return str.slice(0, cutIndex);
+                        const cropped = str.slice(0, cutIndex);
+                        return cropped + "...";
                       }
                       return cropStringAtDelimiter($props.address);
                     })();
