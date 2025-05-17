@@ -693,7 +693,6 @@ function PlasmicProductCard__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-                rounded={true}
                 size={"xSmall"}
                 slot={null}
               />
@@ -1294,7 +1293,40 @@ function PlasmicProductCard__RenderFunc(props: {
               <React.Fragment>
                 {(() => {
                   try {
-                    return $props.address;
+                    return (() => {
+                      function cropStringAtDelimiter(
+                        str,
+                        maxLength = 30,
+                        tolerance = 5
+                      ) {
+                        if (typeof str !== "string") return "";
+                        if (str.length <= maxLength) return str;
+                        const delimiters = [" ", ",", ";", "-"];
+
+                        const start = Math.max(maxLength - tolerance, 0);
+                        const end = Math.min(maxLength + tolerance, str.length);
+                        let cutIndex = -1;
+                        for (let i = maxLength; i >= start; i--) {
+                          if (delimiters.includes(str[i])) {
+                            cutIndex = i;
+                            break;
+                          }
+                        }
+                        if (cutIndex === -1) {
+                          for (let i = maxLength; i <= end; i++) {
+                            if (delimiters.includes(str[i])) {
+                              cutIndex = i;
+                              break;
+                            }
+                          }
+                        }
+                        if (cutIndex === -1) {
+                          cutIndex = maxLength;
+                        }
+                        return str.slice(0, cutIndex);
+                      }
+                      return cropStringAtDelimiter($props.address);
+                    })();
                   } catch (e) {
                     if (
                       e instanceof TypeError ||

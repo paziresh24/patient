@@ -179,8 +179,8 @@
   min-width: auto;
   display: flex;
   flex-direction: row;
-  padding-right: 7px;
-  padding-left: 7px;
+  padding-right: 2px;
+  padding-left: 2px;
   border-radius: 100px;
 }
 .badgesChip2:global(.__wab_instance) {
@@ -188,9 +188,9 @@
   position: relative;
   left: auto;
   top: auto;
-  z-index: 1;
   width: auto;
   transform: translateX(0px) translateY(0px) translateZ(0px);
+  z-index: 1;
 }
 .freeBox__uwhEa {
   display: flex;
@@ -414,7 +414,7 @@
   height: auto;
   max-width: 100%;
   font-size: var(--token-6NbVMeD6zQwn);
-  font-weight: 400;
+  font-weight: 300;
   white-space: pre-wrap;
   width: 100%;
   filter: grayscale(100%);
@@ -461,7 +461,7 @@
   height: auto;
   max-width: 100%;
   font-size: var(--token-6NbVMeD6zQwn);
-  font-weight: 400;
+  font-weight: 500;
   white-space: pre;
   text-overflow: ellipsis;
   overflow: hidden;

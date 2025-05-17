@@ -1403,7 +1403,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                       ];
                     }
 
-                    $steps["runCodeSv2CtrRequest"] = true
+                    $steps["runCodeSv2CtrRequest"] = false
                       ? (() => {
                           const actionArgs = {
                             customFunction: async () => {
@@ -1505,7 +1505,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                         function formatPrice(currentItem, ctx) {
                           const explicitPrice = currentItem?.price;
                           if (explicitPrice) {
-                            return explicitPrice;
+                            return "ویزیت آنلاین: " + explicitPrice;
                           }
                           const showOnlineVisitPrice = Boolean(
                             ctx?.Growthbook?.features?.[
@@ -1520,7 +1520,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                               freePriceRial / 10
                             );
                             return (
-                              freePriceToman.toLocaleString("fa-IR") + " تومان"
+                              "ویزیت آنلاین: " +
+                              freePriceToman.toLocaleString("fa-IR") +
+                              " تومان"
                             );
                           }
                           return "";
