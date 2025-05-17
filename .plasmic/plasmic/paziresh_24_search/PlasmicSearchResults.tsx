@@ -1695,35 +1695,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                       throw e;
                     }
                   })()}
-                >
-                  <DataCtxReader__>
-                    {$ctx => (
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__hqZtm
-                        )}
-                      >
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return $ctx.fetchedData.classifications[0].name;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
-                              }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
-                      </div>
-                    )}
-                  </DataCtxReader__>
-                </ProductCard>
+                />
               </div>
             );
           })}

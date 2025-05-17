@@ -60,11 +60,10 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
-import { DataFetcher } from "@plasmicpkgs/plasmic-query";
+import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 import LineClamp from "../../LineClamp"; // plasmic-import: fa_t7ELXcm5k/component
 import MoreOptionsMenu from "../../MoreOptionsMenu"; // plasmic-import: v0iNnwZxOTSN/component
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
-import Chip from "../../Chip"; // plasmic-import: 1bFBcAoH0lNN/component
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { DoctorInvoiceNotice } from "@/modules/booking/components/factor/doctorInvoiceNotice"; // plasmic-import: KwkSEMDcuddG/codeComponent
@@ -77,15 +76,15 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
+import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
+import CalendarIcon from "../fragment_icons/icons/PlasmicIcon__Calendar"; // plasmic-import: e2zWN9c_lxv7/icon
+import ClockIcon from "../fragment_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
+import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 import Icon41Icon from "./icons/PlasmicIcon__Icon41"; // plasmic-import: l0_vYhehuk4T/icon
 import Icon7Icon from "./icons/PlasmicIcon__Icon7"; // plasmic-import: TnnJDmwgAOL7/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: I0wBVQs9owLc/icon
 import LocationIcon from "../fragment_icons/icons/PlasmicIcon__Location"; // plasmic-import: 9zdEG9CdGbdC/icon
 import MoneyIcon from "../fragment_icons/icons/PlasmicIcon__Money"; // plasmic-import: 4D7uZNf6OjbV/icon
-import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
-import CalendarIcon from "../fragment_icons/icons/PlasmicIcon__Calendar"; // plasmic-import: e2zWN9c_lxv7/icon
-import ClockIcon from "../fragment_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
-import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -126,7 +125,6 @@ export type PlasmicProductCard__ArgsType = {
   topBadge?: any;
   externalLinkTitle?: string;
   classificationTitleApi?: string;
-  children?: React.ReactNode;
   searchCardId?: string;
   debugModeResult?: any;
   slug?: string;
@@ -151,7 +149,6 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "topBadge",
   "externalLinkTitle",
   "classificationTitleApi",
-  "children",
   "searchCardId",
   "debugModeResult",
   "slug",
@@ -161,8 +158,8 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
 export type PlasmicProductCard__OverridesType = {
   root?: Flex__<"div">;
   avatar?: Flex__<typeof Avatar>;
-  classificationApi?: Flex__<typeof DataFetcher>;
   classificationTitle?: Flex__<"span">;
+  badgesChip2?: Flex__<typeof Chip>;
   cardTitle?: Flex__<"h2">;
   moreOptionsMenu?: Flex__<typeof MoreOptionsMenu>;
   cardSubtitle?: Flex__<"span">;
@@ -198,7 +195,6 @@ export interface DefaultProductCardProps {
   topBadge?: any;
   externalLinkTitle?: string;
   classificationTitleApi?: string;
-  children?: React.ReactNode;
   searchCardId?: string;
   debugModeResult?: any;
   slug?: string;
@@ -643,143 +639,125 @@ function PlasmicProductCard__RenderFunc(props: {
               />
             </PlasmicLink__>
           ) : null}
-          <DataFetcher
-            data-plasmic-name={"classificationApi"}
-            data-plasmic-override={overrides.classificationApi}
-            className={classNames("__wab_instance", sty.classificationApi)}
-            dataName={"fetchedData"}
-            errorDisplay={
-              <DataCtxReader__>
-                {$ctx => (
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__yApKc
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return "بروز خطا در دریافت اطلاعات ";
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return "Error fetching data";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </div>
-                )}
-              </DataCtxReader__>
-            }
-            errorName={"fetchError"}
-            loadingDisplay={
-              <DataCtxReader__>
-                {$ctx => (
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text___7PCh
-                    )}
-                  >
-                    {""}
-                  </div>
-                )}
-              </DataCtxReader__>
-            }
-            method={"GET"}
-            noLayout={false}
-            previewErrorDisplay={false}
-            previewSpinner={false}
-            url={(() => {
-              try {
-                return $props.classificationTitleApi;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
+          {(() => {
+            try {
+              return (
+                $state.cardActionSduiV2UiRequest?.data?.search_result_card_ui[0]
+                  ?.data?.category_name?.length > 2
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
               }
-            })()}
-          >
-            <DataCtxReader__>
-              {$ctx =>
-                (() => {
+              throw e;
+            }
+          })() ? (
+            <span
+              data-plasmic-name={"classificationTitle"}
+              data-plasmic-override={overrides.classificationTitle}
+              className={classNames(
+                projectcss.all,
+                projectcss.span,
+                sty.classificationTitle,
+                {
+                  [sty.classificationTitle_5StarRatingMode3__5StarA]:
+                    hasVariant($state, "_5StarRatingMode3", "_5StarA"),
+                  [sty.classificationTitleexternalBookDesign]: hasVariant(
+                    $state,
+                    "externalBookDesign",
+                    "externalBookDesign"
+                  )
+                }
+              )}
+            >
+              <Chip
+                data-plasmic-name={"badgesChip2"}
+                data-plasmic-override={overrides.badgesChip2}
+                className={classNames("__wab_instance", sty.badgesChip2)}
+                color={"gray"}
+                content={(() => {
                   try {
-                    return (
-                      $ctx.fetchedData.classifications[0]?.name?.length > 2
-                    );
+                    return $state.cardActionSduiV2UiRequest.data
+                      .search_result_card_ui[0].data.category_name;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
                       e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      return false;
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                rounded={true}
+                size={"xSmall"}
+                slot={
+                  <InfoIcon
+                    className={classNames(projectcss.all, sty.svg__xtPwc)}
+                    role={"img"}
+                  />
+                }
+              >
+                {(() => {
+                  try {
+                    return currentItem.icon == "smile-icon";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
                     }
                     throw e;
                   }
                 })() ? (
-                  <span
-                    data-plasmic-name={"classificationTitle"}
-                    data-plasmic-override={overrides.classificationTitle}
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.span,
-                      sty.classificationTitle,
-                      {
-                        [sty.classificationTitle_5StarRatingMode3__5StarA]:
-                          hasVariant($state, "_5StarRatingMode3", "_5StarA"),
-                        [sty.classificationTitleexternalBookDesign]: hasVariant(
-                          $state,
-                          "externalBookDesign",
-                          "externalBookDesign"
-                        )
-                      }
-                    )}
-                  >
-                    {renderPlasmicSlot({
-                      defaultContents: (
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return $ctx.fetchedData.classifications[0].name;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
-                              }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
-                      ),
-                      value: args.children,
-                      className: classNames(sty.slotTargetChildren, {
-                        [sty.slotTargetChildren_5StarRatingMode3__5StarA]:
-                          hasVariant($state, "_5StarRatingMode3", "_5StarA"),
-                        [sty.slotTargetChildrenexternalBookDesign]: hasVariant(
-                          $state,
-                          "externalBookDesign",
-                          "externalBookDesign"
-                        )
-                      })
-                    })}
-                  </span>
-                ) : null
-              }
-            </DataCtxReader__>
-          </DataFetcher>
+                  <SmileIcon
+                    className={classNames(projectcss.all, sty.svg__bCS3)}
+                    role={"img"}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return currentItem.icon == "forbidden-icon";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <CalendarIcon
+                    className={classNames(projectcss.all, sty.svg__vDqO)}
+                    role={"img"}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return currentItem.icon == "clock-icon";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <ClockIcon
+                    className={classNames(projectcss.all, sty.svg__z4MNx)}
+                    role={"img"}
+                  />
+                ) : null}
+              </Chip>
+            </span>
+          ) : null}
         </Stack__>
         <Stack__
           as={"div"}
@@ -1824,7 +1802,7 @@ function PlasmicProductCard__RenderFunc(props: {
               params={undefined}
               url={(() => {
                 try {
-                  return `https://apigw.paziresh24.com/v1/ui-jahannama/search-result-card-ui/${$props.searchCardId}`;
+                  return `https://apisix-hmr-2.paziresh24.com/v1/ui-jahannama/search-result-card-ui/${$props.searchCardId}`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -2905,8 +2883,8 @@ const PlasmicDescendants = {
   root: [
     "root",
     "avatar",
-    "classificationApi",
     "classificationTitle",
+    "badgesChip2",
     "cardTitle",
     "moreOptionsMenu",
     "cardSubtitle",
@@ -2924,8 +2902,8 @@ const PlasmicDescendants = {
     "paziresh24Factor"
   ],
   avatar: ["avatar"],
-  classificationApi: ["classificationApi", "classificationTitle"],
-  classificationTitle: ["classificationTitle"],
+  classificationTitle: ["classificationTitle", "badgesChip2"],
+  badgesChip2: ["badgesChip2"],
   cardTitle: ["cardTitle"],
   moreOptionsMenu: ["moreOptionsMenu"],
   cardSubtitle: ["cardSubtitle"],
@@ -2961,8 +2939,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   avatar: typeof Avatar;
-  classificationApi: typeof DataFetcher;
   classificationTitle: "span";
+  badgesChip2: typeof Chip;
   cardTitle: "h2";
   moreOptionsMenu: typeof MoreOptionsMenu;
   cardSubtitle: "span";
@@ -3041,8 +3019,8 @@ export const PlasmicProductCard = Object.assign(
   {
     // Helper components rendering sub-elements
     avatar: makeNodeComponent("avatar"),
-    classificationApi: makeNodeComponent("classificationApi"),
     classificationTitle: makeNodeComponent("classificationTitle"),
+    badgesChip2: makeNodeComponent("badgesChip2"),
     cardTitle: makeNodeComponent("cardTitle"),
     moreOptionsMenu: makeNodeComponent("moreOptionsMenu"),
     cardSubtitle: makeNodeComponent("cardSubtitle"),
