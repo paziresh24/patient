@@ -179,8 +179,8 @@
   min-width: auto;
   display: flex;
   flex-direction: row;
-  padding-right: 7px;
-  padding-left: 7px;
+  padding-right: 2px;
+  padding-left: 2px;
   border-radius: 100px;
 }
 .badgesChip2:global(.__wab_instance) {
@@ -188,9 +188,9 @@
   position: relative;
   left: auto;
   top: auto;
-  z-index: 1;
   width: auto;
   transform: translateX(0px) translateY(0px) translateZ(0px);
+  z-index: 1;
 }
 .freeBox__uwhEa {
   display: flex;

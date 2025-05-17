@@ -693,7 +693,6 @@ function PlasmicProductCard__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-                rounded={true}
                 size={"xSmall"}
                 slot={null}
               />

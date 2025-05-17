@@ -1403,7 +1403,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                       ];
                     }
 
-                    $steps["runCodeSv2CtrRequest"] = true
+                    $steps["runCodeSv2CtrRequest"] = false
                       ? (() => {
                           const actionArgs = {
                             customFunction: async () => {
