@@ -76,15 +76,15 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicProductCard.module.css"; // plasmic-import: ZuA2HO8MLBhh/css
 
-import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
-import CalendarIcon from "../fragment_icons/icons/PlasmicIcon__Calendar"; // plasmic-import: e2zWN9c_lxv7/icon
-import ClockIcon from "../fragment_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
-import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 import Icon41Icon from "./icons/PlasmicIcon__Icon41"; // plasmic-import: l0_vYhehuk4T/icon
 import Icon7Icon from "./icons/PlasmicIcon__Icon7"; // plasmic-import: TnnJDmwgAOL7/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: I0wBVQs9owLc/icon
 import LocationIcon from "../fragment_icons/icons/PlasmicIcon__Location"; // plasmic-import: 9zdEG9CdGbdC/icon
 import MoneyIcon from "../fragment_icons/icons/PlasmicIcon__Money"; // plasmic-import: 4D7uZNf6OjbV/icon
+import SmileIcon from "../fragment_icons/icons/PlasmicIcon__Smile"; // plasmic-import: J8ozh55UiWsA/icon
+import CalendarIcon from "../fragment_icons/icons/PlasmicIcon__Calendar"; // plasmic-import: e2zWN9c_lxv7/icon
+import ClockIcon from "../fragment_icons/icons/PlasmicIcon__Clock"; // plasmic-import: rW7v27ONOoUe/icon
+import InfoIcon from "../fragment_icons/icons/PlasmicIcon__Info"; // plasmic-import: 7Dhq6fgU-utK/icon
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
@@ -676,6 +676,7 @@ function PlasmicProductCard__RenderFunc(props: {
               <Chip
                 data-plasmic-name={"badgesChip2"}
                 data-plasmic-override={overrides.badgesChip2}
+                children={null}
                 className={classNames("__wab_instance", sty.badgesChip2)}
                 color={"gray"}
                 content={(() => {
@@ -694,68 +695,8 @@ function PlasmicProductCard__RenderFunc(props: {
                 })()}
                 rounded={true}
                 size={"xSmall"}
-                slot={
-                  <InfoIcon
-                    className={classNames(projectcss.all, sty.svg__xtPwc)}
-                    role={"img"}
-                  />
-                }
-              >
-                {(() => {
-                  try {
-                    return currentItem.icon == "smile-icon";
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <SmileIcon
-                    className={classNames(projectcss.all, sty.svg__bCS3)}
-                    role={"img"}
-                  />
-                ) : null}
-                {(() => {
-                  try {
-                    return currentItem.icon == "forbidden-icon";
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <CalendarIcon
-                    className={classNames(projectcss.all, sty.svg__vDqO)}
-                    role={"img"}
-                  />
-                ) : null}
-                {(() => {
-                  try {
-                    return currentItem.icon == "clock-icon";
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <ClockIcon
-                    className={classNames(projectcss.all, sty.svg__z4MNx)}
-                    role={"img"}
-                  />
-                ) : null}
-              </Chip>
+                slot={null}
+              />
             </span>
           ) : null}
         </Stack__>
