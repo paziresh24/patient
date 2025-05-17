@@ -31,11 +31,48 @@
   object-fit: cover;
   position: relative;
 }
+.freeBox___7EYwI {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: var(--token-BCWljTOyDNmw);
+  min-width: 0;
+}
 .showMySearchPerformance {
   position: relative;
   text-align: right;
   font-weight: 700;
   padding-top: 8px;
+}
+.apiRequest:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.text__mXeqV {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.text__qSkg {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.text__fbeKy {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+  display: none;
 }
 .topSuggestedCardVerticalStack {
   display: flex;
