@@ -8,25 +8,22 @@ import * as React from "react";
 import { hasVariant, ensureGlobalVariants } from "@plasmicapp/react-web";
 import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasmic-import: O48mK20zxG5g/codeComponent
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: OtwyqzpoIgmH/codeComponent
-import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: FmIK6cMt8uTv/codeComponent
-import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: s8sn0Qj30fkL/codeComponent
-import { PWA } from "@/common/fragment/pwa"; // plasmic-import: 2P-VNbugLA0_/codeComponent
+import { AuthGlobalContext } from "@/common/fragment/authGlobalContext"; // plasmic-import: 8TG3aR7Uilir/codeComponent
+import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: IAeY09R5y5Go/codeComponent
+import { PWA } from "@/common/fragment/pwa"; // plasmic-import: epDoLlQkswhR/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
 }
 
