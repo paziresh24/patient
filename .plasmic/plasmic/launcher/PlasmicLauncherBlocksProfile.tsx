@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Paziresh24Avatar from "../../Paziresh24Avatar"; // plasmic-import: zljt-TXjec48/component
 import LauncherBlocksWallet from "../../LauncherBlocksWallet"; // plasmic-import: h-1safqUkN1a/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -84,7 +85,7 @@ export const PlasmicLauncherBlocksProfile__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicLauncherBlocksProfile__OverridesType = {
   root?: Flex__<"div">;
-  img?: Flex__<typeof PlasmicImg__>;
+  paziresh24Avatar?: Flex__<typeof Paziresh24Avatar>;
   launcherBlocksWallet?: Flex__<typeof LauncherBlocksWallet>;
 };
 
@@ -159,18 +160,23 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
           hasGap={true}
           className={classNames(projectcss.all, sty.freeBox__f64ZV)}
         >
-          <PlasmicImg__
-            data-plasmic-name={"img"}
-            data-plasmic-override={overrides.img}
-            alt={""}
-            className={classNames(sty.img)}
-            displayHeight={"40px"}
-            displayMaxHeight={"none"}
-            displayMaxWidth={"100%"}
-            displayMinHeight={"0"}
-            displayMinWidth={"0"}
-            displayWidth={"40px"}
-            loading={"lazy"}
+          <Paziresh24Avatar
+            data-plasmic-name={"paziresh24Avatar"}
+            data-plasmic-override={overrides.paziresh24Avatar}
+            className={classNames("__wab_instance", sty.paziresh24Avatar)}
+            name={(() => {
+              try {
+                return $ctx.auth.info.name + " " + $ctx.auth.info.family;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
             src={(() => {
               try {
                 return $ctx.auth?.info?.image;
@@ -214,70 +220,127 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
                 })()}
               </React.Fragment>
             </div>
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__wsgSt)}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps["goToPage"] = true
-                  ? (() => {
-                      const actionArgs = {
-                        destination: (() => {
-                          try {
-                            return `/dr/${$ctx.auth?.info?.provider?.slug}`;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      };
-                      return (({ destination }) => {
-                        if (
-                          typeof destination === "string" &&
-                          destination.startsWith("#")
-                        ) {
-                          document
-                            .getElementById(destination.substr(1))
-                            .scrollIntoView({ behavior: "smooth" });
-                        } else {
-                          __nextRouter?.push(destination);
-                        }
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
+            {(() => {
+              try {
+                return $ctx.auth.info.provider.job_title == "doctor";
+              } catch (e) {
                 if (
-                  $steps["goToPage"] != null &&
-                  typeof $steps["goToPage"] === "object" &&
-                  typeof $steps["goToPage"].then === "function"
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  $steps["goToPage"] = await $steps["goToPage"];
+                  return true;
                 }
-              }}
-            >
-              <LauncherIconsEyeIcon
-                className={classNames(projectcss.all, sty.svg__iiLjr)}
-                role={"img"}
-              />
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__wsgSt)}
+                onClick={async event => {
+                  const $steps = {};
 
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__xfrz8
-                )}
+                  $steps["goToPage"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          destination: (() => {
+                            try {
+                              return `/dr/${$ctx.auth?.info?.provider?.slug}`;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        };
+                        return (({ destination }) => {
+                          if (
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
+                          ) {
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
+                          }
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["goToPage"] != null &&
+                    typeof $steps["goToPage"] === "object" &&
+                    typeof $steps["goToPage"].then === "function"
+                  ) {
+                    $steps["goToPage"] = await $steps["goToPage"];
+                  }
+                }}
               >
-                {
-                  "\u0645\u0634\u0627\u0647\u062f\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
+                <LauncherIconsEyeIcon
+                  className={classNames(projectcss.all, sty.svg__iiLjr)}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__xfrz8
+                  )}
+                >
+                  {
+                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
+                  }
+                </div>
+              </Stack__>
+            ) : null}
+            {(() => {
+              try {
+                return $ctx.auth.info.provider.job_title != "doctor";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
                 }
-              </div>
-            </Stack__>
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__oqxGm)}
+              >
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__pEcwE
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return `0${$ctx.auth.info.cell}`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "\u0645\u0634\u0627\u0647\u062f\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
+              </Stack__>
+            ) : null}
           </Stack__>
         </Stack__>
         <div
@@ -319,18 +382,35 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
           />
         </div>
       </Stack__>
-      <LauncherBlocksWallet
-        data-plasmic-name={"launcherBlocksWallet"}
-        data-plasmic-override={overrides.launcherBlocksWallet}
-        className={classNames("__wab_instance", sty.launcherBlocksWallet)}
-      />
+      {(() => {
+        try {
+          return (() => {
+            if ($ctx.auth.info?.provider?.job_title === "doctor") return true;
+            return $ctx.Growthbook.features["hamdast::katibe"]?.hide == false;
+          })();
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <LauncherBlocksWallet
+          data-plasmic-name={"launcherBlocksWallet"}
+          data-plasmic-override={overrides.launcherBlocksWallet}
+          className={classNames("__wab_instance", sty.launcherBlocksWallet)}
+        />
+      ) : null}
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "img", "launcherBlocksWallet"],
-  img: ["img"],
+  root: ["root", "paziresh24Avatar", "launcherBlocksWallet"],
+  paziresh24Avatar: ["paziresh24Avatar"],
   launcherBlocksWallet: ["launcherBlocksWallet"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -338,7 +418,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  img: typeof PlasmicImg__;
+  paziresh24Avatar: typeof Paziresh24Avatar;
   launcherBlocksWallet: typeof LauncherBlocksWallet;
 };
 
@@ -402,7 +482,7 @@ export const PlasmicLauncherBlocksProfile = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    img: makeNodeComponent("img"),
+    paziresh24Avatar: makeNodeComponent("paziresh24Avatar"),
     launcherBlocksWallet: makeNodeComponent("launcherBlocksWallet"),
 
     // Metadata about props expected for PlasmicLauncherBlocksProfile
