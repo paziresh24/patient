@@ -101,14 +101,14 @@ export const aside = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          .filter(
+          ?.filter(
             (widget: any) =>
               widget?.placement?.includes?.('services') &&
               (!isEmpty(widget?.display_conditions) && widget?.display_conditions?.includes?.('BOOKING_DISABLED_ALL_CENTERS')
                 ? isBulk
                 : true),
           )
-          .map((widget: any) => (
+          ?.map((widget: any) => (
             <Hamdast
               key={widget.id}
               id={widget.id}
@@ -276,16 +276,16 @@ export const aside = (data: any) => {
                         children: hamdastWidgets.some(
                           (widget: any) =>
                             widget?.placement?.includes?.('center_info') &&
-                            widget.placements_metadata?.center_info?.center_ids?.includes(center.id),
+                            widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
                         ) ? (
                           <div className="flex flex-col w-full gap-2">
                             {hamdastWidgets
-                              .filter(
+                              ?.filter(
                                 (widget: any) =>
                                   widget?.placement?.includes?.('center_info') &&
-                                  widget.placements_metadata?.center_info?.center_ids?.includes(center.id),
+                                  widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
                               )
-                              .map((widget: any) => (
+                              ?.map((widget: any) => (
                                 <Hamdast
                                   key={widget.id}
                                   id={widget.id}
@@ -315,8 +315,8 @@ export const aside = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          .filter((widget: any) => widget?.placement?.includes?.('sidebar'))
-          .map((widget: any) => (
+          ?.filter((widget: any) => widget?.placement?.includes?.('sidebar'))
+          ?.map((widget: any) => (
             <Hamdast
               key={widget.id}
               id={widget.id}
