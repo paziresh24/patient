@@ -207,7 +207,9 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
               <React.Fragment>
                 {(() => {
                   try {
-                    return $ctx.auth.info?.name + " " + $ctx.auth.info?.family;
+                    return $ctx.auth.info?.name && $ctx.auth.info?.family
+                      ? $ctx.auth.info?.name + " " + $ctx.auth.info?.family
+                      : "کاربر بدون نام";
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -326,13 +328,15 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
                   <React.Fragment>
                     {(() => {
                       try {
-                        return `0${$ctx.auth.info.cell}`;
+                        return $ctx.auth.info.cell
+                          ? `0${$ctx.auth.info.cell}`
+                          : $ctx.auth.info.email;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
                           e?.plasmicType === "PlasmicUndefinedDataError"
                         ) {
-                          return "\u0645\u0634\u0627\u0647\u062f\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644";
+                          return "-";
                         }
                         throw e;
                       }
