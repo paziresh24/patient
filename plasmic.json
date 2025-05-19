@@ -6064,14 +6064,28 @@
       "components": [
         {
           "id": "KinPlL1Jj1j3",
-          "name": "HamdastRismanWidget",
+          "name": "Homepage",
           "type": "managed",
           "projectId": "bN5uNsAhTefwW3S14VjvMG",
-          "renderModuleFilePath": "plasmic/hamdast_risman/PlasmicHamdastRismanWidget.tsx",
+          "renderModuleFilePath": "plasmic/hamdast_risman/PlasmicHomepage.tsx",
           "importSpec": {
-            "modulePath": "HamdastRismanWidget.tsx"
+            "modulePath": "../src/pages/index.tsx"
           },
-          "cssFilePath": "plasmic/hamdast_risman/PlasmicHamdastRismanWidget.module.css",
+          "cssFilePath": "plasmic/hamdast_risman/PlasmicHomepage.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/"
+        },
+        {
+          "id": "LunkQEBG4_Uv",
+          "name": "Alert",
+          "type": "managed",
+          "projectId": "bN5uNsAhTefwW3S14VjvMG",
+          "renderModuleFilePath": "plasmic/hamdast_risman/PlasmicAlert.tsx",
+          "importSpec": {
+            "modulePath": "Alert.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_risman/PlasmicAlert.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
@@ -6108,7 +6122,13 @@
           "moduleFilePath": "plasmic/hamdast_risman/icons/PlasmicIcon__Icon8.tsx"
         }
       ],
-      "images": [],
+      "images": [
+        {
+          "id": "l-vyF3ydBkyA",
+          "name": "image",
+          "filePath": "plasmic/hamdast_risman/images/image.png"
+        }
+      ],
       "indirect": false,
       "globalContextsFilePath": "plasmic/hamdast_risman/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
@@ -6156,67 +6176,67 @@
           "componentImportPath": "@/common/fragment/splunk"
         },
         {
-          "id": "ssz33pG6c5NL",
+          "id": "rQIAo0vbiY0i",
           "name": "RadioFilter",
           "displayName": "RadioFilter",
           "componentImportPath": "@/common/fragment/components/radioFilter"
         },
         {
-          "id": "XeXZUs7id1YC",
+          "id": "ZZHSrG4FaXdY",
           "name": "Gallery",
           "displayName": "Gallery",
           "componentImportPath": "@/common/fragment/components/gallery"
         },
         {
-          "id": "fTStkDLWujLy",
+          "id": "nY-NSi42gsaU",
           "name": "Portal",
           "displayName": "Portal",
           "componentImportPath": "@/common/fragment/components/portal"
         },
         {
-          "id": "hWCO41g2cJ9U",
+          "id": "2eldehalkw89",
           "name": "Accordion",
           "displayName": "Accordion",
           "componentImportPath": "@/common/fragment/components/accordion"
         },
         {
-          "id": "g71LLRrlsiHQ",
+          "id": "nAwHL_aK8RSp",
           "name": "Factor",
           "displayName": "Factor",
           "componentImportPath": "@/modules/booking/views/factor/wrapper"
         },
         {
-          "id": "FIX19u-cGEV7",
+          "id": "MstJgzzEl0Kd",
           "name": "DoctorInvoiceNotice",
           "displayName": "DoctorInvoiceNotice",
           "componentImportPath": "@/modules/booking/components/factor/doctorInvoiceNotice"
         },
         {
-          "id": "hwGcqpyiA6xJ",
+          "id": "sUg9Yj7EMbDk",
           "name": "AppFrame",
           "displayName": "AppFrame",
           "componentImportPath": "@/modules/hamdast/appFrame"
         },
         {
-          "id": "qeP72NDUfcbN",
+          "id": "aubAtkXDwoHl",
           "name": "LayoutWithHeaderAndFooter",
           "displayName": "LayoutWithHeaderAndFooter",
           "componentImportPath": "@/common/components/layouts/layoutWithHeaderAndFooter"
         },
         {
-          "id": "FmIK6cMt8uTv",
+          "id": "8TG3aR7Uilir",
           "name": "AuthGlobalContext",
           "displayName": "AuthGlobalContext",
           "componentImportPath": "@/common/fragment/authGlobalContext"
         },
         {
-          "id": "s8sn0Qj30fkL",
+          "id": "IAeY09R5y5Go",
           "name": "GrowthbookGlobalContext",
           "displayName": "GrowthbookGlobalContext",
           "componentImportPath": "@/common/fragment/growthbookGlobalContext"
         },
         {
-          "id": "2P-VNbugLA0_",
+          "id": "epDoLlQkswhR",
           "name": "PWA",
           "displayName": "PWA",
           "componentImportPath": "@/common/fragment/pwa"
@@ -6230,8 +6250,94 @@
           "name": "splunkEvent",
           "namespace": null
         }
+      ]
+    },
+    {
+      "projectId": "9yPKYrtYPnCNEj6BTTfHnY",
+      "projectApiToken": "caJMVcyN9TzlwZkolKBTw2YWBUFRDNfYVftishw2973CP9Qky86xBuu93pc31OpIhcsrB5xbDyMFSqKwg",
+      "projectName": "@Hamdast/sdk",
+      "version": ">0.0.0",
+      "cssFilePath": "plasmic/hamdast_sdk/plasmic.module.css",
+      "components": [
+        {
+          "id": "KS8cTh0gsgPl",
+          "name": "HamdastProvider",
+          "type": "managed",
+          "projectId": "9yPKYrtYPnCNEj6BTTfHnY",
+          "renderModuleFilePath": "plasmic/hamdast_sdk/PlasmicHamdastProvider.tsx",
+          "importSpec": {
+            "modulePath": "HamdastProvider.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_sdk/PlasmicHamdastProvider.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "6gK09XfScFeD",
+          "name": "HamdastAuth",
+          "type": "managed",
+          "projectId": "9yPKYrtYPnCNEj6BTTfHnY",
+          "renderModuleFilePath": "plasmic/hamdast_sdk/PlasmicHamdastAuth.tsx",
+          "importSpec": {
+            "modulePath": "HamdastAuth.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_sdk/PlasmicHamdastAuth.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "Us2coAfx-xTz",
+          "name": "HamdastPayment",
+          "type": "managed",
+          "projectId": "9yPKYrtYPnCNEj6BTTfHnY",
+          "renderModuleFilePath": "plasmic/hamdast_sdk/PlasmicHamdastPayment.tsx",
+          "importSpec": {
+            "modulePath": "HamdastPayment.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_sdk/PlasmicHamdastPayment.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "RRKFlqCHeJfP",
+          "name": "HamdastUtilsOpenLink",
+          "type": "managed",
+          "projectId": "9yPKYrtYPnCNEj6BTTfHnY",
+          "renderModuleFilePath": "plasmic/hamdast_sdk/PlasmicHamdastUtilsOpenLink.tsx",
+          "importSpec": {
+            "modulePath": "HamdastUtilsOpenLink.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_sdk/PlasmicHamdastUtilsOpenLink.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        }
       ],
-      "jsBundleThemes": []
+      "icons": [
+        {
+          "id": "EpJsLqY0ZzKz",
+          "name": "IconIcon",
+          "moduleFilePath": "plasmic/hamdast_sdk/icons/PlasmicIcon__Icon.tsx"
+        }
+      ],
+      "images": [],
+      "indirect": true,
+      "globalContextsFilePath": "",
+      "splitsProviderFilePath": "",
+      "codeComponents": [
+        {
+          "id": "4TsK3snb_L57",
+          "name": "PlasmicHead",
+          "displayName": "hostless-plasmic-head",
+          "componentImportPath": "@plasmicapp/react-web"
+        },
+        {
+          "id": "GTrnx3J44e8j",
+          "name": "Fetcher",
+          "displayName": "plasmic-data-source-fetcher",
+          "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
+        }
+      ],
+      "customFunctions": []
     }
   ],
   "globalVariants": {
@@ -6313,6 +6419,12 @@
         "name": "Screen",
         "projectId": "bN5uNsAhTefwW3S14VjvMG",
         "contextFilePath": "plasmic/hamdast_risman/PlasmicGlobalVariant__Screen.tsx"
+      },
+      {
+        "id": "NlcKhjN_EH2L",
+        "name": "Screen",
+        "projectId": "9yPKYrtYPnCNEj6BTTfHnY",
+        "contextFilePath": "plasmic/hamdast_sdk/PlasmicGlobalVariant__Screen.tsx"
       }
     ]
   },
