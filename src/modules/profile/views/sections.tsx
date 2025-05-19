@@ -98,8 +98,8 @@ export const sections = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          .filter((widget: any) => widget?.placement?.includes?.('section_one'))
-          .map((widget: any) => (
+          ?.filter((widget: any) => widget?.placement?.includes?.('section_one'))
+          ?.map((widget: any) => (
             <Hamdast
               key={widget.id}
               id={widget.id}
@@ -190,8 +190,8 @@ export const sections = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          .filter((widget: any) => widget?.placement?.includes('section_two'))
-          .map((widget: any) => (
+          ?.filter((widget: any) => widget?.placement?.includes?.('section_two'))
+          ?.map((widget: any) => (
             <Hamdast
               key={widget.id}
               id={widget.id}
@@ -224,8 +224,8 @@ export const sections = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          .filter((widget: any) => widget?.placement?.includes('section_three'))
-          .map((widget: any) => (
+          ?.filter((widget: any) => widget?.placement?.includes?.('section_three'))
+          ?.map((widget: any) => (
             <Hamdast
               key={widget.id}
               id={widget.id}

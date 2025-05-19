@@ -406,8 +406,8 @@ const DoctorProfile = ({
                     children: (
                       <div className="flex flex-col w-full gap-2">
                         {hamdastWidgets
-                          .filter((widget: any) => widget?.placement?.includes?.('head'))
-                          .map((widget: any) => (
+                          ?.filter((widget: any) => widget?.placement?.includes?.('head'))
+                          ?.map((widget: any) => (
                             <Hamdast
                               key={widget.id}
                               id={widget.id}

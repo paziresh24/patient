@@ -185,7 +185,11 @@ export const UserProfile = () => {
                 )}
               </div>
               <Text className="hidden lg:block" fontWeight="bold">
-                {userInfo?.name ?? ''} {userInfo?.family ?? ''}
+                {userInfo?.name || userInfo?.family
+                  ? `${userInfo?.name ?? ''} ${userInfo?.family ?? ''}`
+                  : userInfo.cell
+                  ? `0${userInfo.cell}`
+                  : userInfo.email}
               </Text>
               <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} className="hidden md:block" />
             </div>

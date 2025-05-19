@@ -9,9 +9,6 @@ import AppBar from '@/common/components/layouts/appBar';
 import Seo from '@/common/components/layouts/seo';
 
 const Page = () => {
-  useEffect(() => {
-    window?.clarity?.('upgrade', 'LauncherApps');
-  }, []);
   return (
     <>
       <Seo title="ابزارک ها" noIndex />

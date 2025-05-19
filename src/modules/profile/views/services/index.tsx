@@ -116,7 +116,7 @@ export const Services = ({
   if (
     !customize?.partnerKey &&
     (showHamdastGa ||
-      enabledWidgets?.some(
+      enabledWidgets?.some?.(
         (widget: any) =>
           widget?.placement?.includes?.('services') && widget?.display_conditions?.includes?.('BOOKING_DISABLED_ALL_CENTERS'),
       )) &&
