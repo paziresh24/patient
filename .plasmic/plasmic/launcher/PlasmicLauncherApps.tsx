@@ -845,6 +845,57 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 />
               ) : null}
               <LauncherComponentsApp
+                appkey={"roshan"}
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp__bytUs
+                )}
+                description={
+                  "\u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u0631\u0627\u06cc\u06af\u0627\u0646 \u0635\u062d\u0628\u062a \u06a9\u0646\u06cc\u062f."
+                }
+                link={"/_/roshan/salamat/?origin=launcher-apps"}
+                name={
+                  "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a"
+                }
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pagekey={"salamat"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+
+              <LauncherComponentsApp
                 appkey={"liom"}
                 avatar={
                   "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom%2Ficon.png?versionId="
@@ -880,57 +931,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   }
                 }}
                 pagekey={"irregularities"}
-                widgetFrame={(() => {
-                  try {
-                    return $props.widgetFrames;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })()}
-              />
-
-              <LauncherComponentsApp
-                appkey={"roshan"}
-                avatar={
-                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
-                }
-                className={classNames(
-                  "__wab_instance",
-                  sty.launcherComponentsApp__bytUs
-                )}
-                description={
-                  "\u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u0631\u0627\u06cc\u06af\u0627\u0646 \u0635\u062d\u0628\u062a \u06a9\u0646\u06cc\u062f."
-                }
-                link={"/_/roshan/salamat/?origin=launcher-apps"}
-                name={
-                  "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a \u0645\u0627\u062f\u0631 \u0648 \u06a9\u0648\u062f\u06a9"
-                }
-                onEvent={async () => {
-                  const $steps = {};
-
-                  $steps["runOnEvent"] = true
-                    ? (() => {
-                        const actionArgs = { eventRef: $props["onEvent"] };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["runOnEvent"] != null &&
-                    typeof $steps["runOnEvent"] === "object" &&
-                    typeof $steps["runOnEvent"].then === "function"
-                  ) {
-                    $steps["runOnEvent"] = await $steps["runOnEvent"];
-                  }
-                }}
-                pagekey={"salamat"}
                 widgetFrame={(() => {
                   try {
                     return $props.widgetFrames;
