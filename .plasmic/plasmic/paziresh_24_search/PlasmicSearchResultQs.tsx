@@ -254,7 +254,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         url={(() => {
           try {
             return (() => {
-              return `https://searchia.ir/api/v2/qs/index/slim_clinic_query_su?query=${
+              return `https://apigw.paziresh24.com/v1/searchia-api/v2/qs/index/slim_clinic_query_su?query=${
                 $props.terms || ""
               }&inContent=true&spellCheckEnabled=true`;
             })();
