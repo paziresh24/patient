@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
 
 .plasmic_tokens {
   --token-QGDpFnlvgx6J: #2563eb;
@@ -116,7 +116,6 @@
   --mixin-grtZigwc1rs2_user-select: text;
   --mixin-grtZigwc1rs2_text-decoration-line: none;
   --mixin-grtZigwc1rs2_text-overflow: clip;
-  --mixin-grtZigwc1rs2_font-family: var(--iran-sans-x);
   --mixin-m6HZf81oIbu1_color: #000000;
   --mixin-m6HZf81oIbu1_font-weight: 700;
   --mixin-m6HZf81oIbu1_font-size: 64px;
@@ -535,7 +534,6 @@
   white-space: normal;
 }
 :where(.root_reset) {
-  font-family: var(--mixin-grtZigwc1rs2_font-family);
   font-size: var(--mixin-grtZigwc1rs2_font-size);
   font-weight: var(--mixin-grtZigwc1rs2_font-weight);
   font-style: var(--mixin-grtZigwc1rs2_font-style);
