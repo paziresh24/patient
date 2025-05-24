@@ -92,7 +92,7 @@ export const BulkService = ({ displayName, expertises, availableTime }: BulkServ
             </div>
           )}
           <Button id="bulk-profile-button" block onClick={handleOpenSubstituteDoctorModal}>
-            <Text>دریافت نوبت از سرویس دهنده جایگزین</Text>
+            <Text>دریافت نوبت از پزشک جایگزین</Text>
           </Button>
         </Card>
       )}
@@ -164,7 +164,7 @@ export const BulkService = ({ displayName, expertises, availableTime }: BulkServ
           </div>
         )}
         <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
-          مشاهده سایر سرویس دهندگان آنلاین {expertises.group_expertises[0]?.name}
+          مشاهده سایر پزشکان آنلاین {expertises.group_expertises[0]?.name}
         </Button>
       </Modal>
     </>
