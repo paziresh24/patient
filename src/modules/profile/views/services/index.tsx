@@ -37,6 +37,7 @@ export const Services = ({
   profileData,
   isBulk,
   enabledWidgets,
+  dontShowDeactiveBox,
 }: {
   id: string;
   expertises: any;
@@ -48,6 +49,7 @@ export const Services = ({
   profileData: any;
   isBulk: boolean;
   enabledWidgets?: any[];
+  dontShowDeactiveBox?: boolean;
 }) => {
   const router = useRouter();
   const [servicesRef, inViewServices] = useInView({
@@ -115,11 +117,7 @@ export const Services = ({
 
   if (
     !customize?.partnerKey &&
-    (showHamdastGa ||
-      enabledWidgets?.some?.(
-        (widget: any) =>
-          widget?.placement?.includes?.('services') && widget?.display_conditions?.includes?.('BOOKING_DISABLED_ALL_CENTERS'),
-      )) &&
+    dontShowDeactiveBox &&
     (alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk)
   ) {
     return null;

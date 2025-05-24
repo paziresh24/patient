@@ -82,17 +82,18 @@ export const aside = (data: any) => {
             />
           </BookingGlobalContextsProvider>
         ) : (
-          <Services {...props} enabledWidgets={hamdastWidgets} />
+          <Services {...props} enabledWidgets={hamdastWidgets} dontShowDeactiveBox={!!fragmentComponents?.risman} />
         ),
     },
     {
-      id: 'ga',
-      isShow: !customize.partnerKey && !!hamdast.ga && isBulk,
+      id: 'risman',
+      isShow: !customize.partnerKey && !!fragmentComponents?.risman && isBulk,
       children: (props: any) => (
-        <IframeHamdast
-          appId="xxdfcqqubwkgo5d"
-          pageId="n3nhsc879uzzh9z"
-          src={`https://ga.fragm.site/?doctor_id=${information.id}&slug=${seo.slug}`}
+        <Fragment
+          name="Risman"
+          props={{
+            data: fragmentComponents?.risman,
+          }}
         />
       ),
     },
@@ -101,13 +102,7 @@ export const aside = (data: any) => {
       noWrapper: true,
       children: () =>
         hamdastWidgets
-          ?.filter(
-            (widget: any) =>
-              widget?.placement?.includes?.('services') &&
-              (!isEmpty(widget?.display_conditions) && widget?.display_conditions?.includes?.('BOOKING_DISABLED_ALL_CENTERS')
-                ? isBulk
-                : true),
-          )
+          ?.filter((widget: any) => widget?.placement?.includes?.('services'))
           ?.map((widget: any) => (
             <Hamdast
               key={widget.id}

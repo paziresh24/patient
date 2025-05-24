@@ -2521,7 +2521,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -6058,20 +6059,20 @@
     {
       "projectId": "bN5uNsAhTefwW3S14VjvMG",
       "projectApiToken": "DP65zGGtkFC7h8iJDlgMsEs6o99LciISS1xcteLAB7DlQiqJnbbnmwb1f98mv9VscgN57ZaopmB6jIvlpg",
-      "projectName": "@hamdast/Risman",
+      "projectName": "Risman",
       "version": "latest",
       "cssFilePath": "plasmic/hamdast_risman/plasmic.module.css",
       "components": [
         {
           "id": "KinPlL1Jj1j3",
-          "name": "HamdastRismanWidget",
+          "name": "Risman",
           "type": "managed",
           "projectId": "bN5uNsAhTefwW3S14VjvMG",
-          "renderModuleFilePath": "plasmic/hamdast_risman/PlasmicHamdastRismanWidget.tsx",
+          "renderModuleFilePath": "plasmic/risman/PlasmicRisman.tsx",
           "importSpec": {
-            "modulePath": "HamdastRismanWidget.tsx"
+            "modulePath": "Risman.tsx"
           },
-          "cssFilePath": "plasmic/hamdast_risman/PlasmicHamdastRismanWidget.module.css",
+          "cssFilePath": "plasmic/risman/PlasmicRisman.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
@@ -6230,8 +6231,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     }
   ],
   "globalVariants": {

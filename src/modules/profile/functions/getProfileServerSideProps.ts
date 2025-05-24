@@ -465,6 +465,18 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       console.error(error);
     }
 
+    let rismanData: any;
+    try {
+      rismanData = await axios.get(`https://apigw.paziresh24.com/v1/risman/doctors/`, {
+        params: {
+          doctor_id: information.id,
+        },
+        timeout: 2000,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+
     const doctorCity = centers?.find?.((center: any) => center.id !== '5532')?.city;
 
     const title = `${information.prefix} ${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${
@@ -503,6 +515,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           profileGallery: shouldUsePlasmicProfileGallery,
           rateAndReviews: shouldUsePlasmicRateAndReviews,
           profileSeo: shouldUsePlasmicProfileSeo,
+          risman: rismanData?.data ?? null,
         },
         getOnlyHasuraProfileData,
         status: context.res.statusCode,
