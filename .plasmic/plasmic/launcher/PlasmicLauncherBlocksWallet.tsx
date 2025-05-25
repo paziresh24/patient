@@ -59,9 +59,9 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import LauncherComponentsSeparator from "../../LauncherComponentsSeparator"; // plasmic-import: 1FBJsfya0Spv/component
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -69,9 +69,9 @@ import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherBlocksWallet.module.css"; // plasmic-import: h-1safqUkN1a/css
 
+import LauncherIconsChevronLeftIcon from "./icons/PlasmicIcon__LauncherIconsChevronLeft"; // plasmic-import: bpf8GR68xA_B/icon
 import LauncherIconsWalletIcon from "./icons/PlasmicIcon__LauncherIconsWallet"; // plasmic-import: KKbq06nKrEoJ/icon
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
-import LauncherIconsChevronLeftIcon from "./icons/PlasmicIcon__LauncherIconsChevronLeft"; // plasmic-import: bpf8GR68xA_B/icon
 
 createPlasmicElementProxy;
 
@@ -87,10 +87,10 @@ export const PlasmicLauncherBlocksWallet__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicLauncherBlocksWallet__OverridesType = {
   root?: Flex__<"div">;
-  apiRequest?: Flex__<typeof ApiRequest>;
-  apiRequest2?: Flex__<typeof ApiRequest>;
   modal?: Flex__<typeof Paziresh24Modal>;
   launcherComponentsSeparator?: Flex__<typeof LauncherComponentsSeparator>;
+  apiRequest?: Flex__<typeof ApiRequest>;
+  apiRequest2?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultLauncherBlocksWalletProps {
@@ -205,471 +205,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
         sty.root
       )}
-      onClick={async event => {
-        const $steps = {};
-
-        $steps["updateModalOpen"] =
-          $ctx.Growthbook.features["hamdast::katibe"]?.hide === false &&
-          $state.apiRequest?.data?.data?.balance > 0 &&
-          $state.apiRequest2?.data?.[$state.apiRequest2?.data?.length - 1]
-            ?.sum_Unpaid_Amount > 0
-            ? (() => {
-                const actionArgs = {
-                  variable: {
-                    objRoot: $state,
-                    variablePath: ["modal", "open"]
-                  },
-                  operation: 4
-                };
-                return (({ variable, value, startIndex, deleteCount }) => {
-                  if (!variable) {
-                    return;
-                  }
-                  const { objRoot, variablePath } = variable;
-
-                  const oldValue = $stateGet(objRoot, variablePath);
-                  $stateSet(objRoot, variablePath, !oldValue);
-                  return !oldValue;
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-        if (
-          $steps["updateModalOpen"] != null &&
-          typeof $steps["updateModalOpen"] === "object" &&
-          typeof $steps["updateModalOpen"].then === "function"
-        ) {
-          $steps["updateModalOpen"] = await $steps["updateModalOpen"];
-        }
-
-        $steps["goToDashboardAppsWalletPayment"] =
-          $ctx.Growthbook.features["hamdast::katibe"]?.hide === true
-            ? (() => {
-                const actionArgs = {
-                  destination: "/dashboard/apps/wallet/payment/"
-                };
-                return (({ destination }) => {
-                  if (
-                    typeof destination === "string" &&
-                    destination.startsWith("#")
-                  ) {
-                    document
-                      .getElementById(destination.substr(1))
-                      .scrollIntoView({ behavior: "smooth" });
-                  } else {
-                    __nextRouter?.push(destination);
-                  }
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-        if (
-          $steps["goToDashboardAppsWalletPayment"] != null &&
-          typeof $steps["goToDashboardAppsWalletPayment"] === "object" &&
-          typeof $steps["goToDashboardAppsWalletPayment"].then === "function"
-        ) {
-          $steps["goToDashboardAppsWalletPayment"] = await $steps[
-            "goToDashboardAppsWalletPayment"
-          ];
-        }
-
-        $steps["goToDashboardAppsKatibeBills"] =
-          $ctx.Growthbook.features["hamdast::katibe"]?.hide === false &&
-          !$state.apiRequest2?.data?.[$state.apiRequest2?.data?.length - 1]
-            ?.sum_Unpaid_Amount
-            ? (() => {
-                const actionArgs = {
-                  destination: "/dashboard/apps/katibe/bills/"
-                };
-                return (({ destination }) => {
-                  if (
-                    typeof destination === "string" &&
-                    destination.startsWith("#")
-                  ) {
-                    document
-                      .getElementById(destination.substr(1))
-                      .scrollIntoView({ behavior: "smooth" });
-                  } else {
-                    __nextRouter?.push(destination);
-                  }
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-        if (
-          $steps["goToDashboardAppsKatibeBills"] != null &&
-          typeof $steps["goToDashboardAppsKatibeBills"] === "object" &&
-          typeof $steps["goToDashboardAppsKatibeBills"].then === "function"
-        ) {
-          $steps["goToDashboardAppsKatibeBills"] = await $steps[
-            "goToDashboardAppsKatibeBills"
-          ];
-        }
-      }}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__nrZdj)}
-      >
-        <LauncherIconsWalletIcon
-          className={classNames(projectcss.all, sty.svg__kOroc)}
-          role={"img"}
-        />
-
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__vx14S
-          )}
-        >
-          {"\u06a9\u06cc\u0641 \u067e\u0648\u0644"}
-        </div>
-      </Stack__>
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__j27OP)}
-      >
-        <ApiRequest
-          data-plasmic-name={"apiRequest"}
-          data-plasmic-override={overrides.apiRequest}
-          className={classNames("__wab_instance", sty.apiRequest)}
-          errorDisplay={
-            <LauncherIconsLoaderIcon
-              className={classNames(projectcss.all, sty.svg__z79)}
-              role={"img"}
-            />
-          }
-          loadingDisplay={
-            <LauncherIconsLoaderIcon
-              className={classNames(projectcss.all, sty.svg__fRj6R)}
-              role={"img"}
-            />
-          }
-          method={"GET"}
-          onError={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          onLoading={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          onSuccess={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          url={(() => {
-            try {
-              return $ctx.Growthbook.features["hamdast::katibe"]?.hide == false
-                ? "https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24"
-                : "https://apigw.paziresh24.com/v1/details-payment";
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        >
-          <ApiRequest
-            data-plasmic-name={"apiRequest2"}
-            data-plasmic-override={overrides.apiRequest2}
-            className={classNames("__wab_instance", sty.apiRequest2)}
-            errorDisplay={
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__aobux)}
-              >
-                {(() => {
-                  try {
-                    return !!$state.apiRequest.data;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text___1P9Nv
-                    )}
-                  >
-                    <React.Fragment>
-                      <React.Fragment>{""}</React.Fragment>
-                      {
-                        <span
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.span,
-                            projectcss.__wab_text,
-                            projectcss.plasmic_default__inline,
-                            sty.span__p6NyU
-                          )}
-                        >
-                          <React.Fragment>
-                            {(() => {
-                              try {
-                                return (() => {
-                                  if (
-                                    !$ctx.Growthbook.features["hamdast::katibe"]
-                                      ?.hide
-                                  ) {
-                                    return (
-                                      $state.apiRequest.data?.data?.balance / 10
-                                    )?.toLocaleString("fa-IR");
-                                  }
-                                  return (
-                                    $state.apiRequest.data[
-                                      $state.apiRequest.data?.length - 1
-                                    ]?.sum_Unpaid_Amount / 10
-                                  )?.toLocaleString("fa-IR");
-                                })();
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return "\u06f0";
-                                }
-                                throw e;
-                              }
-                            })()}
-                          </React.Fragment>
-                        </span>
-                      }
-                      <React.Fragment>
-                        {" \u062a\u0648\u0645\u0627\u0646"}
-                      </React.Fragment>
-                    </React.Fragment>
-                  </div>
-                ) : null}
-              </Stack__>
-            }
-            loadingDisplay={
-              <LauncherIconsLoaderIcon
-                className={classNames(projectcss.all, sty.svg___93OVl)}
-                role={"img"}
-              />
-            }
-            method={"GET"}
-            onError={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["apiRequest2", "error"]).apply(
-                null,
-                eventArgs
-              );
-            }}
-            onLoading={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "apiRequest2",
-                "loading"
-              ]).apply(null, eventArgs);
-            }}
-            onSuccess={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["apiRequest2", "data"]).apply(
-                null,
-                eventArgs
-              );
-            }}
-            url={(() => {
-              try {
-                return $ctx.Growthbook.features["hamdast::katibe"]?.hide ==
-                  false
-                  ? "https://apigw.paziresh24.com/v1/details-payment"
-                  : undefined;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-          >
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__ixcoN)}
-            >
-              {(() => {
-                try {
-                  return !!$state.apiRequest2.data;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__oZ7Ry
-                  )}
-                >
-                  <React.Fragment>
-                    <React.Fragment>{""}</React.Fragment>
-                    {
-                      <span
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.span,
-                          projectcss.__wab_text,
-                          projectcss.plasmic_default__inline,
-                          sty.span__wXIym
-                        )}
-                      >
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return (() => {
-                                if (
-                                  !$ctx.Growthbook.features["hamdast::katibe"]
-                                    ?.hide &&
-                                  $state.apiRequest2?.data?.[
-                                    $state.apiRequest2.data?.length - 1
-                                  ]?.sum_Unpaid_Amount > 0
-                                ) {
-                                  return (
-                                    $state.apiRequest2.data[
-                                      $state.apiRequest2.data?.length - 1
-                                    ]?.sum_Unpaid_Amount / 10
-                                  )?.toLocaleString("fa-IR");
-                                }
-                              })();
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "\u06f0";
-                              }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
-                      </span>
-                    }
-                    <React.Fragment>{" +"}</React.Fragment>
-                  </React.Fragment>
-                </div>
-              ) : null}
-              {(() => {
-                try {
-                  return !!$state.apiRequest.data;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__qGszz
-                  )}
-                >
-                  <React.Fragment>
-                    <React.Fragment>{""}</React.Fragment>
-                    {
-                      <span
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.span,
-                          projectcss.__wab_text,
-                          projectcss.plasmic_default__inline,
-                          sty.span___7R1H
-                        )}
-                      >
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return (() => {
-                                if (
-                                  !$ctx.Growthbook.features["hamdast::katibe"]
-                                    ?.hide
-                                ) {
-                                  return (
-                                    $state.apiRequest.data?.data?.balance / 10
-                                  )?.toLocaleString("fa-IR");
-                                }
-                                return (
-                                  $state.apiRequest.data[
-                                    $state.apiRequest.data?.length - 1
-                                  ]?.sum_Unpaid_Amount / 10
-                                )?.toLocaleString("fa-IR");
-                              })();
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "\u06f0";
-                              }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
-                      </span>
-                    }
-                    <React.Fragment>
-                      {" \u062a\u0648\u0645\u0627\u0646"}
-                    </React.Fragment>
-                  </React.Fragment>
-                </div>
-              ) : null}
-            </Stack__>
-            {(() => {
-              try {
-                return !$state.apiRequest2.data;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <LauncherIconsLoaderIcon
-                className={classNames(projectcss.all, sty.svg__s6WeK)}
-                role={"img"}
-              />
-            ) : null}
-          </ApiRequest>
-        </ApiRequest>
-        <LauncherIconsChevronLeftIcon
-          className={classNames(projectcss.all, sty.svg__wJkmF)}
-          role={"img"}
-        />
-      </Stack__>
       <Paziresh24Modal
         data-plasmic-name={"modal"}
         data-plasmic-override={overrides.modal}
@@ -812,7 +348,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                       const actionArgs = {
                         customFunction: async () => {
                           return (() => {
-                            return window.open(
+                            return globalThis.open(
                               "https://dr.paziresh24.com/setting/payment",
                               "_blank"
                             );
@@ -947,6 +483,488 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
         }
         trigger={null}
       />
+
+      <div
+        className={classNames(projectcss.all, sty.freeBox__dpTyg)}
+        onClick={async event => {
+          const $steps = {};
+
+          $steps["updateModalOpen"] =
+            $ctx.Growthbook.features["hamdast::katibe"]?.hide === false &&
+            $state.apiRequest?.data?.data?.balance > 0 &&
+            $state.apiRequest2?.data?.[$state.apiRequest2?.data?.length - 1]
+              ?.sum_Unpaid_Amount > 0
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["modal", "open"]
+                    },
+                    operation: 0,
+                    value: true
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+          if (
+            $steps["updateModalOpen"] != null &&
+            typeof $steps["updateModalOpen"] === "object" &&
+            typeof $steps["updateModalOpen"].then === "function"
+          ) {
+            $steps["updateModalOpen"] = await $steps["updateModalOpen"];
+          }
+
+          $steps["goToDashboardAppsWalletPayment"] =
+            $ctx.Growthbook.features["hamdast::katibe"]?.hide === true
+              ? (() => {
+                  const actionArgs = {
+                    destination: "/dashboard/apps/wallet/payment/"
+                  };
+                  return (({ destination }) => {
+                    if (
+                      typeof destination === "string" &&
+                      destination.startsWith("#")
+                    ) {
+                      document
+                        .getElementById(destination.substr(1))
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      __nextRouter?.push(destination);
+                    }
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+          if (
+            $steps["goToDashboardAppsWalletPayment"] != null &&
+            typeof $steps["goToDashboardAppsWalletPayment"] === "object" &&
+            typeof $steps["goToDashboardAppsWalletPayment"].then === "function"
+          ) {
+            $steps["goToDashboardAppsWalletPayment"] = await $steps[
+              "goToDashboardAppsWalletPayment"
+            ];
+          }
+
+          $steps["goToDashboardAppsKatibeBills"] =
+            $ctx.Growthbook.features["hamdast::katibe"]?.hide === false &&
+            !$state.apiRequest2?.data?.[$state.apiRequest2?.data?.length - 1]
+              ?.sum_Unpaid_Amount
+              ? (() => {
+                  const actionArgs = {
+                    destination: "/dashboard/apps/katibe/bills/"
+                  };
+                  return (({ destination }) => {
+                    if (
+                      typeof destination === "string" &&
+                      destination.startsWith("#")
+                    ) {
+                      document
+                        .getElementById(destination.substr(1))
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      __nextRouter?.push(destination);
+                    }
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+          if (
+            $steps["goToDashboardAppsKatibeBills"] != null &&
+            typeof $steps["goToDashboardAppsKatibeBills"] === "object" &&
+            typeof $steps["goToDashboardAppsKatibeBills"].then === "function"
+          ) {
+            $steps["goToDashboardAppsKatibeBills"] = await $steps[
+              "goToDashboardAppsKatibeBills"
+            ];
+          }
+        }}
+      >
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__nrZdj)}
+        >
+          <LauncherIconsWalletIcon
+            className={classNames(projectcss.all, sty.svg__kOroc)}
+            role={"img"}
+          />
+
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__vx14S
+            )}
+          >
+            {"\u06a9\u06cc\u0641 \u067e\u0648\u0644"}
+          </div>
+        </Stack__>
+        <Stack__
+          as={"div"}
+          hasGap={true}
+          className={classNames(projectcss.all, sty.freeBox__j27OP)}
+        >
+          <ApiRequest
+            data-plasmic-name={"apiRequest"}
+            data-plasmic-override={overrides.apiRequest}
+            className={classNames("__wab_instance", sty.apiRequest)}
+            errorDisplay={
+              <LauncherIconsLoaderIcon
+                className={classNames(projectcss.all, sty.svg__z79)}
+                role={"img"}
+              />
+            }
+            loadingDisplay={
+              <LauncherIconsLoaderIcon
+                className={classNames(projectcss.all, sty.svg__fRj6R)}
+                role={"img"}
+              />
+            }
+            method={"GET"}
+            onError={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
+                null,
+                eventArgs
+              );
+            }}
+            onLoading={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "apiRequest",
+                "loading"
+              ]).apply(null, eventArgs);
+            }}
+            onSuccess={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+                null,
+                eventArgs
+              );
+            }}
+            url={(() => {
+              try {
+                return $ctx.Growthbook.features["hamdast::katibe"]?.hide ==
+                  false
+                  ? "https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24"
+                  : "https://apigw.paziresh24.com/v1/details-payment";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+          >
+            {(() => {
+              try {
+                return (
+                  $ctx.Growthbook.features["hamdast::katibe"]?.hide == true
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__iL1Tm)}
+              >
+                {(() => {
+                  try {
+                    return !!$state.apiRequest.data;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__hl19I
+                    )}
+                  >
+                    <React.Fragment>
+                      <React.Fragment>{""}</React.Fragment>
+                      {
+                        <span
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.span,
+                            projectcss.__wab_text,
+                            projectcss.plasmic_default__inline,
+                            sty.span__bsFd
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return (
+                                  $state.apiRequest?.data?.[
+                                    $state.apiRequest?.data?.length - 1
+                                  ]?.sum_Unpaid_Amount / 10
+                                )?.toLocaleString("fa-IR");
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "\u06f0";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        </span>
+                      }
+                      <React.Fragment>
+                        {" \u062a\u0648\u0645\u0627\u0646"}
+                      </React.Fragment>
+                    </React.Fragment>
+                  </div>
+                ) : null}
+              </Stack__>
+            ) : null}
+            {(() => {
+              try {
+                return (
+                  $ctx.Growthbook.features["hamdast::katibe"]?.hide == false
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <div className={classNames(projectcss.all, sty.freeBox__jBl8I)}>
+                <ApiRequest
+                  data-plasmic-name={"apiRequest2"}
+                  data-plasmic-override={overrides.apiRequest2}
+                  className={classNames("__wab_instance", sty.apiRequest2)}
+                  errorDisplay={
+                    <LauncherIconsLoaderIcon
+                      className={classNames(projectcss.all, sty.svg__oqAxi)}
+                      role={"img"}
+                    />
+                  }
+                  loadingDisplay={
+                    <LauncherIconsLoaderIcon
+                      className={classNames(projectcss.all, sty.svg___93OVl)}
+                      role={"img"}
+                    />
+                  }
+                  method={"GET"}
+                  onError={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "apiRequest2",
+                      "error"
+                    ]).apply(null, eventArgs);
+                  }}
+                  onLoading={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "apiRequest2",
+                      "loading"
+                    ]).apply(null, eventArgs);
+                  }}
+                  onSuccess={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "apiRequest2",
+                      "data"
+                    ]).apply(null, eventArgs);
+                  }}
+                  url={(() => {
+                    try {
+                      return "https://apigw.paziresh24.com/v1/details-payment";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                >
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__ixcoN)}
+                  >
+                    {(() => {
+                      try {
+                        return (
+                          $state.apiRequest2?.data?.[
+                            $state.apiRequest2.data?.length - 1
+                          ]?.sum_Unpaid_Amount > 0
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__oZ7Ry
+                        )}
+                      >
+                        <React.Fragment>
+                          <React.Fragment>{""}</React.Fragment>
+                          {
+                            <span
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.span,
+                                projectcss.__wab_text,
+                                projectcss.plasmic_default__inline,
+                                sty.span__wXIym
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return (
+                                      $state.apiRequest2.data[
+                                        $state.apiRequest2.data?.length - 1
+                                      ]?.sum_Unpaid_Amount / 10
+                                    )?.toLocaleString("fa-IR");
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "\u06f0";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </span>
+                          }
+                          <React.Fragment>{" +"}</React.Fragment>
+                        </React.Fragment>
+                      </div>
+                    ) : null}
+                    {(() => {
+                      try {
+                        return !!$state.apiRequest.data;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__qGszz
+                        )}
+                      >
+                        <React.Fragment>
+                          <React.Fragment>{""}</React.Fragment>
+                          {
+                            <span
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.span,
+                                projectcss.__wab_text,
+                                projectcss.plasmic_default__inline,
+                                sty.span___7R1H
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return (() => {
+                                      return (
+                                        ($state.apiRequest.data?.data
+                                          ?.balance ?? 0) / 10
+                                      )?.toLocaleString("fa-IR");
+                                    })();
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "\u06f0";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </span>
+                          }
+                          <React.Fragment>
+                            {" \u062a\u0648\u0645\u0627\u0646"}
+                          </React.Fragment>
+                        </React.Fragment>
+                      </div>
+                    ) : null}
+                  </Stack__>
+                  {(() => {
+                    try {
+                      return !$state.apiRequest2.data;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <LauncherIconsLoaderIcon
+                      className={classNames(projectcss.all, sty.svg__s6WeK)}
+                      role={"img"}
+                    />
+                  ) : null}
+                </ApiRequest>
+              </div>
+            ) : null}
+          </ApiRequest>
+          <LauncherIconsChevronLeftIcon
+            className={classNames(projectcss.all, sty.svg__wJkmF)}
+            role={"img"}
+          />
+        </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -954,25 +972,25 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "apiRequest",
-    "apiRequest2",
     "modal",
-    "launcherComponentsSeparator"
+    "launcherComponentsSeparator",
+    "apiRequest",
+    "apiRequest2"
   ],
-  apiRequest: ["apiRequest", "apiRequest2"],
-  apiRequest2: ["apiRequest2"],
   modal: ["modal", "launcherComponentsSeparator"],
-  launcherComponentsSeparator: ["launcherComponentsSeparator"]
+  launcherComponentsSeparator: ["launcherComponentsSeparator"],
+  apiRequest: ["apiRequest", "apiRequest2"],
+  apiRequest2: ["apiRequest2"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  apiRequest: typeof ApiRequest;
-  apiRequest2: typeof ApiRequest;
   modal: typeof Paziresh24Modal;
   launcherComponentsSeparator: typeof LauncherComponentsSeparator;
+  apiRequest: typeof ApiRequest;
+  apiRequest2: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1035,12 +1053,12 @@ export const PlasmicLauncherBlocksWallet = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    apiRequest: makeNodeComponent("apiRequest"),
-    apiRequest2: makeNodeComponent("apiRequest2"),
     modal: makeNodeComponent("modal"),
     launcherComponentsSeparator: makeNodeComponent(
       "launcherComponentsSeparator"
     ),
+    apiRequest: makeNodeComponent("apiRequest"),
+    apiRequest2: makeNodeComponent("apiRequest2"),
 
     // Metadata about props expected for PlasmicLauncherBlocksWallet
     internalVariantProps: PlasmicLauncherBlocksWallet__VariantProps,
