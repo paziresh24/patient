@@ -302,19 +302,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             }
           />
         ) : null}
-        {(() => {
-          try {
-            return $ctx.auth.info?.provider?.job_title !== "doctor";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
-          }
-        })() ? (
+        {false ? (
           <LauncherComponentsApp
             avatar={
               "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom%2Ficon.png"
