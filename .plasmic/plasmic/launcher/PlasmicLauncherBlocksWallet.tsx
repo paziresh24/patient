@@ -340,7 +340,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
 
             <div
               className={classNames(projectcss.all, sty.freeBox__o8LB)}
-              onAbort={async event => {
+              onClick={async event => {
                 const $steps = {};
 
                 $steps["runCode"] = true
