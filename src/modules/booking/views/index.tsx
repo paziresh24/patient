@@ -3,11 +3,10 @@ import { toast } from 'react-hot-toast';
 
 // Apis
 import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
-import { useSymptoms } from '@/common/apis/services/booking/symptoms';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
-import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { uniqMessengers } from '../functions/uniqMessengers';
@@ -22,7 +21,6 @@ import TextField from '@/common/components/atom/textField';
 import InfoIcon from '@/common/components/icons/info';
 import InputMask from 'react-input-mask';
 import Recommend from '../components/recommend';
-import SelectSymptoms from '../components/selectSymptoms';
 
 // Booking Steps
 import Wrapper from '../components/wrapper';
@@ -73,7 +71,6 @@ import useBooking from '../hooks/booking';
 import useFirstFreeTime from '../hooks/selectTime/useFirstFreeTime';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
-import { Symptoms } from '../types/selectSymptoms';
 import { growthbook } from 'src/pages/_app';
 import { template, templateSettings } from 'lodash';
 import { useProviders } from '@/modules/profile/apis/providers';
@@ -142,7 +139,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   }>('events::book', {});
   const [timeId, setTimeId] = useState('');
   const [selectedTime, setSelectedTime] = useState(0);
-  const symptomsAutoComplete = useSymptoms();
   const bookRequest = useBookRequest();
   const getTurnTimeout = useRef<any>();
   const messengers = useFeatureValue<any>('channeldescription', defaultMessengers);
@@ -172,9 +168,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [insuranceNumber, setInsuranceNumber] = useState('');
   const [insuranceName, setInsuranceName] = useState('');
   const [firstFreeTimeErrorText, setFirstFreeTimeErrorText] = useState('');
-  const [selectedSymptoms, setSelectedSymptoms] = useState<Symptoms[]>([]);
-  const [symptoms, setSymptoms] = useState<Symptoms[]>([]);
-  const [symptomSearchText, setSymptomSearchText] = useState('');
   const { handleBook, isLoading: bookLoading } = useBooking();
   const getNationalCodeConfirmation = useGetNationalCodeConfirmation();
   const inquiryIdentityInformation = useInquiryIdentityInformation();
@@ -221,15 +214,6 @@ const BookingSteps = (props: BookingStepsProps) => {
       setStep(defaultStep?.step ?? 'SELECT_CENTER');
     }
   }, [centers, defaultStep]);
-
-  useEffect(() => {
-    const fetchSymptomsAutoComplete = async () => {
-      const { data } = await symptomsAutoComplete.mutateAsync(symptomSearchText || profile?.group_expertises?.[0]?.name);
-      data.length && setSymptoms(data);
-      return data;
-    };
-    profile && fetchSymptomsAutoComplete();
-  }, [symptomSearchText, profile]);
 
   useEffect(() => {
     getProvider.mutate({
@@ -303,7 +287,6 @@ const BookingSteps = (props: BookingStepsProps) => {
           ...user,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
         },
-        selectedSymptoms: selectedSymptoms.map(symptoms => symptoms.title),
       },
       {
         onSuccess(data) {
@@ -672,21 +655,6 @@ const BookingSteps = (props: BookingStepsProps) => {
               <Text fontSize="sm">{center?.user_center_desk}</Text>
             </div>
           )}
-          <Text fontWeight="bold" className="block mb-3">
-            برای درمان چه بیماری به پزشک مراجعه می‌کنید؟
-          </Text>
-          <SelectSymptoms
-            symptoms={symptoms}
-            title="اضافه کردن نام بیماری"
-            placeholder="اضافه کردن نام بیماری"
-            modalTitle="نام بیماری"
-            listTitle=" پیشنهادها"
-            setSelectedSymptoms={setSelectedSymptoms}
-            selectedSymptoms={selectedSymptoms}
-            setSearchText={setSymptomSearchText}
-            searchText={symptomSearchText}
-            className="flex items-center gap-1 mb-4 cursor-pointer text-primary"
-          />
           {center?.id === CENTERS.CONSULT && !shouldShowMessengers && (
             <div className="p-2 mb-3 rounded-md bg-slate-100">
               <Text

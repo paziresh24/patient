@@ -131,6 +131,25 @@ const Receipt = () => {
       center_id: centerId,
     });
 
+    if (bookDetailsData?.doctor?.id) {
+      splunkInstance('booking').sendEvent({
+        group: 'view-receipt-page',
+        type: 'view-receipt-page',
+        event: {
+          doctor_id: bookDetailsData?.doctor?.id,
+          slug: bookDetailsData?.doctor?.slug,
+          server_id: bookDetailsData?.doctor?.server_id,
+          doctor_name: doctorName,
+          book_id: bookDetailsData.book_id,
+          reference_code: bookDetailsData.reference_code,
+          book_date: bookDetailsData.book_time_strings,
+          center_id: centerId,
+          user_id: user?.id,
+          is_doctor: user?.provider?.job_title === 'doctor',
+        },
+      });
+    }
+
     return () => {
       growthbook.setAttributes({
         ...growthbook.getAttributes(),

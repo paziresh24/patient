@@ -115,7 +115,7 @@ export const OnlineVisitPromote = () => {
           </div>
         )}
         <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
-          مشاهده سایر سرویس دهندگان آنلاین
+          مشاهده سایر پزشکان آنلاین
         </Button>
       </Modal>
     </>
