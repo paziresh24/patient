@@ -212,16 +212,13 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
               className={classNames("__wab_instance", sty.button__cCw8U)}
               link={(() => {
                 try {
-                  return (() => {
-                    const encodedUrl = globalThis.location.href
-                      .replace(/#/g, "%23")
-                      .replace(/&/g, "%26")
-                      .replace(/:/g, "%3A")
-                      .replace(/\//g, "%2F")
-                      .replace(/\?/g, "%3F");
-                    const reportUrl = `https://apigw.paziresh24.com/v1/hami/report?searchCardId=${$props.searchCardId}&name=${$props.title}&url=${encodedUrl}`;
-                    return reportUrl;
-                  })();
+                  return (
+                    `https://apigw.paziresh24.com/v1/crowd-source?slug=` +
+                    $props.destinationPageUrl
+                      .replace(/https:\/\/[^\/]+\/dr\//, "")
+                      .replace(/\/$/, "") +
+                    `&origin=search`
+                  );
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -274,7 +271,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
                             e instanceof TypeError ||
                             e?.plasmicType === "PlasmicUndefinedDataError"
                           ) {
-                            return "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc \u0627\u06cc\u0646 \u0646\u062a\u06cc\u062c\u0647 \u0628\u0627 \u0628\u0642\u06cc\u0647";
+                            return " ";
                           }
                           throw e;
                         }
