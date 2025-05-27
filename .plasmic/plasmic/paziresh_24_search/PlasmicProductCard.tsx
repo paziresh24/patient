@@ -2070,7 +2070,10 @@ function PlasmicProductCard__RenderFunc(props: {
               return (() => {
                 if (
                   (!$ctx.Growthbook ||
-                    !$state.cardActionSduiV2UiRequest.data) &&
+                    !(
+                      $state.cardActionSduiV2UiRequest.data
+                        .search_result_card_ui[0]?.data?.actions?.length > 0
+                    )) &&
                   $props.actionButtons.length > 0
                 ) {
                   return true;
