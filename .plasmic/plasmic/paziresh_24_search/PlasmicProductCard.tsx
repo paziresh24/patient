@@ -2068,25 +2068,24 @@ function PlasmicProductCard__RenderFunc(props: {
           {(() => {
             try {
               return (() => {
-                if (
+                const isGrowthbookReady = $ctx.Growthbook?.isReady === true;
+                const areOldActionButtonsAvailable =
+                  $props.actionButtons.length > 0;
+                const isNewSDUIActionsFeatureFlagEnabled =
+                  $ctx.Growthbook?.features?.["theme-config"]?.[
+                    "search_result:show_card_action_sdui_v2"
+                  ] === true;
+                const isNewSDUIActionsDataAvailable =
+                  $state.cardActionSduiV2UiRequest?.data
+                    ?.search_result_card_ui?.[0]?.data?.actions?.length > 0;
+                return (
+                  areOldActionButtonsAvailable &&
                   (!$ctx.Growthbook ||
                     !(
-                      $state.cardActionSduiV2UiRequest.data
-                        .search_result_card_ui[0]?.data?.actions?.length > 0
-                    )) &&
-                  $props.actionButtons.length > 0
-                ) {
-                  return true;
-                }
-                return (
-                  $props.actionButtons.length > 0 &&
-                  !(
-                    $ctx.Growthbook.features["theme-config"][
-                      "search_result:show_card_action_sdui_v2"
-                    ] &&
-                    $state.cardActionSduiV2UiRequest.data
-                      ?.search_result_card_ui[0]?.data?.actions !== undefined
-                  )
+                      isGrowthbookReady &&
+                      isNewSDUIActionsFeatureFlagEnabled &&
+                      isNewSDUIActionsDataAvailable
+                    ))
                 );
               })();
             } catch (e) {
