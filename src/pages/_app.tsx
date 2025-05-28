@@ -90,7 +90,7 @@ function MyApp(props: AppProps) {
   useEffect(() => {
     if (isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted'))) {
       window.najvaUserSubscribed = function (najva_user_token: string) {
-        axios.post('https://hamdast.paziresh24.com/api/v1/notification/subscribers/', {
+        axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
           user_id: user.id,
           subscriber_token: najva_user_token,
         });
