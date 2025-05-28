@@ -2521,7 +2521,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -2876,6 +2877,18 @@
           "name": "Factor",
           "displayName": "Factor",
           "componentImportPath": "@/modules/booking/views/factor/wrapper"
+        },
+        {
+          "id": "y10POp-bAKbl",
+          "name": "DoctorInvoiceNotice",
+          "displayName": "DoctorInvoiceNotice",
+          "componentImportPath": "@/modules/booking/components/factor/doctorInvoiceNotice"
+        },
+        {
+          "id": "VxUqsqelQygb",
+          "name": "AppFrame",
+          "displayName": "AppFrame",
+          "componentImportPath": "@/modules/hamdast/appFrame"
         }
       ],
       "customFunctions": [
@@ -2886,8 +2899,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
