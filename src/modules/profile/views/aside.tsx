@@ -249,6 +249,7 @@ export const aside = (data: any) => {
             <Fragment
               name="AddressesWrapper"
               props={{
+                ...profileData,
                 slug: seo.slug,
                 children: centers
                   .filter((center: any) => center.id !== CENTERS.CONSULT)
@@ -257,6 +258,7 @@ export const aside = (data: any) => {
                       key={center.id}
                       name="AddressesCard"
                       props={{
+                        ...profileData,
                         title: center.name,
                         map: center.map,
                         centerId: center.id,
