@@ -629,24 +629,7 @@ function PlasmicProfileActions__RenderFunc(props: {
           onClick={async event => {
             const $steps = {};
 
-            $steps["login"] = !$ctx.auth?.isLogin
-              ? (() => {
-                  const actionArgs = { args: [] };
-                  return $globalActions["AuthGlobalContext.login"]?.apply(
-                    null,
-                    [...actionArgs.args]
-                  );
-                })()
-              : undefined;
-            if (
-              $steps["login"] != null &&
-              typeof $steps["login"] === "object" &&
-              typeof $steps["login"].then === "function"
-            ) {
-              $steps["login"] = await $steps["login"];
-            }
-
-            $steps["goToPage"] = $ctx.auth?.isLogin
+            $steps["goToPage"] = true
               ? (() => {
                   const actionArgs = {
                     destination: (() => {
