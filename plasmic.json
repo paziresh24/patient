@@ -2623,19 +2623,6 @@
           "componentType": "component"
         },
         {
-          "id": "xUh1xJ9SUAar",
-          "name": "BookingAddresses",
-          "type": "managed",
-          "projectId": "8NbkXymcLwvMUC2yXeRrWk",
-          "renderModuleFilePath": "plasmic/paziresh_24_booking/PlasmicBookingAddresses.tsx",
-          "importSpec": {
-            "modulePath": "BookingAddresses.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_booking/PlasmicBookingAddresses.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
           "id": "z1k0-vbkFtby",
           "name": "BookingAddressesCard",
           "type": "managed",
@@ -2899,8 +2886,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -3848,7 +3834,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
