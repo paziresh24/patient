@@ -136,6 +136,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -221,7 +222,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `https://survey.porsline.ir/s/35ggjRX?slug=${$props.slug}&user_id=${$ctx.auth?.info?.id}`;
+                        return `https://apigw.paziresh24.com/v1/crowd-source?slug=${$props.slug}&origin=profile`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
