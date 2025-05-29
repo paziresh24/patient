@@ -2521,7 +2521,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -2618,19 +2619,6 @@
             "modulePath": "BookingCenterListService.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_booking/PlasmicBookingCenterListService.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "xUh1xJ9SUAar",
-          "name": "BookingAddresses",
-          "type": "managed",
-          "projectId": "8NbkXymcLwvMUC2yXeRrWk",
-          "renderModuleFilePath": "plasmic/paziresh_24_booking/PlasmicBookingAddresses.tsx",
-          "importSpec": {
-            "modulePath": "BookingAddresses.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_booking/PlasmicBookingAddresses.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
@@ -2876,6 +2864,18 @@
           "name": "Factor",
           "displayName": "Factor",
           "componentImportPath": "@/modules/booking/views/factor/wrapper"
+        },
+        {
+          "id": "y10POp-bAKbl",
+          "name": "DoctorInvoiceNotice",
+          "displayName": "DoctorInvoiceNotice",
+          "componentImportPath": "@/modules/booking/components/factor/doctorInvoiceNotice"
+        },
+        {
+          "id": "VxUqsqelQygb",
+          "name": "AppFrame",
+          "displayName": "AppFrame",
+          "componentImportPath": "@/modules/hamdast/appFrame"
         }
       ],
       "customFunctions": [
@@ -3813,6 +3813,18 @@
           "name": "Factor",
           "displayName": "Factor",
           "componentImportPath": "@/modules/booking/views/factor/wrapper"
+        },
+        {
+          "id": "A4aZHXv0NpQn",
+          "name": "DoctorInvoiceNotice",
+          "displayName": "DoctorInvoiceNotice",
+          "componentImportPath": "@/modules/booking/components/factor/doctorInvoiceNotice"
+        },
+        {
+          "id": "y-x9fbF5uKVx",
+          "name": "AppFrame",
+          "displayName": "AppFrame",
+          "componentImportPath": "@/modules/hamdast/appFrame"
         }
       ],
       "customFunctions": [
@@ -3823,8 +3835,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "6HBcNwr8dz9LuS1Qe36xa5",

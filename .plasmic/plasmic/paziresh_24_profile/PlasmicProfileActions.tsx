@@ -146,6 +146,7 @@ function PlasmicProfileActions__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -628,29 +629,12 @@ function PlasmicProfileActions__RenderFunc(props: {
           onClick={async event => {
             const $steps = {};
 
-            $steps["login"] = !$ctx.auth?.isLogin
-              ? (() => {
-                  const actionArgs = { args: [] };
-                  return $globalActions["AuthGlobalContext.login"]?.apply(
-                    null,
-                    [...actionArgs.args]
-                  );
-                })()
-              : undefined;
-            if (
-              $steps["login"] != null &&
-              typeof $steps["login"] === "object" &&
-              typeof $steps["login"].then === "function"
-            ) {
-              $steps["login"] = await $steps["login"];
-            }
-
-            $steps["goToPage"] = $ctx.auth?.isLogin
+            $steps["goToPage"] = true
               ? (() => {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `https://survey.porsline.ir/s/35ggjRX?slug=${$props.slug}&user_id=${$ctx.auth?.info?.id}`;
+                        return `https://apigw.paziresh24.com/v1/crowd-source?slug=${$props.slug}&origin=profile`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||

@@ -99,6 +99,7 @@ export type PlasmicBookingAddressesCard__ArgsType = {
   centerName?: string;
   slug?: string;
   children?: React.ReactNode;
+  information?: any;
 };
 type ArgPropType = keyof PlasmicBookingAddressesCard__ArgsType;
 export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
@@ -113,7 +114,8 @@ export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
   "userCenterId",
   "centerName",
   "slug",
-  "children"
+  "children",
+  "information"
 );
 
 export type PlasmicBookingAddressesCard__OverridesType = {
@@ -135,6 +137,7 @@ export interface DefaultBookingAddressesCardProps {
   centerName?: string;
   slug?: string;
   children?: React.ReactNode;
+  information?: any;
   className?: string;
 }
 
@@ -172,6 +175,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -229,7 +233,9 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return $props.title;
+                  return $props.centerType == "office"
+                    ? `مطب ${$props.information.name} ${$props.information.family}`
+                    : $props.title;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
