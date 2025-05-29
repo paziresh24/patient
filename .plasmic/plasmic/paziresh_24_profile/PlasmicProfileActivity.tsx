@@ -206,332 +206,220 @@ function PlasmicProfileActivity__RenderFunc(props: {
   });
 
   return (
-    <div
-      data-plasmic-name={"root"}
-      data-plasmic-override={overrides.root}
-      data-plasmic-root={true}
-      data-plasmic-for-node={forNode}
-      className={classNames(
-        projectcss.all,
-        projectcss.root_reset,
-        projectcss.plasmic_default_styles,
-        projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        sty.root
-      )}
-    >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__fYPi)}
-        dir={"rtl"}
+    (() => {
+      try {
+        return $state.allVisitOnlineCountBook.data !== null;
+      } catch (e) {
+        if (
+          e instanceof TypeError ||
+          e?.plasmicType === "PlasmicUndefinedDataError"
+        ) {
+          return true;
+        }
+        throw e;
+      }
+    })() ? (
+      <div
+        data-plasmic-name={"root"}
+        data-plasmic-override={overrides.root}
+        data-plasmic-root={true}
+        data-plasmic-for-node={forNode}
+        className={classNames(
+          projectcss.all,
+          projectcss.root_reset,
+          projectcss.plasmic_default_styles,
+          projectcss.plasmic_mixins,
+          projectcss.plasmic_tokens,
+          plasmic_fragment_design_system_css.plasmic_tokens,
+          sty.root
+        )}
       >
-        <h2
-          data-plasmic-name={"h2"}
-          data-plasmic-override={overrides.h2}
-          className={classNames(
-            projectcss.all,
-            projectcss.h2,
-            projectcss.__wab_text,
-            sty.h2
-          )}
-        >
-          {"\u0641\u0639\u0627\u0644\u06cc\u062a \u0647\u0627"}
-        </h2>
         <Stack__
           as={"div"}
           hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__a0EzN)}
+          className={classNames(projectcss.all, sty.freeBox__fYPi)}
+          dir={"rtl"}
         >
-          <ApiRequest
-            data-plasmic-name={"removedVisitOnlineCountBook"}
-            data-plasmic-override={overrides.removedVisitOnlineCountBook}
-            children={null}
+          <h2
+            data-plasmic-name={"h2"}
+            data-plasmic-override={overrides.h2}
             className={classNames(
-              "__wab_instance",
-              sty.removedVisitOnlineCountBook
+              projectcss.all,
+              projectcss.h2,
+              projectcss.__wab_text,
+              sty.h2
             )}
-            config={{
-              headers: {
-                Authorization: "Basic cHJvZmlsZTpwcm9maWxlMjUwMTUwMTU="
-              }
-            }}
-            errorDisplay={null}
-            loadingDisplay={null}
-            method={"GET"}
-            onError={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "removedVisitOnlineCountBook",
-                "error"
-              ]).apply(null, eventArgs);
-            }}
-            onLoading={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "removedVisitOnlineCountBook",
-                "loading"
-              ]).apply(null, eventArgs);
-            }}
-            onSuccess={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "removedVisitOnlineCountBook",
-                "data"
-              ]).apply(null, eventArgs);
-            }}
-            params={(() => {
+          >
+            {"\u0641\u0639\u0627\u0644\u06cc\u062a \u0647\u0627"}
+          </h2>
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox__a0EzN)}
+          >
+            <ApiRequest
+              data-plasmic-name={"removedVisitOnlineCountBook"}
+              data-plasmic-override={overrides.removedVisitOnlineCountBook}
+              children={null}
+              className={classNames(
+                "__wab_instance",
+                sty.removedVisitOnlineCountBook
+              )}
+              config={{
+                headers: {
+                  Authorization: "Basic cHJvZmlsZTpwcm9maWxlMjUwMTUwMTU="
+                }
+              }}
+              errorDisplay={null}
+              loadingDisplay={null}
+              method={"GET"}
+              onError={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "removedVisitOnlineCountBook",
+                  "error"
+                ]).apply(null, eventArgs);
+              }}
+              onLoading={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "removedVisitOnlineCountBook",
+                  "loading"
+                ]).apply(null, eventArgs);
+              }}
+              onSuccess={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "removedVisitOnlineCountBook",
+                  "data"
+                ]).apply(null, eventArgs);
+              }}
+              params={(() => {
+                try {
+                  return {
+                    user_center_id: $props.centers.find(
+                      center => center.id === "5532"
+                    ).user_center_id,
+                    payment_status_in: "4",
+                    from_less_than: Math.floor(
+                      new Date().setHours(0, 0, 0, 0) / 1000
+                    ),
+                    from_greather_than: Math.floor(
+                      (new Date().setHours(0, 0, 0, 0) -
+                        30 * 24 * 60 * 60 * 1000) /
+                        1000
+                    ),
+                    deleted_at_greater_than: "from"
+                  };
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              url={"https://apigw.paziresh24.com/v2/appointments/count"}
+            />
+
+            <ApiRequest
+              data-plasmic-name={"allVisitOnlineCountBook"}
+              data-plasmic-override={overrides.allVisitOnlineCountBook}
+              children={null}
+              className={classNames(
+                "__wab_instance",
+                sty.allVisitOnlineCountBook
+              )}
+              config={{
+                headers: {
+                  Authorization: "Basic cHJvZmlsZTpwcm9maWxlMjUwMTUwMTU="
+                }
+              }}
+              errorDisplay={null}
+              loadingDisplay={null}
+              method={"GET"}
+              onError={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "allVisitOnlineCountBook",
+                  "error"
+                ]).apply(null, eventArgs);
+              }}
+              onLoading={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "allVisitOnlineCountBook",
+                  "loading"
+                ]).apply(null, eventArgs);
+              }}
+              onSuccess={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "allVisitOnlineCountBook",
+                  "data"
+                ]).apply(null, eventArgs);
+              }}
+              params={(() => {
+                try {
+                  return {
+                    user_center_id: $props.centers.find(
+                      center => center.id === "5532"
+                    ).user_center_id,
+                    payment_status_in: "3,4,5,6,7,8,9",
+                    from_less_than: Math.floor(
+                      new Date().setHours(0, 0, 0, 0) / 1000
+                    ),
+                    from_greather_than: Math.floor(
+                      (new Date().setHours(0, 0, 0, 0) -
+                        30 * 24 * 60 * 60 * 1000) /
+                        1000
+                    )
+                  };
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+              url={"https://apigw.paziresh24.com/v2/appointments/count"}
+            />
+
+            {(() => {
               try {
-                return {
-                  user_center_id: $props.centers.find(
-                    center => center.id === "5532"
-                  ).user_center_id,
-                  payment_status_in: "4",
-                  from_less_than: Math.floor(
-                    new Date().setHours(0, 0, 0, 0) / 1000
-                  ),
-                  from_greather_than: Math.floor(
-                    (new Date().setHours(0, 0, 0, 0) -
-                      30 * 24 * 60 * 60 * 1000) /
-                      1000
-                  ),
-                  deleted_at_greater_than: "from"
-                };
+                return $props.onlineVisit.enabled;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return undefined;
+                  return true;
                 }
                 throw e;
               }
-            })()}
-            url={"https://apigw.paziresh24.com/v2/appointments/count"}
-          />
-
-          <ApiRequest
-            data-plasmic-name={"allVisitOnlineCountBook"}
-            data-plasmic-override={overrides.allVisitOnlineCountBook}
-            children={null}
-            className={classNames(
-              "__wab_instance",
-              sty.allVisitOnlineCountBook
-            )}
-            config={{
-              headers: {
-                Authorization: "Basic cHJvZmlsZTpwcm9maWxlMjUwMTUwMTU="
-              }
-            }}
-            errorDisplay={null}
-            loadingDisplay={null}
-            method={"GET"}
-            onError={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "allVisitOnlineCountBook",
-                "error"
-              ]).apply(null, eventArgs);
-            }}
-            onLoading={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "allVisitOnlineCountBook",
-                "loading"
-              ]).apply(null, eventArgs);
-            }}
-            onSuccess={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "allVisitOnlineCountBook",
-                "data"
-              ]).apply(null, eventArgs);
-            }}
-            params={(() => {
-              try {
-                return {
-                  user_center_id: $props.centers.find(
-                    center => center.id === "5532"
-                  ).user_center_id,
-                  payment_status_in: "3,4,5,6,7,8,9",
-                  from_less_than: Math.floor(
-                    new Date().setHours(0, 0, 0, 0) / 1000
-                  ),
-                  from_greather_than: Math.floor(
-                    (new Date().setHours(0, 0, 0, 0) -
-                      30 * 24 * 60 * 60 * 1000) /
-                      1000
-                  )
-                };
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            url={"https://apigw.paziresh24.com/v2/appointments/count"}
-          />
-
-          {(() => {
-            try {
-              return $props.onlineVisit.enabled;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___6Sb1M)}
-            >
-              <Icon9Icon
-                className={classNames(projectcss.all, sty.svg__idGbo)}
-                role={"img"}
-              />
-
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__zpTr
-                )}
-              >
-                <div
-                  className={projectcss.__wab_expr_html_text}
-                  dangerouslySetInnerHTML={{
-                    __html: (() => {
-                      try {
-                        return `<b>${$props.history.count_of_consult_books}</b> مشاوره موفق`;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "";
-                        }
-                        throw e;
-                      }
-                    })()
-                  }}
-                />
-              </div>
-            </Stack__>
-          ) : null}
-          {(() => {
-            try {
-              return (
-                $props.onlineVisit.enabled &&
-                ($state.removedVisitOnlineCountBook?.loading ||
-                  $state?.allVisitOnlineCountBook?.loading ||
-                  ($state.allVisitOnlineCountBook.data?.count_book > 0 &&
-                    $state.removedVisitOnlineCountBook.data?.count_book >= 0))
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__chLj)}
-            >
-              <Icon10Icon
-                className={classNames(projectcss.all, sty.svg__jfAu9)}
-                role={"img"}
-              />
-
+            })() ? (
               <Stack__
                 as={"div"}
                 hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__s7TW)}
+                className={classNames(projectcss.all, sty.freeBox___6Sb1M)}
               >
-                {(() => {
-                  try {
-                    return (
-                      $state.allVisitOnlineCountBook.loading ||
-                      $state.removedVisitOnlineCountBook.loading
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <Icon11Icon
-                    className={classNames(
-                      projectcss.all,
-                      sty.svg__rFwLw,
-                      "loader"
-                    )}
-                    role={"img"}
-                  />
-                ) : null}
-                {(() => {
-                  try {
-                    return (
-                      !$state.allVisitOnlineCountBook.loading &&
-                      !$state.removedVisitOnlineCountBook.loading
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })() ? (
+                <Icon9Icon
+                  className={classNames(projectcss.all, sty.svg__idGbo)}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__zpTr
+                  )}
+                >
                   <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__f9Ar
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
+                    className={projectcss.__wab_expr_html_text}
+                    dangerouslySetInnerHTML={{
+                      __html: (() => {
                         try {
-                          return (() => {
-                            if (
-                              $state.allVisitOnlineCountBook.data.count_book <=
-                                0 ||
-                              $state.removedVisitOnlineCountBook.data
-                                ?.count_book <= 0
-                            ) {
-                              return "";
-                            }
-                            const percent = `${Math.ceil(
-                              100 -
-                                (($state.removedVisitOnlineCountBook.data
-                                  ?.count_book
-                                  ? +$state.removedVisitOnlineCountBook.data
-                                      ?.count_book
-                                  : 0) /
-                                  ($state.allVisitOnlineCountBook.data
-                                    ?.count_book
-                                    ? +$state.allVisitOnlineCountBook.data
-                                        ?.count_book
-                                    : 1)) *
-                                  100
-                            )}%`;
-                            return percent;
-                          })();
+                          return `<b>${$props.history.count_of_consult_books}</b> مشاوره موفق`;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -541,107 +429,242 @@ function PlasmicProfileActivity__RenderFunc(props: {
                           }
                           throw e;
                         }
-                      })()}
-                    </React.Fragment>
-                  </div>
-                ) : null}
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__xc1Uo
-                  )}
-                >
-                  {
-                    "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u0645\u0648\u0641\u0642"
-                  }
+                      })()
+                    }}
+                  />
                 </div>
-                <Popover
-                  data-plasmic-name={"popoverCore"}
-                  data-plasmic-override={overrides.popoverCore}
-                  className={classNames("__wab_instance", sty.popoverCore)}
-                  onOpenChange={async (...eventArgs: any) => {
-                    generateStateOnChangeProp($state, [
+              </Stack__>
+            ) : null}
+            {(() => {
+              try {
+                return (
+                  $props.onlineVisit.enabled &&
+                  ($state.removedVisitOnlineCountBook?.loading ||
+                    $state?.allVisitOnlineCountBook?.loading ||
+                    ($state.allVisitOnlineCountBook.data?.count_book > 0 &&
+                      $state.removedVisitOnlineCountBook.data?.count_book >= 0))
+                );
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={"div"}
+                hasGap={true}
+                className={classNames(projectcss.all, sty.freeBox__chLj)}
+              >
+                <Icon10Icon
+                  className={classNames(projectcss.all, sty.svg__jfAu9)}
+                  role={"img"}
+                />
+
+                <Stack__
+                  as={"div"}
+                  hasGap={true}
+                  className={classNames(projectcss.all, sty.freeBox__s7TW)}
+                >
+                  {(() => {
+                    try {
+                      return (
+                        $state.allVisitOnlineCountBook.loading ||
+                        $state.removedVisitOnlineCountBook.loading
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <Icon11Icon
+                      className={classNames(
+                        projectcss.all,
+                        sty.svg__rFwLw,
+                        "loader"
+                      )}
+                      role={"img"}
+                    />
+                  ) : null}
+                  {(() => {
+                    try {
+                      return (
+                        !$state.allVisitOnlineCountBook.loading &&
+                        !$state.removedVisitOnlineCountBook.loading
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__f9Ar
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return (() => {
+                              if (
+                                $state.allVisitOnlineCountBook.data
+                                  .count_book <= 0 ||
+                                $state.removedVisitOnlineCountBook.data
+                                  ?.count_book <= 0
+                              ) {
+                                return "";
+                              }
+                              const percent = `${Math.ceil(
+                                100 -
+                                  (($state.removedVisitOnlineCountBook.data
+                                    ?.count_book
+                                    ? +$state.removedVisitOnlineCountBook.data
+                                        ?.count_book
+                                    : 0) /
+                                    ($state.allVisitOnlineCountBook.data
+                                      ?.count_book
+                                      ? +$state.allVisitOnlineCountBook.data
+                                          ?.count_book
+                                      : 1)) *
+                                    100
+                              )}%`;
+                              return percent;
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                  ) : null}
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__xc1Uo
+                    )}
+                  >
+                    {
+                      "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u0645\u0648\u0641\u0642"
+                    }
+                  </div>
+                  <Popover
+                    data-plasmic-name={"popoverCore"}
+                    data-plasmic-override={overrides.popoverCore}
+                    className={classNames("__wab_instance", sty.popoverCore)}
+                    onOpenChange={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "popoverCore",
+                        "open"
+                      ]).apply(null, eventArgs);
+                    }}
+                    open={generateStateValueProp($state, [
                       "popoverCore",
                       "open"
-                    ]).apply(null, eventArgs);
-                  }}
-                  open={generateStateValueProp($state, ["popoverCore", "open"])}
-                  overlay={
-                    <div
-                      className={classNames(projectcss.all, sty.freeBox__s7Ucu)}
-                    >
+                    ])}
+                    overlay={
                       <div
                         className={classNames(
                           projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text___7YG7
+                          sty.freeBox__s7Ucu
                         )}
                       >
-                        {
-                          "\u0627\u06cc\u0646 \u0634\u0627\u062e\u0635 \u0628\u0631\u0627\u0633\u0627\u0633 \u062a\u0639\u062f\u0627\u062f \u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646\u06cc \u06a9\u0647 \u067e\u0633 \u0627\u0632 \u0632\u0645\u0627\u0646 \u0646\u0648\u0628\u062a \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647\u200c\u0627\u0646\u062f \u0648 \u062d\u0630\u0641 \u0646\u0634\u062f\u0647\u200c\u0627\u0646\u062f \u0645\u062d\u0627\u0633\u0628\u0647 \u0645\u06cc\u200c\u0634\u0648\u062f."
-                        }
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text___7YG7
+                          )}
+                        >
+                          {
+                            "\u0627\u06cc\u0646 \u0634\u0627\u062e\u0635 \u0628\u0631\u0627\u0633\u0627\u0633 \u062a\u0639\u062f\u0627\u062f \u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646\u06cc \u06a9\u0647 \u067e\u0633 \u0627\u0632 \u0632\u0645\u0627\u0646 \u0646\u0648\u0628\u062a \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u0627\u0646\u062c\u0627\u0645 \u0634\u062f\u0647\u200c\u0627\u0646\u062f \u0648 \u062d\u0630\u0641 \u0646\u0634\u062f\u0647\u200c\u0627\u0646\u062f \u0645\u062d\u0627\u0633\u0628\u0647 \u0645\u06cc\u200c\u0634\u0648\u062f."
+                          }
+                        </div>
                       </div>
-                    </div>
-                  }
-                  themeResetClass={classNames(
-                    projectcss.root_reset,
-                    projectcss.plasmic_default_styles,
-                    projectcss.plasmic_mixins,
-                    projectcss.plasmic_tokens,
-                    plasmic_fragment_design_system_css.plasmic_tokens
-                  )}
-                  trigger={true}
-                >
-                  <div
-                    className={classNames(projectcss.all, sty.freeBox___2Kt2T)}
-                  >
-                    <Icon13Icon
-                      className={classNames(projectcss.all, sty.svg__gHr2)}
-                      role={"img"}
-                    />
-                  </div>
-                </Popover>
-              </Stack__>
-            </Stack__>
-          ) : null}
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox___7Mrs)}
-          >
-            <Icon15Icon
-              className={classNames(projectcss.all, sty.svg___6IqcG)}
-              role={"img"}
-            />
-
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__m2WzP
-              )}
-            >
-              <React.Fragment>
-                {(() => {
-                  try {
-                    return `پذیرش24 بیش از ${$props.history.insert_at_age} افتخار میزبانی از صفحه اختصاصی ${$props.information.display_name} را داشته است.`;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return "";
                     }
-                    throw e;
-                  }
-                })()}
-              </React.Fragment>
-            </div>
+                    themeResetClass={classNames(
+                      projectcss.root_reset,
+                      projectcss.plasmic_default_styles,
+                      projectcss.plasmic_mixins,
+                      projectcss.plasmic_tokens,
+                      plasmic_fragment_design_system_css.plasmic_tokens
+                    )}
+                    trigger={true}
+                  >
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        sty.freeBox___2Kt2T
+                      )}
+                    >
+                      <Icon13Icon
+                        className={classNames(projectcss.all, sty.svg__gHr2)}
+                        role={"img"}
+                      />
+                    </div>
+                  </Popover>
+                </Stack__>
+              </Stack__>
+            ) : null}
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox___7Mrs)}
+            >
+              <Icon15Icon
+                className={classNames(projectcss.all, sty.svg___6IqcG)}
+                role={"img"}
+              />
+
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__m2WzP
+                )}
+              >
+                <React.Fragment>
+                  {(() => {
+                    try {
+                      return `پذیرش24 بیش از ${$props.history.insert_at_age} افتخار میزبانی از صفحه اختصاصی ${$props.information.display_name} را داشته است.`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return "";
+                      }
+                      throw e;
+                    }
+                  })()}
+                </React.Fragment>
+              </div>
+            </Stack__>
           </Stack__>
         </Stack__>
-      </Stack__>
-    </div>
+      </div>
+    ) : null
   ) as React.ReactElement | null;
 }
 
