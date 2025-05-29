@@ -302,7 +302,6 @@
   text-overflow: clip;
 }
 .freeBox___7Mrs {
-  display: flex;
   position: relative;
   flex-direction: row;
   width: 100%;
@@ -310,6 +309,7 @@
   max-width: 100%;
   background: var(--token-BU1JCAY6hntB);
   min-width: 0;
+  display: none;
   border-radius: 0.5rem;
   padding: var(--token-Fv8-L_kN-2Ma);
 }
