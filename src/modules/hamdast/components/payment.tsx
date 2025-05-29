@@ -124,15 +124,6 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
         if (gatewayWindow) {
           gatewayWindow?.close();
         }
-        axios.post(
-          `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/payment/verify/`,
-          {
-            receipt_id: paymentData.current?.receipt_id,
-          },
-          {
-            withCredentials: true,
-          },
-        );
         handleClose();
         iframeRef.current?.contentWindow?.postMessage(
           {
