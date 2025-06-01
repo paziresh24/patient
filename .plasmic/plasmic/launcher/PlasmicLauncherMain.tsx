@@ -74,6 +74,7 @@ import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherMain.module.css"; // plasmic-import: zKD4DmZLEtqh/css
 
+import LauncherIconsSupportIcon from "./icons/PlasmicIcon__LauncherIconsSupport"; // plasmic-import: XzVR5ZXt9F_Z/icon
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
 
 createPlasmicElementProxy;
@@ -96,7 +97,7 @@ export type PlasmicLauncherMain__OverridesType = {
   launcherBlocksWidgetsNelson?: Flex__<typeof LauncherBlocksWidgetsNelson>;
   launcherBlocksApps?: Flex__<typeof LauncherBlocksApps>;
   launcherBlocksPatientServices?: Flex__<typeof LauncherBlocksPatientServices>;
-  svg?: Flex__<"svg">;
+  text?: Flex__<"div">;
 };
 
 export interface DefaultLauncherMainProps {
@@ -284,6 +285,69 @@ function PlasmicLauncherMain__RenderFunc(props: {
               />
             </Reveal>
           ) : null}
+          <Reveal
+            className={classNames("__wab_instance", sty.reveal__lQIW)}
+            duration={300}
+            triggerOnce={true}
+          >
+            <Stack__
+              as={"div"}
+              hasGap={true}
+              className={classNames(projectcss.all, sty.freeBox__rnWpl)}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["goToHttpsSupportPaziresh24Com"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: "https://support.paziresh24.com/"
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToHttpsSupportPaziresh24Com"] != null &&
+                  typeof $steps["goToHttpsSupportPaziresh24Com"] === "object" &&
+                  typeof $steps["goToHttpsSupportPaziresh24Com"].then ===
+                    "function"
+                ) {
+                  $steps["goToHttpsSupportPaziresh24Com"] = await $steps[
+                    "goToHttpsSupportPaziresh24Com"
+                  ];
+                }
+              }}
+            >
+              <LauncherIconsSupportIcon
+                className={classNames(projectcss.all, sty.svg__cIfm)}
+                role={"img"}
+              />
+
+              <div
+                data-plasmic-name={"text"}
+                data-plasmic-override={overrides.text}
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text
+                )}
+              >
+                {
+                  "\u0627\u0631\u062a\u0628\u0627\u0637 \u0628\u0627 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4"
+                }
+              </div>
+            </Stack__>
+          </Reveal>
         </Stack__>
       ) : null}
       {(() => {
@@ -300,9 +364,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
         }
       })() ? (
         <LauncherIconsLoaderIcon
-          data-plasmic-name={"svg"}
-          data-plasmic-override={overrides.svg}
-          className={classNames(projectcss.all, sty.svg)}
+          className={classNames(projectcss.all, sty.svg__mRkc)}
           role={"img"}
         />
       ) : null}
@@ -320,7 +382,7 @@ const PlasmicDescendants = {
     "launcherBlocksWidgetsNelson",
     "launcherBlocksApps",
     "launcherBlocksPatientServices",
-    "svg"
+    "text"
   ],
   launcherWrapper: ["launcherWrapper"],
   launcherBlocksProfile: ["launcherBlocksProfile"],
@@ -329,7 +391,7 @@ const PlasmicDescendants = {
   launcherBlocksWidgetsNelson: ["launcherBlocksWidgetsNelson"],
   launcherBlocksApps: ["launcherBlocksApps"],
   launcherBlocksPatientServices: ["launcherBlocksPatientServices"],
-  svg: ["svg"]
+  text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -343,7 +405,7 @@ type NodeDefaultElementType = {
   launcherBlocksWidgetsNelson: typeof LauncherBlocksWidgetsNelson;
   launcherBlocksApps: typeof LauncherBlocksApps;
   launcherBlocksPatientServices: typeof LauncherBlocksPatientServices;
-  svg: "svg";
+  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -417,7 +479,7 @@ export const PlasmicLauncherMain = Object.assign(
     launcherBlocksPatientServices: makeNodeComponent(
       "launcherBlocksPatientServices"
     ),
-    svg: makeNodeComponent("svg"),
+    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicLauncherMain
     internalVariantProps: PlasmicLauncherMain__VariantProps,
