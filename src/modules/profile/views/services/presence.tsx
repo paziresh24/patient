@@ -168,7 +168,7 @@ export const Presence = memo((props: PresenceProps) => {
         footer={{
           actions: [
             {
-              text: 'دریافت نوبت',
+              text: centers?.every?.((center: any) => center?.is_book_request) ? 'درخواست نوبت' : 'دریافت نوبت',
               onClick: handleOnBook,
             },
           ],

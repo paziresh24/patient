@@ -191,6 +191,7 @@ export const Services = ({
                           })
                         : '',
                     })),
+                  is_book_request: center?.services?.some?.((service: any) => service?.can_request),
                 }),
               }))}
             onBook={({ centerId, serviceId }) =>
