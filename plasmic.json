@@ -3835,7 +3835,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
@@ -6243,6 +6244,199 @@
         }
       ],
       "jsBundleThemes": []
+    },
+    {
+      "projectId": "85GFtqPAFvUkDYJxzFDEYS",
+      "projectApiToken": "kCs11hI9jPXjCxbLWFxtfU2e1mLzy0TVNlDyAPJG7mxkrouRbf91vulldzIrOrNHzCbQLpPNJaBriCv8kURjA",
+      "projectName": "Paziresh24/Factor",
+      "version": "latest",
+      "cssFilePath": "plasmic/paziresh_24_factor/plasmic.module.css",
+      "components": [
+        {
+          "id": "gwWZcNwcxOfS",
+          "name": "TextInput",
+          "type": "managed",
+          "projectId": "85GFtqPAFvUkDYJxzFDEYS",
+          "renderModuleFilePath": "plasmic/paziresh_24_factor/PlasmicTextInput.tsx",
+          "importSpec": {
+            "modulePath": "TextInput.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_factor/PlasmicTextInput.module.css",
+          "scheme": "blackbox",
+          "componentType": "component",
+          "plumeType": "text-input"
+        },
+        {
+          "id": "x0UykBoeZWyL",
+          "name": "Factor",
+          "type": "managed",
+          "projectId": "85GFtqPAFvUkDYJxzFDEYS",
+          "renderModuleFilePath": "plasmic/paziresh_24_factor/PlasmicFactor.tsx",
+          "importSpec": {
+            "modulePath": "../src/pages/factor/v3.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_factor/PlasmicFactor.module.css",
+          "scheme": "blackbox",
+          "componentType": "page",
+          "path": "/factor/v3"
+        }
+      ],
+      "icons": [
+        {
+          "id": "9YiWVSMsEV_R",
+          "name": "CheckSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24_factor/icons/PlasmicIcon__CheckSvg.tsx"
+        },
+        {
+          "id": "DAaVIZuoY3lJ",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/paziresh_24_factor/icons/PlasmicIcon__Icon2.tsx"
+        },
+        {
+          "id": "KNObQepbuU98",
+          "name": "Icon7Icon",
+          "moduleFilePath": "plasmic/paziresh_24_factor/icons/PlasmicIcon__Icon7.tsx"
+        },
+        {
+          "id": "vvUuFXXTikkU",
+          "name": "Icons8TelegramSvgIcon",
+          "moduleFilePath": "plasmic/paziresh_24_factor/icons/PlasmicIcon__Icons8TelegramSvg.tsx"
+        }
+      ],
+      "images": [
+        {
+          "id": "FohZpaURVlmE",
+          "name": "image 4",
+          "filePath": "plasmic/paziresh_24_factor/images/image4.svg"
+        },
+        {
+          "id": "NSaPon_LNOS2",
+          "name": "image 5",
+          "filePath": "plasmic/paziresh_24_factor/images/image5.svg"
+        }
+      ],
+      "indirect": false,
+      "globalContextsFilePath": "plasmic/paziresh_24_factor/PlasmicGlobalContextsProvider.tsx",
+      "splitsProviderFilePath": "",
+      "codeComponents": [
+        {
+          "id": "mHf6DdC8B5q3",
+          "name": "PlasmicHead",
+          "displayName": "hostless-plasmic-head",
+          "componentImportPath": "@plasmicapp/react-web"
+        },
+        {
+          "id": "9_ZRSi572LIm",
+          "name": "Fetcher",
+          "displayName": "plasmic-data-source-fetcher",
+          "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
+        },
+        {
+          "id": "1qsTtj04I-F-",
+          "name": "Popover",
+          "displayName": "Popover",
+          "componentImportPath": "@/common/fragment/components/popover"
+        },
+        {
+          "id": "IKl3-RqB6Z7G",
+          "name": "Switch",
+          "displayName": "Switch",
+          "componentImportPath": "@/common/fragment/components/switch"
+        },
+        {
+          "id": "mET2CFwJSE6X",
+          "name": "ApiRequest",
+          "displayName": "ApiRequest",
+          "componentImportPath": "@/common/fragment/components/api-request"
+        },
+        {
+          "id": "l7g8vlXMZ3bW",
+          "name": "Fragment",
+          "displayName": "Fragment",
+          "componentImportPath": "@/common/fragment/designSystemGlobalContext"
+        },
+        {
+          "id": "qgBgvMrVKudW",
+          "name": "Splunk",
+          "displayName": "Splunk",
+          "componentImportPath": "@/common/fragment/splunk"
+        },
+        {
+          "id": "Abe53nKf4IYK",
+          "name": "RadioFilter",
+          "displayName": "RadioFilter",
+          "componentImportPath": "@/common/fragment/components/radioFilter"
+        },
+        {
+          "id": "YuIZpwFao8KO",
+          "name": "Gallery",
+          "displayName": "Gallery",
+          "componentImportPath": "@/common/fragment/components/gallery"
+        },
+        {
+          "id": "4Y2IB7oELUzp",
+          "name": "Portal",
+          "displayName": "Portal",
+          "componentImportPath": "@/common/fragment/components/portal"
+        },
+        {
+          "id": "anhuRz8YKGG9",
+          "name": "Accordion",
+          "displayName": "Accordion",
+          "componentImportPath": "@/common/fragment/components/accordion"
+        },
+        {
+          "id": "REpxIhr40Qde",
+          "name": "Factor",
+          "displayName": "Factor",
+          "componentImportPath": "@/modules/booking/views/factor/wrapper"
+        },
+        {
+          "id": "v6MHDPTZMkoU",
+          "name": "DoctorInvoiceNotice",
+          "displayName": "DoctorInvoiceNotice",
+          "componentImportPath": "@/modules/booking/components/factor/doctorInvoiceNotice"
+        },
+        {
+          "id": "Zn15y8DXnb7E",
+          "name": "AppFrame",
+          "displayName": "AppFrame",
+          "componentImportPath": "@/modules/hamdast/appFrame"
+        },
+        {
+          "id": "O4quD8IKFgEZ",
+          "name": "LayoutWithHeaderAndFooter",
+          "displayName": "LayoutWithHeaderAndFooter",
+          "componentImportPath": "@/common/components/layouts/layoutWithHeaderAndFooter"
+        },
+        {
+          "id": "-dLF5Y0glGDj",
+          "name": "AuthGlobalContext",
+          "displayName": "AuthGlobalContext",
+          "componentImportPath": "@/common/fragment/authGlobalContext"
+        },
+        {
+          "id": "eFipJVcJ7vWd",
+          "name": "GrowthbookGlobalContext",
+          "displayName": "GrowthbookGlobalContext",
+          "componentImportPath": "@/common/fragment/growthbookGlobalContext"
+        },
+        {
+          "id": "t6XcKfVLT_SS",
+          "name": "PWA",
+          "displayName": "PWA",
+          "componentImportPath": "@/common/fragment/pwa"
+        }
+      ],
+      "customFunctions": [
+        {
+          "defaultExport": true,
+          "id": "splunkEvent",
+          "importPath": "@/common/services/plasmicSplunkEvent",
+          "name": "splunkEvent",
+          "namespace": null
+        }
+      ]
     }
   ],
   "globalVariants": {
@@ -6324,6 +6518,12 @@
         "name": "Screen",
         "projectId": "bN5uNsAhTefwW3S14VjvMG",
         "contextFilePath": "plasmic/hamdast_risman/PlasmicGlobalVariant__Screen.tsx"
+      },
+      {
+        "id": "KYNb-K-Hd2zL",
+        "name": "Screen",
+        "projectId": "85GFtqPAFvUkDYJxzFDEYS",
+        "contextFilePath": "plasmic/paziresh_24_factor/PlasmicGlobalVariant__Screen.tsx"
       }
     ]
   },

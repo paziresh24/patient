@@ -3921,6 +3921,88 @@
         }
       ],
       "codegenVersion": "0.0.1"
+    },
+    {
+      "projectId": "85GFtqPAFvUkDYJxzFDEYS",
+      "version": "latest",
+      "dependencies": {
+        "h9Dbk9ygddw7UVEq1NNhKi": "6.0.1",
+        "oBJtsp5RgVpcN6KCrDTuQT": "1.3.0",
+        "sqPBLwEBBKHA2WDuGb17eV": "2.4.0",
+        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.40.0",
+        "YUiM7yqBWAqsh8KSnrdj7": "0.33.0",
+        "ohDidvG9XsCeFumugENU3J": "6.29.0",
+        "6HBcNwr8dz9LuS1Qe36xa5": "0.1.0"
+      },
+      "lang": "ts",
+      "fileLocks": [
+        {
+          "type": "globalVariant",
+          "assetId": "KYNb-K-Hd2zL",
+          "checksum": "d47566f828db34ce7540eca298566ee7"
+        },
+        {
+          "assetId": "85GFtqPAFvUkDYJxzFDEYS",
+          "type": "projectCss",
+          "checksum": "b8b4bcd2653f14e81bd674b32d0c1834"
+        },
+        {
+          "assetId": "85GFtqPAFvUkDYJxzFDEYS",
+          "checksum": "1f9e6791e3699fa9a183ae01aacef3a1",
+          "type": "globalContexts"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "gwWZcNwcxOfS",
+          "checksum": "88e8a50518377e16877638baa832011d"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "gwWZcNwcxOfS",
+          "checksum": "88e8a50518377e16877638baa832011d"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "x0UykBoeZWyL",
+          "checksum": "47ef907a13f13f93d44484ae5cf3dfa8"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "x0UykBoeZWyL",
+          "checksum": "47ef907a13f13f93d44484ae5cf3dfa8"
+        },
+        {
+          "type": "icon",
+          "assetId": "9YiWVSMsEV_R",
+          "checksum": "0928f1a035ee2bae43bd093abd7d8c58"
+        },
+        {
+          "type": "icon",
+          "assetId": "DAaVIZuoY3lJ",
+          "checksum": "a5d2ca4e21662be94dba3ff2b250b46d"
+        },
+        {
+          "type": "icon",
+          "assetId": "KNObQepbuU98",
+          "checksum": "6e581b033e8d53488b9475de64279e2f"
+        },
+        {
+          "type": "icon",
+          "assetId": "vvUuFXXTikkU",
+          "checksum": "f873f17940cff86810961bef6a30aae9"
+        },
+        {
+          "type": "image",
+          "assetId": "FohZpaURVlmE",
+          "checksum": "8eb5352ddb70ca79d50eb600e92ccd66"
+        },
+        {
+          "type": "image",
+          "assetId": "NSaPon_LNOS2",
+          "checksum": "c6dec70ac4a88ed9f6b466a67a8653f2"
+        }
+      ],
+      "codegenVersion": "0.0.1"
     }
   ],
   "cliVersion": "0.1.327"
