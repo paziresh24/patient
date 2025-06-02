@@ -426,9 +426,20 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     let widgetsData: any = {};
 
     try {
+      const userData = await axios.get(`https://apigw.paziresh24.com/v1/gozargah/dr-userid`, {
+        params: {
+          server_id: information.server_id,
+          user_info_id: information.id,
+        },
+        headers: {
+          authorization: `Bearer ${process.env.GOZARGARH_API_KEY}`,
+        },
+        timeout: 3000,
+      });
+
       widgets = await axios.get('https://hamdast.paziresh24.com/api/v1/widgets/', {
         params: {
-          provider_id: profileData?.provider?.provider_id ?? `doctor_${information?.id}_${information.server_id}`,
+          user_id: userData?.data?.user_id,
         },
         timeout: 3000,
       });
@@ -441,9 +452,8 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
               async (item: any) =>
                 await axios.get(item.data_endpoint, {
                   params: {
-                    user_id: information.user_id,
+                    user_id: userData?.data?.user_id,
                     doctor_id: information?.id,
-                    provider_id: profileData?.provider?.provider_id,
                     widget_id: item?.id,
                   },
                   timeout: 3000,
