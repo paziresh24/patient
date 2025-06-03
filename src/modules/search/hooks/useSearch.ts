@@ -119,7 +119,7 @@ export const useSearch = () => {
     !searchRequest?.data?.selected_filters?.result_type &&
     (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
     !searchRequest?.data?.search.is_landing &&
-    params?.length !== 1 &&
+    (params?.length !== 1 || Object.keys(query).length > 0) &&
     showSuggestedDoctor?.enable;
 
   const searchConsultRequest = useConsultSearch(
@@ -208,6 +208,8 @@ export const useSearch = () => {
     isLoading,
     result,
     isSuccess: searchRequest.isSuccess,
+    isError: searchRequest.isError,
+    refetch: searchRequest.refetch,
     total: search?.total,
     pagination: search?.pagination,
     filters,
