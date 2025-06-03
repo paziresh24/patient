@@ -351,6 +351,11 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           }),
       );
 
+      console.log(
+        'condition',
+        !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true,
+      );
+
       if (
         !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
         (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
@@ -360,6 +365,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         showSuggestedDoctor?.enable
       ) {
         try {
+          console.log('hello');
           await queryClient.fetchQuery(
             [
               ServerStateKeysEnum.SearchConsult,
