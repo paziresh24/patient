@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-boolean-cast */
 import { clinicClient } from '@/common/apis/client';
 import axios from 'axios';
 import { getCookie, removeCookies } from 'cookies-next';
@@ -44,9 +45,10 @@ export type UserInfo = {
 };
 
 export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
-  isLogin: false,
-  info: {},
-  pending: true,
+  isLogin: typeof window != 'undefined' && !!localStorage?.getItem?.('user-store') ? true : false,
+  info:
+    typeof window != 'undefined' && !!localStorage?.getItem?.('user-store') ? JSON.parse(localStorage.getItem('user-store') ?? '{}') : {},
+  pending: typeof window != 'undefined' && !!localStorage?.getItem?.('user-store') ? false : true,
   turnsCount: {
     presence: 0,
   },
@@ -68,6 +70,14 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         is_doctor: infoCopy.provider?.job_title === 'doctor',
       });
       window.user = infoCopy;
+
+      localStorage.setItem(
+        'user-store',
+        JSON.stringify({
+          ...infoCopy,
+        }),
+      );
+
       return {
         info: {
           ...infoCopy,
@@ -77,6 +87,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     });
   },
   removeInfo: () => {
+    localStorage.removeItem('user-store');
     set(() => ({
       info: {},
       isLogin: false,
@@ -122,5 +133,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     }
     removeCookies('certificate');
     removeCookies('token');
+    localStorage.removeItem('user-store');
   },
 }));
