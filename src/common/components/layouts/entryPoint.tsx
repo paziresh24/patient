@@ -11,6 +11,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const setPending = useUserInfoStore(state => state.setPending);
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const removeInfo = useUserInfoStore(state => state.removeInfo);
   const info = useUserInfoStore(state => state.info);
   const autoLoginToGozargah = useFeatureIsOn('auto-login-to-gozargah');
 
@@ -23,7 +24,9 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
   const handleUserLogin = async () => {
     try {
-      setPending(true);
+      if (typeof window != 'undefined' && !!localStorage?.getItem?.('user-store') ? false : true) {
+        setPending(true);
+      }
       const userData = await getMe.mutateAsync();
       const doctorProfileData = await getDoctorProfile.mutateAsync();
 
@@ -37,6 +40,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401 || error.response?.status === 400) {
           setPending(false);
+          removeInfo();
         }
       }
     }
