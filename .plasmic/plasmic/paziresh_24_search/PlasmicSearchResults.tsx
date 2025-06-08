@@ -67,7 +67,6 @@ import PeopleAlsoSearchForBox from "../../PeopleAlsoSearchForBox"; // plasmic-im
 import SearchFooterSecondaryTasks from "../../SearchFooterSecondaryTasks"; // plasmic-import: H6s7UfVqSPjE/component
 import ExternalBookSurveyPopup from "../../ExternalBookSurveyPopup"; // plasmic-import: YHypsyWp2tOf/component
 import DebugMode from "../../DebugMode"; // plasmic-import: t_GYTnthnuf9/component
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 

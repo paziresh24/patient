@@ -10,7 +10,6 @@
   outline-style: none;
   box-shadow: none;
   min-width: 0;
-  padding: 0px var(--token-_c276Gs_1FIE) 0px 0px;
 }
 .rootcolor_dark {
   background: #232320;
@@ -66,6 +65,7 @@
   outline-color: transparent;
   outline-offset: 0px;
   height: 100%;
+  font-size: var(--token-tM2Vh4zTir7U);
   min-width: 0;
   min-height: 0;
   padding: 0px;
