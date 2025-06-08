@@ -54,7 +54,7 @@ const Home = ({ fragmentComponents }: any) => {
             showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
             defaultInputValue={defaultInputValue}
             setDefaultInputValue={setDefaultInputValue}
-            className={classNames({
+            className={classNames('!p-0', {
               '[&>div]:border-2 [&>div]:rounded-lg [&>div>div>div]:rounded-lg  [&>div>div>div>div>div>div]:rounded-none [&>div>div>div]:border-0  [&>div]:border-primary':
                 isMobile,
             })}
