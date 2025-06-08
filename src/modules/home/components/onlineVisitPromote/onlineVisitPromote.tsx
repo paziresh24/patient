@@ -59,10 +59,10 @@ export const OnlineVisitPromote = () => {
       <div className="fixed bottom-[5.5rem] md:flex justify-center w-full px-4 z-10">
         <Button
           onClick={handleOpenSubstituteDoctorModal}
-          className="rounded-full font-semibold text-[.8rem] bg-white border-[#386BFC]/30 w-full md:w-auto justify-between"
+          className="rounded-full font-semibold text-[.8rem] bg-[#f9f9f9] border-[#e1e0e0] text-slate-700/80  w-full md:w-auto justify-between"
           variant="secondary"
         >
-          می‌خواهم همین الان با پزشک گفتگو کنم!
+          می‌خواهم همین الان با پزشک گفتگو کنم
           <div className="flex items-center gap-3">
             <div className="flex items-center ">
               {searchData.data?.search?.result?.map((item: any) => (

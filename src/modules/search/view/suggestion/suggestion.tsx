@@ -204,7 +204,7 @@ export const Suggestion = (props: SuggestionProps) => {
 
   if (showPlasmicSuggestion) {
     return (
-      <div className={classNames('w-full lg:w-[50rem]', className)}>
+      <div className={classNames('w-full lg:w-[50rem] py-2 px-2 md:px-0', className)}>
         <SearchGlobalContextsProvider>
           <Fragment
             name="SearchInput"
