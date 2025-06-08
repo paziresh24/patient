@@ -8,9 +8,12 @@ import CloseIcon from '../icons/close';
 import StarIcon from '../icons/star';
 
 import logoSvg from '../../../../public/logos/primary.svg';
+import classNames from '@/common/utils/classNames';
+import { useRouter } from 'next/router';
 
 export const PromoteAppBanner = () => {
   const [isShow, setIShow] = useState(false);
+  const router = useRouter();
   useEffect(() => {
     setIShow(!getCookie('closeAppBanner'));
   }, []);
@@ -23,7 +26,12 @@ export const PromoteAppBanner = () => {
 
   if (!isShow) return null;
   return (
-    <div className="fixed right-0 z-50 flex pwa:hidden items-center justify-between w-full p-3 px-5 bg-white border-t border-b border-solid md:hidden bottom-16 border-slate-200">
+    <div
+      className={classNames(
+        'fixed right-0 z-50 flex pwa:hidden items-center justify-between w-full p-3 px-5 bg-white border-t border-b border-solid md:hidden bottom-16 border-slate-200',
+        { 'top-14 !absolute bottom-auto': router.pathname == '/' },
+      )}
+    >
       <div className="flex items-center space-s-2">
         <CloseIcon className="cursor-pointer" onClick={handleHide} />
         <a href="/app" className="flex items-center space-s-2">

@@ -27,10 +27,19 @@ interface SuggestionProps {
   defaultInputValue?: string;
   setDefaultInputValue?: (value: string) => void;
   showPlasmicSuggestion?: boolean;
+  className?: string;
 }
 
 export const Suggestion = (props: SuggestionProps) => {
-  const { overlay = false, defaultOpen = false, autoFocus, defaultInputValue, setDefaultInputValue, showPlasmicSuggestion } = props;
+  const {
+    overlay = false,
+    defaultOpen = false,
+    autoFocus,
+    defaultInputValue,
+    setDefaultInputValue,
+    showPlasmicSuggestion,
+    className,
+  } = props;
   const router = useRouter();
   const { selectedFilters } = useSearch();
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);
@@ -195,7 +204,7 @@ export const Suggestion = (props: SuggestionProps) => {
 
   if (showPlasmicSuggestion) {
     return (
-      <div className="w-full py-2 px-2 md:px-0 lg:w-[50rem]">
+      <div className={classNames('w-full lg:w-[50rem]', className)}>
         <SearchGlobalContextsProvider>
           <Fragment
             name="SearchInput"
