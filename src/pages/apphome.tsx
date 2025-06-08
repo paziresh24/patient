@@ -81,14 +81,14 @@ const Home = ({ fragmentComponents }: any) => {
           {showChatBotButton && (
             <div className="flex flex-col gap-3 w-full md:hidden">
               <div className="flex items-center gap-5 w-full">
-                <div className="h-px bg-slate-200 w-full" />
+                <div className="h-px bg-[#386BFC]/15 w-full" />
                 <span className="font-semibold text-sm text-primary">یا</span>
-                <div className="h-px bg-slate-200 w-full" />
+                <div className="h-px bg-[#386BFC]/15 w-full" />
               </div>
               <Button
                 variant="secondary"
                 icon={<SparkleIcon className="w-5 h-5 ml-1" />}
-                className="border-[#BECEFD] bg-[#F1F4FF] shadow-md shadow-[#3262EB]/10"
+                className="border-[#BECEFD] bg-[#F1F4FF] shadow-sm font-semibold shadow-[#3262EB]/10"
                 onClick={() => router.push('/_/roshan/salamat/?origin=home')}
               >
                 دنبال پزشک نگرد از من بپرس!
