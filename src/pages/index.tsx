@@ -17,9 +17,7 @@ import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
 import { ReactElement, useEffect, useState } from 'react';
 const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
-const RecentSearch = dynamic(() => import('@/modules/search/view/recentSearch'), {
-  loading: () => <div className="h-[68px] md:h-6" />,
-});
+import RecentSearch from '@/modules/search/view/recentSearch';
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
@@ -28,6 +26,8 @@ import { GrowthBook, useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import toast from 'react-hot-toast';
 import { toastActionble } from '@/common/utils/toastActionble';
+import Button from '@/common/components/atom/button';
+import SparkleIcon from '@/common/components/icons/sparkle';
 
 const Home = ({ fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
@@ -39,6 +39,7 @@ const Home = ({ fragmentComponents }: any) => {
   const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
   const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
+  const showChatBotButton = useFeatureIsOn('home-page::roshan-ai-chat-bot-button');
 
   useEffect(() => {
     if (window.location.host === 'p24-patient.darkube.app') {
@@ -90,31 +91,54 @@ const Home = ({ fragmentComponents }: any) => {
             {customize.partnerSubTitle}
           </Text>
         )}
-        <Suggestion
-          showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
-          defaultInputValue={defaultInputValue}
-          setDefaultInputValue={setDefaultInputValue}
-        />
+        <div className="flex flex-col items-center w-full gap-3">
+          <Suggestion
+            showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
+            defaultInputValue={defaultInputValue}
+            setDefaultInputValue={setDefaultInputValue}
+            className={classNames({
+              '[&>div]:border-2 [&>div]:rounded-lg [&>div>div>div]:rounded-lg  [&>div>div>div>div>div>div]:rounded-none [&>div>div>div]:border-0  [&>div]:border-primary':
+                isMobile,
+            })}
+          />
+          {(fragmentComponents?.showPlasmicRecentSearch || showPlasmicRecentSearch) && (
+            <div className="lg:w-[50rem] w-full">
+              <Fragment
+                name="RecentSearch"
+                props={{
+                  onClick: (value: any) => {
+                    setDefaultInputValue(value?.name || '');
+                    setIsOpenSuggestion(true);
+                  },
+                }}
+              />
+            </div>
+          )}
 
-        {(fragmentComponents?.showPlasmicRecentSearch || showPlasmicRecentSearch) && (
-          <div className="lg:w-[50rem] w-full">
-            <Fragment
-              name="RecentSearch"
-              props={{
-                onClick: (value: any) => {
-                  setDefaultInputValue(value?.name || '');
-                  setIsOpenSuggestion(true);
-                },
-              }}
-            />
-          </div>
-        )}
+          {recent.length > 0 && !fragmentComponents?.showPlasmicRecentSearch && !showPlasmicRecentSearch && (
+            <div className="lg:w-[50rem] w-full">
+              <RecentSearch />
+            </div>
+          )}
+          {showChatBotButton && (
+            <div className="flex flex-col gap-3 w-full md:hidden">
+              <div className="flex items-center gap-5 w-full">
+                <div className="h-px bg-slate-200 w-full" />
+                <span className="font-semibold text-sm text-primary">یا</span>
+                <div className="h-px bg-slate-200 w-full" />
+              </div>
+              <Button
+                variant="secondary"
+                icon={<SparkleIcon className="w-5 h-5 ml-1" />}
+                className="border-[#BECEFD] bg-[#F1F4FF] shadow-md shadow-[#3262EB]/10"
+                onClick={() => router.push('/_/roshan/salamat/?origin=home')}
+              >
+                دنبال پزشک نگرد از من بپرس!
+              </Button>
+            </div>
+          )}
+        </div>
 
-        {recent.length > 0 && !fragmentComponents?.showPlasmicRecentSearch && !showPlasmicRecentSearch && (
-          <div className="lg:w-[50rem] w-full">
-            <RecentSearch />
-          </div>
-        )}
         {customize.showConsultServices &&
           (fragmentComponents?.showPlasmicOnlineVisit || showPlasmicOnlineVisit ? (
             <div>

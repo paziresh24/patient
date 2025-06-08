@@ -1,5 +1,6 @@
 import { useSearch } from '@/common/apis/services/search/search';
 import Alert from '@/common/components/atom/alert';
+import Avatar from '@/common/components/atom/avatar';
 import Button from '@/common/components/atom/button';
 import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
@@ -9,21 +10,19 @@ import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import random from 'lodash/random';
 import { useMemo } from 'react';
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
 
 export const OnlineVisitPromote = () => {
   const { handleOpen, handleClose, modalProps } = useModal();
 
-  const searchData = useSearch(
-    {
-      route: decodeURIComponent(`ir/general-practitioner`),
-      query: {
-        turn_type: 'consult',
-      },
+  const searchData = useSearch({
+    route: decodeURIComponent(`ir/general-practitioner`),
+    query: {
+      turn_type: 'consult',
+      limit: 3,
     },
-    {
-      enabled: modalProps.isOpen,
-    },
-  );
+  });
 
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
 
@@ -57,14 +56,29 @@ export const OnlineVisitPromote = () => {
 
   return (
     <>
-      <Button
-        onClick={handleOpenSubstituteDoctorModal}
-        size="sm"
-        className="bg-indigo-50/80 hover:bg-indigo-100 text-indigo-800 border-none"
-      >
-        می‌خواهم همین الان با پزشک گفتگو کنم!
-        <ChevronIcon dir="left" className="mr-1" />
-      </Button>
+      <div className="fixed bottom-[5.5rem] md:flex justify-center w-full px-6 z-10">
+        <Button
+          onClick={handleOpenSubstituteDoctorModal}
+          className="rounded-full font-semibold bg-white w-full md:w-auto justify-between"
+          variant="secondary"
+        >
+          می‌خواهم همین الان با پزشک گفتگو کنم!
+          <div className="flex items-center gap-3">
+            <div className="flex items-center ">
+              {searchData.data?.search?.result?.map((item: any) => (
+                <Avatar
+                  key={item?.id}
+                  src={publicRuntimeConfig.CDN_BASE_URL + item.image}
+                  className="-ml-2 border-2 border-white"
+                  width={25}
+                  height={25}
+                ></Avatar>
+              ))}
+            </div>
+            <ChevronIcon dir="left" className="mr-1" />
+          </div>
+        </Button>
+      </div>
 
       <Modal bodyClassName="p-3" title="" {...modalProps}>
         {(searchData.isLoading || !substituteDoctor?.url) && (
