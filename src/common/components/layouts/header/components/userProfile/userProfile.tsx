@@ -98,8 +98,8 @@ export const UserProfile = () => {
         {
           name: 'پشتیبانی',
           icon: <HeadphoneIcon width={22} height={22} />,
-          link: 'https://supporto.paziresh24.com',
-          shouldShow: userInfo.provider?.job_title === 'doctor' && showSupportMenuButton,
+          link: 'https://support.paziresh24.com',
+          shouldShow: showSupportMenuButton,
         },
       ].filter(item => item.shouldShow)
     : [
