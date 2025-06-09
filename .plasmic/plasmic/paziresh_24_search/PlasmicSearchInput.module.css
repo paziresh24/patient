@@ -15,13 +15,13 @@
   -webkit-transition-property: box-shadow;
   -webkit-transition-timing-function: ease-in-out;
   -webkit-transition-duration: 0.2s;
-  border-radius: 100px;
+  border-radius: 8px;
   padding: var(--token-fhaz6q6bl-fW) var(--token-vMUQwr5Jto1d)
     var(--token-fhaz6q6bl-fW) var(--token-_c276Gs_1FIE);
   border: 1px solid var(--token-Y3HOiwZmAcAF);
 }
 .rootisFocused {
-  border-radius: var(--token-UIMkdd_bvvx_) var(--token-UIMkdd_bvvx_) 0px 0px;
+  border-radius: 8px 8px 0px 0px;
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .rootisFocused {

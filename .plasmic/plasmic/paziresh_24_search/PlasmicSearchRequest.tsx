@@ -69,6 +69,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchRequest.module.css"; // plasmic-import: 35vwUOYdUX87/css
 
+import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: eKLBqU_Fr5SV/icon
+
 createPlasmicElementProxy;
 
 export type PlasmicSearchRequest__VariantMembers = {};
@@ -90,8 +92,9 @@ export const PlasmicSearchRequest__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicSearchRequest__OverridesType = {
   root?: Flex__<"div">;
-  text?: Flex__<"div">;
   httpRestApiFetcher?: Flex__<typeof DataFetcher>;
+  freeBox?: Flex__<"div">;
+  svg?: Flex__<"svg">;
   searchResults?: Flex__<typeof SearchResults>;
   sendSplunkEvent?: Flex__<typeof SideEffect>;
   sendClarityEvents?: Flex__<typeof SideEffect>;
@@ -163,13 +166,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
         sty.root
       )}
     >
-      <div
-        data-plasmic-name={"text"}
-        data-plasmic-override={overrides.text}
-        className={classNames(projectcss.all, projectcss.__wab_text, sty.text)}
-      >
-        {"Enter U+1F3E5text\ud83c\udfe5 "}
-      </div>
       <DataFetcher
         data-plasmic-name={"httpRestApiFetcher"}
         data-plasmic-override={overrides.httpRestApiFetcher}
@@ -185,15 +181,26 @@ function PlasmicSearchRequest__RenderFunc(props: {
         errorName={"fetchError"}
         loadingDisplay={
           <DataCtxReader__>
-            {$ctx =>
-              "\u062f\u0631 \u062d\u0627\u0644 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648 ..."
-            }
+            {$ctx => (
+              <div
+                data-plasmic-name={"freeBox"}
+                data-plasmic-override={overrides.freeBox}
+                className={classNames(projectcss.all, sty.freeBox)}
+              >
+                <Icon14Icon
+                  data-plasmic-name={"svg"}
+                  data-plasmic-override={overrides.svg}
+                  className={classNames(projectcss.all, sty.svg)}
+                  role={"img"}
+                />
+              </div>
+            )}
           </DataCtxReader__>
         }
         method={"GET"}
         noLayout={false}
         previewErrorDisplay={false}
-        previewSpinner={false}
+        previewSpinner={true}
         url={(() => {
           try {
             return (() => {
@@ -1026,19 +1033,23 @@ function PlasmicSearchRequest__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "text",
     "httpRestApiFetcher",
+    "freeBox",
+    "svg",
     "searchResults",
     "sendSplunkEvent",
     "sendClarityEvents"
   ],
-  text: ["text"],
   httpRestApiFetcher: [
     "httpRestApiFetcher",
+    "freeBox",
+    "svg",
     "searchResults",
     "sendSplunkEvent",
     "sendClarityEvents"
   ],
+  freeBox: ["freeBox", "svg"],
+  svg: ["svg"],
   searchResults: ["searchResults"],
   sendSplunkEvent: ["sendSplunkEvent"],
   sendClarityEvents: ["sendClarityEvents"]
@@ -1048,8 +1059,9 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  text: "div";
   httpRestApiFetcher: typeof DataFetcher;
+  freeBox: "div";
+  svg: "svg";
   searchResults: typeof SearchResults;
   sendSplunkEvent: typeof SideEffect;
   sendClarityEvents: typeof SideEffect;
@@ -1115,8 +1127,9 @@ export const PlasmicSearchRequest = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    text: makeNodeComponent("text"),
     httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
+    freeBox: makeNodeComponent("freeBox"),
+    svg: makeNodeComponent("svg"),
     searchResults: makeNodeComponent("searchResults"),
     sendSplunkEvent: makeNodeComponent("sendSplunkEvent"),
     sendClarityEvents: makeNodeComponent("sendClarityEvents"),

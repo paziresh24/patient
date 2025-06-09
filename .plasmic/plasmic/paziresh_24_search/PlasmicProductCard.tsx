@@ -826,6 +826,19 @@ function PlasmicProductCard__RenderFunc(props: {
                     "__wab_instance",
                     sty.lineClamp___342Ax
                   )}
+                  numberOfLines={(() => {
+                    try {
+                      return $props.searchCardId.startsWith("center") ? 2 : 1;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return 1;
+                      }
+                      throw e;
+                    }
+                  })()}
                 >
                   <h2
                     data-plasmic-name={"cardTitle"}
