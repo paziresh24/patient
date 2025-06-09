@@ -4,6 +4,7 @@ import useModal from '@/common/hooks/useModal';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
+import { getCookie } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useEffectOnce } from 'react-use';
@@ -34,6 +35,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
   const [isLoading, setIsLoading] = useState(true);
   const [id, setId] = useState(null);
   const [fullScreen, setFullScreen] = useState(false);
+  const intervalCloseRef = useRef<any>();
 
   const paymentData = useRef<any>({});
 
@@ -102,6 +104,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
       }
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_CANCEL') {
+        clearInterval(intervalCloseRef.current);
         handleClose();
         iframeRef.current?.contentWindow?.postMessage(
           {
@@ -121,6 +124,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
       }
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_SUCCESS') {
+        clearInterval(intervalCloseRef.current);
         if (gatewayWindow) {
           gatewayWindow?.close();
         }
@@ -144,6 +148,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
       }
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_ERROR') {
+        clearInterval(intervalCloseRef.current);
         if (gatewayWindow) {
           gatewayWindow?.close();
         }
@@ -172,6 +177,51 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
         if (gatewayLink) {
           gatewayWindow = window.open(gatewayLink, '_blank');
           setFullScreen(true);
+
+          intervalCloseRef.current = setInterval(() => {
+            if (!getCookie('payment_state')) return;
+            const status = getCookie('payment_state')?.toString().includes('SUCCESS');
+
+            handleClose();
+
+            if (status) {
+              iframeRef.current?.contentWindow?.postMessage(
+                {
+                  hamdast: {
+                    event: 'HAMDAST_PAYMENT_SUCCESS',
+                    action: 'forwardToApp',
+                    data: {
+                      event: 'HAMDAST_PAYMENT_SUCCESS',
+                      payload: paymentData.current?.payload,
+                      product_key: paymentData.current?.product_key,
+                      receipt_id: paymentData.current?.receipt_id,
+                    },
+                    hash_id: paymentData.current?.hash_id,
+                  },
+                },
+                '*',
+              );
+            }
+
+            if (!status) {
+              toast.error(messageEvent.data?.payman?.data?.message);
+              iframeRef.current?.contentWindow?.postMessage(
+                {
+                  hamdast: {
+                    event: 'HAMDAST_PAYMENT_ERROR',
+                    action: 'forwardToApp',
+                    data: {
+                      event: 'HAMDAST_PAYMENT_ERROR',
+                      payload: paymentData.current?.payload,
+                      product_key: paymentData.current?.product_key,
+                    },
+                    hash_id: paymentData.current?.hash_id,
+                  },
+                },
+                '*',
+              );
+            }
+          }, 1000);
         }
       }
     };
