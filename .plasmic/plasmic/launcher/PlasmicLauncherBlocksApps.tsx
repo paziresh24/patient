@@ -61,6 +61,7 @@ import {
 
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
 import LauncherComponentsApp from "../../LauncherComponentsApp"; // plasmic-import: 25u6_6Q-fQwp/component
+import LauncherComponentsAppSquare from "../../LauncherComponentsAppSquare"; // plasmic-import: u4TwWczEaPgW/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -83,7 +84,6 @@ export const PlasmicLauncherBlocksApps__ArgProps = new Array<ArgPropType>();
 export type PlasmicLauncherBlocksApps__OverridesType = {
   root?: Flex__<"div">;
   launcherComponentsTitle?: Flex__<typeof LauncherComponentsTitle>;
-  freeBox?: Flex__<"div">;
 };
 
 export interface DefaultLauncherBlocksAppsProps {
@@ -153,9 +153,21 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
         className={classNames("__wab_instance", sty.launcherComponentsTitle)}
         isNew={true}
         moreLink={"/_/apps"}
-        moreTitle={
-          "\u0647\u0645\u0647 \u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627"
-        }
+        moreTitle={(() => {
+          try {
+            return $ctx.auth.info?.provider?.job_title !== "doctor"
+              ? null
+              : "همه ابزارک ها";
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         subTitle={(() => {
           try {
             return $ctx.auth.info?.provider?.job_title === "doctor"
@@ -176,10 +188,8 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
 
       <Stack__
         as={"div"}
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
         hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox)}
+        className={classNames(projectcss.all, sty.freeBox__xm9Rt)}
       >
         {(() => {
           try {
@@ -272,19 +282,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             widgetId={"aed80eahprc1qs0"}
           />
         ) : null}
-        {(() => {
-          try {
-            return $ctx.auth.info?.provider?.job_title !== "doctor";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
-          }
-        })() ? (
+        {false ? (
           <LauncherComponentsApp
             avatar={
               "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
@@ -320,15 +318,111 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             }
           />
         ) : null}
+        {(() => {
+          try {
+            return $ctx.auth.info?.provider?.job_title !== "doctor";
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <div className={classNames(projectcss.all, sty.freeBox___0Utqf)}>
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsAppSquare__tgcvE
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-glucose-meter.png"
+              }
+              title={
+                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u062f\u06cc\u0627\u0628\u062a"
+              }
+            />
+
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsAppSquare__b4Fhi
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-fe.png"
+              }
+              onClick={async () => {
+                const $steps = {};
+
+                $steps[
+                  "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                ] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination:
+                          "/_/liom/self-test/?app=paziresh24&type=ida&origin=paziresh24&gw=paziresh24"
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ] != null &&
+                  typeof $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ] === "object" &&
+                  typeof $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ].then === "function"
+                ) {
+                  $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ] = await $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ];
+                }
+              }}
+              title={
+                "\u062a\u0634\u062e\u06cc\u0635 \u06a9\u0645\u0628\u0648\u062f \u0622\u0647\u0646"
+              }
+            />
+
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsAppSquare__ps1Gg
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-thyroid.png"
+              }
+              title={
+                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062e\u062a\u0644\u0627\u0644 \u062a\u06cc\u0631\u0648\u0626\u06cc\u062f"
+              }
+            />
+          </div>
+        ) : null}
       </Stack__>
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "launcherComponentsTitle", "freeBox"],
-  launcherComponentsTitle: ["launcherComponentsTitle"],
-  freeBox: ["freeBox"]
+  root: ["root", "launcherComponentsTitle"],
+  launcherComponentsTitle: ["launcherComponentsTitle"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -336,7 +430,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   launcherComponentsTitle: typeof LauncherComponentsTitle;
-  freeBox: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -400,7 +493,6 @@ export const PlasmicLauncherBlocksApps = Object.assign(
   {
     // Helper components rendering sub-elements
     launcherComponentsTitle: makeNodeComponent("launcherComponentsTitle"),
-    freeBox: makeNodeComponent("freeBox"),
 
     // Metadata about props expected for PlasmicLauncherBlocksApps
     internalVariantProps: PlasmicLauncherBlocksApps__VariantProps,

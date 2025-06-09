@@ -2539,7 +2539,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -2926,8 +2927,7 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "grxNYctbMek6PL66cujx3u",
@@ -3156,6 +3156,19 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksProfile.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "u4TwWczEaPgW",
+          "name": "LauncherComponentsAppSquare",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherComponentsAppSquare.tsx",
+          "importSpec": {
+            "modulePath": "LauncherComponentsAppSquare.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherComponentsAppSquare.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -3328,8 +3341,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",
