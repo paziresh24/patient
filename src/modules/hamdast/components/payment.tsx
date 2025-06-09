@@ -4,7 +4,7 @@ import useModal from '@/common/hooks/useModal';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
-import { getCookie } from 'cookies-next';
+import { getCookie, removeCookies } from 'cookies-next';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useEffectOnce } from 'react-use';
@@ -105,6 +105,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_CANCEL') {
         clearInterval(intervalCloseRef.current);
+        removeCookies('payment_state');
         handleClose();
         iframeRef.current?.contentWindow?.postMessage(
           {
@@ -125,6 +126,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_SUCCESS') {
         clearInterval(intervalCloseRef.current);
+        removeCookies('payment_state');
         if (gatewayWindow) {
           gatewayWindow?.close();
         }
@@ -149,6 +151,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_ERROR') {
         clearInterval(intervalCloseRef.current);
+        removeCookies('payment_state');
         if (gatewayWindow) {
           gatewayWindow?.close();
         }
@@ -181,6 +184,9 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           intervalCloseRef.current = setInterval(() => {
             if (!getCookie('payment_state')) return;
             const status = getCookie('payment_state')?.toString().includes('SUCCESS');
+            clearInterval(intervalCloseRef.current);
+
+            removeCookies('payment_state');
 
             handleClose();
 
@@ -229,6 +235,8 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
 
     return () => {
       window.removeEventListener('message', handleEventFunction);
+      clearInterval(intervalCloseRef.current);
+      removeCookies('payment_state');
     };
   }, [isLogin]);
 
