@@ -191,8 +191,8 @@ export const Services = ({
                           })
                         : '',
                     })),
-                  is_book_request: center?.services?.some?.((service: any) => service?.can_request),
                 }),
+                is_book_request: center.services.some((service: any) => service.can_request == 1),
               }))}
             onBook={({ centerId, serviceId }) =>
               handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
