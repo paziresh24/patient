@@ -183,11 +183,8 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           setFullScreen(true);
 
           intervalCloseRef.current = setInterval(() => {
-            if (!getCookie('payment_state')) return;
-            const status = getCookie('payment_state')?.toString().includes('SUCCESS');
-            clearInterval(intervalCloseRef.current);
-
-            deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+            if (!getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })) return;
+            const status = getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })?.toString().includes('SUCCESS');
 
             handleClose();
 
@@ -208,6 +205,8 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
                 },
                 '*',
               );
+              deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+              clearInterval(intervalCloseRef.current);
             }
 
             if (!status) {
@@ -237,7 +236,6 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
     return () => {
       window.removeEventListener('message', handleEventFunction);
       clearInterval(intervalCloseRef.current);
-      deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
     };
   }, [isLogin]);
 
