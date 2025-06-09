@@ -123,42 +123,6 @@ const Receipt = () => {
   const doctorName = bookDetailsData?.doctor?.display_name;
 
   useEffect(() => {
-    growthbook.loadFeatures({ skipCache: true });
-    growthbook.setAttributes({
-      ...growthbook.getAttributes(),
-      slug: bookDetailsData?.doctor?.slug,
-      book_id: bookId,
-      center_id: centerId,
-    });
-
-    if (bookDetailsData?.doctor?.id) {
-      splunkInstance('booking').sendEvent({
-        group: 'view-receipt-page',
-        type: 'view-receipt-page',
-        event: {
-          doctor_id: bookDetailsData?.doctor?.id,
-          slug: bookDetailsData?.doctor?.slug,
-          server_id: bookDetailsData?.doctor?.server_id,
-          doctor_name: doctorName,
-          book_id: bookDetailsData.book_id,
-          reference_code: bookDetailsData.reference_code,
-          book_date: bookDetailsData.book_time_strings,
-          center_id: centerId,
-          user_id: user?.id,
-          is_doctor: user?.provider?.job_title === 'doctor',
-        },
-      });
-    }
-
-    return () => {
-      growthbook.setAttributes({
-        ...growthbook.getAttributes(),
-        slug: undefined,
-      });
-    };
-  }, [bookDetailsData?.doctor?.slug]);
-
-  useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
       router.replace(`/login?redirect_url=${router.asPath}`);
     }
@@ -417,6 +381,47 @@ const Receipt = () => {
         });
     }
   }, [bookDetailsData?.book_time]);
+
+  useEffect(() => {
+    if (bookDetailsData?.doctor?.slug) {
+      {
+        growthbook.loadFeatures({ skipCache: true });
+        growthbook.setAttributes({
+          ...growthbook.getAttributes(),
+          slug: bookDetailsData?.doctor?.slug,
+          book_id: bookId,
+          center_id: centerId,
+          is_book_request: bookDetailsData?.is_book_request,
+        });
+
+        if (bookDetailsData?.doctor?.id) {
+          splunkInstance('booking').sendEvent({
+            group: 'view-receipt-page',
+            type: 'view-receipt-page',
+            event: {
+              doctor_id: bookDetailsData?.doctor?.id,
+              slug: bookDetailsData?.doctor?.slug,
+              server_id: bookDetailsData?.doctor?.server_id,
+              doctor_name: doctorName,
+              book_id: bookDetailsData.book_id,
+              reference_code: bookDetailsData.reference_code,
+              book_date: bookDetailsData.book_time_strings,
+              center_id: centerId,
+              user_id: user?.id,
+              is_doctor: user?.provider?.job_title === 'doctor',
+            },
+          });
+        }
+      }
+    }
+
+    return () => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        slug: undefined,
+      });
+    };
+  }, [bookDetailsData?.doctor?.slug, turnStatus]);
 
   return (
     <>
