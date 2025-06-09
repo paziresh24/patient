@@ -206,7 +206,6 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
                 '*',
               );
               deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-              clearInterval(intervalCloseRef.current);
             }
 
             if (!status) {
@@ -227,6 +226,8 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
                 '*',
               );
             }
+
+            clearInterval(intervalCloseRef.current);
           }, 1000);
         }
       }
@@ -235,7 +236,6 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
 
     return () => {
       window.removeEventListener('message', handleEventFunction);
-      clearInterval(intervalCloseRef.current);
     };
   }, [isLogin]);
 
