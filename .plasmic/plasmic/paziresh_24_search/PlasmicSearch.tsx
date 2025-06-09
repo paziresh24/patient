@@ -68,7 +68,6 @@ import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmi
 import LocationView from "../../LocationView"; // plasmic-import: p2ixA7V1voJv/component
 import { Portal } from "@/common/fragment/components/portal"; // plasmic-import: 4fT4c69Xtkbb/codeComponent
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
 
@@ -262,6 +261,12 @@ function PlasmicSearch__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "timoutRef",
+        type: "private",
+        variableType: "number",
+        initFunc: ({ $props, $state, $queries, $ctx }) => 0
       }
     ],
     [$props, $ctx, $refs]
@@ -468,6 +473,31 @@ function PlasmicSearch__RenderFunc(props: {
                     $steps["updateInputValue"] = await $steps[
                       "updateInputValue"
                     ];
+                  }
+
+                  $steps["runCode"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return (() => {
+                              clearTimeout($state.timoutRef);
+                              return ($state.timoutRef = setTimeout(() => {
+                                $state.terms = value;
+                              }, 600));
+                            })();
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runCode"] != null &&
+                    typeof $steps["runCode"] === "object" &&
+                    typeof $steps["runCode"].then === "function"
+                  ) {
+                    $steps["runCode"] = await $steps["runCode"];
                   }
                 }}
                 onClickCities={async () => {
@@ -794,18 +824,12 @@ function PlasmicSearch__RenderFunc(props: {
                     ];
                   }
                 }}
-                terms={(() => {
-                  const updateTerms = $$.lodash.debounce(() => {
-                    $state.terms = $state.inputValue;
-                  }, 1000);
-                  updateTerms();
-                  return $state.terms;
-                })()}
+                terms={$state.terms}
               />
 
               {(() => {
                 try {
-                  return $state.inputValue.trim().length >= 3;
+                  return $state.terms.trim().length >= 3;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -841,13 +865,7 @@ function PlasmicSearch__RenderFunc(props: {
                       )
                     }
                   )}
-                  inputValue={(() => {
-                    const updateTerms = $$.lodash.debounce(() => {
-                      $state.terms = $state.inputValue;
-                    }, 1000);
-                    updateTerms();
-                    return $state.terms;
-                  })()}
+                  inputValue={$state.terms}
                 />
               ) : null}
             </div>

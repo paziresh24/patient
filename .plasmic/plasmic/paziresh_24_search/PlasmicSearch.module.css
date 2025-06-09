@@ -95,8 +95,8 @@
   left: 0px;
   top: 65px;
   height: auto;
-  border-bottom-right-radius: var(--token-vMUQwr5Jto1d);
-  border-bottom-left-radius: var(--token-vMUQwr5Jto1d);
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
   background: #ffffff;
   max-height: 400px;
   overflow-x: hidden;
