@@ -201,6 +201,12 @@ function PlasmicSearchRequest__RenderFunc(props: {
                 from: 0,
                 size: 10,
                 query: $props.searchQuery,
+                semantic_search:
+                  $ctx.Growthbook &&
+                  $ctx.Growthbook.isReady &&
+                  $ctx.Growthbook.features["search-semantic-search"]
+                    ? "true"
+                    : "false",
                 facets: "*",
                 ...(Object.values(
                   $props.searchOptionalFilters
