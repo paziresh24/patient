@@ -383,7 +383,7 @@ const Receipt = () => {
   }, [bookDetailsData?.book_time]);
 
   useEffect(() => {
-    if (bookDetailsData?.doctor?.slug) {
+    if (bookDetailsData?.id) {
       {
         growthbook.loadFeatures({ skipCache: true });
         growthbook.setAttributes({
@@ -421,7 +421,7 @@ const Receipt = () => {
         slug: undefined,
       });
     };
-  }, [bookDetailsData?.doctor?.slug, turnStatus]);
+  }, [bookDetailsData?.id]);
 
   return (
     <>
