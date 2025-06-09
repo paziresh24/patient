@@ -40,6 +40,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
   const paymentData = useRef<any>({});
 
   const openAndCreateReceipt = () => {
+    removeCookies('payment_state');
     handleOpen();
     axios
       .post(
