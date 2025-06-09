@@ -134,7 +134,13 @@ const Receipt = () => {
         handleOpenWaitingTimeModal();
         return;
       }
-      if (isPWA() && isActiveTurn && shouldShowRateAppModal && customize.showPromoteApp) {
+      if (
+        isPWA() &&
+        isActiveTurn &&
+        shouldShowRateAppModal &&
+        customize.showPromoteApp &&
+        !getReceiptDetails?.data?.data?.is_book_request
+      ) {
         handleOpenRateAppModal();
         return;
       }
