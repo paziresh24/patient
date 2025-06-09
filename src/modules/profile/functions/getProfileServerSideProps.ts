@@ -484,7 +484,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         timeout: 2000,
       });
     } catch (error) {
-      console.error(error);
+      // error
     }
 
     const doctorCity = centers?.find?.((center: any) => center.id !== '5532')?.city;
