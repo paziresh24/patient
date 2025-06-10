@@ -25,7 +25,7 @@
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .rootisFocused {
-    border-radius: 1000px;
+    border-radius: 8px;
     border-color: var(--token-JDvyxAtm9ONK);
   }
 }

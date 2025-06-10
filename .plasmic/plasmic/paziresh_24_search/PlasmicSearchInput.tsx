@@ -596,7 +596,9 @@ function PlasmicSearchInput__RenderFunc(props: {
                 }).apply(null, eventArgs);
               }}
               placeholder={
-                "\u0646\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u06cc\u060c \u062a\u062e\u0635\u0635\u060c \u067e\u0632\u0634\u06a9\u060c \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648 ..."
+                hasVariant(globalVariants, "screen", "mobileOnly")
+                  ? "\u0628\u06cc\u0645\u0627\u0631\u06cc\u060c \u062a\u062e\u0635\u0635\u060c \u067e\u0632\u0634\u06a9\u060c \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648 ..."
+                  : "\u0646\u0627\u0645 \u0628\u06cc\u0645\u0627\u0631\u06cc\u060c \u062a\u062e\u0635\u0635\u060c \u067e\u0632\u0634\u06a9\u060c \u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648 ..."
               }
               showEndIcon={(() => {
                 try {
