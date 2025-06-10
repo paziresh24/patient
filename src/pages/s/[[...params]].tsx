@@ -41,7 +41,7 @@ const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 
-const Search = ({ host, fragmentComponents }: any) => {
+const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
@@ -176,7 +176,7 @@ const Search = ({ host, fragmentComponents }: any) => {
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
         <Suggestion
-          showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
+          showPlasmicSuggestion={isMainSite || fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
           key={asPath.toString()}
           overlay
         />
@@ -310,6 +310,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     const host = context.req.headers.host;
     const path = context.resolvedUrl;
     const url = `https://${host}${path}`;
+    const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
@@ -391,12 +392,13 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         props: {
           dehydratedState: dehydrate(queryClient),
           fragmentComponents: {
-            showPlasmicSuggestion,
+            showPlasmicSuggestion: isMainSite || showPlasmicSuggestion,
             showPlasmicResult,
             showPlasmicSort,
             showPlasmicConsultBanner,
             url,
           },
+          isMainSite,
         },
       };
     } catch (error) {
