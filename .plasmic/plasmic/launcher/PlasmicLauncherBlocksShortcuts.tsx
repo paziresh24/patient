@@ -155,7 +155,7 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
         moreTitle={(() => {
           try {
             return $ctx.auth.info?.provider?.job_title === "doctor"
-              ? "همه خدمات"
+              ? "همه موارد"
               : null;
           } catch (e) {
             if (
@@ -167,9 +167,7 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
             throw e;
           }
         })()}
-        title={
-          "\u062e\u062f\u0645\u0627\u062a \u067e\u0631\u06a9\u0627\u0631\u0628\u0631\u062f"
-        }
+        title={"\u0645\u06cc\u0627\u0646\u200c\u0628\u0631\u0647\u0627"}
       />
 
       {(() => {
@@ -185,7 +183,7 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <div className={classNames(projectcss.all, sty.freeBox___9RuOc)}>
+        <div className={classNames(projectcss.all, sty.freeBox__iuFcK)}>
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
             (() => {
               try {
@@ -206,9 +204,9 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
                     url: "/dashboard/apps/drapp/vacation/"
                   },
                   {
-                    name: "نظرات",
-                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Freviews.svg?versionId=",
-                    url: "/dashboard/apps/ravi/my_prifile_feedbacks/"
+                    name: "تعرفه ها",
+                    icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fservices.svg?versionId=",
+                    url: "/dashboard/apps/drapp/service/"
                   }
                 ];
               } catch (e) {
@@ -270,6 +268,7 @@ function PlasmicLauncherBlocksShortcuts__RenderFunc(props: {
                     throw e;
                   }
                 })()}
+                source={"shortcuts"}
               />
             );
           })}

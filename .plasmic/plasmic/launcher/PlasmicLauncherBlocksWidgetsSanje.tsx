@@ -133,6 +133,8 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -211,6 +213,47 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
           $steps["goToDashboardAppsSanjeMyPerformance"] = await $steps[
             "goToDashboardAppsSanjeMyPerformance"
           ];
+        }
+
+        $steps["sendLog"] = true
+          ? (() => {
+              const actionArgs = {
+                args: [
+                  (() => {
+                    try {
+                      return {
+                        evant_group: "launcher_statistics",
+                        event_type: "widget_features",
+                        feature: "sanje",
+                        user_id: $ctx.auth.info?.id,
+                        is_doctor: $ctx.auth.info?.is_doctor,
+                        meta_data: {
+                          score: $state.apiRequest.data?.final_score
+                        }
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return $globalActions["Splunk.sendLog"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
+          : undefined;
+        if (
+          $steps["sendLog"] != null &&
+          typeof $steps["sendLog"] === "object" &&
+          typeof $steps["sendLog"].then === "function"
+        ) {
+          $steps["sendLog"] = await $steps["sendLog"];
         }
       }}
     >

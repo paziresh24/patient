@@ -129,6 +129,8 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   return (
     <Stack__
       as={"div"}
@@ -219,6 +221,51 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             name={
               "\u0627\u0631\u0633\u0627\u0644 \u067e\u06cc\u0627\u0645\u06a9"
             }
+            onEvent={async () => {
+              const $steps = {};
+
+              $steps["sendLog"] = true
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        (() => {
+                          try {
+                            return {
+                              evant_group: "launcher_statistics",
+                              event_type: "apps",
+                              user_id: $ctx.auth.info?.id,
+                              is_doctor: $ctx.auth.info?.is_doctor,
+                              meta_data: {
+                                name: "ارسال پیامک",
+                                key: "drapp/notification",
+                                link: "/dashboard/apps/drapp/notification/"
+                              }
+                            };
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return $globalActions["Splunk.sendLog"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
+              if (
+                $steps["sendLog"] != null &&
+                typeof $steps["sendLog"] === "object" &&
+                typeof $steps["sendLog"].then === "function"
+              ) {
+                $steps["sendLog"] = await $steps["sendLog"];
+              }
+            }}
           />
         ) : null}
         {(() => {
@@ -247,6 +294,51 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             }
             link={"/_/bimehnama/setting/"}
             name={"\u0628\u06cc\u0645\u0647 \u0646\u0645\u0627"}
+            onEvent={async () => {
+              const $steps = {};
+
+              $steps["sendLog"] = true
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        (() => {
+                          try {
+                            return {
+                              evant_group: "launcher_statistics",
+                              event_type: "apps",
+                              user_id: $ctx.auth.info?.id,
+                              is_doctor: $ctx.auth.info?.is_doctor,
+                              meta_data: {
+                                name: "بیمه نما",
+                                key: "bimehnama/setting",
+                                link: "/_/bimehnama/setting/"
+                              }
+                            };
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return $globalActions["Splunk.sendLog"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
+              if (
+                $steps["sendLog"] != null &&
+                typeof $steps["sendLog"] === "object" &&
+                typeof $steps["sendLog"].then === "function"
+              ) {
+                $steps["sendLog"] = await $steps["sendLog"];
+              }
+            }}
             widgetId={"hhhzbbsffq0nlna"}
           />
         ) : null}
@@ -278,6 +370,51 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             name={
               "\u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645"
             }
+            onEvent={async () => {
+              const $steps = {};
+
+              $steps["sendLog"] = true
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        (() => {
+                          try {
+                            return {
+                              evant_group: "launcher_statistics",
+                              event_type: "apps",
+                              user_id: $ctx.auth.info?.id,
+                              is_doctor: $ctx.auth.info?.is_doctor,
+                              meta_data: {
+                                name: "پروفایل اینستاگرام",
+                                key: "cywoc24/setting",
+                                link: ""
+                              }
+                            };
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return $globalActions["Splunk.sendLog"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
+              if (
+                $steps["sendLog"] != null &&
+                typeof $steps["sendLog"] === "object" &&
+                typeof $steps["sendLog"].then === "function"
+              ) {
+                $steps["sendLog"] = await $steps["sendLog"];
+              }
+            }}
             soon={true}
             widgetId={"aed80eahprc1qs0"}
           />
@@ -339,19 +476,6 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             <LauncherComponentsAppSquare
               className={classNames(
                 "__wab_instance",
-                sty.launcherComponentsAppSquare__tgcvE
-              )}
-              icon={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-glucose-meter.png"
-              }
-              title={
-                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u062f\u06cc\u0627\u0628\u062a"
-              }
-            />
-
-            <LauncherComponentsAppSquare
-              className={classNames(
-                "__wab_instance",
                 sty.launcherComponentsAppSquare__b4Fhi
               )}
               icon={
@@ -359,6 +483,48 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
               }
               onClick={async () => {
                 const $steps = {};
+
+                $steps["sendLog"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "تشخیص کمبود آهن",
+                                  key: "liom/self-test",
+                                  link: "/_/liom/self-test/"
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendLog"] != null &&
+                  typeof $steps["sendLog"] === "object" &&
+                  typeof $steps["sendLog"].then === "function"
+                ) {
+                  $steps["sendLog"] = await $steps["sendLog"];
+                }
 
                 $steps[
                   "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
@@ -416,6 +582,48 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
               onClick={async () => {
                 const $steps = {};
 
+                $steps["sendLog"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "مشاور هوش مصنوعی سلامت",
+                                  key: "roshan/salamat",
+                                  link: "/_/roshan/salamat/"
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendLog"] != null &&
+                  typeof $steps["sendLog"] === "object" &&
+                  typeof $steps["sendLog"].then === "function"
+                ) {
+                  $steps["sendLog"] = await $steps["sendLog"];
+                }
+
                 $steps["goToRoshanSalamatOriginLauncherApps"] = true
                   ? (() => {
                       const actionArgs = {
@@ -449,6 +657,19 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
               }}
               title={
                 "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a"
+              }
+            />
+
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsAppSquare__tgcvE
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-glucose-meter.png"
+              }
+              title={
+                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u062f\u06cc\u0627\u0628\u062a"
               }
             />
 

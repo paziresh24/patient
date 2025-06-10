@@ -142,6 +142,8 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -599,6 +601,44 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
             $steps["goToDashboardAppsKatibeBills"] = await $steps[
               "goToDashboardAppsKatibeBills"
             ];
+          }
+
+          $steps["updateModalOpen2"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          evant_group: "launcher_statistics",
+                          event_type: "widget_features",
+                          feature: "wallet",
+                          user_id: $ctx.auth.info?.id,
+                          is_doctor: $ctx.auth.info?.is_doctor
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["updateModalOpen2"] != null &&
+            typeof $steps["updateModalOpen2"] === "object" &&
+            typeof $steps["updateModalOpen2"].then === "function"
+          ) {
+            $steps["updateModalOpen2"] = await $steps["updateModalOpen2"];
           }
         }}
       >

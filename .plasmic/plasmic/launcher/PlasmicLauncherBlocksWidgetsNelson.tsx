@@ -575,7 +575,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
               (async checked => {
                 const $steps = {};
 
-                $steps["invokeGlobalAction"] = true
+                $steps["api"] = true
                   ? (() => {
                       const actionArgs = {
                         args: [
@@ -609,13 +609,52 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                     })()
                   : undefined;
                 if (
-                  $steps["invokeGlobalAction"] != null &&
-                  typeof $steps["invokeGlobalAction"] === "object" &&
-                  typeof $steps["invokeGlobalAction"].then === "function"
+                  $steps["api"] != null &&
+                  typeof $steps["api"] === "object" &&
+                  typeof $steps["api"].then === "function"
                 ) {
-                  $steps["invokeGlobalAction"] = await $steps[
-                    "invokeGlobalAction"
-                  ];
+                  $steps["api"] = await $steps["api"];
+                }
+
+                $steps["sendLog"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "widget_features",
+                                feature: "online_visit_on_off_switch",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  is_on: $state._switch.checked
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendLog"] != null &&
+                  typeof $steps["sendLog"] === "object" &&
+                  typeof $steps["sendLog"].then === "function"
+                ) {
+                  $steps["sendLog"] = await $steps["sendLog"];
                 }
               }).apply(null, eventArgs);
             }}
