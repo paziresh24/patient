@@ -81,8 +81,6 @@ import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: eKLBqU_Fr5SV/icon
 
-import { debounce as __lib_lodash__debounce } from "lodash";
-
 createPlasmicElementProxy;
 
 export type PlasmicSearch__VariantMembers = {
@@ -146,11 +144,7 @@ export interface DefaultSearchProps {
   className?: string;
 }
 
-const $$ = {
-  lodash: {
-    debounce: __lib_lodash__debounce
-  }
-};
+const $$ = {};
 
 function useNextRouter() {
   try {
@@ -1091,6 +1085,31 @@ function PlasmicSearch__RenderFunc(props: {
               ) {
                 $steps["updateInputValue"] = await $steps["updateInputValue"];
               }
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return (() => {
+                          clearTimeout($state.timoutRef);
+                          return ($state.timoutRef = setTimeout(() => {
+                            $state.terms = value;
+                          }, 900));
+                        })();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
             }}
             onClickCities={async () => {
               const $steps = {};
@@ -1860,6 +1879,31 @@ function PlasmicSearch__RenderFunc(props: {
                         "updateInputValue"
                       ];
                     }
+
+                    $steps["runCode"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                clearTimeout($state.timoutRef);
+                                return ($state.timoutRef = setTimeout(() => {
+                                  $state.terms = value;
+                                }, 900));
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCode"] != null &&
+                      typeof $steps["runCode"] === "object" &&
+                      typeof $steps["runCode"].then === "function"
+                    ) {
+                      $steps["runCode"] = await $steps["runCode"];
+                    }
                   }}
                   onClickCities={async () => {
                     const $steps = {};
@@ -2079,13 +2123,7 @@ function PlasmicSearch__RenderFunc(props: {
                       hasVariant(globalVariants, "screen", "mobileOnly")
                         ? (() => {
                             try {
-                              return (() => {
-                                const updateTerms = $$.lodash.debounce(() => {
-                                  $state.terms = $state.inputValue;
-                                }, 1000);
-                                updateTerms();
-                                return $state.terms;
-                              })();
+                              return $state.terms;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -2143,13 +2181,7 @@ function PlasmicSearch__RenderFunc(props: {
                         hasVariant(globalVariants, "screen", "mobileOnly")
                           ? (() => {
                               try {
-                                return (() => {
-                                  const updateTerms = $$.lodash.debounce(() => {
-                                    $state.terms = $state.inputValue;
-                                  }, 1000);
-                                  updateTerms();
-                                  return $state.terms;
-                                })();
+                                return $state.terms;
                               } catch (e) {
                                 if (
                                   e instanceof TypeError ||

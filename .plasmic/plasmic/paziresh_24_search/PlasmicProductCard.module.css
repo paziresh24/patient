@@ -252,9 +252,7 @@
   max-width: 100%;
   font-size: var(--token-tM2Vh4zTir7U);
   color: #000000;
-  white-space: pre;
-  text-overflow: ellipsis !important;
-  overflow: hidden;
+  white-space: pre-wrap;
   min-width: 0;
 }
 .link__jKdVb {
