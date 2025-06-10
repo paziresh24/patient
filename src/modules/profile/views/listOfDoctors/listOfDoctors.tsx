@@ -201,7 +201,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                   imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
                   location: {},
                   paginationLoadingStatus: isFetchingNextPage,
-                  center_id: center_id,
+                  centerId: center_id,
                 }}
               />
             </SearchGlobalContextsProvider>
