@@ -331,7 +331,11 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <div className={classNames(projectcss.all, sty.freeBox___0Utqf)}>
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox___0Utqf)}
+          >
             <LauncherComponentsAppSquare
               className={classNames(
                 "__wab_instance",
@@ -404,6 +408,53 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             <LauncherComponentsAppSquare
               className={classNames(
                 "__wab_instance",
+                sty.launcherComponentsAppSquare__puPjQ
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
+              }
+              onClick={async () => {
+                const $steps = {};
+
+                $steps["goToRoshanSalamatOriginLauncherApps"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: "/_/roshan/salamat/?origin=launcher-apps"
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToRoshanSalamatOriginLauncherApps"] != null &&
+                  typeof $steps["goToRoshanSalamatOriginLauncherApps"] ===
+                    "object" &&
+                  typeof $steps["goToRoshanSalamatOriginLauncherApps"].then ===
+                    "function"
+                ) {
+                  $steps["goToRoshanSalamatOriginLauncherApps"] = await $steps[
+                    "goToRoshanSalamatOriginLauncherApps"
+                  ];
+                }
+              }}
+              title={
+                "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a"
+              }
+            />
+
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
                 sty.launcherComponentsAppSquare__ps1Gg
               )}
               icon={
@@ -413,7 +464,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                 "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062e\u062a\u0644\u0627\u0644 \u062a\u06cc\u0631\u0648\u0626\u06cc\u062f"
               }
             />
-          </div>
+          </Stack__>
         ) : null}
       </Stack__>
     </Stack__>
