@@ -34,6 +34,8 @@ interface ListOfDoctorsProps {
   onChangePage: (page: number) => void;
   hasNextPage: boolean;
   isFetchingNextPage?: boolean;
+  isMainSite?: boolean;
+  center_id?: string;
 }
 
 export const ListOfDoctors = (props: ListOfDoctorsProps) => {
@@ -50,6 +52,8 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
     onChangePage,
     hasNextPage,
     isFetchingNextPage,
+    isMainSite,
+    center_id,
   } = props;
   const page = useRef<number>(1);
   const router = useRouter();
@@ -102,7 +106,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
           />
         </div>
       )}
-      {!usePlasmicSearchResult && (
+      {!isMainSite && !usePlasmicSearchResult && (
         <div className="flex flex-col space-y-2">
           {loading && (
             <>
@@ -169,7 +173,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
           )}
         </div>
       )}
-      {usePlasmicSearchResult && (
+      {(isMainSite || usePlasmicSearchResult) && (
         <div className="flex flex-col space-y-2">
           {loading && (
             <>
@@ -197,6 +201,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                   imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
                   location: {},
                   paginationLoadingStatus: isFetchingNextPage,
+                  center_id: center_id,
                 }}
               />
             </SearchGlobalContextsProvider>

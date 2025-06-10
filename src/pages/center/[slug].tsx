@@ -33,7 +33,7 @@ const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile = ({ query: { text, expertise }, host }: any) => {
+const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) => {
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();
@@ -346,6 +346,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
             </Text>
             <div className="px-4 md:p-0">
               <ListOfDoctors
+                isMainSite={isMainSite}
                 doctors={doctors}
                 expertises={
                   expertises.data?.[0]?.items?.[0]?.sub_items?.map((expertise: any) => ({
@@ -369,6 +370,7 @@ const CenterProfile = ({ query: { text, expertise }, host }: any) => {
                   setSearchQuery(query);
                 }}
                 defaultValue={defaultExpertise}
+                center_id={profileData?.id}
               />
             </div>
           </section>
@@ -435,6 +437,8 @@ CenterProfile.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
   const { slug, ...query } = context.query;
+  const host = context.req.headers?.host;
+  const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
   const text = query?.text as string;
   const expertise = query?.expertise as string;
 
@@ -501,6 +505,7 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       props: {
         dehydratedState: dehydrate(queryClient),
         slug: slugFormatted,
+        isMainSite,
       },
     };
   } catch (error) {
