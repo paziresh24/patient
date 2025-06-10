@@ -132,6 +132,8 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   return (
     <Stack__
       as={"div"}
@@ -242,6 +244,47 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
                 onClick={async event => {
                   const $steps = {};
 
+                  $steps["sendLog"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  evant_group: "launcher_statistics",
+                                  event_type: "widget_features",
+                                  feature: "view_profile",
+                                  user_id: $ctx.auth.info?.id,
+                                  is_doctor: $ctx.auth.info?.is_doctor,
+                                  meta_data: {
+                                    slug: $ctx.auth.info?.provider?.slug
+                                  }
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendLog"] != null &&
+                    typeof $steps["sendLog"] === "object" &&
+                    typeof $steps["sendLog"].then === "function"
+                  ) {
+                    $steps["sendLog"] = await $steps["sendLog"];
+                  }
+
                   $steps["goToPage"] = true
                     ? (() => {
                         const actionArgs = {
@@ -351,6 +394,44 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
           className={classNames(projectcss.all, sty.freeBox__vXwnm)}
           onClick={async event => {
             const $steps = {};
+
+            $steps["sendLog"] = true
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            evant_group: "launcher_statistics",
+                            event_type: "widget_features",
+                            feature: "edit_profile",
+                            user_id: $ctx.auth.info?.id,
+                            is_doctor: $ctx.auth.info?.is_doctor
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return $globalActions["Splunk.sendLog"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+            if (
+              $steps["sendLog"] != null &&
+              typeof $steps["sendLog"] === "object" &&
+              typeof $steps["sendLog"].then === "function"
+            ) {
+              $steps["sendLog"] = await $steps["sendLog"];
+            }
 
             $steps["goToDashboardProfile"] = true
               ? (() => {

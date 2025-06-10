@@ -23,17 +23,20 @@
 .launcherComponentsTitle:global(.__wab_instance) {
   max-width: 100%;
 }
-.freeBox___9RuOc {
-  display: flex;
-  flex-direction: row;
+.freeBox__iuFcK {
+  display: grid;
   position: relative;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   width: 100%;
   height: auto;
   max-width: 100%;
-  justify-content: space-between;
-  align-items: center;
+  grid-row-gap: var(--token-6eH8UjLOmr7v);
+  grid-column-gap: var(--token-3WxvfyIdJppy);
   background: #ffffff;
   box-shadow: none;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   min-width: 0;
   border-radius: 12px;
   padding: 16px;

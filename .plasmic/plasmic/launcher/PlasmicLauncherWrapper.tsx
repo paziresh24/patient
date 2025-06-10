@@ -75,9 +75,9 @@ type VariantPropType = keyof PlasmicLauncherWrapper__VariantsArgs;
 export const PlasmicLauncherWrapper__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicLauncherWrapper__ArgsType = {};
+export type PlasmicLauncherWrapper__ArgsType = { page?: string };
 type ArgPropType = keyof PlasmicLauncherWrapper__ArgsType;
-export const PlasmicLauncherWrapper__ArgProps = new Array<ArgPropType>();
+export const PlasmicLauncherWrapper__ArgProps = new Array<ArgPropType>("page");
 
 export type PlasmicLauncherWrapper__OverridesType = {
   root?: Flex__<"div">;
@@ -85,6 +85,7 @@ export type PlasmicLauncherWrapper__OverridesType = {
 };
 
 export interface DefaultLauncherWrapperProps {
+  page?: string;
   className?: string;
 }
 
@@ -165,7 +166,7 @@ function PlasmicLauncherWrapper__RenderFunc(props: {
         onMount={async () => {
           const $steps = {};
 
-          $steps["invokeGlobalAction"] =
+          $steps["growthbookAttributes"] =
             $ctx.Growthbook.isReady && $ctx?.auth?.info?.id
               ? (() => {
                   const actionArgs = {
@@ -193,11 +194,78 @@ function PlasmicLauncherWrapper__RenderFunc(props: {
                 })()
               : undefined;
           if (
-            $steps["invokeGlobalAction"] != null &&
-            typeof $steps["invokeGlobalAction"] === "object" &&
-            typeof $steps["invokeGlobalAction"].then === "function"
+            $steps["growthbookAttributes"] != null &&
+            typeof $steps["growthbookAttributes"] === "object" &&
+            typeof $steps["growthbookAttributes"].then === "function"
           ) {
-            $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
+            $steps["growthbookAttributes"] = await $steps[
+              "growthbookAttributes"
+            ];
+          }
+
+          $steps["sendLog"] = $ctx?.auth?.info?.id
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          evant_group: "launcher_statistics",
+                          event_type: "page_load",
+                          user_id: $ctx.auth.info?.id,
+                          is_doctor: $ctx.auth.info?.is_doctor,
+                          page: $props.page
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["sendLog"] != null &&
+            typeof $steps["sendLog"] === "object" &&
+            typeof $steps["sendLog"].then === "function"
+          ) {
+            $steps["sendLog"] = await $steps["sendLog"];
+          }
+
+          $steps["setClariyUserId"] = !!$ctx.auth.info.id
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      if (globalThis.clarity) {
+                        return globalThis.clarity(
+                          "identify",
+                          $ctx.auth?.info?.id
+                        );
+                      }
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["setClariyUserId"] != null &&
+            typeof $steps["setClariyUserId"] === "object" &&
+            typeof $steps["setClariyUserId"].then === "function"
+          ) {
+            $steps["setClariyUserId"] = await $steps["setClariyUserId"];
           }
         }}
       />

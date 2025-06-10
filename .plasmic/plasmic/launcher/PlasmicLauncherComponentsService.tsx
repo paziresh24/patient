@@ -79,10 +79,11 @@ export type PlasmicLauncherComponentsService__ArgsType = {
   name?: string;
   icon?: string;
   link?: string;
+  source?: string;
 };
 type ArgPropType = keyof PlasmicLauncherComponentsService__ArgsType;
 export const PlasmicLauncherComponentsService__ArgProps =
-  new Array<ArgPropType>("name", "icon", "link");
+  new Array<ArgPropType>("name", "icon", "link", "source");
 
 export type PlasmicLauncherComponentsService__OverridesType = {
   root?: Flex__<"div">;
@@ -96,6 +97,7 @@ export interface DefaultLauncherComponentsServiceProps {
   name?: string;
   icon?: string;
   link?: string;
+  source?: string;
   className?: string;
 }
 
@@ -140,6 +142,8 @@ function PlasmicLauncherComponentsService__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   return (
     <Stack__
@@ -198,6 +202,48 @@ function PlasmicLauncherComponentsService__RenderFunc(props: {
           typeof $steps["goToPage"].then === "function"
         ) {
           $steps["goToPage"] = await $steps["goToPage"];
+        }
+
+        $steps["sendLog"] = true
+          ? (() => {
+              const actionArgs = {
+                args: [
+                  (() => {
+                    try {
+                      return {
+                        evant_group: "launcher_statistics",
+                        event_type: "service",
+                        user_id: $ctx.auth.info?.id,
+                        is_doctor: $ctx.auth.info?.is_doctor,
+                        meta_data: {
+                          name: $props.name,
+                          link: $props.link
+                        },
+                        source: $props.source
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return $globalActions["Splunk.sendLog"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
+          : undefined;
+        if (
+          $steps["sendLog"] != null &&
+          typeof $steps["sendLog"] === "object" &&
+          typeof $steps["sendLog"].then === "function"
+        ) {
+          $steps["sendLog"] = await $steps["sendLog"];
         }
       }}
     >

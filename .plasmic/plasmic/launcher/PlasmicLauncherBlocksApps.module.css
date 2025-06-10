@@ -96,10 +96,6 @@
   > img {
   margin-left: 5px;
 }
-.launcherComponentsAppSquare__tgcvE:global(.__wab_instance) {
-  max-width: 100%;
-  display: none;
-}
 .launcherComponentsAppSquare__b4Fhi:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
@@ -109,6 +105,10 @@
   max-width: 100%;
   width: 100%;
   min-width: 0;
+}
+.launcherComponentsAppSquare__tgcvE:global(.__wab_instance) {
+  max-width: 100%;
+  display: none;
 }
 .launcherComponentsAppSquare__ps1Gg:global(.__wab_instance) {
   max-width: 100%;

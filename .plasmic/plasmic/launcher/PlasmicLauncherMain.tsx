@@ -143,6 +143,8 @@ function PlasmicLauncherMain__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -181,6 +183,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
             data-plasmic-name={"launcherWrapper"}
             data-plasmic-override={overrides.launcherWrapper}
             className={classNames("__wab_instance", sty.launcherWrapper)}
+            page={"main"}
           />
 
           <LauncherBlocksProfile
@@ -296,6 +299,44 @@ function PlasmicLauncherMain__RenderFunc(props: {
               className={classNames(projectcss.all, sty.freeBox__rnWpl)}
               onClick={async event => {
                 const $steps = {};
+
+                $steps["sendLog"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "widget_features",
+                                feature: "support",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendLog"] != null &&
+                  typeof $steps["sendLog"] === "object" &&
+                  typeof $steps["sendLog"].then === "function"
+                ) {
+                  $steps["sendLog"] = await $steps["sendLog"];
+                }
 
                 $steps["goToHttpsSupportPaziresh24Com"] = true
                   ? (() => {

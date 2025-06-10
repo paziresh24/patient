@@ -148,6 +148,8 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   return (
     <Stack__
       as={"div"}
@@ -401,6 +403,47 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
               typeof $steps["goToPage"].then === "function"
             ) {
               $steps["goToPage"] = await $steps["goToPage"];
+            }
+
+            $steps["invokeGlobalAction"] = true
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            evant_group: "launcher_statistics",
+                            event_type: "more_button",
+                            user_id: $ctx.auth.info?.id,
+                            is_doctor: $ctx.auth.info?.is_doctor,
+                            meta_data: {
+                              title: $props.moreTitle,
+                              link: $props.moreLink
+                            }
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return $globalActions["Splunk.sendLog"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+            if (
+              $steps["invokeGlobalAction"] != null &&
+              typeof $steps["invokeGlobalAction"] === "object" &&
+              typeof $steps["invokeGlobalAction"].then === "function"
+            ) {
+              $steps["invokeGlobalAction"] = await $steps["invokeGlobalAction"];
             }
           }}
         >

@@ -153,6 +153,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
         data-plasmic-name={"launcherWrapper"}
         data-plasmic-override={overrides.launcherWrapper}
         className={classNames("__wab_instance", sty.launcherWrapper)}
+        page={"services"}
       />
 
       <Reveal
@@ -262,6 +263,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
                       throw e;
                     }
                   })()}
+                  source={"services_booking"}
                 />
               );
             })}
@@ -391,6 +393,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
                         throw e;
                       }
                     })()}
+                    source={"services_finances"}
                   />
                 );
               })}
@@ -594,6 +597,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
                       throw e;
                     }
                   })()}
+                  source={"services_performance"}
                 />
               );
             })}
