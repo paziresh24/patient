@@ -105,6 +105,7 @@ export type PlasmicSearchResults__ArgsType = {
   topSuggestedCardFeature?: any;
   onlineVisitButtonsCustomDestination?: any;
   searchConsultResponse?: any;
+  centerId?: string;
 };
 type ArgPropType = keyof PlasmicSearchResults__ArgsType;
 export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
@@ -118,7 +119,8 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
   "showMyPerformanceMetricsBox",
   "topSuggestedCardFeature",
   "onlineVisitButtonsCustomDestination",
-  "searchConsultResponse"
+  "searchConsultResponse",
+  "centerId"
 );
 
 export type PlasmicSearchResults__OverridesType = {
@@ -153,6 +155,7 @@ export interface DefaultSearchResultsProps {
   topSuggestedCardFeature?: any;
   onlineVisitButtonsCustomDestination?: any;
   searchConsultResponse?: any;
+  centerId?: string;
   isHorizental?: SingleBooleanChoiceArg<"isHorizental">;
   className?: string;
 }
@@ -1227,6 +1230,14 @@ function PlasmicSearchResults__RenderFunc(props: {
                               currentItem.actions[0].url = `https://www.paziresh24.com/factor/v2/${currentItem.slug}/${serviceId}/`;
                             }
                           }
+                        }
+                        if ($props.centerId) {
+                          return currentItem.actions.map(item => ({
+                            ...item,
+                            url:
+                              item.url.replace("/dr/", "/booking/") +
+                              `?centerId=${$props.centerId}`
+                          }));
                         }
                         return currentItem.actions;
                       })();
