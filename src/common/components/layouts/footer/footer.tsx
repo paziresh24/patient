@@ -16,7 +16,7 @@ const Footer = () => {
   const { t } = useTranslation('common');
 
   return (
-    <footer className="p-4 pwa:hidden print:hidden bg-white text-slate-700 mt-1">
+    <footer className="p-4 pwa:hidden print:hidden z-10 bg-white text-slate-700 mt-1">
       <Accordion title="درباره پذیرش۲۴">
         <div className="container p-4 px-0 mx-auto">
           <div className="grid grid-cols-12 grid-rows-1 gap-5">
@@ -86,6 +86,11 @@ const Footer = () => {
                       </ul>
                     }
                   </Accordion>
+                </div>
+                <div className="md:basis-[49%]">
+                  <a href={`https://support.paziresh24.com`} className="block p-4 text-[0.9rem] font-bold	 rounded-lg bg-slate-100">
+                    {t('footer.menu.support')}
+                  </a>
                 </div>
                 <div className="flex flex-col items-center justify-center mt-2 md:basis-[49%]">
                   <div className="flex flex-row items-center justify-center">
