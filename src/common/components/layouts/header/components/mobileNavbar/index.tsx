@@ -61,6 +61,16 @@ const MobileNavbar = (props: MobileNavbarProps) => {
       title: 'توسعه دهندگان',
       sub_menu: developersMenu,
     },
+    {
+      id: 8,
+      title: 'پشتیبانی',
+      sub_menu: [
+        {
+          title: 'پشتیبانی',
+          link: 'https://support.paziresh24.com',
+        },
+      ],
+    },
   ];
 
   useClickAway(ref, () => {
