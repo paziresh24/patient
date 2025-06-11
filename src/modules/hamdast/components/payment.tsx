@@ -1,6 +1,7 @@
 import Loading from '@/common/components/atom/loading/loading';
 import Modal from '@/common/components/atom/modal';
 import useModal from '@/common/hooks/useModal';
+import { splunkInstance } from '@/common/services/splunk';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
@@ -29,7 +30,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
       );
     },
   });
-  const { isLogin } = useUserInfoStore();
+  const { isLogin, info } = useUserInfoStore();
   const { handleOpenLoginModal } = useLoginModalContext();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -59,6 +60,19 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           ...paymentData.current,
           receipt_id: data.data?.receipt_id,
         };
+        splunkInstance('dashboard').sendEvent({
+          group: 'hamdast_payment',
+          type: 'show_receipt',
+          event: {
+            is_doctor: info?.is_doctor,
+            user_id: info?.id,
+            meta_data: {
+              app_key: app_key,
+              product_key: paymentData.current?.product_key,
+              receipt_id: paymentData.current?.receipt_id,
+            },
+          },
+        });
         setIsLoading(false);
       });
   };
@@ -123,6 +137,19 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           },
           '*',
         );
+        splunkInstance('dashboard').sendEvent({
+          group: 'hamdast_payment',
+          type: 'cancel_receipt',
+          event: {
+            is_doctor: info?.is_doctor,
+            user_id: info?.id,
+            meta_data: {
+              app_key: app_key,
+              product_key: paymentData.current?.product_key,
+              receipt_id: paymentData.current?.receipt_id,
+            },
+          },
+        });
       }
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_SUCCESS') {
@@ -148,6 +175,19 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           },
           '*',
         );
+        splunkInstance('dashboard').sendEvent({
+          group: 'hamdast_payment',
+          type: 'success_receipt',
+          event: {
+            is_doctor: info?.is_doctor,
+            user_id: info?.id,
+            meta_data: {
+              app_key: app_key,
+              product_key: paymentData.current?.product_key,
+              receipt_id: paymentData.current?.receipt_id,
+            },
+          },
+        });
       }
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_ERROR') {
@@ -174,6 +214,20 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           },
           '*',
         );
+        splunkInstance('dashboard').sendEvent({
+          group: 'hamdast_payment',
+          type: 'error_receipt',
+          event: {
+            is_doctor: info?.is_doctor,
+            user_id: info?.id,
+            meta_data: {
+              app_key: app_key,
+              product_key: paymentData.current?.product_key,
+              receipt_id: paymentData.current?.receipt_id,
+              message: messageEvent.data?.payman?.data?.message,
+            },
+          },
+        });
       }
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_OPEN_GATEWAY') {
@@ -181,6 +235,19 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
         if (gatewayLink) {
           gatewayWindow = window.open(gatewayLink, '_blank');
           setFullScreen(true);
+          splunkInstance('dashboard').sendEvent({
+            group: 'hamdast_payment',
+            type: 'open_gateway',
+            event: {
+              is_doctor: info?.is_doctor,
+              user_id: info?.id,
+              meta_data: {
+                app_key: app_key,
+                product_key: paymentData.current?.product_key,
+                receipt_id: paymentData.current?.receipt_id,
+              },
+            },
+          });
 
           intervalCloseRef.current = setInterval(() => {
             if (!getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })) return;
