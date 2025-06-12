@@ -59,6 +59,8 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
@@ -67,11 +69,15 @@ import sty from "./PlasmicLauncherComponentsAppSquare.module.css"; // plasmic-im
 
 createPlasmicElementProxy;
 
-export type PlasmicLauncherComponentsAppSquare__VariantMembers = {};
-export type PlasmicLauncherComponentsAppSquare__VariantsArgs = {};
+export type PlasmicLauncherComponentsAppSquare__VariantMembers = {
+  disabled: "disabled";
+};
+export type PlasmicLauncherComponentsAppSquare__VariantsArgs = {
+  disabled?: SingleBooleanChoiceArg<"disabled">;
+};
 type VariantPropType = keyof PlasmicLauncherComponentsAppSquare__VariantsArgs;
 export const PlasmicLauncherComponentsAppSquare__VariantProps =
-  new Array<VariantPropType>();
+  new Array<VariantPropType>("disabled");
 
 export type PlasmicLauncherComponentsAppSquare__ArgsType = {
   icon?: string;
@@ -85,13 +91,15 @@ export const PlasmicLauncherComponentsAppSquare__ArgProps =
 export type PlasmicLauncherComponentsAppSquare__OverridesType = {
   root?: Flex__<"div">;
   img?: Flex__<typeof PlasmicImg__>;
-  text?: Flex__<"div">;
+  modal?: Flex__<typeof Paziresh24Modal>;
+  span?: Flex__<"span">;
 };
 
 export interface DefaultLauncherComponentsAppSquareProps {
   icon?: string;
   title?: string;
   onClick?: () => void;
+  disabled?: SingleBooleanChoiceArg<"disabled">;
   className?: string;
 }
 
@@ -134,6 +142,30 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "disabled",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.disabled
+      },
+      {
+        path: "modal.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
     <Stack__
       as={"div"}
@@ -149,25 +181,57 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        sty.root
+        sty.root,
+        { [sty.rootdisabled]: hasVariant($state, "disabled", "disabled") }
       )}
       onClick={async event => {
         const $steps = {};
 
-        $steps["runOnClick"] = true
-          ? (() => {
-              const actionArgs = { eventRef: $props["onClick"] };
-              return (({ eventRef, args }) => {
-                return eventRef?.(...(args ?? []));
-              })?.apply(null, [actionArgs]);
-            })()
-          : undefined;
+        $steps["runOnClick"] =
+          $state.disabled !== "disabled"
+            ? (() => {
+                const actionArgs = { eventRef: $props["onClick"] };
+                return (({ eventRef, args }) => {
+                  return eventRef?.(...(args ?? []));
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
         if (
           $steps["runOnClick"] != null &&
           typeof $steps["runOnClick"] === "object" &&
           typeof $steps["runOnClick"].then === "function"
         ) {
           $steps["runOnClick"] = await $steps["runOnClick"];
+        }
+
+        $steps["updateModalOpen"] =
+          $state.disabled == "disabled"
+            ? (() => {
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["modal", "open"]
+                  },
+                  operation: 4
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
+
+                  const oldValue = $stateGet(objRoot, variablePath);
+                  $stateSet(objRoot, variablePath, !oldValue);
+                  return !oldValue;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+        if (
+          $steps["updateModalOpen"] != null &&
+          typeof $steps["updateModalOpen"] === "object" &&
+          typeof $steps["updateModalOpen"].then === "function"
+        ) {
+          $steps["updateModalOpen"] = await $steps["updateModalOpen"];
         }
       }}
     >
@@ -201,9 +265,11 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
       />
 
       <div
-        data-plasmic-name={"text"}
-        data-plasmic-override={overrides.text}
-        className={classNames(projectcss.all, projectcss.__wab_text, sty.text)}
+        className={classNames(
+          projectcss.all,
+          projectcss.__wab_text,
+          sty.text___4UJRl
+        )}
       >
         <React.Fragment>
           {(() => {
@@ -221,14 +287,101 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
           })()}
         </React.Fragment>
       </div>
+      <Paziresh24Modal
+        data-plasmic-name={"modal"}
+        data-plasmic-override={overrides.modal}
+        body={
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__mjP3V
+            )}
+          >
+            <React.Fragment>
+              <React.Fragment>
+                {"\u0627\u0628\u0632\u0627\u0631\u06a9 "}
+              </React.Fragment>
+              {
+                <span
+                  data-plasmic-name={"span"}
+                  data-plasmic-override={overrides.span}
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.span,
+                    projectcss.__wab_text,
+                    projectcss.plasmic_default__inline,
+                    sty.span
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.title;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "X";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </span>
+              }
+              <React.Fragment>
+                {
+                  " \u062f\u0631 \u062d\u0627\u0644 \u062d\u0627\u0636\u0631 \u062f\u0631 \u062f\u0633\u062a\u0631\u0633 \u0646\u06cc\u0633\u062a. \u0627\u06cc\u0646 \u0645\u0634\u06a9\u0644 \u0628\u0647\u200c\u0632\u0648\u062f\u06cc \u0628\u0631\u0637\u0631\u0641 \u0634\u062f\u0647 \u0648 \u0627\u0628\u0632\u0627\u0631\u06a9 \u062f\u0648\u0628\u0627\u0631\u0647 \u0641\u0639\u0627\u0644 \u062e\u0648\u0627\u0647\u062f \u0634\u062f."
+                }
+              </React.Fragment>
+            </React.Fragment>
+          </div>
+        }
+        className={classNames("__wab_instance", sty.modal, {
+          [sty.modaldisabled]: hasVariant($state, "disabled", "disabled")
+        })}
+        noTrigger={true}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["modal", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
+        open={generateStateValueProp($state, ["modal", "open"])}
+        title={
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text___6Vwq0
+            )}
+          >
+            {
+              "\u0645\u0634\u06a9\u0644\u06cc \u067e\u06cc\u0634 \u0622\u0645\u062f\u0647 \u0627\u0633\u062a."
+            }
+          </div>
+        }
+        trigger={null}
+      />
     </Stack__>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "img", "text"],
+  root: ["root", "img", "modal", "span"],
   img: ["img"],
-  text: ["text"]
+  modal: ["modal", "span"],
+  span: ["span"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -236,7 +389,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   img: typeof PlasmicImg__;
-  text: "div";
+  modal: typeof Paziresh24Modal;
+  span: "span";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -304,7 +458,8 @@ export const PlasmicLauncherComponentsAppSquare = Object.assign(
   {
     // Helper components rendering sub-elements
     img: makeNodeComponent("img"),
-    text: makeNodeComponent("text"),
+    modal: makeNodeComponent("modal"),
+    span: makeNodeComponent("span"),
 
     // Metadata about props expected for PlasmicLauncherComponentsAppSquare
     internalVariantProps: PlasmicLauncherComponentsAppSquare__VariantProps,
