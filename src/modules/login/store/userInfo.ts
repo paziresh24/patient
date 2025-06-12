@@ -58,10 +58,12 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         ...get().info,
         ...info,
         is_doctor: info.provider?.slug ? true : false,
-        provider: {
-          job_title: info.provider?.slug ? 'doctor' : null,
-          ...info?.provider,
-        },
+        ...(info.provider?.slug && {
+          provider: {
+            job_title: info.provider?.slug ? 'doctor' : null,
+            ...info?.provider,
+          },
+        }),
       };
 
       growthbook.setAttributes({
