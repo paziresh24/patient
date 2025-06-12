@@ -455,225 +455,238 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             }
           />
         ) : null}
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox___0Utqf)}
-        >
-          <LauncherComponentsAppSquare
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsAppSquare__b4Fhi
-            )}
-            icon={
-              "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-fe.png"
+        {(() => {
+          try {
+            return $ctx.auth.info?.provider?.job_title !== "doctor";
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
             }
-            onClick={async () => {
-              const $steps = {};
-
-              $steps["sendLog"] = true
-                ? (() => {
-                    const actionArgs = {
-                      args: [
-                        (() => {
-                          try {
-                            return {
-                              evant_group: "launcher_statistics",
-                              event_type: "apps",
-                              user_id: $ctx.auth.info?.id,
-                              is_doctor: $ctx.auth.info?.is_doctor,
-                              meta_data: {
-                                name: "تشخیص کمبود آهن",
-                                key: "liom/self-test",
-                                link: "/_/liom/self-test/"
-                              }
-                            };
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      ]
-                    };
-                    return $globalActions["Splunk.sendLog"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
-                : undefined;
-              if (
-                $steps["sendLog"] != null &&
-                typeof $steps["sendLog"] === "object" &&
-                typeof $steps["sendLog"].then === "function"
-              ) {
-                $steps["sendLog"] = await $steps["sendLog"];
+            throw e;
+          }
+        })() ? (
+          <Stack__
+            as={"div"}
+            hasGap={true}
+            className={classNames(projectcss.all, sty.freeBox___0Utqf)}
+          >
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsAppSquare__b4Fhi
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-fe.png"
               }
+              onClick={async () => {
+                const $steps = {};
 
-              $steps[
-                "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
-              ] = true
-                ? (() => {
-                    const actionArgs = {
-                      destination:
-                        "/_/liom/self-test/?app=paziresh24&type=ida&origin=paziresh24&gw=paziresh24"
-                    };
-                    return (({ destination }) => {
-                      if (
-                        typeof destination === "string" &&
-                        destination.startsWith("#")
-                      ) {
-                        document
-                          .getElementById(destination.substr(1))
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        __nextRouter?.push(destination);
-                      }
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
+                $steps["sendLog"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "تشخیص کمبود آهن",
+                                  key: "liom/self-test",
+                                  link: "/_/liom/self-test/"
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendLog"] != null &&
+                  typeof $steps["sendLog"] === "object" &&
+                  typeof $steps["sendLog"].then === "function"
+                ) {
+                  $steps["sendLog"] = await $steps["sendLog"];
+                }
+
                 $steps[
                   "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
-                ] != null &&
-                typeof $steps[
-                  "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
-                ] === "object" &&
-                typeof $steps[
-                  "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
-                ].then === "function"
-              ) {
-                $steps[
-                  "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
-                ] = await $steps[
-                  "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
-                ];
+                ] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination:
+                          "/_/liom/self-test/?app=paziresh24&type=ida&origin=paziresh24&gw=paziresh24"
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ] != null &&
+                  typeof $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ] === "object" &&
+                  typeof $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ].then === "function"
+                ) {
+                  $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ] = await $steps[
+                    "goToLiomSelfTestAppPaziresh24TypeIdaOriginPaziresh24GwPaziresh24"
+                  ];
+                }
+              }}
+              title={
+                "\u062a\u0634\u062e\u06cc\u0635 \u06a9\u0645\u0628\u0648\u062f \u0622\u0647\u0646"
               }
-            }}
-            title={
-              "\u062a\u0634\u062e\u06cc\u0635 \u06a9\u0645\u0628\u0648\u062f \u0622\u0647\u0646"
-            }
-          />
+            />
 
-          <LauncherComponentsAppSquare
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsAppSquare__puPjQ
-            )}
-            disabled={true}
-            icon={
-              "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
-            }
-            onClick={async () => {
-              const $steps = {};
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsAppSquare__puPjQ
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
+              }
+              onClick={async () => {
+                const $steps = {};
 
-              $steps["sendLog"] = true
-                ? (() => {
-                    const actionArgs = {
-                      args: [
-                        (() => {
-                          try {
-                            return {
-                              evant_group: "launcher_statistics",
-                              event_type: "apps",
-                              user_id: $ctx.auth.info?.id,
-                              is_doctor: $ctx.auth.info?.is_doctor,
-                              meta_data: {
-                                name: "مشاور هوش مصنوعی سلامت",
-                                key: "roshan/salamat",
-                                link: "/_/roshan/salamat/"
+                $steps["sendLog"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "مشاور هوش مصنوعی سلامت",
+                                  key: "roshan/salamat",
+                                  link: "/_/roshan/salamat/"
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
                               }
-                            };
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
+                              throw e;
                             }
-                            throw e;
-                          }
-                        })()
-                      ]
-                    };
-                    return $globalActions["Splunk.sendLog"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
-                : undefined;
-              if (
-                $steps["sendLog"] != null &&
-                typeof $steps["sendLog"] === "object" &&
-                typeof $steps["sendLog"].then === "function"
-              ) {
-                $steps["sendLog"] = await $steps["sendLog"];
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendLog"] != null &&
+                  typeof $steps["sendLog"] === "object" &&
+                  typeof $steps["sendLog"].then === "function"
+                ) {
+                  $steps["sendLog"] = await $steps["sendLog"];
+                }
+
+                $steps["goToRoshanSalamatOriginLauncherApps"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: "/_/roshan/salamat/?origin=launcher-apps"
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToRoshanSalamatOriginLauncherApps"] != null &&
+                  typeof $steps["goToRoshanSalamatOriginLauncherApps"] ===
+                    "object" &&
+                  typeof $steps["goToRoshanSalamatOriginLauncherApps"].then ===
+                    "function"
+                ) {
+                  $steps["goToRoshanSalamatOriginLauncherApps"] = await $steps[
+                    "goToRoshanSalamatOriginLauncherApps"
+                  ];
+                }
+              }}
+              title={
+                "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a"
               }
+            />
 
-              $steps["goToRoshanSalamatOriginLauncherApps"] = true
-                ? (() => {
-                    const actionArgs = {
-                      destination: "/_/roshan/salamat/?origin=launcher-apps"
-                    };
-                    return (({ destination }) => {
-                      if (
-                        typeof destination === "string" &&
-                        destination.startsWith("#")
-                      ) {
-                        document
-                          .getElementById(destination.substr(1))
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        __nextRouter?.push(destination);
-                      }
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["goToRoshanSalamatOriginLauncherApps"] != null &&
-                typeof $steps["goToRoshanSalamatOriginLauncherApps"] ===
-                  "object" &&
-                typeof $steps["goToRoshanSalamatOriginLauncherApps"].then ===
-                  "function"
-              ) {
-                $steps["goToRoshanSalamatOriginLauncherApps"] = await $steps[
-                  "goToRoshanSalamatOriginLauncherApps"
-                ];
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsAppSquare__tgcvE
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-glucose-meter.png"
               }
-            }}
-            title={
-              "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a"
-            }
-          />
+              title={
+                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u062f\u06cc\u0627\u0628\u062a"
+              }
+            />
 
-          <LauncherComponentsAppSquare
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsAppSquare__tgcvE
-            )}
-            icon={
-              "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-glucose-meter.png"
-            }
-            title={
-              "\u062a\u0634\u062e\u06cc\u0635 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u062f\u06cc\u0627\u0628\u062a"
-            }
-          />
-
-          <LauncherComponentsAppSquare
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsAppSquare__ps1Gg
-            )}
-            icon={
-              "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-thyroid.png"
-            }
-            title={
-              "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062e\u062a\u0644\u0627\u0644 \u062a\u06cc\u0631\u0648\u0626\u06cc\u062f"
-            }
-          />
-        </Stack__>
+            <LauncherComponentsAppSquare
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsAppSquare__ps1Gg
+              )}
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-thyroid.png"
+              }
+              title={
+                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062e\u062a\u0644\u0627\u0644 \u062a\u06cc\u0631\u0648\u0626\u06cc\u062f"
+              }
+            />
+          </Stack__>
+        ) : null}
       </Stack__>
     </Stack__>
   ) as React.ReactElement | null;
