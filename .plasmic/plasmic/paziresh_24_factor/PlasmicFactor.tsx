@@ -1054,12 +1054,24 @@ function PlasmicFactor__RenderFunc(props: {
                     ];
                   }
 
-                  $steps["goToHttpsGoogleCom"] =
+                  $steps["goToPage2"] =
                     $state.getWallet.data.data.balance >=
                     $state.priceCalculator.data.result.payable_cost
                       ? (() => {
                           const actionArgs = {
-                            destination: "https://google.com"
+                            destination: (() => {
+                              try {
+                                return `https://apigw.paziresh24.com/payment/v1/split?book_id=${$ctx.query.bookId}&center_id=${$ctx.query.centerId}`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
+                              }
+                            })()
                           };
                           return (({ destination }) => {
                             if (
@@ -1076,13 +1088,11 @@ function PlasmicFactor__RenderFunc(props: {
                         })()
                       : undefined;
                   if (
-                    $steps["goToHttpsGoogleCom"] != null &&
-                    typeof $steps["goToHttpsGoogleCom"] === "object" &&
-                    typeof $steps["goToHttpsGoogleCom"].then === "function"
+                    $steps["goToPage2"] != null &&
+                    typeof $steps["goToPage2"] === "object" &&
+                    typeof $steps["goToPage2"].then === "function"
                   ) {
-                    $steps["goToHttpsGoogleCom"] = await $steps[
-                      "goToHttpsGoogleCom"
-                    ];
+                    $steps["goToPage2"] = await $steps["goToPage2"];
                   }
 
                   $steps["createPaymentGatewayLink"] =
@@ -1101,7 +1111,7 @@ function PlasmicFactor__RenderFunc(props: {
                                         .payable_cost -
                                       $state.getWallet.data.data.balance,
                                     returnlink: window.btoa(
-                                      "http://www.google.com"
+                                      `https://apigw.paziresh24.com/payment/v1/split?book_id=${$ctx.query.bookId}&center_id=${$ctx.query.centerId}`
                                     ),
                                     title: "افزایش موجودی کیف پول"
                                   };
