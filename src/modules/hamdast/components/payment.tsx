@@ -121,7 +121,19 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_CANCEL') {
         clearInterval(intervalCloseRef.current);
         deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-        handleClose();
+        splunkInstance('dashboard').sendEvent({
+          group: 'hamdast_payment',
+          type: 'cancel_receipt',
+          event: {
+            is_doctor: info?.is_doctor,
+            user_id: info?.id,
+            meta_data: {
+              app_key: app_key,
+              product_key: paymentData.current?.product_key,
+              receipt_id: paymentData.current?.receipt_id,
+            },
+          },
+        });
         iframeRef.current?.contentWindow?.postMessage(
           {
             hamdast: {
@@ -137,9 +149,18 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           },
           '*',
         );
+        handleClose();
+      }
+
+      if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_SUCCESS') {
+        clearInterval(intervalCloseRef.current);
+        deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+        if (gatewayWindow) {
+          gatewayWindow?.close();
+        }
         splunkInstance('dashboard').sendEvent({
           group: 'hamdast_payment',
-          type: 'cancel_receipt',
+          type: 'success_receipt',
           event: {
             is_doctor: info?.is_doctor,
             user_id: info?.id,
@@ -150,15 +171,6 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
             },
           },
         });
-      }
-
-      if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_SUCCESS') {
-        clearInterval(intervalCloseRef.current);
-        deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-        if (gatewayWindow) {
-          gatewayWindow?.close();
-        }
-        handleClose();
         iframeRef.current?.contentWindow?.postMessage(
           {
             hamdast: {
@@ -175,19 +187,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           },
           '*',
         );
-        splunkInstance('dashboard').sendEvent({
-          group: 'hamdast_payment',
-          type: 'success_receipt',
-          event: {
-            is_doctor: info?.is_doctor,
-            user_id: info?.id,
-            meta_data: {
-              app_key: app_key,
-              product_key: paymentData.current?.product_key,
-              receipt_id: paymentData.current?.receipt_id,
-            },
-          },
-        });
+        handleClose();
       }
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_ERROR') {
@@ -196,8 +196,21 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
         if (gatewayWindow) {
           gatewayWindow?.close();
         }
-        handleClose();
         toast.error(messageEvent.data?.payman?.data?.message);
+        splunkInstance('dashboard').sendEvent({
+          group: 'hamdast_payment',
+          type: 'error_receipt',
+          event: {
+            is_doctor: info?.is_doctor,
+            user_id: info?.id,
+            meta_data: {
+              app_key: app_key,
+              product_key: paymentData.current?.product_key,
+              receipt_id: paymentData.current?.receipt_id,
+              message: messageEvent.data?.payman?.data?.message,
+            },
+          },
+        });
         iframeRef.current?.contentWindow?.postMessage(
           {
             hamdast: {
@@ -214,20 +227,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           },
           '*',
         );
-        splunkInstance('dashboard').sendEvent({
-          group: 'hamdast_payment',
-          type: 'error_receipt',
-          event: {
-            is_doctor: info?.is_doctor,
-            user_id: info?.id,
-            meta_data: {
-              app_key: app_key,
-              product_key: paymentData.current?.product_key,
-              receipt_id: paymentData.current?.receipt_id,
-              message: messageEvent.data?.payman?.data?.message,
-            },
-          },
-        });
+        handleClose();
       }
 
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_OPEN_GATEWAY') {
@@ -253,9 +253,20 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
             if (!getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })) return;
             const status = getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })?.toString().includes('SUCCESS');
 
-            handleClose();
-
             if (status) {
+              splunkInstance('dashboard').sendEvent({
+                group: 'hamdast_payment',
+                type: 'success_receipt',
+                event: {
+                  is_doctor: info?.is_doctor,
+                  user_id: info?.id,
+                  meta_data: {
+                    app_key: app_key,
+                    product_key: paymentData.current?.product_key,
+                    receipt_id: paymentData.current?.receipt_id,
+                  },
+                },
+              });
               iframeRef.current?.contentWindow?.postMessage(
                 {
                   hamdast: {
@@ -276,6 +287,20 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
 
             if (!status) {
               toast.error(messageEvent.data?.payman?.data?.message);
+              splunkInstance('dashboard').sendEvent({
+                group: 'hamdast_payment',
+                type: 'error_receipt',
+                event: {
+                  is_doctor: info?.is_doctor,
+                  user_id: info?.id,
+                  meta_data: {
+                    app_key: app_key,
+                    product_key: paymentData.current?.product_key,
+                    receipt_id: paymentData.current?.receipt_id,
+                    message: messageEvent.data?.payman?.data?.message,
+                  },
+                },
+              });
               iframeRef.current?.contentWindow?.postMessage(
                 {
                   hamdast: {
@@ -293,6 +318,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
               );
             }
 
+            handleClose();
             deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
             clearInterval(intervalCloseRef.current);
           }, 1000);
