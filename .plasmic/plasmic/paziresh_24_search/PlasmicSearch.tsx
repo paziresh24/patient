@@ -128,6 +128,7 @@ export type PlasmicSearch__OverridesType = {
   locationView?: Flex__<typeof LocationView>;
   fragmentPortal?: Flex__<typeof Portal>;
   sideEffect?: Flex__<typeof SideEffect>;
+  text?: Flex__<"div">;
 };
 
 export interface DefaultSearchProps {
@@ -2230,6 +2231,28 @@ function PlasmicSearch__RenderFunc(props: {
           }
         }}
       />
+
+      <div
+        data-plasmic-name={"text"}
+        data-plasmic-override={overrides.text}
+        className={classNames(projectcss.all, projectcss.__wab_text, sty.text)}
+      >
+        <React.Fragment>
+          {(() => {
+            try {
+              return $ctx.query;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return "";
+              }
+              throw e;
+            }
+          })()}
+        </React.Fragment>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -2243,7 +2266,8 @@ const PlasmicDescendants = {
     "svg",
     "locationView",
     "fragmentPortal",
-    "sideEffect"
+    "sideEffect",
+    "text"
   ],
   overlay: ["overlay"],
   selectCityDialog: [
@@ -2256,7 +2280,8 @@ const PlasmicDescendants = {
   svg: ["svg"],
   locationView: ["locationView"],
   fragmentPortal: ["fragmentPortal"],
-  sideEffect: ["sideEffect"]
+  sideEffect: ["sideEffect"],
+  text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2270,6 +2295,7 @@ type NodeDefaultElementType = {
   locationView: typeof LocationView;
   fragmentPortal: typeof Portal;
   sideEffect: typeof SideEffect;
+  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2339,6 +2365,7 @@ export const PlasmicSearch = Object.assign(
     locationView: makeNodeComponent("locationView"),
     fragmentPortal: makeNodeComponent("fragmentPortal"),
     sideEffect: makeNodeComponent("sideEffect"),
+    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicSearch
     internalVariantProps: PlasmicSearch__VariantProps,

@@ -335,7 +335,7 @@ function PlasmicSearchResults__RenderFunc(props: {
       {(() => {
         try {
           return (
-            !!globalThis.window.user.provider &&
+            !!globalThis.window?.user?.provider?.job_title &&
             $props.showMyPerformanceMetricsBox.enable
           );
         } catch (e) {
