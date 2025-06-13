@@ -80,7 +80,7 @@ const Home = ({ fragmentComponents }: any) => {
           'bg-white': !customize.backgroundImage,
         })}
       >
-        {!customize.partnerTitle && <Logo as="h1" className="text-2xl md:text-3xl" width={55} />}
+        {!customize.partnerTitle && <Logo as="h1" home className="text-2xl md:text-3xl" height={120} />}
         {customize.partnerTitle && (
           <Text fontWeight="black" className={classNames('text-primary md:text-lg', { 'text-white': customize.backgroundImage })}>
             {customize.partnerTitle}
