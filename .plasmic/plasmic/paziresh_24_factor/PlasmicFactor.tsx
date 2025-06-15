@@ -605,6 +605,28 @@ function PlasmicFactor__RenderFunc(props: {
                             "__wab_instance",
                             sty.getWallet
                           )}
+                          config={(() => {
+                            try {
+                              return (() => {
+                                const token = window.document.cookie
+                                  .split("; ")
+                                  .find(row => row.startsWith("token="))
+                                  ?.split("=")[1];
+                                const headers = token
+                                  ? { Authorization: `Bearer ${token}` }
+                                  : {};
+                                return headers;
+                              })();
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
                           errorDisplay={
                             <div
                               className={classNames(
@@ -1122,6 +1144,30 @@ function PlasmicFactor__RenderFunc(props: {
                                       "PlasmicUndefinedDataError"
                                   ) {
                                     return {};
+                                  }
+                                  throw e;
+                                }
+                              })(),
+                              undefined,
+                              (() => {
+                                try {
+                                  return (() => {
+                                    const token = window.document.cookie
+                                      .split("; ")
+                                      .find(row => row.startsWith("token="))
+                                      ?.split("=")[1];
+                                    const headers = token
+                                      ? { Authorization: `Bearer ${token}` }
+                                      : {};
+                                    return headers;
+                                  })();
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
                                   }
                                   throw e;
                                 }
@@ -2141,6 +2187,28 @@ function PlasmicFactor__RenderFunc(props: {
                   }
                 })()}
                 className={classNames("__wab_instance", sty.getDoctorInfo)}
+                config={(() => {
+                  try {
+                    return (() => {
+                      const token = window.document.cookie
+                        .split("; ")
+                        .find(row => row.startsWith("token="))
+                        ?.split("=")[1];
+                      const headers = token
+                        ? { Authorization: `Bearer ${token}` }
+                        : {};
+                      return headers;
+                    })();
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 errorDisplay={
                   <Stack__
                     as={"div"}
