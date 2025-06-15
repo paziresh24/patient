@@ -133,6 +133,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -370,7 +371,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                               loading={"lazy"}
                               src={(() => {
                                 try {
-                                  return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/base%2F${currentItem.key}-insurance.svg`;
+                                  return currentItem.icon;
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
@@ -520,7 +521,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                               loading={"lazy"}
                               src={(() => {
                                 try {
-                                  return `https://bimehnama.s3.ir-thr-at1.arvanstorage.ir/insurances%2F${currentItem.key}-insurance.svg`;
+                                  return currentItem.icon;
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
