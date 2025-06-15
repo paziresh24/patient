@@ -615,7 +615,10 @@ function PlasmicFactor__RenderFunc(props: {
                                 const headers = token
                                   ? { Authorization: `Bearer ${token}` }
                                   : {};
-                                return headers;
+                                return {
+                                  headers,
+                                  ...$ctx.Fragment.previewApiConfig
+                                };
                               })();
                             } catch (e) {
                               if (
@@ -1159,7 +1162,10 @@ function PlasmicFactor__RenderFunc(props: {
                                     const headers = token
                                       ? { Authorization: `Bearer ${token}` }
                                       : {};
-                                    return headers;
+                                    return {
+                                      headers,
+                                      ...$ctx.Fragment.previewApiConfig
+                                    };
                                   })();
                                 } catch (e) {
                                   if (
@@ -2197,7 +2203,10 @@ function PlasmicFactor__RenderFunc(props: {
                       const headers = token
                         ? { Authorization: `Bearer ${token}` }
                         : {};
-                      return headers;
+                      return {
+                        headers,
+                        ...$ctx.Fragment.previewApiConfig
+                      };
                     })();
                   } catch (e) {
                     if (
