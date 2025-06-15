@@ -47,7 +47,7 @@ const Home = ({ fragmentComponents }: any) => {
       <Seo title="اپلیکیشن پذیرش24" noIndex />
       <Fragment name="LocationSelectionScript" />
       <main className="flex flex-col items-center justify-center flex-grow w-full p-4 mx-auto space-y-6 bg-white md:w-96">
-        <Logo as="h1" className="text-2xl md:text-3xl" height={120} home />
+        <Logo as="h1" className="text-2xl md:text-3xl" width={55} home />
 
         <div className="flex flex-col items-center w-full gap-3">
           <Suggestion

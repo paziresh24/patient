@@ -115,6 +115,7 @@ const Receipt = () => {
     timestamp: bookDetailsData.book_time,
   });
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
+  const showDoctorAvailabilityWarning = useFeatureValue('show-doctor-availability-warning', '');
   const { isLoading: profileNameLoading, specialities } = useProfile({
     slug: bookDetailsData?.doctor?.slug,
     includeData: ['SPECIALITIES'],
@@ -390,7 +391,7 @@ const Receipt = () => {
   }, [bookDetailsData?.book_time]);
 
   useEffect(() => {
-    if (bookDetailsData?.id) {
+    if (bookDetailsData?.book_id) {
       {
         growthbook.loadFeatures({ skipCache: true });
         growthbook.setAttributes({
@@ -399,6 +400,7 @@ const Receipt = () => {
           book_id: bookId,
           center_id: centerId,
           is_book_request: bookDetailsData?.is_book_request,
+          doctor_city: bookDetailsData?.center?.city?.en_slug,
         });
 
         if (bookDetailsData?.doctor?.id) {
@@ -488,6 +490,13 @@ const Receipt = () => {
                 حاصل کنید.
               </Alert>
             )}
+            {showDoctorAvailabilityWarning && (
+              <Alert severity="warning" className="p-3 font-medium text-orange-800 text-sm">
+                باتوجه به شرایط حال حاضر، احتمال عدم حضور پزشک وجود دارد. لطفا قبل از مراجعه، از طریق تماس با مطب/مرکز درمانی از حضور ایشان
+                مطمئن شوید.
+              </Alert>
+            )}
+
             <BookInfo
               turnData={bookDetailsData}
               loading={getReceiptDetails.isLoading}
