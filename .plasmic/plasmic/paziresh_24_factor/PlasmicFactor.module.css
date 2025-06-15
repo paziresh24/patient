@@ -605,7 +605,7 @@
   .warning {
     background: var(--token-jgohepLVeKvh);
     margin-top: calc(0px + 10px) !important;
-    display: flex;
+    display: none;
     border-radius: 8px;
     padding: 0px;
   }
