@@ -608,7 +608,7 @@ function PlasmicFactor__RenderFunc(props: {
                           config={(() => {
                             try {
                               return (() => {
-                                const token = window.document.cookie
+                                const token = globalThis.document.cookie
                                   .split("; ")
                                   .find(row => row.startsWith("token="))
                                   ?.split("=")[1];
@@ -1152,7 +1152,7 @@ function PlasmicFactor__RenderFunc(props: {
                               (() => {
                                 try {
                                   return (() => {
-                                    const token = window.document.cookie
+                                    const token = globalThis.document.cookie
                                       .split("; ")
                                       .find(row => row.startsWith("token="))
                                       ?.split("=")[1];
@@ -2190,7 +2190,7 @@ function PlasmicFactor__RenderFunc(props: {
                 config={(() => {
                   try {
                     return (() => {
-                      const token = window.document.cookie
+                      const token = globalThis.document.cookie
                         .split("; ")
                         .find(row => row.startsWith("token="))
                         ?.split("=")[1];
