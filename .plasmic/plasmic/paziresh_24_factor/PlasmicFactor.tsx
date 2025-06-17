@@ -114,12 +114,12 @@ export type PlasmicFactor__OverridesType = {
   txtDiscount?: Flex__<typeof TextInput>;
   button?: Flex__<typeof Button>;
   doctorInfo?: Flex__<"div">;
-  getDoctorInfo?: Flex__<typeof ApiRequest>;
   img?: Flex__<typeof PlasmicImg__>;
   goToReceipt?: Flex__<typeof Paziresh24Dialog>;
   dialog2?: Flex__<typeof Paziresh24Dialog>;
   embedHtml?: Flex__<typeof Embed>;
   sideEffect?: Flex__<typeof SideEffect>;
+  getDoctorInfo?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultFactorProps {}
@@ -303,46 +303,13 @@ function PlasmicFactor__RenderFunc(props: {
         path: "goToReceipt.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return (
-                !$state.getDoctorInfo.loading &&
-                !$state.getDoctorInfo.data.data.is_deleted &&
-                $state.getDoctorInfo.data.data.is_paid
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })()
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       },
       {
         path: "dialog2.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return (
-                !$state.getDoctorInfo.loading &&
-                $state.getDoctorInfo.data.data.is_deleted
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       },
       {
         path: "isErrorInParams",
@@ -2252,123 +2219,91 @@ function PlasmicFactor__RenderFunc(props: {
                 data-plasmic-override={overrides.doctorInfo}
                 className={classNames(projectcss.all, sty.doctorInfo)}
               >
-                <ApiRequest
-                  data-plasmic-name={"getDoctorInfo"}
-                  data-plasmic-override={overrides.getDoctorInfo}
-                  body={(() => {
-                    try {
-                      return {
-                        book_id: $ctx.params.book_id,
-                        type: "factor"
-                      };
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                {(() => {
+                  try {
+                    return !!$state.getDoctorInfo.error;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
                     }
-                  })()}
-                  className={classNames("__wab_instance", sty.getDoctorInfo)}
-                  config={(() => {
-                    try {
-                      return (() => {
-                        const token = globalThis.document.cookie
-                          .split("; ")
-                          .find(row => row.startsWith("token="))
-                          ?.split("=")[1];
-                        const headers = token
-                          ? { Authorization: `Bearer ${token}` }
-                          : {};
-                        return {
-                          headers,
-                          ...$ctx.Fragment.previewApiConfig
-                        };
-                      })();
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  errorDisplay={
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
+                    throw e;
+                  }
+                })() ? (
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox___987RA)}
+                  >
+                    <Icon2Icon
+                      className={classNames(projectcss.all, sty.svg___7Ahy)}
+                      role={"img"}
+                    />
+
+                    <div
                       className={classNames(
                         projectcss.all,
-                        sty.freeBox___987RA
+                        projectcss.__wab_text,
+                        sty.text__eHWe
                       )}
                     >
-                      <Icon2Icon
-                        className={classNames(projectcss.all, sty.svg___7Ahy)}
-                        role={"img"}
-                      />
-
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__eHWe
-                        )}
-                      >
-                        {
-                          "\u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0628\u0627 \u062e\u0637\u0627 \u0645\u0648\u0627\u062c\u0647 \u0634\u062f!"
-                        }
-                      </div>
-                    </Stack__>
+                      {
+                        "\u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0628\u0627 \u062e\u0637\u0627 \u0645\u0648\u0627\u062c\u0647 \u0634\u062f!"
+                      }
+                    </div>
+                  </Stack__>
+                ) : null}
+                {(() => {
+                  try {
+                    return $state.getDoctorInfo.loading;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
                   }
-                  loadingDisplay={
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
-                      className={classNames(projectcss.all, sty.freeBox__foIVq)}
+                })() ? (
+                  <Stack__
+                    as={"div"}
+                    hasGap={true}
+                    className={classNames(projectcss.all, sty.freeBox__foIVq)}
+                  >
+                    <Icon2Icon
+                      className={classNames(projectcss.all, sty.svg___7E4So)}
+                      role={"img"}
+                    />
+
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__hHkoG
+                      )}
                     >
-                      <Icon2Icon
-                        className={classNames(projectcss.all, sty.svg___7E4So)}
-                        role={"img"}
-                      />
-
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__hHkoG
-                        )}
-                      >
-                        {
-                          "\u062f\u0631 \u062d\u0627\u0644 \u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a ..."
-                        }
-                      </div>
-                    </Stack__>
+                      {
+                        "\u062f\u0631 \u062d\u0627\u0644 \u062f\u0631\u06cc\u0627\u0641\u062a \u0627\u0637\u0644\u0627\u0639\u0627\u062a ..."
+                      }
+                    </div>
+                  </Stack__>
+                ) : null}
+                {(() => {
+                  try {
+                    return !!$state.getDoctorInfo.data;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
                   }
-                  method={"GET"}
-                  onError={async (...eventArgs: any) => {
-                    generateStateOnChangeProp($state, [
-                      "getDoctorInfo",
-                      "error"
-                    ]).apply(null, eventArgs);
-                  }}
-                  onLoading={async (...eventArgs: any) => {
-                    generateStateOnChangeProp($state, [
-                      "getDoctorInfo",
-                      "loading"
-                    ]).apply(null, eventArgs);
-                  }}
-                  onSuccess={async (...eventArgs: any) => {
-                    generateStateOnChangeProp($state, [
-                      "getDoctorInfo",
-                      "data"
-                    ]).apply(null, eventArgs);
-                  }}
-                  url={`https://api.paziresh24.com/user/v1/book/${$ctx.query.centerId}/${$ctx.query.bookId}`}
-                >
+                })() ? (
                   <div
                     className={classNames(projectcss.all, sty.freeBox__eETs)}
                   >
@@ -2732,7 +2667,7 @@ function PlasmicFactor__RenderFunc(props: {
                       </div>
                     </div>
                   </div>
-                </ApiRequest>
+                ) : null}
               </div>
             </div>
           ) : null}
@@ -2944,40 +2879,167 @@ function PlasmicFactor__RenderFunc(props: {
             data-plasmic-name={"sideEffect"}
             data-plasmic-override={overrides.sideEffect}
             className={classNames("__wab_instance", sty.sideEffect)}
+            deps={(() => {
+              try {
+                return [$state.getDoctorInfo.data];
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
             onMount={async () => {
               const $steps = {};
 
-              $steps["updateIsErrorInParams"] = true
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["isErrorInParams"]
-                      },
-                      operation: 0,
-                      value: !!$ctx.query.err
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
+              $steps["updateDialog2Open"] =
+                !$state.getDoctorInfo.loading &&
+                $state.getDoctorInfo.data.data.is_deleted
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["dialog2", "open"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
 
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
               if (
-                $steps["updateIsErrorInParams"] != null &&
-                typeof $steps["updateIsErrorInParams"] === "object" &&
-                typeof $steps["updateIsErrorInParams"].then === "function"
+                $steps["updateDialog2Open"] != null &&
+                typeof $steps["updateDialog2Open"] === "object" &&
+                typeof $steps["updateDialog2Open"].then === "function"
               ) {
-                $steps["updateIsErrorInParams"] = await $steps[
-                  "updateIsErrorInParams"
+                $steps["updateDialog2Open"] = await $steps["updateDialog2Open"];
+              }
+
+              $steps["updateGoToReceiptOpen"] =
+                !$state.getDoctorInfo.loading &&
+                !$state.getDoctorInfo.data.data.is_deleted &&
+                $state.getDoctorInfo.data.data.is_paid
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["goToReceipt", "open"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
+                $steps["updateGoToReceiptOpen"] != null &&
+                typeof $steps["updateGoToReceiptOpen"] === "object" &&
+                typeof $steps["updateGoToReceiptOpen"].then === "function"
+              ) {
+                $steps["updateGoToReceiptOpen"] = await $steps[
+                  "updateGoToReceiptOpen"
                 ];
               }
             }}
+          />
+
+          <ApiRequest
+            data-plasmic-name={"getDoctorInfo"}
+            data-plasmic-override={overrides.getDoctorInfo}
+            body={(() => {
+              try {
+                return {
+                  book_id: $ctx.params.book_id,
+                  type: "factor"
+                };
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            children={null}
+            className={classNames("__wab_instance", sty.getDoctorInfo)}
+            config={(() => {
+              try {
+                return (() => {
+                  const token = globalThis.document.cookie
+                    .split("; ")
+                    .find(row => row.startsWith("token="))
+                    ?.split("=")[1];
+                  const headers = token
+                    ? { Authorization: `Bearer ${token}` }
+                    : {};
+                  return {
+                    headers,
+                    ...$ctx.Fragment.previewApiConfig
+                  };
+                })();
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            errorDisplay={null}
+            loadingDisplay={null}
+            method={"GET"}
+            onError={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "getDoctorInfo",
+                "error"
+              ]).apply(null, eventArgs);
+            }}
+            onLoading={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "getDoctorInfo",
+                "loading"
+              ]).apply(null, eventArgs);
+            }}
+            onSuccess={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, [
+                "getDoctorInfo",
+                "data"
+              ]).apply(null, eventArgs);
+            }}
+            url={`https://api.paziresh24.com/user/v1/book/${$ctx.query.centerId}/${$ctx.query.bookId}`}
           />
         </div>
       </div>
@@ -2999,12 +3061,12 @@ const PlasmicDescendants = {
     "txtDiscount",
     "button",
     "doctorInfo",
-    "getDoctorInfo",
     "img",
     "goToReceipt",
     "dialog2",
     "embedHtml",
-    "sideEffect"
+    "sideEffect",
+    "getDoctorInfo"
   ],
   paymentBox: [
     "paymentBox",
@@ -3032,13 +3094,13 @@ const PlasmicDescendants = {
   accordion: ["accordion", "txtDiscount", "button"],
   txtDiscount: ["txtDiscount"],
   button: ["button"],
-  doctorInfo: ["doctorInfo", "getDoctorInfo", "img"],
-  getDoctorInfo: ["getDoctorInfo", "img"],
+  doctorInfo: ["doctorInfo", "img"],
   img: ["img"],
   goToReceipt: ["goToReceipt"],
   dialog2: ["dialog2"],
   embedHtml: ["embedHtml"],
-  sideEffect: ["sideEffect"]
+  sideEffect: ["sideEffect"],
+  getDoctorInfo: ["getDoctorInfo"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -3056,12 +3118,12 @@ type NodeDefaultElementType = {
   txtDiscount: typeof TextInput;
   button: typeof Button;
   doctorInfo: "div";
-  getDoctorInfo: typeof ApiRequest;
   img: typeof PlasmicImg__;
   goToReceipt: typeof Paziresh24Dialog;
   dialog2: typeof Paziresh24Dialog;
   embedHtml: typeof Embed;
   sideEffect: typeof SideEffect;
+  getDoctorInfo: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -3135,12 +3197,12 @@ export const PlasmicFactor = Object.assign(
     txtDiscount: makeNodeComponent("txtDiscount"),
     button: makeNodeComponent("button"),
     doctorInfo: makeNodeComponent("doctorInfo"),
-    getDoctorInfo: makeNodeComponent("getDoctorInfo"),
     img: makeNodeComponent("img"),
     goToReceipt: makeNodeComponent("goToReceipt"),
     dialog2: makeNodeComponent("dialog2"),
     embedHtml: makeNodeComponent("embedHtml"),
     sideEffect: makeNodeComponent("sideEffect"),
+    getDoctorInfo: makeNodeComponent("getDoctorInfo"),
 
     // Metadata about props expected for PlasmicFactor
     internalVariantProps: PlasmicFactor__VariantProps,
