@@ -1399,7 +1399,7 @@
   font-weight: 600;
   min-width: 0;
 }
-.dialog:global(.__wab_instance):global(.__wab_instance) {
+.goToReceipt:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
 }
 .text___1JJnZ {
