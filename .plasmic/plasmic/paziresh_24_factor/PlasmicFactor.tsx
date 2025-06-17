@@ -115,7 +115,6 @@ export type PlasmicFactor__OverridesType = {
   button?: Flex__<typeof Button>;
   doctorInfo?: Flex__<"div">;
   img?: Flex__<typeof PlasmicImg__>;
-  goToReceipt?: Flex__<typeof Paziresh24Dialog>;
   dialog2?: Flex__<typeof Paziresh24Dialog>;
   embedHtml?: Flex__<typeof Embed>;
   sideEffect?: Flex__<typeof SideEffect>;
@@ -295,12 +294,6 @@ function PlasmicFactor__RenderFunc(props: {
       },
       {
         path: "paymentLoading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
-      },
-      {
-        path: "goToReceipt.open",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
@@ -2672,71 +2665,6 @@ function PlasmicFactor__RenderFunc(props: {
             </div>
           ) : null}
           <Paziresh24Dialog
-            data-plasmic-name={"goToReceipt"}
-            data-plasmic-override={overrides.goToReceipt}
-            body={
-              <Paziresh24Button
-                children2={
-                  "\u062f\u0631\u06cc\u0627\u0641\u062a \u0645\u062c\u062f\u062f \u0646\u0648\u0628\u062a"
-                }
-                className={classNames(
-                  "__wab_instance",
-                  sty.paziresh24Button__dkkOn
-                )}
-                onClick={async event => {
-                  const $steps = {};
-
-                  $steps["invokeGlobalAction"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          args: [
-                            `https://www.paziresh24.com/dr/${$ctx.params.slug}`
-                          ]
-                        };
-                        return $globalActions["Hamdast.openLink"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["invokeGlobalAction"] != null &&
-                    typeof $steps["invokeGlobalAction"] === "object" &&
-                    typeof $steps["invokeGlobalAction"].then === "function"
-                  ) {
-                    $steps["invokeGlobalAction"] = await $steps[
-                      "invokeGlobalAction"
-                    ];
-                  }
-                }}
-              />
-            }
-            className={classNames("__wab_instance", sty.goToReceipt)}
-            noTrigger={true}
-            onOpenChange={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["goToReceipt", "open"]).apply(
-                null,
-                eventArgs
-              );
-
-              if (
-                eventArgs.length > 1 &&
-                eventArgs[1] &&
-                eventArgs[1]._plasmic_state_init_
-              ) {
-                return;
-              }
-
-              (async val => {
-                const $steps = {};
-              }).apply(null, eventArgs);
-            }}
-            open={generateStateValueProp($state, ["goToReceipt", "open"])}
-            title={
-              "\u0632\u0645\u0627\u0646 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u0628\u0647 \u067e\u0627\u06cc\u0627\u0646 \u0631\u0633\u06cc\u062f"
-            }
-          />
-
-          <Paziresh24Dialog
             data-plasmic-name={"dialog2"}
             data-plasmic-override={overrides.dialog2}
             body={
@@ -2931,43 +2859,46 @@ function PlasmicFactor__RenderFunc(props: {
                 $steps["updateDialog2Open"] = await $steps["updateDialog2Open"];
               }
 
-              $steps["updateGoToReceiptOpen"] =
+              $steps["goToPage"] =
                 !$state.getDoctorInfo.loading &&
                 !$state.getDoctorInfo.data.data.is_deleted &&
                 $state.getDoctorInfo.data.data.is_paid
                   ? (() => {
                       const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["goToReceipt", "open"]
-                        },
-                        operation: 0,
-                        value: true
+                        destination: (() => {
+                          try {
+                            return `/receipt/${$ctx.query.centerId}/${$ctx.query.bookId}`;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
                       };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
                         }
-                        const { objRoot, variablePath } = variable;
-
-                        $stateSet(objRoot, variablePath, value);
-                        return value;
                       })?.apply(null, [actionArgs]);
                     })()
                   : undefined;
               if (
-                $steps["updateGoToReceiptOpen"] != null &&
-                typeof $steps["updateGoToReceiptOpen"] === "object" &&
-                typeof $steps["updateGoToReceiptOpen"].then === "function"
+                $steps["goToPage"] != null &&
+                typeof $steps["goToPage"] === "object" &&
+                typeof $steps["goToPage"].then === "function"
               ) {
-                $steps["updateGoToReceiptOpen"] = await $steps[
-                  "updateGoToReceiptOpen"
-                ];
+                $steps["goToPage"] = await $steps["goToPage"];
               }
             }}
           />
@@ -3062,7 +2993,6 @@ const PlasmicDescendants = {
     "button",
     "doctorInfo",
     "img",
-    "goToReceipt",
     "dialog2",
     "embedHtml",
     "sideEffect",
@@ -3096,7 +3026,6 @@ const PlasmicDescendants = {
   button: ["button"],
   doctorInfo: ["doctorInfo", "img"],
   img: ["img"],
-  goToReceipt: ["goToReceipt"],
   dialog2: ["dialog2"],
   embedHtml: ["embedHtml"],
   sideEffect: ["sideEffect"],
@@ -3119,7 +3048,6 @@ type NodeDefaultElementType = {
   button: typeof Button;
   doctorInfo: "div";
   img: typeof PlasmicImg__;
-  goToReceipt: typeof Paziresh24Dialog;
   dialog2: typeof Paziresh24Dialog;
   embedHtml: typeof Embed;
   sideEffect: typeof SideEffect;
@@ -3198,7 +3126,6 @@ export const PlasmicFactor = Object.assign(
     button: makeNodeComponent("button"),
     doctorInfo: makeNodeComponent("doctorInfo"),
     img: makeNodeComponent("img"),
-    goToReceipt: makeNodeComponent("goToReceipt"),
     dialog2: makeNodeComponent("dialog2"),
     embedHtml: makeNodeComponent("embedHtml"),
     sideEffect: makeNodeComponent("sideEffect"),
