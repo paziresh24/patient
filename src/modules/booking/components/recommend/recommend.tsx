@@ -27,7 +27,7 @@ export const Recommend = ({ className, clickRecommendEvent, limit, ...props }: R
 
   const searchDoctor = useSearch(
     {
-      route: decodeURIComponent(`ir`),
+      route: decodeURIComponent(props?.city ? props.city : `ir`),
       query: {
         turn_type: 'consult',
         text: props.category,

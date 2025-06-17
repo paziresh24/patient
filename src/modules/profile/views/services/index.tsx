@@ -136,7 +136,14 @@ export const Services = ({
       }
       return undefined;
     };
-    return <BulkService displayName={doctor.display_name} expertises={expertises} availableTime={sortedAvalaibleTime()} />;
+    return (
+      <BulkService
+        displayName={doctor.display_name}
+        expertises={expertises}
+        availableTime={sortedAvalaibleTime()}
+        dcotorCity={doctor?.city_en_slug}
+      />
+    );
   }
 
   return (

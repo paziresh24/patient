@@ -13,19 +13,20 @@ import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import random from 'lodash/random';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 interface BulkServiceProps {
   displayName: string;
   expertises: any;
   availableTime?: string;
+  dcotorCity: string;
 }
 
-export const BulkService = ({ displayName, expertises, availableTime }: BulkServiceProps) => {
+export const BulkService = ({ displayName, expertises, availableTime, dcotorCity }: BulkServiceProps) => {
   const { handleOpen, modalProps } = useModal();
   const customize = useCustomize(state => state.customize);
   const searchData = useSearch(
     {
-      route: decodeURIComponent(`ir`),
+      route: decodeURIComponent(dcotorCity),
       query: {
         turn_type: 'consult',
         text: expertises?.expertises?.map((expertise: any) => expertise.expertise_name)[0],
@@ -72,6 +73,12 @@ export const BulkService = ({ displayName, expertises, availableTime }: BulkServ
       previousQueries: false,
     });
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      handleOpenSubstituteDoctorModal();
+    }, 2000);
+  }, []);
 
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
 
