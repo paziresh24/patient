@@ -43,6 +43,24 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
   const openAndCreateReceipt = () => {
     deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
     handleOpen();
+    if (paymentData.current?.receipt_id) {
+      setId(paymentData.current?.receipt_id);
+      splunkInstance('dashboard').sendEvent({
+        group: 'hamdast_payment',
+        type: 'show_receipt',
+        event: {
+          is_doctor: info?.is_doctor,
+          user_id: info?.id,
+          meta_data: {
+            app_key: app_key,
+            product_key: paymentData.current?.product_key,
+            receipt_id: paymentData.current?.receipt_id,
+          },
+        },
+      });
+      setIsLoading(false);
+      return;
+    }
     axios
       .post(
         `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/payment/`,
@@ -87,6 +105,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
           hash_id: messageEvent.data?.hamdast?.hash_id,
           product_key: messageEvent.data?.hamdast?.data?.product_key,
           payload: messageEvent.data?.hamdast?.data?.payload,
+          receipt_id: messageEvent.data?.hamdast?.data?.receipt_id,
         };
 
         if (!isLogin) {
@@ -105,6 +124,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
                       event: 'HAMDAST_PAYMENT_CANCEL',
                       payload: paymentData.current?.payload,
                       product_key: paymentData.current?.product_key,
+                      receipt_id: paymentData.current?.receipt_id,
                     },
                     hash_id: paymentData.current?.hash_id,
                   },
