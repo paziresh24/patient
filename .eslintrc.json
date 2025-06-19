@@ -1,0 +1,22 @@
+{
+  "extends": [
+    // "plugin:storybook/recommended",
+    "next",
+    "next/core-web-vitals",
+    "eslint:recommended"
+  ],
+  "globals": {
+    "React": "readonly"
+  },
+  "env": {
+    "jest": true
+  },
+  "rules": {
+    "no-unused-vars": [0, { "args": "after-used", "argsIgnorePattern": "^_" }],
+    "react-hooks/exhaustive-deps": 0,
+    "react/display-name": 0,
+    "@next/next/no-img-element": 0,
+    "jsx-a11y/control-has-associated-label": 0
+  },
+  "plugins": ["jest"]
+}

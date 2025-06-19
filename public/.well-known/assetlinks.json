@@ -1,0 +1,18 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.paziresh24.paziresh24",
+      "sha256_cert_fingerprints": ["A3:B9:8D:DC:9D:9B:E4:CE:09:E3:8F:83:D4:30:67:05:0A:94:C5:90:E9:1F:23:05:C7:EC:CC:80:9C:74:8E:CF",
+      "B4:E3:C7:38:0D:39:28:15:90:50:0A:B9:28:48:8B:74:1B:8A:9C:3C:19:C7:E6:CB:CA:67:1A:66:9E:1E:B8:4F"]
+    }
+  },
+  {
+    "relation": ["check_validation"],
+    "target": {
+      "namespace": "cafebazaar_twa",
+      "package_name": "com.paziresh24.paziresh24"
+    }
+  }
+]

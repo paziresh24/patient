@@ -1,0 +1,80 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+}
+.root > :global(.__wab_flex-container) {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - var(--token-vMUQwr5Jto1d));
+  height: calc(100% + var(--token-vMUQwr5Jto1d));
+}
+.root > :global(.__wab_flex-container) > *,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.root > :global(.__wab_flex-container) > picture > img,
+.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+  margin-top: var(--token-vMUQwr5Jto1d);
+}
+.h2 {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-tM2Vh4zTir7U);
+  font-weight: 700;
+  color: var(--token-u3OudfMChOo3);
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .h2 {
+    padding-right: var(--token-Fv8-L_kN-2Ma);
+    padding-left: var(--token-Fv8-L_kN-2Ma);
+  }
+}
+.freeBox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  border-top-right-radius: var(--token-_c276Gs_1FIE);
+  border-top-left-radius: var(--token-_c276Gs_1FIE);
+  background: #ffffff;
+  min-width: 0;
+  padding: var(--token-Fv8-L_kN-2Ma);
+}
+.freeBox > :global(.__wab_flex-container) {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+  margin-top: calc(0px - var(--token-vMUQwr5Jto1d));
+  height: calc(100% + var(--token-vMUQwr5Jto1d));
+}
+.freeBox > :global(.__wab_flex-container) > *,
+.freeBox > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox > :global(.__wab_flex-container) > picture > img,
+.freeBox
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: var(--token-vMUQwr5Jto1d);
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+  }
+}
+.reviewRateAndCommentCount:global(.__wab_instance) {
+  max-width: 100%;
+}
+.reviewProgressList:global(.__wab_instance) {
+  max-width: 100%;
+}

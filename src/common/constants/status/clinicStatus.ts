@@ -1,0 +1,8 @@
+export const enum ClinicStatus {
+  SUCCESS = 1,
+  FORM_VALIDATION = 0,
+  EXPIRE_TIME_SLOT = 300,
+  BOOKMARK_EXISTS = 121,
+  BOOKMARK_NOT_EXISTS = 122,
+  EXPIRED_CERTIFICATE = 7,
+}

@@ -1,0 +1,81 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
+.freeBox___4332B {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  background: var(--token-BU1JCAY6hntB);
+  border-radius: var(--token-m74yTzJEHMEw);
+  border: 1px solid var(--token-zGjeYJZOhQzx);
+}
+.text__uOwgV {
+  position: relative;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  width: auto;
+  padding-right: 10px;
+  padding-left: 3px;
+  font-weight: 500;
+  font-size: var(--token-6NbVMeD6zQwn);
+  color: var(--token-sMH6_tUwTYlv);
+}
+.popoverCore:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  position: relative;
+  font-size: var(--token-VrIY9r5RDQZ_);
+  text-align: justify;
+}
+.freeBox__wQaq2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  cursor: pointer;
+}
+.svg {
+  position: relative;
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-sMH6_tUwTYlv);
+  height: 16px;
+  width: 16px;
+  margin-left: 7px;
+  flex-shrink: 0;
+}
+.freeBox___1VoxC {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 300px;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: stretch;
+  box-shadow: 0px 4px 16px 0px #00000033;
+  background: white;
+  border-radius: 8px;
+  padding: var(--token-vMUQwr5Jto1d);
+  border: 1px solid #e2e8f0;
+}
+.text__xt6U {
+  font-size: var(--token-6NbVMeD6zQwn);
+  text-align: right;
+}

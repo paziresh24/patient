@@ -1,0 +1,36 @@
+{
+  "steps": {
+    "mobileNumber": {
+      "title": "ورود/ثبت نام",
+      "description": "لطفا شماره موبايل خود را وارد کنيد",
+      "phoneNumberFieldLable": "شماره موبایل",
+      "exampleHint": "مثال:*******0912",
+      "action": "ادامه",
+      "termAndprivacyPolicyNotice": "ورود شما به معنای پذیرش <0>شرایط پذیرش24</0> و <1>قوانین حریم‌خصوصی</1> است."
+    },
+    "otpCode": {
+      "title": "کد تایید",
+      "description": "لطفا کد ارسال شده به شماره {{mobileNumber}} را وارد کنید.",
+      "changeMobileNumber": "ویرایش شماره موبایل",
+      "voiceCallWay": "تماس صوتی",
+      "resend": "ارسال مجدد",
+      "action": "ورود"
+    },
+    "password": {
+      "title": "کلمه عبور",
+      "description": "رمز عبوری را که از قبل برای خود انتخاب کردید، وارد کنید.",
+      "forgotPassword": "رمز عبورم را فراموش کردم!",
+      "action": "ورود"
+    },
+    "forgot": {
+      "title": "فراموشی رمزعبور",
+      "description": "لطفا کد ارسال شده به شماره {{mobileNumber}} را وارد کنید.",
+      "action": "تایید"
+    },
+    "changePassword": {
+      "title": "فراموشی رمزعبور",
+      "description": "رمزعبور جدید خود را وارد کنید.",
+      "action": "تایید"
+    }
+  }
+}

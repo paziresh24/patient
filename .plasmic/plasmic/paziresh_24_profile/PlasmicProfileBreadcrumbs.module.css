@@ -1,0 +1,57 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .root {
+    width: 100%;
+    justify-self: flex-start;
+    min-width: 0;
+  }
+}
+.freeBox {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-width: 0;
+}
+.freeBox > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-left: calc(0px - var(--token-_c276Gs_1FIE));
+  width: calc(100% + var(--token-_c276Gs_1FIE));
+}
+.freeBox > :global(.__wab_flex-container) > *,
+.freeBox > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox > :global(.__wab_flex-container) > picture > img,
+.freeBox
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-_c276Gs_1FIE);
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+}
+.profileBreadcrumbsItems:global(.__wab_instance) {
+  width: auto;
+  max-width: auto;
+  flex-shrink: 0;
+}

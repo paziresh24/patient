@@ -1,0 +1,41 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  min-width: 0;
+}
+.svg__thGRo {
+  object-fit: cover;
+  max-width: 100%;
+  width: 21px;
+  height: 21px;
+  color: #cacaca;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.svgisSelected__thGRoD4OS {
+  display: none;
+}
+.svgisLarge__thGRocjGnA {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+.svg__elWvz {
+  object-fit: cover;
+  max-width: 100%;
+  width: 21px;
+  height: 21px;
+  color: #ec9c07;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.svgisLarge__elWvzcjGnA {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}

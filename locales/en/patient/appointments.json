@@ -1,0 +1,27 @@
+{
+  "title": "My Turns",
+  "description": "It is possible to keep track of my appointments in Reception 24, download the appointment bill, cancel the appointment, change the appointment time, etc. in this section.",
+  "tunrsTabName": "Turns",
+  "visitOnlineTabName": "Visit Online",
+  "requestsTabName": "Requests",
+  "turnDetails": {
+    "time": "Turn Time",
+    "timeForConsult": "Time to contact the doctor",
+    "referred": "Referred",
+    "trackingCode": "Tracking Code",
+    "waitingTime": "Average waiting time in",
+    "centerName": "Center Name"
+  },
+  "turnAction": {
+    "rebook": "Get the book again"
+  },
+  "turnStatus": {
+    "expired": "Expired",
+    "deleted": "Canceled",
+    "visited": "visited",
+    "requested": "Pending",
+    "not_visited": "Not Visited",
+    "rejected": "Rejected",
+    "accepted": "Accepted"
+  }
+}

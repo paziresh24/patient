@@ -1,0 +1,32 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: hidden;
+  box-shadow: 0px 4px 6px -1px #0000001a;
+  cursor: pointer;
+  transition-property: all;
+  transition-duration: 0.2s;
+  min-width: 0;
+  -webkit-transition-property: all;
+  -webkit-transition-duration: 0.2s;
+  border-radius: var(--token-_c276Gs_1FIE);
+  border: 1px solid var(--token-Y3HOiwZmAcAF);
+}
+.root:hover {
+  box-shadow: 0px 4px 6px -1px #00000026;
+}
+.getDoctorRate:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.productCard:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+}

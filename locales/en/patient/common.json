@@ -1,0 +1,20 @@
+{
+  "menu": {
+    "myTurns": "My Turns",
+    "bookmarks": "Bookmarks",
+    "subuser": "Sub Users",
+    "support": "Support",
+    "logout": "Logout"
+  },
+  "userForm": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "nationalCode": "National Code",
+    "foreigner": "Foreigner",
+    "gender": "Gender",
+    "phoneNumber": "Phone Number",
+    "province": "Province",
+    "city": "City",
+    "action": "Save"
+  }
+}

@@ -1,0 +1,93 @@
+.ariaTextField:global(.__wab_instance) {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  position: relative;
+  padding-top: 0px;
+  min-width: 0;
+  row-gap: 0.25rem;
+}
+.ariaTextField[data-disabled]:global(.__wab_instance) {
+  opacity: 0.5;
+}
+.paziresh24AtomsLabel:global(.__wab_instance):global(.__wab_instance) {
+  position: relative;
+}
+.freeBox__vIqh1 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+.freeBox__dlopK {
+  flex-direction: row;
+  position: absolute;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 9;
+  left: 0px;
+  top: auto;
+  flex-shrink: 0;
+  display: none;
+  padding: 0.375rem 0.625rem;
+}
+.freeBoxiconStart__dlopKxgva8 {
+  display: flex;
+}
+.slotTargetStart {
+  color: #6b7280;
+}
+.svg___2GSw6 {
+  position: relative;
+  height: 1em;
+}
+.textInput:global(.__wab_instance):global(.__wab_instance) {
+  flex-shrink: 0;
+}
+.ariaTextField[data-disabled]
+  .textInput:global(.__wab_instance):global(.__wab_instance) {
+  flex-shrink: 0;
+}
+.textInputmultiLine:global(.__wab_instance):global(.__wab_instance) {
+  flex-shrink: 0;
+}
+.textInputiconStart:global(.__wab_instance):global(.__wab_instance) {
+  flex-shrink: 0;
+}
+.textInputiconEnd:global(.__wab_instance):global(.__wab_instance) {
+  flex-shrink: 0;
+}
+.textInputiconEnd_iconStart:global(.__wab_instance):global(.__wab_instance) {
+  flex-shrink: 0;
+}
+.textAreaInputmultiLine:global(.__wab_instance):global(.__wab_instance) {
+  display: block;
+}
+.freeBox__aGah8 {
+  height: 2rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 1;
+  top: auto;
+  right: 0px;
+  flex-shrink: 0;
+  display: none;
+  padding: 0.375rem 0.625rem;
+}
+.freeBoxiconEnd__aGah8R6BoX {
+  display: flex;
+}
+.slotTargetEnd {
+  color: #6b7280;
+}
+.svg__cxHa4 {
+  position: relative;
+  height: 1em;
+}
+.paziresh24AtomsDescription:global(.__wab_instance):global(.__wab_instance) {
+  position: relative;
+}

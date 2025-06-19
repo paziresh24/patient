@@ -1,0 +1,21 @@
+{
+  "locales": ["fa", "en"],
+  "defaultLocale": "fa",
+  "localeDetection": false,
+  "logBuild": false,
+  "pages": {
+    "*": ["common", "login", "patient/common", "search"],
+    "/": ["home", "search"],
+    "/apphome": ["home", "search"],
+    "/s/[[...params]]": ["search"],
+    "/patient/profile": ["patient/profile"],
+    "/patient/subuser": ["patient/subuser"],
+    "/patient/bookmarks": ["patient/bookmarks"],
+    "/patient/appointments": ["patient/appointments"],
+    "/patient/premium": ["patient/premium"],
+    "/dashboard/profile": ["patient/profile"],
+    "/dashboard/subuser": ["patient/subuser"],
+    "/dashboard/bookmarks": ["patient/bookmarks"],
+    "/dashboard/appointments": ["patient/appointments"]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "steps": {
+    "mobileNumber": {
+      "title": "Login/Register",
+      "description": "Please enter your mobile number",
+      "phoneNumberFieldLable": "Mobile number",
+      "exampleHint": "E.g. 0912*******",
+      "action": "Get Code",
+      "termAndprivacyPolicyNotice": "Your login means acceptance of <0>Paziresh24 Terms</0> and <1>Privacy Policy</1>."
+    },
+    "otpCode": {
+      "title": "Verification code",
+      "description": "Please enter the code sent to {{mobileNumber}}.",
+      "changeMobileNumber": "Change mobile number",
+      "voiceCallWay": "Voice Call",
+      "resend": "ٰResend",
+      "action": "Login"
+    },
+    "password": {
+      "title": "Password",
+      "description": "Please enter the password.",
+      "forgotPassword": "I forgot my password",
+      "action": "Login"
+    }
+  }
+}

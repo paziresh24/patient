@@ -1,0 +1,65 @@
+{
+  "name": "پذیرش۲۴",
+  "short_name": "پذیرش۲۴ - Paziresh24",
+  "description": "تجربه ویزیت آنلاین و دریافت نوبت از بهترین پزشکان و بیمارستان‌های ایران",
+  "lang": "fa",
+  "dir": "rtl",
+  "categories": ["health", "medical"],
+  "icons": [
+    {
+      "src": "/logos/icon_x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logos/icon_x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/logos/icon_x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "جستجوی پزشکان",
+      "url": "/s?utm_source=jumplist&utm_medium=shortcut",
+      "icons": [
+        {
+          "src": "/logos/search.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "نوبت‌های من",
+      "url": "/patient/appointments?utm_source=jumplist&utm_medium=shortcut",
+      "icons": [
+        {
+          "src": "/logos/appointments.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "start_url": "/apphome/?application=true",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "android_package_name": "com.paziresh24.paziresh24",
+  "related_applications": [
+    {
+      "id": "com.paziresh24.paziresh24",
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.paziresh24.paziresh24"
+    }
+  ],
+  "prefer_related_applications": true
+}

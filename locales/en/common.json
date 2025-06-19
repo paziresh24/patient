@@ -1,0 +1,34 @@
+{
+  "brandName": "Paziresh24",
+  "header": {
+    "titles": {
+      "categories": "Categories",
+      "forPatients": "For Patients",
+      "medicalCenters": "Medical Centers",
+      "forDoctors": "For Doctors",
+      "developers": "Developers"
+    },
+    "userProfile": {
+      "useNotloggedIn": "Login | Register"
+    }
+  },
+  "footer": {
+    "description": "Online consultation experience and receiving appointments from the best doctors and hospitals in Iran",
+    "menu": {
+      "forCompany": "Paziresh24",
+      "forPatients": "For Patients",
+      "forDoctors": "Login/Register Doctors"
+    },
+    "copyRightText": "All material and intellectual rights of this website, services and content related to it belong to Sepehr Salamat Kavir Isatis company.",
+    "copyRightTextByBrand": "All material and intellectual rights of this website related to it belong to Paziresh24."
+  },
+  "words": {
+    "delete": "Remove",
+    "edit": "Edit",
+    "phoneNumber": "Phone Number",
+    "nationalCode": "National Code",
+    "cancel": "Cancel",
+    "office": "Office",
+    "hospital": "Hospital"
+  }
+}

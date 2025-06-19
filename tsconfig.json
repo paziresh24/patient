@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/modules/*": ["./src/modules/*"],
+      "@/common/*": ["./src/common/*"],
+      "@/types/*": ["./src/common/types/*"],
+      "@/components/*": ["./src/common/components/*"],
+      "@/utils/*": ["./src/common/utils/*"],
+      "@/images/*": ["./src/common/images/*"],
+      "@/constants/*": ["./src/common/constants/*"],
+      "@/hooks/*": ["./src/common/hooks/*"],
+      "@/store/*": ["./src/common/store/*"],
+      "@/apis/*": ["./src/common/apis/*"],
+      "@/public/*": ["./public/*"],
+      "@/firebase/*": ["./src/firebase/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "**/*.stories.ts", "**/*.stories.js", "**/*.stories.jsx", "**/*.stories.tsx"]
+}
