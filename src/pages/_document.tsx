@@ -10,7 +10,6 @@ const CustomDocument: NextComponentType = (props: any) => {
     <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
         <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://api.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
         <meta name="theme-color" content="#FFFFFF" />
