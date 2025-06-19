@@ -82,6 +82,7 @@ const nextConfig = {
     PLASMIC_PREVIEW: process.env.PLASMIC_PREVIEW,
     CDN_BASE_URL: process.env.CDN_BASE_URL,
     NO_INDEX: process.env.NO_INDEX,
+    DESABLED_GTM: process.env.DESABLED_GTM,
   },
   images: {
     remotePatterns: [
