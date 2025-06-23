@@ -1228,9 +1228,8 @@ function PlasmicProductCard__RenderFunc(props: {
                       try {
                         return $props.satisfactionPercent % 20 === 0
                           ? $props.satisfactionPercent / 20
-                          : ($props.satisfactionPercent / 20)
-                              .toFixed(1)
-                              .replace(".0", "");
+                          : Math.round(($props.satisfactionPercent / 20) * 10) /
+                              10;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
