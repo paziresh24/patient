@@ -622,7 +622,6 @@
 @media (min-width: 0px) and (max-width: 768px) {
   .warning {
     background: var(--token-jgohepLVeKvh);
-    display: none;
     border-radius: 8px;
     padding: 0px;
   }
