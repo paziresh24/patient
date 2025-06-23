@@ -768,6 +768,11 @@ function PlasmicSearch__RenderFunc(props: {
                   "__wab_instance",
                   sty.searchResultQs__mz2G7,
                   {
+                    [sty.searchResultQshasOverlay__mz2G7Yy9Si]: hasVariant(
+                      $state,
+                      "hasOverlay",
+                      "hasOverlay"
+                    ),
                     [sty.searchResultQsisFocus__mz2G7MexBq]: hasVariant(
                       $state,
                       "isFocus",
@@ -2240,7 +2245,13 @@ function PlasmicSearch__RenderFunc(props: {
         <React.Fragment>
           {(() => {
             try {
-              return $ctx.query;
+              return (() => {
+                return globalThis.location.href.includes("text=")
+                  ? decodeURIComponent(
+                      globalThis.location.href.split("text=")[1].split("&")[0]
+                    )
+                  : null;
+              })();
             } catch (e) {
               if (
                 e instanceof TypeError ||
