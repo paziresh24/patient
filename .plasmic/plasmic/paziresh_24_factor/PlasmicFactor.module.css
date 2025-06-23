@@ -580,6 +580,24 @@
   font-weight: 600;
   min-width: 0;
 }
+.cancellationPolicy:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.text__ezBQw {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.text__zKpdL {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
 .warning {
   display: flex;
   flex-direction: column;
@@ -590,7 +608,7 @@
   height: auto;
   max-width: 100%;
   margin-bottom: 16px;
-  margin-top: calc(0px + 10px) !important;
+  margin-top: 0px;
   background: linear-gradient(
       var(--token-jgohepLVeKvh),
       var(--token-jgohepLVeKvh)
@@ -604,7 +622,6 @@
 @media (min-width: 0px) and (max-width: 768px) {
   .warning {
     background: var(--token-jgohepLVeKvh);
-    margin-top: calc(0px + 10px) !important;
     display: none;
     border-radius: 8px;
     padding: 0px;
@@ -1062,54 +1079,6 @@
     min-width: 0;
   }
 }
-.getDoctorInfo:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
-.freeBox__foIVq {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  background: #ffffff;
-  min-width: 0;
-  border-radius: 8px;
-  padding: 15px 8px;
-}
-.freeBox__foIVq > :global(.__wab_flex-container) {
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 0;
-  margin-top: calc(0px - 10px);
-  height: calc(100% + 10px);
-}
-.freeBox__foIVq > :global(.__wab_flex-container) > *,
-.freeBox__foIVq > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__foIVq > :global(.__wab_flex-container) > picture > img,
-.freeBox__foIVq
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: 10px;
-}
-.svg___7E4So {
-  object-fit: cover;
-  max-width: 100%;
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-}
-.text__hHkoG {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  text-align: center;
-  min-width: 0;
-}
 .freeBox___987RA {
   display: flex;
   flex-direction: column;
@@ -1154,6 +1123,50 @@
   max-width: 100%;
   text-align: center;
   color: var(--token-Bo2_tT25lwh4);
+  min-width: 0;
+}
+.freeBox__foIVq {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  background: #ffffff;
+  min-width: 0;
+  border-radius: 8px;
+  padding: 15px 8px;
+}
+.freeBox__foIVq > :global(.__wab_flex-container) {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  margin-top: calc(0px - 10px);
+  height: calc(100% + 10px);
+}
+.freeBox__foIVq > :global(.__wab_flex-container) > *,
+.freeBox__foIVq > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.freeBox__foIVq > :global(.__wab_flex-container) > picture > img,
+.freeBox__foIVq
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-top: 10px;
+}
+.svg___7E4So {
+  object-fit: cover;
+  max-width: 100%;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+.text__hHkoG {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
   min-width: 0;
 }
 .freeBox__eETs {
@@ -1399,43 +1412,6 @@
   font-weight: 600;
   min-width: 0;
 }
-.dialog:global(.__wab_instance):global(.__wab_instance) {
-  max-width: 100%;
-}
-.text___1JJnZ {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
-}
-.svg__eSkjL {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
-.svg__ca0CP {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
-.paziresh24Button__dkkOn:global(.__wab_instance) {
-  max-width: 100%;
-}
-.svg__i9YRi {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
-.svg__y95B {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
 .dialog2:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
 }
@@ -1501,6 +1477,10 @@
   object-fit: cover;
 }
 .sideEffect:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.getDoctorInfo:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
 }
