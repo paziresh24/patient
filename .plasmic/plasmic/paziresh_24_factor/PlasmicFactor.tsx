@@ -1045,23 +1045,19 @@ function PlasmicFactor__RenderFunc(props: {
                     "https://apigw.paziresh24.com/payment/v1/cancellation-policy"
                   }
                 >
-                  {(
-                    hasVariant(globalVariants, "screen", "mobileOnly")
-                      ? true
-                      : (() => {
-                          try {
-                            return true;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return true;
-                            }
-                            throw e;
-                          }
-                        })()
-                  ) ? (
+                  {(() => {
+                    try {
+                      return true;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
                     <div
                       data-plasmic-name={"warning"}
                       data-plasmic-override={overrides.warning}
