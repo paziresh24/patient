@@ -108,6 +108,7 @@ export type PlasmicFactor__OverridesType = {
   priceCalculator?: Flex__<typeof ApiRequest>;
   getWallet?: Flex__<typeof ApiRequest>;
   discountRow?: Flex__<"div">;
+  cancellationPolicy?: Flex__<typeof ApiRequest>;
   warning?: Flex__<"div">;
   support?: Flex__<"div">;
   accordion?: Flex__<typeof AntdAccordion>;
@@ -309,6 +310,24 @@ function PlasmicFactor__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "cancellationPolicy.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "cancellationPolicy.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "cancellationPolicy.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -958,82 +977,159 @@ function PlasmicFactor__RenderFunc(props: {
                     </div>
                   ) : null}
                 </Stack__>
-                {(
-                  hasVariant(globalVariants, "screen", "mobileOnly")
-                    ? true
-                    : (() => {
-                        try {
-                          return (
-                            // $ctx.query.centerId != 5532
-                            false
-                          );
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return true;
-                          }
-                          throw e;
-                        }
-                      })()
-                ) ? (
-                  <div
-                    data-plasmic-name={"warning"}
-                    data-plasmic-override={overrides.warning}
-                    className={classNames(projectcss.all, sty.warning)}
-                  >
-                    <div
-                      className={classNames(projectcss.all, sty.freeBox__rEoqk)}
-                    >
-                      <Icon7Icon
-                        className={classNames(projectcss.all, sty.svg__xyFuw)}
-                        role={"img"}
-                      />
-
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__aWv1G
-                        )}
-                      >
-                        {
-                          "\u0644\u0637\u0641\u0627 \u062f\u0642\u062a \u06a9\u0646\u06cc\u062f!"
-                        }
-                      </div>
-                    </div>
+                <ApiRequest
+                  data-plasmic-name={"cancellationPolicy"}
+                  data-plasmic-override={overrides.cancellationPolicy}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.cancellationPolicy
+                  )}
+                  errorDisplay={
                     <div
                       className={classNames(
                         projectcss.all,
                         projectcss.__wab_text,
-                        sty.text__aqjMk
+                        sty.text__zKpdL
                       )}
                     >
-                      <React.Fragment>
-                        {(() => {
+                      {"Error fetching data"}
+                    </div>
+                  }
+                  loadingDisplay={
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__ezBQw
+                      )}
+                    >
+                      {"Loading..."}
+                    </div>
+                  }
+                  method={"GET"}
+                  onError={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "cancellationPolicy",
+                      "error"
+                    ]).apply(null, eventArgs);
+                  }}
+                  onLoading={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "cancellationPolicy",
+                      "loading"
+                    ]).apply(null, eventArgs);
+                  }}
+                  onSuccess={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "cancellationPolicy",
+                      "data"
+                    ]).apply(null, eventArgs);
+                  }}
+                  params={(() => {
+                    try {
+                      return {
+                        doctor_id: $state.getDoctorInfo.data.data.doctor.id,
+                        center_id: $state.getDoctorInfo.data.data.center_id
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  url={
+                    "https://apigw.paziresh24.com/payment/v1/cancellation-policy"
+                  }
+                >
+                  {(
+                    hasVariant(globalVariants, "screen", "mobileOnly")
+                      ? true
+                      : (() => {
                           try {
-                            return (
-                              "در صورت لغو نوبت توسط بیمار، برای پیگیری بازگشت مبلغ به " +
-                              $state.getDoctorInfo.data.data.centers.find(
-                                center => center.id === $ctx.query.centerId
-                              )?.name +
-                              " مراجعه کنید."
-                            );
+                            return true;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
                               e?.plasmicType === "PlasmicUndefinedDataError"
                             ) {
-                              return "\u062f\u0631 \u0635\u0648\u0631\u062a \u0644\u063a\u0648 \u0646\u0648\u0628\u062a \u062a\u0648\u0633\u0637 \u0628\u06cc\u0645\u0627\u0631\u060c \u0628\u0631\u0627\u06cc \u067e\u06cc\u06af\u06cc\u0631\u06cc \u0628\u0627\u0632\u06af\u0634\u062a \u0645\u0628\u0644\u063a \u0628\u0647 \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0645\u0631\u0627\u062c\u0639\u0647 \u06a9\u0646\u06cc\u062f.";
+                              return true;
                             }
                             throw e;
                           }
-                        })()}
-                      </React.Fragment>
+                        })()
+                  ) ? (
+                    <div
+                      data-plasmic-name={"warning"}
+                      data-plasmic-override={overrides.warning}
+                      className={classNames(projectcss.all, sty.warning)}
+                    >
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox__rEoqk
+                        )}
+                      >
+                        <Icon7Icon
+                          className={classNames(projectcss.all, sty.svg__xyFuw)}
+                          role={"img"}
+                        />
+
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__aWv1G
+                          )}
+                        >
+                          {
+                            "\u0642\u0648\u0627\u0646\u06cc\u0646 \u0627\u0633\u062a\u0631\u062f\u0627\u062f"
+                          }
+                        </div>
+                      </div>
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__aqjMk
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return (() => {
+                                if (
+                                  !$state.cancellationPolicy.data.refund_active
+                                ) {
+                                  return "در صورت لغو نوبت\u060C وجه پرداختی شما مسترد نخواهد شد.";
+                                }
+                                let cancelTime = "";
+                                if (
+                                  $state.cancellationPolicy.data
+                                    .respite_to_refund != 0
+                                ) {
+                                  cancelTime = `${$state.cancellationPolicy.data.respite_to_refund} ساعت مانده به`;
+                                }
+                                return `در صورت لغو نوبت تا ${cancelTime} زمان نوبت، وچه پرداختی شما مسترد خواهد شد. در غیر این صورت، وجه پرداختی شما مسترد نخواهد شد.`;
+                              })();
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "\u062f\u0631 \u0635\u0648\u0631\u062a \u0644\u063a\u0648 \u0646\u0648\u0628\u062a \u062a\u0648\u0633\u0637 \u0628\u06cc\u0645\u0627\u0631\u060c \u0628\u0631\u0627\u06cc \u067e\u06cc\u06af\u06cc\u0631\u06cc \u0628\u0627\u0632\u06af\u0634\u062a \u0645\u0628\u0644\u063a \u0628\u0647 \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0645\u0631\u0627\u062c\u0639\u0647 \u06a9\u0646\u06cc\u062f.";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </div>
                     </div>
-                  </div>
-                ) : null}
+                  ) : null}
+                </ApiRequest>
                 <Paziresh24Button
                   children2={
                     <div
@@ -2986,6 +3082,7 @@ const PlasmicDescendants = {
     "priceCalculator",
     "getWallet",
     "discountRow",
+    "cancellationPolicy",
     "warning",
     "support",
     "accordion",
@@ -3004,6 +3101,7 @@ const PlasmicDescendants = {
     "priceCalculator",
     "getWallet",
     "discountRow",
+    "cancellationPolicy",
     "warning",
     "support",
     "accordion",
@@ -3019,6 +3117,7 @@ const PlasmicDescendants = {
   priceCalculator: ["priceCalculator", "getWallet", "discountRow"],
   getWallet: ["getWallet"],
   discountRow: ["discountRow"],
+  cancellationPolicy: ["cancellationPolicy", "warning"],
   warning: ["warning"],
   support: ["support"],
   accordion: ["accordion", "txtDiscount", "button"],
@@ -3041,6 +3140,7 @@ type NodeDefaultElementType = {
   priceCalculator: typeof ApiRequest;
   getWallet: typeof ApiRequest;
   discountRow: "div";
+  cancellationPolicy: typeof ApiRequest;
   warning: "div";
   support: "div";
   accordion: typeof AntdAccordion;
@@ -3119,6 +3219,7 @@ export const PlasmicFactor = Object.assign(
     priceCalculator: makeNodeComponent("priceCalculator"),
     getWallet: makeNodeComponent("getWallet"),
     discountRow: makeNodeComponent("discountRow"),
+    cancellationPolicy: makeNodeComponent("cancellationPolicy"),
     warning: makeNodeComponent("warning"),
     support: makeNodeComponent("support"),
     accordion: makeNodeComponent("accordion"),
