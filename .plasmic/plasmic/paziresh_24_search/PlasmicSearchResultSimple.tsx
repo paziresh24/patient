@@ -70,6 +70,8 @@ import sty from "./PlasmicSearchResultSimple.module.css"; // plasmic-import: dQK
 
 import Icon32Icon from "./icons/PlasmicIcon__Icon32"; // plasmic-import: Gz4YUaFhVw-g/icon
 
+import { uniq as __lib_lodash__uniq } from "lodash";
+
 createPlasmicElementProxy;
 
 export type PlasmicSearchResultSimple__VariantMembers = {};
@@ -103,7 +105,11 @@ export interface DefaultSearchResultSimpleProps {
   className?: string;
 }
 
-const $$ = {};
+const $$ = {
+  lodash: {
+    uniq: __lib_lodash__uniq
+  }
+};
 
 function useNextRouter() {
   try {
@@ -229,6 +235,40 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
                 throw e;
               }
             })()}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["saveToHistory"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return (() => {
+                          const history = $$.lodash.uniq(
+                            JSON.parse(localStorage.getItem("history") ?? "[]")
+                          );
+                          const newHistory = history.filter(
+                            historyItem => historyItem !== $props.inputValue
+                          );
+                          return localStorage.setItem(
+                            "history",
+                            JSON.stringify([...newHistory, $props.inputValue])
+                          );
+                        })();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["saveToHistory"] != null &&
+                typeof $steps["saveToHistory"] === "object" &&
+                typeof $steps["saveToHistory"].then === "function"
+              ) {
+                $steps["saveToHistory"] = await $steps["saveToHistory"];
+              }
+            }}
             platform={"nextjs"}
           >
             <Icon32Icon

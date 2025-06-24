@@ -77,6 +77,8 @@ import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: E9NGWfC
 import Icon21Icon from "./icons/PlasmicIcon__Icon21"; // plasmic-import: GcSkUNamgvSO/icon
 import Icon44Icon from "./icons/PlasmicIcon__Icon44"; // plasmic-import: mnMqeXnQZuQo/icon
 
+import { uniq as __lib_lodash__uniq } from "lodash";
+
 createPlasmicElementProxy;
 
 export type PlasmicSearchInput__VariantMembers = {
@@ -134,7 +136,11 @@ export interface DefaultSearchInputProps {
   className?: string;
 }
 
-const $$ = {};
+const $$ = {
+  lodash: {
+    uniq: __lib_lodash__uniq
+  }
+};
 
 function useNextRouter() {
   try {
@@ -827,6 +833,39 @@ function PlasmicSearchInput__RenderFunc(props: {
             typeof $steps["runCode"].then === "function"
           ) {
             $steps["runCode"] = await $steps["runCode"];
+          }
+
+          $steps["saveToHistoryKeywords"] = !!$state.enterPress
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      const history = $$.lodash.uniq(
+                        JSON.parse(localStorage.getItem("history") ?? "[]")
+                      );
+                      const newHistory = history.filter(
+                        historyItem => historyItem !== $state.textInput.value
+                      );
+                      return localStorage.setItem(
+                        "history",
+                        JSON.stringify([...newHistory, $state.textInput.value])
+                      );
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["saveToHistoryKeywords"] != null &&
+            typeof $steps["saveToHistoryKeywords"] === "object" &&
+            typeof $steps["saveToHistoryKeywords"].then === "function"
+          ) {
+            $steps["saveToHistoryKeywords"] = await $steps[
+              "saveToHistoryKeywords"
+            ];
           }
 
           $steps["goTo"] = !!$state.enterPress
