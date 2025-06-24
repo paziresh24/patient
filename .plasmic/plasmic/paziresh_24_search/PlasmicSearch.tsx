@@ -294,7 +294,10 @@ function PlasmicSearch__RenderFunc(props: {
         ``,
         {
           [sty.roothasOverlay]: hasVariant($state, "hasOverlay", "hasOverlay"),
-          [sty.rootisFocus]: hasVariant($state, "isFocus", "isFocus")
+          [sty.rootisFocus]: hasVariant($state, "isFocus", "isFocus"),
+          [sty.rootisFocus_hasOverlay]:
+            hasVariant($state, "hasOverlay", "hasOverlay") &&
+            hasVariant($state, "isFocus", "isFocus")
         }
       )}
     >
@@ -352,43 +355,35 @@ function PlasmicSearch__RenderFunc(props: {
                   "__wab_instance",
                   sty.searchInput__cXqko,
                   {
+                    [sty.searchInputhasOverlay__cXqkoyy9Si]: hasVariant(
+                      $state,
+                      "hasOverlay",
+                      "hasOverlay"
+                    ),
                     [sty.searchInputisFocus__cXqkoMexBq]: hasVariant(
                       $state,
                       "isFocus",
                       "isFocus"
-                    )
+                    ),
+                    [sty.searchInputisFocus_hasOverlay__cXqkoMexBqYy9Si]:
+                      hasVariant($state, "hasOverlay", "hasOverlay") &&
+                      hasVariant($state, "isFocus", "isFocus")
                   }
                 )}
                 inputId={"searchInput"}
-                inputValue={
-                  hasVariant(globalVariants, "screen", "mobileOnly")
-                    ? (() => {
-                        try {
-                          return $state.inputValue;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()
-                    : (() => {
-                        try {
-                          return $state.inputValue;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()
-                }
+                inputValue={(() => {
+                  try {
+                    return $props.inputVal;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
                 isAroundMe={(() => {
                   try {
                     return $props.isAroundMe;
@@ -402,71 +397,54 @@ function PlasmicSearch__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-                isFocused={
-                  hasVariant(globalVariants, "screen", "mobileOnly")
-                    ? (() => {
-                        try {
-                          return !!$state.isFocus;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
-                          }
-                          throw e;
-                        }
-                      })()
-                    : (() => {
-                        try {
-                          return !!$state.isFocus;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
-                          }
-                          throw e;
-                        }
-                      })()
-                }
+                isFocused={(() => {
+                  try {
+                    return !!$state.isFocus;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
                 onChangeInput={async value => {
                   const $steps = {};
 
-                  $steps["updateInputValue"] = true
+                  $steps["runOnChangeInputVal2"] = true
                     ? (() => {
                         const actionArgs = {
-                          variable: {
-                            objRoot: $state,
-                            variablePath: ["inputValue"]
-                          },
-                          operation: 0,
-                          value: value
+                          eventRef: $props["onChangeInputVal"],
+                          args: [
+                            (() => {
+                              try {
+                                return value;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
                         };
-                        return (({
-                          variable,
-                          value,
-                          startIndex,
-                          deleteCount
-                        }) => {
-                          if (!variable) {
-                            return;
-                          }
-                          const { objRoot, variablePath } = variable;
-
-                          $stateSet(objRoot, variablePath, value);
-                          return value;
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
                         })?.apply(null, [actionArgs]);
                       })()
                     : undefined;
                   if (
-                    $steps["updateInputValue"] != null &&
-                    typeof $steps["updateInputValue"] === "object" &&
-                    typeof $steps["updateInputValue"].then === "function"
+                    $steps["runOnChangeInputVal2"] != null &&
+                    typeof $steps["runOnChangeInputVal2"] === "object" &&
+                    typeof $steps["runOnChangeInputVal2"].then === "function"
                   ) {
-                    $steps["updateInputValue"] = await $steps[
-                      "updateInputValue"
+                    $steps["runOnChangeInputVal2"] = await $steps[
+                      "runOnChangeInputVal2"
                     ];
                   }
 
@@ -985,35 +963,19 @@ function PlasmicSearch__RenderFunc(props: {
                 ? "searchInput23"
                 : "searchInput"
             }
-            inputValue={
-              hasVariant(globalVariants, "screen", "mobileOnly")
-                ? (() => {
-                    try {
-                      return $state.inputValue;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()
-                : (() => {
-                    try {
-                      return $props.value;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()
-            }
+            inputValue={(() => {
+              try {
+                return $props.inputVal;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
             isAroundMe={
               hasVariant(globalVariants, "screen", "mobileOnly")
                 ? (() => {
@@ -1063,33 +1025,39 @@ function PlasmicSearch__RenderFunc(props: {
             onChangeInput={async value => {
               const $steps = {};
 
-              $steps["updateInputValue"] = true
+              $steps["runOnChangeInputVal"] = true
                 ? (() => {
                     const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["inputValue"]
-                      },
-                      operation: 0,
-                      value: value
+                      eventRef: $props["onChangeInputVal"],
+                      args: [
+                        (() => {
+                          try {
+                            return value;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
                     };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
                     })?.apply(null, [actionArgs]);
                   })()
                 : undefined;
               if (
-                $steps["updateInputValue"] != null &&
-                typeof $steps["updateInputValue"] === "object" &&
-                typeof $steps["updateInputValue"].then === "function"
+                $steps["runOnChangeInputVal"] != null &&
+                typeof $steps["runOnChangeInputVal"] === "object" &&
+                typeof $steps["runOnChangeInputVal"].then === "function"
               ) {
-                $steps["updateInputValue"] = await $steps["updateInputValue"];
+                $steps["runOnChangeInputVal"] = await $steps[
+                  "runOnChangeInputVal"
+                ];
               }
 
               $steps["runCode"] = true
@@ -1790,7 +1758,7 @@ function PlasmicSearch__RenderFunc(props: {
                   }
                   inputValue={(() => {
                     try {
-                      return $state.inputValue;
+                      return $props.inputVal;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -1850,39 +1818,39 @@ function PlasmicSearch__RenderFunc(props: {
                   onChangeInput={async value => {
                     const $steps = {};
 
-                    $steps["updateInputValue"] = true
+                    $steps["runOnChangeInputVal"] = true
                       ? (() => {
                           const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["inputValue"]
-                            },
-                            operation: 0,
-                            value: value
+                            eventRef: $props["onChangeInputVal"],
+                            args: [
+                              (() => {
+                                try {
+                                  return value;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
                           };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
-
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
                           })?.apply(null, [actionArgs]);
                         })()
                       : undefined;
                     if (
-                      $steps["updateInputValue"] != null &&
-                      typeof $steps["updateInputValue"] === "object" &&
-                      typeof $steps["updateInputValue"].then === "function"
+                      $steps["runOnChangeInputVal"] != null &&
+                      typeof $steps["runOnChangeInputVal"] === "object" &&
+                      typeof $steps["runOnChangeInputVal"].then === "function"
                     ) {
-                      $steps["updateInputValue"] = await $steps[
-                        "updateInputValue"
+                      $steps["runOnChangeInputVal"] = await $steps[
+                        "runOnChangeInputVal"
                       ];
                     }
 
