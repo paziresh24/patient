@@ -125,6 +125,11 @@
 .searchResultQs__mz2G7:global(.__wab_instance) {
   position: relative;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .searchResultSimple__ipciO:global(.__wab_instance):global(.__wab_instance) {
+    display: block;
+  }
+}
 .overlay {
   display: flex;
   flex-direction: column;
