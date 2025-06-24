@@ -102,8 +102,6 @@ export type PlasmicSearch__ArgsType = {
   selectedCity?: any;
   defaultValue?: string;
   onClickOverlay?: () => void;
-  inputVal?: string;
-  onChangeInputVal?: (value: string) => void;
   onFocusChange?: (value: boolean) => void;
   isAroundMe?: boolean;
 };
@@ -113,8 +111,6 @@ export const PlasmicSearch__ArgProps = new Array<ArgPropType>(
   "selectedCity",
   "defaultValue",
   "onClickOverlay",
-  "inputVal",
-  "onChangeInputVal",
   "onFocusChange",
   "isAroundMe"
 );
@@ -136,8 +132,6 @@ export interface DefaultSearchProps {
   selectedCity?: any;
   defaultValue?: string;
   onClickOverlay?: () => void;
-  inputVal?: string;
-  onChangeInputVal?: (value: string) => void;
   onFocusChange?: (value: boolean) => void;
   isAroundMe?: boolean;
   hasOverlay?: SingleBooleanChoiceArg<"hasOverlay">;
@@ -200,20 +194,7 @@ function PlasmicSearch__RenderFunc(props: {
         path: "inputValue",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return $props.defaultValue || "";
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()
+        initFunc: ({ $props, $state, $queries, $ctx }) => ``
       },
       {
         path: "getLocationList.data",
@@ -494,6 +475,27 @@ function PlasmicSearch__RenderFunc(props: {
                   ) {
                     $steps["runCode"] = await $steps["runCode"];
                   }
+
+                  $steps["updateIsFocus"] = true
+                    ? (() => {
+                        const actionArgs = { vgroup: "isFocus", operation: 4 };
+                        return (({ vgroup, value }) => {
+                          if (typeof value === "string") {
+                            value = [value];
+                          }
+
+                          $stateSet($state, vgroup, true);
+                          return true;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateIsFocus"] != null &&
+                    typeof $steps["updateIsFocus"] === "object" &&
+                    typeof $steps["updateIsFocus"].then === "function"
+                  ) {
+                    $steps["updateIsFocus"] = await $steps["updateIsFocus"];
+                  }
                 }}
                 onClickCities={async () => {
                   const $steps = {};
@@ -593,50 +595,38 @@ function PlasmicSearch__RenderFunc(props: {
                 onFocuse={async value => {
                   const $steps = {};
 
-                  $steps["isOpen"] = true
+                  $steps["updateIsFocus2"] = true
                     ? (() => {
                         const actionArgs = {
-                          customFunction: async () => {
-                            return (() => {
-                              if (value && !$state.isFocus) {
-                                return true;
-                              } else {
-                                return false;
-                              }
-                            })();
-                          }
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["isFocus"]
+                          },
+                          operation: 0,
+                          value: true
                         };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["isOpen"] != null &&
-                    typeof $steps["isOpen"] === "object" &&
-                    typeof $steps["isOpen"].then === "function"
-                  ) {
-                    $steps["isOpen"] = await $steps["isOpen"];
-                  }
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                  $steps["runCode"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return ($state.isFocus = value);
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
                         })?.apply(null, [actionArgs]);
                       })()
                     : undefined;
                   if (
-                    $steps["runCode"] != null &&
-                    typeof $steps["runCode"] === "object" &&
-                    typeof $steps["runCode"].then === "function"
+                    $steps["updateIsFocus2"] != null &&
+                    typeof $steps["updateIsFocus2"] === "object" &&
+                    typeof $steps["updateIsFocus2"].then === "function"
                   ) {
-                    $steps["runCode"] = await $steps["runCode"];
+                    $steps["updateIsFocus2"] = await $steps["updateIsFocus2"];
                   }
 
                   $steps["runOnClickOverlay"] = true
@@ -829,7 +819,7 @@ function PlasmicSearch__RenderFunc(props: {
 
               {(() => {
                 try {
-                  return $state.terms.trim().length >= 3;
+                  return $state.terms?.trim().length >= 3;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -2211,28 +2201,83 @@ function PlasmicSearch__RenderFunc(props: {
       <SideEffect
         data-plasmic-name={"sideEffect"}
         data-plasmic-override={overrides.sideEffect}
-        className={classNames("__wab_instance", sty.sideEffect)}
+        className={classNames("__wab_instance", sty.sideEffect, {
+          [sty.sideEffectisFocus]: hasVariant($state, "isFocus", "isFocus")
+        })}
+        deps={(() => {
+          try {
+            return [$props.defaultValue];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         onMount={async () => {
           const $steps = {};
 
-          $steps["runCode"] = true
-            ? (() => {
-                const actionArgs = {
-                  customFunction: async () => {
-                    return console.log("data:", $ctx.fetchedData?.entity);
-                  }
-                };
-                return (({ customFunction }) => {
-                  return customFunction();
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
+          $steps["updateInputValue"] =
+            $props.defaultValue?.length > 0
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["inputValue"]
+                    },
+                    operation: 0,
+                    value: $props.defaultValue
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
           if (
-            $steps["runCode"] != null &&
-            typeof $steps["runCode"] === "object" &&
-            typeof $steps["runCode"].then === "function"
+            $steps["updateInputValue"] != null &&
+            typeof $steps["updateInputValue"] === "object" &&
+            typeof $steps["updateInputValue"].then === "function"
           ) {
-            $steps["runCode"] = await $steps["runCode"];
+            $steps["updateInputValue"] = await $steps["updateInputValue"];
+          }
+
+          $steps["updateTerms"] =
+            $props.defaultValue?.length > 0
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["terms"]
+                    },
+                    operation: 0,
+                    value: $props.defaultValue
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+          if (
+            $steps["updateTerms"] != null &&
+            typeof $steps["updateTerms"] === "object" &&
+            typeof $steps["updateTerms"].then === "function"
+          ) {
+            $steps["updateTerms"] = await $steps["updateTerms"];
           }
         }}
       />
