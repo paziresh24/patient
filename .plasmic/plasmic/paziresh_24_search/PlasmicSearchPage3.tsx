@@ -145,6 +145,24 @@ function PlasmicSearchPage3__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "search.terms",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   const globalVariants = ensureGlobalVariants({
     screen: useScreenVariantsbr2UhI7UlpvR()
   });
@@ -171,6 +189,21 @@ function PlasmicSearchPage3__RenderFunc(props: {
           data-plasmic-override={overrides.search}
           className={classNames("__wab_instance", sty.search)}
           hasOverlay={true}
+          onTermsChange={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["search", "terms"]).apply(
+              null,
+              eventArgs
+            );
+
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
+              return;
+            }
+          }}
+          terms={generateStateValueProp($state, ["search", "terms"])}
         />
       </div>
       <div className={classNames(projectcss.all, sty.freeBox__e94Wt)}>
