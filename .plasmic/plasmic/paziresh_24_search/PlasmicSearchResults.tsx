@@ -79,6 +79,7 @@ import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
+import { uniq as __lib_lodash__uniq } from "lodash";
 
 createPlasmicElementProxy;
 
@@ -161,7 +162,10 @@ export interface DefaultSearchResultsProps {
 }
 
 const $$ = {
-  splunkEvent: __fn_splunkEvent
+  splunkEvent: __fn_splunkEvent,
+  lodash: {
+    uniq: __lib_lodash__uniq
+  }
 };
 
 function useNextRouter() {
@@ -1559,6 +1563,45 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ) {
                       $steps["runCodeSv2CtrRequest"] = await $steps[
                         "runCodeSv2CtrRequest"
+                      ];
+                    }
+
+                    $steps["setHistoryKeyword"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                const history = $$.lodash.uniq(
+                                  JSON.parse(
+                                    localStorage.getItem("history") ?? "[]"
+                                  )
+                                );
+                                const newHistory = history.filter(
+                                  historyItem =>
+                                    historyItem !== currentItem?.title ?? ""
+                                );
+                                return localStorage.setItem(
+                                  "history",
+                                  JSON.stringify([
+                                    ...newHistory,
+                                    currentItem?.title ?? ""
+                                  ])
+                                );
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["setHistoryKeyword"] != null &&
+                      typeof $steps["setHistoryKeyword"] === "object" &&
+                      typeof $steps["setHistoryKeyword"].then === "function"
+                    ) {
+                      $steps["setHistoryKeyword"] = await $steps[
+                        "setHistoryKeyword"
                       ];
                     }
                   }}

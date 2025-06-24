@@ -70,7 +70,7 @@ import sty from "./PlasmicSearchResultQs.module.css"; // plasmic-import: 4t5SBkI
 
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: eKLBqU_Fr5SV/icon
 
-import { uniqBy as __lib_lodash__uniqBy } from "lodash";
+import { uniq as __lib_lodash__uniq } from "lodash";
 
 createPlasmicElementProxy;
 
@@ -108,7 +108,7 @@ export interface DefaultSearchResultQsProps {
 
 const $$ = {
   lodash: {
-    uniqBy: __lib_lodash__uniqBy
+    uniq: __lib_lodash__uniq
   }
 };
 
@@ -281,12 +281,11 @@ function PlasmicSearchResultQs__RenderFunc(props: {
                   const actionArgs = {
                     customFunction: async () => {
                       return (() => {
-                        const history = $$.lodash.uniqBy(
-                          JSON.parse(localStorage.getItem("history") ?? "[]"),
-                          "name"
+                        const history = $$.lodash.uniq(
+                          JSON.parse(localStorage.getItem("history") ?? "[]")
                         );
                         const newHistory = history.filter(
-                          historyItem => historyItem.name !== value.name
+                          historyItem => historyItem !== value
                         );
                         return localStorage.setItem(
                           "history",
