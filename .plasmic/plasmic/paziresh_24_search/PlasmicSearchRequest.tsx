@@ -200,7 +200,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
         method={"GET"}
         noLayout={false}
         previewErrorDisplay={false}
-        previewSpinner={true}
+        previewSpinner={false}
         url={(() => {
           try {
             return (() => {
