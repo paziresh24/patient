@@ -196,11 +196,16 @@ export const Suggestion = (props: SuggestionProps) => {
   };
 
   const handleClickOverlay = () => {
-    if (setDefaultInputValue && !!defaultInputValue) {
-      setDefaultInputValue('');
-    }
     setIsOpenSuggestion(false);
   };
+
+  useEffect(() => {
+    setDefaultInputValue?.('');
+  }, [isOpenSuggestion]);
+
+  useEffect(() => {
+    setIsOpenSuggestion(false);
+  }, []);
 
   if (showPlasmicSuggestion) {
     return (
@@ -213,11 +218,11 @@ export const Suggestion = (props: SuggestionProps) => {
                 onChangeCity({ ...val });
               },
               selectedCity: city,
-              defaultValue: debouncedSearchTerm || defaultInputValue || selectedFilters?.text || '',
+              defaultValue: userSearchValue || defaultInputValue || selectedFilters?.text || '',
               onClickOverlay: handleClickOverlay,
-              inputVal: debouncedSearchTerm,
-              onChangeInputVal: setUserSearchValue,
-              onFocusChange: (val: any) => setIsOpenSuggestion(val),
+              onFocusChange: (val: any) => {
+                setIsOpenSuggestion(val);
+              },
               isAroundMe: city.is_aroundme,
             }}
             variants={{

@@ -65,7 +65,7 @@ const Home = ({ fragmentComponents }: any) => {
                 name="RecentSearch"
                 props={{
                   onClick: (value: any) => {
-                    setDefaultInputValue(value?.name || '');
+                    setDefaultInputValue(value?.name || value || '');
                     setIsOpenSuggestion(true);
                   },
                 }}
