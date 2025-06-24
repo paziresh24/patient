@@ -1,0 +1,30 @@
+name: Remove Google Fonts Import
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  clean-font-imports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Run cleanup script
+        run: |
+          chmod +x ./remove-google-fonts.sh
+          ./remove-google-fonts.sh
+
+      - name: Commit and push changes if needed
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Remove Google Fonts imports"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
