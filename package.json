@@ -24,6 +24,7 @@
     "@growthbook/growthbook-react": "0.18.0",
     "@next/bundle-analyzer": "12.3.1",
     "@next/font": "13.2.3",
+    "@next/third-parties": "15.3.4",
     "@paziresh24/splunk-event": "2.1.1",
     "@persian-tools/persian-tools": "3.6.0",
     "@plasmicapp/cli": "0.1.327",

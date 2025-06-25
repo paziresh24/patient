@@ -24,6 +24,7 @@ import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGl
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
 import Script from 'next/script';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -133,6 +134,7 @@ function MyApp(props: AppProps) {
                 />
               </Head>
               <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
+              <GoogleTagManager gtmId="GTM-P5RPLDP" />
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>

@@ -24,14 +24,6 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
       }),
   );
 
-  useEffect(() => {
-    if (!publicRuntimeConfig.DESABLED_GTM) {
-      TagManager.initialize({
-        gtmId: 'GTM-P5RPLDP',
-      });
-    }
-  }, [publicRuntimeConfig]);
-
   return (
     <QueryClientProvider client={queryClient}>
       <LoginModalProvider>
