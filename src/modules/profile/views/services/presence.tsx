@@ -176,7 +176,7 @@ export const Presence = memo((props: PresenceProps) => {
       />
       <Modal title="انتخاب مرکز درمانی" {...selectCenterModalProps} bodyClassName="pl-3">
         {selectCenterModalProps.isOpen && (
-          <div className="pl-2 overflow-auto max-h-96">
+          <div className="pl-2 overflow-auto max-h-[28rem]">
             <SelectCenter
               centers={reformattedCentersProperty({ centers, displayName })}
               onSelect={center => handleOnBookByCenter(centers.find(c => c.id === center.id))}

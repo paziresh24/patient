@@ -16,7 +16,7 @@ export const PhoneNumberList = (props: PhoneNumberListProps) => {
   if (!phoneNumbers?.length) return null;
   return (
     <>
-      <Button block size="sm" onClick={handleOpen} className="!bg-white !border-[#5c8afe] !text-[#3861FB] mt-4 pointer-events-auto">
+      <Button block size="sm" onClick={handleOpen} className="!bg-white !border-[#5c8afe] !text-[#3861FB] mt-3 pointer-events-auto">
         {phoneTitle}
       </Button>
       <Modal title={phoneTitle} {...modalProps}>
