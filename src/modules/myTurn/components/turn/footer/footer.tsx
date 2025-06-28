@@ -34,6 +34,7 @@ import { SecureCallButton } from '../../secureCallButton/secureCallButton';
 import { OnlineVisitChannel } from '../turnType';
 import axios from 'axios';
 import { growthbook } from 'src/pages/_app';
+import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
 const { publicRuntimeConfig } = getConfig();
 
 interface TurnFooterProps {
@@ -62,6 +63,7 @@ interface TurnFooterProps {
   description: string;
   notRefundable?: boolean;
   possibilityBeingVisited?: boolean;
+  serverId: number;
 }
 
 export const TurnFooter: React.FC<TurnFooterProps> = props => {
@@ -91,6 +93,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     description,
     notRefundable,
     isDelete,
+    serverId,
   } = props;
   const { t } = useTranslation('patient/appointments');
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
@@ -111,7 +114,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       });
     },
   });
-
+  const getCancellationPolicyStatus = useGetCancellationPolicyStatus({ book_id: id }, { enabled: false });
   const router = useRouter();
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
@@ -229,6 +232,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       book_id: id,
       slug: slug,
     });
+    if (serverId == 3) {
+      getCancellationPolicyStatus.remove();
+      getCancellationPolicyStatus.refetch();
+    }
     handleOpenRemoveTurn();
     splunkInstance('doctor-profile').sendEvent({
       group: 'my-turn',
@@ -441,13 +448,23 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               </Text>
             </Alert>
           )}
+          {serverId == 3 && getCancellationPolicyStatus.data?.data?.is_paid && (
+            <Alert severity="warning" className="flex items-center gap-3 p-3 mb-4">
+              <WarningIcon className="w-5" />
+              <Text fontSize="sm" fontWeight="medium">
+                {getCancellationPolicyStatus.data?.data?.refundable
+                  ? 'وجه پرداختی شما تا یک ساعت بعد از لغو نوبت به شما مسترد خواهد شد.'
+                  : 'با توجه به قوانین استرداد مرکز، وجه پرداختی شما مسترد نخواهد شد.'}
+              </Text>
+            </Alert>
+          )}
           <div className="flex space-s-2">
             {(!notRefundable || centerType == CenterType.consult) && (
               <Button
                 theme="error"
                 block
                 onClick={removeBookAction}
-                loading={removeBookApi.isLoading}
+                loading={removeBookApi.isLoading || (serverId == 3 && getCancellationPolicyStatus.isLoading)}
                 data-testid="modal__remove-turn-button"
                 disabled={isOnlineVisitTurn && !reasonDeleteTurn}
               >

@@ -26,7 +26,7 @@ export const Invoice = (props: InvoiceProps) => {
 
   return (
     <div className="border border-solid rounded-lg border-slate-200">
-      <Accordion title="اطلاعات پرداخت" className="bg-white p-0">
+      <Accordion title="اطلاعات پرداخت" className="bg-white p-0" isOpen={!!(walletAmount && walletAmount > 0)}>
         <div className="flex flex-col space-y-3">
           {loading && (
             <div className="flex justify-between">

@@ -1,6 +1,6 @@
 import classNames from '@/common/utils/classNames';
 import ChevronIcon from '@/components/icons/chevron';
-import { HTMLAttributes, useState } from 'react';
+import { HTMLAttributes, useEffect, useState } from 'react';
 import Text from '../text';
 
 interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
@@ -11,6 +11,10 @@ interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
 const Accordion: React.FC<AccordionProps> = props => {
   const { title, children, className, isOpen } = props;
   const [open, setOpen] = useState(isOpen);
+
+  useEffect(() => {
+    setOpen(isOpen);
+  }, [isOpen]);
   return (
     <div className={classNames('rounded-lg bg-slate-100 flex flex-col', className)}>
       <div className="flex items-center justify-between select-none cursor-pointer p-4" onClick={() => setOpen(!open)}>
