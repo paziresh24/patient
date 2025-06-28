@@ -9,6 +9,7 @@ export interface TurnProps {
   paymentStatus: PaymentStatus;
   id: string;
   centerType: CenterType;
+  serverId: number;
   centerInfo: {
     centerId: string;
     centerType: string;

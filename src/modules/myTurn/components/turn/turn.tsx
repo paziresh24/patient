@@ -22,6 +22,7 @@ export const Turn: React.FC<TurnProps> = props => {
     patientInfo,
     centerInfo,
     id,
+    serverId,
   } = props;
   const { t } = useTranslation();
 
@@ -94,6 +95,7 @@ export const Turn: React.FC<TurnProps> = props => {
         respiteDeleteTurn={turnDetails.respiteDeleteTurn}
         notRefundable={turnDetails.notRefundable}
         possibilityBeingVisited={turnDetails.possibilityBeingVisited}
+        serverId={serverId}
       />
     </Card>
   );

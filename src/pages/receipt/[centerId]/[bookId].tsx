@@ -53,6 +53,8 @@ import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
 import Script from 'next/script';
 import axios from 'axios';
+import WarningIcon from '@/common/components/icons/warning';
+import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
@@ -94,7 +96,7 @@ const Receipt = () => {
     pageSize: 'a4',
     scale: 2,
   });
-
+  const getCancellationPolicyStatus = useGetCancellationPolicyStatus({ book_id: bookId as string }, { enabled: false });
   const { removeBookApi, centerMap } = useBookAction();
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const shouldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
@@ -254,6 +256,10 @@ const Receipt = () => {
   };
 
   const handleRemoveBookClick = () => {
+    if (bookDetailsData?.doctor?.server_id == 3) {
+      getCancellationPolicyStatus.remove();
+      getCancellationPolicyStatus.refetch();
+    }
     if (!isLogin) {
       handleOpenLoginModal({ state: true, postLogin: handleOpenRemoveModal });
       return;
@@ -694,8 +700,23 @@ const Receipt = () => {
                 />
               ))}
           </div>
+          {bookDetailsData?.doctor?.server_id == 3 && getCancellationPolicyStatus.data?.data?.is_paid && (
+            <Alert severity="warning" className="flex items-center gap-3 p-3 mb-4">
+              <WarningIcon className="w-5" />
+              <Text fontSize="sm" fontWeight="medium">
+                {getCancellationPolicyStatus.data?.data?.refundable
+                  ? 'وجه پرداختی شما تا یک ساعت بعد از لغو نوبت به شما مسترد خواهد شد.'
+                  : 'با توجه به قوانین استرداد مرکز، وجه پرداختی شما مسترد نخواهد شد.'}
+              </Text>
+            </Alert>
+          )}
           <div className="flex space-s-2">
-            <Button theme="error" block onClick={handleRemoveBookTurn} loading={removeBookApi.isLoading}>
+            <Button
+              theme="error"
+              block
+              onClick={handleRemoveBookTurn}
+              loading={removeBookApi.isLoading || (bookDetailsData?.doctor?.server_id == 3 && getCancellationPolicyStatus.isLoading)}
+            >
               {turnStatus.requestedTurn ? 'لغو درخواست' : 'لغو نوبت'}
             </Button>
             <Button theme="error" variant="secondary" block onClick={handleCloseRemoveModal}>

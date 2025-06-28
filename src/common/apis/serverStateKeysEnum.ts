@@ -26,4 +26,5 @@ export enum ServerStateKeysEnum {
   Services = 'services',
   WalletBalance = 'walletBalance',
   OnlineChannels = 'onlineChannels',
+  GetCancellationPolicyStatus = 'getCancellationPolicyStatus',
 }
