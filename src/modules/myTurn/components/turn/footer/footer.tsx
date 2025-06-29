@@ -232,7 +232,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       book_id: id,
       slug: slug,
     });
-    if (serverId == 3) {
+    if (serverId != 1) {
       getCancellationPolicyStatus.remove();
       getCancellationPolicyStatus.refetch();
     }
@@ -448,7 +448,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               </Text>
             </Alert>
           )}
-          {serverId == 3 && getCancellationPolicyStatus.data?.data?.is_paid && (
+          {serverId != 1 && getCancellationPolicyStatus.data?.data?.is_paid && (
             <Alert severity="warning" className="flex items-center gap-3 p-3 mb-4">
               <WarningIcon className="w-5" />
               <Text fontSize="sm" fontWeight="medium">
@@ -464,7 +464,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
                 theme="error"
                 block
                 onClick={removeBookAction}
-                loading={removeBookApi.isLoading || (serverId == 3 && getCancellationPolicyStatus.isLoading)}
+                loading={removeBookApi.isLoading || (serverId != 1 && getCancellationPolicyStatus.isLoading)}
                 data-testid="modal__remove-turn-button"
                 disabled={isOnlineVisitTurn && !reasonDeleteTurn}
               >

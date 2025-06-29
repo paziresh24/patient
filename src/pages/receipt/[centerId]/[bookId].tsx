@@ -256,7 +256,7 @@ const Receipt = () => {
   };
 
   const handleRemoveBookClick = () => {
-    if (bookDetailsData?.doctor?.server_id == 3) {
+    if (bookDetailsData?.doctor?.server_id != 1) {
       getCancellationPolicyStatus.remove();
       getCancellationPolicyStatus.refetch();
     }
@@ -700,7 +700,7 @@ const Receipt = () => {
                 />
               ))}
           </div>
-          {bookDetailsData?.doctor?.server_id == 3 && getCancellationPolicyStatus.data?.data?.is_paid && (
+          {bookDetailsData?.doctor?.server_id != 1 && getCancellationPolicyStatus.data?.data?.is_paid && (
             <Alert severity="warning" className="flex items-center gap-3 p-3 mb-4">
               <WarningIcon className="w-5" />
               <Text fontSize="sm" fontWeight="medium">
@@ -715,7 +715,7 @@ const Receipt = () => {
               theme="error"
               block
               onClick={handleRemoveBookTurn}
-              loading={removeBookApi.isLoading || (bookDetailsData?.doctor?.server_id == 3 && getCancellationPolicyStatus.isLoading)}
+              loading={removeBookApi.isLoading || (bookDetailsData?.doctor?.server_id != 1 && getCancellationPolicyStatus.isLoading)}
             >
               {turnStatus.requestedTurn ? 'لغو درخواست' : 'لغو نوبت'}
             </Button>
