@@ -710,6 +710,38 @@ function PlasmicSearch__RenderFunc(props: {
                   ) {
                     $steps["splunk"] = await $steps["splunk"];
                   }
+
+                  $steps["sentClarityTagEvent"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return (() => {
+                              return setTimeout(function () {
+                                if (typeof clarity === "function") {
+                                  clarity("set", "searchBoxOpen", "opened");
+                                } else {
+                                  console.error(
+                                    "Clarity is not defined. Make sure Clarity is loaded before this script."
+                                  );
+                                }
+                              }, 500);
+                            })();
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sentClarityTagEvent"] != null &&
+                    typeof $steps["sentClarityTagEvent"] === "object" &&
+                    typeof $steps["sentClarityTagEvent"].then === "function"
+                  ) {
+                    $steps["sentClarityTagEvent"] = await $steps[
+                      "sentClarityTagEvent"
+                    ];
+                  }
                 }}
               />
             </div>

@@ -67,6 +67,8 @@ import plasmic_fragment_design_system_css from "../fragment_design_system/plasmi
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicRecentSearch.module.css"; // plasmic-import: ARWFU9130hug/css
 
+import { reverse as __lib_lodash__reverse } from "lodash";
+
 createPlasmicElementProxy;
 
 export type PlasmicRecentSearch__VariantMembers = {};
@@ -90,7 +92,11 @@ export interface DefaultRecentSearchProps {
   className?: string;
 }
 
-const $$ = {};
+const $$ = {
+  lodash: {
+    reverse: __lib_lodash__reverse
+  }
+};
 
 function useNextRouter() {
   try {
@@ -219,7 +225,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
               (() => {
                 try {
-                  return $state.history.slice(-4);
+                  return $$.lodash.reverse($state.history.slice(-4));
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -284,7 +290,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
                       try {
                         return typeof currentItem == "string"
                           ? currentItem
-                          : currentItem.name || currentItem.title;
+                          : currentItem?.name || currentItem?.title;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -321,7 +327,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
                     if (typeof window != "undefined") {
                       const history =
                         JSON.parse(localStorage.getItem("history")) || [];
-                      return history;
+                      return history?.filter(item => typeof item == "string");
                     } else {
                       return [];
                     }

@@ -359,6 +359,7 @@ function PlasmicSearchTextInput__RenderFunc(props: {
             "showStartIcon"
           )
         })}
+        data-clarity-unmask={"true"}
         disabled={
           hasVariant($state, "isDisabled", "isDisabled") ? true : undefined
         }
