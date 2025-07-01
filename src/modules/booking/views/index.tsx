@@ -345,9 +345,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           router.replace(`/receipt/${center.id}/${data.book_info.id}`);
         },
         onExpire(data) {
-          toast.error(data.message, {
-            duration: 10000,
-          });
+          toast.error(toastActionble({ ...data }), { duration: data?.duration ?? 10000 });
           handleChangeStep('SELECT_TIME');
         },
         onError(data) {
@@ -362,9 +360,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             );
           }
           if (Object.values(data?.details ?? {})?.length == 0) {
-            toast.error(data.message, {
-              duration: 10000,
-            });
+            toast.error(toastActionble({ ...data }), { duration: data?.duration ?? 10000 });
           }
 
           sendGaEvent({
