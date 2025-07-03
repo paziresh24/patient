@@ -204,8 +204,10 @@ export const Suggestion = (props: SuggestionProps) => {
   }, [isOpenSuggestion]);
 
   useEffect(() => {
-    setIsOpenSuggestion(false);
-  }, []);
+    if (!defaultOpen) {
+      setIsOpenSuggestion(false);
+    }
+  }, [defaultOpen]);
 
   if (showPlasmicSuggestion) {
     return (

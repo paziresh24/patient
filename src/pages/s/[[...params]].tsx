@@ -40,6 +40,8 @@ const ConsultBanner = dynamic(() => import('@/modules/search/components/consultB
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
+import Loading from '@/common/components/atom/loading';
+import useLockScroll from '@/common/hooks/useLockScroll';
 
 const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   const { isMobile } = useResponsive();
@@ -70,6 +72,34 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
   const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
   const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
+  const { lockScroll, openScroll } = useLockScroll();
+
+  const router = useRouter();
+  const [isPageLoading, setIsPageLoading] = useState(false);
+
+  useEffect(() => {
+    const handleRouteChangeStart = (url: string) => {
+      if (url.startsWith('/dr') || url.startsWith('/center')) {
+        setIsPageLoading(true);
+        lockScroll();
+      }
+    };
+
+    const handleRouteChangeComplete = () => {
+      setIsPageLoading(false);
+      openScroll();
+    };
+
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    router.events.on('routeChangeError', handleRouteChangeComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      router.events.off('routeChangeError', handleRouteChangeComplete);
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -277,6 +307,11 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
         </div>
       </div>
       <UnknownCity />
+      {isPageLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
+          <Loading width={50} />
+        </div>
+      )}
     </>
   );
 };
