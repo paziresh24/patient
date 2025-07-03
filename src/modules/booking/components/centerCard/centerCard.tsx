@@ -21,7 +21,7 @@ export const CenterCard = (props: CenterCardProps) => {
     <>
       <div
         onClick={() => !isDisable && isAvailable && onClick(center)}
-        className={classNames('w-full rounded-lg border border-slate-200 cursor-pointer shadow-sm', {
+        className={classNames('w-full rounded-lg border-2 border-slate-200 cursor-pointer shadow-sm', {
           'cursor-default': isDisable || !isAvailable,
         })}
       >
