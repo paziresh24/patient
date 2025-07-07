@@ -128,10 +128,10 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
         {searchData.isSuccess && substituteDoctor?.url && (
           <div className="flex flex-col mb-2 space-y-2">
             <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
-              <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
+              <Text className="text-sm font-medium">{displayName} نوبت ندارد.</Text>
             </Alert>
             <Alert severity="success" className="p-3 text-sm font-medium text-green-700">
-              بدون خروج از منزل، آنلاین ویزیت شوید.
+              طبق نظر بیماران، مشابه ترین پزشک آنلاین به {displayName}:
             </Alert>
             <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>
               <SearchCard
@@ -139,7 +139,6 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
                 baseInfo={{
                   displayName: substituteDoctor.title,
                   expertise: substituteDoctor.display_expertise,
-                  experience: substituteDoctor.experience,
                   isVerify: true,
                   avatar: substituteDoctor.image,
                   rate: {
@@ -149,15 +148,6 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
                   isOnline: true,
                 }}
                 type="doctor"
-                details={{
-                  badges: [
-                    {
-                      title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
-                      icon: 'shield-icon',
-                      type: 'error',
-                    },
-                  ],
-                }}
                 className="shadow-none !py-0 lg:!py-0 cursor-pointer"
                 actions={[
                   {
@@ -171,7 +161,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
           </div>
         )}
         <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
-          مشاهده سایر پزشکان آنلاین {expertises.group_expertises[0]?.name}
+          مشاهده سایر پزشکان آنلاین {expertises.group_expertises[0]?.name} مشابه
         </Button>
       </Modal>
     </>
