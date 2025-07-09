@@ -4,7 +4,7 @@ import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useTranslation from 'next-translate/useTranslation';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import PinInput from 'react-pin-input';
 import { useLogin } from '../../hooks/useLogin';
@@ -27,6 +27,37 @@ export const OtpCode = (props: OtpCodeProps) => {
   const resetPassword = useResetPassword();
   const [password, setPassword] = useState('');
   const [shouldShowResetButton, setShouldShowResetButton] = useState(false);
+
+  const pinInputRef = useRef<any>(null);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+
+    const getOtpFromSms = async () => {
+      if ('OTPCredential' in window && 'credentials' in navigator) {
+        try {
+          const content = await (navigator.credentials.get as any)({
+            otp: { transport: ['sms'] },
+            signal: abortController.signal,
+          });
+
+          if (content && content.code) {
+            setPassword(content.code);
+            if (pinInputRef.current) {
+              pinInputRef.current.setValue(content.code);
+            }
+            handleLogin(content.code);
+          }
+        } catch (err) {
+          console.warn('Web OTP API error:', err);
+        }
+      }
+    };
+
+    getOtpFromSms();
+
+    return () => abortController.abort();
+  }, []);
 
   const handleLogin = async (password: string) => {
     try {
@@ -85,6 +116,7 @@ export const OtpCode = (props: OtpCodeProps) => {
         </button>
       </div>
       <PinInput
+        ref={pinInputRef}
         length={4}
         focus
         initialValue=""

@@ -126,6 +126,7 @@ const DoctorProfile = ({
           isWebView: !!isWebView || !!isApplication,
           features: {
             ravi_show_external_rate: dontShowRateDetails,
+            risman: fragmentComponents?.risman && isBulk,
           },
           viewer_user_id: userInfo?.id,
           enabledWidgets: hamdastWidgets?.map((item: any) => item?.id) ?? [],
