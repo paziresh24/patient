@@ -43,10 +43,10 @@ export const OtpCode = (props: OtpCodeProps) => {
 
           if (content && content.code) {
             setPassword(content.code);
-            if (pinInputRef.current) {
-              pinInputRef.current.setValue(content.code);
-            }
             handleLogin(content.code);
+            if (pinInputRef.current) {
+              pinInputRef.current.value = content.code;
+            }
           }
         } catch (err) {
           console.warn('Web OTP API error:', err);
