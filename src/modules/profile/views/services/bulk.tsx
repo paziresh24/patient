@@ -42,6 +42,9 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
     splunkInstance('search').sendEvent({
       group: 'profile_visit_online_doctor_recommendation',
       type: 'profile_visit_online_doctor_recommendation-open-modal',
+      event: {
+        slug: substituteDoctor?.url?.replace('/dr/', ''),
+      },
     });
     handleOpen();
   };
@@ -61,6 +64,9 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
     splunkInstance('search').sendEvent({
       group: 'profile_visit_online_doctor_recommendation',
       type: 'profile_visit_online_doctor_recommendation-click-more-doctors',
+      event: {
+        slug: substituteDoctor?.url?.replace('/dr/', ''),
+      },
     });
     changeRoute({
       query: {
@@ -74,13 +80,14 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
     });
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      handleOpenSubstituteDoctorModal();
-    }, 2000);
-  }, []);
-
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
+  useEffect(() => {
+    if (substituteDoctor?.url) {
+      setTimeout(() => {
+        handleOpenSubstituteDoctorModal();
+      }, 2000);
+    }
+  }, [substituteDoctor?.url]);
 
   return (
     <>
@@ -127,10 +134,10 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
         )}
         {searchData.isSuccess && substituteDoctor?.url && (
           <div className="flex flex-col mb-2 space-y-2">
-            <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
+            <Alert severity="error" className="flex bg-slate-50 border-slate-200 text-slate-900 items-center p-3 space-s-2">
               <Text className="text-sm font-medium">{displayName} نوبت ندارد.</Text>
             </Alert>
-            <Alert severity="success" className="p-3 text-sm font-medium text-green-700">
+            <Alert severity="success" className="p-3 bg-green-600 border-green-700 text-sm font-medium text-white">
               طبق نظر بیماران، مشابه ترین پزشک آنلاین به {displayName}:
             </Alert>
             <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>
@@ -151,7 +158,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
                 className="shadow-none !py-0 lg:!py-0 cursor-pointer"
                 actions={[
                   {
-                    text: `گفتگو با ${substituteDoctor.title}`,
+                    text: `ویزیت آنلاین با دکتر ${substituteDoctor.title}`,
                     outline: false,
                     description: '',
                   },
