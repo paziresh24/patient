@@ -12,6 +12,7 @@ import { UserInfo } from '../../store/userInfo';
 import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
 import { splunkInstance } from '@/common/services/splunk';
+import { isEqual } from 'lodash';
 interface OtpCodeProps {
   setStep: Dispatch<SetStateAction<StepLoginForm>>;
   mobileNumberValue: string;
@@ -43,9 +44,16 @@ export const OtpCode = (props: OtpCodeProps) => {
 
           if (content && content.code) {
             setPassword(content.code);
-            handleLogin(content.code);
             if (pinInputRef.current) {
               pinInputRef.current.value = content.code;
+
+              const valueArr = (content.code || '').toString().split('');
+
+              if (isEqual(valueArr, pinInputRef.current.values)) return;
+
+              for (let i = 0; i < pinInputRef.current.elements.length; i++) {
+                pinInputRef.current.elements[i].update(valueArr[i] || '', true);
+              }
             }
           }
         } catch (err) {
@@ -119,7 +127,7 @@ export const OtpCode = (props: OtpCodeProps) => {
         ref={pinInputRef}
         length={4}
         focus
-        initialValue=""
+        initialValue={''}
         onChange={value => setPassword(value)}
         type="numeric"
         inputMode="number"
