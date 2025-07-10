@@ -29,7 +29,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
       route: decodeURIComponent(dcotorCity),
       query: {
         turn_type: 'consult',
-        text: expertises?.expertises?.map((expertise: any) => expertise.expertise_name)[0],
+        text: expertises?.expertises.filter((item: any) => item.expertise_id !== 325)?.map((expertise: any) => expertise.expertise_name)[0],
       },
     },
     {
