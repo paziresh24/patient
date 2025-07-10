@@ -1070,13 +1070,167 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 />
               ) : null}
               <LauncherComponentsApp
+                appkey={"liom"}
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-fe.png"
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp__bytUs
+                )}
+                description={
+                  "\u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u0631\u0627\u06cc\u06af\u0627\u0646 \u0635\u062d\u0628\u062a \u06a9\u0646\u06cc\u062f."
+                }
+                link={
+                  "/_/liom/self-test/?app=paziresh24&type=ida&origin=paziresh24&gw=paziresh24"
+                }
+                name={
+                  "\u062a\u0634\u062e\u06cc\u0635 \u06a9\u0645\u0628\u0648\u062f \u0622\u0647\u0646"
+                }
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["sendLog"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  evant_group: "launcher_statistics",
+                                  event_type: "apps",
+                                  user_id: $ctx.auth.info?.id,
+                                  is_doctor: $ctx.auth.info?.is_doctor,
+                                  meta_data: {
+                                    name: "تشخیص کمبود آهن",
+                                    key: "liom/self-test",
+                                    link: "/_/liom/self-test/?app=paziresh24&type=ida&origin=paziresh24&gw=paziresh24"
+                                  },
+                                  source: "apps"
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendLog"] != null &&
+                    typeof $steps["sendLog"] === "object" &&
+                    typeof $steps["sendLog"].then === "function"
+                  ) {
+                    $steps["sendLog"] = await $steps["sendLog"];
+                  }
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pageQuery={{
+                  app: "paziresh24",
+                  type: "ida",
+                  origin: "paziresh24",
+                  gw: "paziresh24"
+                }}
+                pagekey={"self-test"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+
+              {false ? (
+                <LauncherComponentsApp
+                  appkey={"liom"}
+                  avatar={
+                    "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom%2Ficon.png?versionId="
+                  }
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsApp__yj1N6
+                  )}
+                  description={
+                    "\u067e\u0631\u06cc\u0648\u062f \u0634\u0645\u0627 \u0646\u0627\u0645\u0646\u0638\u0645 \u0627\u0633\u062a\u061f \u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646\u060c \u06af\u0641\u062a\u06af\u0648 \u0631\u0627 \u0622\u063a\u0627\u0632 \u06a9\u0646\u06cc\u062f."
+                  }
+                  link={"/_/liom/irregularities/?origin=launcher-apps"}
+                  name={
+                    "\u062a\u0634\u062e\u06cc\u0635 \u062f\u0647\u0646\u062f\u0647 \u0639\u0644\u062a \u067e\u0631\u06cc\u0648\u062f \u0646\u0627\u0645\u0646\u0638\u0645"
+                  }
+                  onEvent={async () => {
+                    const $steps = {};
+
+                    $steps["runOnEvent"] = true
+                      ? (() => {
+                          const actionArgs = { eventRef: $props["onEvent"] };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnEvent"] != null &&
+                      typeof $steps["runOnEvent"] === "object" &&
+                      typeof $steps["runOnEvent"].then === "function"
+                    ) {
+                      $steps["runOnEvent"] = await $steps["runOnEvent"];
+                    }
+                  }}
+                  pagekey={"irregularities"}
+                  widgetFrame={(() => {
+                    try {
+                      return $props.widgetFrames;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
+              ) : null}
+              <LauncherComponentsApp
                 appkey={"roshan"}
                 avatar={
                   "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
                 }
                 className={classNames(
                   "__wab_instance",
-                  sty.launcherComponentsApp__bytUs
+                  sty.launcherComponentsApp__mWccY
                 )}
                 description={
                   "\u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u0631\u0627\u06cc\u06af\u0627\u0646 \u0635\u062d\u0628\u062a \u06a9\u0646\u06cc\u062f."
@@ -1148,57 +1302,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   }
                 }}
                 pagekey={"salamat"}
-                widgetFrame={(() => {
-                  try {
-                    return $props.widgetFrames;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })()}
-              />
-
-              <LauncherComponentsApp
-                appkey={"liom"}
-                avatar={
-                  "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom%2Ficon.png?versionId="
-                }
-                className={classNames(
-                  "__wab_instance",
-                  sty.launcherComponentsApp__yj1N6
-                )}
-                description={
-                  "\u067e\u0631\u06cc\u0648\u062f \u0634\u0645\u0627 \u0646\u0627\u0645\u0646\u0638\u0645 \u0627\u0633\u062a\u061f \u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646\u060c \u06af\u0641\u062a\u06af\u0648 \u0631\u0627 \u0622\u063a\u0627\u0632 \u06a9\u0646\u06cc\u062f."
-                }
-                link={"/_/liom/irregularities/?origin=launcher-apps"}
-                name={
-                  "\u062a\u0634\u062e\u06cc\u0635 \u062f\u0647\u0646\u062f\u0647 \u0639\u0644\u062a \u067e\u0631\u06cc\u0648\u062f \u0646\u0627\u0645\u0646\u0638\u0645"
-                }
-                onEvent={async () => {
-                  const $steps = {};
-
-                  $steps["runOnEvent"] = true
-                    ? (() => {
-                        const actionArgs = { eventRef: $props["onEvent"] };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["runOnEvent"] != null &&
-                    typeof $steps["runOnEvent"] === "object" &&
-                    typeof $steps["runOnEvent"].then === "function"
-                  ) {
-                    $steps["runOnEvent"] = await $steps["runOnEvent"];
-                  }
-                }}
-                pagekey={"irregularities"}
                 widgetFrame={(() => {
                   try {
                     return $props.widgetFrames;

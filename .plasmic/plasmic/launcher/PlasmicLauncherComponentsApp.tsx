@@ -95,6 +95,7 @@ export type PlasmicLauncherComponentsApp__ArgsType = {
   onEvent?: () => void;
   appkey?: string;
   pagekey?: string;
+  pageQuery?: any;
 };
 type ArgPropType = keyof PlasmicLauncherComponentsApp__ArgsType;
 export const PlasmicLauncherComponentsApp__ArgProps = new Array<ArgPropType>(
@@ -106,7 +107,8 @@ export const PlasmicLauncherComponentsApp__ArgProps = new Array<ArgPropType>(
   "widgetFrame",
   "onEvent",
   "appkey",
-  "pagekey"
+  "pagekey",
+  "pageQuery"
 );
 
 export type PlasmicLauncherComponentsApp__OverridesType = {
@@ -129,6 +131,7 @@ export interface DefaultLauncherComponentsAppProps {
   onEvent?: () => void;
   appkey?: string;
   pagekey?: string;
+  pageQuery?: any;
   soon?: SingleBooleanChoiceArg<"soon">;
   className?: string;
 }
@@ -154,7 +157,8 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
     () =>
       Object.assign(
         {
-          widgetFrame: false
+          widgetFrame: false,
+          pageQuery: {}
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -368,6 +372,19 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                       params={(() => {
                         try {
                           return [$props.pagekey];
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      queries={(() => {
+                        try {
+                          return $props.pageQuery;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
