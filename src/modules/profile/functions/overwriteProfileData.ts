@@ -60,29 +60,18 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     group_expertises: isEmpty(group_expertises)
       ? source?.group_expertises ?? []
       : group_expertises.map((item: any) => item && { id: item.id, en_slug: item.slug, icon: item.icon, name: item.title }),
-    expertises: isEmpty(overwriteData.provider?.expertises)
-      ? source?.expertises?.map?.((item: any) => ({
-          alias_title: getDisplayDoctorExpertise({
-            aliasTitle: item.alias_title,
-            degree: item.degree?.name,
-            expertise: item.expertise?.name,
-          }),
-          expertise_id: item.expertise.id,
-          degree_id: item.degree.id,
-          degree_name: item?.degree?.name ?? '',
-          expertise_name: item.expertise?.name,
-        })) ?? []
-      : overwriteData.provider?.expertises?.map((item: any) => ({
-          alias_title: getDisplayDoctorExpertise({
-            aliasTitle: item?.alias,
-            degree: item?.academic_degree?.title,
-            expertise: item?.speciality?.title,
-          }),
-          expertise_id: item?.speciality?.id ?? '',
-          degree_id: item?.academic_degree?.id ?? '',
-          degree_name: item?.academic_degree?.title ?? '',
-          expertise_name: item?.speciality?.title,
-        })),
+    expertises:
+      source?.expertises?.map?.((item: any) => ({
+        alias_title: getDisplayDoctorExpertise({
+          aliasTitle: item.alias_title,
+          degree: item.degree?.name,
+          expertise: item.expertise?.name,
+        }),
+        expertise_id: item.expertise.id,
+        degree_id: item.degree.id,
+        degree_name: item?.degree?.name ?? '',
+        expertise_name: item.expertise?.name,
+      })) ?? [],
   };
 
   const feedbacks = {

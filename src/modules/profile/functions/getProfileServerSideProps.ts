@@ -292,16 +292,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
           }),
         };
 
-        const parallelRequests = [await getSpecialitiesData({ provider_id: providerData.value.id })];
-        const [specialitiesData] = await Promise.allSettled(parallelRequests);
-
-        if (specialitiesData.status === 'fulfilled') {
-          profileData.provider = {
-            ...profileData.provider,
-            expertises: Object.values(specialitiesData?.value ?? {}),
-          };
-        }
-
         if (shouldUseUser || getOnlyHasuraProfileData) {
           const parallelRequests = [await getUserData({ user_id: providerData.value?.user_id, slug: slugFormmated })];
           const [userData] = await Promise.allSettled(parallelRequests);
