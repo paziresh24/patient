@@ -22,6 +22,7 @@ export const LoginForm = ({ title, description, postLogin }: LoginFormProps) => 
       group: 'legacy-login-steps',
       type: 'load',
     });
+    window?.clarity?.('upgrade', 'LoginModal');
   }, []);
 
   return (
