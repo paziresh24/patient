@@ -33,7 +33,11 @@ export const RecommendWrapper = ({ city, groupExpertise, doctorId, clickRecommen
       <Recommend
         className="pr-4 md:pr-0"
         doctorId={doctorId}
-        category={expertises?.map((expertise: any) => expertise.expertise_name)[0]}
+        category={
+          expertises?.filter((item: any) => item.alias_title)?.[0]?.alias_title
+            ? expertises?.filter((item: any) => item.alias_title)?.[0]?.alias_title
+            : expertises?.filter((item: any) => item.expertise_id !== 325)?.map((expertise: any) => expertise.expertise_name)[0]
+        }
         city={city.en_slug}
         clickRecommendEvent={clickRecommendEvent}
         limit={3}
