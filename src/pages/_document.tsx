@@ -21,6 +21,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <meta name="google" content="notranslate" />
         <Script strategy="afterInteractive" src="https://gozargah.paziresh24.com/assets/js/gozar.js" />
+        <Script strategy="afterInteractive" src="https://accounts.google.com/gsi/client" />
       </Head>
       <body
         className={classNames('bg-[#f2f3f5] antialiased  pwa:select-none', {
