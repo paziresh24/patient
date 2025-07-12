@@ -49,17 +49,17 @@
 .button:global(.__wab_instance) {
   max-width: 100%;
 }
-.svg {
+.svg___8XMac {
   object-fit: cover;
   max-width: 100%;
   color: var(--token-JDvyxAtm9ONK);
   height: 1em;
 }
-.text {
+.text__lwA1 {
   font-size: var(--token-VrIY9r5RDQZ_);
 }
 @media (min-width: 0px) and (max-width: 768px) {
-  .text {
+  .text__lwA1 {
     font-weight: 600;
   }
 }
@@ -88,4 +88,43 @@
   .freeBox__mlKb3 {
     border-radius: 0px;
   }
+}
+.apiRequest:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.dialog:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+}
+.text__uvwZr {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.svg__yqxSv {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__rSQm {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__sf5Up {
+  object-fit: cover;
+  max-width: 100px;
+  width: 20px;
+  height: 1em;
+}
+.text__gWav {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: right;
+  min-width: 0;
 }

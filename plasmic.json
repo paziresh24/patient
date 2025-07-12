@@ -2780,6 +2780,11 @@
           "id": "808a21QqaoxC",
           "name": "Icon17Icon",
           "moduleFilePath": "plasmic/paziresh_24_booking/icons/PlasmicIcon__Icon17.tsx"
+        },
+        {
+          "id": "-yayxblt2ill",
+          "name": "Icon18Icon",
+          "moduleFilePath": "plasmic/paziresh_24_booking/icons/PlasmicIcon__Icon18.tsx"
         }
       ],
       "images": [],
@@ -2904,8 +2909,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -3342,7 +3346,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",
