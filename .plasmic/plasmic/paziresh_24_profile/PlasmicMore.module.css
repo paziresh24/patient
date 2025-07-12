@@ -5,12 +5,11 @@
   height: auto;
   justify-self: flex-start;
   flex-direction: column;
+  background: none;
 }
-.popover:global(.__wab_instance):global(.__wab_instance) {
+.popover2:global(.__wab_instance) {
   max-width: 100%;
-  position: relative;
-  left: auto;
-  top: auto;
+  object-fit: cover;
 }
 .svg {
   object-fit: cover;
@@ -20,7 +19,7 @@
 .freeBox {
   display: flex;
   position: relative;
-  background: var(--token-N4HSVavcnQSE);
+  background: var(--token-Tj8l-gG8DOrL);
   width: auto;
   flex-direction: column;
   border-radius: var(--token-aZQ2s5eeQ3I1);
