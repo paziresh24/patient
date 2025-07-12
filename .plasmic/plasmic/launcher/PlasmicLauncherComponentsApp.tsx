@@ -77,13 +77,15 @@ createPlasmicElementProxy;
 
 export type PlasmicLauncherComponentsApp__VariantMembers = {
   soon: "soon";
+  _new: "_new";
 };
 export type PlasmicLauncherComponentsApp__VariantsArgs = {
   soon?: SingleBooleanChoiceArg<"soon">;
+  _new?: SingleBooleanChoiceArg<"_new">;
 };
 type VariantPropType = keyof PlasmicLauncherComponentsApp__VariantsArgs;
 export const PlasmicLauncherComponentsApp__VariantProps =
-  new Array<VariantPropType>("soon");
+  new Array<VariantPropType>("soon", "_new");
 
 export type PlasmicLauncherComponentsApp__ArgsType = {
   name?: string;
@@ -133,6 +135,7 @@ export interface DefaultLauncherComponentsAppProps {
   pagekey?: string;
   pageQuery?: any;
   soon?: SingleBooleanChoiceArg<"soon">;
+  _new?: SingleBooleanChoiceArg<"_new">;
   className?: string;
 }
 
@@ -215,6 +218,12 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "_new",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props._new
       }
     ],
     [$props, $ctx, $refs]
@@ -595,6 +604,24 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                   )}
                 >
                   {"\u0628\u0632\u0648\u062f\u06cc"}
+                </div>
+              ) : null}
+              {(hasVariant($state, "_new", "_new") ? true : false) ? (
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__gXiwI,
+                    {
+                      [sty.text_new__gXiwIgvzsl]: hasVariant(
+                        $state,
+                        "_new",
+                        "_new"
+                      )
+                    }
+                  )}
+                >
+                  {"\u062c\u062f\u06cc\u062f"}
                 </div>
               ) : null}
             </Stack__>
