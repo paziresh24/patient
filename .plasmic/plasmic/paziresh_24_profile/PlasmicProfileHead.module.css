@@ -123,9 +123,6 @@
   max-width: 100%;
   min-width: 0;
 }
-.profileActions:global(.__wab_instance) {
-  max-width: 100%;
-}
 .viewCount {
   display: flex;
   flex-direction: row;
@@ -153,6 +150,13 @@
   height: 20px;
   color: var(--token-u3OudfMChOo3);
   flex-shrink: 0;
+}
+.more:global(.__wab_instance) {
+  max-width: 100%;
+}
+.profileActions:global(.__wab_instance) {
+  max-width: 100%;
+  display: none;
 }
 .profileInfo:global(.__wab_instance) {
   max-width: 100%;

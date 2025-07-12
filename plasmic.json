@@ -2909,7 +2909,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -3659,6 +3660,71 @@
           "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileGallery.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "_AH4Ju8JTju3",
+          "name": "More",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicMore.tsx",
+          "importSpec": {
+            "modulePath": "More.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicMore.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "_7a-KahBhmM3",
+          "name": "Button",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicButton.tsx",
+          "importSpec": {
+            "modulePath": "Button.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicButton.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "6s-0pGHxM88t",
+          "name": "OverlayArrow",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicOverlayArrow.tsx",
+          "importSpec": {
+            "modulePath": "OverlayArrow.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicOverlayArrow.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "WT_WNiJDPC9J",
+          "name": "Popover",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicPopover.tsx",
+          "importSpec": {
+            "modulePath": "Popover.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicPopover.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "l1A3UpFFipsx",
+          "name": "ProfileActions2",
+          "type": "managed",
+          "projectId": "7r312uiqyadpVPdnRoAggk",
+          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicProfileActions2.tsx",
+          "importSpec": {
+            "modulePath": "ProfileActions2.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicProfileActions2.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -3751,6 +3817,31 @@
           "id": "jjh8AKTP6EWp",
           "name": "Icon18Icon",
           "moduleFilePath": "plasmic/paziresh_24_profile/icons/PlasmicIcon__Icon18.tsx"
+        },
+        {
+          "id": "73RLsiz_6zJN",
+          "name": "CircleIcon",
+          "moduleFilePath": "plasmic/paziresh_24_profile/icons/PlasmicIcon__Circle.tsx"
+        },
+        {
+          "id": "apxaPuHF4pHZ",
+          "name": "ChevronDownIcon",
+          "moduleFilePath": "plasmic/paziresh_24_profile/icons/PlasmicIcon__ChevronDown.tsx"
+        },
+        {
+          "id": "V0-P1Yq3oOJr",
+          "name": "TriangleFilledIcon",
+          "moduleFilePath": "plasmic/paziresh_24_profile/icons/PlasmicIcon__TriangleFilled.tsx"
+        },
+        {
+          "id": "oXrPsLduVJ9L",
+          "name": "Icon19Icon",
+          "moduleFilePath": "plasmic/paziresh_24_profile/icons/PlasmicIcon__Icon19.tsx"
+        },
+        {
+          "id": "dYzWfdbRIW5L",
+          "name": "Icon20Icon",
+          "moduleFilePath": "plasmic/paziresh_24_profile/icons/PlasmicIcon__Icon20.tsx"
         }
       ],
       "images": [],
@@ -3875,8 +3966,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "6HBcNwr8dz9LuS1Qe36xa5",

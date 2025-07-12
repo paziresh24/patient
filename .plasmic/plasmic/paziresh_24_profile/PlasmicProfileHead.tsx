@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import More from "../../More"; // plasmic-import: _AH4Ju8JTju3/component
 import ProfileActions from "../../ProfileActions"; // plasmic-import: VtINgkEb27Pn/component
 import ProfileInfo from "../../ProfileInfo"; // plasmic-import: rFaRrp2J8jq8/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
@@ -106,10 +107,11 @@ export const PlasmicProfileHead__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicProfileHead__OverridesType = {
   root?: Flex__<"div">;
-  profileActions?: Flex__<typeof ProfileActions>;
   viewCount?: Flex__<"div">;
   span?: Flex__<"span">;
   svg?: Flex__<"svg">;
+  more?: Flex__<typeof More>;
+  profileActions?: Flex__<typeof ProfileActions>;
   profileInfo?: Flex__<typeof ProfileInfo>;
 };
 
@@ -197,25 +199,6 @@ function PlasmicProfileHead__RenderFunc(props: {
           className={classNames(projectcss.all, sty.freeBox__exjNw)}
         >
           <div className={classNames(projectcss.all, sty.freeBox__tuVqM)}>
-            <ProfileActions
-              data-plasmic-name={"profileActions"}
-              data-plasmic-override={overrides.profileActions}
-              className={classNames("__wab_instance", sty.profileActions)}
-              slug={(() => {
-                try {
-                  return $props.slug;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-            />
-
             <div
               data-plasmic-name={"viewCount"}
               data-plasmic-override={overrides.viewCount}
@@ -256,6 +239,30 @@ function PlasmicProfileHead__RenderFunc(props: {
                 role={"img"}
               />
             </div>
+            <More
+              data-plasmic-name={"more"}
+              data-plasmic-override={overrides.more}
+              className={classNames("__wab_instance", sty.more)}
+            />
+
+            <ProfileActions
+              data-plasmic-name={"profileActions"}
+              data-plasmic-override={overrides.profileActions}
+              className={classNames("__wab_instance", sty.profileActions)}
+              slug={(() => {
+                try {
+                  return $props.slug;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+            />
           </div>
         </Stack__>
         <ProfileInfo
@@ -487,11 +494,20 @@ function PlasmicProfileHead__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "profileActions", "viewCount", "span", "svg", "profileInfo"],
-  profileActions: ["profileActions"],
+  root: [
+    "root",
+    "viewCount",
+    "span",
+    "svg",
+    "more",
+    "profileActions",
+    "profileInfo"
+  ],
   viewCount: ["viewCount", "span", "svg"],
   span: ["span"],
   svg: ["svg"],
+  more: ["more"],
+  profileActions: ["profileActions"],
   profileInfo: ["profileInfo"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -499,10 +515,11 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  profileActions: typeof ProfileActions;
   viewCount: "div";
   span: "span";
   svg: "svg";
+  more: typeof More;
+  profileActions: typeof ProfileActions;
   profileInfo: typeof ProfileInfo;
 };
 
@@ -566,10 +583,11 @@ export const PlasmicProfileHead = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    profileActions: makeNodeComponent("profileActions"),
     viewCount: makeNodeComponent("viewCount"),
     span: makeNodeComponent("span"),
     svg: makeNodeComponent("svg"),
+    more: makeNodeComponent("more"),
+    profileActions: makeNodeComponent("profileActions"),
     profileInfo: makeNodeComponent("profileInfo"),
 
     // Metadata about props expected for PlasmicProfileHead
