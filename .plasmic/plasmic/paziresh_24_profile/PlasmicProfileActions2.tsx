@@ -255,6 +255,15 @@ function PlasmicProfileActions2__RenderFunc(props: {
                       role={"img"}
                     />
                   ) : null}
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__oAFkQ
+                    )}
+                  >
+                    {"\u0630\u062e\u06cc\u0631\u0647"}
+                  </div>
                   {(() => {
                     try {
                       return $state.isBookMarked;
@@ -273,15 +282,6 @@ function PlasmicProfileActions2__RenderFunc(props: {
                       role={"img"}
                     />
                   ) : null}
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__oAFkQ
-                    )}
-                  >
-                    {"\u0630\u062e\u06cc\u0631\u0647"}
-                  </div>
                 </Stack__>
               }
               className={classNames("__wab_instance", sty.button___2WWol)}
@@ -353,15 +353,6 @@ function PlasmicProfileActions2__RenderFunc(props: {
                 hasGap={true}
                 className={classNames(projectcss.all, sty.freeBox__nBwVl)}
               >
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__z2WGf
-                  )}
-                >
-                  {"\u0630\u062e\u06cc\u0631\u0647"}
-                </div>
                 {(() => {
                   try {
                     return !$state.isBookMarked;
@@ -398,6 +389,15 @@ function PlasmicProfileActions2__RenderFunc(props: {
                     role={"img"}
                   />
                 ) : null}
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__z2WGf
+                  )}
+                >
+                  {"\u0630\u062e\u06cc\u0631\u0647"}
+                </div>
               </Stack__>
             }
             className={classNames("__wab_instance", sty.button__cz3Yt)}
@@ -545,6 +545,11 @@ function PlasmicProfileActions2__RenderFunc(props: {
               hasGap={true}
               className={classNames(projectcss.all, sty.freeBox__avNNd)}
             >
+              <Icon2Icon
+                className={classNames(projectcss.all, sty.svg__tk5Y)}
+                role={"img"}
+              />
+
               <div
                 className={classNames(
                   projectcss.all,
@@ -556,10 +561,6 @@ function PlasmicProfileActions2__RenderFunc(props: {
                   "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
                 }
               </div>
-              <Icon2Icon
-                className={classNames(projectcss.all, sty.svg__tk5Y)}
-                role={"img"}
-              />
             </Stack__>
           }
           className={classNames("__wab_instance", sty.button__xjAnJ)}
@@ -606,6 +607,11 @@ function PlasmicProfileActions2__RenderFunc(props: {
               hasGap={true}
               className={classNames(projectcss.all, sty.freeBox__vez0E)}
             >
+              <Icon18Icon
+                className={classNames(projectcss.all, sty.svg___9UClU)}
+                role={"img"}
+              />
+
               <div
                 className={classNames(
                   projectcss.all,
@@ -617,10 +623,6 @@ function PlasmicProfileActions2__RenderFunc(props: {
                   "\u06af\u0632\u0627\u0631\u0634 \u0627\u0634\u062a\u0628\u0627\u0647"
                 }
               </div>
-              <Icon18Icon
-                className={classNames(projectcss.all, sty.svg___9UClU)}
-                role={"img"}
-              />
             </Stack__>
           }
           className={classNames("__wab_instance", sty.button__wvbjB)}

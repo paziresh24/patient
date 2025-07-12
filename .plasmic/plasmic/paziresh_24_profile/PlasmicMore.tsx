@@ -59,7 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { Popover } from "@/common/fragment/components/popover"; // plasmic-import: H0CcaVug1FmD/codeComponent
+import { Popover } from "@plasmicpkgs/radix-ui";
 import ProfileActions2 from "../../ProfileActions2"; // plasmic-import: l1A3UpFFipsx/component
 
 import "@plasmicapp/react-web/lib/plasmic.css";
@@ -83,9 +83,8 @@ export const PlasmicMore__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicMore__OverridesType = {
   root?: Flex__<"div">;
-  popover2?: Flex__<typeof Popover>;
+  popoverCore?: Flex__<typeof Popover>;
   svg?: Flex__<"svg">;
-  freeBox?: Flex__<"div">;
   profileActions2?: Flex__<typeof ProfileActions2>;
 };
 
@@ -135,12 +134,10 @@ function PlasmicMore__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "popover2.open",
+        path: "popoverCore.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
-
-        refName: "popover2"
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -169,15 +166,19 @@ function PlasmicMore__RenderFunc(props: {
       )}
     >
       <Popover
-        data-plasmic-name={"popover2"}
-        data-plasmic-override={overrides.popover2}
-        className={classNames("__wab_instance", sty.popover2)}
-        content={
-          <div
-            data-plasmic-name={"freeBox"}
-            data-plasmic-override={overrides.freeBox}
-            className={classNames(projectcss.all, sty.freeBox)}
-          >
+        data-plasmic-name={"popoverCore"}
+        data-plasmic-override={overrides.popoverCore}
+        align={"end"}
+        className={classNames("__wab_instance", sty.popoverCore)}
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["popoverCore", "open"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        open={generateStateValueProp($state, ["popoverCore", "open"])}
+        overlay={
+          <div className={classNames(projectcss.all, sty.freeBox__trlmt)}>
             <ProfileActions2
               data-plasmic-name={"profileActions2"}
               data-plasmic-override={overrides.profileActions2}
@@ -185,34 +186,32 @@ function PlasmicMore__RenderFunc(props: {
             />
           </div>
         }
-        onOpenChange={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["popover2", "open"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        open={generateStateValueProp($state, ["popover2", "open"])}
-        ref={ref => {
-          $refs["popover2"] = ref;
-        }}
-        trigger={
+        side={"bottom"}
+        themeResetClass={classNames(
+          projectcss.root_reset,
+          projectcss.plasmic_default_styles,
+          projectcss.plasmic_mixins,
+          projectcss.plasmic_tokens,
+          plasmic_fragment_design_system_css.plasmic_tokens
+        )}
+      >
+        <div className={classNames(projectcss.all, sty.freeBox__zv3Qa)}>
           <Icon20Icon
             data-plasmic-name={"svg"}
             data-plasmic-override={overrides.svg}
             className={classNames(projectcss.all, sty.svg)}
             role={"img"}
           />
-        }
-      />
+        </div>
+      </Popover>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "popover2", "svg", "freeBox", "profileActions2"],
-  popover2: ["popover2", "svg", "freeBox", "profileActions2"],
+  root: ["root", "popoverCore", "svg", "profileActions2"],
+  popoverCore: ["popoverCore", "svg", "profileActions2"],
   svg: ["svg"],
-  freeBox: ["freeBox", "profileActions2"],
   profileActions2: ["profileActions2"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -220,9 +219,8 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  popover2: typeof Popover;
+  popoverCore: typeof Popover;
   svg: "svg";
-  freeBox: "div";
   profileActions2: typeof ProfileActions2;
 };
 
@@ -286,9 +284,8 @@ export const PlasmicMore = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    popover2: makeNodeComponent("popover2"),
+    popoverCore: makeNodeComponent("popoverCore"),
     svg: makeNodeComponent("svg"),
-    freeBox: makeNodeComponent("freeBox"),
     profileActions2: makeNodeComponent("profileActions2"),
 
     // Metadata about props expected for PlasmicMore
