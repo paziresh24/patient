@@ -348,7 +348,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                           !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                           (() => {
                             try {
-                              return $ctx.schedules[0].services;
+                              return $state.apiRequest.data[0].services;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -530,10 +530,11 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                               {(() => {
                                 try {
                                   return $state.service
-                                    ? $ctx.schedules[0].services.find(
+                                    ? $state.apiRequest.data[0].services.find(
                                         item => item.id === $state.service
                                       ).title
-                                    : $ctx.schedules[0].services[0].title;
+                                    : $state.apiRequest.data[0].services[0]
+                                        .title;
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
@@ -708,13 +709,13 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                                   __html: (() => {
                                     try {
                                       return (
-                                        $ctx.schedules[0].services
+                                        $state.apiRequest?.data?.[0].services
                                           .find(
                                             item =>
                                               item.id ===
                                               ($state.service ||
-                                                $ctx.schedules[0].services[0]
-                                                  .id)
+                                                $state.apiRequest?.data?.[0]
+                                                  .services[0].id)
                                           )
                                           .schedules.filter(
                                             item =>
