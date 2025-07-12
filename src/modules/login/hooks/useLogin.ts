@@ -34,7 +34,12 @@ export const useLogin = () => {
           });
 
         const userData = await getMe.mutateAsync();
-        const doctorProfileData = await getDoctorProfile.mutateAsync();
+        const doctorProfileData = getDoctorProfile.mutateAsync().then(data => {
+          setUserInfo({
+            provider: data,
+            ...userData,
+          });
+        });
 
         if (window?.Android) window.Android.login(data.certificate);
 
@@ -42,8 +47,6 @@ export const useLogin = () => {
           provider: doctorProfileData,
           ...userData,
         });
-
-        const shouldUseWebPushNotification = newApiFeatureFlaggingCondition(webPushNotificationUserList.ids, userData?.id);
 
         return Promise.resolve({ provider: doctorProfileData, ...userData });
       }

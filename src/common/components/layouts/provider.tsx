@@ -7,6 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import { EntryPoint } from './entryPoint';
 import Splash from './splash';
 import config from 'next/config';
+import GoogleOneTap from '@/modules/login/components/googleOneTapLogin';
 const { publicRuntimeConfig } = config();
 
 const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
@@ -30,6 +31,7 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
         <EntryPoint>
           <AppBridge {...appBridgeConfig}>
             <>{children}</>
+            <GoogleOneTap />
           </AppBridge>
         </EntryPoint>
       </LoginModalProvider>
