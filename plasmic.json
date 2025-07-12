@@ -3675,19 +3675,6 @@
           "componentType": "component"
         },
         {
-          "id": "_7a-KahBhmM3",
-          "name": "Button",
-          "type": "managed",
-          "projectId": "7r312uiqyadpVPdnRoAggk",
-          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicButton.tsx",
-          "importSpec": {
-            "modulePath": "Button.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicButton.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
           "id": "6s-0pGHxM88t",
           "name": "OverlayArrow",
           "type": "managed",
@@ -3697,19 +3684,6 @@
             "modulePath": "OverlayArrow.tsx"
           },
           "cssFilePath": "plasmic/paziresh_24_profile/PlasmicOverlayArrow.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
-          "id": "WT_WNiJDPC9J",
-          "name": "Popover",
-          "type": "managed",
-          "projectId": "7r312uiqyadpVPdnRoAggk",
-          "renderModuleFilePath": "plasmic/paziresh_24_profile/PlasmicPopover.tsx",
-          "importSpec": {
-            "modulePath": "Popover.tsx"
-          },
-          "cssFilePath": "plasmic/paziresh_24_profile/PlasmicPopover.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         },
