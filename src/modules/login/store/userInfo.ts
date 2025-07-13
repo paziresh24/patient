@@ -45,10 +45,9 @@ export type UserInfo = {
 };
 
 export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
-  isLogin: typeof window != 'undefined' && !!localStorage?.getItem?.('user-store') ? true : false,
-  info:
-    typeof window != 'undefined' && !!localStorage?.getItem?.('user-store') ? JSON.parse(localStorage.getItem('user-store') ?? '{}') : {},
-  pending: typeof window != 'undefined' && !!localStorage?.getItem?.('user-store') ? false : true,
+  isLogin: false,
+  info: {},
+  pending: true,
   turnsCount: {
     presence: 0,
   },

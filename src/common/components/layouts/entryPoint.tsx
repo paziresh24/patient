@@ -20,6 +20,10 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
   useEffect(() => {
     handleUserLogin();
+    if (typeof window != 'undefined' && !!localStorage?.getItem?.('user-store')) {
+      setUserInfo(JSON.parse(localStorage.getItem('user-store') ?? '{}'));
+      setPending(false);
+    }
   }, []);
 
   const handleUserLogin = async () => {

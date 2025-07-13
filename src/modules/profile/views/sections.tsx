@@ -119,7 +119,6 @@ export const sections = (data: any) => {
     },
     // Gallery
     {
-      ...(!fragmentComponents?.profileGallery && { title: 'گالری' }),
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('gallery')} />,
       isShow: customize.showGalleryProfile && media.gallery?.length > 0,
       isShowFallback: editable,
@@ -134,15 +133,13 @@ export const sections = (data: any) => {
         const items = media?.gallery;
         const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
 
-        return fragmentComponents?.profileGallery ? (
+        return (
           <Fragment
             name="ProfileGallery"
             props={{
               gallery: reformattedItems,
             }}
           />
-        ) : (
-          <Gallery className="bg-white md:rounded-lg" {...props} />
         );
       },
       fallback: (props: any) => (
@@ -214,8 +211,7 @@ export const sections = (data: any) => {
             '!hidden md:!flex': fragmentComponents?.raviComponentTopOrderProfile,
           })}
         >
-          {!fragmentComponents?.rateAndReviews && <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>}
-          <FragmentRateReview fragmentComponents={fragmentComponents} profileData={profileData} />
+          <FragmentRateReview profileData={profileData} />
         </div>
       ),
     },
@@ -245,16 +241,14 @@ export const sections = (data: any) => {
         const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
         const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
         const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
-        const about = `<p>${information.prefix} ${information.display_name}، ${doctorExpertise ?? 'سایر'} در شهر ${
-          center?.city ?? '(ثبت نشده)'
-        } است. مطب ${information.prefix} ${information.display_name} در ${
-          center?.address ?? '(ثبت نشده)'
-        } واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
+        const about = `<p>${information.display_name}، ${doctorExpertise ?? 'سایر'} در شهر ${center?.city ?? '(ثبت نشده)'} است. مطب ${
+          information.display_name
+        } در ${center?.address ?? '(ثبت نشده)'} واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${
           !isOnlineVisitCenter && !!center?.display_number_array[0] ? center?.display_number_array[0] : '(ثبت نشده)'
         }</span> تماس بگیرید.</p>
-        <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information.prefix} ${
-          information.display_name
-        }، ${doctorExpertise ?? 'سایر'}  بازدید کرده‌اند؛ ${
+        <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information.display_name}، ${
+          doctorExpertise ?? 'سایر'
+        }  بازدید کرده‌اند؛ ${
           !feedbacks?.details?.hide_rates
             ? `همچنین ${
                 +(
@@ -264,29 +258,29 @@ export const sections = (data: any) => {
                   3
                 )?.toFixed(1) * 20
               }٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند. <b>نظرات ${
-                information.prefix
-              } ${information.display_name}</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>`
+                information.display_name
+              }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>`
             : ''
         }
         ${
           center?.freeturn_text
-            ? `<p>زودترین زمان رزرو نوبت از مطب ${information.prefix} ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
+            ? `<p>زودترین زمان رزرو نوبت از مطب ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
             : ''
         }
         <p>اگر زمان کافی برای مراجعه حضوری به پزشک مورد نظر خود را ندارید، به پروفایل پزشک در <a href="/" class="text-primary">پذیرش۲۴</a> سری بزنید و در صورت فعال بودن خدمات ویزیت آنلاین ایشان، نوبت ویزیت آنلاین خود را دریافت کنید؛ در غیر این‌صورت می‌توانید از سایر پزشکان ${
           doctorExpertise ?? 'سایر'
         } <a href="/consult" class="text-primary"> ویزیت آنلاین (تلفنی و متنی)</a> نوبت بگیرید.</p>
-        <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${information.prefix} ${
+        <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${
           information.display_name
         }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
         <ui>
-        <li>آدرس مطب ${information.prefix} ${information.display_name}: ${
+        <li>آدرس مطب ${information.display_name}: ${
           isOnlineVisitCenter || (!center?.address && !center?.city) ? 'ثبت نشده' : `${center?.city}، ${center?.address}`
         }</li>
-        <li>تلفن مطب ${information.prefix} ${information.display_name}: <span class="inline-block">${
+        <li>تلفن مطب ${information.display_name}: <span class="inline-block">${
           isOnlineVisitCenter || !center?.display_number_array[0] ? 'ثبت نشده' : center?.display_number_array[0] ?? ''
         }</span></li>
-        <li>تخصص ${information.prefix} ${information.display_name}: ${
+        <li>تخصص ${information.display_name}: ${
           expertises?.expertises?.map?.((item: any) => item?.alias_title)?.join('/ ') ?? expertises?.expertises?.[0]?.name
         }</li>
         </ui>
@@ -303,7 +297,7 @@ export const sections = (data: any) => {
         const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
         const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
 
-        return fragmentComponents?.profileSeo ? (
+        return (
           <Fragment
             name="ProfileSeo"
             props={{
@@ -318,8 +312,6 @@ export const sections = (data: any) => {
               expertises,
             }}
           />
-        ) : (
-          <ProfileSeoBox {...props} />
         );
       },
     },

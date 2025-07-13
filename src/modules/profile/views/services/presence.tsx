@@ -15,8 +15,8 @@ import Notification from '../../components/notification/notification';
 import ServiceCard from '../../components/serviceCard/serviceCard';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import orderBy from 'lodash/orderBy';
-const SelectService = dynamic(() => import('@/modules/booking/views/selectService'));
-const SelectCenter = dynamic(() => import('@/modules/booking/views/selectCenter'));
+import SelectService from '@/modules/booking/views/selectService';
+import SelectCenter from '@/modules/booking/views/selectCenter';
 
 interface PresenceProps {
   centers: any[];
