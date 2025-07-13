@@ -2580,9 +2580,9 @@ function PlasmicProductCard__RenderFunc(props: {
                           ];
                         }
 
-                        $steps["updateDialog2Open"] = $ctx.Growthbook.features[
-                          "search-online-visit-factor-modal"
-                        ].includes(actionButton.url)
+                        $steps["updateDialog2Open"] = (() => {
+                          return false;
+                        })()
                           ? (() => {
                               const actionArgs = {
                                 variable: {
