@@ -305,6 +305,12 @@ function PlasmicSearchResults__RenderFunc(props: {
                       try {
                         return {
                           url: window.location.href,
+                          ...(Intl.DateTimeFormat().resolvedOptions()
+                            .timeZone && {
+                            timeZone:
+                              Intl.DateTimeFormat().resolvedOptions().timeZone +
+                              ","
+                          }),
                           user_id: $ctx.auth?.info?.id
                         };
                       } catch (e) {
