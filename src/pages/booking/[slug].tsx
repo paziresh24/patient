@@ -92,6 +92,7 @@ const Booking = () => {
       payload: queries as any,
     };
   }, []);
+
   useEffect(() => {
     if (isSuccess) {
       setProfileData(profileData);

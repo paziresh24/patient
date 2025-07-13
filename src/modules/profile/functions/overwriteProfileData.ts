@@ -37,7 +37,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const information = {
     id: source?.id ?? null,
     server_id: source?.server_id ?? null,
-    display_name: source?.display_name,
+    display_name: source?.name + ' ' + source?.family,
     name: source?.name,
     family: source?.family,
     biography: source?.biography,
@@ -48,6 +48,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     city_en_slug: source?.city_en_slug ?? null,
     should_recommend_other_doctors: source?.should_recommend_other_doctors ?? null,
     ...overwriteData.provider,
+    prefix: '',
   };
 
   const group_expertises = flatMap(overwriteData?.provider?.expertises ?? [], item => get(item, 'speciality.taggables', [])).map(

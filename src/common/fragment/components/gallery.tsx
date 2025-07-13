@@ -14,13 +14,7 @@ interface GalleryProps {
 }
 
 export const Gallery = (props: GalleryProps) => {
-  const {
-    items = ['https://www.paziresh24.com/_next/static/media/logo.5e03fe79.svg'],
-    className,
-    imageClassName,
-    imageWidth = 120,
-    imageHeight = 120,
-  } = props;
+  const { items = [], className, imageClassName, imageWidth = 120, imageHeight = 120 } = props;
 
   return (
     <PhotoProvider>
@@ -50,7 +44,7 @@ export const galleryMeta: CodeComponentMeta<GalleryProps> = {
   props: {
     items: {
       type: 'array',
-      defaultValue: ['https://www.paziresh24.com/_next/static/media/logo.5e03fe79.svg'],
+      defaultValue: [],
     },
     className: 'string',
     imageClassName: 'string',
@@ -65,4 +59,3 @@ export const galleryMeta: CodeComponentMeta<GalleryProps> = {
   },
   classNameProp: 'className',
 };
-

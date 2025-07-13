@@ -9,7 +9,7 @@ export const Loading: React.FC<LoadingProps> = props => {
 
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="34" {...rest}>
-      <circle fill="currentColor" stroke="currentColor" stroke-width="2" r="15" cx="40" cy="100">
+      <circle fill="currentColor" stroke="currentColor" strokeWidth="2" r="15" cx="40" cy="100">
         <animate
           attributeName="opacity"
           calcMode="spline"
@@ -20,7 +20,7 @@ export const Loading: React.FC<LoadingProps> = props => {
           begin="-0.4s"
         />
       </circle>
-      <circle fill="currentColor" stroke="currentColor" stroke-width="2" r="15" cx="100" cy="100">
+      <circle fill="currentColor" stroke="currentColor" strokeWidth="2" r="15" cx="100" cy="100">
         <animate
           attributeName="opacity"
           calcMode="spline"
@@ -31,7 +31,7 @@ export const Loading: React.FC<LoadingProps> = props => {
           begin="-0.2s"
         />
       </circle>
-      <circle fill="currentColor" stroke="currentColor" stroke-width="2" r="15" cx="160" cy="100">
+      <circle fill="currentColor" stroke="currentColor" strokeWidth="2" r="15" cx="160" cy="100">
         <animate
           attributeName="opacity"
           calcMode="spline"

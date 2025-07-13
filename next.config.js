@@ -6,7 +6,7 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const withPWA = require('next-pwa')({
+const withPWA = require('@ducanh2912/next-pwa').default({
   disable: !isProduction,
   dest: 'public',
   register: true,

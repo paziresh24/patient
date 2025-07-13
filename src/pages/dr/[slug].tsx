@@ -66,7 +66,6 @@ const DoctorProfile = ({
   dontShowRateAndReviewMessage,
   shouldUseIncrementPageView,
   fragmentComponents,
-  getOnlyHasuraProfileData,
   status,
   hamdastWidgets,
   hamdastWidgetsData,
@@ -253,224 +252,59 @@ const DoctorProfile = ({
           )}
 
           <div className="lg:float-right lg:w-[670px] mb-3">
-            {fragmentComponents?.headInfo?.hide && (
-              <Head
-                pageViewCount={profileData.history?.count_of_page_view}
-                displayName={profileData.information.display_name}
-                image={
-                  getOnlyHasuraProfileData
-                    ? publicRuntimeConfig.API_GATEWAY_BASE_URL + `/v1/rokhnama/image?slug=${slug}&user_id=${information?.user_id}`
-                    : publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
-                }
-                imageAlt={`${information.prefix} ${information.display_name}`}
-                title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
-                subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
-                serviceList={flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|')))}
-                className="w-full shadow-card lg:rounded-lg"
-                satisfaction={
-                  customize.showRateAndReviews &&
-                  !dontShowRateAndReviewMessage &&
-                  (fragmentComponents.reviewCard
-                    ? (
-                        (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                          +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                          +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                        3
-                      ).toFixed(1)
-                    : profileData.feedbacks?.details?.satisfaction_percent)
-                }
-                hideRates={profileData.feedbacks?.details?.hide_rates}
-                rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
-                editable={editable}
-                servicesEditAction={() => handleViewAs('services')}
-                infoEditAction={() => handleViewAs('information')}
-                shouldUseFragmentReviewCard={fragmentComponents.reviewCard}
-                profileData={pick(profileData, [
-                  'information',
-                  'centers',
-                  'expertises',
-                  'feedbacks',
-                  'media',
-                  'history',
-                  'symptomes',
-                  'onlineVisit',
-                  'seo',
-                ])}
-              >
-                {editable && (
-                  <div className="flex mx-4 space-s-2">
-                    <Button
-                      size="sm"
-                      icon={<ReceiptIcon className="w-6 h-6" />}
-                      onClick={() => {
-                        window.open(publicRuntimeConfig.DOCTOR_APP_BASE_URL);
-                        splunkInstance('doctor-profile').sendEvent({
-                          group: 'profile',
-                          type: 'view-as',
-                          event: {
-                            action: `click-list`,
-                            doctor: information.display_name,
-                            slug,
-                            terminal_id: getCookie('terminal_id'),
-                          },
-                        });
-                      }}
-                    >
-                      لیست مراجعین
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      icon={<CalenderIcon className="w-6 h-6" />}
-                      onClick={() => handleViewAs('workHours')}
-                    >
-                      ساعت کاری
-                    </Button>
-                  </div>
-                )}
-              </Head>
-            )}
-            {!!fragmentComponents?.headInfo?.hide && (
-              <nav className="lg:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-10 !mt-0 bg-white">
-                <ul className="flex justify-around">
-                  <li>
-                    <a
-                      href="#book-me"
-                      onClick={e => {
-                        e.preventDefault();
-                        scrollIntoViewWithOffset('#book-me', 90);
-                      }}
-                      title="دریافت نوبت"
-                      className="text-sm font-medium"
-                    >
-                      دریافت نوبت
-                    </a>
-                  </li>
-                  {profileData.centers.some((center: any) => center.id !== CENTERS.CONSULT) && (
-                    <li>
-                      <a
-                        href="#phone-and-address"
-                        onClick={e => {
-                          e.preventDefault();
-                          scrollIntoViewWithOffset('#phone-and-address', 90);
-                        }}
-                        title="آدرس و تلفن"
-                        className="text-sm font-medium"
-                      >
-                        آدرس و تلفن
-                      </a>
-                    </li>
-                  )}
-                  <li>
-                    <a
-                      href="#about-me"
-                      onClick={e => {
-                        e.preventDefault();
-                        scrollIntoViewWithOffset('#about-me', 90);
-                      }}
-                      title="درباره من"
-                      className="text-sm font-medium"
-                    >
-                      درباره من
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#reviews"
-                      onClick={e => {
-                        e.preventDefault();
-                        scrollIntoViewWithOffset('#reviews', 90);
-                      }}
-                      title="نظرات"
-                      className="text-sm font-medium"
-                    >
-                      نظرات
-                    </a>
-                  </li>
-                </ul>
-              </nav>
-            )}
-            {!fragmentComponents?.headInfo?.hide && (
-              <ProfileGlobalContextsProvider>
-                <Fragment
-                  name="ProfileHead"
-                  props={{
-                    pageViewCount: profileData.history?.count_of_page_view,
-                    serviceList: flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
-                    displayName: profileData.information.display_name,
-                    title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
-                    subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                    imageUrl: getOnlyHasuraProfileData
-                      ? publicRuntimeConfig.API_GATEWAY_BASE_URL + `/v1/rokhnama/image?slug=${slug}&user_id=${information?.user_id}`
-                      : publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image,
-                    slug: slug,
-                    children: (
-                      <div className="flex flex-col w-full gap-2">
-                        {hamdastWidgets
-                          ?.filter((widget: any) => widget?.placement?.includes?.('head'))
-                          ?.map((widget: any) => (
-                            <Hamdast
-                              key={widget.id}
-                              id={widget.id}
-                              backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
-                              profileData={profileData}
-                              widgetData={{
-                                placement: widget?.placement,
-                                placement_metadata: widget.placements_metadata,
-                              }}
-                            />
-                          ))}
-                        <RaviGlobalContextsProvider>
-                          <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-                            {newRateAndCommentCount ? (
-                              <Fragment
-                                name="RateAndCommentCount2"
-                                props={{
-                                  ...profileData,
-                                  rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
-                                  rate:
-                                    customize.showRateAndReviews &&
-                                    !dontShowRateAndReviewMessage &&
-                                    (fragmentComponents.reviewCard
-                                      ? (
-                                          (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                                            +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                                            +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                                          3
-                                        ).toFixed(1)
-                                      : profileData.feedbacks?.details?.satisfaction_percent),
-                                  hideRates: profileData.feedbacks?.details?.hide_rates,
-                                }}
-                              />
-                            ) : (
-                              <Fragment
-                                name="RateAndCommentCount"
-                                props={{
-                                  ...profileData,
-                                  rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
-                                  rate:
-                                    customize.showRateAndReviews &&
-                                    !dontShowRateAndReviewMessage &&
-                                    (fragmentComponents.reviewCard
-                                      ? (
-                                          (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                                            +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                                            +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                                          3
-                                        ).toFixed(1)
-                                      : profileData.feedbacks?.details?.satisfaction_percent),
-                                  hideRates: profileData.feedbacks?.details?.hide_rates,
-                                }}
-                              />
-                            )}
-                          </div>
-                        </RaviGlobalContextsProvider>
-                      </div>
-                    ),
-                  }}
-                />
-              </ProfileGlobalContextsProvider>
-            )}
+            <ProfileGlobalContextsProvider>
+              <Fragment
+                name="ProfileHead"
+                props={{
+                  pageViewCount: profileData.history?.count_of_page_view,
+                  serviceList: flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
+                  displayName: profileData.information.display_name,
+                  title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
+                  subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
+                  imageUrl: publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image,
+                  slug: slug,
+                  children: (
+                    <div className="flex flex-col w-full gap-2">
+                      {hamdastWidgets
+                        ?.filter((widget: any) => widget?.placement?.includes?.('head'))
+                        ?.map((widget: any) => (
+                          <Hamdast
+                            key={widget.id}
+                            id={widget.id}
+                            backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                            profileData={profileData}
+                            widgetData={{
+                              placement: widget?.placement,
+                              placement_metadata: widget.placements_metadata,
+                            }}
+                          />
+                        ))}
+                      <RaviGlobalContextsProvider>
+                        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
+                          <Fragment
+                            name="RateAndCommentCount2"
+                            props={{
+                              ...profileData,
+                              rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
+                              rate:
+                                customize.showRateAndReviews &&
+                                !dontShowRateAndReviewMessage &&
+                                (
+                                  (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                                    +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                                    +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                                  3
+                                ).toFixed(1),
+                              hideRates: profileData.feedbacks?.details?.hide_rates,
+                            }}
+                          />
+                        </div>
+                      </RaviGlobalContextsProvider>
+                    </div>
+                  ),
+                }}
+              />
+            </ProfileGlobalContextsProvider>
           </div>
 
           <div className="flex flex-col space-y-3 lg:float-left lg:w-[calc(100%_-_690px)]">
@@ -519,7 +353,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         '@context': 'http://www.schema.org',
         '@type': 'Physician',
         'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
-        'name': `${information.prefix} ${information.display_name}`,
+        'name': `${information.display_name}`,
         'telephone': center?.display_number,
         'description': information?.biography ? removeHtmlTagInString(information.biography) : '',
         'image': publicRuntimeConfig.CDN_BASE_URL + information.image,
@@ -574,7 +408,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         '@context': 'http://www.schema.org',
         '@type': 'Person',
         'jobTitle': 'physician',
-        'name': `${information.prefix} ${information.display_name}`,
+        'name': `${information.display_name}`,
         'telephone': center?.display_number,
         'image': publicRuntimeConfig.CDN_BASE_URL + information.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
@@ -606,7 +440,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
             'position': 2,
             'item': {
               '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-              'name': `${information.prefix} ${information.display_name}`,
+              'name': `${information.display_name}`,
             },
           },
         ],
@@ -623,7 +457,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         openGraph={{
           image: {
             src: publicRuntimeConfig.CDN_BASE_URL + information?.image,
-            alt: `${information.prefix} ${information.display_name}`,
+            alt: `${information.display_name}`,
             type: 'image/jpg',
           },
         }}

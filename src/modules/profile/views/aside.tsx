@@ -71,19 +71,7 @@ export const aside = (data: any) => {
           isBulk,
         };
       },
-      children: (props: any) =>
-        fragmentComponents?.bookingServiceList?.hide === false ? (
-          <BookingGlobalContextsProvider>
-            <Fragment
-              name="BookingServiceList"
-              props={{
-                slug: seo.slug,
-              }}
-            />
-          </BookingGlobalContextsProvider>
-        ) : (
-          <Services {...props} enabledWidgets={hamdastWidgets} dontShowDeactiveBox={!!fragmentComponents?.risman} />
-        ),
+      children: (props: any) => <Services {...props} enabledWidgets={hamdastWidgets} dontShowDeactiveBox={!!fragmentComponents?.risman} />,
     },
     {
       id: 'risman',
@@ -157,8 +145,7 @@ export const aside = (data: any) => {
       isShow: customize.showRateAndReviews && fragmentComponents?.raviComponentTopOrderProfile,
       children: (props: any) => (
         <div className="md:hidden flex flex-col gap-y-3">
-          {!fragmentComponents?.rateAndReviews && <h2 className="font-bold px-4 md:px-0">نظرات در مورد {information.display_name}</h2>}
-          <FragmentRateReview fragmentComponents={fragmentComponents} profileData={profileData} />
+          <FragmentRateReview profileData={profileData} />
         </div>
       ),
     },
@@ -166,10 +153,6 @@ export const aside = (data: any) => {
     {
       id: 'phone-and-address',
       isShow: centers.some((center: any) => center.id !== CENTERS.CONSULT),
-      ...(fragmentComponents?.addresses?.hide === true && {
-        title: 'آدرس و تلفن تماس',
-        ActionButton: customize.showContribute && !editable && <ActionButton slug={seo?.slug} />,
-      }),
       function: () => {
         return {
           centers: centers
@@ -243,69 +226,66 @@ export const aside = (data: any) => {
           },
         };
       },
-      children: (props: any) =>
-        fragmentComponents?.addresses?.hide === false ? (
-          <BookingGlobalContextsProvider>
-            <Fragment
-              name="AddressesWrapper"
-              props={{
-                ...profileData,
-                slug: seo.slug,
-                children: centers
-                  .filter((center: any) => center.id !== CENTERS.CONSULT)
-                  .map((center: any) => (
-                    <Fragment
-                      key={center.id}
-                      name="AddressesCard"
-                      props={{
-                        ...profileData,
-                        title: center.name,
-                        map: center.map,
-                        centerId: center.id,
-                        address: center.address,
-                        city: center.city,
-                        displayNumberArray: center.display_number_array,
-                        slug: center.slug,
-                        centerType: center.center_type == 1 ? 'office' : 'hospital',
-                        description: center.description?.trim(),
-                        userCenterId: center.user_center_id,
-                        centerName: center.name,
-                        children: hamdastWidgets.some(
-                          (widget: any) =>
-                            widget?.placement?.includes?.('center_info') &&
-                            widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
-                        ) ? (
-                          <div className="flex flex-col w-full gap-2">
-                            {hamdastWidgets
-                              ?.filter(
-                                (widget: any) =>
-                                  widget?.placement?.includes?.('center_info') &&
-                                  widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
-                              )
-                              ?.map((widget: any) => (
-                                <Hamdast
-                                  key={widget.id}
-                                  id={widget.id}
-                                  backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
-                                  profileData={profileData}
-                                  widgetData={{
-                                    placement: widget?.placement,
-                                    placement_metadata: widget.placements_metadata,
-                                    center_id: center.id,
-                                  }}
-                                />
-                              ))}
-                          </div>
-                        ) : null,
-                      }}
-                    />
-                  )),
-              }}
-            />
-          </BookingGlobalContextsProvider>
-        ) : (
-          <CentersInfo className="bg-white md:rounded-lg" {...props} />
-        ),
+      children: (props: any) => (
+        <BookingGlobalContextsProvider>
+          <Fragment
+            name="AddressesWrapper"
+            props={{
+              ...profileData,
+              slug: seo.slug,
+              children: centers
+                .filter((center: any) => center.id !== CENTERS.CONSULT)
+                .map((center: any) => (
+                  <Fragment
+                    key={center.id}
+                    name="AddressesCard"
+                    props={{
+                      ...profileData,
+                      title: center.name,
+                      map: center.map,
+                      centerId: center.id,
+                      address: center.address,
+                      city: center.city,
+                      displayNumberArray: center.display_number_array,
+                      slug: center.slug,
+                      centerType: center.center_type == 1 ? 'office' : 'hospital',
+                      description: center.description?.trim(),
+                      userCenterId: center.user_center_id,
+                      centerName: center.name,
+                      children: hamdastWidgets.some(
+                        (widget: any) =>
+                          widget?.placement?.includes?.('center_info') &&
+                          widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+                      ) ? (
+                        <div className="flex flex-col w-full gap-2">
+                          {hamdastWidgets
+                            ?.filter(
+                              (widget: any) =>
+                                widget?.placement?.includes?.('center_info') &&
+                                widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+                            )
+                            ?.map((widget: any) => (
+                              <Hamdast
+                                key={widget.id}
+                                id={widget.id}
+                                backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                                profileData={profileData}
+                                widgetData={{
+                                  placement: widget?.placement,
+                                  placement_metadata: widget.placements_metadata,
+                                  center_id: center.id,
+                                }}
+                              />
+                            ))}
+                        </div>
+                      ) : null,
+                    }}
+                  />
+                )),
+            }}
+          />
+        </BookingGlobalContextsProvider>
+      ),
     },
     {
       isShow: !customize?.partnerKey,
