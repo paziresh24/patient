@@ -572,13 +572,17 @@ function PlasmicProfileActions__RenderFunc(props: {
                   const actionArgs = {
                     customFunction: async () => {
                       return (() => {
-                        const url = `${window.location.origin}/dr/${$props.slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
-                        if (window.navigator && !!window.navigator.share) {
+                        const url = `${window.location.origin}/dr/${props.slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
+                        if (window.navigator && window.navigator.share) {
                           return navigator.share({
-                            title: $props.title,
-                            text: `${$props.displayName} در پذیرش۲۴`,
+                            title: props.title,
+                            text: `${props.displayName} در پذیرش۲۴`,
                             url
                           });
+                        } else {
+                          return alert(
+                            `برای اشتراک‌گذاری از این لینک استفاده کنید:\n${url}`
+                          );
                         }
                       })();
                     }
@@ -699,15 +703,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicProfileActions__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicProfileActions__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicProfileActions__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicProfileActions__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

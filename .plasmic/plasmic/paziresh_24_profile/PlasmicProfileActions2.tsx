@@ -574,7 +574,7 @@ function PlasmicProfileActions2__RenderFunc(props: {
                     customFunction: async () => {
                       return (() => {
                         const url = `${window.location.origin}/dr/${$props.slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
-                        if (window.navigator && !!window.navigator.share) {
+                        if (window.navigator && window.navigator.share) {
                           return navigator.share({
                             title: $props.title,
                             text: `${$props.displayName} در پذیرش۲۴`,
@@ -700,15 +700,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicProfileActions2__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicProfileActions2__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicProfileActions2__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicProfileActions2__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
