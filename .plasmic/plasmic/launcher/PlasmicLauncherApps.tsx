@@ -876,7 +876,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
               />
 
               <LauncherComponentsApp
-                _new={true}
                 appkey={"cywoc24"}
                 avatar={
                   "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finstagram-plugin.png?versionId="
@@ -955,6 +954,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   }
                 }}
                 pagekey={"launcher"}
+                soon={true}
                 widgetFrame={(() => {
                   try {
                     return $props.widgetFrames;
@@ -1383,15 +1383,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherApps__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherApps__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherApps__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherApps__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

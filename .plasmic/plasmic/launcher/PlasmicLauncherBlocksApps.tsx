@@ -356,7 +356,6 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
           }
         })() ? (
           <LauncherComponentsApp
-            _new={true}
             avatar={
               "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finstagram-plugin.png?versionId="
             }
@@ -416,6 +415,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                 $steps["sendLog"] = await $steps["sendLog"];
               }
             }}
+            soon={true}
             widgetId={"aed80eahprc1qs0"}
           />
         ) : null}
@@ -716,15 +716,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherBlocksApps__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherBlocksApps__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherBlocksApps__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherBlocksApps__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
