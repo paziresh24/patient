@@ -243,6 +243,19 @@ function PlasmicProfileHead__RenderFunc(props: {
               data-plasmic-name={"more"}
               data-plasmic-override={overrides.more}
               className={classNames("__wab_instance", sty.more)}
+              slug={(() => {
+                try {
+                  return $props.slug;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
             />
 
             <ProfileActions
@@ -535,15 +548,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicProfileHead__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicProfileHead__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicProfileHead__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicProfileHead__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

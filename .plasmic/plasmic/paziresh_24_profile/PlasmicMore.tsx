@@ -77,9 +77,9 @@ export type PlasmicMore__VariantsArgs = {};
 type VariantPropType = keyof PlasmicMore__VariantsArgs;
 export const PlasmicMore__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicMore__ArgsType = {};
+export type PlasmicMore__ArgsType = { slug?: string };
 type ArgPropType = keyof PlasmicMore__ArgsType;
-export const PlasmicMore__ArgProps = new Array<ArgPropType>();
+export const PlasmicMore__ArgProps = new Array<ArgPropType>("slug");
 
 export type PlasmicMore__OverridesType = {
   root?: Flex__<"div">;
@@ -89,6 +89,7 @@ export type PlasmicMore__OverridesType = {
 };
 
 export interface DefaultMoreProps {
+  slug?: string;
   className?: string;
 }
 
@@ -183,6 +184,19 @@ function PlasmicMore__RenderFunc(props: {
               data-plasmic-name={"profileActions2"}
               data-plasmic-override={overrides.profileActions2}
               className={classNames("__wab_instance", sty.profileActions2)}
+              slug={(() => {
+                try {
+                  return $props.slug;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
             />
           </div>
         }
@@ -236,15 +250,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicMore__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicMore__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicMore__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicMore__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
