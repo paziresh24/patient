@@ -345,48 +345,6 @@ function PlasmicProfileInfo__RenderFunc(props: {
               sty.freeBox__qjWEy,
               "no-scroll"
             )}
-            onClick={async event => {
-              const $steps = {};
-
-              $steps["goToPage"] = true
-                ? (() => {
-                    const actionArgs = {
-                      destination: (() => {
-                        try {
-                          return `https://apigw.paziresh24.com/seapi/v1/search/tehran?turn_type=consult&text=${$props.serviceList[0]}`;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()
-                    };
-                    return (({ destination }) => {
-                      if (
-                        typeof destination === "string" &&
-                        destination.startsWith("#")
-                      ) {
-                        document
-                          .getElementById(destination.substr(1))
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        __nextRouter?.push(destination);
-                      }
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["goToPage"] != null &&
-                typeof $steps["goToPage"] === "object" &&
-                typeof $steps["goToPage"].then === "function"
-              ) {
-                $steps["goToPage"] = await $steps["goToPage"];
-              }
-            }}
             style={{ width: "100%" }}
           >
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -416,6 +374,48 @@ function PlasmicProfileInfo__RenderFunc(props: {
                     sty.text
                   )}
                   key={currentIndex}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["goToPage"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            destination: (() => {
+                              try {
+                                return `http://www.paziresh24.com/s?turn_type=consult&text=${currentItem}`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          };
+                          return (({ destination }) => {
+                            if (
+                              typeof destination === "string" &&
+                              destination.startsWith("#")
+                            ) {
+                              document
+                                .getElementById(destination.substr(1))
+                                .scrollIntoView({ behavior: "smooth" });
+                            } else {
+                              __nextRouter?.push(destination);
+                            }
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["goToPage"] != null &&
+                      typeof $steps["goToPage"] === "object" &&
+                      typeof $steps["goToPage"].then === "function"
+                    ) {
+                      $steps["goToPage"] = await $steps["goToPage"];
+                    }
+                  }}
                   style={{ width: "max-content", minWidth: "fit-content" }}
                 >
                   <React.Fragment>
