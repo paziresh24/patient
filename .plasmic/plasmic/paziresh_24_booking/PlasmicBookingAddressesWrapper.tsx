@@ -351,7 +351,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
         }}
         url={(() => {
           try {
-            return `https://apigw.paziresh24.com/ravi/v1/absent_risk_for_profile?slug=${$props.slug}`;
+            return `https://apigw.paziresh24.com/ravi/v2/absent_risk_for_profile?slug=${$props.slug}`;
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -462,15 +462,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicBookingAddressesWrapper__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicBookingAddressesWrapper__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicBookingAddressesWrapper__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicBookingAddressesWrapper__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
