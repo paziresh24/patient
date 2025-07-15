@@ -199,7 +199,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       ...rateDetailsResult,
       hideRates: rateDetailsResult?.hide_rates,
       reviews: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
-      waiting_time_info: averageWaitingTimeResult?.status === 'fulfilled' ? averageWaitingTimeResult.value : {},
+      waiting_time_info: averageWaitingTimeResult?.status === 'fulfilled' ? averageWaitingTimeResult.value : [],
     },
     history: {},
   };
