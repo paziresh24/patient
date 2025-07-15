@@ -5,6 +5,7 @@ import { ServerStateKeysEnum } from '../../serverStateKeysEnum';
 interface Params {
   user_id: string;
   center_id: string[];
+  slug: string;
 }
 
 export const availabilityStatus = ({ user_id, ...params }: Params) => {

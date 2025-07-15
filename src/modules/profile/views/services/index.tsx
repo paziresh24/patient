@@ -59,7 +59,7 @@ export const Services = ({
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
 
   const alabilityStatus = useAvailabilityStatus(
-    { user_id: doctor.user_id, center_id: centers.map(center => center.id) },
+    { user_id: doctor.user_id, center_id: centers.map(center => center.id), slug: slug },
     { enabled: !!useAvailabilityStatusApi },
   );
   const { isMobile } = useResponsive();
