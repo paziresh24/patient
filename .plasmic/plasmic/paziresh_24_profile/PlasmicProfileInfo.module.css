@@ -144,6 +144,7 @@
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+  cursor: pointer;
   min-width: 0;
   padding: 1px;
 }
@@ -180,6 +181,7 @@
   align-self: auto;
   background: var(--token-It8BufY6ejOY);
   white-space: pre;
+  transform: none;
   border-radius: 14px;
   border: 1px solid var(--token-Y3HOiwZmAcAF);
 }
