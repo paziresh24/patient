@@ -351,7 +351,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
         }}
         url={(() => {
           try {
-            return `https://apigw.paziresh24.com/ravi/v2/absent_risk_for_profile?slug=${$props.slug}`;
+            return `https://apigw.paziresh24.com/ravi/v2/absent_risk_for_profile/?slug=${$props.slug}`;
           } catch (e) {
             if (
               e instanceof TypeError ||
