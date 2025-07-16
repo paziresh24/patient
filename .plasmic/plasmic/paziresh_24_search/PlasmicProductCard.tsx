@@ -69,6 +69,8 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { DoctorInvoiceNotice } from "@/modules/booking/components/factor/doctorInvoiceNotice"; // plasmic-import: KwkSEMDcuddG/codeComponent
 import { Factor } from "@/modules/booking/views/factor/wrapper"; // plasmic-import: mfaiXZwrYRAY/codeComponent
 
+import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -340,6 +342,10 @@ function PlasmicProductCard__RenderFunc(props: {
     $ctx,
     $queries: {},
     $refs
+  });
+
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsbr2UhI7UlpvR()
   });
 
   return (
@@ -2515,31 +2521,56 @@ function PlasmicProductCard__RenderFunc(props: {
                           role={"img"}
                         />
                       }
-                      link={(() => {
-                        try {
-                          return (() => {
-                            if (
-                              actionButton.title === "ویزیت آنلاین" &&
-                              $ctx.Growthbook.features[
-                                "search-online-visit-factor-modal"
-                              ]?.includes?.($props.slug)
-                            ) {
-                              return "";
-                            }
-                            return actionButton.url.startsWith("/center/https")
-                              ? actionButton.url.slice(8, -1)
-                              : actionButton.url;
-                          })();
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
+                      link={
+                        hasVariant(globalVariants, "screen", "mobileOnly")
+                          ? (() => {
+                              try {
+                                return (() => {
+                                  if (
+                                    actionButton.title === "ویزیت آنلاین" &&
+                                    $props.actionButtons[0].url
+                                      .split("/")
+                                      .slice(-2, -1)[0].length == 36 &&
+                                    $ctx.Growthbook.features[
+                                      "search-online-visit-factor-modal"
+                                    ]?.includes?.($props.slug)
+                                  ) {
+                                    return "";
+                                  }
+                                  return actionButton.url.startsWith(
+                                    "/center/https"
+                                  )
+                                    ? actionButton.url.slice(8, -1)
+                                    : actionButton.url;
+                                })();
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          : (() => {
+                              try {
+                                return actionButton.url.startsWith(
+                                  "/center/https"
+                                )
+                                  ? actionButton.url.slice(8, -1)
+                                  : actionButton.url;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                      }
                       onClick={async event => {
                         const $steps = {};
 
@@ -2581,6 +2612,9 @@ function PlasmicProductCard__RenderFunc(props: {
                         }
 
                         $steps["updateDialog2Open"] =
+                          $props.actionButtons[0].url
+                            .split("/")
+                            .slice(-2, -1)[0].length == 36 &&
                           actionButton.title === "ویزیت آنلاین" &&
                           $ctx.Growthbook?.features?.[
                             "search-online-visit-factor-modal"
@@ -2741,160 +2775,160 @@ function PlasmicProductCard__RenderFunc(props: {
           </div>
         </div>
       ) : null}
-      <Dialog
-        data-plasmic-name={"dialog2"}
-        data-plasmic-override={overrides.dialog2}
-        body={
-          <div className={classNames(projectcss.all, sty.freeBox___9VOzO)}>
-            <DoctorInvoiceNotice
-              data-plasmic-name={"paziresh24DoctorInvoiceNotice"}
-              data-plasmic-override={overrides.paziresh24DoctorInvoiceNotice}
-              className={classNames(
-                "__wab_instance",
-                sty.paziresh24DoctorInvoiceNotice
-              )}
-              serviceId={(() => {
-                try {
-                  return $props.actionButtons[0].url
-                    .split("/")
-                    .slice(-2, -1)[0];
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              slug={(() => {
-                try {
-                  return $props.slug;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-            />
-
-            <Factor
-              data-plasmic-name={"paziresh24Factor"}
-              data-plasmic-override={overrides.paziresh24Factor}
-              centerId={"5532"}
-              className={classNames("__wab_instance", sty.paziresh24Factor)}
-              serviceId={(() => {
-                try {
-                  return $props.actionButtons[0].url
-                    .split("/")
-                    .slice(-2, -1)[0];
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              userCenterId={(() => {
-                try {
-                  return $props.centers.find(center => center.id === "5532")
-                    .user_center_id;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-            />
-          </div>
-        }
-        className={classNames("__wab_instance", sty.dialog2)}
-        noTrigger={true}
-        onOpenChange={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["dialog2", "open"]).apply(
-            null,
-            eventArgs
-          );
-
-          if (
-            eventArgs.length > 1 &&
-            eventArgs[1] &&
-            eventArgs[1]._plasmic_state_init_
-          ) {
-            return;
-          }
-
-          (async val => {
-            const $steps = {};
-
-            $steps["runCode"] = true
-              ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return (() => {
-                        if (val) {
-                          globalThis.history.pushState(
-                            { factorModal: true },
-                            "Modal Opened",
-                            "?modal=true"
-                          );
-                        }
-                        if (!val) {
-                          globalThis.history.back();
-                        }
-                        return globalThis.addEventListener(
-                          "popstate",
-                          event => {
-                            if (event.state && event.state.factorModal) {
-                              $state.dialog2.open = true;
-                            } else {
-                              $state.dialog2.open = false;
-                            }
-                          }
-                        );
-                      })();
+      {(hasVariant(globalVariants, "screen", "mobileOnly") ? true : false) ? (
+        <Dialog
+          data-plasmic-name={"dialog2"}
+          data-plasmic-override={overrides.dialog2}
+          body={
+            <div className={classNames(projectcss.all, sty.freeBox___9VOzO)}>
+              <DoctorInvoiceNotice
+                data-plasmic-name={"paziresh24DoctorInvoiceNotice"}
+                data-plasmic-override={overrides.paziresh24DoctorInvoiceNotice}
+                className={classNames(
+                  "__wab_instance",
+                  sty.paziresh24DoctorInvoiceNotice
+                )}
+                serviceId={(() => {
+                  try {
+                    return $props.actionButtons[0].url
+                      .split("/")
+                      .slice(-2, -1)[0];
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
+                    throw e;
+                  }
+                })()}
+                slug={(() => {
+                  try {
+                    return $props.slug;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+
+              <Factor
+                data-plasmic-name={"paziresh24Factor"}
+                data-plasmic-override={overrides.paziresh24Factor}
+                centerId={"5532"}
+                className={classNames("__wab_instance", sty.paziresh24Factor)}
+                serviceId={(() => {
+                  try {
+                    return $props.actionButtons[0].url
+                      .split("/")
+                      .slice(-2, -1)[0];
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                userCenterId={(() => {
+                  try {
+                    return $props.centers.find(center => center.id === "5532")
+                      .user_center_id;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+            </div>
+          }
+          className={classNames("__wab_instance", sty.dialog2)}
+          fullScreen={true}
+          noTrigger={true}
+          onOpenChange={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["dialog2", "open"]).apply(
+              null,
+              eventArgs
+            );
+
             if (
-              $steps["runCode"] != null &&
-              typeof $steps["runCode"] === "object" &&
-              typeof $steps["runCode"].then === "function"
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
             ) {
-              $steps["runCode"] = await $steps["runCode"];
+              return;
             }
-          }).apply(null, eventArgs);
-        }}
-        open={generateStateValueProp($state, ["dialog2", "open"])}
-        title={
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__kr9Zz
-            )}
-          >
-            {"Dialog title"}
-          </div>
-        }
-        trigger={null}
-      />
+
+            (async val => {
+              const $steps = {};
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return (() => {
+                          if (val) {
+                            globalThis.history.pushState(
+                              { factorModal: true },
+                              "Modal Opened",
+                              "?modal=true"
+                            );
+                          }
+                          return globalThis.addEventListener(
+                            "popstate",
+                            event => {
+                              if (event.state && event.state.factorModal) {
+                                $state.dialog2.open = true;
+                              } else {
+                                $state.dialog2.open = false;
+                              }
+                            }
+                          );
+                        })();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+            }).apply(null, eventArgs);
+          }}
+          open={generateStateValueProp($state, ["dialog2", "open"])}
+          title={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__kr9Zz
+              )}
+            >
+              {"Dialog title"}
+            </div>
+          }
+          trigger={null}
+        />
+      ) : null}
     </Stack__>
   ) as React.ReactElement | null;
 }
