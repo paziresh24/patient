@@ -7,9 +7,7 @@ interface ProvidersParams {
 }
 
 export const providers = async (params: ProvidersParams) => {
-  const { data } = await apiGatewayClient.get(`/v1/providers`, { params, timeout: 2000 });
-
-  return data?.providers?.[0];
+  return null;
 };
 
 export const useProviders = () => useMutation(providers);
