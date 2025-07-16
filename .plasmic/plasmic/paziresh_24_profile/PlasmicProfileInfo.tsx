@@ -69,6 +69,8 @@ import sty from "./PlasmicProfileInfo.module.css"; // plasmic-import: rFaRrp2J8j
 
 import Icon5Icon from "./icons/PlasmicIcon__Icon5"; // plasmic-import: 1QRRV71mMOrH/icon
 
+import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
+
 createPlasmicElementProxy;
 
 export type PlasmicProfileInfo__VariantMembers = {};
@@ -109,7 +111,9 @@ export interface DefaultProfileInfoProps {
   className?: string;
 }
 
-const $$ = {};
+const $$ = {
+  splunkEvent: __fn_splunkEvent
+};
 
 function useNextRouter() {
   try {
@@ -382,7 +386,7 @@ function PlasmicProfileInfo__RenderFunc(props: {
                           const actionArgs = {
                             destination: (() => {
                               try {
-                                return `https://www.paziresh24.com/s?turn_type=consult&text=${currentItem}&utm_source=profile&utm_medium=internal_link&utm_campaign=specialty_click&utm_content=${$props.displayName}`;
+                                return `http://www.paziresh24.com/s?turn_type=consult&text=${currentItem}&ref=profile&click=spec_title&dr=${$props.displayName}`;
                               } catch (e) {
                                 if (
                                   e instanceof TypeError ||
@@ -414,6 +418,36 @@ function PlasmicProfileInfo__RenderFunc(props: {
                       typeof $steps["goToPage"].then === "function"
                     ) {
                       $steps["goToPage"] = await $steps["goToPage"];
+                    }
+
+                    $steps["runCode"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return $$.splunkEvent({
+                                group: "profile",
+                                data: {
+                                  doctor_name: $props.displayName,
+                                  comment_id: $props.serviceList
+                                },
+                                type: "exp_click",
+                                token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                                api_host:
+                                  "https://splunk-ravi-hec.paziresh24.com"
+                              });
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCode"] != null &&
+                      typeof $steps["runCode"] === "object" &&
+                      typeof $steps["runCode"].then === "function"
+                    ) {
+                      $steps["runCode"] = await $steps["runCode"];
                     }
                   }}
                   style={{ width: "max-content", minWidth: "fit-content" }}
