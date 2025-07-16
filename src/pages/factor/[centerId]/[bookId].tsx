@@ -14,7 +14,6 @@ import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
-import { useProfile } from '@/modules/profile/hooks/useProfile';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { digitsFaToEn } from '@persian-tools/persian-tools';
 import moment from 'jalali-moment';
