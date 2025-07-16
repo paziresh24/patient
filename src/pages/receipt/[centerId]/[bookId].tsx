@@ -38,7 +38,6 @@ import MessengerButton from '@/modules/myTurn/components/messengerButton';
 import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { useProfile } from '@/modules/profile/hooks/useProfile';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
@@ -118,11 +117,6 @@ const Receipt = () => {
   });
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
   const showDoctorAvailabilityWarning = useFeatureValue('show-doctor-availability-warning', '');
-  const { isLoading: profileNameLoading, specialities } = useProfile({
-    slug: bookDetailsData?.doctor?.slug,
-    includeData: ['SPECIALITIES'],
-  });
-
   const doctorName = bookDetailsData?.doctor?.display_name;
 
   useEffect(() => {
@@ -517,7 +511,7 @@ const Receipt = () => {
                   name="ReceiptActionButtons"
                   props={{
                     bookDetailsData: { ...bookDetailsData, doctor: { ...bookDetailsData.doctor, display_name: doctorName } },
-                    specialities,
+                    specialities: [],
                     currentUserId: user.id,
                   }}
                   variants={{
@@ -676,7 +670,7 @@ const Receipt = () => {
             {...(bookDetailsData?.doctor?.image && { avatar: publicRuntimeConfig.CDN_BASE_URL + bookDetailsData?.doctor?.image })}
             fullName={doctorName}
             expertise={bookDetailsData.doctor?.display_expertise}
-            isLoading={getReceiptDetails.isLoading || profileNameLoading}
+            isLoading={getReceiptDetails.isLoading}
           />
         </div>
         <Modal
