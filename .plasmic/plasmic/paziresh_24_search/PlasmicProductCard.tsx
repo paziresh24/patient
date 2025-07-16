@@ -68,7 +68,6 @@ import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmi
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { DoctorInvoiceNotice } from "@/modules/booking/components/factor/doctorInvoiceNotice"; // plasmic-import: KwkSEMDcuddG/codeComponent
 import { Factor } from "@/modules/booking/views/factor/wrapper"; // plasmic-import: mfaiXZwrYRAY/codeComponent
-import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -2520,9 +2519,10 @@ function PlasmicProductCard__RenderFunc(props: {
                         try {
                           return (() => {
                             if (
+                              actionButton.title === "ویزیت آنلاین" &&
                               $ctx.Growthbook.features[
                                 "search-online-visit-factor-modal"
-                              ]?.includes?.(actionButton.url)
+                              ]?.includes?.($props.slug)
                             ) {
                               return "";
                             }
@@ -2580,34 +2580,36 @@ function PlasmicProductCard__RenderFunc(props: {
                           ];
                         }
 
-                        $steps["updateDialog2Open"] = (() => {
-                          return false;
-                        })()
-                          ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["dialog2", "open"]
-                                },
-                                operation: 0,
-                                value: true
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                        $steps["updateDialog2Open"] =
+                          actionButton.title === "ویزیت آنلاین" &&
+                          $ctx.Growthbook?.features?.[
+                            "search-online-visit-factor-modal"
+                          ]?.includes?.($props.slug)
+                            ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["dialog2", "open"]
+                                  },
+                                  operation: 0,
+                                  value: true
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
                         if (
                           $steps["updateDialog2Open"] != null &&
                           typeof $steps["updateDialog2Open"] === "object" &&
@@ -2988,15 +2990,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicProductCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicProductCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicProductCard__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicProductCard__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
