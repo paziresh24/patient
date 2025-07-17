@@ -1425,9 +1425,28 @@ function PlasmicSearchResults__RenderFunc(props: {
                                       pathname: window.location?.pathname ?? "",
                                       host: window.location?.host ?? ""
                                     },
+                                    suggestion_source: (function () {
+                                      if (
+                                        $props &&
+                                        typeof $props.searchResultResponse
+                                          .search.suggestion_source !==
+                                          "undefined"
+                                      ) {
+                                        return $props.searchResultResponse
+                                          .search.suggestion_source;
+                                      }
+                                      return false;
+                                    })(),
+                                    semantic_search:
+                                      $props?.searchResultResponse?.search
+                                        ?.semantic_search &&
+                                      $props.searchResultResponse.search
+                                        .semantic_search == "true"
+                                        ? "true"
+                                        : "false",
                                     userAgent:
-                                      navigator?.userAgent?.length > 3
-                                        ? navigator.userAgent
+                                      globalThis.navigator.userAgent > 3
+                                        ? globalThis.navigator.userAgent
                                         : "",
                                     card_data: {
                                       action:
@@ -1481,11 +1500,16 @@ function PlasmicSearchResults__RenderFunc(props: {
                                     query_id:
                                       $props?.searchResultResponse?.search
                                         ?.query_id ?? "",
-                                    terminal_id:
-                                      document.cookie?.replace(
-                                        /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
-                                        "$1"
-                                      ) ?? ""
+                                    terminal_id: (function () {
+                                      try {
+                                        return document.cookie.replace(
+                                          /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                          "$1"
+                                        );
+                                      } catch (e) {
+                                        return null;
+                                      }
+                                    })()
                                   };
                                 } catch (e) {
                                   if (
@@ -2575,15 +2599,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchResults__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchResults__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchResults__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchResults__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
