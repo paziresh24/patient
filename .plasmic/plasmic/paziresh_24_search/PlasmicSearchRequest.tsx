@@ -259,6 +259,22 @@ function PlasmicSearchRequest__RenderFunc(props: {
                     return {
                       search: {
                         query_id: "",
+                        suggestion_source: (function () {
+                          if (
+                            $props &&
+                            typeof $props.suggestionExecutionSource !==
+                              "undefined"
+                          ) {
+                            return $props.suggestionExecutionSource;
+                          }
+                          return false;
+                        })(),
+                        semantic_search:
+                          $ctx.Growthbook &&
+                          $ctx.Growthbook.isReady &&
+                          $ctx.Growthbook.features["search-semantic-search"]
+                            ? "true"
+                            : "false",
                         total: $ctx.fetchedData?.entity?.totalHits ?? 0,
                         is_landing: false,
                         pagination: {
@@ -475,7 +491,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                 return actions;
                               })(),
                               experience: item.source?.experience ?? "",
-                              position: item.beforePersonalizationPosition ?? 0,
+                              position:
+                                item.beforePersonalizationPosition + 1 ?? 0,
                               has_presciption: false,
                               insurances: item.source?.insurances ?? [],
                               experiment_details: {
@@ -540,7 +557,27 @@ function PlasmicSearchRequest__RenderFunc(props: {
                             };
                           }
                         })
-                      }
+                      },
+                      selected_filters: (function () {
+                        const filters = {};
+                        if (
+                          $props &&
+                          $props.searchOptionalFilters &&
+                          typeof $props.searchOptionalFilters === "object"
+                        ) {
+                          for (const key in $props.searchOptionalFilters) {
+                            if (
+                              $props.searchOptionalFilters.hasOwnProperty(key)
+                            ) {
+                              filters[key] = $props.searchOptionalFilters[key];
+                            }
+                          }
+                        }
+                        if ($props && $props.searchQuery) {
+                          filters.text = $props.searchQuery;
+                        }
+                        return filters;
+                      })()
                     };
                   } catch (e) {
                     if (
@@ -586,6 +623,14 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                   event_group: "search_metrics",
                                   event_type: "search_view",
                                   current_url: window.location.href,
+                                  semantic_search:
+                                    $ctx.Growthbook &&
+                                    $ctx.Growthbook.isReady &&
+                                    $ctx.Growthbook.features[
+                                      "search-semantic-search"
+                                    ]
+                                      ? "true"
+                                      : "false",
                                   terminal_id: (function () {
                                     try {
                                       return document.cookie.replace(
@@ -666,10 +711,9 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                     }
                                     return false;
                                   })(),
-                                  userAgent:
-                                    navigator && navigator.userAgent
-                                      ? navigator.userAgent
-                                      : "",
+                                  userAgent: globalThis.navigator.userAgent
+                                    ? globalThis.navigator.userAgent
+                                    : "",
                                   url: (function () {
                                     const url = {
                                       href: window.location.href,
@@ -1079,15 +1123,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchRequest__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchRequest__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchRequest__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchRequest__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
