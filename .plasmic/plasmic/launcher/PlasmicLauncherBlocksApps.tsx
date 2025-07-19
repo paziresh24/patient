@@ -356,6 +356,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
           }
         })() ? (
           <LauncherComponentsApp
+            _new={true}
             avatar={
               "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finstagram-plugin.png?versionId="
             }
@@ -415,7 +416,6 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                 $steps["sendLog"] = await $steps["sendLog"];
               }
             }}
-            soon={true}
             widgetId={"aed80eahprc1qs0"}
           />
         ) : null}
