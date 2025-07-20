@@ -319,7 +319,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
             const $steps = {};
 
             $steps["updateDialogOpen"] =
-              $state.apiRequest.data?.response === "success"
+              $state.apiRequest.data?.list.length > 0
                 ? (() => {
                     const actionArgs = {
                       variable: {
@@ -351,7 +351,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
         }}
         url={(() => {
           try {
-            return `https://apigw.paziresh24.com/ravi/v2/absent_risk_for_profile/?slug=${$props.slug}`;
+            return `https://apigw.paziresh24.com/ravi/v3/absent_risk_for_profile?where=(slug,isnot,null)~and(slug,eq,${$props.slug})`;
           } catch (e) {
             if (
               e instanceof TypeError ||
