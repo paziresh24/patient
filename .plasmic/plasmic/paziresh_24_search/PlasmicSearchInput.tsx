@@ -813,6 +813,17 @@ function PlasmicSearchInput__RenderFunc(props: {
                             params.delete("text");
                             const existingParams = params?.toString() || "";
                             params.append("text", $state.textInput.value);
+                            params.append("ref", "search_suggestion_box");
+                            const semanticSearchParam =
+                              $ctx.Growthbook &&
+                              $ctx.Growthbook.isReady &&
+                              $ctx.Growthbook.features["search-semantic-search"]
+                                ? "true"
+                                : "false";
+                            params.append(
+                              "semantic_search",
+                              semanticSearchParam
+                            );
                             return ($state.enterPress = `/s/${
                               $props.citySlug ? $props.citySlug + "/" : ""
                             }?${params.toString()}`);
@@ -941,15 +952,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchInput__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchInput__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchInput__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchInput__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
