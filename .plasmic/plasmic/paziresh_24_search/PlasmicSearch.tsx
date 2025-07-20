@@ -125,6 +125,7 @@ export type PlasmicSearch__OverridesType = {
   fragmentPortal?: Flex__<typeof Portal>;
   sideEffect?: Flex__<typeof SideEffect>;
   text?: Flex__<"div">;
+  setGrowthbookAttributes?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchProps {
@@ -2356,6 +2357,74 @@ function PlasmicSearch__RenderFunc(props: {
           })()}
         </React.Fragment>
       </div>
+      <SideEffect
+        data-plasmic-name={"setGrowthbookAttributes"}
+        data-plasmic-override={overrides.setGrowthbookAttributes}
+        className={classNames("__wab_instance", sty.setGrowthbookAttributes)}
+        deps={(() => {
+          try {
+            return [$ctx.Growthbook.isReady, $ctx.auth.info.id];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["setGrowthbookAttributes"] = $ctx.Growthbook.isReady
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          url: window.location.href,
+                          ...(Intl.DateTimeFormat().resolvedOptions()
+                            .timeZone && {
+                            timeZone:
+                              Intl.DateTimeFormat().resolvedOptions().timeZone +
+                              ","
+                          }),
+                          user_id: $ctx.auth?.info?.id,
+                          id: globalThis.document?.cookie
+                            ?.split?.("; ")
+                            ?.find?.(row => row.startsWith("terminal_id="))
+                            ?.split("=")[1]
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["setGrowthbookAttributes"] != null &&
+            typeof $steps["setGrowthbookAttributes"] === "object" &&
+            typeof $steps["setGrowthbookAttributes"].then === "function"
+          ) {
+            $steps["setGrowthbookAttributes"] = await $steps[
+              "setGrowthbookAttributes"
+            ];
+          }
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
@@ -2370,7 +2439,8 @@ const PlasmicDescendants = {
     "locationView",
     "fragmentPortal",
     "sideEffect",
-    "text"
+    "text",
+    "setGrowthbookAttributes"
   ],
   overlay: ["overlay"],
   selectCityDialog: [
@@ -2384,7 +2454,8 @@ const PlasmicDescendants = {
   locationView: ["locationView"],
   fragmentPortal: ["fragmentPortal"],
   sideEffect: ["sideEffect"],
-  text: ["text"]
+  text: ["text"],
+  setGrowthbookAttributes: ["setGrowthbookAttributes"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2399,6 +2470,7 @@ type NodeDefaultElementType = {
   fragmentPortal: typeof Portal;
   sideEffect: typeof SideEffect;
   text: "div";
+  setGrowthbookAttributes: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2469,6 +2541,7 @@ export const PlasmicSearch = Object.assign(
     fragmentPortal: makeNodeComponent("fragmentPortal"),
     sideEffect: makeNodeComponent("sideEffect"),
     text: makeNodeComponent("text"),
+    setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
 
     // Metadata about props expected for PlasmicSearch
     internalVariantProps: PlasmicSearch__VariantProps,
