@@ -34,6 +34,7 @@ type Search = {
   total: number;
   is_landing: boolean;
   query_id: string;
+  semantic_search?: any;
 };
 
 export type Result = {
