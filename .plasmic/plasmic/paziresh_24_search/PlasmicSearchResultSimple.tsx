@@ -224,7 +224,15 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
             component={Link}
             href={(() => {
               try {
-                return `/s/?text=${$props.inputValue}`;
+                return (() => {
+                  const semanticSearchParam =
+                    $ctx.Growthbook &&
+                    $ctx.Growthbook?.isReady &&
+                    $ctx.Growthbook?.features?.["search-semantic-search"]
+                      ? "true"
+                      : "false";
+                  return `/s/?text=${$props.inputValue}&ref=search_suggestion_box&semantic_search=${semanticSearchParam}`;
+                })();
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -345,15 +353,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchResultSimple__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchResultSimple__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchResultSimple__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchResultSimple__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
