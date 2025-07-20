@@ -14,6 +14,7 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
+import { splunkInstance } from '@/common/services/splunk';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -160,6 +161,18 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     if (axios.isAxiosError(error)) {
       const status = error.response?.status ?? 500;
       context.res.statusCode = status === 404 ? 410 : error.message.includes('timeout') ? 504 : status;
+      await splunkInstance('doctor-profile').sendEvent({
+        group: 'profile_error',
+        type: 'profile_error',
+        event: {
+          endpoint: error?.config?.url,
+          error_status: error.response?.status,
+          error: error?.response?.data,
+          message: error.message,
+          handle_error_status: context.res.statusCode,
+          stack: error?.stack,
+        },
+      });
       return handleSsrError(context.res.statusCode, slug);
     }
     console.dir(error);
