@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
 import { GrowthBook } from '@growthbook/growthbook-react';
+import { getCookie } from 'cookies-next';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 interface GrowthbookGlobalContextProps {
   previewAttributes?: Record<string, string>;
@@ -24,6 +26,7 @@ export const GrowthbookGlobalContext = ({
   );
   const [isReady, setIsReady] = useState(false);
   const [attr, setAttr] = useState({});
+  const user = useUserInfoStore(state => state.info);
 
   useEffect(() => {
     if (apiHost && clientKey) {
@@ -49,8 +52,13 @@ export const GrowthbookGlobalContext = ({
     growthbook.setAttributes({
       ...attr,
       ...previewAttributes,
+      url: window.location.href,
+      id: getCookie('terminal_id'),
+      user_id: user?.id,
+      host: window.location.host,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
-  }, [attr, previewAttributes]);
+  }, [attr, previewAttributes, user]);
 
   useEffect(() => {
     setIsReady(growthbook?.ready);
@@ -66,6 +74,11 @@ export const GrowthbookGlobalContext = ({
     if (isReady) {
       growthbook.setAttributes({
         ...previewAttributes,
+        url: window.location.href,
+        id: getCookie('terminal_id'),
+        user_id: user?.id,
+        host: window.location.host,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       });
     }
   }, [previewAttributes, isReady]);
@@ -77,6 +90,11 @@ export const GrowthbookGlobalContext = ({
           growthbook.setAttributes({
             ...attributes,
             ...previewAttributes,
+            url: window.location.href,
+            id: getCookie('terminal_id'),
+            user_id: user?.id,
+            host: window.location.host,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           });
 
           setAttr(attributes);
@@ -88,6 +106,11 @@ export const GrowthbookGlobalContext = ({
             ...growthbook.getAttributes(),
             ...attributes,
             ...previewAttributes,
+            url: window.location.href,
+            id: getCookie('terminal_id'),
+            user_id: user?.id,
+            host: window.location.host,
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
           });
 
           setAttr(attributes);
