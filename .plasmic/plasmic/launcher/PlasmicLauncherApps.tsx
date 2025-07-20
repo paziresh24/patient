@@ -973,17 +973,17 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
               <LauncherComponentsApp
                 avatar={
-                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fwaiting-plugin.png?versionId="
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Faccess-plugin.png?versionId="
                 }
                 className={classNames(
                   "__wab_instance",
                   sty.launcherComponentsApp__n2XvW
                 )}
                 description={
-                  "\u062f\u0631 \u0632\u0645\u0627\u0646\u06cc \u06a9\u0647 \u0646\u0648\u0628\u062a \u062f\u0647\u06cc \u0628\u0633\u062a\u0647 \u0627\u0633\u062a\u060c \u0646\u0648\u0628\u062a \u0628\u062f\u0647."
+                  "\u062b\u0628\u062a \u0648 \u0646\u0645\u0627\u06cc\u0634 \u0648\u0636\u0639\u06cc\u062a \u0627\u0645\u06a9\u0627\u0646\u0627\u062a \u0645\u0637\u0628 \u0627\u0632 \u062c\u0645\u0644\u0647 \u062c\u0627\u06cc \u067e\u0627\u0631\u06a9\u060c \u067e\u0644\u0647\u060c \u0622\u0633\u0627\u0646\u0633\u0648\u0631 \u0648 \u0633\u0627\u06cc\u0631 \u062f\u0633\u062a\u0631\u0633\u06cc\u200c\u0647\u0627"
                 }
                 name={
-                  "\u0646\u0648\u0628\u062a \u062f\u0627\u0631 \u0634\u062f \u0628\u0647 \u0645\u0646 \u0627\u0637\u0644\u0627\u0639 \u0628\u062f\u0647"
+                  "\u062f\u0633\u062a\u0631\u0633\u06cc \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0628\u0647 \u0645\u0637\u0628"
                 }
                 onEvent={async () => {
                   const $steps = {};
@@ -1000,8 +1000,8 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                   user_id: $ctx.auth.info?.id,
                                   is_doctor: $ctx.auth.info?.is_doctor,
                                   meta_data: {
-                                    name: "نوبت دار شد خبر بده",
-                                    key: "reminder/setting",
+                                    name: "دسترسی بیماران به مطب",
+                                    key: "access/setting",
                                     link: ""
                                   }
                                 };
