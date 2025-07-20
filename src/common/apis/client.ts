@@ -56,6 +56,9 @@ clinicClient.interceptors.request.use(
     if (typeof window !== 'undefined' && window.localStorage?.getItem('fragment::previewToken')) {
       (config as any).headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('fragment::previewToken');
     }
+    if (typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone == 'string') {
+      (config as any).headers['accept-timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
     config = {
       ...config,
       meta: {
@@ -90,6 +93,9 @@ apiGatewayClient.interceptors.request.use(
     if (isPWA()) {
       (config as any).headers['isApplication'] = true;
     }
+    if (typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone == 'string') {
+      (config as any).headers['accept-timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
     return config;
   },
   err => {
@@ -108,6 +114,9 @@ paziresh24AppClient.interceptors.request.use(
     }
     if (typeof window !== 'undefined' && window.localStorage?.getItem('fragment::previewToken')) {
       (config as any).headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('fragment::previewToken');
+    }
+    if (typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone == 'string') {
+      (config as any).headers['accept-timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
     return config;
   },
