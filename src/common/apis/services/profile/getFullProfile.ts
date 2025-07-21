@@ -9,7 +9,7 @@ export interface Params {
 }
 
 export const getProfileData = async ({ slug, ...params }: Params) => {
-  const { data } = await apiGatewayClient.get(`/v1/full-profile/${slug}/`, { params, timeout: 2000 });
+  const { data } = await apiGatewayClient.get(`/v1/full-profile/${slug}/`, { params, timeout: 6000 });
   return data;
 };
 
