@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import Button from '@/common/components/atom/button';
 import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
@@ -24,6 +25,10 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
+import HamdastLanding from '.plasmic/HamdastLanding';
+import Logo from '@/common/components/atom/logo';
+import ChevronIcon from '@/common/components/icons/chevron';
 
 export function replaceKeysInString(template: string, keys: string[], values: string[]) {
   // Create a regular expression to find placeholders like {{key}}
@@ -65,6 +70,8 @@ const Page = ({ page, app }: any) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPending = useUserInfoStore(state => state.pending);
   const { handleOpenLoginModal } = useLoginModalContext();
+  const [showApp, setShowApp] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(false);
 
   const embedSrc = useMemo(() => {
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
@@ -92,8 +99,22 @@ const Page = ({ page, app }: any) => {
   useEffect(() => {
     setTimeout(() => {
       setIsAppLoading(false);
-    }, 6000);
+    }, 10000);
   }, []);
+
+  useEffect(() => {
+    if (showTranslation && page?.layout?.show_landing) {
+      setTimeout(() => {
+        setShowApp(true);
+        setShowTranslation(false);
+      }, 2500);
+    }
+  }, [showTranslation, page?.layout?.show_landing]);
+  useEffect(() => {
+    if (page?.layout && !page?.layout?.show_landing) {
+      setShowApp(true);
+    }
+  }, [page?.layout?.show_landing]);
 
   return (
     <LayoutWithHeaderAndFooter
@@ -108,10 +129,29 @@ const Page = ({ page, app }: any) => {
         <AppBar title={page.name?.fa} backButton={true} actionButton={<Report app_key={app_key as string} page_key={page?.key} />} />
       )}
       <Seo title={page.name?.fa} noIndex />
+      {showTranslation && (
+        <div className="w-full flex-grow flex flex-col gap-5 justify-center items-center">
+          <div className="flex items-center gap-5">
+            <div className="bg-white rounded-2xl shadow-card w-20 h-20 flex justify-center items-center">
+              <Logo type="compact" width={45} />
+            </div>
+            <ChevronIcon dir="left" className="w-4 h-4 opacity-70 animate-pulse" />
+            <div className="bg-white rounded-2xl shadow-card w-20 h-20 flex justify-center items-center">
+              <img src={app?.icon} className="w-14 h-14 rounded-xl" />
+            </div>
+          </div>
+          <span className="font-semibold">درحال انتقال به {app?.name?.fa}</span>
+        </div>
+      )}
+      {!showApp && !showTranslation && page?.layout?.show_landing && (
+        <GlobalContextsProvider>
+          <HamdastLanding appKey={app?.key} onClick={() => setShowTranslation(true)} />
+        </GlobalContextsProvider>
+      )}
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
-      <div className="w-full flex-grow flex flex-col">
+      <div className={classNames('w-full flex-grow flex flex-col', { '!hidden !opacity-0': !showApp })}>
         {(!showIframe || isAppLoading) && (
           <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
             <Loading />
