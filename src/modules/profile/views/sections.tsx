@@ -55,6 +55,7 @@ export const sections = (data: any) => {
     fragmentComponents,
     hamdastWidgetsData,
     hamdastWidgets,
+    user_id,
   } = data;
 
   const profileData = pick(data, [
@@ -67,6 +68,7 @@ export const sections = (data: any) => {
     'symptomes',
     'onlineVisit',
     'seo',
+    'user_id',
   ]);
 
   return [

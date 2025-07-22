@@ -8,6 +8,10 @@ import PlasmicHamdastCywoc24Widget, {
   PlasmicHamdastCywoc24Widget__ArgProps,
 } from '.plasmic/plasmic/hamdast_cywoc_24/PlasmicHamdastCywoc24Widget';
 
+import PlasmicHamdastHamyarWidget, {
+  PlasmicHamdastHamyarWidget__ArgProps,
+} from '.plasmic/plasmic/hamdast_hamyar/PlasmicHamdastHamyarWidget';
+
 export const Components = {
   hhhzbbsffq0nlna: {
     component_id: '6-Wp84uf7hB4',
@@ -26,5 +30,11 @@ export const Components = {
     project_id: 'fc2TT88raN5pz7nywm4q4q',
     Component: PlasmicHamdastCywoc24Widget,
     props_allowed: PlasmicHamdastCywoc24Widget__ArgProps,
+  },
+  ad0b26pc5ni63nm: {
+    component_id: 'SXuHQqEYBK76',
+    project_id: 'g8Bqu3xcbG5xgWev5sVtns',
+    Component: PlasmicHamdastHamyarWidget,
+    props_allowed: PlasmicHamdastHamyarWidget__ArgProps,
   },
 };

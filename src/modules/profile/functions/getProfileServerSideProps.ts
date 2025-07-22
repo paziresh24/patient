@@ -96,14 +96,8 @@ const initializeFeatureFlags = async (context: GetServerSidePropsContext, slug: 
   }
 };
 
-const fetchWidgetsData = async (information: any): Promise<{ widgets: any[]; widgetsData: any }> => {
+const fetchWidgetsData = async (information: any, userData: any): Promise<{ widgets: any[]; widgetsData: any }> => {
   try {
-    const { data: userData } = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
-      params: { server_id: information.server_id, user_info_id: information.id },
-      headers: { authorization: `Bearer ${process.env.GOZARGARH_API_KEY}` },
-      timeout: 3000,
-    });
-
     if (!userData?.user_id) return { widgets: [], widgetsData: {} };
 
     const { data: widgets } = await axios.get(API_ENDPOINTS.HAMDAST_WIDGETS, {
@@ -220,7 +214,20 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, fullProfileData);
 
-  const { widgets, widgetsData } = await fetchWidgetsData(information);
+  let userData = null;
+  try {
+    const data = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
+      params: { server_id: information.server_id, user_info_id: information.id },
+      headers: { authorization: `Bearer ${process.env.GOZARGARH_API_KEY}` },
+      timeout: 3000,
+    });
+
+    userData = data?.data;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+
+  const { widgets, widgetsData } = await fetchWidgetsData(information, userData);
 
   const doctorCity = centers?.find?.((center: any) => center.id !== IGNORED_CENTER_ID)?.city;
   const title = `${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${
@@ -263,6 +270,7 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     status: context.res.statusCode,
     hamdastWidgets: widgets,
     hamdastWidgetsData: widgetsData,
+    user_id: userData?.user_id ?? null,
   };
 
   return {
