@@ -69,6 +69,7 @@ const DoctorProfile = ({
   status,
   hamdastWidgets,
   hamdastWidgetsData,
+  user_id,
 }: any) => {
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
   const { customize } = useCustomize();
@@ -232,6 +233,7 @@ const DoctorProfile = ({
     seo: { breadcrumbs, slug },
     hamdastWidgetsData,
     hamdastWidgets,
+    user_id,
   };
 
   if ([404, 500, 504, 410].includes(status)) {

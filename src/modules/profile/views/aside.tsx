@@ -39,6 +39,7 @@ export const aside = (data: any) => {
     hamdast,
     hamdastWidgetsData,
     hamdastWidgets,
+    user_id,
   } = data;
 
   const profileData = pick(data, [
@@ -52,6 +53,7 @@ export const aside = (data: any) => {
     'symptomes',
     'seo',
     'onlineVisit',
+    'user_id',
   ]);
 
   return [
