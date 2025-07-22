@@ -1960,6 +1960,16 @@
           "assetId": "grxNYctbMek6PL66cujx3u",
           "type": "projectCss",
           "checksum": "7ba19303b10139b71126b82f31f04878"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "dNxLMZLM4oWU",
+          "checksum": "948d41f20fda55a9efe831e6d615ade0"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "dNxLMZLM4oWU",
+          "checksum": "948d41f20fda55a9efe831e6d615ade0"
         }
       ],
       "codegenVersion": "0.0.1"

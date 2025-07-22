@@ -3175,6 +3175,19 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherComponentsAppSquare.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "dNxLMZLM4oWU",
+          "name": "HamdastLanding",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicHamdastLanding.tsx",
+          "importSpec": {
+            "modulePath": "HamdastLanding.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicHamdastLanding.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
