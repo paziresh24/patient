@@ -554,6 +554,7 @@ function PlasmicSearch__RenderFunc(props: {
                                     params.delete("text");
                                     params.append("text", $state.inputValue);
                                   }
+                                  params.delete("ref");
                                   params.append("ref", "search_suggestion_box");
                                   const citySlug =
                                     $props.selectedCity.en_slug &&
@@ -568,6 +569,7 @@ function PlasmicSearch__RenderFunc(props: {
                                     ]
                                       ? "true"
                                       : "false";
+                                  params.delete("semantic_search");
                                   params.append(
                                     "semantic_search",
                                     semanticSearchParam
@@ -2384,7 +2386,6 @@ function PlasmicSearch__RenderFunc(props: {
                     (() => {
                       try {
                         return {
-                          url: window.location.href,
                           ...(Intl.DateTimeFormat().resolvedOptions()
                             .timeZone && {
                             timeZone:
@@ -2392,6 +2393,7 @@ function PlasmicSearch__RenderFunc(props: {
                               ","
                           }),
                           user_id: $ctx.auth?.info?.id,
+                          url: globalThis.location.href,
                           id: globalThis.document?.cookie
                             ?.split?.("; ")
                             ?.find?.(row => row.startsWith("terminal_id="))
