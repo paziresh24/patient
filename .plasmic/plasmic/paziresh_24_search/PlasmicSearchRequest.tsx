@@ -206,7 +206,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
             return (() => {
               const queries = {
                 from: 0,
-                size: 10,
+                size: 5,
                 query: $props.searchQuery,
                 semantic_search:
                   $ctx.Growthbook &&

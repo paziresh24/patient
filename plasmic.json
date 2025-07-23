@@ -2539,8 +2539,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -4196,7 +4195,8 @@
           "componentImportPath": "@plasmicapp/react-web/lib/data-sources"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "pkMLinFwM9pzwv5S5KpiAu",
@@ -6718,7 +6718,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {
