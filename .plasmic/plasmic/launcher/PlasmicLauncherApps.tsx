@@ -972,6 +972,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               />
 
               <LauncherComponentsApp
+                _new={true}
                 avatar={
                   "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Faccess-plugin.png?versionId="
                 }
@@ -982,6 +983,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 description={
                   "\u062b\u0628\u062a \u0648 \u0646\u0645\u0627\u06cc\u0634 \u0648\u0636\u0639\u06cc\u062a \u0627\u0645\u06a9\u0627\u0646\u0627\u062a \u0645\u0637\u0628 \u0627\u0632 \u062c\u0645\u0644\u0647 \u062c\u0627\u06cc \u067e\u0627\u0631\u06a9\u060c \u067e\u0644\u0647\u060c \u0622\u0633\u0627\u0646\u0633\u0648\u0631 \u0648 \u0633\u0627\u06cc\u0631 \u062f\u0633\u062a\u0631\u0633\u06cc\u200c\u0647\u0627"
                 }
+                link={"/_/cheragh/launcher/"}
                 name={
                   "\u062f\u0633\u062a\u0631\u0633\u06cc \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0628\u0647 \u0645\u0637\u0628"
                 }
@@ -1001,7 +1003,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                   is_doctor: $ctx.auth.info?.is_doctor,
                                   meta_data: {
                                     name: "دسترسی بیماران به مطب",
-                                    key: "access/setting",
+                                    key: "/cheragh/launcher/",
                                     link: ""
                                   }
                                 };
@@ -1030,7 +1032,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
                     $steps["sendLog"] = await $steps["sendLog"];
                   }
                 }}
-                soon={true}
               />
             </Stack__>
           ) : null}
