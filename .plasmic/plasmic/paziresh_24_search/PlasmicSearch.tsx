@@ -1409,7 +1409,7 @@ function PlasmicSearch__RenderFunc(props: {
                     />
                   </div>
                 }
-                method={"POST"}
+                method={"GET"}
                 onError={async (...eventArgs: any) => {
                   generateStateOnChangeProp($state, [
                     "getLocationList",
@@ -1428,7 +1428,9 @@ function PlasmicSearch__RenderFunc(props: {
                     "data"
                   ]).apply(null, eventArgs);
                 }}
-                url={"https://www.paziresh24.com/api/getbaseinfo"}
+                url={
+                  'https://apigw.paziresh24.com/clinic/v2/baseinfo?table=["city","province"]'
+                }
               >
                 <LocationView
                   data-plasmic-name={"locationView"}

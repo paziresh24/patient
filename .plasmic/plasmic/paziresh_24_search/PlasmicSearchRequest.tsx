@@ -936,7 +936,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                           url: (function () {
                                             const url = {
                                               href: window.location.href,
-                                              qurey: {},
+                                              query: {},
                                               pathname:
                                                 window.location.pathname,
                                               host: window.location.host
@@ -950,7 +950,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                                 key,
                                                 value
                                               ] of urlParams.entries()) {
-                                                url.qurey[key] = value;
+                                                url.query[key] = value;
                                               }
                                             } catch (e) {}
                                             return url;
