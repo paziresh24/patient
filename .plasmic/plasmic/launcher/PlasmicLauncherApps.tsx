@@ -973,6 +973,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
               <LauncherComponentsApp
                 _new={true}
+                appkey={"cheragh"}
                 avatar={
                   "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Faccess-plugin.png?versionId="
                 }
@@ -1032,6 +1033,21 @@ function PlasmicLauncherApps__RenderFunc(props: {
                     $steps["sendLog"] = await $steps["sendLog"];
                   }
                 }}
+                pagekey={"launcher"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
+                widgetId={"o1maxe7isynnf3v"}
               />
             </Stack__>
           ) : null}
