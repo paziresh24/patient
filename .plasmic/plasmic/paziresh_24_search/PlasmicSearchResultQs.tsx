@@ -314,7 +314,13 @@ function PlasmicSearchResultQs__RenderFunc(props: {
                       try {
                         return `/s/${
                           $props.citySlug ? $props.citySlug + "/" : ""
-                        }?text=${value}`;
+                        }?text=${value}&ref=search_suggestion_box_qs&semantic_search=${
+                          $ctx.Growthbook &&
+                          $ctx.Growthbook.isReady &&
+                          $ctx.Growthbook.features["search-semantic-search"]
+                            ? "true"
+                            : "false"
+                        }`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -441,15 +447,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchResultQs__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchResultQs__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchResultQs__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchResultQs__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
