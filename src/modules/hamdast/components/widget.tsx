@@ -21,17 +21,18 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
   const hashId = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [isCancelLoading, setIsCancelLoading] = useState(false);
-  const getCenters = useGetCenters({ user_id: info?.id?.toString()! }, { enabled: false });
+  const getCenters = useGetCenters(
+    { user_id: info?.id?.toString()! },
+    { enabled: widgetInfo.data?.data?.placement.includes('center_info') },
+  );
   const [selectedCenter, setSelctedCenter] = useState('');
 
   useEffect(() => {
-    if (widgetInfo.data?.data?.placement.includes('center_info')) {
-      getCenters.refetch().then(() => {
-        const centers = getCenters?.data?.data?.items?.filter((center: any) => center.id !== '5532');
-        setSelctedCenter(centers?.length == 1 ? centers?.[0]?.id : '');
-      });
+    if (widgetInfo.data?.data?.placement.includes('center_info') && getCenters?.data) {
+      const centers = getCenters?.data?.data?.items?.filter((center: any) => center.id !== '5532');
+      setSelctedCenter(centers?.length == 1 ? centers?.[0]?.id : '');
     }
-  }, [widgetInfo.data?.data?.placement.includes('center_info')]);
+  }, [widgetInfo.data?.data?.placement.includes('center_info'), getCenters?.data]);
 
   useEffect(() => {
     const handleEventFunction = (messageEvent: MessageEvent) => {

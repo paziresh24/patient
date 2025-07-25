@@ -107,7 +107,7 @@ const Page = ({ page, app }: any) => {
       setTimeout(() => {
         setShowApp(true);
         setShowTranslation(false);
-      }, 2500);
+      }, 3000);
     }
   }, [showTranslation, page?.layout?.show_landing]);
   useEffect(() => {
@@ -130,17 +130,41 @@ const Page = ({ page, app }: any) => {
       )}
       <Seo title={page.name?.fa} noIndex />
       {showTranslation && (
-        <div className="w-full flex-grow flex flex-col gap-5 justify-center items-center">
+        <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center">
           <div className="flex items-center gap-5">
-            <div className="bg-white rounded-2xl shadow-card w-20 h-20 flex justify-center items-center">
-              <Logo type="compact" width={45} />
+            <div className="bg-white rounded-xl shadow-card w-16 h-16 flex justify-center items-center">
+              <Logo type="compact" width={40} />
             </div>
-            <ChevronIcon dir="left" className="w-4 h-4 opacity-70 animate-pulse" />
-            <div className="bg-white rounded-2xl shadow-card w-20 h-20 flex justify-center items-center">
-              <img src={app?.icon} className="w-14 h-14 rounded-xl" />
+            <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-primary">
+              <polyline
+                points="60,20 30,50 60,80"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                opacity="0"
+              >
+                <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+                <animateTransform
+                  attributeName="transform"
+                  attributeType="XML"
+                  type="translate"
+                  from="0 0"
+                  to="-10 0"
+                  dur="1s"
+                  repeatCount="indefinite"
+                />
+              </polyline>
+            </svg>
+
+            <div className="bg-white rounded-xl shadow-card w-16 h-16 flex justify-center items-center">
+              <img src={app?.icon} className="w-10 h-10 rounded-xl" />
             </div>
           </div>
-          <span className="font-semibold">درحال انتقال به {app?.name?.fa}</span>
+          <span className="text-sm">
+            درحال انتقال از <span className="font-bold">پذیرش۲۴ به {app?.name?.fa}</span>
+          </span>
         </div>
       )}
       {!showApp && !showTranslation && page?.layout?.show_landing && (
