@@ -65,6 +65,8 @@ import { AppFrame } from "@/modules/hamdast/appFrame"; // plasmic-import: m7qJ9q
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 
+import { useScreenVariants as useScreenVariantsqiBuxNlixBgQ } from "../paziresh_24_design_system/PlasmicGlobalVariant__Screen"; // plasmic-import: QiBUXNlixBgQ/globalVariant
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
@@ -233,6 +235,10 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
     $ctx,
     $queries: {},
     $refs
+  });
+
+  const globalVariants = ensureGlobalVariants({
+    screen: useScreenVariantsqiBuxNlixBgQ()
   });
 
   return (
@@ -938,7 +944,11 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                           displayMaxWidth={"100%"}
                           displayMinHeight={"0"}
                           displayMinWidth={"28px"}
-                          displayWidth={"28px"}
+                          displayWidth={
+                            hasVariant(globalVariants, "screen", "mobileOnly")
+                              ? "auto"
+                              : "28px"
+                          }
                           key={currentIndex}
                           loading={"eager"}
                           src={(() => {
@@ -1011,15 +1021,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherComponentsApp__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherComponentsApp__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherComponentsApp__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherComponentsApp__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
