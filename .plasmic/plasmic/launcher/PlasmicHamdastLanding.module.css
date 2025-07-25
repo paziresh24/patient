@@ -70,7 +70,7 @@
   .freeBox__xRQeg {
     display: flex;
     flex-direction: column;
-    margin-bottom: 70px;
+    margin-bottom: 130px;
     width: 100%;
     min-width: 0;
   }
@@ -343,7 +343,7 @@
     top: auto;
     position: fixed;
     right: 0;
-    bottom: 0;
+    bottom: 63px;
     width: auto;
     padding: 15px;
     border-top: 1px solid var(--token-4iQ-8GWBqX6X);
