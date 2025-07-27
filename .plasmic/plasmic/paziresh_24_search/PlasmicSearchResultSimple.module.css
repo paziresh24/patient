@@ -16,7 +16,7 @@
 .searchRequest:global(.__wab_instance) {
   max-width: 100%;
 }
-.link {
+.link__jm7Vv {
   display: flex;
   flex-direction: row;
   position: relative;
@@ -27,7 +27,7 @@
   min-width: 0;
   padding: var(--token-Fv8-L_kN-2Ma);
 }
-.link > :global(.__wab_flex-container) {
+.link__jm7Vv > :global(.__wab_flex-container) {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
@@ -35,13 +35,17 @@
   margin-left: calc(0px - var(--token-_c276Gs_1FIE));
   width: calc(100% + var(--token-_c276Gs_1FIE));
 }
-.link > :global(.__wab_flex-container) > *,
-.link > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.link > :global(.__wab_flex-container) > picture > img,
-.link > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
+.link__jm7Vv > :global(.__wab_flex-container) > *,
+.link__jm7Vv > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.link__jm7Vv > :global(.__wab_flex-container) > picture > img,
+.link__jm7Vv
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
   margin-left: var(--token-_c276Gs_1FIE);
 }
-.svg {
+.svg__jiTxY {
   object-fit: cover;
   max-width: 100%;
   width: 24px;
@@ -56,4 +60,38 @@
   font-size: var(--token-tM2Vh4zTir7U);
   font-weight: 500;
   min-width: 0;
+}
+.link__sNaaj {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  background: var(--token-BU1JCAY6hntB);
+  padding: var(--token-fhaz6q6bl-fW);
+}
+.link__sNaaj > :global(.__wab_flex-container) {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: calc(0px - var(--token-_c276Gs_1FIE));
+  width: calc(100% + var(--token-_c276Gs_1FIE));
+}
+.link__sNaaj > :global(.__wab_flex-container) > *,
+.link__sNaaj > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
+.link__sNaaj > :global(.__wab_flex-container) > picture > img,
+.link__sNaaj
+  > :global(.__wab_flex-container)
+  > :global(.__wab_slot)
+  > picture
+  > img {
+  margin-left: var(--token-_c276Gs_1FIE);
+}
+.svg__wxoOf {
+  object-fit: cover;
+  max-width: 100%;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }

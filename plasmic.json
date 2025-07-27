@@ -39,8 +39,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-embed-css"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "caTPwKxj5ZrD9LQ7DMdK4Z",
@@ -98,8 +97,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -340,8 +338,7 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "gmeH6XgPaBtkt51HunAo4g",
@@ -549,8 +546,7 @@
           "componentImportPath": "@plasmicpkgs/react-aria/skinny/registerDialog"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -995,8 +991,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -2404,6 +2399,16 @@
           "id": "JPz3a5sl3Q1Z",
           "name": "Icon46Icon",
           "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon46.tsx"
+        },
+        {
+          "id": "R2ju4pTU0fg9",
+          "name": "Icon47Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon47.tsx"
+        },
+        {
+          "id": "xyErzd5gLY8W",
+          "name": "Icon48Icon",
+          "moduleFilePath": "plasmic/paziresh_24_search/icons/PlasmicIcon__Icon48.tsx"
         }
       ],
       "images": [
@@ -2539,8 +2544,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -3360,7 +3364,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",

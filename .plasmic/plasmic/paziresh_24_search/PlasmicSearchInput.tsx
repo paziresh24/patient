@@ -881,7 +881,7 @@ function PlasmicSearchInput__RenderFunc(props: {
             ];
           }
 
-          $steps["goTo"] = !!$state.enterPress
+          $steps["goToWhenEnterPress"] = !!$state.enterPress
             ? (() => {
                 const actionArgs = {
                   destination: (() => {
@@ -913,11 +913,11 @@ function PlasmicSearchInput__RenderFunc(props: {
               })()
             : undefined;
           if (
-            $steps["goTo"] != null &&
-            typeof $steps["goTo"] === "object" &&
-            typeof $steps["goTo"].then === "function"
+            $steps["goToWhenEnterPress"] != null &&
+            typeof $steps["goToWhenEnterPress"] === "object" &&
+            typeof $steps["goToWhenEnterPress"].then === "function"
           ) {
-            $steps["goTo"] = await $steps["goTo"];
+            $steps["goToWhenEnterPress"] = await $steps["goToWhenEnterPress"];
           }
         }}
         onUnmount={async () => {
