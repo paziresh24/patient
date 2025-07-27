@@ -1217,28 +1217,11 @@ function PlasmicSearchResults__RenderFunc(props: {
                           );
                         }
                         if (currentItem.actions[0]?.title === "ویزیت آنلاین") {
-                          let enabledSlugs =
-                            $ctx.Growthbook?.features?.[
-                              "fragment::online-visit-buttons-to-factor-destination-b"
-                            ]?.enabled_dr_slugs;
-                          if (typeof enabledSlugs === "string") {
-                            try {
-                              enabledSlugs = JSON.parse(enabledSlugs);
-                            } catch {
-                              enabledSlugs = [];
-                            }
-                          }
-                          const shouldReplace =
-                            Array.isArray(enabledSlugs) &&
-                            enabledSlugs.length &&
-                            enabledSlugs.includes(currentItem.slug);
-                          if (shouldReplace) {
-                            const oldUrl = currentItem.actions[0].url || "";
-                            const match = oldUrl.match(/serviceId=([^&]+)/);
-                            const serviceId = match ? match[1] : null;
-                            if (serviceId) {
-                              currentItem.actions[0].url = `https://www.paziresh24.com/factor/v2/${currentItem.slug}/${serviceId}/`;
-                            }
+                          const oldUrl = currentItem.actions[0].url || "";
+                          const match = oldUrl.match(/serviceId=([^&]+)/);
+                          const serviceId = match ? match[1] : null;
+                          if (serviceId) {
+                            currentItem.actions[0].url = `https://www.paziresh24.com/factor/v2/${currentItem.slug}/${serviceId}/`;
                           }
                         }
                         if ($props.centerId) {

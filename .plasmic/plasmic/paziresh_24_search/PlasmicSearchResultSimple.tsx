@@ -69,6 +69,7 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCru
 import sty from "./PlasmicSearchResultSimple.module.css"; // plasmic-import: dQKny9PQUcJM/css
 
 import Icon32Icon from "./icons/PlasmicIcon__Icon32"; // plasmic-import: Gz4YUaFhVw-g/icon
+import Icon48Icon from "./icons/PlasmicIcon__Icon48"; // plasmic-import: xyErzd5gLY8W/icon
 
 import { uniq as __lib_lodash__uniq } from "lodash";
 
@@ -94,8 +95,6 @@ export type PlasmicSearchResultSimple__OverridesType = {
   root?: Flex__<typeof SearchContentItem>;
   freeBox?: Flex__<"div">;
   searchRequest?: Flex__<typeof SearchRequest>;
-  link?: Flex__<"a"> & Partial<LinkProps>;
-  svg?: Flex__<"svg">;
   text?: Flex__<"div">;
 };
 
@@ -217,10 +216,12 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
         })() ? (
           <Stack__
             as={PlasmicLink__}
-            data-plasmic-name={"link"}
-            data-plasmic-override={overrides.link}
             hasGap={true}
-            className={classNames(projectcss.all, projectcss.a, sty.link)}
+            className={classNames(
+              projectcss.all,
+              projectcss.a,
+              sty.link__jm7Vv
+            )}
             component={Link}
             href={(() => {
               try {
@@ -280,9 +281,7 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
             platform={"nextjs"}
           >
             <Icon32Icon
-              data-plasmic-name={"svg"}
-              data-plasmic-override={overrides.svg}
-              className={classNames(projectcss.all, sty.svg)}
+              className={classNames(projectcss.all, sty.svg__jiTxY)}
               role={"img"}
             />
 
@@ -314,6 +313,91 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
                 }}
               />
             </div>
+            {(() => {
+              try {
+                return !!$props.inputValue;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })() ? (
+              <Stack__
+                as={PlasmicLink__}
+                hasGap={true}
+                className={classNames(
+                  projectcss.all,
+                  projectcss.a,
+                  sty.link__sNaaj
+                )}
+                component={Link}
+                href={(() => {
+                  try {
+                    return (() => {
+                      const semanticSearchParam = "true";
+                      return `/s/?text=${$props.inputValue}&ref=search_suggestion_box&semantic_search=${semanticSearchParam}`;
+                    })();
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["saveToHistory"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return (() => {
+                              const history = $$.lodash.uniq(
+                                JSON.parse(
+                                  localStorage.getItem("history") ?? "[]"
+                                )
+                              );
+                              const newHistory = history.filter(
+                                historyItem => historyItem !== $props.inputValue
+                              );
+                              return localStorage.setItem(
+                                "history",
+                                JSON.stringify([
+                                  ...newHistory,
+                                  $props.inputValue
+                                ])
+                              );
+                            })();
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["saveToHistory"] != null &&
+                    typeof $steps["saveToHistory"] === "object" &&
+                    typeof $steps["saveToHistory"].then === "function"
+                  ) {
+                    $steps["saveToHistory"] = await $steps["saveToHistory"];
+                  }
+                }}
+                platform={"nextjs"}
+              >
+                <Icon48Icon
+                  className={classNames(projectcss.all, sty.svg__wxoOf)}
+                  role={"img"}
+                />
+              </Stack__>
+            ) : null}
           </Stack__>
         ) : null}
       </div>
@@ -322,11 +406,9 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "freeBox", "searchRequest", "link", "svg", "text"],
-  freeBox: ["freeBox", "searchRequest", "link", "svg", "text"],
+  root: ["root", "freeBox", "searchRequest", "text"],
+  freeBox: ["freeBox", "searchRequest", "text"],
   searchRequest: ["searchRequest"],
-  link: ["link", "svg", "text"],
-  svg: ["svg"],
   text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -336,8 +418,6 @@ type NodeDefaultElementType = {
   root: typeof SearchContentItem;
   freeBox: "div";
   searchRequest: typeof SearchRequest;
-  link: "a";
-  svg: "svg";
   text: "div";
 };
 
@@ -403,8 +483,6 @@ export const PlasmicSearchResultSimple = Object.assign(
     // Helper components rendering sub-elements
     freeBox: makeNodeComponent("freeBox"),
     searchRequest: makeNodeComponent("searchRequest"),
-    link: makeNodeComponent("link"),
-    svg: makeNodeComponent("svg"),
     text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicSearchResultSimple
