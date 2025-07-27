@@ -44,6 +44,7 @@ const nextConfig = {
   trailingSlash: true,
   serverRuntimeConfig: {
     DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
+    FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
   },
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
@@ -83,6 +84,7 @@ const nextConfig = {
     CDN_BASE_URL: process.env.CDN_BASE_URL,
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
+    FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
   },
   images: {
     remotePatterns: [
