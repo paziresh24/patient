@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
 import useModal from '@/common/hooks/useModal';
@@ -17,6 +18,7 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
       cancel();
     },
   });
+  const { handleClose: handlePreviewWidgetClose, handleOpen: handlePreviewWidgetOpen, modalProps: previewWidgetModalProps } = useModal();
   const { isLogin, info } = useUserInfoStore();
   const hashId = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -74,6 +76,9 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
         { withCredentials: true },
       );
       handleClose();
+      if (widgetInfo.data?.data?.successful_popup?.title) {
+        handlePreviewWidgetOpen();
+      }
       iframeRef.current?.contentWindow?.postMessage(
         {
           hamdast: {
@@ -250,6 +255,20 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
             </div>
           </>
         )}
+      </Modal>
+
+      <Modal noHeader {...previewWidgetModalProps} bodyClassName="gap-2 items-center text-center flex flex-col">
+        <img className="w-96" src={widgetInfo.data?.data?.successful_popup?.image} />
+        <span className="font-bold">{widgetInfo.data?.data?.successful_popup?.title}</span>
+        <span className="text-sm">{widgetInfo.data?.data?.successful_popup?.description} </span>
+        <div className="flex gap-3 w-full">
+          <Button className="w-full" onClick={() => window.open(`/dr/${info.provider?.slug}`)}>
+            مشاهده پروفایل من
+          </Button>
+          <Button variant="secondary" className="w-full" onClick={handlePreviewWidgetClose}>
+            بازگشت به {app_name}
+          </Button>
+        </div>
       </Modal>
     </div>
   );
