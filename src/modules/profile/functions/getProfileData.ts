@@ -5,6 +5,7 @@ export const getProfile = async ({ slug, university }: { slug: string; universit
     await getProfileData({
       slug,
       ...(university && { university }),
+      profile_page: true,
     }),
   ];
 
