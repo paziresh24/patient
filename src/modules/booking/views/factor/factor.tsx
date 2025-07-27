@@ -51,12 +51,17 @@ export const Factor = (props: FactorProps) => {
 
   const { handleOpen, modalProps } = useModal();
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
-  const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
-  const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
+const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
+const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
+
+// اولویت بررسی
+const paymentFeature = useKatibePaymentForEarnestFactor || newVisitInvoice;
+
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { data: balance, isLoading: balanceLoading } = useGetBalance({
-    enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor) && isLogin,
-  });
+  enabled: paymentFeature && isLogin,
+});
+
 
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
@@ -67,10 +72,8 @@ export const Factor = (props: FactorProps) => {
           priceText={centerId === CENTERS.CONSULT || newVisitInvoice ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
           price={price}
           totalPrice={totalPrice}
-          walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor ? balance?.data?.data?.balance : null}
-          tax={tax}
-          discount={discount}
-          loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor ? balanceLoading : false)}
+          walletAmount={paymentFeature ? balance?.data?.data?.balance : null}
+loading={loading || (paymentFeature ? balanceLoading : false)}
         />
         {centerId === CENTERS.CONSULT && !refundTermsBadge && (
           <Chips
