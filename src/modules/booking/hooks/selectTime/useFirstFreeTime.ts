@@ -2,8 +2,10 @@ import { useGetFreeTurn } from '@/common/apis/services/booking/getFreeTurn';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useApplication from '@/common/hooks/useApplication';
 import useWebView from '@/common/hooks/useWebView';
+import axios from 'axios';
 import pick from 'lodash/pick';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface UseFirstFreeTime {
   centerId: string;
@@ -34,27 +36,43 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
   }, [enabled]);
 
   const getFirstFreeTime = async (): Promise<FirstFreeTime> => {
-    const { data, meta } = (await getFreeTurn.mutateAsync({
-      center_id: centerId,
-      service_id: serviceId,
-      user_center_id: userCenterId,
-      type: isWebView || isApplication ? 'app' : 'web',
-    })) as any;
+    try {
+      const { data, meta } = (await getFreeTurn.mutateAsync({
+        center_id: centerId,
+        service_id: serviceId,
+        user_center_id: userCenterId,
+        type: isWebView || isApplication ? 'app' : 'web',
+      })) as any;
 
-    onEvent && onEvent({ ...data, meta });
-    const { result, status } = data;
+      onEvent && onEvent({ ...data, meta });
+      const { result, status } = data;
 
-    if (status === ClinicStatus.SUCCESS) {
-      const data = pick(result, ['from', 'to', 'full_date', 'request_code']);
-      const dataFormatted = { ...data, timeId: data.request_code, status: status };
-      setData(dataFormatted);
-      return dataFormatted;
+      if (status === ClinicStatus.SUCCESS) {
+        const data = pick(result, ['from', 'to', 'full_date', 'request_code']);
+        const dataFormatted = { ...data, timeId: data.request_code, status: status };
+        setData(dataFormatted);
+        return dataFormatted;
+      }
+      onError && onError(data.message);
+      setData({});
+      return {
+        message: data.message,
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status == 429) {
+          const message = `متأسفانه در دقایق گذشته، درخواست های زیادی ارسال کرده‌اید و به سقف مجاز رسیده‌اید.
+لطفاً چند دقیقه صبر کنید و دوباره تلاش کنید.`;
+          onError && onError(message);
+          return {
+            message: message,
+          };
+        }
+      }
+      return {
+        message: 'خطایی پیش آمده است.',
+      };
     }
-    onError && onError(data.message);
-    setData({});
-    return {
-      message: data.message,
-    };
   };
 
   return {
