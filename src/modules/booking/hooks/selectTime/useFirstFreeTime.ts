@@ -60,7 +60,7 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        if (error.response?.status == 429) {
+        if (error.code == 'ERR_NETWORK' || error.response?.status == 429) {
           const message = `متأسفانه در دقایق گذشته، درخواست های زیادی ارسال کرده‌اید و به سقف مجاز رسیده‌اید.
 لطفاً چند دقیقه صبر کنید و دوباره تلاش کنید.`;
           onError && onError(message);
