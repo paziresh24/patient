@@ -1,5 +1,6 @@
 /* eslint-disable no-extra-boolean-cast */
 import { clinicClient } from '@/common/apis/client';
+import { authorizeUser, deauthorizeUser, setCustomAttribute, setEmail, setFirstName, setLastName, setPhoneNumber } from '@metrixorg/websdk';
 import axios from 'axios';
 import { getCookie, removeCookies } from 'cookies-next';
 import { growthbook } from 'src/pages/_app';
@@ -78,6 +79,12 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
           ...infoCopy,
         }),
       );
+      authorizeUser(info?.id?.toString()!);
+      setFirstName(info?.name!);
+      setLastName(info?.family!);
+      setEmail(info?.email!);
+      setPhoneNumber(info?.cell!);
+      setCustomAttribute('is_doctor', infoCopy?.is_doctor?.toString());
 
       return {
         info: {
@@ -88,6 +95,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     });
   },
   removeInfo: () => {
+    deauthorizeUser();
     localStorage.removeItem('user-store');
     set(() => ({
       info: {},

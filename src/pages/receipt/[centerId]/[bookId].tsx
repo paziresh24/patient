@@ -75,11 +75,6 @@ const Receipt = () => {
     modalProps: waitingTimeModalProps,
   } = useModal();
   const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
-  const {
-    handleOpen: handleOpenNotificationGrantAccses,
-    handleClose: handleCloseNotificationGrantAccses,
-    modalProps: notificationGrantAccsesModalProps,
-  } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
   const [hasHolidays, setHasHolidays] = useState(false);
 
@@ -325,17 +320,6 @@ const Receipt = () => {
   }, [turnStatus, centerType]);
 
   useEffect(() => {
-    if (isLogin) {
-      window.najvaUserSubscribed = function (najva_user_token: string) {
-        axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
-          user_id: user.id,
-          subscriber_token: najva_user_token,
-        });
-      };
-    }
-  }, [isLogin]);
-
-  useEffect(() => {
     if (bookDetailsData?.book_time && centerId !== CENTERS.CONSULT && bookDetailsData?.center?.type_id == 1) {
       const bookDate = moment(bookDetailsData.book_time * 1000);
       const bookDateStr = bookDate.format('YYYY-MM-DD');
@@ -434,24 +418,6 @@ const Receipt = () => {
 
   return (
     <>
-      {isLogin && (
-        <Script id="najva-script">{`(function(){
-        var now = new Date();
-        var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
-            "0" + now.getHours();
-        var head = document.getElementsByTagName("head")[0];
-        var link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "https://van.najva.com/static/cdn/css/local-messaging.css" + "?v=" + version;
-        head.appendChild(link);
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.async = true;
-        script.src = "https://van.najva.com/static/js/scripts/new-website387894-website-58369-ca07382e-9477-44a1-90a3-1a65b5a0557e.js" + "?v=" + version;
-        head.appendChild(script);
-        })()`}</Script>
-      )}
-
       <Seo title="رسید نوبت" noIndex />
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full bg-white md:basis-4/6 md:rounded-lg shadow-card">
@@ -778,9 +744,6 @@ const Receipt = () => {
               {rateAppModalInfo?.button_show_receipt_text}
             </Button>
           </div>
-        </Modal>
-        <Modal {...notificationGrantAccsesModalProps} noHeader>
-          <span className="text-base font-bold leading-7">{notificationGrantAccsesModalText}</span>
         </Modal>
       </div>
     </>

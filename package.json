@@ -23,6 +23,7 @@
     "@ant-design/pro-components": "2.7.10",
     "@ducanh2912/next-pwa": "10.2.9",
     "@growthbook/growthbook-react": "0.18.0",
+    "@metrixorg/websdk": "2.5.0",
     "@next/bundle-analyzer": "12.3.1",
     "@next/font": "13.2.3",
     "@next/third-parties": "15.3.4",
