@@ -59,10 +59,10 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import LauncherWrapper from "../../LauncherWrapper"; // plasmic-import: 3TTnoIEhqXMk/component
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherComponentsCategory from "../../LauncherComponentsCategory"; // plasmic-import: 0KB-vfelIleY/component
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
 import LauncherComponentsApp from "../../LauncherComponentsApp"; // plasmic-import: 25u6_6Q-fQwp/component
 import LauncherComponentsSeparator from "../../LauncherComponentsSeparator"; // plasmic-import: 1FBJsfya0Spv/component
@@ -92,6 +92,7 @@ export const PlasmicLauncherApps__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicLauncherApps__OverridesType = {
   root?: Flex__<"div">;
+  getCenters?: Flex__<typeof ApiRequest>;
   launcherWrapper?: Flex__<typeof LauncherWrapper>;
   launcherComponentsCategory?: Flex__<typeof LauncherComponentsCategory>;
   apiRequest?: Flex__<typeof ApiRequest>;
@@ -171,6 +172,24 @@ function PlasmicLauncherApps__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "getCenters.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "getCenters.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "getCenters.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -198,6 +217,34 @@ function PlasmicLauncherApps__RenderFunc(props: {
         sty.root
       )}
     >
+      <ApiRequest
+        data-plasmic-name={"getCenters"}
+        data-plasmic-override={overrides.getCenters}
+        className={classNames("__wab_instance", sty.getCenters)}
+        errorDisplay={null}
+        loadingDisplay={null}
+        method={"GET"}
+        onError={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["getCenters", "error"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        onLoading={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["getCenters", "loading"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        onSuccess={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["getCenters", "data"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        url={`https://apigw.paziresh24.com/v1/doctor/${$ctx.auth?.info?.id}/centers`}
+      />
+
       <LauncherWrapper
         data-plasmic-name={"launcherWrapper"}
         data-plasmic-override={overrides.launcherWrapper}
@@ -971,68 +1018,198 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 widgetId={"aed80eahprc1qs0"}
               />
 
-              <LauncherComponentsApp
-                _new={true}
-                avatar={
-                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Faccess-plugin.png?versionId="
-                }
-                className={classNames(
-                  "__wab_instance",
-                  sty.launcherComponentsApp__n2XvW
-                )}
-                description={
-                  "\u062b\u0628\u062a \u0648 \u0646\u0645\u0627\u06cc\u0634 \u0648\u0636\u0639\u06cc\u062a \u0627\u0645\u06a9\u0627\u0646\u0627\u062a \u0645\u0637\u0628 \u0627\u0632 \u062c\u0645\u0644\u0647 \u062c\u0627\u06cc \u067e\u0627\u0631\u06a9\u060c \u067e\u0644\u0647\u060c \u0622\u0633\u0627\u0646\u0633\u0648\u0631 \u0648 \u0633\u0627\u06cc\u0631 \u062f\u0633\u062a\u0631\u0633\u06cc\u200c\u0647\u0627"
-                }
-                link={"/_/cheragh/launcher/"}
-                name={
-                  "\u062f\u0633\u062a\u0631\u0633\u06cc \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0628\u0647 \u0645\u0637\u0628"
-                }
-                onEvent={async () => {
-                  const $steps = {};
-
-                  $steps["sendLog"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
-                                return {
-                                  evant_group: "launcher_statistics",
-                                  event_type: "apps",
-                                  user_id: $ctx.auth.info?.id,
-                                  is_doctor: $ctx.auth.info?.is_doctor,
-                                  meta_data: {
-                                    name: "دسترسی بیماران به مطب",
-                                    key: "/cheragh/launcher/",
-                                    link: ""
-                                  }
-                                };
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Splunk.sendLog"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
-                    : undefined;
+              {(() => {
+                try {
+                  return (
+                    $state.getCenters?.data?.items?.filter(
+                      item => item.id !== "5532"
+                    ).length > 0
+                  );
+                } catch (e) {
                   if (
-                    $steps["sendLog"] != null &&
-                    typeof $steps["sendLog"] === "object" &&
-                    typeof $steps["sendLog"].then === "function"
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    $steps["sendLog"] = await $steps["sendLog"];
+                    return true;
                   }
-                }}
-              />
+                  throw e;
+                }
+              })() ? (
+                <LauncherComponentsApp
+                  _new={true}
+                  appkey={"hamyar"}
+                  avatar={
+                    "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fhamyar.png?versionId="
+                  }
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsApp__n2XvW
+                  )}
+                  description={
+                    "\u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0642\u0627\u062f\u0631 \u0647\u0633\u062a\u0646\u062f \u062f\u0631 \u0632\u0645\u0627\u0646 \u0641\u0639\u0627\u0644 \u0628\u0648\u062f\u0646 \u0627\u0628\u0632\u0627\u0631\u06a9\u060c \u0628\u062f\u0648\u0646 \u0645\u0634\u0627\u0647\u062f\u0647 \u0634\u0645\u0627\u0631\u0647 \u0645\u0646\u0634\u06cc \u0628\u0627 \u0645\u0646\u0634\u06cc \u062a\u0645\u0627\u0633 \u0627\u0645\u0646 \u0628\u06af\u06cc\u0631\u0646\u062f."
+                  }
+                  link={"/_/hamyar/launcher/"}
+                  name={"\u0647\u0645\u06cc\u0627\u0631"}
+                  onEvent={async () => {
+                    const $steps = {};
+
+                    $steps["sendLog"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return {
+                                    evant_group: "launcher_statistics",
+                                    event_type: "apps",
+                                    user_id: $ctx.auth.info?.id,
+                                    is_doctor: $ctx.auth.info?.is_doctor,
+                                    meta_data: {
+                                      name: "همیار",
+                                      key: "/hamyar/launcher/",
+                                      link: ""
+                                    }
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Splunk.sendLog"]?.apply(null, [
+                            ...actionArgs.args
+                          ]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["sendLog"] != null &&
+                      typeof $steps["sendLog"] === "object" &&
+                      typeof $steps["sendLog"].then === "function"
+                    ) {
+                      $steps["sendLog"] = await $steps["sendLog"];
+                    }
+                  }}
+                  pagekey={"launcher"}
+                  widgetFrame={(() => {
+                    try {
+                      return $props.widgetFrames;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  widgetId={"ad0b26pc5ni63nm"}
+                />
+              ) : null}
+              {(() => {
+                try {
+                  return (
+                    $state.getCenters?.data?.items?.filter(
+                      item => item.id !== "5532"
+                    ).length > 0
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <LauncherComponentsApp
+                  _new={true}
+                  appkey={"cheragh"}
+                  avatar={
+                    "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Faccess-plugin.png?versionId="
+                  }
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsApp__zXhci
+                  )}
+                  description={
+                    "\u062b\u0628\u062a \u0648 \u0646\u0645\u0627\u06cc\u0634 \u0648\u0636\u0639\u06cc\u062a \u0627\u0645\u06a9\u0627\u0646\u0627\u062a \u0645\u0637\u0628 \u0627\u0632 \u062c\u0645\u0644\u0647 \u062c\u0627\u06cc \u067e\u0627\u0631\u06a9\u060c \u067e\u0644\u0647\u060c \u0622\u0633\u0627\u0646\u0633\u0648\u0631 \u0648 \u0633\u0627\u06cc\u0631 \u062f\u0633\u062a\u0631\u0633\u06cc\u200c\u0647\u0627"
+                  }
+                  link={"/_/cheragh/launcher/"}
+                  name={
+                    "\u062f\u0633\u062a\u0631\u0633\u06cc \u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0628\u0647 \u0645\u0637\u0628"
+                  }
+                  onEvent={async () => {
+                    const $steps = {};
+
+                    $steps["sendLog"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return {
+                                    evant_group: "launcher_statistics",
+                                    event_type: "apps",
+                                    user_id: $ctx.auth.info?.id,
+                                    is_doctor: $ctx.auth.info?.is_doctor,
+                                    meta_data: {
+                                      name: "دسترسی بیماران به مطب",
+                                      key: "/cheragh/launcher/",
+                                      link: ""
+                                    }
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Splunk.sendLog"]?.apply(null, [
+                            ...actionArgs.args
+                          ]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["sendLog"] != null &&
+                      typeof $steps["sendLog"] === "object" &&
+                      typeof $steps["sendLog"].then === "function"
+                    ) {
+                      $steps["sendLog"] = await $steps["sendLog"];
+                    }
+                  }}
+                  pagekey={"launcher"}
+                  widgetFrame={(() => {
+                    try {
+                      return $props.widgetFrames;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  widgetId={"o1maxe7isynnf3v"}
+                />
+              ) : null}
             </Stack__>
           ) : null}
           {(() => {
@@ -1357,7 +1534,14 @@ function PlasmicLauncherApps__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "launcherWrapper", "launcherComponentsCategory", "apiRequest"],
+  root: [
+    "root",
+    "getCenters",
+    "launcherWrapper",
+    "launcherComponentsCategory",
+    "apiRequest"
+  ],
+  getCenters: ["getCenters"],
   launcherWrapper: ["launcherWrapper"],
   launcherComponentsCategory: ["launcherComponentsCategory"],
   apiRequest: ["apiRequest"]
@@ -1367,6 +1551,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  getCenters: typeof ApiRequest;
   launcherWrapper: typeof LauncherWrapper;
   launcherComponentsCategory: typeof LauncherComponentsCategory;
   apiRequest: typeof ApiRequest;
@@ -1432,6 +1617,7 @@ export const PlasmicLauncherApps = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    getCenters: makeNodeComponent("getCenters"),
     launcherWrapper: makeNodeComponent("launcherWrapper"),
     launcherComponentsCategory: makeNodeComponent("launcherComponentsCategory"),
     apiRequest: makeNodeComponent("apiRequest"),
