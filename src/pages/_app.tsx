@@ -25,6 +25,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
 import Script from 'next/script';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { init } from '@metrixorg/websdk';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -89,6 +90,16 @@ function MyApp(props: AppProps) {
   }, [pageProps?.query, pageProps?.themeConfing]);
 
   useEffect(() => {
+    init('hxmzqfzphnwlxxm', 'fa5f1633-d242-4ded-9691-3610de3c231c', {
+      push: {
+        enabled: true,
+        publicKey: 'BJUQtSIYC49JvDVv6BH3tf8ZRhFQjtoWLCKHQsohN4RBp16VKPx4N42FZA2VjvUkeuVlv8YZmYppTb8fQihqUIU',
+        hasSW: true,
+      },
+    });
+  }, []);
+
+  useEffect(() => {
     if (isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted'))) {
       window.najvaUserSubscribed = function (najva_user_token: string) {
         axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
@@ -108,23 +119,6 @@ function MyApp(props: AppProps) {
           <GlobalContextsProvider>
             <PlasmicRootProvider disableLoadingBoundary>
               <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
-              {isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted')) && (
-                <Script id="najva-script">{`(function(){
-        var now = new Date();
-        var version = now.getFullYear().toString() + "0" + now.getMonth() + "0" + now.getDate() +
-            "0" + now.getHours();
-        var head = document.getElementsByTagName("head")[0];
-        var link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = "https://van.najva.com/static/cdn/css/local-messaging.css" + "?v=" + version;
-        head.appendChild(link);
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.async = true;
-        script.src = "https://van.najva.com/static/js/scripts/new-website387894-website-58369-ca07382e-9477-44a1-90a3-1a65b5a0557e.js" + "?v=" + version;
-        head.appendChild(script);
-        })()`}</Script>
-              )}
               <Head>
                 <meta
                   name="viewport"
