@@ -1433,21 +1433,19 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 />
               ) : null}
               <LauncherComponentsApp
-                appkey={"roshan"}
+                appkey={"lab_result"}
                 avatar={
-                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
+                  "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Flab-result.png?versionId="
                 }
                 className={classNames(
                   "__wab_instance",
                   sty.launcherComponentsApp__mWccY
                 )}
                 description={
-                  "\u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0628\u0647 \u0635\u0648\u0631\u062a \u0631\u0627\u06cc\u06af\u0627\u0646 \u0635\u062d\u0628\u062a \u06a9\u0646\u06cc\u062f."
+                  "\u062f\u0633\u062a\u06cc\u0627\u0631 \u0647\u0648\u0634\u0645\u0646\u062f \u062a\u0641\u0633\u06cc\u0631 \u0622\u0632\u0645\u0627\u06cc\u0634"
                 }
-                link={"/_/roshan/salamat/?origin=launcher-apps"}
-                name={
-                  "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a"
-                }
+                link={"/_/lab_result/launcher/?origin=launcher-apps"}
+                name={"\u062a\u0641\u0633\u06cc\u0631"}
                 onEvent={async () => {
                   const $steps = {};
 
@@ -1463,9 +1461,9 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                   user_id: $ctx.auth.info?.id,
                                   is_doctor: $ctx.auth.info?.is_doctor,
                                   meta_data: {
-                                    name: "مشاور هوش مصنوعی سلامت",
-                                    key: "roshan/salamat",
-                                    link: "/_/roshan/salamat/"
+                                    name: "تفسیر",
+                                    key: "lab_result/launcher",
+                                    link: "/_/lab_result/launcher/"
                                   },
                                   source: "apps"
                                 };
@@ -1510,7 +1508,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                     $steps["runOnEvent"] = await $steps["runOnEvent"];
                   }
                 }}
-                pagekey={"salamat"}
+                pagekey={"launcher"}
                 widgetFrame={(() => {
                   try {
                     return $props.widgetFrames;

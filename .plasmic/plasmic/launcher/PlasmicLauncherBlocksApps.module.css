@@ -101,10 +101,16 @@
   width: 100%;
   min-width: 0;
 }
+.launcherComponentsAppSquare__xBoQ:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
 .launcherComponentsAppSquare__puPjQ:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
   min-width: 0;
+  display: none;
 }
 .launcherComponentsAppSquare__tgcvE:global(.__wab_instance) {
   max-width: 100%;

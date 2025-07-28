@@ -83,14 +83,16 @@ export type PlasmicLauncherComponentsAppSquare__ArgsType = {
   icon?: string;
   title?: string;
   onClick?: () => void;
+  description?: string;
 };
 type ArgPropType = keyof PlasmicLauncherComponentsAppSquare__ArgsType;
 export const PlasmicLauncherComponentsAppSquare__ArgProps =
-  new Array<ArgPropType>("icon", "title", "onClick");
+  new Array<ArgPropType>("icon", "title", "onClick", "description");
 
 export type PlasmicLauncherComponentsAppSquare__OverridesType = {
   root?: Flex__<"div">;
   img?: Flex__<typeof PlasmicImg__>;
+  freeBox?: Flex__<"div">;
   modal?: Flex__<typeof Paziresh24Modal>;
   span?: Flex__<"span">;
 };
@@ -99,6 +101,7 @@ export interface DefaultLauncherComponentsAppSquareProps {
   icon?: string;
   title?: string;
   onClick?: () => void;
+  description?: string;
   disabled?: SingleBooleanChoiceArg<"disabled">;
   className?: string;
 }
@@ -264,29 +267,60 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
         width={"60"}
       />
 
-      <div
-        className={classNames(
-          projectcss.all,
-          projectcss.__wab_text,
-          sty.text___4UJRl
-        )}
+      <Stack__
+        as={"div"}
+        data-plasmic-name={"freeBox"}
+        data-plasmic-override={overrides.freeBox}
+        hasGap={true}
+        className={classNames(projectcss.all, sty.freeBox)}
       >
-        <React.Fragment>
-          {(() => {
-            try {
-              return $props.title;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return "";
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text___4UJRl
+          )}
+        >
+          <React.Fragment>
+            {(() => {
+              try {
+                return $props.title;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "";
+                }
+                throw e;
               }
-              throw e;
-            }
-          })()}
-        </React.Fragment>
-      </div>
+            })()}
+          </React.Fragment>
+        </div>
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__jT55R
+          )}
+        >
+          <React.Fragment>
+            {(() => {
+              try {
+                return $props.description;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "";
+                }
+                throw e;
+              }
+            })()}
+          </React.Fragment>
+        </div>
+      </Stack__>
       <Paziresh24Modal
         data-plasmic-name={"modal"}
         data-plasmic-override={overrides.modal}
@@ -378,8 +412,9 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "img", "modal", "span"],
+  root: ["root", "img", "freeBox", "modal", "span"],
   img: ["img"],
+  freeBox: ["freeBox"],
   modal: ["modal", "span"],
   span: ["span"]
 } as const;
@@ -389,6 +424,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   img: typeof PlasmicImg__;
+  freeBox: "div";
   modal: typeof Paziresh24Modal;
   span: "span";
 };
@@ -408,15 +444,15 @@ type NodeComponentProps<T extends NodeNameType> =
     PlasmicLauncherComponentsAppSquare__VariantsArgs,
     ReservedPropsType
   > &
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherComponentsAppSquare__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherComponentsAppSquare__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
@@ -458,6 +494,7 @@ export const PlasmicLauncherComponentsAppSquare = Object.assign(
   {
     // Helper components rendering sub-elements
     img: makeNodeComponent("img"),
+    freeBox: makeNodeComponent("freeBox"),
     modal: makeNodeComponent("modal"),
     span: makeNodeComponent("span"),
 
