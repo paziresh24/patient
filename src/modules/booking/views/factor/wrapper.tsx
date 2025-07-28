@@ -33,11 +33,10 @@ const FactorWrapper = (props: FactorWrapperProps) => {
   const { bookId, centerId, serviceId, userCenterId, respiteToRefundAfterDelete } = props;
   const centerPayment = useCenterPayment();
   const consultPayment = useConsultPayment();
-  const isApplication = useApplication();
   const userInfo = useUserInfoStore(state => state.info);
   const premiumOnlineVistDiscountCode = useFeatureValue('premium.online_visit_discount_code', '');
   const premiumOnlineVisitDiscountPercentage = useFeatureValue('premium.online_visit_discount_percentage', '');
-  const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
+  const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
   const isLogin = useUserInfoStore(state => state.isLogin);
   const loginModal = useLoginModalContext();
   const getFirstFreeTime = useFirstFreeTime({
@@ -198,10 +197,12 @@ const FactorWrapper = (props: FactorWrapperProps) => {
     if (centerId === CENTERS.CONSULT) return [];
     return [
       `تنها در صورت لغو نوبت تا <b> ${respiteToRefundAfterDelete} ساعت</b> قبل از زمان ویزیت، امکان استرداد وجه شما ممکن می باشد.`,
-      newVisitInvoice
+      !useKatibePaymentForEarnestFactor
         ? `این مبلغ هزینه ویزیت شما است که به‌صورت آنلاین پرداخت می‌شود.`
         : `مبلغ فوق به عنوان پیش پرداخت حق ویزیت (بیعانه) می باشد و تسویه نهایی بعد از مراجعه به مطب انجام خواهد شد.`,
-      newVisitInvoice ? `درصورتی‌که خدمات اضافی در مطب ارائه شود، ممکن است هزینه‌های دیگری نیز توسط پزشک تعیین و دریافت شود.` : undefined,
+      !useKatibePaymentForEarnestFactor
+        ? `درصورتی‌که خدمات اضافی در مطب ارائه شود، ممکن است هزینه‌های دیگری نیز توسط پزشک تعیین و دریافت شود.`
+        : undefined,
     ];
   };
 

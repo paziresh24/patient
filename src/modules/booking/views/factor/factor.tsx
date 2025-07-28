@@ -62,9 +62,9 @@ export const Factor = (props: FactorProps) => {
     <div className="flex flex-col space-y-2 md:space-y-5">
       <div className="flex flex-col justify-center p-5 space-y-3 bg-white md:rounded-lg shadow-card">
         <Invoice
-          serviceFeeText={newVisitInvoice ? (centerId === CENTERS.CONSULT ? 'کارمزد خدمات آنلاین' : 'مالیات و کارمزد خدمات آنلاین') : ''}
-          serviceFee={newVisitInvoice ? (centerId === CENTERS.CONSULT ? 'پزشک پرداخت کرده' : 'رایگان') : ''}
-          priceText={centerId === CENTERS.CONSULT || newVisitInvoice ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
+          serviceFeeText={centerId === CENTERS.CONSULT ? 'کارمزد خدمات آنلاین' : 'مالیات و کارمزد خدمات آنلاین'}
+          serviceFee={centerId === CENTERS.CONSULT ? 'پزشک پرداخت کرده' : 'رایگان'}
+          priceText={centerId === CENTERS.CONSULT || !useKatibePaymentForEarnestFactor ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
           price={price}
           totalPrice={totalPrice}
           walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor ? balance?.data?.data?.balance : null}
