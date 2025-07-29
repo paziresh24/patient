@@ -81,7 +81,15 @@ export const UserCard = (props: UserCardProps) => {
     () =>
       type === 'subUser'
         ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']
-        : ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'IS_FOREIGNER', 'CELL', 'COUNTRY_CODE'],
+        : [
+            'NAME',
+            'FAMILY',
+            'GENDER',
+            'NATIONAL_CODE',
+            'IS_FOREIGNER',
+            userInfo?.cell ? undefined : 'CELL',
+            userInfo?.cell ? undefined : 'COUNTRY_CODE',
+          ],
     [type],
   );
 
