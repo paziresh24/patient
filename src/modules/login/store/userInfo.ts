@@ -30,6 +30,7 @@ export type UserInfo = {
   gender?: 'male' | 'female';
   city_id?: string;
   province_id?: string;
+  country_code_id?: string;
   image?: string;
   cell?: string;
   is_doctor?: boolean;
