@@ -7,6 +7,8 @@ interface Params {
   family?: string;
   national_code?: string;
   gender?: 'male' | 'female';
+  cell?: string;
+  country_code?: string;
 }
 
 export const patchUser = async ({ user_id, national_code, ...params }: Params) => {

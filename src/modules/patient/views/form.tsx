@@ -5,6 +5,7 @@ import Checkbox from '@/common/components/atom/checkbox';
 import TextField from '@/common/components/atom/textField';
 import cities from '@/common/constants/places/city.json';
 import provinces from '@/common/constants/places/province.json';
+import { prefixCountries } from '@/common/constants/prefixCountries';
 import classNames from '@/common/utils/classNames';
 import useTranslation from 'next-translate/useTranslation';
 import { memo, useEffect } from 'react';
@@ -23,7 +24,9 @@ const genders = [
 
 const formattedProvinces = provinces.map(item => ({ label: item.name, value: item.id }));
 
-export type FormFields = Array<'NAME' | 'FAMILY' | 'NATIONAL_CODE' | 'GENDER' | 'PROVINCES' | 'CITIES' | 'CELL' | 'IS_FOREIGNER'>;
+export type FormFields = Array<
+  'NAME' | 'FAMILY' | 'NATIONAL_CODE' | 'GENDER' | 'PROVINCES' | 'CITIES' | 'COUNTRY_CODE' | 'CELL' | 'IS_FOREIGNER'
+>;
 
 interface PatinetProfileFormProps {
   fields: FormFields;
@@ -36,6 +39,7 @@ interface PatinetProfileFormProps {
     PROVINCE?: string;
     CITY?: string;
     CELL?: string;
+    COUNTRY_CODE?: string;
   };
   errorsField?: object;
   onSubmit?: (data: any) => void;
@@ -44,6 +48,10 @@ interface PatinetProfileFormProps {
 
 const fieldsNameForError = [
   { name: 'تلفن همراه', field: 'cell' },
+  {
+    name: 'پیش‌شماره',
+    field: 'country_code',
+  },
   {
     name: 'جنسیت',
     field: 'gender',
@@ -91,6 +99,14 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
       national_code: defaultValues?.NATIONAL_CODE ?? '',
       is_foreigner: defaultValues?.IS_FOREIGNER ?? false,
       ...(defaultValues?.CELL && { cell: defaultValues?.CELL ?? '' }),
+      ...(defaultValues?.COUNTRY_CODE && {
+        country_code: JSON.parse(
+          JSON.stringify({
+            label: prefixCountries.find(item => item.code === defaultValues?.COUNTRY_CODE)?.name,
+            value: prefixCountries.find(item => item.code === defaultValues?.COUNTRY_CODE)?.code,
+          }),
+        ),
+      }),
       ...(defaultValues?.GENDER && { gender: genders.find(item => item.value === defaultValues?.GENDER) }),
       ...(defaultValues?.PROVINCE && {
         province: JSON.parse(
@@ -117,6 +133,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
       Object.entries(errorsField).map(([key, value]: [string, string]) => {
         const fieldName = fieldsNameForError.find(item => item.name === key)?.field as
           | 'cell'
+          | 'country_code'
           | 'gender'
           | 'name'
           | 'family'
@@ -191,13 +208,41 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
           />
         )}
         {fields?.includes('CELL') && (
-          <TextField
-            classNameWrapper="col-span-2"
-            error={!!errors.cell}
-            helperText={errors.cell?.message}
-            {...register('cell', { required: true })}
-            label={t('userForm.phoneNumber')}
-          />
+          <div className="flex col-span-2 items-end gap-3">
+            <TextField
+              classNameWrapper="col-span-2 w-full"
+              error={!!errors.cell}
+              helperText={errors.cell?.message}
+              placeholder={fields?.includes('COUNTRY_CODE') ? '9123456789' : ''}
+              type="tel"
+              {...register('cell', { required: true })}
+              label={t('userForm.phoneNumber')}
+            />
+            {fields?.includes('COUNTRY_CODE') && (
+              <Controller
+                control={control}
+                name="country_code"
+                rules={{ required: true }}
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                  <Autocomplete
+                    className="w-28"
+                    options={prefixCountries.map(item => ({
+                      label: item.name,
+                      value: item.code,
+                    }))}
+                    onChange={e => {
+                      resetField('city');
+                      setValue('city', '');
+                      onChange(e.target.value);
+                    }}
+                    value={value}
+                    error={!!error}
+                    helperText={error?.message}
+                  />
+                )}
+              />
+            )}
+          </div>
         )}
 
         {fields?.includes('PROVINCES') && (

@@ -21,6 +21,7 @@ interface UserCardProps {
   name: string;
   family: string;
   cell?: string;
+  country_code?: string;
   email?: string;
   nationalCode: string;
   userId: string;
@@ -51,6 +52,7 @@ export const UserCard = (props: UserCardProps) => {
     family,
     cell,
     email,
+    country_code,
     nationalCode,
     isForeigner,
     gender,
@@ -79,7 +81,7 @@ export const UserCard = (props: UserCardProps) => {
     () =>
       type === 'subUser'
         ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']
-        : ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'IS_FOREIGNER'],
+        : ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'IS_FOREIGNER', 'CELL', 'COUNTRY_CODE'],
     [type],
   );
 
@@ -95,6 +97,7 @@ export const UserCard = (props: UserCardProps) => {
         const { is_foreigner, ...userData } = data;
         await patchUser.mutateAsync({
           ...userData,
+          country_code: userData.country_code?.value,
           user_id: userId,
           gender: userData.gender.value,
         });
@@ -189,6 +192,7 @@ export const UserCard = (props: UserCardProps) => {
             GENDER: gender,
             CELL: cell,
             IS_FOREIGNER: isForeigner,
+            COUNTRY_CODE: country_code ? country_code.toString() : '98',
           }}
           onSubmit={handleEditUser}
           loading={editSubuser.isLoading || patchUser.isLoading}
