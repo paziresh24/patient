@@ -102,10 +102,9 @@ export const UserCard = (props: UserCardProps) => {
   const handleEditUser = async (data: any) => {
     if (type === 'user') {
       try {
-        const { is_foreigner, ...userData } = data;
+        const { is_foreigner, cell, country_code, ...userData } = data;
         await patchUser.mutateAsync({
           ...userData,
-          country_code: userData.country_code?.value,
           user_id: userId,
           gender: userData.gender.value,
         });
@@ -115,6 +114,7 @@ export const UserCard = (props: UserCardProps) => {
           ...userInfo,
           ...data,
           gender: data.gender.value,
+          cell: country_code?.value == '98' ? cell.replace(/^0/, '') : userInfo.cell,
         });
       } catch (error) {
         if (axios.isAxiosError(error)) {

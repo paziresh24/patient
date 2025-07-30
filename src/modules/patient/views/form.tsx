@@ -7,6 +7,7 @@ import cities from '@/common/constants/places/city.json';
 import provinces from '@/common/constants/places/province.json';
 import { prefixCountries } from '@/common/constants/prefixCountries';
 import classNames from '@/common/utils/classNames';
+import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import useTranslation from 'next-translate/useTranslation';
 import { memo, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -215,7 +216,10 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
               helperText={errors.cell?.message}
               placeholder={fields?.includes('COUNTRY_CODE') ? '9123456789' : ''}
               type="tel"
-              {...register('cell', { required: true })}
+              {...register('cell', {
+                required: true,
+                validate: value => (value ? phoneNumberValidator(value) : ''),
+              })}
               label={t('userForm.phoneNumber')}
             />
             {fields?.includes('COUNTRY_CODE') && (
