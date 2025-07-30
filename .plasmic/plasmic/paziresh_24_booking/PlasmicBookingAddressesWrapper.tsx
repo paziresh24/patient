@@ -375,19 +375,33 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
               )}
             >
               <React.Fragment>
-                <React.Fragment>
-                  {
-                    "\u0637\u0628\u0642 \u06af\u0632\u0627\u0631\u0634 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644 \u0639\u062f\u0645 \u062d\u0636\u0648\u0631 \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0645\u0637\u0628 \u06cc\u0627 \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0648\u062c\u0648\u062f \u062f\u0627\u0631\u062f.\n\u0644\u0637\u0641\u0627 "
-                  }
-                </React.Fragment>
+                <span
+                  className={"plasmic_default__all plasmic_default__span"}
+                  style={{ fontWeight: 700 }}
+                >
+                  {""}
+                </span>
+                <React.Fragment>{"\n"}</React.Fragment>
                 <span
                   className={"plasmic_default__all plasmic_default__span"}
                   style={{ fontWeight: 700 }}
                 >
                   {
-                    "\u0642\u0628\u0644 \u0627\u0632 \u0645\u0631\u0627\u062c\u0639\u0647 \u0627\u0632 \u062d\u0636\u0648\u0631 \u067e\u0632\u0634\u06a9 \u0645\u0637\u0645\u0626\u0646 \u0634\u0648\u06cc\u062f."
+                    "\u0644\u0637\u0641\u0627 \u0642\u0628\u0644 \u0627\u0632 \u0645\u0631\u0627\u062c\u0639\u0647 \u0627\u0632 \u062d\u0636\u0648\u0631 \u067e\u0632\u0634\u06a9 \u0645\u0637\u0645\u0626\u0646 \u0634\u0648\u06cc\u062f."
                   }
                 </span>
+                <React.Fragment>{"\n"}</React.Fragment>
+                <span
+                  className={"plasmic_default__all plasmic_default__span"}
+                  style={{ fontWeight: 700 }}
+                >
+                  {""}
+                </span>
+                <React.Fragment>
+                  {
+                    "\n(\u0637\u0628\u0642 \u06af\u0632\u0627\u0631\u0634 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644 \u0639\u062f\u0645 \u062d\u0636\u0648\u0631 \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0645\u0637\u0628 \u06cc\u0627 \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0648\u062c\u0648\u062f \u062f\u0627\u0631\u062f.)\n"
+                  }
+                </React.Fragment>
               </React.Fragment>
             </div>
           }
