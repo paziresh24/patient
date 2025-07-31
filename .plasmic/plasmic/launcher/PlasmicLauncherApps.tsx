@@ -1509,6 +1509,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   }
                 }}
                 pagekey={"launcher"}
+                soon={true}
                 widgetFrame={(() => {
                   try {
                     return $props.widgetFrames;
