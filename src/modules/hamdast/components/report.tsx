@@ -87,11 +87,11 @@ export const Report = ({ app_key, page_key }: { app_key: string; page_key: strin
               </label>
             ))}
           </div>
-          {reportItemSelected === 'others' && (
+          {reportItemSelected != 'empty' && (
             <TextField onChange={e => setReason(e.target?.value)} multiLine className="h-36" placeholder="دلیل گزارش خود را بنویسید..." />
           )}
           <div className="fixed md:static md:p-0 md:border-none bottom-0 w-full right-0 p-5 bg-white border border-t border-slate-100">
-            <Button className="w-full" onClick={() => handleReportSubmit()}>
+            <Button className="w-full" disabled={reason.length == 0} onClick={() => handleReportSubmit()}>
               ثبت گزارش
             </Button>
           </div>
