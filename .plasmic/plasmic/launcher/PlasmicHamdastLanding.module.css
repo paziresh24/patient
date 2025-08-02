@@ -21,6 +21,7 @@
 .rootmobileView {
   align-items: center;
   justify-content: space-between;
+  padding: 0px;
 }
 .apiRequest:global(.__wab_instance) {
   max-width: 100%;
@@ -86,6 +87,9 @@
   justify-content: flex-start;
   align-items: center;
   min-width: 0;
+}
+.freeBoxmobileView___8LIppybl4O {
+  padding: 30px;
 }
 .img {
   object-fit: cover;
@@ -168,7 +172,7 @@
   row-gap: 10px;
   column-gap: 0px;
   display: flex;
-  padding: 20px;
+  padding: 30px;
 }
 .freeBox__eWyNl {
   display: flex;
