@@ -132,13 +132,11 @@ function PlasmicLauncherServices__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -160,11 +158,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
         className={classNames("__wab_instance", sty.reveal__cm1K)}
         triggerOnce={true}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__uIxXe)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__uIxXe)}>
           <LauncherComponentsTitle
             className={classNames(
               "__wab_instance",
@@ -268,7 +262,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
               );
             })}
           </div>
-        </Stack__>
+        </div>
       </Reveal>
       <Reveal
         className={classNames("__wab_instance", sty.reveal___9YwDd)}
@@ -285,11 +279,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
         className={classNames("__wab_instance", sty.reveal__q4WNz)}
         triggerOnce={true}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__mNsks)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__mNsks)}>
           <LauncherComponentsTitle
             className={classNames(
               "__wab_instance",
@@ -492,7 +482,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
               })}
             </div>
           ) : null}
-        </Stack__>
+        </div>
       </Reveal>
       <Reveal
         className={classNames("__wab_instance", sty.reveal__ghIlb)}
@@ -509,11 +499,7 @@ function PlasmicLauncherServices__RenderFunc(props: {
         className={classNames("__wab_instance", sty.reveal__l0T55)}
         triggerOnce={true}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__ffZ6Q)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__ffZ6Q)}>
           <LauncherComponentsTitle
             className={classNames(
               "__wab_instance",
@@ -602,9 +588,9 @@ function PlasmicLauncherServices__RenderFunc(props: {
               );
             })}
           </div>
-        </Stack__>
+        </div>
       </Reveal>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -632,15 +618,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherServices__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherServices__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherServices__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherServices__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

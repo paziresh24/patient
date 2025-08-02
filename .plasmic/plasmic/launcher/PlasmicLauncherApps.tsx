@@ -256,9 +256,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
         className={classNames("__wab_instance", sty.reveal__hxDkw)}
         triggerOnce={true}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox__irEu, "no-scroll")}
         >
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -387,7 +385,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
             );
           })}
           <div className={classNames(projectcss.all, sty.freeBox__edkby)} />
-        </Stack__>
+        </div>
       </Reveal>
       <Reveal
         className={classNames("__wab_instance", sty.reveal__yyNqO)}
@@ -395,11 +393,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
         effect={"fade"}
         triggerOnce={true}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__jojFn)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__jojFn)}>
           <ApiRequest
             data-plasmic-name={"apiRequest"}
             data-plasmic-override={overrides.apiRequest}
@@ -429,11 +423,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               "https://hamdast.paziresh24.com/api/v1/apps/launcher/developments/"
             }
           >
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__wtXm5)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__wtXm5)}>
               <LauncherComponentsTitle
                 className={classNames(
                   "__wab_instance",
@@ -614,7 +604,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   />
                 );
               })}
-            </Stack__>
+            </div>
             <LauncherComponentsSeparator
               className={classNames(
                 "__wab_instance",
@@ -638,11 +628,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               throw e;
             }
           })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__bug)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__bug)}>
               {(() => {
                 try {
                   return $state.selectedCategory === "all";
@@ -759,7 +745,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   }
                 })()}
               />
-            </Stack__>
+            </div>
           ) : null}
           {(() => {
             try {
@@ -800,11 +786,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               throw e;
             }
           })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__jfYAj)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__jfYAj)}>
               {(() => {
                 try {
                   return $state.selectedCategory === "all";
@@ -1210,7 +1192,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   widgetId={"o1maxe7isynnf3v"}
                 />
               ) : null}
-            </Stack__>
+            </div>
           ) : null}
           {(() => {
             try {
@@ -1250,11 +1232,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               throw e;
             }
           })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__nu6H4)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__nu6H4)}>
               {(() => {
                 try {
                   return $state.selectedCategory === "all";
@@ -1524,9 +1502,9 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   }
                 })()}
               />
-            </Stack__>
+            </div>
           ) : null}
-        </Stack__>
+        </div>
       </Reveal>
     </div>
   ) as React.ReactElement | null;

@@ -179,13 +179,11 @@ function PlasmicHamdastLanding__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -255,11 +253,7 @@ function PlasmicHamdastLanding__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__xRQeg)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__xRQeg)}>
             <div className={classNames(projectcss.all, sty.freeBox___8LIpp)}>
               {(
                 hasVariant(globalVariants, "screen", "mobileOnly")
@@ -311,11 +305,7 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                   ? true
                   : false
               ) ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__jCz6K)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__jCz6K)}>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -365,7 +355,7 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                       }}
                     />
                   </div>
-                </Stack__>
+                </div>
               ) : null}
             </div>
             {(
@@ -385,19 +375,13 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                   })()
                 : true
             ) ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox___7WZyr)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox___7WZyr)}>
                 {(
                   hasVariant(globalVariants, "screen", "mobileOnly")
                     ? false
                     : true
                 ) ? (
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__eWyNl)}
                   >
                     <div
@@ -449,7 +433,7 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                         }}
                       />
                     </div>
-                  </Stack__>
+                  </div>
                 ) : null}
                 {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                   (() => {
@@ -469,9 +453,7 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                   const currentItem = __plasmic_item_0;
                   const currentIndex = __plasmic_idx_0;
                   return (
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
+                    <div
                       className={classNames(
                         projectcss.all,
                         sty.freeBox___5Sfdc
@@ -506,7 +488,7 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                           })()}
                         </React.Fragment>
                       </div>
-                    </Stack__>
+                    </div>
                   );
                 })}
                 <div className={classNames(projectcss.all, sty.freeBox__v2Czy)}>
@@ -555,12 +537,12 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                     }}
                   />
                 </div>
-              </Stack__>
+              </div>
             ) : null}
-          </Stack__>
+          </div>
         ) : null}
       </ApiRequest>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 

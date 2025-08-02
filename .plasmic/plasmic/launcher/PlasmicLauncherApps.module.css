@@ -26,30 +26,15 @@
   display: flex;
   flex-direction: row;
   position: relative;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   height: auto;
   max-width: 100%;
   overflow: auto;
+  column-gap: 10px;
   min-width: 0;
   padding: 20px 20px 0px;
-}
-.freeBox__irEu > :global(.__wab_flex-container) {
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 0;
-  margin-left: calc(0px - 10px);
-  width: calc(100% + 10px);
-}
-.freeBox__irEu > :global(.__wab_flex-container) > *,
-.freeBox__irEu > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__irEu > :global(.__wab_flex-container) > picture > img,
-.freeBox__irEu
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-left: 10px;
 }
 .launcherComponentsCategory:global(.__wab_instance) {
   max-width: 100%;
@@ -79,26 +64,11 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  min-width: 0;
-  padding: 20px;
-}
-.freeBox__jojFn > :global(.__wab_flex-container) {
-  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  row-gap: 20px;
   min-width: 0;
-  margin-top: calc(0px - 20px);
-  height: calc(100% + 20px);
-}
-.freeBox__jojFn > :global(.__wab_flex-container) > *,
-.freeBox__jojFn > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__jojFn > :global(.__wab_flex-container) > picture > img,
-.freeBox__jojFn
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: 20px;
+  padding: 20px;
 }
 .apiRequest:global(.__wab_instance) {
   max-width: 100%;
@@ -111,28 +81,13 @@
   width: 100%;
   height: auto;
   max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
   background: #fcf7ee;
+  row-gap: 10px;
   min-width: 0;
   border-radius: 10px;
   padding: 15px;
-}
-.freeBox__wtXm5 > :global(.__wab_flex-container) {
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  min-width: 0;
-  margin-top: calc(0px - 10px);
-  height: calc(100% + 10px);
-}
-.freeBox__wtXm5 > :global(.__wab_flex-container) > *,
-.freeBox__wtXm5 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__wtXm5 > :global(.__wab_flex-container) > picture > img,
-.freeBox__wtXm5
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: 10px;
 }
 .launcherComponentsTitle__fsOfS:global(.__wab_instance) {
   max-width: 100%;
@@ -149,25 +104,10 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  min-width: 0;
-}
-.freeBox__bug > :global(.__wab_flex-container) {
-  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  row-gap: 10px;
   min-width: 0;
-  margin-top: calc(0px - 10px);
-  height: calc(100% + 10px);
-}
-.freeBox__bug > :global(.__wab_flex-container) > *,
-.freeBox__bug > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__bug > :global(.__wab_flex-container) > picture > img,
-.freeBox__bug
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: 10px;
 }
 .launcherComponentsTitle___9YhTd:global(.__wab_instance) {
   max-width: 100%;
@@ -185,25 +125,10 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  min-width: 0;
-}
-.freeBox__jfYAj > :global(.__wab_flex-container) {
-  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  row-gap: 10px;
   min-width: 0;
-  margin-top: calc(0px - 10px);
-  height: calc(100% + 10px);
-}
-.freeBox__jfYAj > :global(.__wab_flex-container) > *,
-.freeBox__jfYAj > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__jfYAj > :global(.__wab_flex-container) > picture > img,
-.freeBox__jfYAj
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: 10px;
 }
 .launcherComponentsTitle__zis3D:global(.__wab_instance) {
   max-width: 100%;
@@ -230,25 +155,10 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-  min-width: 0;
-}
-.freeBox__nu6H4 > :global(.__wab_flex-container) {
-  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  row-gap: 10px;
   min-width: 0;
-  margin-top: calc(0px - 10px);
-  height: calc(100% + 10px);
-}
-.freeBox__nu6H4 > :global(.__wab_flex-container) > *,
-.freeBox__nu6H4 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__nu6H4 > :global(.__wab_flex-container) > picture > img,
-.freeBox__nu6H4
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: 10px;
 }
 .launcherComponentsTitle__mMdX8:global(.__wab_instance) {
   max-width: 100%;

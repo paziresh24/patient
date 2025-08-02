@@ -267,13 +267,11 @@ function PlasmicRadixUiButton__RenderFunc(props: {
   };
 
   return (
-    <Stack__
-      as={"button"}
+    <button
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.button,
@@ -642,7 +640,7 @@ function PlasmicRadixUiButton__RenderFunc(props: {
           })}
         </div>
       ) : null}
-    </Stack__>
+    </button>
   ) as React.ReactElement | null;
 }
 
@@ -703,15 +701,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicRadixUiButton__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicRadixUiButton__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicRadixUiButton__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicRadixUiButton__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

@@ -132,13 +132,11 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
   const $globalActions = useGlobalActions?.();
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -188,11 +186,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
         title={"\u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627"}
       />
 
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__xm9Rt)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__xm9Rt)}>
         {(() => {
           try {
             return $ctx.auth.info?.provider?.job_title === "doctor";
@@ -468,11 +462,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox___0Utqf)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox___0Utqf)}>
             <LauncherComponentsAppSquare
               className={classNames(
                 "__wab_instance",
@@ -631,7 +621,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                   $steps["sendLog"] = await $steps["sendLog"];
                 }
 
-                $steps["goToLabResultLauncher"] = true
+                $steps["goToLabResultLauncher"] = false
                   ? (() => {
                       const actionArgs = {
                         destination: "/_/lab_result/launcher"
@@ -777,10 +767,10 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                 "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062e\u062a\u0644\u0627\u0644 \u062a\u06cc\u0631\u0648\u0626\u06cc\u062f"
               }
             />
-          </Stack__>
+          </div>
         ) : null}
-      </Stack__>
-    </Stack__>
+      </div>
+    </div>
   ) as React.ReactElement | null;
 }
 

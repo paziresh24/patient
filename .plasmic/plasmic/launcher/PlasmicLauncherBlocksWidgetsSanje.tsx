@@ -166,13 +166,11 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -309,11 +307,7 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__hIhKh)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__hIhKh)}>
             <div className={classNames(projectcss.all, sty.freeBox__sgOar)}>
               <div
                 className={classNames(
@@ -400,7 +394,7 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
                 aspectRatio: undefined
               }}
             />
-          </Stack__>
+          </div>
         ) : null}
         {(() => {
           try {
@@ -421,7 +415,7 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
           />
         ) : null}
       </ApiRequest>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -453,15 +447,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherBlocksWidgetsSanje__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherBlocksWidgetsSanje__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherBlocksWidgetsSanje__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherBlocksWidgetsSanje__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
