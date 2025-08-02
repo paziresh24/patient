@@ -170,13 +170,11 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -267,11 +265,9 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
         width={"60"}
       />
 
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"freeBox"}
         data-plasmic-override={overrides.freeBox}
-        hasGap={true}
         className={classNames(projectcss.all, sty.freeBox)}
       >
         <div
@@ -320,7 +316,7 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
             })()}
           </React.Fragment>
         </div>
-      </Stack__>
+      </div>
       <Paziresh24Modal
         data-plasmic-name={"modal"}
         data-plasmic-override={overrides.modal}
@@ -407,7 +403,7 @@ function PlasmicLauncherComponentsAppSquare__RenderFunc(props: {
         }
         trigger={null}
       />
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 

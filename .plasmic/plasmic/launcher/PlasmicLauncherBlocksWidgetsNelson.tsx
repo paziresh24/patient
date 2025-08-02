@@ -207,13 +207,11 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -302,9 +300,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                   throw e;
                 }
               })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
+                <div
                   className={classNames(projectcss.all, sty.freeBox__xh81H)}
                   onClick={async event => {
                     const $steps = {};
@@ -348,9 +344,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                     }
                   }}
                 >
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__g495E)}
                   >
                     <div
@@ -364,7 +358,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                         "\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc \u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646"
                       }
                     </div>
-                  </Stack__>
+                  </div>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -376,9 +370,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                       "\u0628\u0647 \u0635\u0648\u0631\u062a \u063a\u06cc\u0631\u062d\u0636\u0648\u0631\u06cc \u0648\u06cc\u0632\u06cc\u062a \u06a9\u0646\u06cc\u062f."
                     }
                   </div>
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__wM0Lm)}
                   >
                     <div
@@ -394,8 +386,8 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                       className={classNames(projectcss.all, sty.svg__gmwpb)}
                       role={"img"}
                     />
-                  </Stack__>
-                </Stack__>
+                  </div>
+                </div>
               ) : null}
             </React.Fragment>
           }
@@ -444,11 +436,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
           })()}
           url={"https://apigw.paziresh24.com/v1/user-center-services"}
         >
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__wxcz5)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__wxcz5)}>
             {(() => {
               try {
                 return $state._switch.checked;
@@ -462,11 +450,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__vnEpp)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__vnEpp)}>
                 <div
                   className={classNames(projectcss.all, sty.freeBox__dyTj)}
                 />
@@ -480,7 +464,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                 >
                   {"\u0641\u0639\u0627\u0644"}
                 </div>
-              </Stack__>
+              </div>
             ) : null}
             {(() => {
               try {
@@ -495,11 +479,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__bvg8K)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__bvg8K)}>
                 <div
                   className={classNames(projectcss.all, sty.freeBox__fd0Vr)}
                 />
@@ -513,7 +493,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                 >
                   {"\u063a\u06cc\u0631\u0641\u0639\u0627\u0644"}
                 </div>
-              </Stack__>
+              </div>
             ) : null}
             <div
               className={classNames(
@@ -560,7 +540,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                 <React.Fragment>{" \u0627\u0633\u062a"}</React.Fragment>
               </React.Fragment>
             </div>
-          </Stack__>
+          </div>
           <Switch
             data-plasmic-name={"_switch"}
             data-plasmic-override={overrides._switch}
@@ -661,7 +641,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
           />
         </ApiRequest>
       </ApiRequest>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -698,15 +678,15 @@ type NodeComponentProps<T extends NodeNameType> =
     PlasmicLauncherBlocksWidgetsNelson__VariantsArgs,
     ReservedPropsType
   > &
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherBlocksWidgetsNelson__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherBlocksWidgetsNelson__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

@@ -418,9 +418,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
           ) : null}
         </Portal>
       ) : null}
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__wxtDc, {
           [sty.freeBoxsoon__wxtDcwdK6]: hasVariant($state, "soon", "soon")
         })}
@@ -514,11 +512,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
           }
         }}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox___3Yal5)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox___3Yal5)}>
           <PlasmicImg__
             alt={""}
             className={classNames(sty.img__vnPue, {
@@ -553,9 +547,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
               [sty.freeBoxsoon___94WLwdK6]: hasVariant($state, "soon", "soon")
             })}
           >
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox___9RkNp, {
                 [sty.freeBoxsoon___9RkNPwdK6]: hasVariant(
                   $state,
@@ -630,7 +622,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                   {"\u062c\u062f\u06cc\u062f"}
                 </div>
               ) : null}
-            </Stack__>
+            </div>
             <div
               className={classNames(
                 projectcss.all,
@@ -658,7 +650,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
               </React.Fragment>
             </div>
           </div>
-        </Stack__>
+        </div>
         {(() => {
           try {
             return !!$props.widgetId;
@@ -974,7 +966,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
             </ApiRequest>
           </div>
         ) : null}
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
