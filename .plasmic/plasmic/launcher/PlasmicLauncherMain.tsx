@@ -174,11 +174,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__by7Eu)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__by7Eu)}>
           <LauncherWrapper
             data-plasmic-name={"launcherWrapper"}
             data-plasmic-override={overrides.launcherWrapper}
@@ -224,11 +220,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
               duration={300}
               triggerOnce={true}
             >
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__cJfkN)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__cJfkN)}>
                 <LauncherBlocksWidgetsSanje
                   data-plasmic-name={"launcherBlocksWidgetsSanje"}
                   data-plasmic-override={overrides.launcherBlocksWidgetsSanje}
@@ -246,7 +238,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
                     sty.launcherBlocksWidgetsNelson
                   )}
                 />
-              </Stack__>
+              </div>
             </Reveal>
           ) : null}
           <Reveal
@@ -293,9 +285,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
             duration={300}
             triggerOnce={true}
           >
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox__rnWpl)}
               onClick={async event => {
                 const $steps = {};
@@ -387,9 +377,9 @@ function PlasmicLauncherMain__RenderFunc(props: {
                   "\u0627\u0631\u062a\u0628\u0627\u0637 \u0628\u0627 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4"
                 }
               </div>
-            </Stack__>
+            </div>
           </Reveal>
-        </Stack__>
+        </div>
       ) : null}
       {(() => {
         try {
@@ -461,15 +451,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherMain__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherMain__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherMain__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherMain__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

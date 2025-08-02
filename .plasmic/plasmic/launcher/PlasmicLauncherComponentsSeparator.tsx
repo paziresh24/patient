@@ -126,13 +126,11 @@ function PlasmicLauncherComponentsSeparator__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -171,15 +169,15 @@ type NodeComponentProps<T extends NodeNameType> =
     PlasmicLauncherComponentsSeparator__VariantsArgs,
     ReservedPropsType
   > &
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherComponentsSeparator__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherComponentsSeparator__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

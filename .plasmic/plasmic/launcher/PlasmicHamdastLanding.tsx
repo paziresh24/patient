@@ -77,10 +77,16 @@ import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__Che
 
 createPlasmicElementProxy;
 
-export type PlasmicHamdastLanding__VariantMembers = {};
-export type PlasmicHamdastLanding__VariantsArgs = {};
+export type PlasmicHamdastLanding__VariantMembers = {
+  mobileView: "mobileView";
+};
+export type PlasmicHamdastLanding__VariantsArgs = {
+  mobileView?: SingleBooleanChoiceArg<"mobileView">;
+};
 type VariantPropType = keyof PlasmicHamdastLanding__VariantsArgs;
-export const PlasmicHamdastLanding__VariantProps = new Array<VariantPropType>();
+export const PlasmicHamdastLanding__VariantProps = new Array<VariantPropType>(
+  "mobileView"
+);
 
 export type PlasmicHamdastLanding__ArgsType = {
   appKey?: string;
@@ -96,12 +102,12 @@ export type PlasmicHamdastLanding__OverridesType = {
   root?: Flex__<"div">;
   apiRequest?: Flex__<typeof ApiRequest>;
   img?: Flex__<typeof PlasmicImg__>;
-  paziresh24Button?: Flex__<typeof Paziresh24Button>;
 };
 
 export interface DefaultHamdastLandingProps {
   appKey?: string;
   onClick?: () => void;
+  mobileView?: SingleBooleanChoiceArg<"mobileView">;
   className?: string;
 }
 
@@ -163,6 +169,12 @@ function PlasmicHamdastLanding__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "mobileView",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.mobileView
       }
     ],
     [$props, $ctx, $refs]
@@ -179,13 +191,11 @@ function PlasmicHamdastLanding__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -193,13 +203,20 @@ function PlasmicHamdastLanding__RenderFunc(props: {
         projectcss.plasmic_mixins,
         projectcss.plasmic_tokens,
         plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        sty.root
+        sty.root,
+        { [sty.rootmobileView]: hasVariant($state, "mobileView", "mobileView") }
       )}
     >
       <ApiRequest
         data-plasmic-name={"apiRequest"}
         data-plasmic-override={overrides.apiRequest}
-        className={classNames("__wab_instance", sty.apiRequest)}
+        className={classNames("__wab_instance", sty.apiRequest, {
+          [sty.apiRequestmobileView]: hasVariant(
+            $state,
+            "mobileView",
+            "mobileView"
+          )
+        })}
         errorDisplay={null}
         loadingDisplay={
           <div className={classNames(projectcss.all, sty.freeBox__a1Prp)}>
@@ -255,14 +272,40 @@ function PlasmicHamdastLanding__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__xRQeg)}
+          <div
+            className={classNames(projectcss.all, sty.freeBox__xRQeg, {
+              [sty.freeBoxmobileView__xRQegybl4O]: hasVariant(
+                $state,
+                "mobileView",
+                "mobileView"
+              )
+            })}
           >
-            <div className={classNames(projectcss.all, sty.freeBox___8LIpp)}>
+            <div
+              className={classNames(projectcss.all, sty.freeBox___8LIpp, {
+                [sty.freeBoxmobileView___8LIppybl4O]: hasVariant(
+                  $state,
+                  "mobileView",
+                  "mobileView"
+                )
+              })}
+            >
               {(
-                hasVariant(globalVariants, "screen", "mobileOnly")
+                hasVariant($state, "mobileView", "mobileView")
+                  ? (() => {
+                      try {
+                        return $state.apiRequest.data.image;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })()
+                  : hasVariant(globalVariants, "screen", "mobileOnly")
                   ? (() => {
                       try {
                         return $state.apiRequest.data.image;
@@ -282,7 +325,13 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                   data-plasmic-name={"img"}
                   data-plasmic-override={overrides.img}
                   alt={""}
-                  className={classNames(sty.img)}
+                  className={classNames(sty.img, {
+                    [sty.imgmobileView]: hasVariant(
+                      $state,
+                      "mobileView",
+                      "mobileView"
+                    )
+                  })}
                   displayHeight={"230px"}
                   displayMaxHeight={"none"}
                   displayMaxWidth={"100%"}
@@ -307,14 +356,20 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                 />
               ) : null}
               {(
-                hasVariant(globalVariants, "screen", "mobileOnly")
+                hasVariant($state, "mobileView", "mobileView")
+                  ? true
+                  : hasVariant(globalVariants, "screen", "mobileOnly")
                   ? true
                   : false
               ) ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__jCz6K)}
+                <div
+                  className={classNames(projectcss.all, sty.freeBox__jCz6K, {
+                    [sty.freeBoxmobileView__jCz6Kybl4O]: hasVariant(
+                      $state,
+                      "mobileView",
+                      "mobileView"
+                    )
+                  })}
                 >
                   <div
                     className={classNames(
@@ -365,11 +420,25 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                       }}
                     />
                   </div>
-                </Stack__>
+                </div>
               ) : null}
             </div>
             {(
-              hasVariant(globalVariants, "screen", "mobileOnly")
+              hasVariant($state, "mobileView", "mobileView")
+                ? (() => {
+                    try {
+                      return $state.apiRequest.data.features?.length > 0;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })()
+                : hasVariant(globalVariants, "screen", "mobileOnly")
                 ? (() => {
                     try {
                       return $state.apiRequest.data.features?.length > 0;
@@ -385,26 +454,43 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                   })()
                 : true
             ) ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox___7WZyr)}
+              <div
+                className={classNames(projectcss.all, sty.freeBox___7WZyr, {
+                  [sty.freeBoxmobileView___7WZyrybl4O]: hasVariant(
+                    $state,
+                    "mobileView",
+                    "mobileView"
+                  )
+                })}
               >
                 {(
-                  hasVariant(globalVariants, "screen", "mobileOnly")
+                  hasVariant($state, "mobileView", "mobileView")
+                    ? false
+                    : hasVariant(globalVariants, "screen", "mobileOnly")
                     ? false
                     : true
                 ) ? (
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
-                    className={classNames(projectcss.all, sty.freeBox__eWyNl)}
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__eWyNl, {
+                      [sty.freeBoxmobileView__eWyNlybl4O]: hasVariant(
+                        $state,
+                        "mobileView",
+                        "mobileView"
+                      )
+                    })}
                   >
                     <div
                       className={classNames(
                         projectcss.all,
                         projectcss.__wab_text,
-                        sty.text__hXLgE
+                        sty.text__hXLgE,
+                        {
+                          [sty.textmobileView__hXLgEybl4O]: hasVariant(
+                            $state,
+                            "mobileView",
+                            "mobileView"
+                          )
+                        }
                       )}
                     >
                       <React.Fragment>
@@ -427,7 +513,14 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                       className={classNames(
                         projectcss.all,
                         projectcss.__wab_text,
-                        sty.text__i8Oer
+                        sty.text__i8Oer,
+                        {
+                          [sty.textmobileView__i8Oerybl4O]: hasVariant(
+                            $state,
+                            "mobileView",
+                            "mobileView"
+                          )
+                        }
                       )}
                     >
                       <div
@@ -449,7 +542,7 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                         }}
                       />
                     </div>
-                  </Stack__>
+                  </div>
                 ) : null}
                 {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                   (() => {
@@ -469,12 +562,17 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                   const currentItem = __plasmic_item_0;
                   const currentIndex = __plasmic_idx_0;
                   return (
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
+                    <div
                       className={classNames(
                         projectcss.all,
-                        sty.freeBox___5Sfdc
+                        sty.freeBox___5Sfdc,
+                        {
+                          [sty.freeBoxmobileView___5SfdCybl4O]: hasVariant(
+                            $state,
+                            "mobileView",
+                            "mobileView"
+                          )
+                        }
                       )}
                       key={currentIndex}
                     >
@@ -506,13 +604,19 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                           })()}
                         </React.Fragment>
                       </div>
-                    </Stack__>
+                    </div>
                   );
                 })}
-                <div className={classNames(projectcss.all, sty.freeBox__v2Czy)}>
+                <div
+                  className={classNames(projectcss.all, sty.freeBox__v2Czy, {
+                    [sty.freeBoxmobileView__v2CzYybl4O]: hasVariant(
+                      $state,
+                      "mobileView",
+                      "mobileView"
+                    )
+                  })}
+                >
                   <Paziresh24Button
-                    data-plasmic-name={"paziresh24Button"}
-                    data-plasmic-override={overrides.paziresh24Button}
                     children2={
                       <React.Fragment>
                         {(() => {
@@ -532,7 +636,11 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                     }
                     className={classNames(
                       "__wab_instance",
-                      sty.paziresh24Button
+                      sty.paziresh24Button___0Jxf3,
+                      {
+                        [sty.paziresh24ButtonmobileView___0Jxf3Ybl4O]:
+                          hasVariant($state, "mobileView", "mobileView")
+                      }
                     )}
                     onClick={async event => {
                       const $steps = {};
@@ -555,20 +663,80 @@ function PlasmicHamdastLanding__RenderFunc(props: {
                     }}
                   />
                 </div>
-              </Stack__>
+              </div>
             ) : null}
-          </Stack__>
+            {(hasVariant($state, "mobileView", "mobileView") ? true : false) ? (
+              <div
+                className={classNames(projectcss.all, sty.freeBox__mGtJh, {
+                  [sty.freeBoxmobileView__mGtJhybl4O]: hasVariant(
+                    $state,
+                    "mobileView",
+                    "mobileView"
+                  )
+                })}
+              >
+                <Paziresh24Button
+                  children2={
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $state.apiRequest.data.button_text;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "Button";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  }
+                  className={classNames(
+                    "__wab_instance",
+                    sty.paziresh24Button__dwGi1,
+                    {
+                      [sty.paziresh24ButtonmobileView__dwGi1Ybl4O]: hasVariant(
+                        $state,
+                        "mobileView",
+                        "mobileView"
+                      )
+                    }
+                  )}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["runOnClick"] = true
+                      ? (() => {
+                          const actionArgs = { eventRef: $props["onClick"] };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnClick"] != null &&
+                      typeof $steps["runOnClick"] === "object" &&
+                      typeof $steps["runOnClick"].then === "function"
+                    ) {
+                      $steps["runOnClick"] = await $steps["runOnClick"];
+                    }
+                  }}
+                />
+              </div>
+            ) : null}
+          </div>
         ) : null}
       </ApiRequest>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest", "img", "paziresh24Button"],
-  apiRequest: ["apiRequest", "img", "paziresh24Button"],
-  img: ["img"],
-  paziresh24Button: ["paziresh24Button"]
+  root: ["root", "apiRequest", "img"],
+  apiRequest: ["apiRequest", "img"],
+  img: ["img"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -577,7 +745,6 @@ type NodeDefaultElementType = {
   root: "div";
   apiRequest: typeof ApiRequest;
   img: typeof PlasmicImg__;
-  paziresh24Button: typeof Paziresh24Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -642,7 +809,6 @@ export const PlasmicHamdastLanding = Object.assign(
     // Helper components rendering sub-elements
     apiRequest: makeNodeComponent("apiRequest"),
     img: makeNodeComponent("img"),
-    paziresh24Button: makeNodeComponent("paziresh24Button"),
 
     // Metadata about props expected for PlasmicHamdastLanding
     internalVariantProps: PlasmicHamdastLanding__VariantProps,

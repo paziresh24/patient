@@ -135,13 +135,11 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
   const $globalActions = useGlobalActions?.();
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -152,16 +150,8 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__avrUp)}
-      >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__f64ZV)}
-        >
+      <div className={classNames(projectcss.all, sty.freeBox__avrUp)}>
+        <div className={classNames(projectcss.all, sty.freeBox__f64ZV)}>
           <Paziresh24Avatar
             data-plasmic-name={"paziresh24Avatar"}
             data-plasmic-override={overrides.paziresh24Avatar}
@@ -194,11 +184,7 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
             })()}
           />
 
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__fBrbq)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__fBrbq)}>
             <div
               className={classNames(
                 projectcss.all,
@@ -237,9 +223,7 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
+              <div
                 className={classNames(projectcss.all, sty.freeBox__wsgSt)}
                 onClick={async event => {
                   const $steps = {};
@@ -341,7 +325,7 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
                     "\u0645\u0634\u0627\u0647\u062f\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
                   }
                 </div>
-              </Stack__>
+              </div>
             ) : null}
             {(() => {
               try {
@@ -356,11 +340,7 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__oqxGm)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__oqxGm)}>
                 <div
                   className={classNames(
                     projectcss.all,
@@ -386,10 +366,10 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
                     })()}
                   </React.Fragment>
                 </div>
-              </Stack__>
+              </div>
             ) : null}
-          </Stack__>
-        </Stack__>
+          </div>
+        </div>
         <div
           className={classNames(projectcss.all, sty.freeBox__vXwnm)}
           onClick={async event => {
@@ -466,7 +446,7 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
             role={"img"}
           />
         </div>
-      </Stack__>
+      </div>
       {(() => {
         try {
           return (() => {
@@ -489,7 +469,7 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
           className={classNames("__wab_instance", sty.launcherBlocksWallet)}
         />
       ) : null}
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -519,15 +499,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherBlocksProfile__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherBlocksProfile__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherBlocksProfile__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherBlocksProfile__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

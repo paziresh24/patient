@@ -39,8 +39,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-embed-css"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "caTPwKxj5ZrD9LQ7DMdK4Z",
@@ -98,8 +97,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-basic-components"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -340,8 +338,7 @@
           "componentImportPath": "@plasmicpkgs/radix-ui"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "gmeH6XgPaBtkt51HunAo4g",
@@ -549,8 +546,7 @@
           "componentImportPath": "@plasmicpkgs/react-aria/skinny/registerDialog"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -2942,8 +2938,7 @@
           "componentImportPath": "@plasmicpkgs/react-awesome-reveal"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "grxNYctbMek6PL66cujx3u",
@@ -3385,8 +3380,7 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "fc2TT88raN5pz7nywm4q4q",
@@ -5565,8 +5559,7 @@
       "globalContextsFilePath": "",
       "splitsProviderFilePath": "",
       "codeComponents": [],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "iDYgiKJB9Yi7CUB81stQBK",
