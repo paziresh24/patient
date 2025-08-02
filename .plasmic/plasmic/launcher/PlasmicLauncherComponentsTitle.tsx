@@ -151,13 +151,11 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
   const $globalActions = useGlobalActions?.();
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -184,16 +182,8 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__iwcwy)}
-        >
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__wfqSr)}
-          >
+        <div className={classNames(projectcss.all, sty.freeBox__iwcwy)}>
+          <div className={classNames(projectcss.all, sty.freeBox__wfqSr)}>
             <div
               className={classNames(
                 projectcss.all,
@@ -240,7 +230,7 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
                 {"\u062c\u062f\u06cc\u062f"}
               </div>
             ) : null}
-          </Stack__>
+          </div>
           <div
             className={classNames(
               projectcss.all,
@@ -264,7 +254,7 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
               })()}
             </React.Fragment>
           </div>
-        </Stack__>
+        </div>
       ) : null}
       {(() => {
         try {
@@ -279,11 +269,7 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__qeAnl)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__qeAnl)}>
           {(() => {
             try {
               return !$props.subTitle;
@@ -344,7 +330,7 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
               {"\u062c\u062f\u06cc\u062f"}
             </div>
           ) : null}
-        </Stack__>
+        </div>
       ) : null}
       {(() => {
         try {
@@ -359,9 +345,7 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox__fiYAr)}
           onClick={async event => {
             const $steps = {};
@@ -476,9 +460,9 @@ function PlasmicLauncherComponentsTitle__RenderFunc(props: {
             className={classNames(projectcss.all, sty.svg)}
             role={"img"}
           />
-        </Stack__>
+        </div>
       ) : null}
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -506,15 +490,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherComponentsTitle__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherComponentsTitle__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherComponentsTitle__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherComponentsTitle__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

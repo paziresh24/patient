@@ -230,11 +230,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
         data-plasmic-name={"modal"}
         data-plasmic-override={overrides.modal}
         body={
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__ehbPk)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__ehbPk)}>
             <div
               className={classNames(projectcss.all, sty.freeBox__cXju2)}
               onClick={async event => {
@@ -272,11 +268,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
               }}
             >
               <div className={classNames(projectcss.all, sty.freeBox__egvir)}>
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__fxh6D)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__fxh6D)}>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -331,7 +323,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                       </React.Fragment>
                     </React.Fragment>
                   </div>
-                </Stack__>
+                </div>
                 <div
                   className={classNames(
                     projectcss.all,
@@ -390,11 +382,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
               }}
             >
               <div className={classNames(projectcss.all, sty.freeBox___6Y1Vp)}>
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__dUpyi)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__dUpyi)}>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -451,7 +439,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                       </React.Fragment>
                     </React.Fragment>
                   </div>
-                </Stack__>
+                </div>
                 <div
                   className={classNames(
                     projectcss.all,
@@ -469,7 +457,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                 role={"img"}
               />
             </div>
-          </Stack__>
+          </div>
         }
         className={classNames("__wab_instance", sty.modal)}
         noTrigger={true}
@@ -642,11 +630,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
           }
         }}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__nrZdj)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__nrZdj)}>
           <LauncherIconsWalletIcon
             className={classNames(projectcss.all, sty.svg__kOroc)}
             role={"img"}
@@ -661,12 +645,8 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
           >
             {"\u06a9\u06cc\u0641 \u067e\u0648\u0644"}
           </div>
-        </Stack__>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__j27OP)}
-        >
+        </div>
+        <div className={classNames(projectcss.all, sty.freeBox__j27OP)}>
           <ApiRequest
             data-plasmic-name={"getCenters"}
             data-plasmic-override={overrides.getCenters}
@@ -859,11 +839,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                   throw e;
                 }
               })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__iL1Tm)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__iL1Tm)}>
                   {(() => {
                     try {
                       return !!$state.apiRequest.data;
@@ -924,7 +900,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                       </React.Fragment>
                     </div>
                   ) : null}
-                </Stack__>
+                </div>
               ) : null}
               {(() => {
                 try {
@@ -963,11 +939,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                   throw e;
                 }
               })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__ixcoN)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__ixcoN)}>
                   {(() => {
                     try {
                       return (
@@ -1075,7 +1047,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                       </React.Fragment>
                     </React.Fragment>
                   </div>
-                </Stack__>
+                </div>
               ) : null}
             </ApiRequest>
           </ApiRequest>
@@ -1083,7 +1055,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
             className={classNames(projectcss.all, sty.svg__wJkmF)}
             role={"img"}
           />
-        </Stack__>
+        </div>
       </div>
     </div>
   ) as React.ReactElement | null;
@@ -1128,15 +1100,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherBlocksWallet__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherBlocksWallet__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLauncherBlocksWallet__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLauncherBlocksWallet__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
