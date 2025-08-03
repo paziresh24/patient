@@ -572,7 +572,21 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
               description={
                 "\u062f\u0633\u062a\u06cc\u0627\u0631 \u0647\u0648\u0634\u0645\u0646\u062f \u062a\u0641\u0633\u06cc\u0631 \u0622\u0632\u0645\u0627\u06cc\u0634"
               }
-              disabled={true}
+              disabled={(() => {
+                try {
+                  return !$ctx.Growthbook?.features?.[
+                    "launcher::lab_result_app"
+                  ];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "disabled";
+                  }
+                  throw e;
+                }
+              })()}
               icon={
                 "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Flab-result.png?versionId="
               }
@@ -621,7 +635,9 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                   $steps["sendLog"] = await $steps["sendLog"];
                 }
 
-                $steps["goToLabResultLauncher"] = false
+                $steps["goToLabResultLauncher"] = $ctx.Growthbook?.features?.[
+                  "launcher::lab_result_app"
+                ]
                   ? (() => {
                       const actionArgs = {
                         destination: "/_/lab_result/launcher"
