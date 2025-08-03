@@ -1487,7 +1487,21 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   }
                 }}
                 pagekey={"launcher"}
-                soon={true}
+                soon={(() => {
+                  try {
+                    return !$ctx.Growthbook.features[
+                      "launcher::lab_result_app"
+                    ];
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "soon";
+                    }
+                    throw e;
+                  }
+                })()}
                 widgetFrame={(() => {
                   try {
                     return $props.widgetFrames;
