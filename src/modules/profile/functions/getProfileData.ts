@@ -1,6 +1,6 @@
 import { getProfileData } from '@/common/apis/services/profile/getFullProfile';
 
-export const getProfile = async ({ slug, university }: { slug: string; university: string }) => {
+export const getProfile = async ({ slug, university }: { slug: string; university?: string }) => {
   const requests = [
     await getProfileData({
       slug,
