@@ -22,8 +22,9 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
     const finalProps = await getAggregatedProfileData(slug, university, true);
 
     return {
+      ...finalProps,
       props: sanitizeObject({
-        ...finalProps,
+        ...finalProps?.props,
         status: context.res.statusCode,
       }),
     };
@@ -32,6 +33,19 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
       const status = error.response?.status ?? 500;
       const statusCode = status === 404 ? 410 : error.message.includes('timeout') || status === 504 ? 504 : status;
       context.res.statusCode = statusCode;
+
+      await splunkInstance('doctor-profile').sendEvent({
+        group: 'profile_error',
+        type: 'profile_error',
+        event: {
+          endpoint: error?.config?.url,
+          error_status: error.response?.status,
+          error: error?.response?.data,
+          message: error.message,
+          handle_error_status: context.res.statusCode,
+          stack: error?.stack,
+        },
+      });
 
       if (statusCode === 504) {
         console.warn(`SSR Timeout for slug: ${slug}. Falling back to client-side rendering.`);
@@ -61,15 +75,6 @@ export const getProfileServerSideProps = withServerUtils(async (context: GetServ
         };
       }
 
-      await splunkInstance('doctor-profile').sendEvent({
-        group: 'profile_ssr_error',
-        type: `status_${statusCode}`,
-        event: {
-          slug,
-          error_message: error.message,
-          status_code: statusCode,
-        },
-      });
       return handleSsrError(context.res.statusCode, slug);
     }
 

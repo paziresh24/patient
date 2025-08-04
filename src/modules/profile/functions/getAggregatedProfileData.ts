@@ -1,7 +1,6 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
-import { CENTERS } from '@/common/types/centers';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -79,17 +78,21 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 // ================= Main Aggregator Function =================
 
 export async function getAggregatedProfileData(slug: string, university: string | undefined, isServer: boolean, req?: any) {
-  // `req` is optional and only available on the server for things like Growthbook
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
 
-  // Step 1: Fetch core profile data. If this fails, the whole function will throw an error.
-  const { fullProfileData } = await getProfile({ slug, university });
+  const { redirect, fullProfileData } = await getProfile({ slug, university, isServer: isServer });
 
-  // Step 2: Fetch ancillary data in parallel
+  if (redirect) {
+    if (isServer) {
+      return { redirect: { statusCode: redirect.statusCode, destination: encodeURI(redirect.route) }, props: {} };
+    } else {
+      return location.replace(encodeURI(redirect.route));
+    }
+  }
+
   const rateDetailsResult = await getRateDetailsData({
     slug,
-    version: 2,
   }).catch(() => null);
 
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
@@ -130,7 +133,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
   let widgets: any[] = [];
   let widgetsData = {};
 
-  if (isServer) {
+  if (isServer && !university) {
     try {
       const { data } = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
         params: { server_id: information.server_id, user_info_id: information.id },
@@ -154,39 +157,41 @@ export async function getAggregatedProfileData(slug: string, university: string 
   const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const finalProps = {
-    title: university ? information?.display_name : title,
-    description: university ? '' : description,
-    information,
-    centers,
-    expertises,
-    feedbacks: {
-      ...feedbacks,
-      feedbacks: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
+    props: {
+      title: university ? information?.display_name : title,
+      description: university ? '' : description,
+      information,
+      centers,
+      expertises,
+      feedbacks: {
+        ...feedbacks,
+        feedbacks: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
+      },
+      dehydratedState: dehydrate(queryClient),
+      media,
+      symptomes,
+      history,
+      onlineVisit,
+      similarLinks,
+      waitingTimeInfo,
+      isBulk: !!(
+        centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services.every((s: any) => !s.hours_of_work))
+      ),
+      breadcrumbs: createBreadcrumb(
+        internalLinksResult.status === 'fulfilled' ? internalLinksResult.value : [],
+        information?.display_name,
+        pageSlug,
+      ),
+      slug,
+      fragmentComponents: {
+        // Note: Flags would need to be handled differently on the client
+        raviComponentTopOrderProfile: false, // Default value for client
+        risman: rismanResult.status === 'fulfilled' ? rismanResult.value?.data : null,
+      },
+      hamdastWidgets: widgets,
+      hamdastWidgetsData: widgetsData,
+      user_id: userData?.user_id ?? null,
     },
-    dehydratedState: dehydrate(queryClient),
-    media,
-    symptomes,
-    history,
-    onlineVisit,
-    similarLinks,
-    waitingTimeInfo,
-    isBulk: !!(
-      centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services.every((s: any) => !s.hours_of_work))
-    ),
-    breadcrumbs: createBreadcrumb(
-      internalLinksResult.status === 'fulfilled' ? internalLinksResult.value : [],
-      information?.display_name,
-      pageSlug,
-    ),
-    slug,
-    fragmentComponents: {
-      // Note: Flags would need to be handled differently on the client
-      raviComponentTopOrderProfile: false, // Default value for client
-      risman: rismanResult.status === 'fulfilled' ? rismanResult.value?.data : null,
-    },
-    hamdastWidgets: widgets,
-    hamdastWidgetsData: widgetsData,
-    user_id: userData?.user_id ?? null,
   };
 
   return finalProps;

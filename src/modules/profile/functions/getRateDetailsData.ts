@@ -3,7 +3,7 @@ import { countOfFeedbacks } from '@/common/apis/services/rate/countOfFeedbacks';
 import { satisfactionPercent } from '@/common/apis/services/rate/satisfactionPercent';
 import { rate } from '@/common/apis/services/reviews/rate';
 
-type GetRateDetailsData = { slug: string; version: number };
+type GetRateDetailsData = { slug: string };
 
 export const getRateDetailsData = async ({ slug }: GetRateDetailsData) => {
   const rateRes = await rate({ slug });

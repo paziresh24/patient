@@ -73,7 +73,7 @@ const DoctorProfile = (props: any) => {
   const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
 
-  const finalProps = shouldFetchOnClient ? clientData : props;
+  const finalProps = shouldFetchOnClient ? clientData?.props : props;
   const {
     slug,
     title,
