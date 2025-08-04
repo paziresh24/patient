@@ -15,6 +15,7 @@ RUN npm cache verify
 RUN npm install --force
 
 COPY . .
+RUN chmod +x /app/curl_logger.sh /app/entrypoint.sh
 
 RUN npm run build
 
@@ -22,4 +23,6 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["npm", "start"]
+#CMD ["npm", "start"]
+CMD ["/app/entrypoint.sh"]
+
