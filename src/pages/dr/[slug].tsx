@@ -47,13 +47,20 @@ import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import Loading from '@/common/components/atom/loading';
+import { useRouter } from 'next/router';
 
 const { publicRuntimeConfig } = config();
 
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
+  const { query } = useRouter();
 
-  const { data: clientData, isLoading, isError, error } = useProfileClientFetch(initialSlug, !!shouldFetchOnClient);
+  const {
+    data: clientData,
+    isLoading,
+    isError,
+    error,
+  } = useProfileClientFetch(initialSlug ?? query.slug, !!shouldFetchOnClient || !props?.information);
 
   const { customize } = useCustomize();
   const isApplication = useApplication();
@@ -73,7 +80,7 @@ const DoctorProfile = (props: any) => {
   const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
 
-  const finalProps = shouldFetchOnClient ? clientData?.props : props;
+  const finalProps = !!shouldFetchOnClient || !props?.information ? clientData?.props : props;
   const {
     slug,
     title,
@@ -243,7 +250,7 @@ const DoctorProfile = (props: any) => {
   if (shouldFetchOnClient && isLoading) {
     return (
       <div className="flex flex-grow justify-center items-center">
-        <Loading className="w-9 h-9" />
+        <Loading width={50} />
       </div>
     );
   }
@@ -260,7 +267,7 @@ const DoctorProfile = (props: any) => {
   if (!finalProps?.information) {
     return (
       <div className="flex flex-grow justify-center items-center">
-        <Loading className="w-9 h-9" />
+        <Loading width={50} />
       </div>
     );
   }
@@ -365,13 +372,13 @@ const DoctorProfile = (props: any) => {
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, expertises, centers, information, feedbacks, host } = page.props;
+  const { title, description, slug, expertises, centers = [], information, feedbacks, host } = page.props;
 
   const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
   const getJsonlds = () => {
-    const center = centers.find((cn: any) => cn.id !== CENTERS.CONSULT);
-    const visitOnlineCenter = centers.find((cn: any) => cn.id === CENTERS.CONSULT);
+    const center = centers?.find?.((cn: any) => cn.id !== CENTERS.CONSULT);
+    const visitOnlineCenter = centers?.find?.((cn: any) => cn.id === CENTERS.CONSULT);
     const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
     const currentUrl = `/dr/${slug}`;
 
@@ -480,7 +487,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
       <Seo
         title={title}
         description={description}
-        jsonlds={getJsonlds()}
+        jsonlds={centers?.length > 0 ? getJsonlds() : []}
         openGraph={{
           image: {
             src: publicRuntimeConfig.CDN_BASE_URL + information?.image,

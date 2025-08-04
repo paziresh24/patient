@@ -133,11 +133,11 @@ export async function getAggregatedProfileData(slug: string, university: string 
   let widgets: any[] = [];
   let widgetsData = {};
 
-  if (isServer && !university) {
+  if (!university) {
     try {
       const { data } = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
         params: { server_id: information.server_id, user_info_id: information.id },
-        headers: { authorization: `Bearer ${process.env.GOZARGARH_API_KEY}` },
+        headers: { authorization: `Bearer tzDWVALYrMpF6w9Msju87wmc@kd)` },
         timeout: 3000,
       });
       userData = data;
