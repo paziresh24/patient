@@ -45,45 +45,23 @@ import useLockScroll from '@/common/hooks/useLockScroll';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
+import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
+import Loading from '@/common/components/atom/loading';
 
 const { publicRuntimeConfig } = config();
 
-const DoctorProfile = ({
-  slug,
-  title,
-  breadcrumbs,
-  information,
-  centers,
-  media,
-  symptomes,
-  history,
-  onlineVisit,
-  similarLinks,
-  isBulk,
-  expertises,
-  feedbacks,
-  waitingTimeInfo,
-  dontShowRateAndReviewMessage,
-  shouldUseIncrementPageView,
-  fragmentComponents,
-  status,
-  hamdastWidgets,
-  hamdastWidgetsData,
-  user_id,
-}: any) => {
-  useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
+const DoctorProfile = (props: any) => {
+  const { shouldFetchOnClient, slug: initialSlug, status } = props;
+
+  const { data: clientData, isLoading, isError, error } = useProfileClientFetch(initialSlug, !!shouldFetchOnClient);
+
   const { customize } = useCustomize();
   const isApplication = useApplication();
   const isWebView = useWebView();
-
   const addPageView = usePageView();
   const incrementPageView = useIncrementPageView();
-
   const { recommendEvent } = useProfileSplunkEvent();
-
-  // Modal
   const { handleOpen: handleOpenViewAsModal, modalProps: viewAsModalProps } = useModal();
-
   const [editable, setEditable] = useState(false);
   const [viewAdData, setViewAsData] = useState({ title: '', url: '' });
   const userInfo = useUserInfoStore(state => state.info);
@@ -94,6 +72,32 @@ const DoctorProfile = ({
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
+
+  const finalProps = shouldFetchOnClient ? clientData?.props : props;
+  const {
+    slug,
+    title,
+    breadcrumbs,
+    information,
+    centers,
+    media,
+    symptomes,
+    history,
+    onlineVisit,
+    similarLinks,
+    isBulk,
+    expertises,
+    feedbacks,
+    waitingTimeInfo,
+    shouldUseIncrementPageView,
+    fragmentComponents,
+    hamdastWidgets,
+    hamdastWidgetsData,
+    user_id,
+    dontShowRateAndReviewMessage,
+  } = finalProps ?? {};
+
+  useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
 
   useEffect(() => {
     setIsOpenSuggestion(false);
@@ -236,8 +240,29 @@ const DoctorProfile = ({
     user_id,
   };
 
-  if ([404, 500, 504, 410].includes(status)) {
+  if (shouldFetchOnClient && isLoading) {
+    return (
+      <div className="flex flex-grow justify-center items-center">
+        <Loading className="w-9 h-9" />
+      </div>
+    );
+  }
+
+  if (isError && shouldFetchOnClient) {
+    const clientErrorStatusCode = (error as any)?.response?.status ?? 500;
+    return <ErrorPage statusCode={clientErrorStatusCode} />;
+  }
+
+  if ([404, 500, 504, 410].includes(status) && !shouldFetchOnClient) {
     return <ErrorPage statusCode={status} />;
+  }
+
+  if (!finalProps?.information) {
+    return (
+      <div className="flex flex-grow justify-center items-center">
+        <Loading className="w-9 h-9" />
+      </div>
+    );
   }
 
   return (
@@ -355,12 +380,12 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         '@context': 'http://www.schema.org',
         '@type': 'Physician',
         'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
-        'name': `${information.display_name}`,
+        'name': `${information?.display_name}`,
         'telephone': center?.display_number,
-        'description': information?.biography ? removeHtmlTagInString(information.biography) : '',
-        'image': publicRuntimeConfig.CDN_BASE_URL + information.image,
+        'description': information?.biography ? removeHtmlTagInString(information?.biography) : '',
+        'image': publicRuntimeConfig.CDN_BASE_URL + information?.image,
         'isAcceptingNewPatients': true,
-        'medicalSpecialty': !expertises?.group_expertises ? expertises.group_expertises?.[0]?.name : doctorExpertise,
+        'medicalSpecialty': !expertises?.group_expertises ? expertises?.group_expertises?.[0]?.name : doctorExpertise,
         'duns': information?.employee_id,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
         'address': {
@@ -410,9 +435,9 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         '@context': 'http://www.schema.org',
         '@type': 'Person',
         'jobTitle': 'physician',
-        'name': `${information.display_name}`,
+        'name': `${information?.display_name}`,
         'telephone': center?.display_number,
-        'image': publicRuntimeConfig.CDN_BASE_URL + information.image,
+        'image': publicRuntimeConfig.CDN_BASE_URL + information?.image,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
         'address': {
           '@type': 'PostalAddress',
@@ -433,7 +458,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
             '@type': 'ListItem',
             'position': 1,
             'item': {
-              '@id': `${publicRuntimeConfig.CLINIC_BASE_URL}/`,
+              '@id': `${publicRuntimeConfig?.CLINIC_BASE_URL}/`,
               'name': 'پذیرش۲۴',
             },
           },
@@ -442,7 +467,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
             'position': 2,
             'item': {
               '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-              'name': `${information.display_name}`,
+              'name': `${information?.display_name}`,
             },
           },
         ],
@@ -459,7 +484,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         openGraph={{
           image: {
             src: publicRuntimeConfig.CDN_BASE_URL + information?.image,
-            alt: `${information.display_name}`,
+            alt: `${information?.display_name}`,
             type: 'image/jpg',
           },
         }}

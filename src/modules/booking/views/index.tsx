@@ -73,7 +73,6 @@ import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
 import { growthbook } from 'src/pages/_app';
 import { template, templateSettings } from 'lodash';
-import { useProviders } from '@/modules/profile/apis/providers';
 import { useGetServices } from '@/common/apis/services/profile/services';
 import { toastActionble } from '@/common/utils/toastActionble';
 interface BookingStepsProps {
@@ -164,7 +163,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [errorModalMetaData, setErrorModalMetaData] = useState<any>({});
   const { handleOpen: handleOpenBirthDateModal, handleClose: handleCloseBirthDateModal, modalProps: birthDateModalProps } = useModal();
   const birthDateInputValue = useRef<any>(null);
-  const getProvider = useProviders();
   const [insuranceNumber, setInsuranceNumber] = useState('');
   const [insuranceName, setInsuranceName] = useState('');
   const [firstFreeTimeErrorText, setFirstFreeTimeErrorText] = useState('');
@@ -216,9 +214,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [centers, defaultStep]);
 
   useEffect(() => {
-    getProvider.mutate({
-      slug: slug,
-    });
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       slug,
@@ -271,8 +266,6 @@ const BookingSteps = (props: BookingStepsProps) => {
         selected_name: user?.name,
         selected_family: user?.family,
         selected_online_channel: user?.messengerType,
-        user_id: getProvider?.data?.user_id,
-        provider_id: getProvider?.data?.id,
       });
       router.replace(destination);
 
@@ -322,8 +315,6 @@ const BookingSteps = (props: BookingStepsProps) => {
                 selected_name: user?.name,
                 selected_family: user?.family,
                 selected_online_channel: user?.messengerType,
-                user_id: getProvider?.data?.user_id,
-                provider_id: getProvider?.data?.id,
                 book_id: data.book_info.id,
               });
               return router.replace(destination);
