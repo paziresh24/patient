@@ -42,7 +42,7 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 
     const { data: widgets } = await axios.get(API_ENDPOINTS.HAMDAST_WIDGETS, {
       params: { user_id: userData.user_id },
-      timeout: 3000,
+      timeout: 500,
     });
 
     if (!widgets || widgets.length === 0) return { widgets: [], widgetsData: {} };
@@ -52,7 +52,7 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
       dataEndpoints.map((item: any) =>
         axios.get(item.data_endpoint, {
           params: { user_id: userData.user_id, doctor_id: information?.id, widget_id: item?.id },
-          timeout: 3000,
+          timeout: 1500,
         }),
       ),
     );
@@ -109,7 +109,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
     getAverageWaitingTime({
       slug,
     }),
-    axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: fullProfileData.id }, timeout: 2000 }),
+    axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: fullProfileData.id }, timeout: 1500 }),
   ]);
 
   // Step 3: Overwrite and assemble data
@@ -138,7 +138,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
       const { data } = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
         params: { server_id: information.server_id, user_info_id: information.id },
         headers: { authorization: `Bearer tzDWVALYrMpF6w9Msju87wmc@kd)` },
-        timeout: 3000,
+        timeout: 500,
       });
       userData = data;
       const widgetResults = await fetchWidgetsData(information, userData);
@@ -160,7 +160,10 @@ export async function getAggregatedProfileData(slug: string, university: string 
     props: {
       title: university ? information?.display_name : title,
       description: university ? '' : description,
-      information,
+      information: {
+        ...information,
+        user_id: userData?.user_id ?? null,
+      },
       centers,
       expertises,
       feedbacks: {

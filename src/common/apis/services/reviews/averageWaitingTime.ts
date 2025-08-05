@@ -10,7 +10,7 @@ export const averageWaitingTime = async (params: AverageWaitingTimeParams) => {
     params: {
       where: `(slug,eq,${params.slug})`,
     },
-    timeout: 1000,
+    timeout: 500,
   });
 };
 

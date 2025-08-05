@@ -60,6 +60,7 @@ const DoctorProfile = (props: any) => {
     isLoading,
     isError,
     error,
+    refetch,
   } = useProfileClientFetch(initialSlug ?? query.slug, !!shouldFetchOnClient || !props?.information);
 
   const { customize } = useCustomize();
@@ -255,13 +256,13 @@ const DoctorProfile = (props: any) => {
     );
   }
 
-  if (isError && shouldFetchOnClient) {
+  if (isError) {
     const clientErrorStatusCode = (error as any)?.response?.status ?? 500;
-    return <ErrorPage statusCode={clientErrorStatusCode} />;
+    return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} />;
   }
 
   if ([404, 500, 504, 410].includes(status) && !shouldFetchOnClient) {
-    return <ErrorPage statusCode={status} />;
+    return <ErrorPage statusCode={status} refresh={refetch} />;
   }
 
   if (!finalProps?.information) {

@@ -32,9 +32,10 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        console.log(error.response?.status);
+
         const status = error.response?.status ?? 500;
         const statusCode = status === 404 ? 410 : error.message.includes('timeout') || status === 504 ? 504 : status;
-        context.res.statusCode = statusCode;
 
         await splunkInstance('doctor-profile').sendEvent({
           group: 'profile_error',
@@ -45,18 +46,18 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
             error: error?.response?.data,
             message: error.message,
             handle_error_status: context.res.statusCode,
+            slug: slug,
             stack: error?.stack,
           },
         });
 
-        if (statusCode === 504) {
-          console.warn(`SSR Timeout for slug: ${slug}. Falling back to client-side rendering.`);
+        if ([500, 502, 504].includes(statusCode)) {
+          console.warn(`SSR Timeout/Error for slug: ${slug}. Falling back to client-side rendering.`);
           return {
             props: sanitizeObject({
               slug,
               shouldFetchOnClient: true,
               status: 200,
-
               title: `درحال بارگذاری اطلاعات پزشک...`,
               description: '',
               information: null,
@@ -76,6 +77,8 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
             }),
           };
         }
+
+        context.res.statusCode = statusCode;
 
         return handleSsrError(context.res.statusCode, slug);
       }
