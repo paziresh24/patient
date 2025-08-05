@@ -995,8 +995,7 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": [],
-      "jsBundleThemes": []
+      "customFunctions": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -3370,7 +3369,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",
@@ -5363,6 +5363,18 @@
           "name": "Factor",
           "displayName": "Factor",
           "componentImportPath": "@/modules/booking/views/factor/wrapper"
+        },
+        {
+          "id": "dTUaURlCf_GA",
+          "name": "DoctorInvoiceNotice",
+          "displayName": "DoctorInvoiceNotice",
+          "componentImportPath": "@/modules/booking/components/factor/doctorInvoiceNotice"
+        },
+        {
+          "id": "Fk6v6vtKSBat",
+          "name": "AppFrame",
+          "displayName": "AppFrame",
+          "componentImportPath": "@/modules/hamdast/appFrame"
         }
       ],
       "customFunctions": [
@@ -5373,8 +5385,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "k6ZwKcaHfkxemp7yqC1vbY",

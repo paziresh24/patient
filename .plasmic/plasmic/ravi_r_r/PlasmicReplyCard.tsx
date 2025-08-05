@@ -157,18 +157,17 @@ function PlasmicReplyCard__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -382,16 +381,8 @@ function PlasmicReplyCard__RenderFunc(props: {
                   )}
                 </DataCtxReader__>
               </DataFetcher>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__dbIvm)}
-              >
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__rie2S)}
-                >
+              <div className={classNames(projectcss.all, sty.freeBox__dbIvm)}>
+                <div className={classNames(projectcss.all, sty.freeBox__rie2S)}>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -442,8 +433,8 @@ function PlasmicReplyCard__RenderFunc(props: {
                       size={"xSmall"}
                     />
                   ) : null}
-                </Stack__>
-              </Stack__>
+                </div>
+              </div>
             </div>
           )}
         </DataCtxReader__>
@@ -476,7 +467,7 @@ function PlasmicReplyCard__RenderFunc(props: {
           />
         </div>
       </div>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -540,15 +531,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReplyCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReplyCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicReplyCard__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicReplyCard__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

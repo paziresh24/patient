@@ -196,6 +196,7 @@ function PlasmicReviewList__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -553,16 +554,8 @@ function PlasmicReviewList__RenderFunc(props: {
             className={classNames("__wab_instance", sty.setNweReview)}
           />
 
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox___6RwG3)}
-          >
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__alcob)}
-            >
+          <div className={classNames(projectcss.all, sty.freeBox___6RwG3)}>
+            <div className={classNames(projectcss.all, sty.freeBox__alcob)}>
               <CustomSelect
                 data-plasmic-name={"filterInput"}
                 data-plasmic-override={overrides.filterInput}
@@ -800,7 +793,7 @@ function PlasmicReviewList__RenderFunc(props: {
                 })()}
                 value={generateStateValueProp($state, ["sortInput", "value"])}
               />
-            </Stack__>
+            </div>
             <TextInput
               data-plasmic-name={"searchInput"}
               data-plasmic-override={overrides.searchInput}
@@ -893,7 +886,7 @@ function PlasmicReviewList__RenderFunc(props: {
                 generateStateValueProp($state, ["searchInput", "value"]) ?? ""
               }
             />
-          </Stack__>
+          </div>
           <div className={classNames(projectcss.all, sty.freeBox__juWhk)} />
 
           <div
@@ -920,11 +913,9 @@ function PlasmicReviewList__RenderFunc(props: {
               const currentItem = __plasmic_item_0;
               const currentIndex = __plasmic_idx_0;
               return (
-                <Stack__
-                  as={"div"}
+                <div
                   data-plasmic-name={"cardLine"}
                   data-plasmic-override={overrides.cardLine}
-                  hasGap={true}
                   className={classNames(projectcss.all, sty.cardLine)}
                   key={currentIndex}
                 >
@@ -1305,7 +1296,7 @@ function PlasmicReviewList__RenderFunc(props: {
                   <div
                     className={classNames(projectcss.all, sty.freeBox__q1VhB)}
                   />
-                </Stack__>
+                </div>
               );
             })}
           </div>
@@ -2059,15 +2050,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReviewList__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReviewList__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicReviewList__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicReviewList__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

@@ -152,6 +152,7 @@ function PlasmicNewRatingBox__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -181,13 +182,11 @@ function PlasmicNewRatingBox__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -302,9 +301,7 @@ function PlasmicNewRatingBox__RenderFunc(props: {
             })()}
           </React.Fragment>
         </div>
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox__uVqwL, {
             [sty.freeBoxcompact__uVqwLrBwm9]: hasVariant(
               $state,
@@ -386,7 +383,7 @@ function PlasmicNewRatingBox__RenderFunc(props: {
               />
             );
           })}
-        </Stack__>
+        </div>
         <div
           className={classNames(
             projectcss.all,
@@ -501,9 +498,7 @@ function PlasmicNewRatingBox__RenderFunc(props: {
           )}
         </div>
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__jKc6I, {
           [sty.freeBoxcompact__jKc6IrBwm9]: hasVariant(
             $state,
@@ -589,8 +584,8 @@ function PlasmicNewRatingBox__RenderFunc(props: {
             })()}
           </React.Fragment>
         </div>
-      </Stack__>
-    </Stack__>
+      </div>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -620,15 +615,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicNewRatingBox__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicNewRatingBox__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicNewRatingBox__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicNewRatingBox__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

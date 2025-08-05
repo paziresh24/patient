@@ -189,6 +189,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -369,13 +370,11 @@ function PlasmicReviewCard2__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"verticalStack"}
       data-plasmic-override={overrides.verticalStack}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -1168,9 +1167,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
                     }
                   })(),
                   replies2: (
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
+                    <div
                       className={classNames(projectcss.all, sty.freeBox__qg4Xk)}
                     >
                       {(_par =>
@@ -1253,7 +1250,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
                           />
                         );
                       })}
-                    </Stack__>
+                    </div>
                   ),
                   replyCard: (
                     <div
@@ -1947,7 +1944,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
           </ApiRequest>
         </ApiRequest>
       </ApiRequest>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -2023,15 +2020,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReviewCard2__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReviewCard2__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicReviewCard2__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicReviewCard2__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
