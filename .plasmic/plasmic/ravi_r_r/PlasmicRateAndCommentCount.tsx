@@ -147,6 +147,7 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -187,13 +188,11 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
         throw e;
       }
     })() ? (
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"root"}
         data-plasmic-override={overrides.root}
         data-plasmic-root={true}
         data-plasmic-for-node={forNode}
-        hasGap={true}
         className={classNames(
           projectcss.all,
           projectcss.root_reset,
@@ -239,16 +238,8 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__evZN)}
-          >
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__aawEq)}
-            >
+          <div className={classNames(projectcss.all, sty.freeBox__evZN)}>
+            <div className={classNames(projectcss.all, sty.freeBox__aawEq)}>
               <Icon2Icon
                 className={classNames(projectcss.all, sty.svg__yhwpm)}
                 role={"img"}
@@ -286,7 +277,7 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
               >
                 {"\u0627\u0632 \u06f5"}
               </div>
-            </Stack__>
+            </div>
             <div
               className={classNames(
                 projectcss.all,
@@ -409,7 +400,7 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
                 />
               </div>
             </Popover>
-          </Stack__>
+          </div>
         ) : null}
         <SideEffect
           data-plasmic-name={"sideEffect"}
@@ -466,7 +457,7 @@ function PlasmicRateAndCommentCount__RenderFunc(props: {
             }
           }}
         />
-      </Stack__>
+      </div>
     ) : null
   ) as React.ReactElement | null;
 }
@@ -499,15 +490,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicRateAndCommentCount__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicRateAndCommentCount__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicRateAndCommentCount__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicRateAndCommentCount__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

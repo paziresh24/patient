@@ -246,6 +246,7 @@ function PlasmicReviewCard__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -388,15 +389,13 @@ function PlasmicReviewCard__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={
         "\u06a9\u0627\u0631\u062f\u0646\u0645\u0627\u06cc\u0634\u0646\u0638\u0631"
       }
       data-plasmic-override={overrides.کاردنمایشنظر}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -463,11 +462,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                   throw e;
                 }
               })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__cAdEv)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__cAdEv)}>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -498,7 +493,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                       })()}
                     </React.Fragment>
                   </div>
-                </Stack__>
+                </div>
               ) : null}
               <EditAndReport
                 data-plasmic-name={"editAndReport"}
@@ -750,11 +745,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 </DataFetcher>
               </div>
               <div className={classNames(projectcss.all, sty.freeBox__hJuBl)}>
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__mTvMh)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__mTvMh)}>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -883,12 +874,8 @@ function PlasmicReviewCard__RenderFunc(props: {
                       />
                     </Chip>
                   ) : null}
-                </Stack__>
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__vdK60)}
-                >
+                </div>
+                <div className={classNames(projectcss.all, sty.freeBox__vdK60)}>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -972,30 +959,20 @@ function PlasmicReviewCard__RenderFunc(props: {
                       </React.Fragment>
                     </div>
                   ) : null}
-                </Stack__>
+                </div>
               </div>
             </div>
           )}
         </DataCtxReader__>
       </DataFetcher>
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"\u0645\u062a\u0646\u0646\u0638\u0631"}
         data-plasmic-override={overrides.متننظر}
-        hasGap={true}
         className={classNames(projectcss.all, sty.متننظر)}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox___53H3H)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox___53H3H)}>
           {false ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__zoUnv)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__zoUnv)}>
               <div
                 className={classNames(
                   projectcss.all,
@@ -1011,13 +988,9 @@ function PlasmicReviewCard__RenderFunc(props: {
                 className={classNames(projectcss.all, sty.svg__ecNXv)}
                 role={"img"}
               />
-            </Stack__>
+            </div>
           ) : null}
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__zLXc8)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__zLXc8)}>
             <div
               className={classNames(
                 projectcss.all,
@@ -1033,8 +1006,8 @@ function PlasmicReviewCard__RenderFunc(props: {
               className={classNames(projectcss.all, sty.svg__a8Ad)}
               role={"img"}
             />
-          </Stack__>
-        </Stack__>
+          </div>
+        </div>
         <div
           className={classNames(
             projectcss.all,
@@ -1068,14 +1041,12 @@ function PlasmicReviewCard__RenderFunc(props: {
             }}
           />
         </div>
-      </Stack__>
-      <Stack__
-        as={"div"}
+      </div>
+      <div
         data-plasmic-name={
           "\u0644\u0627\u06cc\u06a9\u0631\u06cc\u067e\u0648\u0631\u062a"
         }
         data-plasmic-override={overrides.لایکریپورت}
-        hasGap={true}
         className={classNames(projectcss.all, sty.لایکریپورت)}
       >
         <Dialog
@@ -1414,9 +1385,7 @@ function PlasmicReviewCard__RenderFunc(props: {
           open={generateStateValueProp($state, ["dialog", "open"])}
           title={"\u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631"}
           trigger={
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox___0EXmx, {
                 [sty.freeBoxraviExpFroDrakam___0EXmxQl6C7]: hasVariant(
                   $state,
@@ -1439,7 +1408,7 @@ function PlasmicReviewCard__RenderFunc(props: {
               >
                 {"\u06af\u0632\u0627\u0631\u0634"}
               </div>
-            </Stack__>
+            </div>
           }
         />
 
@@ -1488,9 +1457,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                   data-plasmic-name={"dialog2"}
                   data-plasmic-override={overrides.dialog2}
                   body={
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
+                    <div
                       className={classNames(projectcss.all, sty.freeBox__x126B)}
                     >
                       {(_par =>
@@ -1589,7 +1556,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                           </div>
                         );
                       })}
-                    </Stack__>
+                    </div>
                   }
                   className={classNames("__wab_instance", sty.dialog2)}
                   onOpenChange={async (...eventArgs: any) => {
@@ -1622,13 +1589,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                         throw e;
                       }
                     })() ? (
-                      <Stack__
-                        as={"div"}
+                      <div
                         data-plasmic-name={
                           "\u0646\u0638\u0631\u0628\u06cc\u0634\u062a\u0631\u0627\u06321"
                         }
                         data-plasmic-override={overrides.نظربیشتراز1}
-                        hasGap={true}
                         className={classNames(projectcss.all, sty.نظربیشتراز1)}
                       >
                         <RepliesIcon
@@ -1650,7 +1615,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                             "\u0646\u0645\u0627\u06cc\u0634 \u0646\u0638\u0631 \u06a9\u0627\u0631\u0628\u0631\u0627\u0646"
                           }
                         </div>
-                      </Stack__>
+                      </div>
                     ) : null
                   }
                 />
@@ -1658,11 +1623,7 @@ function PlasmicReviewCard__RenderFunc(props: {
             }
           </DataCtxReader__>
         </DataFetcher>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__o8WyD)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__o8WyD)}>
           <Popover
             data-plasmic-name={"popoverCore"}
             data-plasmic-override={overrides.popoverCore}
@@ -1973,9 +1934,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
+              <div
                 className={classNames(projectcss.all, sty.freeBox__qhLa0)}
                 onClick={async event => {
                   const $steps = {};
@@ -2179,7 +2138,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                     ? "\u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"
                     : " \u0686\u0642\u062f\u0631 \u0645\u0641\u06cc\u062f \u0628\u0648\u062f\u061f"}
                 </div>
-              </Stack__>
+              </div>
             ) : null}
           </Popover>
           <div
@@ -2262,9 +2221,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 >
                   <DataCtxReader__>
                     {$ctx => (
-                      <Stack__
-                        as={"div"}
-                        hasGap={true}
+                      <div
                         className={classNames(
                           projectcss.all,
                           sty.freeBox__o41Sk
@@ -2724,7 +2681,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                             outline={true}
                           />
                         </div>
-                      </Stack__>
+                      </div>
                     )}
                   </DataCtxReader__>
                 </DataFetcher>
@@ -2749,9 +2706,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                 "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
               }
               trigger={
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
+                <div
                   className={classNames(projectcss.all, sty.freeBox__iAvTv, {
                     [sty.freeBoxraviExpFroDrakam__iAvTvQl6C7]: hasVariant(
                       $state,
@@ -2774,12 +2729,12 @@ function PlasmicReviewCard__RenderFunc(props: {
                   >
                     {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
                   </div>
-                </Stack__>
+                </div>
               }
             />
           </div>
-        </Stack__>
-      </Stack__>
+        </div>
+      </div>
       {(() => {
         try {
           return $props.isShowReplyInput;
@@ -3142,7 +3097,7 @@ function PlasmicReviewCard__RenderFunc(props: {
           }
         </DataCtxReader__>
       </DataFetcher>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -3312,15 +3267,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReviewCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReviewCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicReviewCard__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicReviewCard__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

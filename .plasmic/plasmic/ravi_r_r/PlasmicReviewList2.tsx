@@ -178,6 +178,7 @@ function PlasmicReviewList2__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -247,11 +248,7 @@ function PlasmicReviewList2__RenderFunc(props: {
               throw e;
             }
           })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__icLaA)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__icLaA)}>
               <RaviSummery
                 data-plasmic-name={"raviSummery"}
                 data-plasmic-override={overrides.raviSummery}
@@ -455,7 +452,7 @@ function PlasmicReviewList2__RenderFunc(props: {
               />
 
               <div className={classNames(projectcss.all, sty.freeBox__kSizI)} />
-            </Stack__>
+            </div>
           ) : null}
           {(() => {
             try {
@@ -875,9 +872,7 @@ function PlasmicReviewList2__RenderFunc(props: {
               const currentItem = __plasmic_item_0;
               const currentIndex = __plasmic_idx_0;
               return (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
+                <div
                   className={classNames(projectcss.all, sty.freeBox__n1Ldu)}
                   key={currentIndex}
                 >
@@ -1156,7 +1151,7 @@ function PlasmicReviewList2__RenderFunc(props: {
                       }
                     })()}
                   />
-                </Stack__>
+                </div>
               );
             })}
             {(() => {
@@ -1453,15 +1448,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReviewList2__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReviewList2__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicReviewList2__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicReviewList2__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

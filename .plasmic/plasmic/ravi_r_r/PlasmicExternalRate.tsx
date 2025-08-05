@@ -139,6 +139,7 @@ function PlasmicExternalRate__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -215,11 +216,7 @@ function PlasmicExternalRate__RenderFunc(props: {
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__iiGlz)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__iiGlz)}>
         <ApiRequest
           data-plasmic-name={"apiRequest"}
           data-plasmic-override={overrides.apiRequest}
@@ -435,7 +432,7 @@ function PlasmicExternalRate__RenderFunc(props: {
             })()}
           />
         </ApiRequest>
-      </Stack__>
+      </div>
       {(() => {
         try {
           return $state.getPaziresh24Rate?.data?.list?.length > 0;
@@ -678,15 +675,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicExternalRate__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicExternalRate__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicExternalRate__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicExternalRate__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

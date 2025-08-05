@@ -182,6 +182,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -630,9 +631,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
                   "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0646\u0638\u0631"
                 }
                 trigger={
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__dv97B)}
                   >
                     <Icon3Icon
@@ -649,7 +648,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
                     >
                       {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
                     </div>
-                  </Stack__>
+                  </div>
                 }
               />
             ) : null}
@@ -670,9 +669,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
                 data-plasmic-name={"dialog4"}
                 data-plasmic-override={overrides.dialog4}
                 body={
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__jYq71)}
                   >
                     <Button
@@ -979,7 +976,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
                         />
                       }
                     />
-                  </Stack__>
+                  </div>
                 }
                 className={classNames("__wab_instance", sty.dialog4)}
                 onOpenChange={async (...eventArgs: any) => {
@@ -1011,9 +1008,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
                   </div>
                 }
                 trigger={
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__yHVaz)}
                   >
                     <Icon4Icon
@@ -1030,7 +1025,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
                     >
                       {"\u062d\u0630\u0641"}
                     </div>
-                  </Stack__>
+                  </div>
                 }
               />
             ) : null}
@@ -1411,9 +1406,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
               open={generateStateValueProp($state, ["dialog5", "open"])}
               title={"\u06af\u0632\u0627\u0631\u0634 \u0646\u0638\u0631"}
               trigger={
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
+                <div
                   className={classNames(projectcss.all, sty.freeBox__bKaQl, {
                     [sty.freeBoxraviExpFroDrakam__bKaQlAslZi]: hasVariant(
                       $state,
@@ -1436,7 +1429,7 @@ function PlasmicEditAndReport__RenderFunc(props: {
                   >
                     {"\u06af\u0632\u0627\u0631\u0634"}
                   </div>
-                </Stack__>
+                </div>
               }
             />
           </div>
@@ -1513,15 +1506,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicEditAndReport__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicEditAndReport__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicEditAndReport__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicEditAndReport__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

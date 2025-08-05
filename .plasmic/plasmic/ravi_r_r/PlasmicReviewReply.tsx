@@ -145,6 +145,7 @@ function PlasmicReviewReply__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -338,7 +339,12 @@ function PlasmicReviewReply__RenderFunc(props: {
             })()}
             userName={(() => {
               try {
-                return $state.userApi.data.users[0].name || "کاربر بدون نام";
+                return (() => {
+                  if ($props.userId == $props.doctorId) {
+                    return `${$state.userApi.data.users[0].name} ${$state.userApi.data.users[0].family}`;
+                  }
+                  return $state.userApi.data.users[0].name || "کاربر بدون نام";
+                })();
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -459,15 +465,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReviewReply__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReviewReply__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicReviewReply__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicReviewReply__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

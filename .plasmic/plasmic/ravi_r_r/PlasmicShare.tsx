@@ -147,6 +147,7 @@ function PlasmicShare__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -232,11 +233,7 @@ function PlasmicShare__RenderFunc(props: {
               })()}
             />
 
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__jhKz0)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__jhKz0)}>
               <div
                 className={classNames(
                   projectcss.all,
@@ -652,7 +649,7 @@ function PlasmicShare__RenderFunc(props: {
                   outline={true}
                 />
               </div>
-            </Stack__>
+            </div>
           </React.Fragment>
         }
         className={classNames("__wab_instance", sty.dialog6)}
@@ -685,11 +682,7 @@ function PlasmicShare__RenderFunc(props: {
           </div>
         }
         trigger={
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__e5NKf)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__e5NKf)}>
             <Icon14Icon
               className={classNames(projectcss.all, sty.svg__toA7)}
               role={"img"}
@@ -704,7 +697,7 @@ function PlasmicShare__RenderFunc(props: {
             >
               {"\u0627\u0631\u0633\u0627\u0644 \u06a9\u0646 "}
             </div>
-          </Stack__>
+          </div>
         }
       />
     </div>
@@ -781,15 +774,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicShare__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicShare__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicShare__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicShare__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
