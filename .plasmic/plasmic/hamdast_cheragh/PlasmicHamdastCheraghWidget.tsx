@@ -59,11 +59,17 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
+import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 4fjEYDyHsDvAphaYRHZchB/projectcss
 import sty from "./PlasmicHamdastCheraghWidget.module.css"; // plasmic-import: ZjqBgretf8Lk/css
+
+import ChevronRightIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
+import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 
 createPlasmicElementProxy;
 
@@ -81,7 +87,8 @@ export const PlasmicHamdastCheraghWidget__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicHamdastCheraghWidget__OverridesType = {
   root?: Flex__<"div">;
-  img?: Flex__<typeof PlasmicImg__>;
+  modal?: Flex__<typeof Paziresh24Modal>;
+  paziresh24Button?: Flex__<typeof Paziresh24Button>;
 };
 
 export interface DefaultHamdastCheraghWidgetProps {
@@ -128,14 +135,30 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "modal.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -146,22 +169,255 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
         sty.root
       )}
     >
-      <div
-        className={classNames(
-          projectcss.all,
-          projectcss.__wab_text,
-          sty.text__btpEz
-        )}
-      >
-        {
-          "\u062f\u0633\u062a\u0631\u0633\u06cc\u200c\u0647\u0627\u06cc \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc"
-        }
+      <div className={classNames(projectcss.all, sty.freeBox__ylkfx)}>
+        <div
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text__btpEz
+          )}
+        >
+          {
+            "\u062f\u0633\u062a\u0631\u0633\u06cc\u200c\u0647\u0627\u06cc \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc"
+          }
+        </div>
+        <Paziresh24Modal
+          data-plasmic-name={"modal"}
+          data-plasmic-override={overrides.modal}
+          body={(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+            (() => {
+              try {
+                return Object.values($props.data).filter(item => item.title);
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
+                }
+                throw e;
+              }
+            })()
+          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+            const currentItem = __plasmic_item_0;
+            const currentIndex = __plasmic_idx_0;
+            return (
+              <div
+                className={classNames(projectcss.all, sty.freeBox__s7Tyc)}
+                key={currentIndex}
+              >
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__pciSr
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return currentItem.title;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "\u062f\u0633\u062a\u0631\u0633\u06cc";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
+                <div className={classNames(projectcss.all, sty.freeBox__iEaW)}>
+                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                    (() => {
+                      try {
+                        return currentItem.items;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()
+                  ).map((__plasmic_item_1, __plasmic_idx_1) => {
+                    const currentItem = __plasmic_item_1;
+                    const currentIndex = __plasmic_idx_1;
+                    return (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox__zdG2U
+                        )}
+                        key={currentIndex}
+                      >
+                        <PlasmicImg__
+                          alt={""}
+                          className={classNames(sty.img___4Dxyq)}
+                          displayHeight={"30px"}
+                          displayMaxHeight={"none"}
+                          displayMaxWidth={"100%"}
+                          displayMinHeight={"0"}
+                          displayMinWidth={"0"}
+                          displayWidth={"30px"}
+                          loading={"lazy"}
+                          src={(() => {
+                            try {
+                              return currentItem.icon;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()}
+                        />
+
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__z6NmD
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return currentItem.name;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+          className={classNames("__wab_instance", sty.modal)}
+          onOpenChange={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["modal", "open"]).apply(
+              null,
+              eventArgs
+            );
+
+            if (
+              eventArgs.length > 1 &&
+              eventArgs[1] &&
+              eventArgs[1]._plasmic_state_init_
+            ) {
+              return;
+            }
+
+            (async val => {
+              const $steps = {};
+            }).apply(null, eventArgs);
+          }}
+          open={generateStateValueProp($state, ["modal", "open"])}
+          title={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text___8Mv1Z
+              )}
+            >
+              {
+                "\u062f\u0633\u062a\u0631\u0633\u06cc\u200c\u0647\u0627\u06cc \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc"
+              }
+            </div>
+          }
+          trigger={
+            <Paziresh24Button
+              data-plasmic-name={"paziresh24Button"}
+              data-plasmic-override={overrides.paziresh24Button}
+              children2={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__w7UUw
+                  )}
+                >
+                  {
+                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u0628\u06cc\u0634\u062a\u0631"
+                  }
+                </div>
+              }
+              color={"text"}
+              endIcon={
+                <ChevronLeftIcon
+                  className={classNames(projectcss.all, sty.svg__fAdKx)}
+                  role={"img"}
+                />
+              }
+              showEndIcon={true}
+              size={"minimal"}
+              startIcon={
+                <ChevronRightIcon
+                  className={classNames(projectcss.all, sty.svg___8IYau)}
+                  role={"img"}
+                />
+              }
+            />
+          }
+        />
       </div>
-      <div className={classNames(projectcss.all, sty.freeBox__tJs3C)}>
+      <div
+        className={classNames(projectcss.all, sty.freeBox__tJs3C)}
+        onClick={async event => {
+          const $steps = {};
+
+          $steps["updateModalOpen"] = true
+            ? (() => {
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["modal", "open"]
+                  },
+                  operation: 0,
+                  value: true
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
+
+                  $stateSet(objRoot, variablePath, value);
+                  return value;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["updateModalOpen"] != null &&
+            typeof $steps["updateModalOpen"] === "object" &&
+            typeof $steps["updateModalOpen"].then === "function"
+          ) {
+            $steps["updateModalOpen"] = await $steps["updateModalOpen"];
+          }
+        }}
+      >
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
           (() => {
             try {
-              return $props.data;
+              return $props.data.general;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -176,17 +432,13 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
           const currentItem = __plasmic_item_0;
           const currentIndex = __plasmic_idx_0;
           return (
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox__j63Cu)}
               key={currentIndex}
             >
               <PlasmicImg__
-                data-plasmic-name={"img"}
-                data-plasmic-override={overrides.img}
                 alt={""}
-                className={classNames(sty.img)}
+                className={classNames(sty.img__e03Ru)}
                 displayHeight={"30px"}
                 displayMaxHeight={"none"}
                 displayMaxWidth={"100%"}
@@ -232,24 +484,26 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
                   })()}
                 </React.Fragment>
               </div>
-            </Stack__>
+            </div>
           );
         })}
       </div>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "img"],
-  img: ["img"]
+  root: ["root", "modal", "paziresh24Button"],
+  modal: ["modal", "paziresh24Button"],
+  paziresh24Button: ["paziresh24Button"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  img: typeof PlasmicImg__;
+  modal: typeof Paziresh24Modal;
+  paziresh24Button: typeof Paziresh24Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -312,7 +566,8 @@ export const PlasmicHamdastCheraghWidget = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    img: makeNodeComponent("img"),
+    modal: makeNodeComponent("modal"),
+    paziresh24Button: makeNodeComponent("paziresh24Button"),
 
     // Metadata about props expected for PlasmicHamdastCheraghWidget
     internalVariantProps: PlasmicHamdastCheraghWidget__VariantProps,
