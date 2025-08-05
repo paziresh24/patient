@@ -11,6 +11,7 @@ export const rate = async (params: Rate) => {
     params: {
       where: `(doctor_slug,eq,${params.slug})`,
     },
+    timeout: 1000,
   });
   return data;
 };
