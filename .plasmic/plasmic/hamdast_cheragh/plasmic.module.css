@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&display=swap");
 
 .plasmic_tokens {
   --token-pgepVULXAGuw: #030712;
@@ -156,6 +156,8 @@
   background: none;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  row-gap: 0px;
+  column-gap: 0px;
   box-shadow: none;
   box-sizing: border-box;
   text-decoration-line: none;
@@ -169,6 +171,8 @@
   background: none;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  row-gap: 0px;
+  column-gap: 0px;
   box-shadow: none;
   box-sizing: border-box;
   margin: 0;
@@ -604,7 +608,7 @@ ul:where(.root_reset_tags) {
   padding-left: var(--mixin-ZoDqPPY9K-bA_padding-left);
   position: var(--mixin-ZoDqPPY9K-bA_position);
   list-style-type: var(--mixin-ZoDqPPY9K-bA_list-style-type);
-  flex-column-gap: var(--mixin-ZoDqPPY9K-bA_flex-column-gap);
+  column-gap: var(--mixin-ZoDqPPY9K-bA_column-gap);
 }
 
 :where(.root_reset) ol:where(.ol),
@@ -620,7 +624,7 @@ ol:where(.root_reset_tags) {
   padding-left: var(--mixin-tZHLiciEWbGK_padding-left);
   position: var(--mixin-tZHLiciEWbGK_position);
   list-style-type: var(--mixin-tZHLiciEWbGK_list-style-type);
-  flex-column-gap: var(--mixin-tZHLiciEWbGK_flex-column-gap);
+  column-gap: var(--mixin-tZHLiciEWbGK_column-gap);
 }
 
 :where(.root_reset) h5:where(.h5),
