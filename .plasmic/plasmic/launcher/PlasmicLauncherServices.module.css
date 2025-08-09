@@ -90,18 +90,6 @@
 .launcherComponentsService__pWhtd:global(.__wab_instance) {
   max-width: 100%;
 }
-.freeBox__a49YB {
-  display: grid;
-  position: relative;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
-}
-.launcherComponentsService__swAe:global(.__wab_instance) {
-  max-width: 100%;
-}
 .reveal__ghIlb:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;

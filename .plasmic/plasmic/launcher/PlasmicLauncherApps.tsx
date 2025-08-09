@@ -1095,101 +1095,83 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   widgetId={"ad0b26pc5ni63nm"}
                 />
               ) : null}
-              {(() => {
-                try {
-                  return (
-                    $state.getCenters?.data?.items?.filter(
-                      item => item.id !== "5532"
-                    ).length > 0
-                  );
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
+              <LauncherComponentsApp
+                _new={true}
+                appkey={"rahnama"}
+                avatar={
+                  "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Frahnama.png?versionId="
                 }
-              })() ? (
-                <LauncherComponentsApp
-                  _new={true}
-                  appkey={"hamyar"}
-                  avatar={
-                    "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fhamyar.png?versionId="
-                  }
-                  className={classNames(
-                    "__wab_instance",
-                    sty.launcherComponentsApp___8UPeb
-                  )}
-                  description={
-                    "\u0628\u06cc\u0645\u0627\u0631\u0627\u0646 \u0642\u0627\u062f\u0631 \u0647\u0633\u062a\u0646\u062f \u062f\u0631 \u0632\u0645\u0627\u0646 \u0641\u0639\u0627\u0644 \u0628\u0648\u062f\u0646 \u0627\u0628\u0632\u0627\u0631\u06a9\u060c \u0628\u062f\u0648\u0646 \u0645\u0634\u0627\u0647\u062f\u0647 \u0634\u0645\u0627\u0631\u0647 \u0645\u0646\u0634\u06cc \u0628\u0627 \u0645\u0646\u0634\u06cc \u062a\u0645\u0627\u0633 \u0627\u0645\u0646 \u0628\u06af\u06cc\u0631\u0646\u062f."
-                  }
-                  link={"/_/hamyar/launcher/"}
-                  name={"\u0647\u0645\u06cc\u0627\u0631"}
-                  onEvent={async () => {
-                    const $steps = {};
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp___8UPeb
+                )}
+                description={
+                  "\u0644\u06cc\u0646\u06a9 \u0634\u0628\u06a9\u0647\u200c\u0647\u0627\u06cc \u0627\u062c\u062a\u0645\u0627\u0639\u06cc\u200c\u062a\u0627\u0646 (\u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645\u060c \u0627\u06cc\u06a9\u0633\u060c \u0627\u067e\u0627\u0631\u0627\u062a) \u0631\u0627 \u0628\u0647 \u0633\u0627\u062f\u06af\u06cc \u062f\u0631 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644\u200c\u062a\u0627\u0646 \u0642\u0631\u0627\u0631 \u062f\u0647\u06cc\u062f."
+                }
+                link={"/_/rahnama/launcher/"}
+                name={"\u0631\u0627\u0647\u200c\u0646\u0645\u0627"}
+                onEvent={async () => {
+                  const $steps = {};
 
-                    $steps["sendLog"] = true
-                      ? (() => {
-                          const actionArgs = {
-                            args: [
-                              (() => {
-                                try {
-                                  return {
-                                    evant_group: "launcher_statistics",
-                                    event_type: "apps",
-                                    user_id: $ctx.auth.info?.id,
-                                    is_doctor: $ctx.auth.info?.is_doctor,
-                                    meta_data: {
-                                      name: "همیار",
-                                      key: "/hamyar/launcher/",
-                                      link: ""
-                                    }
-                                  };
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
+                  $steps["sendLog"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  evant_group: "launcher_statistics",
+                                  event_type: "apps",
+                                  user_id: $ctx.auth.info?.id,
+                                  is_doctor: $ctx.auth.info?.is_doctor,
+                                  meta_data: {
+                                    name: "راه‌نما",
+                                    key: "/rahnama/launcher/",
+                                    link: ""
                                   }
-                                  throw e;
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
                                 }
-                              })()
-                            ]
-                          };
-                          return $globalActions["Splunk.sendLog"]?.apply(null, [
-                            ...actionArgs.args
-                          ]);
-                        })()
-                      : undefined;
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendLog"] != null &&
+                    typeof $steps["sendLog"] === "object" &&
+                    typeof $steps["sendLog"].then === "function"
+                  ) {
+                    $steps["sendLog"] = await $steps["sendLog"];
+                  }
+                }}
+                pagekey={"launcher"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
                     if (
-                      $steps["sendLog"] != null &&
-                      typeof $steps["sendLog"] === "object" &&
-                      typeof $steps["sendLog"].then === "function"
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
                     ) {
-                      $steps["sendLog"] = await $steps["sendLog"];
+                      return false;
                     }
-                  }}
-                  pagekey={"launcher"}
-                  widgetFrame={(() => {
-                    try {
-                      return $props.widgetFrames;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return false;
-                      }
-                      throw e;
-                    }
-                  })()}
-                  widgetId={"ad0b26pc5ni63nm"}
-                />
-              ) : null}
+                    throw e;
+                  }
+                })()}
+                widgetId={"fb1sxun8iwn7due"}
+              />
+
               {(() => {
                 try {
                   return (
