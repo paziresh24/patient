@@ -85,6 +85,8 @@ export const PlasmicHamdastRahnamaWidget__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicHamdastRahnamaWidget__OverridesType = {
   root?: Flex__<"div">;
+  freeBox?: Flex__<"div">;
+  text?: Flex__<"div">;
   link?: Flex__<"a"> & Partial<LinkProps>;
   img?: Flex__<typeof PlasmicImg__>;
 };
@@ -153,13 +155,11 @@ function PlasmicHamdastRahnamaWidget__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -170,60 +170,62 @@ function PlasmicHamdastRahnamaWidget__RenderFunc(props: {
         sty.root
       )}
     >
-      {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-        (() => {
-          try {
-            return $props.data.items;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return [];
-            }
-            throw e;
-          }
-        })()
-      ).map((__plasmic_item_0, __plasmic_idx_0) => {
-        const currentItem = __plasmic_item_0;
-        const currentIndex = __plasmic_idx_0;
-        return (
-          <PlasmicLink__
-            data-plasmic-name={"link"}
-            data-plasmic-override={overrides.link}
-            className={classNames(projectcss.all, projectcss.a, sty.link)}
-            component={Link}
-            href={(() => {
+      <div
+        data-plasmic-name={"freeBox"}
+        data-plasmic-override={overrides.freeBox}
+        className={classNames(projectcss.all, sty.freeBox)}
+      >
+        <div
+          data-plasmic-name={"text"}
+          data-plasmic-override={overrides.text}
+          className={classNames(
+            projectcss.all,
+            projectcss.__wab_text,
+            sty.text
+          )}
+        >
+          <React.Fragment>
+            {(() => {
               try {
-                return currentItem.link;
+                return `صفحات مجازی ${$props.profileData.infomation.name} ${$props.profileData.infomation.family} : `;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return undefined;
+                  return "\u0635\u0641\u062d\u0627\u062a \u0645\u062c\u0627\u0632\u06cc \u067e\u0632\u0634\u06a9:";
                 }
                 throw e;
               }
             })()}
-            key={currentIndex}
-            platform={"nextjs"}
-          >
-            <PlasmicImg__
-              data-plasmic-name={"img"}
-              data-plasmic-override={overrides.img}
-              alt={""}
-              className={classNames(sty.img)}
-              displayHeight={"24px"}
-              displayMaxHeight={"none"}
-              displayMaxWidth={"100%"}
-              displayMinHeight={"0"}
-              displayMinWidth={"0"}
-              displayWidth={"24px"}
-              loading={"lazy"}
-              src={(() => {
+          </React.Fragment>
+        </div>
+        {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+          (() => {
+            try {
+              return $props.data.items;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return [];
+              }
+              throw e;
+            }
+          })()
+        ).map((__plasmic_item_0, __plasmic_idx_0) => {
+          const currentItem = __plasmic_item_0;
+          const currentIndex = __plasmic_idx_0;
+          return (
+            <PlasmicLink__
+              data-plasmic-name={"link"}
+              data-plasmic-override={overrides.link}
+              className={classNames(projectcss.all, projectcss.a, sty.link)}
+              component={Link}
+              href={(() => {
                 try {
-                  return currentItem.icon;
+                  return currentItem.link;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -234,16 +236,51 @@ function PlasmicHamdastRahnamaWidget__RenderFunc(props: {
                   throw e;
                 }
               })()}
-            />
-          </PlasmicLink__>
-        );
-      })}
-    </Stack__>
+              key={currentIndex}
+              onClick={async event => {
+                const $steps = {};
+              }}
+              platform={"nextjs"}
+              rel={"nofollow"}
+            >
+              <PlasmicImg__
+                data-plasmic-name={"img"}
+                data-plasmic-override={overrides.img}
+                alt={""}
+                className={classNames(sty.img)}
+                displayHeight={"24px"}
+                displayMaxHeight={"none"}
+                displayMaxWidth={"100%"}
+                displayMinHeight={"0"}
+                displayMinWidth={"0"}
+                displayWidth={"24px"}
+                loading={"lazy"}
+                src={(() => {
+                  try {
+                    return currentItem.icon;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+            </PlasmicLink__>
+          );
+        })}
+      </div>
+    </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "link", "img"],
+  root: ["root", "freeBox", "text", "link", "img"],
+  freeBox: ["freeBox", "text", "link", "img"],
+  text: ["text"],
   link: ["link", "img"],
   img: ["img"]
 } as const;
@@ -252,6 +289,8 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  freeBox: "div";
+  text: "div";
   link: "a";
   img: typeof PlasmicImg__;
 };
@@ -316,6 +355,8 @@ export const PlasmicHamdastRahnamaWidget = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    freeBox: makeNodeComponent("freeBox"),
+    text: makeNodeComponent("text"),
     link: makeNodeComponent("link"),
     img: makeNodeComponent("img"),
 
