@@ -162,6 +162,7 @@ function PlasmicDialog__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -299,10 +300,14 @@ function PlasmicDialog__RenderFunc(props: {
           projectcss.plasmic_tokens
         )}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__nMxG)}
+        <div
+          className={classNames(projectcss.all, sty.freeBox__nMxG, {
+            [sty.freeBoxfullScreen__nMxGvEcX]: hasVariant(
+              $state,
+              "fullScreen",
+              "fullScreen"
+            )
+          })}
           dir={"rtl"}
         >
           <DialogTitle
@@ -322,9 +327,15 @@ function PlasmicDialog__RenderFunc(props: {
               })}
             </h5>
           </DialogTitle>
-        </Stack__>
+        </div>
         <div
-          className={classNames(projectcss.all, sty.freeBox__i0Esu)}
+          className={classNames(projectcss.all, sty.freeBox__i0Esu, {
+            [sty.freeBoxfullScreen__i0EsuvEcX]: hasVariant(
+              $state,
+              "fullScreen",
+              "fullScreen"
+            )
+          })}
           dir={"rtl"}
         >
           {renderPlasmicSlot({
@@ -345,7 +356,13 @@ function PlasmicDialog__RenderFunc(props: {
         <DialogClose
           data-plasmic-name={"dialogClose"}
           data-plasmic-override={overrides.dialogClose}
-          className={classNames("__wab_instance", sty.dialogClose)}
+          className={classNames("__wab_instance", sty.dialogClose, {
+            [sty.dialogClosefullScreen]: hasVariant(
+              $state,
+              "fullScreen",
+              "fullScreen"
+            )
+          })}
         >
           <XIcon
             data-plasmic-name={"svg"}
@@ -398,15 +415,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicDialog__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicDialog__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicDialog__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicDialog__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

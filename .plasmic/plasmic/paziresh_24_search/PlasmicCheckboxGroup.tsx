@@ -246,11 +246,7 @@ function PlasmicCheckboxGroup__RenderFunc(props: {
       ) : null}
       {renderPlasmicSlot({
         defaultContents: (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__iAjf1)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__iAjf1)}>
             <Checkbox2
               className={classNames("__wab_instance", sty.checkbox2__i06AX)}
               label={"Option 1"}
@@ -268,7 +264,7 @@ function PlasmicCheckboxGroup__RenderFunc(props: {
               label={"Option 3"}
               value={"option3"}
             />
-          </Stack__>
+          </div>
         ),
         value: args.options
       })}
@@ -314,15 +310,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicCheckboxGroup__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicCheckboxGroup__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicCheckboxGroup__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicCheckboxGroup__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

@@ -146,13 +146,11 @@ function PlasmicFilterRowSelected__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -163,9 +161,7 @@ function PlasmicFilterRowSelected__RenderFunc(props: {
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__yyeat, "no-scroll")}
       >
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -256,9 +252,7 @@ function PlasmicFilterRowSelected__RenderFunc(props: {
           const currentItem = __plasmic_item_0;
           const currentIndex = __plasmic_idx_0;
           return (
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox__wvnew)}
               key={currentIndex}
             >
@@ -344,11 +338,11 @@ function PlasmicFilterRowSelected__RenderFunc(props: {
                 }}
                 role={"img"}
               />
-            </Stack__>
+            </div>
           );
         })}
-      </Stack__>
-    </Stack__>
+      </div>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -378,15 +372,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicFilterRowSelected__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicFilterRowSelected__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicFilterRowSelected__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicFilterRowSelected__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

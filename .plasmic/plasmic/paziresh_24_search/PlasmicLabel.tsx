@@ -194,11 +194,9 @@ function PlasmicLabel__RenderFunc(props: {
         }
       )}
     >
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"freeBox"}
         data-plasmic-override={overrides.freeBox}
-        hasGap={true}
         className={classNames(projectcss.all, sty.freeBox, {
           [sty.freeBoxrequirementIndicator_optional]: hasVariant(
             $state,
@@ -252,7 +250,7 @@ function PlasmicLabel__RenderFunc(props: {
             ? "*"
             : "(optional)"}
         </div>
-      </Stack__>
+      </div>
     </BaseLabel>
   ) as React.ReactElement | null;
 }
@@ -283,15 +281,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLabel__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLabel__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLabel__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLabel__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

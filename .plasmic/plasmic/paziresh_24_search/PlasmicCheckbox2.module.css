@@ -11,8 +11,8 @@
   font-size: var(--token-1nDNJIYJ8foS);
   line-height: var(--token-9evef4D4tD-c);
   width: 100%;
-  min-width: 0;
   column-gap: var(--token--8CCgm4ivqmI);
+  min-width: 0;
 }
 .ariaCheckbox[data-disabled]:global(.__wab_instance) {
   opacity: 0.5;

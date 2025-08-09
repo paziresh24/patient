@@ -93,36 +93,16 @@
   position: relative;
   width: 100%;
   max-width: 100%;
-  min-width: 0;
-}
-.freeBox__nMxG > :global(.__wab_flex-container) {
-  flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
+  column-gap: 8px;
+  row-gap: var(--token-vMUQwr5Jto1d);
   min-width: 0;
-  margin-left: calc(0px - 8px);
-  width: calc(100% + 8px);
-  margin-top: calc(0px - var(--token-vMUQwr5Jto1d));
-  height: calc(100% + var(--token-vMUQwr5Jto1d));
-}
-.freeBox__nMxG > :global(.__wab_flex-container) > *,
-.freeBox__nMxG > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__nMxG > :global(.__wab_flex-container) > picture > img,
-.freeBox__nMxG
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-left: 8px;
-  margin-top: var(--token-vMUQwr5Jto1d);
 }
 .dialogTitle:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
-  margin-top: calc(0px + var(--token-vMUQwr5Jto1d)) !important;
-  margin-right: 0px;
-  margin-bottom: 0px;
-  margin-left: calc(0px + 8px) !important;
+  margin: 0px;
 }
 .h5 {
   width: 100%;

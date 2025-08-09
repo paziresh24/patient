@@ -213,11 +213,9 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                 "\u0628\u0631\u0627\u06cc \u062f\u06cc\u062f\u0646 \u0646\u062a\u0627\u06cc\u062c \u0627\u0637\u0631\u0627\u0641\u062a\u0627\u0646\u060c \u0628\u0647 \u067e\u0630\u06cc\u0631\u063424 \u0627\u062c\u0627\u0632\u0647 \u062f\u0633\u062a\u0631\u0633\u06cc \u0628\u0647 \u0645\u0648\u0642\u0639\u06cc\u062a \u0645\u06a9\u0627\u0646\u06cc \u0631\u0627 \u0628\u062f\u0647\u06cc\u062f."
               }
             </div>
-            <Stack__
-              as={"div"}
+            <div
               data-plasmic-name={"freeBox"}
               data-plasmic-override={overrides.freeBox}
-              hasGap={true}
               className={classNames(projectcss.all, sty.freeBox)}
             >
               <Button
@@ -524,7 +522,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                   />
                 }
               />
-            </Stack__>
+            </div>
           </React.Fragment>
         }
         className={classNames("__wab_instance", sty.dialog)}
@@ -836,15 +834,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLocationSelectionScript__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLocationSelectionScript__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLocationSelectionScript__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLocationSelectionScript__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

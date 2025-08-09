@@ -216,9 +216,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
           sty.root
         )}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox___2I0J3)}
           onClick={async event => {
             const $steps = {};
@@ -249,9 +247,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
             }
           }}
         >
-          <Stack__
-            as={"div"}
-            hasGap={true}
+          <div
             className={classNames(projectcss.all, sty.freeBox__hopQe)}
             onClick={async event => {
               const $steps = {};
@@ -318,7 +314,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
                 })()}
               </React.Fragment>
             </div>
-          </Stack__>
+          </div>
           {(() => {
             try {
               return !!$props.categoryValue;
@@ -554,7 +550,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
             title={" "}
             trigger={null}
           />
-        </Stack__>
+        </div>
       </div>
     ) : null
   ) as React.ReactElement | null;
@@ -602,15 +598,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicConsultBanner__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicConsultBanner__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicConsultBanner__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicConsultBanner__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

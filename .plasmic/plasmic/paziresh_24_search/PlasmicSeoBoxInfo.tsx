@@ -142,13 +142,11 @@ function PlasmicSeoBoxInfo__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -211,11 +209,7 @@ function PlasmicSeoBoxInfo__RenderFunc(props: {
           "\u062f\u0631\u0628\u0627\u0631\u0647 \u0627\u06cc\u0646 \u0635\u0641\u062d\u0647"
         }
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__cWy6U)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__cWy6U)}>
           <div
             className={classNames(
               projectcss.all,
@@ -256,11 +250,7 @@ function PlasmicSeoBoxInfo__RenderFunc(props: {
               throw e;
             }
           })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__rZuZx)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__rZuZx)}>
               {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                 (() => {
                   try {
@@ -408,11 +398,11 @@ function PlasmicSeoBoxInfo__RenderFunc(props: {
                   </Accordion>
                 );
               })}
-            </Stack__>
+            </div>
           ) : null}
-        </Stack__>
+        </div>
       </Accordion>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -440,15 +430,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSeoBoxInfo__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSeoBoxInfo__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSeoBoxInfo__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSeoBoxInfo__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

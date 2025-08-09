@@ -184,11 +184,7 @@ function PlasmicSearchContentTree__RenderFunc(props: {
               throw e;
             }
           })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__xnRm8)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__xnRm8)}>
               <div className={classNames(projectcss.all, sty.freeBox__bLpwi)} />
 
               <div
@@ -260,7 +256,7 @@ function PlasmicSearchContentTree__RenderFunc(props: {
                   }}
                 />
               </div>
-            </Stack__>
+            </div>
           ) : null}
           <div className={classNames(projectcss.all, sty.freeBox__lvcKr)}>
             {(() => {
@@ -316,11 +312,7 @@ function PlasmicSearchContentTree__RenderFunc(props: {
                 </LineClamp>
               </div>
             ) : null}
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__qg5E)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__qg5E)}>
               {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                 (() => {
                   try {
@@ -339,9 +331,7 @@ function PlasmicSearchContentTree__RenderFunc(props: {
                 const currentItem = __plasmic_item_0;
                 const currentIndex = __plasmic_idx_0;
                 return (
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__i8FmB)}
                     key={currentIndex}
                     onClick={async event => {
@@ -412,10 +402,10 @@ function PlasmicSearchContentTree__RenderFunc(props: {
                         }}
                       />
                     </div>
-                  </Stack__>
+                  </div>
                 );
               })}
-            </Stack__>
+            </div>
           </div>
         </div>
       ) : null}
@@ -450,9 +440,7 @@ function PlasmicSearchContentTree__RenderFunc(props: {
             const currentItem = __plasmic_item_0;
             const currentIndex = __plasmic_idx_0;
             return (
-              <Stack__
-                as={"div"}
-                hasGap={true}
+              <div
                 className={classNames(projectcss.all, sty.freeBox__ijG)}
                 key={currentIndex}
                 onClick={async event => {
@@ -522,7 +510,7 @@ function PlasmicSearchContentTree__RenderFunc(props: {
                     }}
                   />
                 </div>
-              </Stack__>
+              </div>
             );
           })
         : null}
@@ -554,15 +542,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchContentTree__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchContentTree__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchContentTree__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchContentTree__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

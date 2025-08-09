@@ -214,9 +214,7 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={PlasmicLink__}
-            hasGap={true}
+          <PlasmicLink__
             className={classNames(
               projectcss.all,
               projectcss.a,
@@ -326,9 +324,7 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={PlasmicLink__}
-                hasGap={true}
+              <PlasmicLink__
                 className={classNames(
                   projectcss.all,
                   projectcss.a,
@@ -396,9 +392,9 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
                   className={classNames(projectcss.all, sty.svg__wxoOf)}
                   role={"img"}
                 />
-              </Stack__>
+              </PlasmicLink__>
             ) : null}
-          </Stack__>
+          </PlasmicLink__>
         ) : null}
       </div>
     </SearchContentItem>

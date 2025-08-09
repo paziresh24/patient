@@ -3431,16 +3431,10 @@ function PlasmicSearchPage3__RenderFunc(props: {
         data-plasmic-override={overrides.container}
         className={classNames(projectcss.all, sty.container)}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__fu9VT)}
-        >
-          <Stack__
-            as={"div"}
+        <div className={classNames(projectcss.all, sty.freeBox__fu9VT)}>
+          <div
             data-plasmic-name={"filters"}
             data-plasmic-override={overrides.filters}
-            hasGap={true}
             className={classNames(projectcss.all, sty.filters)}
           >
             <FilterSelectedView
@@ -6708,7 +6702,7 @@ function PlasmicSearchPage3__RenderFunc(props: {
                 }
               ]}
             />
-          </Stack__>
+          </div>
           <div
             data-plasmic-name={"products"}
             data-plasmic-override={overrides.products}
@@ -6748,7 +6742,7 @@ function PlasmicSearchPage3__RenderFunc(props: {
               searchQuery={"\u0632\u0646\u0627\u0646"}
             />
           </div>
-        </Stack__>
+        </div>
       </div>
     </div>
   ) as React.ReactElement | null;
@@ -6822,15 +6816,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchPage3__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchPage3__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchPage3__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchPage3__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
