@@ -905,7 +905,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
               />
 
               <LauncherComponentsApp
-                _new={true}
                 appkey={"cywoc24"}
                 avatar={
                   "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finstagram-plugin.png?versionId="
@@ -984,6 +983,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   }
                 }}
                 pagekey={"launcher"}
+                soon={true}
                 widgetFrame={(() => {
                   try {
                     return $props.widgetFrames;
@@ -1095,6 +1095,83 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   widgetId={"ad0b26pc5ni63nm"}
                 />
               ) : null}
+              <LauncherComponentsApp
+                _new={true}
+                appkey={"rahnama"}
+                avatar={
+                  "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Frahnama.png?versionId="
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp___8UPeb
+                )}
+                description={
+                  "\u0644\u06cc\u0646\u06a9 \u0634\u0628\u06a9\u0647\u200c\u0647\u0627\u06cc \u0627\u062c\u062a\u0645\u0627\u0639\u06cc\u200c\u062a\u0627\u0646 (\u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645\u060c \u0627\u06cc\u06a9\u0633\u060c \u0627\u067e\u0627\u0631\u0627\u062a) \u0631\u0627 \u0628\u0647 \u0633\u0627\u062f\u06af\u06cc \u062f\u0631 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644\u200c\u062a\u0627\u0646 \u0642\u0631\u0627\u0631 \u062f\u0647\u06cc\u062f."
+                }
+                link={"/_/rahnama/launcher/"}
+                name={"\u0631\u0627\u0647\u200c\u0646\u0645\u0627"}
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["sendLog"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  evant_group: "launcher_statistics",
+                                  event_type: "apps",
+                                  user_id: $ctx.auth.info?.id,
+                                  is_doctor: $ctx.auth.info?.is_doctor,
+                                  meta_data: {
+                                    name: "راه‌نما",
+                                    key: "/rahnama/launcher/",
+                                    link: ""
+                                  }
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendLog"] != null &&
+                    typeof $steps["sendLog"] === "object" &&
+                    typeof $steps["sendLog"].then === "function"
+                  ) {
+                    $steps["sendLog"] = await $steps["sendLog"];
+                  }
+                }}
+                pagekey={"launcher"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
+                widgetId={"fb1sxun8iwn7due"}
+              />
+
               {(() => {
                 try {
                   return (

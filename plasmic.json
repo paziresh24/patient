@@ -995,7 +995,8 @@
           "componentImportPath": "@plasmicpkgs/plasmic-query"
         }
       ],
-      "customFunctions": []
+      "customFunctions": [],
+      "jsBundleThemes": []
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -3369,8 +3370,7 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ],
-      "jsBundleThemes": []
+      ]
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",
@@ -5385,7 +5385,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     },
     {
       "projectId": "k6ZwKcaHfkxemp7yqC1vbY",
@@ -6768,6 +6769,16 @@
           "id": "lnoDnCE8IIMN",
           "name": "TriangleFilledIcon",
           "moduleFilePath": "plasmic/hamdast_cheragh/icons/PlasmicIcon__TriangleFilled.tsx"
+        },
+        {
+          "id": "ekUdrHWFUm04",
+          "name": "CheckSvgIcon",
+          "moduleFilePath": "plasmic/hamdast_cheragh/icons/PlasmicIcon__CheckSvg.tsx"
+        },
+        {
+          "id": "AI_HjayOlLGM",
+          "name": "Icon2Icon",
+          "moduleFilePath": "plasmic/hamdast_cheragh/icons/PlasmicIcon__Icon2.tsx"
         }
       ],
       "images": [],
@@ -7045,7 +7056,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "jsBundleThemes": []
     }
   ],
   "globalVariants": {

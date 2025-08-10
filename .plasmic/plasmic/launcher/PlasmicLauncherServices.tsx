@@ -290,198 +290,91 @@ function PlasmicLauncherServices__RenderFunc(props: {
             }
           />
 
-          {(() => {
-            try {
-              return $ctx.Growthbook.features["hamdast::katibe"]?.hide == false;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })() ? (
-            <div className={classNames(projectcss.all, sty.freeBox___93XgG)}>
-              {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                (() => {
-                  try {
-                    return [
-                      {
-                        name: "تراکنش ها",
-                        icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Ftransactions.svg?versionId=",
-                        url: "/dashboard/apps/katibe/bills/"
-                      },
-                      {
-                        name: "فاکتور ها",
-                        icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Finvoices.svg?versionId=",
-                        url: "/dashboard/apps/katibe/factors/"
-                      },
-                      {
-                        name: "تنظیمات",
-                        icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fpayment-setting.svg?versionId=",
-                        url: "/dashboard/apps/katibe/setting/"
-                      }
-                    ];
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return [];
+          <div className={classNames(projectcss.all, sty.freeBox___93XgG)}>
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return [
+                    {
+                      name: "تراکنش ها",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Ftransactions.svg?versionId=",
+                      url: "/dashboard/apps/katibe/bills/"
+                    },
+                    {
+                      name: "فاکتور ها",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Finvoices.svg?versionId=",
+                      url: "/dashboard/apps/katibe/factors/"
+                    },
+                    {
+                      name: "تنظیمات",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fpayment-setting.svg?versionId=",
+                      url: "/dashboard/apps/katibe/setting/"
                     }
-                    throw e;
+                  ];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
                   }
-                })()
-              ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                const currentItem = __plasmic_item_0;
-                const currentIndex = __plasmic_idx_0;
-                return (
-                  <LauncherComponentsService
-                    className={classNames(
-                      "__wab_instance",
-                      sty.launcherComponentsService__pWhtd
-                    )}
-                    icon={(() => {
-                      try {
-                        return currentItem.icon;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <LauncherComponentsService
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsService__pWhtd
+                  )}
+                  icon={(() => {
+                    try {
+                      return currentItem.icon;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()}
-                    key={currentIndex}
-                    link={(() => {
-                      try {
-                        return currentItem.url;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    name={(() => {
-                      try {
-                        return currentItem.name;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                    source={"services_finances"}
-                  />
-                );
-              })}
-            </div>
-          ) : null}
-          {(() => {
-            try {
-              return $ctx.Growthbook.features["hamdast::katibe"]?.hide == true;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })() ? (
-            <div className={classNames(projectcss.all, sty.freeBox__a49YB)}>
-              {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                (() => {
-                  try {
-                    return [
-                      {
-                        name: "تسویه حساب",
-                        icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Ftransactions.svg?versionId=",
-                        url: "/dashboard/apps/wallet/payment/"
-                      },
-                      {
-                        name: "تنظیمات",
-                        icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fpayment-setting.svg?versionId=",
-                        url: "/dashboard/apps/wallet/payment/?section=setting"
-                      }
-                    ];
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return [];
+                      throw e;
                     }
-                    throw e;
-                  }
-                })()
-              ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                const currentItem = __plasmic_item_0;
-                const currentIndex = __plasmic_idx_0;
-                return (
-                  <LauncherComponentsService
-                    className={classNames(
-                      "__wab_instance",
-                      sty.launcherComponentsService__swAe
-                    )}
-                    icon={(() => {
-                      try {
-                        return currentItem.icon;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+                  })()}
+                  key={currentIndex}
+                  link={(() => {
+                    try {
+                      return currentItem.url;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()}
-                    key={currentIndex}
-                    link={(() => {
-                      try {
-                        return currentItem.url;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+                      throw e;
+                    }
+                  })()}
+                  name={(() => {
+                    try {
+                      return currentItem.name;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()}
-                    name={(() => {
-                      try {
-                        return currentItem.name;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                  />
-                );
-              })}
-            </div>
-          ) : null}
+                      throw e;
+                    }
+                  })()}
+                  source={"services_finances"}
+                />
+              );
+            })}
+          </div>
         </div>
       </Reveal>
       <Reveal
