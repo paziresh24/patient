@@ -163,7 +163,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   const [errorModalMetaData, setErrorModalMetaData] = useState<any>({});
   const { handleOpen: handleOpenBirthDateModal, handleClose: handleCloseBirthDateModal, modalProps: birthDateModalProps } = useModal();
   const birthDateInputValue = useRef<any>(null);
-  const [insuranceNumber, setInsuranceNumber] = useState('');
   const [insuranceName, setInsuranceName] = useState('');
   const [firstFreeTimeErrorText, setFirstFreeTimeErrorText] = useState('');
   const { handleBook, isLoading: bookLoading } = useBooking();
@@ -813,7 +812,6 @@ const BookingSteps = (props: BookingStepsProps) => {
       <Modal title="انتخاب بیمه" {...insuranceModalProps}>
         <div className="flex flex-col space-y-3">
           <Autocomplete onChange={e => setInsuranceName(e.target.value.value)} label="نام بیمه" options={getInsuranceList()} />
-          <TextField value={insuranceNumber} onChange={e => setInsuranceNumber(e.target.value)} label="شماره بیمه (اختیاری)" />
           <Button
             loading={bookLoading}
             block
@@ -821,7 +819,6 @@ const BookingSteps = (props: BookingStepsProps) => {
               handleBookAction({
                 ...user,
                 insurance_id: insuranceName,
-                insurance_number: insuranceNumber,
               })
             }
           >
