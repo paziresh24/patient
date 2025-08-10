@@ -62,8 +62,6 @@ import {
 import { Switch } from "@/common/fragment/components/switch"; // plasmic-import: 3ov1diNJvJkk/codeComponent
 import { RadioFilter } from "@/common/fragment/components/radioFilter"; // plasmic-import: 4HH4ImSoMWKe/codeComponent
 
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
-
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
@@ -205,18 +203,12 @@ function PlasmicFilterListItem__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
-
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -234,11 +226,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
         }
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__iBo76)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__iBo76)}>
         <div
           data-plasmic-name={"text"}
           data-plasmic-override={overrides.text}
@@ -343,7 +331,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
             }}
           />
         ) : null}
-      </Stack__>
+      </div>
       {(() => {
         try {
           return $props.item.type === "radio";
@@ -357,11 +345,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__gfvgx)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__gfvgx)}>
           <RadioFilter
             data-plasmic-name={"radioFilter"}
             data-plasmic-override={overrides.radioFilter}
@@ -457,9 +441,9 @@ function PlasmicFilterListItem__RenderFunc(props: {
             }}
             value={generateStateValueProp($state, ["radioFilter", "selected"])}
           />
-        </Stack__>
+        </div>
       ) : null}
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -491,15 +475,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicFilterListItem__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicFilterListItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicFilterListItem__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicFilterListItem__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

@@ -231,11 +231,9 @@ function PlasmicResultView__RenderFunc(props: {
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"freeBox"}
         data-plasmic-override={overrides.freeBox}
-        hasGap={true}
         className={classNames(projectcss.all, sty.freeBox)}
       >
         {(hasVariant(globalVariants, "screen", "mobileOnly") ? true : false) ? (
@@ -518,7 +516,7 @@ function PlasmicResultView__RenderFunc(props: {
             }
           }}
         />
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -562,15 +560,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicResultView__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicResultView__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicResultView__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicResultView__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

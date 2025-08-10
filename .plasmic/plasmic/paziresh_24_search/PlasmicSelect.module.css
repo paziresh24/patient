@@ -3,8 +3,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: 0;
   row-gap: var(--token-9Cwse874ebqD);
+  min-width: 0;
 }
 .ariaSelect[data-disabled]:global(.__wab_instance) {
   opacity: 0.5;

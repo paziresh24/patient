@@ -158,6 +158,7 @@ function PlasmicChip__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -217,11 +218,9 @@ function PlasmicChip__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"freeBox"}
         data-plasmic-override={overrides.freeBox}
-        hasGap={true}
         className={classNames(projectcss.all, sty.freeBox, {
           [sty.freeBoxcolor_blue]: hasVariant($state, "color", "blue"),
           [sty.freeBoxcolor_gray]: hasVariant($state, "color", "gray"),
@@ -312,7 +311,7 @@ function PlasmicChip__RenderFunc(props: {
               value: args.slot
             })
           : null}
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -343,15 +342,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicChip__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicChip__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicChip__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicChip__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

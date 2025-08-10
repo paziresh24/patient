@@ -209,13 +209,11 @@ function PlasmicLocationView__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -335,11 +333,7 @@ function PlasmicLocationView__RenderFunc(props: {
           value={generateStateValueProp($state, ["textInput", "value"]) ?? ""}
         />
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox___3K4Wv)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox___3K4Wv)}>
         <div
           className={classNames(projectcss.all, sty.freeBox__urbAk)}
           onClick={async event => {
@@ -470,7 +464,7 @@ function PlasmicLocationView__RenderFunc(props: {
             }}
           />
         ) : null}
-      </Stack__>
+      </div>
       <div
         className={classNames(projectcss.all, sty.freeBox__hlKod)}
         id={"cities-list"}
@@ -556,7 +550,7 @@ function PlasmicLocationView__RenderFunc(props: {
           })()}
         />
       </div>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -602,15 +596,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLocationView__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLocationView__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicLocationView__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicLocationView__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

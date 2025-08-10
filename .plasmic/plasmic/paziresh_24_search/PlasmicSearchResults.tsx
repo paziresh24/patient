@@ -253,13 +253,11 @@ function PlasmicSearchResults__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -491,11 +489,9 @@ function PlasmicSearchResults__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
+        <div
           data-plasmic-name={"topSuggestedCardVerticalStack"}
           data-plasmic-override={overrides.topSuggestedCardVerticalStack}
-          hasGap={true}
           className={classNames(
             projectcss.all,
             sty.topSuggestedCardVerticalStack
@@ -977,7 +973,7 @@ function PlasmicSearchResults__RenderFunc(props: {
               })()}
             />
           ) : null}
-        </Stack__>
+        </div>
       ) : null}
       {(() => {
         try {
@@ -992,11 +988,9 @@ function PlasmicSearchResults__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
+        <div
           data-plasmic-name={"resultCardsVerticalStack2"}
           data-plasmic-override={overrides.resultCardsVerticalStack2}
-          hasGap={true}
           className={classNames(projectcss.all, sty.resultCardsVerticalStack2, {
             [sty.resultCardsVerticalStack2isHorizental]: hasVariant(
               $state,
@@ -1862,7 +1856,7 @@ function PlasmicSearchResults__RenderFunc(props: {
               </div>
             );
           })}
-        </Stack__>
+        </div>
       ) : null}
       {(() => {
         try {
@@ -1948,11 +1942,9 @@ function PlasmicSearchResults__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
+        <div
           data-plasmic-name={"noResultsBlockVerticalStack"}
           data-plasmic-override={overrides.noResultsBlockVerticalStack}
-          hasGap={true}
           className={classNames(
             projectcss.all,
             sty.noResultsBlockVerticalStack
@@ -2008,9 +2000,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                     <React.Fragment>
                       <React.Fragment>{""}</React.Fragment>
                       {
-                        <Stack__
-                          as={"ul"}
-                          hasGap={true}
+                        <ul
                           className={classNames(
                             projectcss.all,
                             projectcss.ul,
@@ -2111,7 +2101,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                               "\u06a9\u0644\u0645\u0627\u062a \u0645\u062a\u0641\u0627\u0648\u062a\u06cc \u0631\u0627 \u0628\u0631\u0627\u06cc \u062c\u0633\u062a\u062c\u0648 \u0627\u0645\u062a\u062d\u0627\u0646 \u06a9\u0646\u06cc\u062f."
                             }
                           </li>
-                        </Stack__>
+                        </ul>
                       }
                       <React.Fragment>{""}</React.Fragment>
                     </React.Fragment>
@@ -2121,7 +2111,7 @@ function PlasmicSearchResults__RenderFunc(props: {
               <React.Fragment>{""}</React.Fragment>
             </React.Fragment>
           </div>
-        </Stack__>
+        </div>
       ) : null}
       <SideEffect
         data-plasmic-name={"sideEffect"}
@@ -2498,7 +2488,7 @@ function PlasmicSearchResults__RenderFunc(props: {
           searchResultResponse={args.searchResultResponse}
         />
       ) : null}
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 

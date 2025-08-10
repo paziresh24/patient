@@ -171,11 +171,7 @@ function PlasmicSearchContentItem__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox___9ODgw)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox___9ODgw)}>
           <SearchContentIcon
             data-plasmic-name={"searchContentIcon"}
             data-plasmic-override={overrides.searchContentIcon}
@@ -220,18 +216,14 @@ function PlasmicSearchContentItem__RenderFunc(props: {
               })()}
             </React.Fragment>
           </div>
-        </Stack__>
+        </div>
       ) : null}
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__hoTvt)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__hoTvt)}>
         {renderPlasmicSlot({
           defaultContents: null,
           value: args.children
         })}
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -262,15 +254,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchContentItem__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchContentItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchContentItem__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchContentItem__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

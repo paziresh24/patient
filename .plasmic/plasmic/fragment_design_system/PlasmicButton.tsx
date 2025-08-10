@@ -67,7 +67,7 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UV
 import sty from "./PlasmicButton.module.css"; // plasmic-import: oVzoHzMf1TLl/css
 
 import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import Icon17Icon from "./icons/PlasmicIcon__Icon17"; // plasmic-import: eCsLCdWP9DST/icon
+import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: usOc2d77sFG3/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 createPlasmicElementProxy;
@@ -226,6 +226,7 @@ function PlasmicButton__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -305,13 +306,11 @@ function PlasmicButton__RenderFunc(props: {
   };
 
   return (
-    <Stack__
-      as={"button"}
+    <button
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.button,
@@ -561,15 +560,32 @@ function PlasmicButton__RenderFunc(props: {
               "color",
               "clear"
             ),
+            [sty.contentContainercolor_red]: hasVariant($state, "color", "red"),
             [sty.contentContainerisDisabled]: hasVariant(
               $state,
               "isDisabled",
               "isDisabled"
             ),
+            [sty.contentContainerloading]: hasVariant(
+              $state,
+              "loading",
+              "loading"
+            ),
+            [sty.contentContainerloading_color_red]:
+              hasVariant($state, "color", "red") &&
+              hasVariant($state, "loading", "loading"),
             [sty.contentContainerloading_color_red_outline]:
               hasVariant($state, "loading", "loading") &&
               hasVariant($state, "color", "red") &&
               hasVariant($state, "outline", "outline"),
+            [sty.contentContainerloading_outline]:
+              hasVariant($state, "outline", "outline") &&
+              hasVariant($state, "loading", "loading"),
+            [sty.contentContaineroutline]: hasVariant(
+              $state,
+              "outline",
+              "outline"
+            ),
             [sty.contentContainershape_rounded]: hasVariant(
               $state,
               "shape",
@@ -582,30 +598,23 @@ function PlasmicButton__RenderFunc(props: {
             )
           })}
         >
-          <Icon17Icon
-            data-plasmic-name={"svg"}
-            data-plasmic-override={overrides.svg}
-            className={classNames(projectcss.all, sty.svg, "loader", {
-              [sty.svgcolor_clear]: hasVariant($state, "color", "clear"),
-              [sty.svgloading]: hasVariant($state, "loading", "loading"),
-              [sty.svgloading_color_link]:
-                hasVariant($state, "loading", "loading") &&
-                hasVariant($state, "color", "link"),
-              [sty.svgloading_color_link_outline]:
-                hasVariant($state, "loading", "loading") &&
-                hasVariant($state, "outline", "outline") &&
-                hasVariant($state, "color", "link"),
-              [sty.svgloading_color_red_outline]:
-                hasVariant($state, "loading", "loading") &&
-                hasVariant($state, "color", "red") &&
-                hasVariant($state, "outline", "outline"),
-              [sty.svgloading_outline]:
-                hasVariant($state, "loading", "loading") &&
-                hasVariant($state, "outline", "outline")
-            })}
-            role={"img"}
-          />
-
+          {(hasVariant($state, "loading", "loading") ? true : false) ? (
+            <Icon2Icon
+              data-plasmic-name={"svg"}
+              data-plasmic-override={overrides.svg}
+              className={classNames(projectcss.all, sty.svg, ``, {
+                [sty.svgloading]: hasVariant($state, "loading", "loading"),
+                [sty.svgloading_color_red_outline]:
+                  hasVariant($state, "color", "red") &&
+                  hasVariant($state, "loading", "loading") &&
+                  hasVariant($state, "outline", "outline"),
+                [sty.svgloading_outline]:
+                  hasVariant($state, "outline", "outline") &&
+                  hasVariant($state, "loading", "loading")
+              })}
+              role={"img"}
+            />
+          ) : null}
           {(hasVariant($state, "loading", "loading") ? false : true)
             ? renderPlasmicSlot({
                 defaultContents: "Button",
@@ -855,7 +864,7 @@ function PlasmicButton__RenderFunc(props: {
           })}
         </div>
       ) : null}
-    </Stack__>
+    </button>
   ) as React.ReactElement | null;
 }
 
@@ -924,15 +933,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicButton__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicButton__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicButton__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicButton__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

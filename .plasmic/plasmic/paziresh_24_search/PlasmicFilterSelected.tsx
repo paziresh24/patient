@@ -149,13 +149,11 @@ function PlasmicFilterSelected__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -217,11 +215,7 @@ function PlasmicFilterSelected__RenderFunc(props: {
           size={"minimal"}
         />
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox___17Ie4)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox___17Ie4)}>
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
           (() => {
             try {
@@ -318,9 +312,7 @@ function PlasmicFilterSelected__RenderFunc(props: {
           const currentItem = __plasmic_item_0;
           const currentIndex = __plasmic_idx_0;
           return (
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox___7Lfff)}
               key={currentIndex}
             >
@@ -404,11 +396,11 @@ function PlasmicFilterSelected__RenderFunc(props: {
                 }}
                 role={"img"}
               />
-            </Stack__>
+            </div>
           );
         })}
-      </Stack__>
-    </Stack__>
+      </div>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -438,15 +430,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicFilterSelected__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicFilterSelected__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicFilterSelected__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicFilterSelected__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

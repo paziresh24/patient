@@ -188,11 +188,9 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
         data-plasmic-override={overrides.popover}
         className={classNames("__wab_instance", sty.popover)}
         content={
-          <Stack__
-            as={"div"}
+          <div
             data-plasmic-name={"freeBox"}
             data-plasmic-override={overrides.freeBox}
-            hasGap={true}
             className={classNames(projectcss.all, sty.freeBox)}
           >
             <Button
@@ -379,7 +377,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
                 target={true}
               />
             ) : null}
-          </Stack__>
+          </div>
         }
         onOpenChange={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, ["popover", "open"]).apply(
@@ -428,15 +426,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicMoreOptionsMenu__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicMoreOptionsMenu__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicMoreOptionsMenu__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicMoreOptionsMenu__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

@@ -28,20 +28,20 @@
     position: relative;
   }
 }
-.text__z6Jlh {
+.text__a7BQe {
   position: relative;
   width: 100%;
   height: auto;
   max-width: 100%;
   min-width: 0;
 }
-.svg___6V1Kn {
+.svg__lTwKj {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
 }
-.svg__gsMaG {
+.svg__bi92X {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -156,6 +156,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    column-gap: 0px;
     padding: var(--token-_c276Gs_1FIE);
   }
 }
@@ -240,26 +241,26 @@
 .dialog:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
 }
-.text__iutyD {
+.text__f4Vmf {
   position: relative;
   width: 100%;
   height: auto;
   max-width: 100%;
   min-width: 0;
 }
-.svg__amvpc {
+.svg__pTwT7 {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
 }
-.svg__gyQDb {
+.svg__zZkL {
   position: relative;
   object-fit: cover;
   width: auto;
   height: 1em;
 }
-.text__piCoc {
+.text___47TV {
   width: 100%;
   height: auto;
   max-width: 100%;

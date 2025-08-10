@@ -190,13 +190,11 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -491,11 +489,9 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
+        <div
           data-plasmic-name={"freeBox"}
           data-plasmic-override={overrides.freeBox}
-          hasGap={true}
           className={classNames(projectcss.all, sty.freeBox)}
           onClick={async event => {
             const $steps = {};
@@ -589,9 +585,9 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
               })()}
             </React.Fragment>
           </div>
-        </Stack__>
+        </div>
       ) : null}
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -621,15 +617,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicFilterItemSingleSelect__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicFilterItemSingleSelect__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicFilterItemSingleSelect__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicFilterItemSingleSelect__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

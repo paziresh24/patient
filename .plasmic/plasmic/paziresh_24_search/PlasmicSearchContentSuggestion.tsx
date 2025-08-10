@@ -138,13 +138,11 @@ function PlasmicSearchContentSuggestion__RenderFunc(props: {
   const $refs = refsRef.current;
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"suggest"}
       data-plasmic-override={overrides.suggest}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -173,11 +171,9 @@ function PlasmicSearchContentSuggestion__RenderFunc(props: {
         const currentItem = __plasmic_item_0;
         const currentIndex = __plasmic_idx_0;
         return (
-          <Stack__
-            as={"div"}
+          <div
             data-plasmic-name={"freeBox"}
             data-plasmic-override={overrides.freeBox}
-            hasGap={true}
             className={classNames(projectcss.all, sty.freeBox)}
             key={currentIndex}
             onClick={async event => {
@@ -252,10 +248,10 @@ function PlasmicSearchContentSuggestion__RenderFunc(props: {
                 }}
               />
             </div>
-          </Stack__>
+          </div>
         );
       })}
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -287,15 +283,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchContentSuggestion__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchContentSuggestion__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchContentSuggestion__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchContentSuggestion__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

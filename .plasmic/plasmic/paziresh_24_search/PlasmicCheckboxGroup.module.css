@@ -4,8 +4,8 @@
   flex-direction: column;
   box-sizing: border-box;
   width: 100%;
-  min-width: 0;
   row-gap: var(--token-9Cwse874ebqD);
+  min-width: 0;
 }
 .ariaCheckboxGroup[data-disabled]:global(.__wab_instance) {
   opacity: 0.5;
@@ -23,21 +23,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-}
-.freeBox__iAjf1 > :global(.__wab_flex-container) {
-  flex-direction: column;
-  margin-top: calc(0px - var(--token-9Cwse874ebqD));
-  height: calc(100% + var(--token-9Cwse874ebqD));
-}
-.freeBox__iAjf1 > :global(.__wab_flex-container) > *,
-.freeBox__iAjf1 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__iAjf1 > :global(.__wab_flex-container) > picture > img,
-.freeBox__iAjf1
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: var(--token-9Cwse874ebqD);
+  row-gap: var(--token-9Cwse874ebqD);
 }
 .checkbox2__i06AX:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;

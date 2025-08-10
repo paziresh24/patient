@@ -307,9 +307,7 @@ function PlasmicFilterRow__RenderFunc(props: {
           className={classNames(projectcss.all, sty.freeBox__xFe0)}
           style={{ width: "100%" }}
         >
-          <Stack__
-            as={"div"}
-            hasGap={true}
+          <div
             className={classNames(
               projectcss.all,
               sty.freeBox__dbjg,
@@ -770,7 +768,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                 />
               );
             })}
-          </Stack__>
+          </div>
           <Dialog
             data-plasmic-name={"sortDialog"}
             data-plasmic-override={overrides.sortDialog}
@@ -2280,11 +2278,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                     })()}
                   />
                 </div>
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__hpRvf)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__hpRvf)}>
                   <Button
                     children2={
                       <React.Fragment>
@@ -2430,7 +2424,7 @@ function PlasmicFilterRow__RenderFunc(props: {
                     }}
                     outline={true}
                   />
-                </Stack__>
+                </div>
               </div>
             }
             className={classNames("__wab_instance", sty.filterListDialog)}
@@ -2856,9 +2850,7 @@ function PlasmicFilterRow__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(
             projectcss.all,
             sty.freeBox__nGtd4,
@@ -2951,7 +2943,7 @@ function PlasmicFilterRow__RenderFunc(props: {
               </div>
             );
           })}
-        </Stack__>
+        </div>
       ) : null}
     </div>
   ) as React.ReactElement | null;
@@ -3008,15 +3000,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicFilterRow__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicFilterRow__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicFilterRow__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicFilterRow__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

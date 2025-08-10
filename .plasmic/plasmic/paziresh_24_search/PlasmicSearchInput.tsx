@@ -246,9 +246,7 @@ function PlasmicSearchInput__RenderFunc(props: {
         { [sty.rootisFocused]: hasVariant($state, "isFocused", "isFocused") }
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__xcgrP, {
           [sty.freeBoxisFocused__xcgrPo9DZj]: hasVariant(
             $state,
@@ -257,9 +255,7 @@ function PlasmicSearchInput__RenderFunc(props: {
           )
         })}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox__jzSpg, {
             [sty.freeBoxisFocused__jzSpgo9DZj]: hasVariant(
               $state,
@@ -624,12 +620,10 @@ function PlasmicSearchInput__RenderFunc(props: {
               }
             />
           </div>
-        </Stack__>
+        </div>
         <div className={classNames(projectcss.all, sty.freeBox___4GS1M)} />
 
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(
             projectcss.all,
             sty.freeBox__gfDby,
@@ -767,8 +761,8 @@ function PlasmicSearchInput__RenderFunc(props: {
               role={"img"}
             />
           ) : null}
-        </Stack__>
-      </Stack__>
+        </div>
+      </div>
       <SideEffect
         data-plasmic-name={"sideEffect"}
         data-plasmic-override={overrides.sideEffect}

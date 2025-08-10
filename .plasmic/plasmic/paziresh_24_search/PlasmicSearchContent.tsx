@@ -309,9 +309,7 @@ function PlasmicSearchContent__RenderFunc(props: {
                         data-plasmic-name={"button"}
                         data-plasmic-override={overrides.button}
                         children2={
-                          <Stack__
-                            as={"div"}
-                            hasGap={true}
+                          <div
                             className={classNames(
                               projectcss.all,
                               sty.freeBox__uxToj
@@ -378,7 +376,7 @@ function PlasmicSearchContent__RenderFunc(props: {
                                 }}
                               />
                             </div>
-                          </Stack__>
+                          </div>
                         }
                         className={classNames("__wab_instance", sty.button)}
                         color={"link"}
@@ -441,11 +439,9 @@ function PlasmicSearchContent__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
+              <div
                 data-plasmic-name={"slider"}
                 data-plasmic-override={overrides.slider}
-                hasGap={true}
                 className={classNames(projectcss.all, sty.slider, "no-scroll")}
               >
                 {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -531,7 +527,7 @@ function PlasmicSearchContent__RenderFunc(props: {
                     </div>
                   );
                 })}
-              </Stack__>
+              </div>
             ) : null}
             {(() => {
               try {
@@ -725,9 +721,7 @@ function PlasmicSearchContent__RenderFunc(props: {
             const currentItem = __plasmic_item_0;
             const currentIndex = __plasmic_idx_0;
             return (
-              <Stack__
-                as={"div"}
-                hasGap={true}
+              <div
                 className={classNames(projectcss.all, sty.freeBox__cxH7V)}
                 key={currentIndex}
                 onClick={async event => {
@@ -801,7 +795,7 @@ function PlasmicSearchContent__RenderFunc(props: {
                     }}
                   />
                 </div>
-              </Stack__>
+              </div>
             );
           })}
         </div>
@@ -948,15 +942,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSearchContent__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSearchContent__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSearchContent__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSearchContent__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

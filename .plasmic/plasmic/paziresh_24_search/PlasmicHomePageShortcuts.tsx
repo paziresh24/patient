@@ -224,11 +224,7 @@ function PlasmicHomePageShortcuts__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__tyXdw)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__tyXdw)}>
           <div
             className={classNames(
               projectcss.all,
@@ -259,11 +255,9 @@ function PlasmicHomePageShortcuts__RenderFunc(props: {
               const currentItem = __plasmic_item_0;
               const currentIndex = __plasmic_idx_0;
               return (
-                <Stack__
-                  as={PlasmicLink__}
+                <PlasmicLink__
                   data-plasmic-name={"link"}
                   data-plasmic-override={overrides.link}
-                  hasGap={true}
                   className={classNames(projectcss.all, projectcss.a, sty.link)}
                   component={Link}
                   href={(() => {
@@ -372,11 +366,11 @@ function PlasmicHomePageShortcuts__RenderFunc(props: {
                       })()}
                     </React.Fragment>
                   </div>
-                </Stack__>
+                </PlasmicLink__>
               );
             })}
           </div>
-        </Stack__>
+        </div>
       ) : null}
     </div>
   ) as React.ReactElement | null;
@@ -410,15 +404,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicHomePageShortcuts__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicHomePageShortcuts__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicHomePageShortcuts__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicHomePageShortcuts__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

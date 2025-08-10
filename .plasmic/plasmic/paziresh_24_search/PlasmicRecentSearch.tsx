@@ -167,13 +167,11 @@ function PlasmicRecentSearch__RenderFunc(props: {
   });
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
@@ -197,11 +195,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
           throw e;
         }
       })() ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__dNlbb)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__dNlbb)}>
           <div
             className={classNames(
               projectcss.all,
@@ -213,9 +207,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
               "\u0622\u062e\u0631\u06cc\u0646 \u062c\u0633\u062a\u062c\u0648\u0647\u0627\u06cc \u0634\u0645\u0627"
             }
           </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
+          <div
             className={classNames(
               projectcss.all,
               sty.freeBox__syfQn,
@@ -305,8 +297,8 @@ function PlasmicRecentSearch__RenderFunc(props: {
                 </div>
               );
             })}
-          </Stack__>
-        </Stack__>
+          </div>
+        </div>
       ) : null}
       <SideEffect
         data-plasmic-name={"sideEffect"}
@@ -353,7 +345,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
           }
         }}
       />
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -381,15 +373,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicRecentSearch__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicRecentSearch__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicRecentSearch__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicRecentSearch__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

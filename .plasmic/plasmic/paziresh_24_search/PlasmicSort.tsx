@@ -213,16 +213,8 @@ function PlasmicSort__RenderFunc(props: {
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__s6Ax2)}
-      >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__owPgt)}
-        >
+      <div className={classNames(projectcss.all, sty.freeBox__s6Ax2)}>
+        <div className={classNames(projectcss.all, sty.freeBox__owPgt)}>
           <SortItem
             data-plasmic-name={"sort"}
             data-plasmic-override={overrides.sort}
@@ -347,7 +339,7 @@ function PlasmicSort__RenderFunc(props: {
               "selectValue"
             ])}
           />
-        </Stack__>
+        </div>
         <div className={classNames(projectcss.all, sty.freeBox___9E8T)}>
           {(() => {
             try {
@@ -409,7 +401,7 @@ function PlasmicSort__RenderFunc(props: {
             />
           ) : null}
         </div>
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -444,15 +436,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicSort__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicSort__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicSort__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicSort__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

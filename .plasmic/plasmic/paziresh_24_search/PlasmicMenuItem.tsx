@@ -184,11 +184,7 @@ function PlasmicMenuItem__RenderFunc(props: {
       plasmicUpdateVariant={updateVariant}
       textValue={args.label}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__nR8QP)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__nR8QP)}>
         <BaseText
           data-plasmic-name={"ariaText"}
           data-plasmic-override={overrides.ariaText}
@@ -251,7 +247,7 @@ function PlasmicMenuItem__RenderFunc(props: {
             </div>
           </BaseText2>
         ) : null}
-      </Stack__>
+      </div>
     </BaseListBoxItem>
   ) as React.ReactElement | null;
 }
@@ -282,15 +278,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicMenuItem__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicMenuItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicMenuItem__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicMenuItem__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
