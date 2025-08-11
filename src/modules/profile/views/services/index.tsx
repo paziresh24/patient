@@ -168,7 +168,7 @@ export const Services = ({
                 variants={{ type: 'onlineVisit' }}
               />
             ))}
-        {centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
+        {router.query.centerTarget != CENTERS.CONSULT && centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
             centers={centers
               .filter((center: any) => center.id !== CENTERS.CONSULT)
