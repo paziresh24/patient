@@ -409,7 +409,6 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                 $steps["sendLog"] = await $steps["sendLog"];
               }
             }}
-            soon={true}
             widgetId={"aed80eahprc1qs0"}
           />
         ) : null}
