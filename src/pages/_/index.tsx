@@ -14,8 +14,6 @@ import TextField from '@/common/components/atom/textField';
 import { splunkInstance } from '@/common/services/splunk';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import toast from 'react-hot-toast';
-import { onPushStateResolved, subscribePush } from '@metrixorg/websdk';
-import BellIcon from '@/common/components/icons/bell';
 
 const Page = () => {
   const { handleOpen, handleClose, modalProps } = useModal();
@@ -29,19 +27,6 @@ const Page = () => {
 
   useEffect(() => {
     window?.clarity?.('upgrade', 'LauncherMain');
-  }, []);
-
-  useEffect(() => {
-    const getPushStatus = async () => {
-      const status = await onPushStateResolved();
-      if (status != 'subscribed') {
-        setShowNitificationBanner(true);
-      }
-      if (status == 'subscribed') {
-        subscribePush();
-      }
-    };
-    getPushStatus();
   }, []);
 
   return (
@@ -59,21 +44,6 @@ const Page = () => {
               localStorage.setItem('dont-show-launcher-intro-banner', 'true');
             }}
           />
-        </div>
-      )}
-      {showNotificationBanner && (
-        <div
-          className="p-3 gap-3 bg-blue-100  cursor-pointer font-semibold flex items-center"
-          onClick={async () => {
-            const status = await subscribePush();
-            setShowNitificationBanner(status != 'subscribed');
-          }}
-        >
-          <BellIcon className="w-6 min-w-6 h-6" />
-          <span className="font-semibold">
-            برای دریافت آخرین رویدادها و اطلاع‌رسانی‌ها، دسترسی به نوتیفیکیشن‌ها را فعال کنید!
-            <span className="underline-offset-8 underline mr-2">کلیک کنید</span>
-          </span>
         </div>
       )}
       <Modal {...modalProps} noHeader>

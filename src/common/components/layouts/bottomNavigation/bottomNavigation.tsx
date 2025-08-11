@@ -58,9 +58,9 @@ export const BottomNavigation = () => {
       };
     }
 
-    if (isEnabledLauncher && localStorage.getItem('use-dashboard') != user.id)
+    if (localStorage.getItem('use-dashboard') != user.id)
       return {
-        name: 'خدمات',
+        name: user.provider?.job_title === 'doctor' ? 'داشبورد' : 'پروفایل',
         icon: <ElementIcon />,
         fillIcon: <ElementIcon isSolid />,
         link: '/_',
@@ -68,12 +68,7 @@ export const BottomNavigation = () => {
         privateRoute: true,
         exact: false,
       };
-    if (
-      isEnabledDashboard ||
-      dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') ||
-      dashboardDoctorList.ids.includes('*') ||
-      localStorage.getItem('use-dashboard') == user.id
-    )
+    if (localStorage.getItem('use-dashboard') == user.id && user.provider?.job_title === 'doctor')
       return {
         name: 'داشبورد',
         icon: <ElementIcon />,

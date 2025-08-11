@@ -36,8 +36,6 @@ const Home = ({ fragmentComponents }: any) => {
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const { setIsOpenSuggestion } = useSearchStore();
   const customize = useCustomize(state => state.customize);
-  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
-  const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
   const showChatBotButton = useFeatureIsOn('home-page::roshan-ai-chat-bot-button');
 
@@ -93,7 +91,7 @@ const Home = ({ fragmentComponents }: any) => {
         )}
         <div className="flex flex-col items-center w-full gap-3">
           <Suggestion
-            showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
+            showPlasmicSuggestion={!customize.partnerKey}
             defaultInputValue={defaultInputValue}
             setDefaultInputValue={setDefaultInputValue}
             className={classNames('!p-0', {
@@ -101,7 +99,7 @@ const Home = ({ fragmentComponents }: any) => {
                 isMobile,
             })}
           />
-          {(fragmentComponents?.showPlasmicRecentSearch || showPlasmicRecentSearch) && (
+          {!customize.partnerKey && (
             <div className="lg:w-[50rem] w-full">
               <Fragment
                 name="RecentSearch"
@@ -115,7 +113,7 @@ const Home = ({ fragmentComponents }: any) => {
             </div>
           )}
 
-          {recent.length > 0 && !fragmentComponents?.showPlasmicRecentSearch && !showPlasmicRecentSearch && (
+          {recent.length > 0 && customize.partnerKey && (
             <div className="lg:w-[50rem] w-full">
               <RecentSearch />
             </div>
@@ -217,8 +215,8 @@ Home.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext) => {
-    let showPlasmicSuggestion: boolean = false;
-    let showPlasmicRecentSearch: boolean = false;
+    let showPlasmicSuggestion: boolean = true;
+    let showPlasmicRecentSearch: boolean = true;
     let showPlasmicOnlineVisit: boolean = false;
     try {
       const host = context.req.headers.host;

@@ -23,9 +23,7 @@ import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
-import Script from 'next/script';
 import { GoogleTagManager } from '@next/third-parties/google';
-import { init } from '@metrixorg/websdk';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -88,16 +86,6 @@ function MyApp(props: AppProps) {
     useCustomize.getState().setCustomize(pageProps?.themeConfing);
     useServerQuery.getState().setQueries(pageProps?.query);
   }, [pageProps?.query, pageProps?.themeConfing]);
-
-  useEffect(() => {
-    init('hxmzqfzphnwlxxm', 'fa5f1633-d242-4ded-9691-3610de3c231c', {
-      push: {
-        enabled: true,
-        publicKey: 'BJUQtSIYC49JvDVv6BH3tf8ZRhFQjtoWLCKHQsohN4RBp16VKPx4N42FZA2VjvUkeuVlv8YZmYppTb8fQihqUIU',
-        hasSW: true,
-      },
-    });
-  }, []);
 
   useEffect(() => {
     if (isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted'))) {

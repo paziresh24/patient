@@ -206,11 +206,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
       <Fragment name="LocationSelectionScript" />
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
-        <Suggestion
-          showPlasmicSuggestion={isMainSite || fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
-          key={asPath.toString()}
-          overlay
-        />
+        <Suggestion showPlasmicSuggestion={!customize.partnerKey} key={asPath.toString()} overlay />
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
