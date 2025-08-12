@@ -12,6 +12,7 @@ export interface AutocompleteProps extends Omit<TextFieldProps, 'onChange' | 'va
   defaultValue?: Option;
   classNameWrapper?: string;
   searchable?: boolean;
+  align?: 'top' | 'bottom';
 }
 
 type Option = {
@@ -20,7 +21,7 @@ type Option = {
 };
 
 export const Autocomplete = (props: AutocompleteProps) => {
-  const { options, onChange, value, classNameWrapper, defaultValue, searchable, ...inputProps } = props;
+  const { options, onChange, value, classNameWrapper, defaultValue, searchable, align = 'bottom', ...inputProps } = props;
   const [activeSuggestion, setActiveSuggestion] = useState(0);
   const [filteredSuggestions, setFilteredSuggestions] = useState<Option[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -88,7 +89,14 @@ export const Autocomplete = (props: AutocompleteProps) => {
 
   if (showSuggestions) {
     suggestionsListComponent = (
-      <ul className="absolute w-full mt-1 bg-white divide-y divide-slate-100 rounded-lg shadow-md z-infinity max-h-[15rem] overflow-auto">
+      <ul
+        className={classNames(
+          'absolute w-full mt-1 bg-white divide-y divide-slate-100 rounded-lg shadow-md z-infinity max-h-[15rem] overflow-auto',
+          {
+            'bottom-14': align == 'top',
+          },
+        )}
+      >
         {filteredSuggestions.length ? (
           filteredSuggestions.map((suggestion, index) => {
             return (

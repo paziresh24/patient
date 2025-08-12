@@ -14,10 +14,11 @@ export interface ModalProps {
   bodyClassName?: string;
   className?: string;
   noHeader?: boolean;
+  noScroll?: boolean;
 }
 
 export const Modal = (props: ModalProps) => {
-  const { title, isOpen, onClose, children, fullScreen, bodyClassName, className, noHeader = false } = props;
+  const { title, isOpen, onClose, children, fullScreen, bodyClassName, className, noHeader = false, noScroll = false } = props;
   const { isMobile } = useResponsive();
 
   return (
@@ -37,6 +38,7 @@ export const Modal = (props: ModalProps) => {
             'bg-white w-full flex flex-col rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto',
             {
               'h-full overflow-hidden rounded-tr-none rounded-tl-none': fullScreen,
+              'overflow-visible': noScroll,
             },
             className,
           )}
@@ -49,7 +51,9 @@ export const Modal = (props: ModalProps) => {
               <CloseIcon onClick={onClose} className="cursor-pointer" />
             </div>
           )}
-          <div className={classNames('p-5 flex-grow overflow-auto no-scroll', bodyClassName)}>{children}</div>
+          <div className={classNames('p-5 flex-grow overflow-auto no-scroll', bodyClassName, { 'overflow-visible': noScroll })}>
+            {children}
+          </div>
         </Transition>
       </Transition>
     </ClientOnlyPortal>
