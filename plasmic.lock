@@ -2,7 +2,7 @@
   "projects": [
     {
       "projectId": "8PtdGodUbexNYgkuyBUcWu",
-      "version": "3.31.0",
+      "version": "3.32.0",
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
@@ -21,7 +21,7 @@
     },
     {
       "projectId": "caTPwKxj5ZrD9LQ7DMdK4Z",
-      "version": "3.44.0",
+      "version": "3.45.0",
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
@@ -174,7 +174,7 @@
     },
     {
       "projectId": "sqPBLwEBBKHA2WDuGb17eV",
-      "version": "2.8.0",
+      "version": "2.9.0",
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
@@ -1991,7 +1991,7 @@
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "dependencies": {},
       "lang": "ts",
       "fileLocks": [
@@ -3437,17 +3437,17 @@
       "dependencies": {
         "h9Dbk9ygddw7UVEq1NNhKi": "8.0.0",
         "oBJtsp5RgVpcN6KCrDTuQT": "1.4.0",
-        "sqPBLwEBBKHA2WDuGb17eV": "2.6.0",
-        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.42.0",
-        "8PtdGodUbexNYgkuyBUcWu": "3.29.0",
-        "9UibdRruyX43DxnB8Q1QXF": "0.4.0"
+        "sqPBLwEBBKHA2WDuGb17eV": "2.9.0",
+        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.45.0",
+        "8PtdGodUbexNYgkuyBUcWu": "3.32.0",
+        "9UibdRruyX43DxnB8Q1QXF": "0.6.0"
       },
       "lang": "ts",
       "fileLocks": [
         {
           "type": "globalVariant",
           "assetId": "26V_wbvcdVyW",
-          "checksum": "76700c180bca36e9853b6f3397e442e1"
+          "checksum": "9cf4ff8f7551c517c2f40d485a3d8e38"
         },
         {
           "assetId": "k6ZwKcaHfkxemp7yqC1vbY",
@@ -3457,12 +3457,12 @@
         {
           "type": "renderModule",
           "assetId": "6-Wp84uf7hB4",
-          "checksum": "0caa6ecb239a60ad59ba378eec3ac37f"
+          "checksum": "6b9963736995b3f3a588e2298e8b0b7b"
         },
         {
           "type": "cssRules",
           "assetId": "6-Wp84uf7hB4",
-          "checksum": "0caa6ecb239a60ad59ba378eec3ac37f"
+          "checksum": "6b9963736995b3f3a588e2298e8b0b7b"
         },
         {
           "type": "icon",
@@ -3472,7 +3472,7 @@
         {
           "assetId": "k6ZwKcaHfkxemp7yqC1vbY",
           "type": "projectCss",
-          "checksum": "2e243a87f67582f701cbfb7abe22193e"
+          "checksum": "9c54deb1e47ab73f58e3d894ee0ba74f"
         }
       ],
       "codegenVersion": "0.0.1"
