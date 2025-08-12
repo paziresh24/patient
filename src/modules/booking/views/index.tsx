@@ -75,6 +75,7 @@ import { growthbook } from 'src/pages/_app';
 import { template, templateSettings } from 'lodash';
 import { useGetServices } from '@/common/apis/services/profile/services';
 import { toastActionble } from '@/common/utils/toastActionble';
+import useResponsive from '@/common/hooks/useResponsive';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -117,6 +118,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const { customize } = useCustomize();
   const isApplication = useApplication();
   const { slug, defaultStep, className } = props;
+  const { isMobile } = useResponsive();
   const { data, isLoading } = useGetProfileData(
     {
       slug,
@@ -809,9 +811,15 @@ const BookingSteps = (props: BookingStepsProps) => {
           </Button>
         </div>
       </Modal>
-      <Modal title="انتخاب بیمه" {...insuranceModalProps}>
+      <Modal title="انتخاب بیمه" {...insuranceModalProps} noScroll>
         <div className="flex flex-col space-y-3">
-          <Autocomplete onChange={e => setInsuranceName(e.target.value.value)} label="نام بیمه" options={getInsuranceList()} />
+          <Autocomplete
+            placeholder="انتخاب کنید."
+            align={isMobile ? 'top' : 'bottom'}
+            onChange={e => setInsuranceName(e.target.value.value)}
+            label="نام بیمه"
+            options={getInsuranceList()}
+          />
           <Button
             loading={bookLoading}
             block
