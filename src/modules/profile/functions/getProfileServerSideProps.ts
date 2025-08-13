@@ -1,5 +1,5 @@
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import { ThemeConfig } from '@/common/hooks/useCustomize';
 import { getAggregatedProfileData } from './getAggregatedProfileData'; // ۱. وارد کردن تابع مشترک
 import axios from 'axios';
@@ -8,6 +8,8 @@ import { splunkInstance } from '@/common/services/splunk';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import { handleSsrError } from '@/common/utils/handleSsrError';
 import { withCSR } from '@/common/hoc/withCsr';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
+import { GrowthBook } from '@growthbook/growthbook-react';
 
 export const getProfileServerSideProps: GetServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
@@ -20,8 +22,15 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     const slug = decodeURIComponent(rawSlug as string);
     const university = themeConfing?.partnerKey as string;
 
+    const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+    const growthbook = new GrowthBook(growthbookContext);
+    growthbook.setAttributes({ slug });
+    await growthbook.loadFeatures({ timeout: 1000 });
+
     try {
-      const finalProps = await getAggregatedProfileData(slug, university, true);
+      const finalProps = await getAggregatedProfileData(slug, university, true, {
+        useClApi: growthbook.isOn('use-clapi-profile-page'),
+      });
 
       return {
         ...finalProps,

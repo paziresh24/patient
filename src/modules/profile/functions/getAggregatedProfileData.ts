@@ -42,7 +42,7 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 
     const { data: widgets } = await axios.get(API_ENDPOINTS.HAMDAST_WIDGETS, {
       params: { user_id: userData.user_id },
-      timeout: 500,
+      timeout: 1000,
     });
 
     if (!widgets || widgets.length === 0) return { widgets: [], widgetsData: {} };
@@ -77,17 +77,31 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 
 // ================= Main Aggregator Function =================
 
-export async function getAggregatedProfileData(slug: string, university: string | undefined, isServer: boolean, req?: any) {
+export async function getAggregatedProfileData(slug: string, university: string | undefined, isServer: boolean, options?: any) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
 
-  const { redirect, fullProfileData } = await getProfile({ slug, university, isServer: isServer });
+  const slugInfo = options?.useClApi ? await axios.get(`https://apigw.paziresh24.com/clapi/v1/slugs/${slug}`, { timeout: 1000 }) : null;
+  const userInfo = options?.useClApi
+    ? await axios.get(`https://apigw.paziresh24.com/clapi/v1/users_info/${slugInfo?.data?.ownerId}/${slugInfo?.data?.serverId}/`, {
+        timeout: 1000,
+      })
+    : null;
 
-  if (redirect) {
-    if (isServer) {
-      return { redirect: { statusCode: redirect.statusCode, destination: encodeURI(redirect.route) }, props: {} };
-    } else {
-      return location.replace(encodeURI(redirect.route));
+  let fullProfileData;
+  try {
+    const { redirect, fullProfileData: data } = await getProfile({ slug, university, isServer: isServer });
+    fullProfileData = data;
+    if (redirect) {
+      if (isServer) {
+        return { redirect: { statusCode: redirect.statusCode, destination: encodeURI(redirect.route) }, props: {} };
+      } else {
+        return location.replace(encodeURI(redirect.route));
+      }
+    }
+  } catch (error) {
+    if (!options?.useClApi) {
+      return Promise.reject(error);
     }
   }
 
@@ -99,7 +113,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
 
   const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult] = await Promise.allSettled([
     internalLinks({
-      links: getSearchLinks({ centers: fullProfileData.centers, group_expertises: fullProfileData.group_expertises ?? [] }),
+      links: getSearchLinks({ centers: fullProfileData?.centers, group_expertises: fullProfileData?.group_expertises ?? [] }),
     }),
     shouldFetchReviews
       ? queryClient.fetchQuery([ServerStateKeysEnum.Feedbacks, { slug, sort: 'default_order', showOnlyPositiveFeedbacks: true }], () =>
@@ -109,14 +123,16 @@ export async function getAggregatedProfileData(slug: string, university: string 
     getAverageWaitingTime({
       slug,
     }),
-    axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: fullProfileData.id }, timeout: 1500 }),
+    axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: fullProfileData?.id }, timeout: 1500 }),
   ]);
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
-    provider: {},
+    provider: {
+      user_id: userInfo?.data?.userId ?? null,
+    },
     feedbacks: {
-      ...fullProfileData.feedbacks,
+      ...fullProfileData?.feedbacks,
       ...rateDetailsResult,
       hideRates: rateDetailsResult?.hide_rates,
       reviews: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
@@ -126,21 +142,29 @@ export async function getAggregatedProfileData(slug: string, university: string 
   };
 
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
-    overwriteProfileData(overwriteData, fullProfileData);
+    overwriteProfileData(overwriteData, {
+      ...fullProfileData,
+      id: slugInfo?.data?.ownerId ?? fullProfileData?.id,
+      server_id: slugInfo?.data?.serverId ?? fullProfileData?.server_id,
+      name: userInfo?.data?.name ?? fullProfileData?.name,
+      family: userInfo?.data?.family ?? fullProfileData?.family,
+    });
 
   // Step 4: Fetch server-specific data only if running on the server
-  let userData = null;
+  let userData = overwriteData?.provider ?? null;
   let widgets: any[] = [];
   let widgetsData = {};
 
   if (!university) {
     try {
-      const { data } = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
-        params: { server_id: information.server_id, user_info_id: information.id },
-        headers: { authorization: `Bearer tzDWVALYrMpF6w9Msju87wmc@kd)` },
-        timeout: 500,
-      });
-      userData = data;
+      if (!userInfo?.data?.userId) {
+        const { data } = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
+          params: { server_id: information.server_id, user_info_id: information?.id },
+          headers: { authorization: `Bearer tzDWVALYrMpF6w9Msju87wmc@kd)` },
+          timeout: 500,
+        });
+        userData = data;
+      }
       const widgetResults = await fetchWidgetsData(information, userData);
       widgets = widgetResults.widgets;
       widgetsData = widgetResults.widgetsData;
@@ -162,7 +186,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
       description: university ? '' : description,
       information: {
         ...information,
-        user_id: userData?.user_id ?? null,
+        user_id: userData?.user_id ?? information?.user_id ?? null,
       },
       centers,
       expertises,
@@ -194,6 +218,8 @@ export async function getAggregatedProfileData(slug: string, university: string 
       hamdastWidgets: widgets,
       hamdastWidgetsData: widgetsData,
       user_id: userData?.user_id ?? null,
+      shouldFetchOnClient: !fullProfileData?.id,
+      isFullProfileError: !fullProfileData?.id,
     },
   };
 
