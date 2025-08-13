@@ -214,7 +214,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
                   $ctx.Growthbook.features["search-semantic-search"]
                     ? "true"
                     : "false",
-                facets: "*",
                 ...(Object.values(
                   $props.searchOptionalFilters
                     ? $props.searchOptionalFilters
@@ -312,7 +311,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                   )
                                 ).join(", ") ?? "",
                               satisfaction: item.source?.satisfaction ?? 0,
-
                               rates_count: item.source?.rates_count ?? 0,
                               price: (() => {
                                 const consultServices =
