@@ -130,6 +130,7 @@ export type PlasmicProductCard__ArgsType = {
   debugModeResult?: any;
   slug?: string;
   centers?: any;
+  recordType?: string;
 };
 type ArgPropType = keyof PlasmicProductCard__ArgsType;
 export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
@@ -153,7 +154,8 @@ export const PlasmicProductCard__ArgProps = new Array<ArgPropType>(
   "searchCardId",
   "debugModeResult",
   "slug",
-  "centers"
+  "centers",
+  "recordType"
 );
 
 export type PlasmicProductCard__OverridesType = {
@@ -201,6 +203,7 @@ export interface DefaultProductCardProps {
   debugModeResult?: any;
   slug?: string;
   centers?: any;
+  recordType?: string;
   _5StarRatingMode3?: SingleChoiceArg<"_5StarA">;
   externalBookDesign?: SingleBooleanChoiceArg<"externalBookDesign">;
   isSingleCard?: SingleBooleanChoiceArg<"isSingleCard">;
@@ -1713,7 +1716,10 @@ function PlasmicProductCard__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
-          return !!$props.actionButtons;
+          return (
+            !!$props.actionButtons ||
+            $props.recordType === "application.chatbot"
+          );
         } catch (e) {
           if (
             e instanceof TypeError ||

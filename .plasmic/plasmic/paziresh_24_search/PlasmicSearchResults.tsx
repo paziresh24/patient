@@ -1724,6 +1724,19 @@ function PlasmicSearchResults__RenderFunc(props: {
                       throw e;
                     }
                   })()}
+                  recordType={(() => {
+                    try {
+                      return currentItem.record_type;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   satisfactionPercent={(() => {
                     try {
                       return (() => {
