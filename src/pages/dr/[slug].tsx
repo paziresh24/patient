@@ -81,7 +81,7 @@ const DoctorProfile = (props: any) => {
   const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
 
-  const finalProps = !!shouldFetchOnClient || !props?.information ? clientData?.props : props;
+  const finalProps = (!!shouldFetchOnClient && !props?.information) || (clientData?.props as any)?.information ? clientData?.props : props;
   const {
     slug,
     title,
@@ -248,7 +248,7 @@ const DoctorProfile = (props: any) => {
     user_id,
   };
 
-  if (shouldFetchOnClient && isLoading) {
+  if (!finalProps?.information?.id ? shouldFetchOnClient && isLoading : false) {
     return (
       <div className="flex flex-grow justify-center items-center">
         <Loading width={50} />
@@ -263,14 +263,6 @@ const DoctorProfile = (props: any) => {
 
   if ([404, 500, 504, 410].includes(status) && !shouldFetchOnClient) {
     return <ErrorPage statusCode={status} refresh={refetch} />;
-  }
-
-  if (!finalProps?.information) {
-    return (
-      <div className="flex flex-grow justify-center items-center">
-        <Loading width={50} />
-      </div>
-    );
   }
 
   return (
@@ -296,7 +288,9 @@ const DoctorProfile = (props: any) => {
                   displayName: profileData.information.display_name,
                   title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
                   subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                  imageUrl: publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image,
+                  imageUrl: profileData.information?.image
+                    ? publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
+                    : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`,
                   slug: slug,
                   children: (
                     <div className="flex flex-col w-full gap-2">
@@ -343,6 +337,18 @@ const DoctorProfile = (props: any) => {
           </div>
 
           <div className="flex flex-col space-y-3 lg:float-left lg:w-[calc(100%_-_690px)]">
+            {isLoading && shouldFetchOnClient && (
+              <div className="w-full py-20 flex justify-center items-center">
+                <Loading />
+              </div>
+            )}
+
+            {(clientData?.props as any)?.isFullProfileError && (
+              <div className="w-full py-20 flex justify-center items-center">
+                <ErrorPage message="در دریافت اطلاعات مطب/مرکز درمانی مشکلی بوجود آمده." refresh={refetch} />
+              </div>
+            )}
+
             {aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
               .filter(({ isShow }: any) => Boolean(isShow))
               .map((section: any, index: number) => (

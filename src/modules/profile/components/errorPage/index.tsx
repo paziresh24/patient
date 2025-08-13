@@ -3,7 +3,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-const ErrorPage = ({ statusCode, refresh }: { statusCode: number; refresh: () => void }) => {
+const ErrorPage = ({ statusCode, refresh, message }: { message?: string; statusCode?: number; refresh: () => void }) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -44,20 +44,22 @@ const ErrorPage = ({ statusCode, refresh }: { statusCode: number; refresh: () =>
     },
   };
 
-  const error = errors[statusCode] || errors[500];
+  const error: any = statusCode ? errors[statusCode ?? 500] || errors[500] : {};
 
   return (
     <div className="flex flex-col items-center justify-center flex-grow bg-gray-100 text-center p-6">
-      <h1 className="text-6xl font-bold text-red-600">{error.status}</h1>
-      <h2 className="text-3xl font-semibold mt-4">{error.title}</h2>
-      <p className="text-lg text-gray-600 mt-2">{error.message}</p>
+      {error.status && <h1 className="text-6xl font-bold text-red-600">{error?.status}</h1>}
+      {error.title && <h2 className="text-3xl font-semibold mt-4">{error?.title}</h2>}
+      <p className="text-lg text-gray-600 mt-2">{message || error?.message}</p>
       <div className="flex gap-3">
         <Button className="mt-6" onClick={refresh}>
           تلاش مجدد
         </Button>
-        <Button variant="secondary" className="mt-6" onClick={() => router.push('/')}>
-          بازگشت به صفحه اصلی
-        </Button>
+        {error.status == 404 && (
+          <Button variant="secondary" className="mt-6" onClick={() => router.push('/')}>
+            بازگشت به صفحه اصلی
+          </Button>
+        )}
       </div>
     </div>
   );
