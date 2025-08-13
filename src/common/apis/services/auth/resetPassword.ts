@@ -1,7 +1,7 @@
 import formData from '@/common/utils/formData';
 import { useMutation } from '@tanstack/react-query';
 import { getCookie } from 'cookies-next';
-import { clinicClient } from '../../client';
+import { apiGatewayClient } from '../../client';
 import { setTerminal } from './setTerminal';
 
 interface Params {
@@ -11,7 +11,7 @@ interface Params {
 
 export const resetPassword = async (params: Params) => {
   await setTerminal();
-  return await clinicClient.post(`/api/resetPassword`, formData({ ...params, terminal_id: getCookie('terminal_id') }));
+  return await apiGatewayClient.post(`/gozargah/resetpassword`, formData({ ...params, terminal_id: getCookie('terminal_id') }));
 };
 
 export const useResetPassword = () => {
