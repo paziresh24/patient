@@ -154,7 +154,7 @@ export const aside = (data: any) => {
     // Centers Info
     {
       id: 'phone-and-address',
-      isShow: centers.some((center: any) => center.id !== CENTERS.CONSULT),
+      isShow: centers?.some?.((center: any) => center.id !== CENTERS.CONSULT),
       function: () => {
         return {
           centers: centers

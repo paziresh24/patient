@@ -248,7 +248,7 @@ const DoctorProfile = (props: any) => {
     user_id,
   };
 
-  if (!finalProps?.information?.id ? shouldFetchOnClient && isLoading : false) {
+  if (!finalProps?.information?.id ? shouldFetchOnClient || isLoading : false) {
     return (
       <div className="flex flex-grow justify-center items-center">
         <Loading width={50} />
@@ -268,7 +268,7 @@ const DoctorProfile = (props: any) => {
   return (
     <RaviGlobalContextsProvider>
       <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
-        <main key={information.id} className="lg:py-10 pwa:pb-24">
+        <main key={information?.id} className="lg:py-10 pwa:pb-24">
           {editable && (
             <div className="flex items-center p-2 !mb-4 bg-slate-200 lg:mb-0 lg:rounded-md text-slate-600 space-s-1">
               <InfoIcon className="min-w-6" />

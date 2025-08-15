@@ -116,13 +116,13 @@ export const sections = (data: any) => {
     },
     // Video
     {
-      isShow: media.aparat && media.aparat !== '0',
-      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media.aparat }} />,
+      isShow: media?.aparat && media?.aparat !== '0',
+      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media?.aparat }} />,
     },
     // Gallery
     {
       ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('gallery')} />,
-      isShow: customize.showGalleryProfile && media.gallery?.length > 0,
+      isShow: customize.showGalleryProfile && media?.gallery?.length > 0,
       isShowFallback: editable,
       function: () => {
         const items = media?.gallery;
@@ -240,7 +240,7 @@ export const sections = (data: any) => {
     {
       isShow: customize.showSeoBoxs,
       function: () => {
-        const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
+        const center = centers?.find?.((item: any) => item?.center_type === 1) ?? centers?.[0];
         const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
         const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
         const about = `<p>${information.display_name}، ${doctorExpertise ?? 'سایر'} در شهر ${center?.city ?? '(ثبت نشده)'} است. مطب ${
@@ -295,7 +295,7 @@ export const sections = (data: any) => {
         };
       },
       children: (props: any) => {
-        const center = centers.find((item: any) => item?.center_type === 1) ?? centers[0];
+        const center = centers?.find?.((item: any) => item?.center_type === 1) ?? centers?.[0];
         const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
         const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
 
