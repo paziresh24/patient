@@ -8,6 +8,7 @@ import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
+import { splunkInstance } from '@/common/services/splunk';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -81,12 +82,49 @@ export async function getAggregatedProfileData(slug: string, university: string 
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
 
-  const slugInfo = options?.useClApi ? await axios.get(`https://apigw.paziresh24.com/clapi/v1/slugs/${slug}`, { timeout: 1000 }) : null;
-  const userInfo = options?.useClApi
-    ? await axios.get(`https://apigw.paziresh24.com/clapi/v1/users_info/${slugInfo?.data?.ownerId}/${slugInfo?.data?.serverId}/`, {
-        timeout: 1000,
-      })
-    : null;
+  let slugInfo = null;
+  let userInfo = null;
+
+  if (options?.useClApi) {
+    const slugInfoEndpoint = isServer
+      ? `https://clinic-api-platform.darkube.app/api/slugs/${slug}`
+      : `https://apigw.paziresh24.com/clapi/v1/slugs/${slug}`;
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'profile_api_request',
+      type: 'profile_api_request',
+      event: {
+        endpoint: slugInfoEndpoint,
+        slug: slug,
+        isServer: isServer,
+      },
+    });
+    slugInfo = await axios.get(slugInfoEndpoint, {
+      headers: {
+        Accept: 'application/json',
+      },
+      timeout: 1000,
+    });
+
+    const userInfoEndpoint = isServer
+      ? `https://clinic-api-platform.darkube.app/api/users_info/${slugInfo?.data?.ownerId}/${slugInfo?.data?.serverId}/`
+      : `https://apigw.paziresh24.com/clapi/v1/users_info/${slugInfo?.data?.ownerId}/${slugInfo?.data?.serverId}/`;
+
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'profile_api_request',
+      type: 'profile_api_request',
+      event: {
+        endpoint: userInfoEndpoint,
+        slug: slug,
+        isServer: isServer,
+      },
+    });
+    userInfo = await axios.get(userInfoEndpoint, {
+      headers: {
+        Accept: 'application/json',
+      },
+      timeout: 1000,
+    });
+  }
 
   let fullProfileData;
   try {
