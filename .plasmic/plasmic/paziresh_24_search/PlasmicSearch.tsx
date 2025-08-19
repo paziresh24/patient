@@ -506,7 +506,7 @@ function PlasmicSearch__RenderFunc(props: {
                               try {
                                 return {
                                   ...$ctx.Growthbook.attributes,
-                                  search_query: value
+                                  search_query: $state.inputValue || ""
                                 };
                               } catch (e) {
                                 if (
