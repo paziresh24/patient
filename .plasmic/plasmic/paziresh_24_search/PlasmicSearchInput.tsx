@@ -775,7 +775,10 @@ function PlasmicSearchInput__RenderFunc(props: {
         })}
         deps={(() => {
           try {
-            return [$state.enterPress];
+            return [
+              $state.enterPress,
+              $ctx.Growthbook.attributes?.search_query
+            ];
           } catch (e) {
             if (
               e instanceof TypeError ||
