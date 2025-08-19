@@ -302,6 +302,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                     (() => {
                       try {
                         return {
+                          ...$ctx.Growthbook.attributes,
                           url: window.location.href,
                           ...(Intl.DateTimeFormat().resolvedOptions()
                             .timeZone && {
