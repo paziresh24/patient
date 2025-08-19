@@ -178,12 +178,17 @@ const BookingSteps = (props: BookingStepsProps) => {
     serviceId: service?.id,
     userCenterId: center?.user_center_id,
   });
-  const searchData = useSearch({
-    route: decodeURIComponent(`ir/${profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug}`),
-    query: {
-      turn_type: 'consult',
+  const searchData = useSearch(
+    {
+      route: decodeURIComponent(`ir/${profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug}`),
+      query: {
+        turn_type: 'consult',
+      },
     },
-  });
+    {
+      enabled: recommendModalProps.isOpen && shouldShowOnlineVistRecommendModal,
+    },
+  );
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
   const { data: services } = useGetServices({ slug, center_id: center?.id }, { enabled: !!center?.id && !!service?.id });
