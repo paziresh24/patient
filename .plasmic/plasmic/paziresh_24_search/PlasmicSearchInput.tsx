@@ -60,13 +60,12 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import SearchTextInput from "../../SearchTextInput"; // plasmic-import: wpkArHt5O9Fa/component
-import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchInput.module.css"; // plasmic-import: qe20xTbxVmkB/css
 
@@ -119,7 +118,6 @@ export const PlasmicSearchInput__ArgProps = new Array<ArgPropType>(
 export type PlasmicSearchInput__OverridesType = {
   root?: Flex__<"div">;
   textInput?: Flex__<typeof SearchTextInput>;
-  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchInputProps {
@@ -225,9 +223,10 @@ function PlasmicSearchInput__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const globalVariants = _useGlobalVariants();
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -240,8 +239,8 @@ function PlasmicSearchInput__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root,
         { [sty.rootisFocused]: hasVariant($state, "isFocused", "isFocused") }
       )}
@@ -389,6 +388,131 @@ function PlasmicSearchInput__RenderFunc(props: {
                 typeof $steps["runOnFocuse"].then === "function"
               ) {
                 $steps["runOnFocuse"] = await $steps["runOnFocuse"];
+              }
+            }}
+            onKeyDown={async event => {
+              const $steps = {};
+
+              $steps["runCode"] =
+                event.key === "Enter"
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (() => {
+                            const params = new globalThis.URLSearchParams(
+                              globalThis.location.search
+                            );
+                            params.delete("text");
+                            const existingParams = params?.toString() || "";
+                            params.append("text", $state.textInput.value);
+                            params.delete("ref");
+                            params.append("ref", "search_suggestion_box");
+                            const semanticSearchParam =
+                              $ctx.Growthbook &&
+                              $ctx.Growthbook.isReady &&
+                              $ctx.Growthbook.features["search-semantic-search"]
+                                ? "true"
+                                : "false";
+                            params.delete("semantic_search");
+                            params.append(
+                              "semantic_search",
+                              semanticSearchParam
+                            );
+                            return params.toString();
+                          })();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+
+              $steps["runCode2"] =
+                $steps.runCode?.length > 0
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (() => {
+                            const history = $$.lodash.uniq(
+                              JSON.parse(
+                                localStorage.getItem("history") ?? "[]"
+                              )
+                            );
+                            const newHistory = history.filter(
+                              historyItem =>
+                                historyItem !== $state.textInput.value
+                            );
+                            return localStorage.setItem(
+                              "history",
+                              JSON.stringify([
+                                ...newHistory,
+                                $state.textInput.value
+                              ])
+                            );
+                          })();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
+                $steps["runCode2"] != null &&
+                typeof $steps["runCode2"] === "object" &&
+                typeof $steps["runCode2"].then === "function"
+              ) {
+                $steps["runCode2"] = await $steps["runCode2"];
+              }
+
+              $steps["goToPage"] =
+                $steps.runCode?.length > 0
+                  ? (() => {
+                      const actionArgs = {
+                        destination: (() => {
+                          try {
+                            return `/s/${
+                              $props.citySlug ? $props.citySlug + "/" : ""
+                            }?${$steps.runCode?.toString() ?? ""}`;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
+                $steps["goToPage"] != null &&
+                typeof $steps["goToPage"] === "object" &&
+                typeof $steps["goToPage"].then === "function"
+              ) {
+                $steps["goToPage"] = await $steps["goToPage"];
               }
             }}
           >
@@ -763,169 +887,13 @@ function PlasmicSearchInput__RenderFunc(props: {
           ) : null}
         </div>
       </div>
-      <SideEffect
-        data-plasmic-name={"sideEffect"}
-        data-plasmic-override={overrides.sideEffect}
-        className={classNames("__wab_instance", sty.sideEffect, {
-          [sty.sideEffectisFocused]: hasVariant(
-            $state,
-            "isFocused",
-            "isFocused"
-          )
-        })}
-        deps={(() => {
-          try {
-            return [$state.enterPress];
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        onMount={async () => {
-          const $steps = {};
-
-          $steps["runCode"] = true
-            ? (() => {
-                const actionArgs = {
-                  customFunction: async () => {
-                    return (() => {
-                      const input = globalThis.window.document.getElementById(
-                        $props.inputId
-                      );
-                      const params = new globalThis.URLSearchParams(
-                        globalThis.window.location.search
-                      );
-                      if (typeof window != "undefined" && input) {
-                        return input.addEventListener("keypress", event => {
-                          if (event.key === "Enter") {
-                            event.preventDefault();
-                            params.delete("text");
-                            const existingParams = params?.toString() || "";
-                            params.append("text", $state.textInput.value);
-                            params.delete("ref");
-                            params.append("ref", "search_suggestion_box");
-                            const semanticSearchParam =
-                              $ctx.Growthbook &&
-                              $ctx.Growthbook.isReady &&
-                              $ctx.Growthbook.features["search-semantic-search"]
-                                ? "true"
-                                : "false";
-                            params.delete("semantic_search");
-                            params.append(
-                              "semantic_search",
-                              semanticSearchParam
-                            );
-                            return ($state.enterPress = `/s/${
-                              $props.citySlug ? $props.citySlug + "/" : ""
-                            }?${params.toString()}`);
-                          }
-                        });
-                      }
-                    })();
-                  }
-                };
-                return (({ customFunction }) => {
-                  return customFunction();
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["runCode"] != null &&
-            typeof $steps["runCode"] === "object" &&
-            typeof $steps["runCode"].then === "function"
-          ) {
-            $steps["runCode"] = await $steps["runCode"];
-          }
-
-          $steps["saveToHistoryKeywords"] = !!$state.enterPress
-            ? (() => {
-                const actionArgs = {
-                  customFunction: async () => {
-                    return (() => {
-                      const history = $$.lodash.uniq(
-                        JSON.parse(localStorage.getItem("history") ?? "[]")
-                      );
-                      const newHistory = history.filter(
-                        historyItem => historyItem !== $state.textInput.value
-                      );
-                      return localStorage.setItem(
-                        "history",
-                        JSON.stringify([...newHistory, $state.textInput.value])
-                      );
-                    })();
-                  }
-                };
-                return (({ customFunction }) => {
-                  return customFunction();
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["saveToHistoryKeywords"] != null &&
-            typeof $steps["saveToHistoryKeywords"] === "object" &&
-            typeof $steps["saveToHistoryKeywords"].then === "function"
-          ) {
-            $steps["saveToHistoryKeywords"] = await $steps[
-              "saveToHistoryKeywords"
-            ];
-          }
-
-          $steps["goToWhenEnterPress"] = !!$state.enterPress
-            ? (() => {
-                const actionArgs = {
-                  destination: (() => {
-                    try {
-                      return $state.enterPress;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()
-                };
-                return (({ destination }) => {
-                  if (
-                    typeof destination === "string" &&
-                    destination.startsWith("#")
-                  ) {
-                    document
-                      .getElementById(destination.substr(1))
-                      .scrollIntoView({ behavior: "smooth" });
-                  } else {
-                    __nextRouter?.push(destination);
-                  }
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["goToWhenEnterPress"] != null &&
-            typeof $steps["goToWhenEnterPress"] === "object" &&
-            typeof $steps["goToWhenEnterPress"].then === "function"
-          ) {
-            $steps["goToWhenEnterPress"] = await $steps["goToWhenEnterPress"];
-          }
-        }}
-        onUnmount={async () => {
-          const $steps = {};
-        }}
-      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "textInput", "sideEffect"],
-  textInput: ["textInput"],
-  sideEffect: ["sideEffect"]
+  root: ["root", "textInput"],
+  textInput: ["textInput"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -933,7 +901,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   textInput: typeof SearchTextInput;
-  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -997,7 +964,6 @@ export const PlasmicSearchInput = Object.assign(
   {
     // Helper components rendering sub-elements
     textInput: makeNodeComponent("textInput"),
-    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicSearchInput
     internalVariantProps: PlasmicSearchInput__VariantProps,
