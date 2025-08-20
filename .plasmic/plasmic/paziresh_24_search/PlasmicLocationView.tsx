@@ -63,10 +63,12 @@ import TextInput from "../../TextInput"; // plasmic-import: 6w9lKEd-r02I/compone
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import UserLocation from "../../UserLocation"; // plasmic-import: YoStZ8eQd9r-/component
 import LocationList from "../../LocationList"; // plasmic-import: WC4zcEVYQzEC/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicLocationView.module.css"; // plasmic-import: p2ixA7V1voJv/css
 
@@ -208,6 +210,10 @@ function PlasmicLocationView__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -219,8 +225,8 @@ function PlasmicLocationView__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root,
         "locations-container"
       )}

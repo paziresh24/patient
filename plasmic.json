@@ -40,7 +40,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/plasmic_embed_css/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/plasmic_embed_css/plasmic.tsx"
     },
     {
       "projectId": "caTPwKxj5ZrD9LQ7DMdK4Z",
@@ -99,7 +100,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/plasmic_basic_components/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/plasmic_basic_components/plasmic.tsx"
     },
     {
       "projectId": "oBJtsp5RgVpcN6KCrDTuQT",
@@ -250,7 +252,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/fragment_icons/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/fragment_icons/plasmic.tsx"
     },
     {
       "projectId": "sqPBLwEBBKHA2WDuGb17eV",
@@ -341,7 +344,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/radix_ui/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/radix_ui/plasmic.tsx"
     },
     {
       "projectId": "gmeH6XgPaBtkt51HunAo4g",
@@ -550,7 +554,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/react_aria/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_aria/plasmic.tsx"
     },
     {
       "projectId": "hsyJcmBceSfPzvvXzVTuk7",
@@ -566,7 +571,8 @@
       "splitsProviderFilePath": "",
       "codeComponents": [],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/lodash/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/lodash/plasmic.tsx"
     },
     {
       "projectId": "ohDidvG9XsCeFumugENU3J",
@@ -967,7 +973,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "YUiM7yqBWAqsh8KSnrdj7",
@@ -996,7 +1004,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/plasmic_query/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/plasmic_query/plasmic.tsx"
     },
     {
       "projectId": "h9Dbk9ygddw7UVEq1NNhKi",
@@ -1144,7 +1153,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/fragment_design_system/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/fragment_design_system/plasmic.tsx"
     },
     {
       "projectId": "sMdpLWyxbzDCruwMRffW2m",
@@ -2554,7 +2564,9 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "styleTokensProviderFilePath": "plasmic/paziresh_24_search/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/paziresh_24_search/plasmic.tsx"
     },
     {
       "projectId": "8NbkXymcLwvMUC2yXeRrWk",
@@ -2924,7 +2936,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "58GpZjZCWTaJ8AUhpCwt2K",
@@ -2947,7 +2961,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "grxNYctbMek6PL66cujx3u",
@@ -3375,7 +3391,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",
@@ -3391,7 +3409,8 @@
       "splitsProviderFilePath": "",
       "codeComponents": [],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "styleTokensProviderFilePath": "plasmic/nanoid/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/nanoid/plasmic.tsx"
     },
     {
       "projectId": "fc2TT88raN5pz7nywm4q4q",
@@ -3549,7 +3568,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "7r312uiqyadpVPdnRoAggk",
@@ -3968,7 +3989,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "6HBcNwr8dz9LuS1Qe36xa5",
@@ -4211,7 +4234,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "pkMLinFwM9pzwv5S5KpiAu",
@@ -4626,7 +4651,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",
@@ -5391,7 +5418,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "k6ZwKcaHfkxemp7yqC1vbY",
@@ -5544,7 +5573,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
@@ -5567,7 +5598,9 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "k6BnBuAUepzRX8Qs2WvkKs",
@@ -5583,7 +5616,9 @@
       "splitsProviderFilePath": "",
       "codeComponents": [],
       "customFunctions": [],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "iDYgiKJB9Yi7CUB81stQBK",
@@ -6221,7 +6256,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "bN5uNsAhTefwW3S14VjvMG",
@@ -6399,7 +6436,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "85GFtqPAFvUkDYJxzFDEYS",
@@ -6593,7 +6632,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "g8Bqu3xcbG5xgWev5sVtns",
@@ -6746,7 +6787,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "4fjEYDyHsDvAphaYRHZchB",
@@ -6909,7 +6952,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     },
     {
       "projectId": "5MMYVxpXKV5JuJRaJPvqek",
@@ -7062,7 +7107,9 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": []
+      "jsBundleThemes": [],
+      "styleTokensProviderFilePath": "",
+      "projectModuleFilePath": ""
     }
   ],
   "globalVariants": {
@@ -7175,7 +7222,7 @@
   "nextjsConfig": {
     "pagesDir": "../src/pages"
   },
-  "cliVersion": "0.1.340",
+  "cliVersion": "0.1.342",
   "packageManager": "npm",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.340/dist/plasmic.schema.json"
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.342/dist/plasmic.schema.json"
 }
