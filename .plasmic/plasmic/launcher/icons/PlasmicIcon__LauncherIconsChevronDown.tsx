@@ -5,12 +5,12 @@
 import React from "react";
 import { classNames } from "@plasmicapp/react-web";
 
-export type LauncherIconsChevronLeftIconProps = React.ComponentProps<"svg"> & {
+export type LauncherIconsChevronDownIconProps = React.ComponentProps<"svg"> & {
   title?: string;
 };
 
-export function LauncherIconsChevronLeftIcon(
-  props: LauncherIconsChevronLeftIconProps
+export function LauncherIconsChevronDownIcon(
+  props: LauncherIconsChevronDownIconProps
 ) {
   const { className, style, title, ...restProps } = props;
   return (
@@ -24,7 +24,7 @@ export function LauncherIconsChevronLeftIcon(
       className={classNames(
         "plasmic-default__svg",
         className,
-        "lucide lucide-chevron-left-icon lucide-chevron-left"
+        "lucide lucide-chevron-down-icon lucide-chevron-down"
       )}
       viewBox={"0 0 24 24"}
       height={"1em"}
@@ -33,10 +33,10 @@ export function LauncherIconsChevronLeftIcon(
     >
       {title && <title>{title}</title>}
 
-      <path d={"m15 18-6-6 6-6"}></path>
+      <path d={"m6 9 6 6 6-6"}></path>
     </svg>
   );
 }
 
-export default LauncherIconsChevronLeftIcon;
+export default LauncherIconsChevronDownIcon;
 /* prettier-ignore-end */

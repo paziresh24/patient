@@ -63,10 +63,12 @@ import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5f
 import { Portal } from "@/common/fragment/components/portal"; // plasmic-import: 8JnrBOuqUY30/codeComponent
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherApps from "../../LauncherApps"; // plasmic-import: Qz6g1T5BaK7n/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherDesktopApps.module.css"; // plasmic-import: rMG1ZGZR_tFC/css
 
@@ -155,6 +157,10 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_paziresh_24_design_system =
+    useStyleTokens_paziresh_24_design_system();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -166,8 +172,8 @@ function PlasmicLauncherDesktopApps__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >

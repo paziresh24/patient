@@ -59,6 +59,9 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
@@ -193,6 +196,8 @@ function PlasmicPaziresh24Chip__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -204,7 +209,7 @@ function PlasmicPaziresh24Chip__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
+        styleTokensClassNames,
         sty.root,
         {
           [sty.rootcolor_blue]: hasVariant($state, "color", "blue"),
@@ -218,11 +223,9 @@ function PlasmicPaziresh24Chip__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
-      <Stack__
-        as={"div"}
+      <div
         data-plasmic-name={"freeBox"}
         data-plasmic-override={overrides.freeBox}
-        hasGap={true}
         className={classNames(projectcss.all, sty.freeBox, {
           [sty.freeBoxcolor_blue]: hasVariant($state, "color", "blue"),
           [sty.freeBoxcolor_gray]: hasVariant($state, "color", "gray"),
@@ -313,7 +316,7 @@ function PlasmicPaziresh24Chip__RenderFunc(props: {
               value: args.slot
             })
           : null}
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -344,15 +347,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicPaziresh24Chip__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicPaziresh24Chip__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicPaziresh24Chip__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicPaziresh24Chip__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

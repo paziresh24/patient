@@ -64,10 +64,12 @@ import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
 import LauncherComponentsService from "../../LauncherComponentsService"; // plasmic-import: 51AmRlCgKgNN/component
 import LauncherComponentsSeparator from "../../LauncherComponentsSeparator"; // plasmic-import: 1FBJsfya0Spv/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherServices.module.css"; // plasmic-import: sRZYv0Q2DAH0/css
 
@@ -131,6 +133,10 @@ function PlasmicLauncherServices__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_paziresh_24_design_system =
+    useStyleTokens_paziresh_24_design_system();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -142,8 +148,8 @@ function PlasmicLauncherServices__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >

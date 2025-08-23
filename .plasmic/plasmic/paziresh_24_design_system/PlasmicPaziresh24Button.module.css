@@ -2,29 +2,19 @@
   display: flex;
   position: relative;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
   background: var(--token-s_XuzePAGmOh);
   cursor: pointer;
   transition-property: background;
   transition-duration: 0.1s;
   pointer-events: auto;
+  column-gap: 8px;
   -webkit-transition-property: background;
   -webkit-transition-duration: 0.1s;
   border-radius: 6px;
   padding: 11px 20px;
   border-width: 0px;
-}
-.root > :global(.__wab_flex-container) {
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-left: calc(0px - 8px);
-  width: calc(100% + 8px);
-}
-.root > :global(.__wab_flex-container) > *,
-.root > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.root > :global(.__wab_flex-container) > picture > img,
-.root > :global(.__wab_flex-container) > :global(.__wab_slot) > picture > img {
-  margin-left: 8px;
 }
 .rootshowStartIcon {
   padding-left: 16px;
@@ -107,10 +97,8 @@
   background: #f37f00;
 }
 .rootspace {
-  padding-left: 10px;
-}
-.rootspace > :global(.__wab_flex-container) {
   justify-content: space-between;
+  padding-left: 10px;
 }
 .rootshape_rounded_showStartIcon {
   padding-left: 16px;

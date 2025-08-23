@@ -60,6 +60,8 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { BaseText } from "@plasmicpkgs/react-aria/skinny/registerText";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -130,6 +132,8 @@ function PlasmicPaziresh24AtomsDescription__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <BaseText
       data-plasmic-name={"root"}
@@ -141,7 +145,7 @@ function PlasmicPaziresh24AtomsDescription__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
       slot={"description"}
@@ -184,15 +188,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicPaziresh24AtomsDescription__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicPaziresh24AtomsDescription__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicPaziresh24AtomsDescription__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicPaziresh24AtomsDescription__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

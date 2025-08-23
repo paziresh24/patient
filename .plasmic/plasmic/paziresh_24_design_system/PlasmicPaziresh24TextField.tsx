@@ -64,6 +64,8 @@ import Paziresh24AtomsLabel from "../../Paziresh24AtomsLabel"; // plasmic-import
 import Paziresh24AtomsTextInput from "../../Paziresh24AtomsTextInput"; // plasmic-import: PTeLKP71vIWx/component
 import Paziresh24AtomsTextAreaInput from "../../Paziresh24AtomsTextAreaInput"; // plasmic-import: HOBObNXYC7Oc/component
 import Paziresh24AtomsDescription from "../../Paziresh24AtomsDescription"; // plasmic-import: 54F0s7A58MP4/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -385,6 +387,8 @@ function PlasmicPaziresh24TextField__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+
   const [$ccVariants, setDollarCcVariants] = React.useState<
     Record<string, boolean>
   >({
@@ -417,7 +421,7 @@ function PlasmicPaziresh24TextField__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
+        styleTokensClassNames,
         sty.ariaTextField,
         {
           [sty.ariaTextFieldiconEnd]: hasVariant($state, "iconEnd", "iconEnd"),
@@ -682,15 +686,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicPaziresh24TextField__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicPaziresh24TextField__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicPaziresh24TextField__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicPaziresh24TextField__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

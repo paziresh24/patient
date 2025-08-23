@@ -2961,9 +2961,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/react_awesome_reveal/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/react_awesome_reveal/plasmic.tsx"
     },
     {
       "projectId": "grxNYctbMek6PL66cujx3u",
@@ -3260,6 +3259,16 @@
           "id": "XzVR5ZXt9F_Z",
           "name": "LauncherIconsSupportIcon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsSupport.tsx"
+        },
+        {
+          "id": "QkcYbCaNRb2n",
+          "name": "LauncherIconsChevronDownIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsChevronDown.tsx"
+        },
+        {
+          "id": "YqtCKsyIRIgg",
+          "name": "LauncherIconsChevronUpIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsChevronUp.tsx"
         }
       ],
       "images": [
@@ -3391,9 +3400,8 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/launcher/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/launcher/plasmic.tsx"
     },
     {
       "projectId": "9UibdRruyX43DxnB8Q1QXF",
@@ -4234,9 +4242,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/paziresh_24_design_system/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/paziresh_24_design_system/plasmic.tsx"
     },
     {
       "projectId": "pkMLinFwM9pzwv5S5KpiAu",
@@ -5616,9 +5623,8 @@
       "splitsProviderFilePath": "",
       "codeComponents": [],
       "customFunctions": [],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/axios/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/axios/plasmic.tsx"
     },
     {
       "projectId": "iDYgiKJB9Yi7CUB81stQBK",

@@ -17,18 +17,6 @@
   max-width: 100%;
   object-fit: cover;
 }
-.svg__suKw8 {
-  object-fit: cover;
-  max-width: 100%;
-  width: 22px;
-  height: 22px;
-}
-.svg___5Xek1 {
-  object-fit: cover;
-  max-width: 100%;
-  width: 22px;
-  height: 22px;
-}
 .freeBox__hIhKh {
   display: flex;
   flex-direction: column;
@@ -82,16 +70,17 @@
   object-fit: cover;
   max-width: 100%;
   position: absolute;
-  left: 0px;
-  top: -20px;
+  left: -10px;
+  top: -10px;
   width: 46px;
 }
 .img > picture > img {
   object-fit: cover;
 }
-.svg__zYtC3 {
+.svg {
   object-fit: cover;
   max-width: 100%;
   width: 22px;
   height: 22px;
+  flex-shrink: 0;
 }

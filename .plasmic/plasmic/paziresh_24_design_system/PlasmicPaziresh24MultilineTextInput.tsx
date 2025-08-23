@@ -60,6 +60,8 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -195,6 +197,8 @@ function PlasmicPaziresh24MultilineTextInput__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -206,7 +210,7 @@ function PlasmicPaziresh24MultilineTextInput__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
@@ -454,15 +458,15 @@ type NodeComponentProps<T extends NodeNameType> =
     PlasmicPaziresh24MultilineTextInput__VariantsArgs,
     ReservedPropsType
   > &
-    /* Specify args directly as props*/ Omit<
-      PlasmicPaziresh24MultilineTextInput__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicPaziresh24MultilineTextInput__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

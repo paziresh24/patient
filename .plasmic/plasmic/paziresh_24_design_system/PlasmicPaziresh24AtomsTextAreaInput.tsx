@@ -61,6 +61,8 @@ import {
 
 import { BaseTextArea } from "@plasmicpkgs/react-aria/skinny/registerTextArea";
 import { inputHelpers as BaseTextArea_Helpers } from "@plasmicpkgs/react-aria/skinny/registerTextArea";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -220,6 +222,8 @@ function PlasmicPaziresh24AtomsTextAreaInput__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+
   const [$ccVariants, setDollarCcVariants] = React.useState<
     Record<string, boolean>
   >({
@@ -249,7 +253,7 @@ function PlasmicPaziresh24AtomsTextAreaInput__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
+        styleTokensClassNames,
         sty.ariaTextArea,
         {
           [sty.ariaTextAreaflat_bottom]: hasVariant($state, "flat", "bottom"),
@@ -327,15 +331,15 @@ type NodeComponentProps<T extends NodeNameType> =
     PlasmicPaziresh24AtomsTextAreaInput__VariantsArgs,
     ReservedPropsType
   > &
-    /* Specify args directly as props*/ Omit<
-      PlasmicPaziresh24AtomsTextAreaInput__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicPaziresh24AtomsTextAreaInput__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

@@ -64,8 +64,8 @@ import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5f
 import { DialogContent } from "@plasmicpkgs/radix-ui";
 import { DialogTitle } from "@plasmicpkgs/radix-ui";
 import { DialogClose } from "@plasmicpkgs/radix-ui";
-
-import { useScreenVariants as useScreenVariantsqiBuxNlixBgQ } from "./PlasmicGlobalVariant__Screen"; // plasmic-import: QiBUXNlixBgQ/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -219,9 +219,8 @@ function PlasmicPaziresh24Modal__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsqiBuxNlixBgQ()
-  });
+  const globalVariants = _useGlobalVariants();
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <Dialog
@@ -234,7 +233,7 @@ function PlasmicPaziresh24Modal__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
+        styleTokensClassNames,
         sty.dialog,
         {
           [sty.dialogfullScreen]: hasVariant(
@@ -278,7 +277,7 @@ function PlasmicPaziresh24Modal__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens
+        styleTokensClassNames
       )}
       triggerSlot={
         (hasVariant($state, "noTrigger", "noTrigger") ? false : true)
@@ -340,12 +339,10 @@ function PlasmicPaziresh24Modal__RenderFunc(props: {
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens
+          styleTokensClassNames
         )}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox__ckToi, {
             [sty.freeBoxhideHeader__ckToi1Okbm]: hasVariant(
               $state,
@@ -372,7 +369,7 @@ function PlasmicPaziresh24Modal__RenderFunc(props: {
               })}
             </h5>
           </DialogTitle>
-        </Stack__>
+        </div>
         <div
           className={classNames(projectcss.all, sty.freeBox___1Wayd, {
             [sty.freeBoxhideHeader___1Wayd1Okbm]: hasVariant(
@@ -459,15 +456,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicPaziresh24Modal__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicPaziresh24Modal__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicPaziresh24Modal__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicPaziresh24Modal__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
