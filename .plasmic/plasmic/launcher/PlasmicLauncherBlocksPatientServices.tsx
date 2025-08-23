@@ -60,13 +60,19 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
+import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherComponentsService from "../../LauncherComponentsService"; // plasmic-import: 51AmRlCgKgNN/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherBlocksPatientServices.module.css"; // plasmic-import: ofxhzuPg2IHJ/css
+
+import LauncherIconsChevronDownIcon from "./icons/PlasmicIcon__LauncherIconsChevronDown"; // plasmic-import: QkcYbCaNRb2n/icon
+import LauncherIconsChevronUpIcon from "./icons/PlasmicIcon__LauncherIconsChevronUp"; // plasmic-import: YqtCKsyIRIgg/icon
 
 createPlasmicElementProxy;
 
@@ -84,7 +90,7 @@ export const PlasmicLauncherBlocksPatientServices__ArgProps =
 export type PlasmicLauncherBlocksPatientServices__OverridesType = {
   root?: Flex__<"div">;
   launcherComponentsTitle?: Flex__<typeof LauncherComponentsTitle>;
-  freeBox?: Flex__<"div">;
+  reveal?: Flex__<typeof Reveal>;
   launcherComponentsService?: Flex__<typeof LauncherComponentsService>;
 };
 
@@ -131,6 +137,28 @@ function PlasmicLauncherBlocksPatientServices__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "isShow",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
+
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_paziresh_24_design_system =
+    useStyleTokens_paziresh_24_design_system();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -142,116 +170,208 @@ function PlasmicLauncherBlocksPatientServices__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >
-      <LauncherComponentsTitle
-        data-plasmic-name={"launcherComponentsTitle"}
-        data-plasmic-override={overrides.launcherComponentsTitle}
-        className={classNames("__wab_instance", sty.launcherComponentsTitle)}
-        title={
-          "\u0628\u0631\u0627\u06cc \u0628\u06cc\u0645\u0627\u0631\u0627\u0646"
-        }
-      />
-
       <div
-        data-plasmic-name={"freeBox"}
-        data-plasmic-override={overrides.freeBox}
-        className={classNames(projectcss.all, sty.freeBox)}
+        className={classNames(projectcss.all, sty.freeBox__teHUw)}
+        onClick={async event => {
+          const $steps = {};
+
+          $steps["updateIsShow"] = true
+            ? (() => {
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["isShow"]
+                  },
+                  operation: 4
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
+
+                  const oldValue = $stateGet(objRoot, variablePath);
+                  $stateSet(objRoot, variablePath, !oldValue);
+                  return !oldValue;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["updateIsShow"] != null &&
+            typeof $steps["updateIsShow"] === "object" &&
+            typeof $steps["updateIsShow"].then === "function"
+          ) {
+            $steps["updateIsShow"] = await $steps["updateIsShow"];
+          }
+        }}
       >
-        {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-          (() => {
-            try {
-              return [
-                {
-                  name: "نوبت های من",
-                  icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-appointments.svg?versionId=",
-                  url: "/dashboard/appointments/"
-                },
-                {
-                  name: "دوستان من",
-                  icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-friends.svg?versionId=",
-                  url: "/dashboard/subuser/"
-                },
-                {
-                  name: "پزشکان من",
-                  icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-doctors.svg?versionId=",
-                  url: "/dashboard/bookmarks/"
-                },
-                {
-                  name: "نظرات من",
-                  icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-reviews.svg?versionId=",
-                  url: "/dashboard/apps/ravi/my_feedbacks/"
-                }
-              ];
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return [];
-              }
-              throw e;
+        <LauncherComponentsTitle
+          data-plasmic-name={"launcherComponentsTitle"}
+          data-plasmic-override={overrides.launcherComponentsTitle}
+          className={classNames("__wab_instance", sty.launcherComponentsTitle)}
+          title={
+            "\u0628\u0631\u0627\u06cc \u0628\u06cc\u0645\u0627\u0631\u0627\u0646"
+          }
+        />
+
+        {(() => {
+          try {
+            return !$state.isShow;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
             }
-          })()
-        ).map((__plasmic_item_0, __plasmic_idx_0) => {
-          const currentItem = __plasmic_item_0;
-          const currentIndex = __plasmic_idx_0;
-          return (
-            <LauncherComponentsService
-              data-plasmic-name={"launcherComponentsService"}
-              data-plasmic-override={overrides.launcherComponentsService}
-              className={classNames(
-                "__wab_instance",
-                sty.launcherComponentsService
-              )}
-              icon={(() => {
-                try {
-                  return currentItem.icon;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              key={currentIndex}
-              link={(() => {
-                try {
-                  return currentItem.url;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              name={(() => {
-                try {
-                  return currentItem.name;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              source={"patient_services"}
-            />
-          );
-        })}
+            throw e;
+          }
+        })() ? (
+          <LauncherIconsChevronDownIcon
+            className={classNames(projectcss.all, sty.svg__eqra0)}
+            role={"img"}
+          />
+        ) : null}
+        {(() => {
+          try {
+            return $state.isShow;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
+            }
+            throw e;
+          }
+        })() ? (
+          <LauncherIconsChevronUpIcon
+            className={classNames(projectcss.all, sty.svg__v0Va3)}
+            role={"img"}
+          />
+        ) : null}
       </div>
+      {(() => {
+        try {
+          return $state.isShow;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
+        }
+      })() ? (
+        <Reveal
+          data-plasmic-name={"reveal"}
+          data-plasmic-override={overrides.reveal}
+          cascade={true}
+          className={classNames("__wab_instance", sty.reveal)}
+          effect={"fade"}
+          reverse={false}
+          triggerOnce={true}
+        >
+          <div className={classNames(projectcss.all, sty.freeBox__yVvKb)}>
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return [
+                    {
+                      name: "نوبت های من",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-appointments.svg?versionId=",
+                      url: "/dashboard/appointments/"
+                    },
+                    {
+                      name: "دوستان من",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-friends.svg?versionId=",
+                      url: "/dashboard/subuser/"
+                    },
+                    {
+                      name: "پزشکان من",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-doctors.svg?versionId=",
+                      url: "/dashboard/bookmarks/"
+                    },
+                    {
+                      name: "نظرات من",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-reviews.svg?versionId=",
+                      url: "/dashboard/apps/ravi/my_feedbacks/"
+                    }
+                  ];
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <LauncherComponentsService
+                  data-plasmic-name={"launcherComponentsService"}
+                  data-plasmic-override={overrides.launcherComponentsService}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsService
+                  )}
+                  icon={(() => {
+                    try {
+                      return currentItem.icon;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  key={currentIndex}
+                  link={(() => {
+                    try {
+                      return currentItem.url;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  name={(() => {
+                    try {
+                      return currentItem.name;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  source={"patient_services"}
+                />
+              );
+            })}
+          </div>
+        </Reveal>
+      ) : null}
     </div>
   ) as React.ReactElement | null;
 }
@@ -260,11 +380,11 @@ const PlasmicDescendants = {
   root: [
     "root",
     "launcherComponentsTitle",
-    "freeBox",
+    "reveal",
     "launcherComponentsService"
   ],
   launcherComponentsTitle: ["launcherComponentsTitle"],
-  freeBox: ["freeBox", "launcherComponentsService"],
+  reveal: ["reveal", "launcherComponentsService"],
   launcherComponentsService: ["launcherComponentsService"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -273,7 +393,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   launcherComponentsTitle: typeof LauncherComponentsTitle;
-  freeBox: "div";
+  reveal: typeof Reveal;
   launcherComponentsService: typeof LauncherComponentsService;
 };
 
@@ -342,7 +462,7 @@ export const PlasmicLauncherBlocksPatientServices = Object.assign(
   {
     // Helper components rendering sub-elements
     launcherComponentsTitle: makeNodeComponent("launcherComponentsTitle"),
-    freeBox: makeNodeComponent("freeBox"),
+    reveal: makeNodeComponent("reveal"),
     launcherComponentsService: makeNodeComponent("launcherComponentsService"),
 
     // Metadata about props expected for PlasmicLauncherBlocksPatientServices

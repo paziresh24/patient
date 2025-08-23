@@ -5,8 +5,8 @@
   width: 100%;
   position: relative;
   padding-top: 0px;
-  min-width: 0;
   row-gap: 0.25rem;
+  min-width: 0;
 }
 .ariaTextField[data-disabled]:global(.__wab_instance) {
   opacity: 0.5;
