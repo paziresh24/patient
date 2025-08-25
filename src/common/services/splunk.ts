@@ -12,7 +12,8 @@ type Index =
   | 'error'
   | 'dashboard'
   | 'cwv'
-  | 'contribute';
+  | 'contribute'
+  | 'homepage';
 
 export const splunkInstance = (index: Index) => {
   switch (index) {
@@ -75,6 +76,17 @@ export const splunkInstance = (index: Index) => {
       return splunk.create({
         baseUrl: 'https://rokhdad-splunk-hec.paziresh24.com',
         token: '1e490c2c-d98b-4777-816d-cf7f09b21888',
+        constant: {
+          current_url: window.location.href,
+          terminal_id: getCookie('terminal_id'),
+          is_application: isPWA(),
+        },
+      });
+    }
+    case 'homepage': {
+      return splunk.create({
+        baseUrl: 'https://rokhdad-splunk-hec.paziresh24.com',
+        token: 'f9a5959d-625a-4d2e-b892-1c87cfa4e9af',
         constant: {
           current_url: window.location.href,
           terminal_id: getCookie('terminal_id'),

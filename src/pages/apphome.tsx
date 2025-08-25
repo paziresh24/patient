@@ -19,7 +19,8 @@ import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_sea
 import classNames from '@/common/utils/classNames';
 import useResponsive from '@/common/hooks/useResponsive';
 import Button from '@/common/components/atom/button';
-import SparkleIcon from '@/common/components/icons/sparkle';
+import ChevronIcon from '@/common/components/icons/chevron';
+import { splunkInstance } from '@/common/services/splunk';
 
 const Home = ({ fragmentComponents }: any) => {
   const isApplication = useApplication();
@@ -30,7 +31,8 @@ const Home = ({ fragmentComponents }: any) => {
   const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
   const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
-  const showChatBotButton = useFeatureIsOn('home-page::roshan-ai-chat-bot-button');
+  const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
+
   const { isMobile } = useResponsive();
 
   useEffect(() => {
@@ -41,6 +43,20 @@ const Home = ({ fragmentComponents }: any) => {
       if (query.download_source) localStorage.setItem('app:download_source', query.download_source as string);
     }
   }, [isReady, query, isApplication]);
+
+  useEffect(() => {
+    splunkInstance('homepage').sendEvent({
+      group: 'home-page-load',
+      type: 'home-page-load',
+      event: {
+        features: {
+          'health-assistants-button': showHealthAssistantsButton,
+        },
+      },
+    });
+    // Prefetch the search page
+    router.prefetch('/s/[[...params]]');
+  }, []);
 
   return (
     <>
@@ -78,20 +94,23 @@ const Home = ({ fragmentComponents }: any) => {
               <RecentSearch />
             </div>
           )}
-          {showChatBotButton && (
-            <div className="flex flex-col gap-3 w-full md:hidden">
+          {showHealthAssistantsButton && (
+            <div className="flex flex-col gap-3 w-full lg:w-[50rem]">
               <div className="flex items-center gap-5 w-full">
-                <div className="h-px bg-[#386BFC]/15 w-full" />
-                <span className="font-semibold text-sm text-primary">یا</span>
                 <div className="h-px bg-[#386BFC]/15 w-full" />
               </div>
               <Button
                 variant="secondary"
-                icon={<SparkleIcon className="w-5 h-5 ml-1" />}
-                className="border-[#BECEFD] bg-[#F1F4FF] shadow-sm font-semibold shadow-[#3262EB]/10"
-                onClick={() => router.push('/_/roshan/salamat/?origin=home')}
+                className="border-[#BECEFD] h-16 bg-[#F1F4FF] shadow-sm justify-between font-semibold shadow-[#3262EB]/10"
+                onClick={() => router.push('/s/?result_type=ابزارک%E2%80%8Cهای+سلامتی&text=ابزارک&ref=HomePageIcon')}
               >
-                دنبال پزشک نگرد از من بپرس!
+                <div className="flex gap-1 items-center">
+                  <div className="flex flex-col items-start">
+                    <span>دستیارهای سلامتی</span>
+                    <span className="font-normal text-xs">تشخیص کمبود آهن، تفسیر آزمایش و ...</span>
+                  </div>
+                </div>
+                <ChevronIcon dir="left" />
               </Button>
             </div>
           )}
