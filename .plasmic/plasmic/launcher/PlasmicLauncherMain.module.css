@@ -79,6 +79,15 @@
 .launcherBlocksApps:global(.__wab_instance) {
   max-width: 100%;
 }
+.reveal__wzbgq:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
+}
+.launcherBlocksSectionsStore:global(.__wab_instance) {
+  position: relative;
+}
 .reveal__h09Vw:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
@@ -96,24 +105,23 @@
 }
 .freeBox__rnWpl {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
   height: auto;
   max-width: 100%;
   justify-content: center;
   align-items: center;
-  opacity: 0.6;
+  opacity: 1;
   margin-top: 10px;
   cursor: pointer;
-  row-gap: 2px;
+  column-gap: var(--token-KVcr9NiMwFLr);
   min-width: 0;
 }
 .svg__cIfm {
   object-fit: cover;
   max-width: 100%;
-  width: 40px;
-  height: 40px;
-  color: #475569;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
 }
 .text {
@@ -121,9 +129,8 @@
   height: auto;
   max-width: 100%;
   text-align: center;
-  color: var(--token-I_yaFrj8gHQz);
-  font-weight: 600;
-  font-size: var(--token-0D6VF35kZC-C);
+  font-weight: 500;
+  font-size: var(--token-P2saABvfDCPH);
 }
 .svg__mRkc {
   object-fit: cover;
