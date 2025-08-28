@@ -82,10 +82,11 @@ export type PlasmicLauncherComponentsService__ArgsType = {
   icon?: string;
   link?: string;
   source?: string;
+  openNewTab?: boolean;
 };
 type ArgPropType = keyof PlasmicLauncherComponentsService__ArgsType;
 export const PlasmicLauncherComponentsService__ArgProps =
-  new Array<ArgPropType>("name", "icon", "link", "source");
+  new Array<ArgPropType>("name", "icon", "link", "source", "openNewTab");
 
 export type PlasmicLauncherComponentsService__OverridesType = {
   root?: Flex__<"div">;
@@ -100,6 +101,7 @@ export interface DefaultLauncherComponentsServiceProps {
   icon?: string;
   link?: string;
   source?: string;
+  openNewTab?: boolean;
   className?: string;
 }
 
@@ -125,7 +127,8 @@ function PlasmicLauncherComponentsService__RenderFunc(props: {
       Object.assign(
         {
           name: "\u0645\u0631\u0627\u062c\u0639\u06cc\u0646 \u0645\u0646",
-          icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fmy-patients.svg?versionId="
+          icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/services%2Fmy-patients.svg?versionId=",
+          openNewTab: false
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -169,43 +172,65 @@ function PlasmicLauncherComponentsService__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["goToPage"] = !!$props.link
-          ? (() => {
-              const actionArgs = {
-                destination: (() => {
-                  try {
-                    return $props.link;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
+        $steps["goToPage"] =
+          !!$props.link && !$props.openNewTab
+            ? (() => {
+                const actionArgs = {
+                  destination: (() => {
+                    try {
+                      return $props.link;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
                     }
-                    throw e;
+                  })()
+                };
+                return (({ destination }) => {
+                  if (
+                    typeof destination === "string" &&
+                    destination.startsWith("#")
+                  ) {
+                    document
+                      .getElementById(destination.substr(1))
+                      .scrollIntoView({ behavior: "smooth" });
+                  } else {
+                    __nextRouter?.push(destination);
                   }
-                })()
-              };
-              return (({ destination }) => {
-                if (
-                  typeof destination === "string" &&
-                  destination.startsWith("#")
-                ) {
-                  document
-                    .getElementById(destination.substr(1))
-                    .scrollIntoView({ behavior: "smooth" });
-                } else {
-                  __nextRouter?.push(destination);
-                }
-              })?.apply(null, [actionArgs]);
-            })()
-          : undefined;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
         if (
           $steps["goToPage"] != null &&
           typeof $steps["goToPage"] === "object" &&
           typeof $steps["goToPage"].then === "function"
         ) {
           $steps["goToPage"] = await $steps["goToPage"];
+        }
+
+        $steps["runCode"] =
+          !!$props.link && $props.openNewTab
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return globalThis.open($props.link, "blank");
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+        if (
+          $steps["runCode"] != null &&
+          typeof $steps["runCode"] === "object" &&
+          typeof $steps["runCode"].then === "function"
+        ) {
+          $steps["runCode"] = await $steps["runCode"];
         }
 
         $steps["sendLog"] = true

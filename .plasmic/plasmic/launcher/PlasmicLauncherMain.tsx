@@ -66,6 +66,7 @@ import LauncherBlocksShortcuts from "../../LauncherBlocksShortcuts"; // plasmic-
 import LauncherBlocksWidgetsSanje from "../../LauncherBlocksWidgetsSanje"; // plasmic-import: p_ncR6UWroPY/component
 import LauncherBlocksWidgetsNelson from "../../LauncherBlocksWidgetsNelson"; // plasmic-import: kPpI69i3raKy/component
 import LauncherBlocksApps from "../../LauncherBlocksApps"; // plasmic-import: 1JVvWgQsicxr/component
+import LauncherBlocksSectionsStore from "../../LauncherBlocksSectionsStore"; // plasmic-import: eAgPCQOGXT3k/component
 import LauncherBlocksPatientServices from "../../LauncherBlocksPatientServices"; // plasmic-import: ofxhzuPg2IHJ/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
@@ -98,6 +99,7 @@ export type PlasmicLauncherMain__OverridesType = {
   launcherBlocksWidgetsSanje?: Flex__<typeof LauncherBlocksWidgetsSanje>;
   launcherBlocksWidgetsNelson?: Flex__<typeof LauncherBlocksWidgetsNelson>;
   launcherBlocksApps?: Flex__<typeof LauncherBlocksApps>;
+  launcherBlocksSectionsStore?: Flex__<typeof LauncherBlocksSectionsStore>;
   launcherBlocksPatientServices?: Flex__<typeof LauncherBlocksPatientServices>;
   text?: Flex__<"div">;
 };
@@ -146,6 +148,39 @@ function PlasmicLauncherMain__RenderFunc(props: {
   const $refs = refsRef.current;
 
   const $globalActions = useGlobalActions?.();
+
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "widgets",
+        type: "private",
+        variableType: "array",
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          (() => {
+            try {
+              return JSON.parse(
+                globalThis.localStorage.getItem("widgets") ?? "[]"
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return [];
+              }
+              throw e;
+            }
+          })()
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
 
   const styleTokensClassNames = _useStyleTokens();
   const styleTokensClassNames_paziresh_24_design_system =
@@ -258,6 +293,84 @@ function PlasmicLauncherMain__RenderFunc(props: {
               className={classNames("__wab_instance", sty.launcherBlocksApps)}
             />
           </Reveal>
+          {(() => {
+            try {
+              return $ctx.auth.info?.provider?.job_title === "doctor";
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <Reveal
+              className={classNames("__wab_instance", sty.reveal__wzbgq)}
+              triggerOnce={true}
+            >
+              {(() => {
+                try {
+                  return true;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <LauncherBlocksSectionsStore
+                  data-plasmic-name={"launcherBlocksSectionsStore"}
+                  data-plasmic-override={overrides.launcherBlocksSectionsStore}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherBlocksSectionsStore
+                  )}
+                  onSubmit={async widgets => {
+                    const $steps = {};
+
+                    $steps["updateWidgets"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["widgets"]
+                            },
+                            operation: 0,
+                            value: widgets
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateWidgets"] != null &&
+                      typeof $steps["updateWidgets"] === "object" &&
+                      typeof $steps["updateWidgets"].then === "function"
+                    ) {
+                      $steps["updateWidgets"] = await $steps["updateWidgets"];
+                    }
+                  }}
+                />
+              ) : null}
+            </Reveal>
+          ) : null}
           {(() => {
             try {
               return $ctx.auth.info?.provider?.job_title === "doctor";
@@ -418,6 +531,7 @@ const PlasmicDescendants = {
     "launcherBlocksWidgetsSanje",
     "launcherBlocksWidgetsNelson",
     "launcherBlocksApps",
+    "launcherBlocksSectionsStore",
     "launcherBlocksPatientServices",
     "text"
   ],
@@ -427,6 +541,7 @@ const PlasmicDescendants = {
   launcherBlocksWidgetsSanje: ["launcherBlocksWidgetsSanje"],
   launcherBlocksWidgetsNelson: ["launcherBlocksWidgetsNelson"],
   launcherBlocksApps: ["launcherBlocksApps"],
+  launcherBlocksSectionsStore: ["launcherBlocksSectionsStore"],
   launcherBlocksPatientServices: ["launcherBlocksPatientServices"],
   text: ["text"]
 } as const;
@@ -441,6 +556,7 @@ type NodeDefaultElementType = {
   launcherBlocksWidgetsSanje: typeof LauncherBlocksWidgetsSanje;
   launcherBlocksWidgetsNelson: typeof LauncherBlocksWidgetsNelson;
   launcherBlocksApps: typeof LauncherBlocksApps;
+  launcherBlocksSectionsStore: typeof LauncherBlocksSectionsStore;
   launcherBlocksPatientServices: typeof LauncherBlocksPatientServices;
   text: "div";
 };
@@ -513,6 +629,9 @@ export const PlasmicLauncherMain = Object.assign(
       "launcherBlocksWidgetsNelson"
     ),
     launcherBlocksApps: makeNodeComponent("launcherBlocksApps"),
+    launcherBlocksSectionsStore: makeNodeComponent(
+      "launcherBlocksSectionsStore"
+    ),
     launcherBlocksPatientServices: makeNodeComponent(
       "launcherBlocksPatientServices"
     ),
