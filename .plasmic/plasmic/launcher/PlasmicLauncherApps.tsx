@@ -1440,58 +1440,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 })()}
               />
 
-              {false ? (
-                <LauncherComponentsApp
-                  appkey={"liom"}
-                  avatar={
-                    "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom%2Ficon.png?versionId="
-                  }
-                  className={classNames(
-                    "__wab_instance",
-                    sty.launcherComponentsApp__yj1N6
-                  )}
-                  description={
-                    "\u067e\u0631\u06cc\u0648\u062f \u0634\u0645\u0627 \u0646\u0627\u0645\u0646\u0638\u0645 \u0627\u0633\u062a\u061f \u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646\u060c \u06af\u0641\u062a\u06af\u0648 \u0631\u0627 \u0622\u063a\u0627\u0632 \u06a9\u0646\u06cc\u062f."
-                  }
-                  link={"/_/liom/irregularities/?origin=launcher-apps"}
-                  name={
-                    "\u062a\u0634\u062e\u06cc\u0635 \u062f\u0647\u0646\u062f\u0647 \u0639\u0644\u062a \u067e\u0631\u06cc\u0648\u062f \u0646\u0627\u0645\u0646\u0638\u0645"
-                  }
-                  onEvent={async () => {
-                    const $steps = {};
-
-                    $steps["runOnEvent"] = true
-                      ? (() => {
-                          const actionArgs = { eventRef: $props["onEvent"] };
-                          return (({ eventRef, args }) => {
-                            return eventRef?.(...(args ?? []));
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["runOnEvent"] != null &&
-                      typeof $steps["runOnEvent"] === "object" &&
-                      typeof $steps["runOnEvent"].then === "function"
-                    ) {
-                      $steps["runOnEvent"] = await $steps["runOnEvent"];
-                    }
-                  }}
-                  pagekey={"irregularities"}
-                  widgetFrame={(() => {
-                    try {
-                      return $props.widgetFrames;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return false;
-                      }
-                      throw e;
-                    }
-                  })()}
-                />
-              ) : null}
               <LauncherComponentsApp
                 appkey={"lab_result"}
                 avatar={
@@ -1584,6 +1532,196 @@ function PlasmicLauncherApps__RenderFunc(props: {
                     throw e;
                   }
                 })()}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+
+              <LauncherComponentsApp
+                appkey={"blood_pressure"}
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fblood-pressure.png?versionId="
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp___4BsSl
+                )}
+                description={
+                  "\u0627\u06cc\u0646 \u0622\u0632\u0645\u0648\u0646 \u0633\u0644\u0627\u0645\u062a\u06cc \u062a\u0648\u0633\u0637 \u062f\u06a9\u062a\u0631 \u0631\u0648\u062d\u06cc \u0646\u0698\u0627\u062f \u0637\u0631\u0627\u062d\u06cc \u0634\u062f\u0647 \u0627\u0633\u062a."
+                }
+                link={"/_/blood_pressure/launcher/"}
+                name={
+                  "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062d\u062a\u0645\u0627\u0644 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u0641\u0634\u0627\u0631 \u062e\u0648\u0646"
+                }
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["sendLog"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  evant_group: "launcher_statistics",
+                                  event_type: "apps",
+                                  user_id: $ctx.auth.info?.id,
+                                  is_doctor: $ctx.auth.info?.is_doctor,
+                                  meta_data: {
+                                    name: "تشخیص احتمال ابتلا به فشار خون",
+                                    key: "blood_pressure/launcher",
+                                    link: "/_/blood_pressure/launcher/"
+                                  },
+                                  source: "apps"
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendLog"] != null &&
+                    typeof $steps["sendLog"] === "object" &&
+                    typeof $steps["sendLog"].then === "function"
+                  ) {
+                    $steps["sendLog"] = await $steps["sendLog"];
+                  }
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pageQuery={{}}
+                pagekey={"launcher"}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+
+              <LauncherComponentsApp
+                appkey={"diabetes_risk"}
+                avatar={
+                  "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-glucose-meter.png?versionId="
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp___6Tcy5
+                )}
+                description={
+                  "\u0627\u06cc\u0646 \u0622\u0632\u0645\u0648\u0646 \u0633\u0644\u0627\u0645\u062a\u06cc \u062a\u0648\u0633\u0637 \u062f\u06a9\u062a\u0631 \u0631\u0648\u062d\u06cc \u0646\u0698\u0627\u062f \u0637\u0631\u0627\u062d\u06cc \u0634\u062f\u0647 \u0627\u0633\u062a."
+                }
+                link={"/_/diabetes_risk/launcher/"}
+                name={
+                  "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062d\u062a\u0645\u0627\u0644 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u062f\u06cc\u0627\u0628\u062a"
+                }
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["sendLog"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  evant_group: "launcher_statistics",
+                                  event_type: "apps",
+                                  user_id: $ctx.auth.info?.id,
+                                  is_doctor: $ctx.auth.info?.is_doctor,
+                                  meta_data: {
+                                    name: "تشخیص احتمال ابتلا به دیابت",
+                                    key: "diabetes_risk/launcher",
+                                    link: "/_/diabetes_risk/launcher/"
+                                  },
+                                  source: "apps"
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendLog"] != null &&
+                    typeof $steps["sendLog"] === "object" &&
+                    typeof $steps["sendLog"].then === "function"
+                  ) {
+                    $steps["sendLog"] = await $steps["sendLog"];
+                  }
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pageQuery={{}}
+                pagekey={"launcher"}
                 widgetFrame={(() => {
                   try {
                     return $props.widgetFrames;

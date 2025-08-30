@@ -189,7 +189,21 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             throw e;
           }
         })()}
-        title={"\u0627\u0628\u0632\u0627\u0631\u06a9 \u0647\u0627"}
+        title={(() => {
+          try {
+            return $ctx.auth.info?.provider?.job_title !== "doctor"
+              ? "دستیارهای سلامتی"
+              : "ابزارک ها";
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
       />
 
       <div className={classNames(projectcss.all, sty.freeBox__xm9Rt)}>
@@ -467,7 +481,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <div className={classNames(projectcss.all, sty.freeBox___0Utqf)}>
+          <div className={classNames(projectcss.all, sty.freeBox__drCi7)}>
             <LauncherComponentsAppSquare
               className={classNames(
                 "__wab_instance",
@@ -677,15 +691,18 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             <LauncherComponentsAppSquare
               className={classNames(
                 "__wab_instance",
-                sty.launcherComponentsAppSquare__puPjQ
+                sty.launcherComponentsAppSquare__tgcvE
               )}
+              description={
+                "\u0627\u06cc\u0646 \u0622\u0632\u0645\u0648\u0646 \u0633\u0644\u0627\u0645\u062a\u06cc \u062a\u0648\u0633\u0637 \u062f\u06a9\u062a\u0631 \u0631\u0648\u062d\u06cc \u0646\u0698\u0627\u062f \u0637\u0631\u0627\u062d\u06cc \u0634\u062f\u0647 \u0627\u0633\u062a."
+              }
               icon={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2FSalamat%20Logo.svg?versionId="
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-glucose-meter.png?versionId="
               }
               onClick={async () => {
                 const $steps = {};
 
-                $steps["sendLog"] = true
+                $steps["invokeGlobalAction"] = true
                   ? (() => {
                       const actionArgs = {
                         args: [
@@ -697,9 +714,9 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                                 user_id: $ctx.auth.info?.id,
                                 is_doctor: $ctx.auth.info?.is_doctor,
                                 meta_data: {
-                                  name: "مشاور هوش مصنوعی سلامت",
-                                  key: "roshan/salamat",
-                                  link: "/_/roshan/salamat/"
+                                  name: "تشخیص احتمال ابتلا به دیابت",
+                                  key: "blood_pressure/launcher",
+                                  link: "/_/blood_pressure/launcher/"
                                 }
                               };
                             } catch (e) {
@@ -720,17 +737,19 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                     })()
                   : undefined;
                 if (
-                  $steps["sendLog"] != null &&
-                  typeof $steps["sendLog"] === "object" &&
-                  typeof $steps["sendLog"].then === "function"
+                  $steps["invokeGlobalAction"] != null &&
+                  typeof $steps["invokeGlobalAction"] === "object" &&
+                  typeof $steps["invokeGlobalAction"].then === "function"
                 ) {
-                  $steps["sendLog"] = await $steps["sendLog"];
+                  $steps["invokeGlobalAction"] = await $steps[
+                    "invokeGlobalAction"
+                  ];
                 }
 
-                $steps["goToRoshanSalamatOriginLauncherApps"] = true
+                $steps["goToPage"] = true
                   ? (() => {
                       const actionArgs = {
-                        destination: "/_/roshan/salamat/?origin=launcher-apps"
+                        destination: "/_/blood_pressure/launcher/"
                       };
                       return (({ destination }) => {
                         if (
@@ -747,32 +766,15 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                     })()
                   : undefined;
                 if (
-                  $steps["goToRoshanSalamatOriginLauncherApps"] != null &&
-                  typeof $steps["goToRoshanSalamatOriginLauncherApps"] ===
-                    "object" &&
-                  typeof $steps["goToRoshanSalamatOriginLauncherApps"].then ===
-                    "function"
+                  $steps["goToPage"] != null &&
+                  typeof $steps["goToPage"] === "object" &&
+                  typeof $steps["goToPage"].then === "function"
                 ) {
-                  $steps["goToRoshanSalamatOriginLauncherApps"] = await $steps[
-                    "goToRoshanSalamatOriginLauncherApps"
-                  ];
+                  $steps["goToPage"] = await $steps["goToPage"];
                 }
               }}
               title={
-                "\u0645\u0634\u0627\u0648\u0631 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc \u0633\u0644\u0627\u0645\u062a"
-              }
-            />
-
-            <LauncherComponentsAppSquare
-              className={classNames(
-                "__wab_instance",
-                sty.launcherComponentsAppSquare__tgcvE
-              )}
-              icon={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-glucose-meter.png"
-              }
-              title={
-                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u062f\u06cc\u0627\u0628\u062a"
+                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062d\u062a\u0645\u0627\u0644 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u062f\u06cc\u0627\u0628\u062a"
               }
             />
 
@@ -781,11 +783,90 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                 "__wab_instance",
                 sty.launcherComponentsAppSquare__ps1Gg
               )}
-              icon={
-                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fliom-thyroid.png"
+              description={
+                "\u0627\u06cc\u0646 \u0622\u0632\u0645\u0648\u0646 \u0633\u0644\u0627\u0645\u062a\u06cc \u062a\u0648\u0633\u0637 \u062f\u06a9\u062a\u0631 \u0631\u0648\u062d\u06cc \u0646\u0698\u0627\u062f \u0637\u0631\u0627\u062d\u06cc \u0634\u062f\u0647 \u0627\u0633\u062a."
               }
+              icon={
+                "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fblood-pressure.png?versionId="
+              }
+              onClick={async () => {
+                const $steps = {};
+
+                $steps["invokeGlobalAction"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "تشخیص احتمال ابتلا به دیابت",
+                                  key: "diabetes_risk/launcher",
+                                  link: "/_/diabetes_risk/launcher/"
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["invokeGlobalAction"] != null &&
+                  typeof $steps["invokeGlobalAction"] === "object" &&
+                  typeof $steps["invokeGlobalAction"].then === "function"
+                ) {
+                  $steps["invokeGlobalAction"] = await $steps[
+                    "invokeGlobalAction"
+                  ];
+                }
+
+                $steps["goToDiabetesRiskLauncher"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        destination: "/_/diabetes_risk/launcher/"
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["goToDiabetesRiskLauncher"] != null &&
+                  typeof $steps["goToDiabetesRiskLauncher"] === "object" &&
+                  typeof $steps["goToDiabetesRiskLauncher"].then === "function"
+                ) {
+                  $steps["goToDiabetesRiskLauncher"] = await $steps[
+                    "goToDiabetesRiskLauncher"
+                  ];
+                }
+              }}
               title={
-                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062e\u062a\u0644\u0627\u0644 \u062a\u06cc\u0631\u0648\u0626\u06cc\u062f"
+                "\u062a\u0634\u062e\u06cc\u0635 \u0627\u062d\u062a\u0645\u0627\u0644 \u0627\u0628\u062a\u0644\u0627 \u0628\u0647 \u0641\u0634\u0627\u0631 \u062e\u0648\u0646"
               }
             />
           </div>

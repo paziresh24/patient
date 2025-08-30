@@ -161,9 +161,16 @@ function PlasmicLauncherBlocksSectionsStoreWidgetCard__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           (() => {
             try {
-              return !!globalThis.localStorage
-                .getItem("widgets")
-                ?.includes?.($props.widgetKey);
+              return (
+                !!JSON.parse(
+                  globalThis.localStorage.getItem("widgets") ?? "[]"
+                )?.includes?.($props.widgetKey) ||
+                JSON.parse(
+                  globalThis.localStorage.getItem("widgets") ?? "[]"
+                )?.some?.(
+                  item => item?.key == $props.widgetKey && item?.enabled == true
+                )
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -314,7 +321,7 @@ function PlasmicLauncherBlocksSectionsStoreWidgetCard__RenderFunc(props: {
                               globalThis.localStorage?.getItem?.("widgets") ??
                                 "[]"
                             ),
-                            $props.widgetKey
+                            { key: $props.widgetKey, enabled: true }
                           ])
                         );
                       }
@@ -418,7 +425,13 @@ function PlasmicLauncherBlocksSectionsStoreWidgetCard__RenderFunc(props: {
                           JSON.stringify([
                             ...JSON.parse(
                               globalThis.localStorage.getItem("widgets") ?? "{}"
-                            ).filter(item => item != $props.widgetKey)
+                            )
+                              .filter(item => item != $props.widgetKey)
+                              .map(item =>
+                                item?.key == $props.widgetKey
+                                  ? { ...item, enabled: false }
+                                  : item
+                              )
                           ])
                         );
                       }

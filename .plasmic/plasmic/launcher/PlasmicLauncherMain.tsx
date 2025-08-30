@@ -152,25 +152,10 @@ function PlasmicLauncherMain__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "widgets",
+        path: "launcherBlocksSectionsStore.widgets",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
-          (() => {
-            try {
-              return JSON.parse(
-                globalThis.localStorage.getItem("widgets") ?? "[]"
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return [];
-              }
-              throw e;
-            }
-          })()
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -245,7 +230,13 @@ function PlasmicLauncherMain__RenderFunc(props: {
           </Reveal>
           {(() => {
             try {
-              return $ctx.auth.info?.provider?.job_title === "doctor";
+              return (
+                $ctx.auth.info?.provider?.job_title === "doctor" &&
+                $state.launcherBlocksSectionsStore.widgets?.some(
+                  item =>
+                    ["nelsun", "sanje"]?.includes?.(item?.key) && item?.enabled
+                )
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -262,23 +253,56 @@ function PlasmicLauncherMain__RenderFunc(props: {
               triggerOnce={true}
             >
               <div className={classNames(projectcss.all, sty.freeBox__cJfkN)}>
-                <LauncherBlocksWidgetsSanje
-                  data-plasmic-name={"launcherBlocksWidgetsSanje"}
-                  data-plasmic-override={overrides.launcherBlocksWidgetsSanje}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.launcherBlocksWidgetsSanje
-                  )}
-                />
-
-                <LauncherBlocksWidgetsNelson
-                  data-plasmic-name={"launcherBlocksWidgetsNelson"}
-                  data-plasmic-override={overrides.launcherBlocksWidgetsNelson}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.launcherBlocksWidgetsNelson
-                  )}
-                />
+                {(() => {
+                  try {
+                    return $state.launcherBlocksSectionsStore.widgets?.some(
+                      item => item?.key == "sanje" && item?.enabled
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <LauncherBlocksWidgetsSanje
+                    data-plasmic-name={"launcherBlocksWidgetsSanje"}
+                    data-plasmic-override={overrides.launcherBlocksWidgetsSanje}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.launcherBlocksWidgetsSanje
+                    )}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return $state.launcherBlocksSectionsStore.widgets?.some(
+                      item => item?.key == "nelsun" && item?.enabled
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <LauncherBlocksWidgetsNelson
+                    data-plasmic-name={"launcherBlocksWidgetsNelson"}
+                    data-plasmic-override={
+                      overrides.launcherBlocksWidgetsNelson
+                    }
+                    className={classNames(
+                      "__wab_instance",
+                      sty.launcherBlocksWidgetsNelson
+                    )}
+                  />
+                ) : null}
               </div>
             </Reveal>
           ) : null}
@@ -332,39 +356,19 @@ function PlasmicLauncherMain__RenderFunc(props: {
                   )}
                   onSubmit={async widgets => {
                     const $steps = {};
+                  }}
+                  onWidgetsChange={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "launcherBlocksSectionsStore",
+                      "widgets"
+                    ]).apply(null, eventArgs);
 
-                    $steps["updateWidgets"] = true
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["widgets"]
-                            },
-                            operation: 0,
-                            value: widgets
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
-
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
                     if (
-                      $steps["updateWidgets"] != null &&
-                      typeof $steps["updateWidgets"] === "object" &&
-                      typeof $steps["updateWidgets"].then === "function"
+                      eventArgs.length > 1 &&
+                      eventArgs[1] &&
+                      eventArgs[1]._plasmic_state_init_
                     ) {
-                      $steps["updateWidgets"] = await $steps["updateWidgets"];
+                      return;
                     }
                   }}
                 />
