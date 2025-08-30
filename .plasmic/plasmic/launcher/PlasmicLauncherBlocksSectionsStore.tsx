@@ -59,6 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import LauncherBlocksSectionsPrescription from "../../LauncherBlocksSectionsPrescription"; // plasmic-import: NaX6a-Bx6lRC/component
 import LauncherBlocksSectionsBookingPanels from "../../LauncherBlocksSectionsBookingPanels"; // plasmic-import: kf_mz8gXeCXH/component
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
@@ -85,13 +86,15 @@ export const PlasmicLauncherBlocksSectionsStore__VariantProps =
 
 export type PlasmicLauncherBlocksSectionsStore__ArgsType = {
   onSubmit?: (widgets: any) => void;
+  onWidgetsChange?: (val: string) => void;
 };
 type ArgPropType = keyof PlasmicLauncherBlocksSectionsStore__ArgsType;
 export const PlasmicLauncherBlocksSectionsStore__ArgProps =
-  new Array<ArgPropType>("onSubmit");
+  new Array<ArgPropType>("onSubmit", "onWidgetsChange");
 
 export type PlasmicLauncherBlocksSectionsStore__OverridesType = {
   root?: Flex__<"div">;
+  sideEffect?: Flex__<typeof SideEffect>;
   launcherBlocksSectionsPrescription?: Flex__<
     typeof LauncherBlocksSectionsPrescription
   >;
@@ -100,11 +103,11 @@ export type PlasmicLauncherBlocksSectionsStore__OverridesType = {
   >;
   svg?: Flex__<"svg">;
   modal?: Flex__<typeof Paziresh24Modal>;
-  launcherComponentsSeparator?: Flex__<typeof LauncherComponentsSeparator>;
 };
 
 export interface DefaultLauncherBlocksSectionsStoreProps {
   onSubmit?: (widgets: any) => void;
+  onWidgetsChange?: (val: string) => void;
   className?: string;
 }
 
@@ -159,7 +162,7 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
       },
       {
         path: "widgets",
-        type: "private",
+        type: "readonly",
         variableType: "array",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
           (() => {
@@ -176,7 +179,9 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
               }
               throw e;
             }
-          })()
+          })(),
+
+        onChangeProp: "onWidgetsChange"
       }
     ],
     [$props, $ctx, $refs]
@@ -208,9 +213,68 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
         sty.root
       )}
     >
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["runCode"] = true
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      const defaultWidgets = ["nelsun", "sanje"];
+
+                      if (
+                        JSON.parse(
+                          globalThis.localStorage.getItem("widgets") ?? "[]"
+                        )?.filter?.(
+                          item =>
+                            defaultWidgets?.includes(item) ||
+                            defaultWidgets.includes(item?.key)
+                        )?.length < defaultWidgets?.length
+                      ) {
+                        return globalThis.localStorage.setItem(
+                          "widgets",
+                          JSON.stringify([
+                            ...JSON.parse(
+                              globalThis.localStorage.getItem("widgets") ?? "[]"
+                            ),
+                            ...defaultWidgets.map(item => ({
+                              key: item,
+                              enabled: true
+                            }))
+                          ])
+                        );
+                      }
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runCode"] != null &&
+            typeof $steps["runCode"] === "object" &&
+            typeof $steps["runCode"].then === "function"
+          ) {
+            $steps["runCode"] = await $steps["runCode"];
+          }
+        }}
+      />
+
       {(() => {
         try {
-          return $state.widgets.includes("prescription");
+          return (
+            $state.widgets?.includes?.("prescription") ||
+            $state.widgets?.some?.(
+              item => item?.key == "prescription" && item.enabled == true
+            )
+          );
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -232,7 +296,12 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
       ) : null}
       {(() => {
         try {
-          return $state.widgets.includes("booking-panel");
+          return (
+            $state.widgets?.includes?.("booking-panel") ||
+            $state.widgets?.some?.(
+              item => item?.key == "booking-panel" && item.enabled == true
+            )
+          );
         } catch (e) {
           if (
             e instanceof TypeError ||
@@ -489,11 +558,9 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
             />
 
             <LauncherComponentsSeparator
-              data-plasmic-name={"launcherComponentsSeparator"}
-              data-plasmic-override={overrides.launcherComponentsSeparator}
               className={classNames(
                 "__wab_instance",
-                sty.launcherComponentsSeparator
+                sty.launcherComponentsSeparator__vEk8U
               )}
             />
 
@@ -635,6 +702,298 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
               }}
               widgetKey={"booking-panel"}
             />
+
+            <LauncherComponentsSeparator
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsSeparator___9Kkgl
+              )}
+            />
+
+            <LauncherBlocksSectionsStoreWidgetCard
+              className={classNames(
+                "__wab_instance",
+                sty.launcherBlocksSectionsStoreWidgetCard___4QKk
+              )}
+              cover={
+                "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fsanje-widget.png?versionId="
+              }
+              description={
+                "\u0645\u0634\u0627\u0647\u062f\u0647 \u0627\u0645\u062a\u06cc\u0627\u0632 \u0639\u0645\u0644\u06a9\u0631\u062f \u0648 \u0631\u0627\u0647\u0646\u0645\u0627\u06cc\u06cc \u0628\u0631\u0627\u06cc \u0631\u0634\u062f"
+              }
+              name={
+                "\u0627\u0645\u062a\u06cc\u0627\u0632 \u0639\u0645\u0644\u06a9\u0631\u062f \u0645\u0646"
+              }
+              onToggle={async isActive => {
+                const $steps = {};
+
+                $steps["runOnSubmit"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onSubmit"],
+                        args: [
+                          (() => {
+                            try {
+                              return JSON.parse(
+                                globalThis.localStorage.getItem("widgets") ??
+                                  "[]"
+                              );
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnSubmit"] != null &&
+                  typeof $steps["runOnSubmit"] === "object" &&
+                  typeof $steps["runOnSubmit"].then === "function"
+                ) {
+                  $steps["runOnSubmit"] = await $steps["runOnSubmit"];
+                }
+
+                $steps["updateWidgets"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["widgets"]
+                        },
+                        operation: 0,
+                        value: JSON.parse(
+                          globalThis.localStorage.getItem("widgets") ?? "[]"
+                        )
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateWidgets"] != null &&
+                  typeof $steps["updateWidgets"] === "object" &&
+                  typeof $steps["updateWidgets"].then === "function"
+                ) {
+                  $steps["updateWidgets"] = await $steps["updateWidgets"];
+                }
+
+                $steps["invokeGlobalAction"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "section_store_open",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  section_name: "sanje",
+                                  is_installed: JSON.parse(
+                                    globalThis.localStorage.getItem(
+                                      "widgets"
+                                    ) ?? "[]"
+                                  )?.includes("sanje")
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["invokeGlobalAction"] != null &&
+                  typeof $steps["invokeGlobalAction"] === "object" &&
+                  typeof $steps["invokeGlobalAction"].then === "function"
+                ) {
+                  $steps["invokeGlobalAction"] = await $steps[
+                    "invokeGlobalAction"
+                  ];
+                }
+              }}
+              widgetKey={"sanje"}
+            />
+
+            <LauncherComponentsSeparator
+              className={classNames(
+                "__wab_instance",
+                sty.launcherComponentsSeparator__piL6B
+              )}
+            />
+
+            <LauncherBlocksSectionsStoreWidgetCard
+              className={classNames(
+                "__wab_instance",
+                sty.launcherBlocksSectionsStoreWidgetCard__h5MoG
+              )}
+              cover={
+                "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fnelsun-widget.png?versionId="
+              }
+              description={
+                "\u0628\u0647 \u0633\u0627\u062f\u06af\u06cc \u0648\u0636\u0639\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u0628\u0648\u062f\u0646 \u062e\u0648\u062f\u062a\u0648 \u0627\u0639\u0644\u0627\u0645 \u06a9\u0646"
+              }
+              name={
+                "\u0648\u0636\u0639\u06cc\u062a \u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646"
+              }
+              onToggle={async isActive => {
+                const $steps = {};
+
+                $steps["runOnSubmit"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onSubmit"],
+                        args: [
+                          (() => {
+                            try {
+                              return JSON.parse(
+                                globalThis.localStorage.getItem("widgets") ??
+                                  "[]"
+                              );
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnSubmit"] != null &&
+                  typeof $steps["runOnSubmit"] === "object" &&
+                  typeof $steps["runOnSubmit"].then === "function"
+                ) {
+                  $steps["runOnSubmit"] = await $steps["runOnSubmit"];
+                }
+
+                $steps["updateWidgets"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["widgets"]
+                        },
+                        operation: 0,
+                        value: JSON.parse(
+                          globalThis.localStorage.getItem("widgets") ?? "[]"
+                        )
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateWidgets"] != null &&
+                  typeof $steps["updateWidgets"] === "object" &&
+                  typeof $steps["updateWidgets"].then === "function"
+                ) {
+                  $steps["updateWidgets"] = await $steps["updateWidgets"];
+                }
+
+                $steps["invokeGlobalAction"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "section_store_open",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  section_name: "nelsun",
+                                  is_installed: JSON.parse(
+                                    globalThis.localStorage.getItem(
+                                      "widgets"
+                                    ) ?? "[]"
+                                  )?.includes("nelsun")
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["invokeGlobalAction"] != null &&
+                  typeof $steps["invokeGlobalAction"] === "object" &&
+                  typeof $steps["invokeGlobalAction"].then === "function"
+                ) {
+                  $steps["invokeGlobalAction"] = await $steps[
+                    "invokeGlobalAction"
+                  ];
+                }
+              }}
+              widgetKey={"nelsun"}
+            />
           </div>
         }
         className={classNames("__wab_instance", sty.modal)}
@@ -675,28 +1034,28 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
+    "sideEffect",
     "launcherBlocksSectionsPrescription",
     "launcherBlocksSectionsBookingPanels",
     "svg",
-    "modal",
-    "launcherComponentsSeparator"
+    "modal"
   ],
+  sideEffect: ["sideEffect"],
   launcherBlocksSectionsPrescription: ["launcherBlocksSectionsPrescription"],
   launcherBlocksSectionsBookingPanels: ["launcherBlocksSectionsBookingPanels"],
   svg: ["svg"],
-  modal: ["modal", "launcherComponentsSeparator"],
-  launcherComponentsSeparator: ["launcherComponentsSeparator"]
+  modal: ["modal"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  sideEffect: typeof SideEffect;
   launcherBlocksSectionsPrescription: typeof LauncherBlocksSectionsPrescription;
   launcherBlocksSectionsBookingPanels: typeof LauncherBlocksSectionsBookingPanels;
   svg: "svg";
   modal: typeof Paziresh24Modal;
-  launcherComponentsSeparator: typeof LauncherComponentsSeparator;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -763,6 +1122,7 @@ export const PlasmicLauncherBlocksSectionsStore = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    sideEffect: makeNodeComponent("sideEffect"),
     launcherBlocksSectionsPrescription: makeNodeComponent(
       "launcherBlocksSectionsPrescription"
     ),
@@ -771,9 +1131,6 @@ export const PlasmicLauncherBlocksSectionsStore = Object.assign(
     ),
     svg: makeNodeComponent("svg"),
     modal: makeNodeComponent("modal"),
-    launcherComponentsSeparator: makeNodeComponent(
-      "launcherComponentsSeparator"
-    ),
 
     // Metadata about props expected for PlasmicLauncherBlocksSectionsStore
     internalVariantProps: PlasmicLauncherBlocksSectionsStore__VariantProps,
