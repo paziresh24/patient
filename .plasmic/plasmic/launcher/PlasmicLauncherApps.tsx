@@ -280,6 +280,10 @@ function PlasmicLauncherApps__RenderFunc(props: {
                         value: "notifications"
                       },
                       {
+                        name: "اطلاعات پروفایل",
+                        value: "profile-information"
+                      },
+                      {
                         name: "افزونه پروفایل",
                         value: "profile-plugin"
                       },
@@ -775,6 +779,143 @@ function PlasmicLauncherApps__RenderFunc(props: {
                 sty.launcherComponentsSeparator__de8Lg
               )}
             />
+          ) : null}
+          {(() => {
+            try {
+              return (
+                ["all", "profile-information"].includes(
+                  $state.selectedCategory
+                ) && $ctx.auth.info?.provider?.job_title === "doctor"
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <div className={classNames(projectcss.all, sty.freeBox___8BTu2)}>
+              {(() => {
+                try {
+                  return $state.selectedCategory === "all";
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <LauncherComponentsTitle
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherComponentsTitle__ldus
+                  )}
+                  title={
+                    "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
+                  }
+                />
+              ) : null}
+              <LauncherComponentsApp
+                _new={true}
+                appkey={"chehreh"}
+                avatar={
+                  "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fchereh.png?versionId="
+                }
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherComponentsApp__zu3Oq
+                )}
+                description={
+                  "\u0648\u06cc\u0631\u0627\u06cc\u0634 \u0648 \u0633\u0627\u062e\u062a \u062a\u0635\u0648\u06cc\u0631 \u062d\u0631\u0641\u0647\u200c\u0627\u06cc \u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0634\u0645\u0627 \u0628\u0627 \u0647\u0648\u0634 \u0645\u0635\u0646\u0648\u0639\u06cc"
+                }
+                link={"/_/chehreh/launcher/"}
+                name={"\u0686\u0647\u0631\u0647"}
+                onEvent={async () => {
+                  const $steps = {};
+
+                  $steps["sendLog"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            (() => {
+                              try {
+                                return {
+                                  evant_group: "launcher_statistics",
+                                  event_type: "apps",
+                                  user_id: $ctx.auth.info?.id,
+                                  is_doctor: $ctx.auth.info?.is_doctor,
+                                  meta_data: {
+                                    name: "چهره",
+                                    key: "chehreh/launcher",
+                                    link: "/_/chehreh/launcher/"
+                                  },
+                                  source: "apps"
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendLog"] != null &&
+                    typeof $steps["sendLog"] === "object" &&
+                    typeof $steps["sendLog"].then === "function"
+                  ) {
+                    $steps["sendLog"] = await $steps["sendLog"];
+                  }
+
+                  $steps["runOnEvent"] = true
+                    ? (() => {
+                        const actionArgs = { eventRef: $props["onEvent"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnEvent"] != null &&
+                    typeof $steps["runOnEvent"] === "object" &&
+                    typeof $steps["runOnEvent"].then === "function"
+                  ) {
+                    $steps["runOnEvent"] = await $steps["runOnEvent"];
+                  }
+                }}
+                pagekey={"launcher"}
+                soon={undefined}
+                widgetFrame={(() => {
+                  try {
+                    return $props.widgetFrames;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()}
+                widgetId={``}
+              />
+            </div>
           ) : null}
           {(() => {
             try {

@@ -83,6 +83,7 @@
   align-items: center;
   row-gap: 10px;
   padding-bottom: 30px;
+  max-height: 38rem;
   min-width: 0;
 }
 .launcherBlocksSectionsStoreWidgetCard___7Fhnx:global(.__wab_instance) {
