@@ -504,6 +504,11 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                 consult_search_index: "slim_clinic_online_visit"
                               },
                               expertises: item.source?.expertises ?? [],
+                              keyword_tags: {
+                                user_priority_1:
+                                  item.source?.keyword_tags?.user_priority_1 ??
+                                  []
+                              },
                               gender: item.source?.gender ?? null,
                               expertise: item.source?.expertise ?? [],
                               rate_info: item.source?.rate_info ?? {},

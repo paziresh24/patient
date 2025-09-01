@@ -2142,6 +2142,32 @@
           "cssFilePath": "plasmic/paziresh_24_search/PlasmicTestMyTasks.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "QiKny2-oAX-B",
+          "name": "TagsRow",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicTagsRow.tsx",
+          "importSpec": {
+            "modulePath": "TagsRow.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicTagsRow.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "umF0x1BStiqV",
+          "name": "TagsRowSingleTagItem",
+          "type": "managed",
+          "projectId": "sMdpLWyxbzDCruwMRffW2m",
+          "renderModuleFilePath": "plasmic/paziresh_24_search/PlasmicTagsRowSingleTagItem.tsx",
+          "importSpec": {
+            "modulePath": "TagsRowSingleTagItem.tsx"
+          },
+          "cssFilePath": "plasmic/paziresh_24_search/PlasmicTagsRowSingleTagItem.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [

@@ -191,7 +191,7 @@
   width: auto;
   min-width: var(--token-W6cMLA0AZVBO);
 }
-.link__xjBwH {
+.linkSubtitle {
   display: flex;
   position: relative;
   flex-direction: row;
@@ -212,6 +212,58 @@
   font-weight: 400;
   white-space: pre-wrap;
   min-width: auto;
+}
+.linkTagsOfExpertise {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.lineClamp___7VvD7:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.cardSubtitle3 {
+  height: auto;
+  font-size: var(--token-6NbVMeD6zQwn);
+  font-weight: 400;
+  white-space: pre-wrap;
+  min-width: auto;
+  display: none;
+}
+.tagsRow__kdQvn:global(.__wab_instance) {
+  max-width: 100%;
+}
+.linkTags {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.lineClamp__k1Ixo:global(.__wab_instance) {
+  max-width: 100%;
+  position: relative;
+}
+.cardSubtitle2 {
+  height: auto;
+  font-size: var(--token-6NbVMeD6zQwn);
+  font-weight: 400;
+  white-space: pre-wrap;
+  min-width: auto;
+  display: none;
+}
+.tagsRow__jtDwd:global(.__wab_instance) {
+  max-width: 100%;
 }
 .freeBox__zf7Bm {
   display: flex;
