@@ -1368,6 +1368,21 @@ function PlasmicSearchResults__RenderFunc(props: {
                       throw e;
                     }
                   })()}
+                  certificates={(() => {
+                    try {
+                      return currentItem.expertises
+                        ? { expertises: currentItem.expertises }
+                        : {};
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   className={classNames("__wab_instance", sty.productCard, {
                     [sty.productCardisHorizental]: hasVariant(
                       $state,
@@ -1648,6 +1663,19 @@ function PlasmicSearchResults__RenderFunc(props: {
                                   .split("uri=https%3A%2F%2F")[1]
                                   ?.split?.("%2F")?.[0])
                         : "";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  keywordTags={(() => {
+                    try {
+                      return currentItem.keyword_tags;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
