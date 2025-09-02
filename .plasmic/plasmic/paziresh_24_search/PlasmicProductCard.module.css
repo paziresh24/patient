@@ -228,14 +228,6 @@
   max-width: 100%;
   position: relative;
 }
-.cardSubtitle3 {
-  height: auto;
-  font-size: var(--token-6NbVMeD6zQwn);
-  font-weight: 400;
-  white-space: pre-wrap;
-  min-width: auto;
-  display: none;
-}
 .tagsRow__kdQvn:global(.__wab_instance) {
   max-width: 100%;
 }
@@ -253,14 +245,6 @@
 .lineClamp__k1Ixo:global(.__wab_instance) {
   max-width: 100%;
   position: relative;
-}
-.cardSubtitle2 {
-  height: auto;
-  font-size: var(--token-6NbVMeD6zQwn);
-  font-weight: 400;
-  white-space: pre-wrap;
-  min-width: auto;
-  display: none;
 }
 .tagsRow__jtDwd:global(.__wab_instance) {
   max-width: 100%;

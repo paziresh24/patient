@@ -395,7 +395,10 @@ function PlasmicSearchResultQs__RenderFunc(props: {
           }}
           topQuerySuggestions={(() => {
             try {
-              return $state.serchiaSuggestion.data.entity.topQuerySuggestions;
+              return $state.serchiaSuggestion.data.entity.topQuerySuggestions
+                .length > 0
+                ? $state.serchiaSuggestion.data.entity.topQuerySuggestions
+                : [$props.terms];
             } catch (e) {
               if (
                 e instanceof TypeError ||
