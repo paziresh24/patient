@@ -82,13 +82,10 @@ export async function getAggregatedProfileData(slug: string, university: string 
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
 
-  let slugInfo = null;
   let userInfo = null;
 
   if (options?.useClApi) {
-    const slugInfoEndpoint = isServer
-      ? `https://clinic-api-platform.darkube.app/api/slugs/${slug}`
-      : `https://apigw.paziresh24.com/clapi/v1/slugs/${slug}`;
+    const slugInfoEndpoint = `https://apigw.paziresh24.com/prapi/v1/slugs/${slug}`;
     splunkInstance('doctor-profile').sendEvent({
       group: 'profile_api_request',
       type: 'profile_api_request',
@@ -98,32 +95,13 @@ export async function getAggregatedProfileData(slug: string, university: string 
         isServer: isServer,
       },
     });
-    slugInfo = await axios.get(slugInfoEndpoint, {
+    const data = await axios.get(slugInfoEndpoint, {
       headers: {
         Accept: 'application/json',
       },
       timeout: 1000,
     });
-
-    const userInfoEndpoint = isServer
-      ? `https://clinic-api-platform.darkube.app/api/users_info/${slugInfo?.data?.ownerId}/${slugInfo?.data?.serverId}/`
-      : `https://apigw.paziresh24.com/clapi/v1/users_info/${slugInfo?.data?.ownerId}/${slugInfo?.data?.serverId}/`;
-
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'profile_api_request',
-      type: 'profile_api_request',
-      event: {
-        endpoint: userInfoEndpoint,
-        slug: slug,
-        isServer: isServer,
-      },
-    });
-    userInfo = await axios.get(userInfoEndpoint, {
-      headers: {
-        Accept: 'application/json',
-      },
-      timeout: 1000,
-    });
+    userInfo = data?.data?.user_info;
   }
 
   let fullProfileData;
@@ -167,7 +145,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
     provider: {
-      user_id: userInfo?.data?.userId ?? null,
+      user_id: userInfo?.user_id ?? null,
     },
     feedbacks: {
       ...fullProfileData?.feedbacks,
@@ -182,10 +160,10 @@ export async function getAggregatedProfileData(slug: string, university: string 
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
       ...fullProfileData,
-      id: slugInfo?.data?.ownerId ?? fullProfileData?.id,
-      server_id: slugInfo?.data?.serverId ?? fullProfileData?.server_id,
-      name: userInfo?.data?.name ?? fullProfileData?.name,
-      family: userInfo?.data?.family ?? fullProfileData?.family,
+      id: userInfo?.id ?? fullProfileData?.id,
+      server_id: userInfo?.server_id ?? fullProfileData?.server_id,
+      name: userInfo?.name ?? fullProfileData?.name,
+      family: userInfo?.family ?? fullProfileData?.family,
     });
 
   // Step 4: Fetch server-specific data only if running on the server
@@ -195,7 +173,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
 
   if (!university) {
     try {
-      if (!userInfo?.data?.userId) {
+      if (!userInfo?.user_id) {
         const { data } = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
           params: { server_id: information.server_id, user_info_id: information?.id },
           headers: { authorization: `Bearer tzDWVALYrMpF6w9Msju87wmc@kd)` },
