@@ -173,9 +173,7 @@ export type PlasmicProductCard__OverridesType = {
   linkSubtitle?: Flex__<"a"> & Partial<LinkProps>;
   cardSubtitle?: Flex__<"span">;
   linkTagsOfExpertise?: Flex__<"a"> & Partial<LinkProps>;
-  cardSubtitle3?: Flex__<"span">;
   linkTags?: Flex__<"a"> & Partial<LinkProps>;
-  cardSubtitle2?: Flex__<"span">;
   cardAddressRow?: Flex__<"span">;
   cardPrice?: Flex__<"span">;
   dialog?: Flex__<typeof Dialog>;
@@ -1318,44 +1316,6 @@ function PlasmicProductCard__RenderFunc(props: {
                     }
                   })()}
                 >
-                  <span
-                    data-plasmic-name={"cardSubtitle3"}
-                    data-plasmic-override={overrides.cardSubtitle3}
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.span,
-                      projectcss.__wab_text,
-                      sty.cardSubtitle3,
-                      {
-                        [sty.cardSubtitle3_5StarRatingMode3__5StarA]:
-                          hasVariant($state, "_5StarRatingMode3", "_5StarA"),
-                        [sty.cardSubtitle3externalBookDesign]: hasVariant(
-                          $state,
-                          "externalBookDesign",
-                          "externalBookDesign"
-                        )
-                      }
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return $props.subTitle.replace(
-                            /([^،])،(?!\s)([^،])/g,
-                            "$1، $2"
-                          );
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return " ";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </span>
                   <TagsRow
                     className={classNames("__wab_instance", sty.tagsRow__kdQvn)}
                     items={(() => {
@@ -1521,44 +1481,6 @@ function PlasmicProductCard__RenderFunc(props: {
                     }
                   })()}
                 >
-                  <span
-                    data-plasmic-name={"cardSubtitle2"}
-                    data-plasmic-override={overrides.cardSubtitle2}
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.span,
-                      projectcss.__wab_text,
-                      sty.cardSubtitle2,
-                      {
-                        [sty.cardSubtitle2_5StarRatingMode3__5StarA]:
-                          hasVariant($state, "_5StarRatingMode3", "_5StarA"),
-                        [sty.cardSubtitle2externalBookDesign]: hasVariant(
-                          $state,
-                          "externalBookDesign",
-                          "externalBookDesign"
-                        )
-                      }
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return $props.subTitle.replace(
-                            /([^،])،(?!\s)([^،])/g,
-                            "$1، $2"
-                          );
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return " ";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </span>
                   <TagsRow
                     className={classNames("__wab_instance", sty.tagsRow__jtDwd)}
                     items={(() => {
@@ -3754,9 +3676,7 @@ const PlasmicDescendants = {
     "linkSubtitle",
     "cardSubtitle",
     "linkTagsOfExpertise",
-    "cardSubtitle3",
     "linkTags",
-    "cardSubtitle2",
     "cardAddressRow",
     "cardPrice",
     "dialog",
@@ -3778,10 +3698,8 @@ const PlasmicDescendants = {
   moreOptionsMenu: ["moreOptionsMenu"],
   linkSubtitle: ["linkSubtitle", "cardSubtitle"],
   cardSubtitle: ["cardSubtitle"],
-  linkTagsOfExpertise: ["linkTagsOfExpertise", "cardSubtitle3"],
-  cardSubtitle3: ["cardSubtitle3"],
-  linkTags: ["linkTags", "cardSubtitle2"],
-  cardSubtitle2: ["cardSubtitle2"],
+  linkTagsOfExpertise: ["linkTagsOfExpertise"],
+  linkTags: ["linkTags"],
   cardAddressRow: ["cardAddressRow"],
   cardPrice: ["cardPrice"],
   dialog: ["dialog", "badgesChip"],
@@ -3823,9 +3741,7 @@ type NodeDefaultElementType = {
   linkSubtitle: "a";
   cardSubtitle: "span";
   linkTagsOfExpertise: "a";
-  cardSubtitle3: "span";
   linkTags: "a";
-  cardSubtitle2: "span";
   cardAddressRow: "span";
   cardPrice: "span";
   dialog: typeof Dialog;
@@ -3909,9 +3825,7 @@ export const PlasmicProductCard = Object.assign(
     linkSubtitle: makeNodeComponent("linkSubtitle"),
     cardSubtitle: makeNodeComponent("cardSubtitle"),
     linkTagsOfExpertise: makeNodeComponent("linkTagsOfExpertise"),
-    cardSubtitle3: makeNodeComponent("cardSubtitle3"),
     linkTags: makeNodeComponent("linkTags"),
-    cardSubtitle2: makeNodeComponent("cardSubtitle2"),
     cardAddressRow: makeNodeComponent("cardAddressRow"),
     cardPrice: makeNodeComponent("cardPrice"),
     dialog: makeNodeComponent("dialog"),
