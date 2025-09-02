@@ -8,6 +8,8 @@ import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import Button from '@/common/components/atom/button';
+import LoadingAtom from '@/common/components/atom/loading';
+import Text from '@/common/components/atom/text';
 
 export const Result = () => {
   const {
@@ -39,6 +41,12 @@ export const Result = () => {
       )}
       {isLoading && !isError && result.length == 0 && (
         <div className="flex flex-col w-full space-y-3">
+          <div className="flex flex-col p-5 space-y-4 rounded-lg bg-white">
+            <div className="flex items-center space-s-2">
+              <LoadingAtom />
+              <Text>در حال آماده سازی نتایج جستجو ...</Text>
+            </div>
+          </div>
           <Loading line={isLanding} />
         </div>
       )}
