@@ -67,10 +67,12 @@ import {
 
 import { Popover } from "@plasmicpkgs/radix-ui";
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicInAppNotification.module.css"; // plasmic-import: oB4wbfvJITFc/css
 
@@ -206,6 +208,10 @@ function PlasmicInAppNotification__RenderFunc(props: {
     $queries = new$Queries;
   }
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -217,8 +223,8 @@ function PlasmicInAppNotification__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
       dir={"rtl"}
@@ -235,11 +241,9 @@ function PlasmicInAppNotification__RenderFunc(props: {
         }}
         open={generateStateValueProp($state, ["popoverCore", "open"])}
         overlay={
-          <Stack__
-            as={"div"}
+          <div
             data-plasmic-name={"freeBox"}
             data-plasmic-override={overrides.freeBox}
-            hasGap={true}
             className={classNames(projectcss.all, sty.freeBox)}
           >
             {(() => {
@@ -258,11 +262,9 @@ function PlasmicInAppNotification__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
+              <div
                 data-plasmic-name={"group7"}
                 data-plasmic-override={overrides.group7}
-                hasGap={true}
                 className={classNames(projectcss.all, sty.group7)}
                 onClick={async event => {
                   const $steps = {};
@@ -373,7 +375,7 @@ function PlasmicInAppNotification__RenderFunc(props: {
                     }
                   </div>
                 </div>
-              </Stack__>
+              </div>
             ) : null}
             {(() => {
               try {
@@ -391,11 +393,9 @@ function PlasmicInAppNotification__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
+              <div
                 data-plasmic-name={"group8"}
                 data-plasmic-override={overrides.group8}
-                hasGap={true}
                 className={classNames(projectcss.all, sty.group8)}
                 onClick={async event => {
                   const $steps = {};
@@ -441,16 +441,16 @@ function PlasmicInAppNotification__RenderFunc(props: {
                     "\u067e\u06cc\u0627\u0645\u06cc \u0628\u0631\u0627\u06cc \u0646\u0645\u0627\u06cc\u0634 \u0648\u062c\u0648\u062f \u0646\u062f\u0627\u0631\u062f."
                   }
                 </div>
-              </Stack__>
+              </div>
             ) : null}
-          </Stack__>
+          </div>
         }
         themeResetClass={classNames(
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens
+          styleTokensClassNames,
+          styleTokensClassNames_fragment_design_system
         )}
       >
         <div
@@ -591,15 +591,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicInAppNotification__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicInAppNotification__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicInAppNotification__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicInAppNotification__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

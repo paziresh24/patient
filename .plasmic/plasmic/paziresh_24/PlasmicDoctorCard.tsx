@@ -61,10 +61,12 @@ import {
 
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicDoctorCard.module.css"; // plasmic-import: NhMGML-3Q4Pu/css
 
@@ -161,30 +163,28 @@ function PlasmicDoctorCard__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
+
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
       dir={"rtl"}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__lci0J)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__lci0J)}>
         <Avatar
           data-plasmic-name={"avatar"}
           data-plasmic-override={overrides.avatar}
@@ -218,11 +218,7 @@ function PlasmicDoctorCard__RenderFunc(props: {
           })()}
         />
 
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__og6Ex)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__og6Ex)}>
           <div
             className={classNames(
               projectcss.all,
@@ -269,11 +265,7 @@ function PlasmicDoctorCard__RenderFunc(props: {
               })()}
             </React.Fragment>
           </div>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox___7Uq1)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox___7Uq1)}>
             <Icon14Icon
               className={classNames(projectcss.all, sty.svg__tNyjc)}
               role={"img"}
@@ -325,14 +317,10 @@ function PlasmicDoctorCard__RenderFunc(props: {
                 })()}
               </React.Fragment>
             </div>
-          </Stack__>
-        </Stack__>
-      </Stack__>
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__cxTcz)}
-      >
+          </div>
+        </div>
+      </div>
+      <div className={classNames(projectcss.all, sty.freeBox__cxTcz)}>
         <Icon18Icon
           className={classNames(projectcss.all, sty.svg__fufn)}
           role={"img"}
@@ -349,7 +337,7 @@ function PlasmicDoctorCard__RenderFunc(props: {
             "\u062a\u0636\u0645\u06cc\u0646 \u0628\u0627\u0632\u067e\u0631\u062f\u0627\u062e\u062a \u0645\u0628\u0644\u063a \u0648\u06cc\u0632\u06cc\u062a \u062f\u0631 \u0635\u0648\u0631\u062a \u0646\u0627\u0631\u0636\u0627\u06cc\u062a\u06cc"
           }
         </div>
-      </Stack__>
+      </div>
       <Button
         data-plasmic-name={"button"}
         data-plasmic-override={overrides.button}
@@ -414,7 +402,7 @@ function PlasmicDoctorCard__RenderFunc(props: {
           }
         }}
       />
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -444,15 +432,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicDoctorCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicDoctorCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicDoctorCard__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicDoctorCard__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

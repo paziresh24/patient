@@ -69,10 +69,12 @@ import {
 import { Popover } from "@plasmicpkgs/radix-ui";
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicActivity.module.css"; // plasmic-import: pggD1apWa_wW/css
 
@@ -197,21 +199,23 @@ function PlasmicActivity__RenderFunc(props: {
   const dataSourcesCtx = usePlasmicDataSourceContext();
   const plasmicInvalidate = usePlasmicInvalidate();
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
+
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
       dir={"rtl"}
@@ -225,11 +229,7 @@ function PlasmicActivity__RenderFunc(props: {
       >
         {"\u0641\u0639\u0627\u0644\u06cc\u062a \u0647\u0627"}
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__njTt0)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__njTt0)}>
         {(() => {
           try {
             return $props.onlineVisit.enabled;
@@ -243,11 +243,7 @@ function PlasmicActivity__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox___1VxTv)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox___1VxTv)}>
             <Icon20Icon
               className={classNames(projectcss.all, sty.svg__fSiU)}
               role={"img"}
@@ -279,7 +275,7 @@ function PlasmicActivity__RenderFunc(props: {
                 }}
               />
             </div>
-          </Stack__>
+          </div>
         ) : null}
         {(() => {
           try {
@@ -299,21 +295,13 @@ function PlasmicActivity__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__npHib)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__npHib)}>
             <Icon21Icon
               className={classNames(projectcss.all, sty.svg__s35Ry)}
               role={"img"}
             />
 
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__pCmV)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__pCmV)}>
               {(() => {
                 try {
                   return !$state.deletedBookRateLoading;
@@ -434,8 +422,8 @@ function PlasmicActivity__RenderFunc(props: {
                   projectcss.root_reset,
                   projectcss.plasmic_default_styles,
                   projectcss.plasmic_mixins,
-                  projectcss.plasmic_tokens,
-                  plasmic_fragment_design_system_css.plasmic_tokens
+                  styleTokensClassNames,
+                  styleTokensClassNames_fragment_design_system
                 )}
                 trigger={true}
               >
@@ -452,14 +440,10 @@ function PlasmicActivity__RenderFunc(props: {
                   color={"clear"}
                 />
               </Popover>
-            </Stack__>
-          </Stack__>
+            </div>
+          </div>
         ) : null}
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__tcVrm)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__tcVrm)}>
           <Icon19Icon
             className={classNames(projectcss.all, sty.svg___6A1Z5)}
             role={"img"}
@@ -488,7 +472,7 @@ function PlasmicActivity__RenderFunc(props: {
               })()}
             </React.Fragment>
           </div>
-        </Stack__>
+        </div>
         {(() => {
           try {
             return $props.centers.some(center => center.id === "5532");
@@ -548,7 +532,9 @@ function PlasmicActivity__RenderFunc(props: {
                           params: [
                             $props.centers.find(center => center.id === "5532")
                               .user_center_id,
+
                             Math.floor(new Date().setHours(0, 0, 0, 0) / 1000),
+
                             Math.floor(
                               (new Date().setHours(0, 0, 0, 0) -
                                 30 * 24 * 60 * 60 * 1000) /
@@ -598,7 +584,9 @@ function PlasmicActivity__RenderFunc(props: {
                           params: [
                             $props.centers.find(center => center.id === "5532")
                               .user_center_id,
+
                             Math.floor(new Date().setHours(0, 0, 0, 0) / 1000),
+
                             Math.floor(
                               (new Date().setHours(0, 0, 0, 0) -
                                 30 * 24 * 60 * 60 * 1000) /
@@ -736,8 +724,8 @@ function PlasmicActivity__RenderFunc(props: {
             }}
           />
         ) : null}
-      </Stack__>
-    </Stack__>
+      </div>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -769,15 +757,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicActivity__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicActivity__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicActivity__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicActivity__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

@@ -64,12 +64,12 @@ import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
 import { DialogContent } from "@plasmicpkgs/radix-ui";
 import { DialogTitle } from "@plasmicpkgs/radix-ui";
 import { DialogClose } from "@plasmicpkgs/radix-ui";
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicDialog.module.css"; // plasmic-import: 5NUpgw2K0nJD/css
 
@@ -188,9 +188,10 @@ function PlasmicDialog__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const globalVariants = _useGlobalVariants();
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
 
   return (
     <Dialog
@@ -203,8 +204,8 @@ function PlasmicDialog__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.dialog,
         { [sty.dialognoTrigger]: hasVariant($state, "noTrigger", "noTrigger") }
       )}
@@ -227,8 +228,8 @@ function PlasmicDialog__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system
       )}
       triggerSlot={
         (hasVariant($state, "noTrigger", "noTrigger") ? false : true)
@@ -262,13 +263,11 @@ function PlasmicDialog__RenderFunc(props: {
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens
+          styleTokensClassNames,
+          styleTokensClassNames_fragment_design_system
         )}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox___4ZVcG)}
           dir={"rtl"}
         >
@@ -289,7 +288,7 @@ function PlasmicDialog__RenderFunc(props: {
               })}
             </h5>
           </DialogTitle>
-        </Stack__>
+        </div>
         <div
           className={classNames(projectcss.all, sty.freeBox__sz00C)}
           dir={"rtl"}
@@ -349,15 +348,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicDialog__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicDialog__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicDialog__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicDialog__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

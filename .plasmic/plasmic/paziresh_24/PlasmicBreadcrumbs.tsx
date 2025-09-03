@@ -59,9 +59,12 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
+
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicBreadcrumbs.module.css"; // plasmic-import: p60lZNLf7UJ8/css
 
@@ -130,6 +133,10 @@ function PlasmicBreadcrumbs__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -141,8 +148,8 @@ function PlasmicBreadcrumbs__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
       dir={"rtl"}
@@ -165,11 +172,9 @@ function PlasmicBreadcrumbs__RenderFunc(props: {
         const currentItem = __plasmic_item_0;
         const currentIndex = __plasmic_idx_0;
         return (
-          <Stack__
-            as={"div"}
+          <div
             data-plasmic-name={"freeBox"}
             data-plasmic-override={overrides.freeBox}
-            hasGap={true}
             className={classNames(projectcss.all, sty.freeBox)}
             key={currentIndex}
           >
@@ -288,7 +293,7 @@ function PlasmicBreadcrumbs__RenderFunc(props: {
                 role={"img"}
               />
             ) : null}
-          </Stack__>
+          </div>
         );
       })}
     </div>
@@ -325,15 +330,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicBreadcrumbs__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicBreadcrumbs__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicBreadcrumbs__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicBreadcrumbs__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

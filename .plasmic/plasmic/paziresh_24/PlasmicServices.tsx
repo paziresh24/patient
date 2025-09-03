@@ -61,12 +61,12 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: J-umObTYZwAG/codeComponent
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicServices.module.css"; // plasmic-import: q3FGMz6XNu9L/css
 
@@ -223,9 +223,10 @@ function PlasmicServices__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const globalVariants = _useGlobalVariants();
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -238,8 +239,8 @@ function PlasmicServices__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root,
         {
           [sty.roottype_onlineVisit]: hasVariant($state, "type", "onlineVisit")
@@ -256,11 +257,7 @@ function PlasmicServices__RenderFunc(props: {
           )
         })}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox___2Q2QS)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox___2Q2QS)}>
           <PlasmicIcon__
             PlasmicIconType={
               hasVariant($state, "type", "onlineVisit")
@@ -295,7 +292,7 @@ function PlasmicServices__RenderFunc(props: {
               ? "\u0647\u0645\u06cc\u0646 \u0627\u0644\u0627\u0646 \u0622\u0646\u0644\u0627\u06cc\u0646 \u0648\u06cc\u0632\u06cc\u062a \u0634\u0648\u06cc\u062f"
               : "\u0646\u0648\u0628\u062a \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u0648 \u0645\u0631\u0627\u062c\u0639\u0647 \u062d\u0636\u0648\u0631\u06cc"}
           </div>
-        </Stack__>
+        </div>
         <div
           className={classNames(
             projectcss.all,
@@ -333,9 +330,7 @@ function PlasmicServices__RenderFunc(props: {
           )}
         </div>
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__xv7Yc, {
           [sty.freeBoxtype_onlineVisit__xv7Yc7QAlK]: hasVariant(
             $state,
@@ -380,9 +375,7 @@ function PlasmicServices__RenderFunc(props: {
                 ? "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u062f\u0631 \u067e\u06cc\u0627\u0645 \u0631\u0633\u0627\u0646:"
                 : "\u0627\u0645\u06a9\u0627\u0646 \u062f\u0631\u06cc\u0627\u0641\u062a \u0632\u0648\u062f\u062a\u0631\u06cc\u0646 \u0646\u0648\u0628\u062a"}
             </div>
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox__vlbHa, {
                 [sty.freeBoxtype_onlineVisit__vlbHa7QAlK]: hasVariant(
                   $state,
@@ -408,9 +401,7 @@ function PlasmicServices__RenderFunc(props: {
                     })()
                   : true
               ) ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
+                <div
                   className={classNames(projectcss.all, sty.freeBox__lnM1, {
                     [sty.freeBoxtype_onlineVisit__lnM17QAlK]: hasVariant(
                       $state,
@@ -446,7 +437,7 @@ function PlasmicServices__RenderFunc(props: {
                   >
                     {"\u0627\u06cc\u062a\u0627"}
                   </div>
-                </Stack__>
+                </div>
               ) : null}
               {(
                 hasVariant($state, "type", "onlineVisit")
@@ -465,9 +456,7 @@ function PlasmicServices__RenderFunc(props: {
                     })()
                   : true
               ) ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
+                <div
                   className={classNames(projectcss.all, sty.freeBox__zcaIc, {
                     [sty.freeBoxtype_onlineVisit__zcaIc7QAlK]: hasVariant(
                       $state,
@@ -503,9 +492,9 @@ function PlasmicServices__RenderFunc(props: {
                   >
                     {"\u0648\u0627\u062a\u0633\u0627\u067e"}
                   </div>
-                </Stack__>
+                </div>
               ) : null}
-            </Stack__>
+            </div>
           </div>
           {(
             hasVariant($state, "type", "onlineVisit") &&
@@ -1073,85 +1062,37 @@ function PlasmicServices__RenderFunc(props: {
               $steps["runOnEvent"] = await $steps["runOnEvent"];
             }
 
-            $steps["goToPage"] =
-              !$props.onlineVisitButtonsToFactorDestinationB.enabled_dr_slugs?.includes(
-                $props.seo?.slug
-              )
-                ? (() => {
-                    const actionArgs = {
-                      destination: (() => {
-                        try {
-                          return `/booking/${$props.seo.slug}?centerId=5532&skipTimeSelectStep=true`;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+            $steps["goToFactorV2"] = true
+              ? (() => {
+                  const actionArgs = {
+                    destination: (() => {
+                      try {
+                        return `https://www.paziresh24.com/factor/v2/${$props.seo.slug}/${$props.service.id}/`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
                         }
-                      })()
-                    };
-                    return (({ destination }) => {
-                      if (
-                        typeof destination === "string" &&
-                        destination.startsWith("#")
-                      ) {
-                        document
-                          .getElementById(destination.substr(1))
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        __nextRouter?.push(destination);
+                        throw e;
                       }
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-            if (
-              $steps["goToPage"] != null &&
-              typeof $steps["goToPage"] === "object" &&
-              typeof $steps["goToPage"].then === "function"
-            ) {
-              $steps["goToPage"] = await $steps["goToPage"];
-            }
-
-            $steps["goToFactorV2"] =
-              $props.onlineVisitButtonsToFactorDestinationB.enabled_dr_slugs?.includes(
-                $props.seo?.slug
-              ) ||
-              $props.onlineVisitButtonsToFactorDestinationB.enabled_dr_slugs?.includes(
-                "*"
-              )
-                ? (() => {
-                    const actionArgs = {
-                      destination: (() => {
-                        try {
-                          return `https://www.paziresh24.com/factor/v2/${$props.seo.slug}/${$props.service.id}/`;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()
-                    };
-                    return (({ destination }) => {
-                      if (
-                        typeof destination === "string" &&
-                        destination.startsWith("#")
-                      ) {
-                        document
-                          .getElementById(destination.substr(1))
-                          .scrollIntoView({ behavior: "smooth" });
-                      } else {
-                        __nextRouter?.push(destination);
-                      }
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
+                    })()
+                  };
+                  return (({ destination }) => {
+                    if (
+                      typeof destination === "string" &&
+                      destination.startsWith("#")
+                    ) {
+                      document
+                        .getElementById(destination.substr(1))
+                        .scrollIntoView({ behavior: "smooth" });
+                    } else {
+                      __nextRouter?.push(destination);
+                    }
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
             if (
               $steps["goToFactorV2"] != null &&
               typeof $steps["goToFactorV2"] === "object" &&
@@ -1204,7 +1145,7 @@ function PlasmicServices__RenderFunc(props: {
           }
           space={hasVariant($state, "type", "onlineVisit") ? true : undefined}
         />
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -1235,15 +1176,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicServices__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicServices__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicServices__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicServices__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
