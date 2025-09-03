@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import LauncherComponentsApp from "../../LauncherComponentsApp"; // plasmic-import: 25u6_6Q-fQwp/component
 import LauncherComponentsAppSquare from "../../LauncherComponentsAppSquare"; // plasmic-import: u4TwWczEaPgW/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
@@ -70,6 +71,8 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherBlocksApps.module.css"; // plasmic-import: 1JVvWgQsicxr/css
+
+import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
 
 createPlasmicElementProxy;
 
@@ -86,6 +89,8 @@ export const PlasmicLauncherBlocksApps__ArgProps = new Array<ArgPropType>();
 export type PlasmicLauncherBlocksApps__OverridesType = {
   root?: Flex__<"div">;
   launcherComponentsTitle?: Flex__<typeof LauncherComponentsTitle>;
+  apiRequest?: Flex__<typeof ApiRequest>;
+  svg?: Flex__<"svg">;
 };
 
 export interface DefaultLauncherBlocksAppsProps {
@@ -132,6 +137,36 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
   const $refs = refsRef.current;
 
   const $globalActions = useGlobalActions?.();
+
+  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
+    () => [
+      {
+        path: "apiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      }
+    ],
+    [$props, $ctx, $refs]
+  );
+  const $state = useDollarState(stateSpecs, {
+    $props,
+    $ctx,
+    $queries: {},
+    $refs
+  });
 
   const styleTokensClassNames = _useStyleTokens();
   const styleTokensClassNames_paziresh_24_design_system =
@@ -209,7 +244,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
       <div className={classNames(projectcss.all, sty.freeBox__xm9Rt)}>
         {(() => {
           try {
-            return $ctx.auth.info?.provider?.job_title === "doctor";
+            return $ctx.auth.info.is_doctor;
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -220,41 +255,89 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <LauncherComponentsApp
-            avatar={
-              "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fnelson-notification.png?versionId="
-            }
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsApp__c9Nm0
-            )}
-            description={
-              "\u0627\u0631\u0633\u0627\u0644 \u0627\u0637\u0644\u0627\u0639 \u0631\u0633\u0627\u0646\u06cc \u0647\u0627 \u0628\u0631\u0627\u0633\u0627\u0633 \u0631\u0648\u06cc\u062f\u0627\u062f\u0647\u0627\u06cc \u0645\u062e\u0644\u062a\u0641"
-            }
-            link={"/dashboard/apps/drapp/notification/"}
-            name={
-              "\u0627\u0631\u0633\u0627\u0644 \u067e\u06cc\u0627\u0645\u06a9"
-            }
-            onEvent={async () => {
-              const $steps = {};
-
-              $steps["sendLog"] = true
-                ? (() => {
-                    const actionArgs = {
-                      args: [
-                        (() => {
+          <div className={classNames(projectcss.all, sty.freeBox__aL9EE)}>
+            <ApiRequest
+              data-plasmic-name={"apiRequest"}
+              data-plasmic-override={overrides.apiRequest}
+              className={classNames("__wab_instance", sty.apiRequest)}
+              errorDisplay={null}
+              loadingDisplay={
+                <LauncherIconsLoaderIcon
+                  data-plasmic-name={"svg"}
+                  data-plasmic-override={overrides.svg}
+                  className={classNames(projectcss.all, sty.svg)}
+                  role={"img"}
+                />
+              }
+              method={"GET"}
+              onError={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest",
+                  "error"
+                ]).apply(null, eventArgs);
+              }}
+              onLoading={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest",
+                  "loading"
+                ]).apply(null, eventArgs);
+              }}
+              onSuccess={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+                  null,
+                  eventArgs
+                );
+              }}
+              url={"https://apigw.paziresh24.com/v1/hamdast/apps/recommended"}
+            >
+              {(() => {
+                try {
+                  return $ctx.auth.info?.provider?.job_title === "doctor";
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return false;
+                  }
+                  throw e;
+                }
+              })()
+                ? (_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+                    (() => {
+                      try {
+                        return $state.apiRequest.data;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()
+                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                    const currentItem = __plasmic_item_0;
+                    const currentIndex = __plasmic_idx_0;
+                    return (
+                      <LauncherComponentsApp
+                        _new={(() => {
                           try {
-                            return {
-                              evant_group: "launcher_statistics",
-                              event_type: "apps",
-                              user_id: $ctx.auth.info?.id,
-                              is_doctor: $ctx.auth.info?.is_doctor,
-                              meta_data: {
-                                name: "ارسال پیامک",
-                                key: "drapp/notification",
-                                link: "/dashboard/apps/drapp/notification/"
-                              }
-                            };
+                            return currentItem.badges?.includes("NEW");
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
+                          }
+                        })()}
+                        appkey={(() => {
+                          try {
+                            return currentItem.app_key;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -264,70 +347,10 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                             }
                             throw e;
                           }
-                        })()
-                      ]
-                    };
-                    return $globalActions["Splunk.sendLog"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
-                : undefined;
-              if (
-                $steps["sendLog"] != null &&
-                typeof $steps["sendLog"] === "object" &&
-                typeof $steps["sendLog"].then === "function"
-              ) {
-                $steps["sendLog"] = await $steps["sendLog"];
-              }
-            }}
-          />
-        ) : null}
-        {(() => {
-          try {
-            return $ctx.auth.info?.provider?.job_title === "doctor";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
-          <LauncherComponentsApp
-            avatar={
-              "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finsurance-plugin.png?versionId="
-            }
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsApp__yf3EN
-            )}
-            description={
-              "\u0627\u0641\u0632\u0648\u062f\u0646 \u0628\u06cc\u0645\u0647 \u0647\u0627\u06cc \u067e\u0627\u06cc\u0647 \u0648 \u062a\u06a9\u0645\u06cc\u0644\u06cc \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
-            }
-            link={"/_/bimehnama/setting/"}
-            name={"\u0628\u06cc\u0645\u0647 \u0646\u0645\u0627"}
-            onEvent={async () => {
-              const $steps = {};
-
-              $steps["sendLog"] = true
-                ? (() => {
-                    const actionArgs = {
-                      args: [
-                        (() => {
+                        })()}
+                        avatar={(() => {
                           try {
-                            return {
-                              evant_group: "launcher_statistics",
-                              event_type: "apps",
-                              user_id: $ctx.auth.info?.id,
-                              is_doctor: $ctx.auth.info?.is_doctor,
-                              meta_data: {
-                                name: "بیمه نما",
-                                key: "bimehnama/setting",
-                                link: "/_/bimehnama/setting/"
-                              }
-                            };
+                            return currentItem.icon;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -337,73 +360,14 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                             }
                             throw e;
                           }
-                        })()
-                      ]
-                    };
-                    return $globalActions["Splunk.sendLog"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
-                : undefined;
-              if (
-                $steps["sendLog"] != null &&
-                typeof $steps["sendLog"] === "object" &&
-                typeof $steps["sendLog"].then === "function"
-              ) {
-                $steps["sendLog"] = await $steps["sendLog"];
-              }
-            }}
-            widgetId={"hhhzbbsffq0nlna"}
-          />
-        ) : null}
-        {(() => {
-          try {
-            return $ctx.auth.info?.provider?.job_title === "doctor";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return true;
-            }
-            throw e;
-          }
-        })() ? (
-          <LauncherComponentsApp
-            avatar={
-              "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Finstagram-plugin.png?versionId="
-            }
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsApp__kHecn
-            )}
-            description={
-              "\u0627\u0641\u0632\u0648\u062f\u0646 \u067e\u0633\u062a\u200c\u0647\u0627\u06cc \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645 \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"
-            }
-            link={"/_/cywoc24/launcher/"}
-            name={
-              "\u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0627\u06cc\u0646\u0633\u062a\u0627\u06af\u0631\u0627\u0645"
-            }
-            onEvent={async () => {
-              const $steps = {};
-
-              $steps["sendLog"] = true
-                ? (() => {
-                    const actionArgs = {
-                      args: [
-                        (() => {
+                        })()}
+                        className={classNames(
+                          "__wab_instance",
+                          sty.launcherComponentsApp__c9Nm0
+                        )}
+                        description={(() => {
                           try {
-                            return {
-                              evant_group: "launcher_statistics",
-                              event_type: "apps",
-                              user_id: $ctx.auth.info?.id,
-                              is_doctor: $ctx.auth.info?.is_doctor,
-                              meta_data: {
-                                name: "پروفایل اینستاگرام",
-                                key: "cywoc24/setting",
-                                link: "/_/cywoc24/launcher/"
-                              }
-                            };
+                            return currentItem.subtitle;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -413,24 +377,101 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                             }
                             throw e;
                           }
-                        })()
-                      ]
-                    };
-                    return $globalActions["Splunk.sendLog"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
-                : undefined;
-              if (
-                $steps["sendLog"] != null &&
-                typeof $steps["sendLog"] === "object" &&
-                typeof $steps["sendLog"].then === "function"
-              ) {
-                $steps["sendLog"] = await $steps["sendLog"];
-              }
-            }}
-            widgetId={"aed80eahprc1qs0"}
-          />
+                        })()}
+                        key={currentIndex}
+                        link={(() => {
+                          try {
+                            return currentItem.link;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "";
+                            }
+                            throw e;
+                          }
+                        })()}
+                        name={(() => {
+                          try {
+                            return currentItem.title;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        onEvent={async () => {
+                          const $steps = {};
+
+                          $steps["sendLog"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return {
+                                          evant_group: "launcher_statistics",
+                                          event_type: "apps",
+                                          user_id: $ctx.auth.info?.id,
+                                          is_doctor: $ctx.auth.info?.is_doctor,
+                                          meta_data: {
+                                            name: currentItem.title,
+                                            key: currentItem.app_key,
+                                            link: currentItem.link
+                                          }
+                                        };
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return $globalActions["Splunk.sendLog"]?.apply(
+                                  null,
+                                  [...actionArgs.args]
+                                );
+                              })()
+                            : undefined;
+                          if (
+                            $steps["sendLog"] != null &&
+                            typeof $steps["sendLog"] === "object" &&
+                            typeof $steps["sendLog"].then === "function"
+                          ) {
+                            $steps["sendLog"] = await $steps["sendLog"];
+                          }
+                        }}
+                        pagekey={"launcher"}
+                        soon={(() => {
+                          try {
+                            return currentItem.badges?.includes("SOON");
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    );
+                  })
+                : null}
+            </ApiRequest>
+          </div>
         ) : null}
         {false ? (
           <LauncherComponentsApp
@@ -877,8 +918,10 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "launcherComponentsTitle"],
-  launcherComponentsTitle: ["launcherComponentsTitle"]
+  root: ["root", "launcherComponentsTitle", "apiRequest", "svg"],
+  launcherComponentsTitle: ["launcherComponentsTitle"],
+  apiRequest: ["apiRequest", "svg"],
+  svg: ["svg"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -886,6 +929,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   launcherComponentsTitle: typeof LauncherComponentsTitle;
+  apiRequest: typeof ApiRequest;
+  svg: "svg";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -949,6 +994,8 @@ export const PlasmicLauncherBlocksApps = Object.assign(
   {
     // Helper components rendering sub-elements
     launcherComponentsTitle: makeNodeComponent("launcherComponentsTitle"),
+    apiRequest: makeNodeComponent("apiRequest"),
+    svg: makeNodeComponent("svg"),
 
     // Metadata about props expected for PlasmicLauncherBlocksApps
     internalVariantProps: PlasmicLauncherBlocksApps__VariantProps,

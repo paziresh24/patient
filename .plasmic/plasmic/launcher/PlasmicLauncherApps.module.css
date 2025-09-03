@@ -8,15 +8,22 @@
   align-items: center;
   background: #ffffff;
   min-width: 0;
-}
-.getCenters:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
+  padding: 20px;
 }
 .launcherWrapper:global(.__wab_instance) {
   max-width: 100%;
 }
-.reveal__hxDkw:global(.__wab_instance) {
+.apiRequest2:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.svg {
+  object-fit: cover;
+  max-width: 100%;
+  width: 24px;
+  height: 24px;
+}
+.reveal:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
   width: 100%;
@@ -33,8 +40,8 @@
   max-width: 100%;
   overflow: auto;
   column-gap: 10px;
+  margin-bottom: 20px;
   min-width: 0;
-  padding: 20px 20px 0px;
 }
 .launcherComponentsCategory:global(.__wab_instance) {
   max-width: 100%;
@@ -51,16 +58,9 @@
   width: 10px;
   flex-shrink: 0;
 }
-.reveal__yyNqO:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-  width: 100%;
-  min-width: 0;
-}
-.freeBox__jojFn {
+.freeBox__bug {
   display: flex;
   flex-direction: column;
-  position: relative;
   width: 100%;
   height: auto;
   max-width: 100%;
@@ -68,39 +68,11 @@
   align-items: center;
   row-gap: 20px;
   min-width: 0;
-  padding: 20px;
 }
-.apiRequest:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
-.freeBox__wtXm5 {
+.freeBox__qIMhb {
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  justify-content: flex-start;
-  align-items: center;
-  background: #fcf7ee;
-  row-gap: 10px;
-  min-width: 0;
-  border-radius: 10px;
-  padding: 15px;
-}
-.launcherComponentsTitle__fsOfS:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsApp__cIv3S:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsSeparator___87AAq:global(.__wab_instance) {
-  max-width: 100%;
-}
-.freeBox__bug {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   height: auto;
   max-width: 100%;
@@ -115,59 +87,9 @@
 .launcherComponentsApp__v6ChM:global(.__wab_instance) {
   max-width: 100%;
 }
-.launcherComponentsSeparator__de8Lg:global(.__wab_instance) {
+.launcherComponentsSeparator:global(.__wab_instance) {
   max-width: 100%;
-}
-.freeBox___8BTu2 {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  justify-content: flex-start;
-  align-items: center;
-  row-gap: 10px;
-  min-width: 0;
-}
-.launcherComponentsTitle__ldus:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsApp__zu3Oq:global(.__wab_instance) {
-  max-width: 100%;
-}
-.freeBox__jfYAj {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  justify-content: flex-start;
-  align-items: center;
-  row-gap: 10px;
-  min-width: 0;
-}
-.launcherComponentsTitle__zis3D:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsApp__fBpFq:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsApp__dA5Ff:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsApp__n2XvW:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsApp___8UPeb:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsApp__zXhci:global(.__wab_instance) {
-  max-width: 100%;
-}
-.launcherComponentsSeparator__dcM8:global(.__wab_instance) {
-  max-width: 100%;
+  margin-bottom: 20px;
 }
 .freeBox__nu6H4 {
   display: flex;
@@ -195,4 +117,34 @@
 }
 .launcherComponentsApp___6Tcy5:global(.__wab_instance) {
   max-width: 100%;
+}
+.apiRequest:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.freeBox__wtXm5 {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  background: #fcf7ee;
+  row-gap: 10px;
+  margin-top: 20px;
+  min-width: 0;
+  border-radius: 10px;
+  padding: 15px;
+}
+.launcherComponentsTitle__fsOfS:global(.__wab_instance) {
+  max-width: 100%;
+}
+.launcherComponentsApp__cIv3S:global(.__wab_instance) {
+  max-width: 100%;
+}
+.getCenters:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
 }
