@@ -5688,9 +5688,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/loading_boundary/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/loading_boundary/plasmic.tsx"
     },
     {
       "projectId": "k6BnBuAUepzRX8Qs2WvkKs",
@@ -6334,6 +6333,12 @@
           "name": "DoctorInvoiceNotice",
           "displayName": "DoctorInvoiceNotice",
           "componentImportPath": "@/modules/booking/components/factor/doctorInvoiceNotice"
+        },
+        {
+          "id": "TbVgdjCHeydG",
+          "name": "AppFrame",
+          "displayName": "AppFrame",
+          "componentImportPath": "@/modules/hamdast/appFrame"
         }
       ],
       "customFunctions": [
@@ -6345,9 +6350,8 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/paziresh_24/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/paziresh_24/plasmic.tsx"
     },
     {
       "projectId": "bN5uNsAhTefwW3S14VjvMG",

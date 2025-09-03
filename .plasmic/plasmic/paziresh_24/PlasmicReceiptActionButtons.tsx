@@ -65,12 +65,12 @@ import Dialog from "../../Dialog"; // plasmic-import: 5NUpgw2K0nJD/component
 import DoctorCard from "../../DoctorCard"; // plasmic-import: NhMGML-3Q4Pu/component
 import { Timer } from "@plasmicpkgs/plasmic-basic-components";
 import TextInput from "../../TextInput"; // plasmic-import: MB7oMSw7lp7m/component
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicReceiptActionButtons.module.css"; // plasmic-import: EifS7TB9I3zC/css
 
@@ -274,25 +274,23 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root,
         {
           [sty.roottype_visitOnline]: hasVariant($state, "type", "visitOnline")
@@ -317,9 +315,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
             })()
           : false
       ) ? (
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox__wMEqE, {
             [sty.freeBoxtype_visitOnline__wMEqElbrEa]: hasVariant(
               $state,
@@ -361,9 +357,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                   }
                 })()
           ) ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox__gVl5, {
                 [sty.freeBoxtype_visitOnline__gVl5LbrEa]: hasVariant(
                   $state,
@@ -812,7 +806,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                   }
                 />
               ) : null}
-            </Stack__>
+            </div>
           ) : null}
           {(
             hasVariant($state, "type", "visitOnline")
@@ -949,11 +943,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
           ) ? (
             <Alert
               body={
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__uzO0V)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__uzO0V)}>
                   <div
                     className={classNames(
                       projectcss.all,
@@ -1525,9 +1515,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                             throw e;
                           }
                         })() ? (
-                          <Stack__
-                            as={"div"}
-                            hasGap={true}
+                          <div
                             className={classNames(
                               projectcss.all,
                               sty.freeBox___63WC
@@ -1544,7 +1532,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                                 "\u067e\u0632\u0634\u06a9\u06cc \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f."
                               }
                             </div>
-                          </Stack__>
+                          </div>
                         ) : null}
                       </React.Fragment>
                     }
@@ -1778,7 +1766,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                       />
                     }
                   />
-                </Stack__>
+                </div>
               }
               className={classNames("__wab_instance", sty.alert__auAds, {
                 [sty.alerttype_visitOnline__auAdSlbrEa]: hasVariant(
@@ -1829,9 +1817,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                 data-plasmic-name={"dialog3"}
                 data-plasmic-override={overrides.dialog3}
                 body={
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__hk0YF)}
                   >
                     <Button
@@ -2017,7 +2003,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                       outline={true}
                       submitsForm={true}
                     />
-                  </Stack__>
+                  </div>
                 }
                 className={classNames("__wab_instance", sty.dialog3, {
                   [sty.dialog3type_visitOnline]: hasVariant(
@@ -2120,9 +2106,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                   }
                 })()
           ) ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox___4AFlz, {
                 [sty.freeBoxtype_visitOnline___4AFlzlbrEa]: hasVariant(
                   $state,
@@ -2135,11 +2119,9 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                 data-plasmic-name={"dialog2"}
                 data-plasmic-override={overrides.dialog2}
                 body={
-                  <Stack__
-                    as={"form"}
+                  <form
                     data-plasmic-name={"form"}
                     data-plasmic-override={overrides.form}
-                    hasGap={true}
                     action={(() => {
                       try {
                         return `https://apigw.paziresh24.com/v1/support/doctordelayfollowup`;
@@ -2301,7 +2283,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                       )}
                       submitsForm={true}
                     />
-                  </Stack__>
+                  </form>
                 }
                 className={classNames("__wab_instance", sty.dialog2)}
                 onOpenChange={async (...eventArgs: any) => {
@@ -2627,11 +2609,11 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                   />
                 }
               />
-            </Stack__>
+            </div>
           ) : null}
-        </Stack__>
+        </div>
       ) : null}
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -2688,15 +2670,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReceiptActionButtons__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReceiptActionButtons__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicReceiptActionButtons__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicReceiptActionButtons__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

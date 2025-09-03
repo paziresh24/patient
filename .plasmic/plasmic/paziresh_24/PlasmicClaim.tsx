@@ -60,10 +60,12 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 import sty from "./PlasmicClaim.module.css"; // plasmic-import: 5jjwlzFYfMqI/css
 
@@ -134,6 +136,10 @@ function PlasmicClaim__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
+
   return (
     (() => {
       try {
@@ -148,20 +154,18 @@ function PlasmicClaim__RenderFunc(props: {
         throw e;
       }
     })() ? (
-      <Stack__
-        as={"section"}
+      <section
         data-plasmic-name={"root"}
         data-plasmic-override={overrides.root}
         data-plasmic-root={true}
         data-plasmic-for-node={forNode}
-        hasGap={true}
         className={classNames(
           projectcss.all,
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens,
+          styleTokensClassNames,
+          styleTokensClassNames_fragment_design_system,
           sty.root
         )}
       >
@@ -285,7 +289,7 @@ function PlasmicClaim__RenderFunc(props: {
             "\u0627\u06cc\u0646 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0628\u0627 \u0647\u062f\u0641 \u062a\u0633\u0647\u06cc\u0644 \u062f\u0631 \u06cc\u0627\u0641\u062a\u0646 \u0627\u0639\u0636\u0627\u06cc \u062c\u0627\u0645\u0639\u0647 \u067e\u0632\u0634\u06a9\u06cc \u0648 \u062f\u0631 \u0631\u0627\u0633\u062a\u0627\u06cc \u0627\u062c\u0631\u0627\u06cc \u0642\u0627\u0646\u0648\u0646 \u0627\u0646\u062a\u0634\u0627\u0631 \u0648 \u062f\u0633\u062a\u0631\u0633\u06cc \u0622\u0632\u0627\u062f \u0628\u0647 \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0645\u0635\u0648\u0628 \u0645\u062c\u0644\u0633 \u0634\u0648\u0631\u0627\u06cc \u0627\u0633\u0644\u0627\u0645\u06cc \u0627\u0631\u0627\u0626\u0647 \u0634\u062f\u0647 \u0627\u0633\u062a."
           }
         </div>
-      </Stack__>
+      </section>
     ) : null
   ) as React.ReactElement | null;
 }
@@ -314,15 +318,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicClaim__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicClaim__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicClaim__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicClaim__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
