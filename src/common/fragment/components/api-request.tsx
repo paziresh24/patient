@@ -1,7 +1,7 @@
 'use client';
 
 import { CodeComponentMeta, useSelector } from '@plasmicapp/host';
-import { ReactNode, useMemo, useState } from 'react';
+import { forwardRef, ReactNode, useImperativeHandle, useMemo, useState } from 'react';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 
@@ -21,7 +21,7 @@ type ApiRequestType = {
   onSuccess?: (data: any) => void;
 };
 
-export const ApiRequest = (props: ApiRequestType) => {
+export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
   const {
     method = 'GET',
     params,
@@ -53,7 +53,7 @@ export const ApiRequest = (props: ApiRequestType) => {
     [method, url, params, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig],
   );
 
-  const { data, isLoading, isInitialLoading, isError } = useQuery(
+  const { data, isLoading, isInitialLoading, isError, refetch } = useQuery(
     [method, url, params, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig],
     () => reuqestFn(fetchProps),
     {
@@ -72,6 +72,18 @@ export const ApiRequest = (props: ApiRequestType) => {
     },
   );
 
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        refresh: () => {
+          return refetch();
+        },
+      };
+    },
+    [],
+  );
+
   const reuqestFn = async ({ method, url, params, body, config }: any) => {
     onLoading?.(true);
     onError?.(null);
@@ -79,6 +91,15 @@ export const ApiRequest = (props: ApiRequestType) => {
     if (method === 'GET') {
       return await axios.get(url, {
         params,
+        ...config,
+      });
+    }
+    if (method === 'DELETE') {
+      return await axios.delete(url, {
+        params,
+        data: {
+          ...body,
+        },
         ...config,
       });
     }
@@ -99,7 +120,7 @@ export const ApiRequest = (props: ApiRequestType) => {
   if (data?.data) {
     return children;
   }
-};
+});
 
 export const apiRequestMeta: CodeComponentMeta<ApiRequestType> = {
   name: 'ApiRequest',
@@ -194,6 +215,12 @@ export const apiRequestMeta: CodeComponentMeta<ApiRequestType> = {
           type: 'boolean',
         },
       ],
+    },
+  },
+  refActions: {
+    refresh: {
+      argTypes: [],
+      displayName: 'Refresh Data',
     },
   },
   classNameProp: 'className',
