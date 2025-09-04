@@ -62,12 +62,12 @@ import {
 import BookingNotAvailible from "../../BookingNotAvailible"; // plasmic-import: HI9wFtACqPcK/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicBookingService.module.css"; // plasmic-import: Fbeul3tjKryJ/css
 
@@ -195,9 +195,10 @@ function PlasmicBookingService__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const globalVariants = _useGlobalVariants();
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -210,8 +211,8 @@ function PlasmicBookingService__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root,
         {
           [sty.rootisUnAvailable]: hasVariant(
@@ -231,9 +232,7 @@ function PlasmicBookingService__RenderFunc(props: {
           )
         })}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox__tiTvf, {
             [sty.freeBoxisUnAvailable__tiTvfhFZbh]: hasVariant(
               $state,
@@ -301,7 +300,7 @@ function PlasmicBookingService__RenderFunc(props: {
               })()}
             </React.Fragment>
           </div>
-        </Stack__>
+        </div>
         {(() => {
           try {
             return $props.isOnlineType;
@@ -342,9 +341,7 @@ function PlasmicBookingService__RenderFunc(props: {
           </div>
         ) : null}
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__sLNk, {
           [sty.freeBoxisUnAvailable__sLNKhFZbh]: hasVariant(
             $state,
@@ -378,9 +375,7 @@ function PlasmicBookingService__RenderFunc(props: {
           })()}
         />
 
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(projectcss.all, sty.freeBox__vwfrp, {
             [sty.freeBoxisUnAvailable__vwfrphFZbh]: hasVariant(
               $state,
@@ -422,11 +417,7 @@ function PlasmicBookingService__RenderFunc(props: {
                   "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u062f\u0631 \u067e\u06cc\u0627\u0645 \u0631\u0633\u0627\u0646:"
                 }
               </div>
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__wvHqn)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__wvHqn)}>
                 {(() => {
                   try {
                     return $props.onlineVisitChannelTypes.includes("eitaa");
@@ -440,9 +431,7 @@ function PlasmicBookingService__RenderFunc(props: {
                     throw e;
                   }
                 })() ? (
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__c4S89)}
                   >
                     <Icon3Icon
@@ -459,7 +448,7 @@ function PlasmicBookingService__RenderFunc(props: {
                     >
                       {"\u0627\u06cc\u062a\u0627"}
                     </div>
-                  </Stack__>
+                  </div>
                 ) : null}
                 {(() => {
                   try {
@@ -474,9 +463,7 @@ function PlasmicBookingService__RenderFunc(props: {
                     throw e;
                   }
                 })() ? (
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__fLmTn)}
                   >
                     <Icon4Icon
@@ -493,9 +480,9 @@ function PlasmicBookingService__RenderFunc(props: {
                     >
                       {"\u0648\u0627\u062a\u0633\u0627\u067e"}
                     </div>
-                  </Stack__>
+                  </div>
                 ) : null}
-              </Stack__>
+              </div>
             </div>
           ) : null}
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -552,7 +539,7 @@ function PlasmicBookingService__RenderFunc(props: {
               </div>
             );
           })}
-        </Stack__>
+        </div>
         {(
           hasVariant($state, "isUnAvailable", "isUnAvailable") ? false : true
         ) ? (
@@ -731,7 +718,7 @@ function PlasmicBookingService__RenderFunc(props: {
             }
           />
         ) : null}
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -760,15 +747,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicBookingService__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicBookingService__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicBookingService__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicBookingService__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
