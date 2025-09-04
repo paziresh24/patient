@@ -62,10 +62,12 @@ import {
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: -32RqKI9mlfN/codeComponent
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicBookingAddressesWrapper.module.css"; // plasmic-import: Z7E4nvI5-Dtv/css
 
@@ -181,21 +183,23 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
+
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
     >
@@ -442,7 +446,7 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
           }
         />
       </ApiRequest>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 

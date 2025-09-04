@@ -65,10 +65,12 @@ import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import BookingCenterList from "../../BookingCenterList"; // plasmic-import: 4Y4p7schjdHw/component
 import BookingCenterListService from "../../BookingCenterListService"; // plasmic-import: oxKPcE6Kc5i3/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicBookingServiceList.module.css"; // plasmic-import: fpdRSzutXHoq/css
 
@@ -226,6 +228,10 @@ function PlasmicBookingServiceList__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -237,8 +243,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
     >
@@ -288,11 +294,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
           }
         })()}
       >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__gTjnf)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__gTjnf)}>
           {(() => {
             try {
               return $state.getFullProfileData.data.data.centers?.some(
@@ -840,7 +842,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
               }
             />
           ) : null}
-        </Stack__>
+        </div>
         <ApiRequest
           data-plasmic-name={"waitingApi"}
           data-plasmic-override={overrides.waitingApi}
@@ -1259,11 +1261,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         data-plasmic-name={"mashhadBookingDialog"}
         data-plasmic-override={overrides.mashhadBookingDialog}
         body={
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__y0RsR)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__y0RsR)}>
             <div
               className={classNames(
                 projectcss.all,
@@ -1291,7 +1289,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                 className={classNames("__wab_instance", sty.button__nl513)}
               />
             </PlasmicLink__>
-          </Stack__>
+          </div>
         }
         className={classNames("__wab_instance", sty.mashhadBookingDialog)}
         noTrigger={true}
@@ -1320,11 +1318,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         data-plasmic-name={"applicationDialog"}
         data-plasmic-override={overrides.applicationDialog}
         body={
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__hmcX)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__hmcX)}>
             <div
               className={classNames(
                 projectcss.all,
@@ -1384,7 +1378,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                 }
               }}
             />
-          </Stack__>
+          </div>
         }
         className={classNames("__wab_instance", sty.applicationDialog)}
         noTrigger={true}
@@ -1466,15 +1460,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicBookingServiceList__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicBookingServiceList__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicBookingServiceList__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicBookingServiceList__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

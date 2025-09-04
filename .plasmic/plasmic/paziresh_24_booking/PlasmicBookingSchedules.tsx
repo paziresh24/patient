@@ -63,12 +63,12 @@ import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmi
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { Popover } from "@plasmicpkgs/radix-ui";
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicBookingSchedules.module.css"; // plasmic-import: Mt_WMP6AHSGv/css
 
@@ -201,9 +201,10 @@ function PlasmicBookingSchedules__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const globalVariants = _useGlobalVariants();
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -216,8 +217,8 @@ function PlasmicBookingSchedules__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
       dir={"rtl"}
@@ -300,11 +301,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                   throw e;
                 }
               })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__qv9Rk)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__qv9Rk)}>
                   <Popover
                     data-plasmic-name={"popoverCore"}
                     data-plasmic-override={overrides.popoverCore}
@@ -325,9 +322,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                       "open"
                     ])}
                     overlay={
-                      <Stack__
-                        as={"div"}
-                        hasGap={true}
+                      <div
                         className={classNames(
                           projectcss.all,
                           sty.freeBox__kShU
@@ -480,15 +475,15 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                             />
                           );
                         })}
-                      </Stack__>
+                      </div>
                     }
                     side={"bottom"}
                     themeResetClass={classNames(
                       projectcss.root_reset,
                       projectcss.plasmic_default_styles,
                       projectcss.plasmic_mixins,
-                      projectcss.plasmic_tokens,
-                      plasmic_fragment_design_system_css.plasmic_tokens
+                      styleTokensClassNames,
+                      styleTokensClassNames_fragment_design_system
                     )}
                   >
                     <Button
@@ -762,7 +757,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                       </div>
                     );
                   })}
-                </Stack__>
+                </div>
               ) : null}
               {(() => {
                 try {
@@ -777,11 +772,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                   throw e;
                 }
               })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__xhyyH)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__xhyyH)}>
                   <InfoIcon
                     className={classNames(projectcss.all, sty.svg__psuCv)}
                     role={"img"}
@@ -798,7 +789,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                       "\u067e\u0632\u0634\u06a9 \u062f\u0631 \u0627\u06cc\u0646 \u0645\u0631\u06a9\u0632 \u0628\u0631\u0646\u0627\u0645\u0647 \u06a9\u0627\u0631\u06cc \u0646\u062f\u0627\u0631\u062f."
                     }
                   </div>
-                </Stack__>
+                </div>
               ) : null}
               {(() => {
                 try {
@@ -837,11 +828,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                   throw e;
                 }
               })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__uNfGv)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__uNfGv)}>
                   <XIcon
                     className={classNames(projectcss.all, sty.svg__dKT8)}
                     role={"img"}
@@ -858,7 +845,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                       "\u062e\u0637\u0627 \u062f\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0628\u0631\u0646\u0627\u0645\u0647 \u06a9\u0627\u0631\u06cc \u067e\u0632\u0634\u06a9"
                     }
                   </div>
-                </Stack__>
+                </div>
               ) : null}
             </React.Fragment>
           }
@@ -965,15 +952,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicBookingSchedules__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicBookingSchedules__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicBookingSchedules__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicBookingSchedules__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

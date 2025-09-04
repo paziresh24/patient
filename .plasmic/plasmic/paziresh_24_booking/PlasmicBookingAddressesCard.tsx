@@ -62,12 +62,12 @@ import {
 import Collapsible from "../../Collapsible"; // plasmic-import: kYXN54tCkD2S/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import BookingSchedules from "../../BookingSchedules"; // plasmic-import: Mt_WMP6AHSGv/component
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
+import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import sty from "./PlasmicBookingAddressesCard.module.css"; // plasmic-import: z1k0-vbkFtby/css
 
@@ -180,25 +180,24 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const globalVariants = _useGlobalVariants();
+  const styleTokensClassNames = _useStyleTokens();
+  const styleTokensClassNames_fragment_design_system =
+    useStyleTokens_fragment_design_system();
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
+        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
     >
@@ -249,11 +248,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
             </React.Fragment>
           </div>
         </PlasmicLink__>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__a2ONy)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__a2ONy)}>
           <div
             className={classNames(
               projectcss.all,
@@ -321,7 +316,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
               <React.Fragment>{""}</React.Fragment>
             </React.Fragment>
           </div>
-        </Stack__>
+        </div>
       </div>
       {(() => {
         try {
@@ -359,11 +354,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
             </div>
           }
           slot2={
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__wvxjo)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__wvxjo)}>
               <Icon13Icon
                 className={classNames(projectcss.all, sty.svg__yK0C5)}
                 role={"img"}
@@ -394,7 +385,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                   </React.Fragment>
                 </div>
               </div>
-            </Stack__>
+            </div>
           }
         >
           <div className={classNames(projectcss.all, sty.freeBox__j4Sfd)}>
@@ -614,7 +605,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
           />
         ) : null}
       </PlasmicLink__>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -644,15 +635,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicBookingAddressesCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicBookingAddressesCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicBookingAddressesCard__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicBookingAddressesCard__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
