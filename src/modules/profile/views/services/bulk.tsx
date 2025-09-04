@@ -51,7 +51,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
     handleOpen();
   };
 
-  const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
+  const handleClickDcotorCardDoctor = ({ url, element }: { url: string; element: any }) => {
     splunkInstance('search').sendEvent({
       group: 'profile_visit_online_doctor_recommendation',
       type: 'profile_visit_online_doctor_recommendation-click-doctor-card',
@@ -59,7 +59,10 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
         slug: url.replace('/dr/', ''),
       },
     });
-    location.assign(url.replace('/dr/', '/booking/') + '?centerId=5532&skipTimeSelectStep=true');
+    if (element == 'button') {
+      return location.assign(url.replace('/dr/', '/booking/') + '?centerId=5532&skipTimeSelectStep=true');
+    }
+    return location.assign(url + '?centerTarget=5532');
   };
 
   const handleClickMoreDoctors = () => {
@@ -87,7 +90,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
     if (substituteDoctor?.url) {
       setTimeout(() => {
         handleOpenSubstituteDoctorModal();
-      }, 2000);
+      }, 6000);
     }
   }, [substituteDoctor?.url]);
 
@@ -142,7 +145,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
             <Alert severity="success" className="p-3 bg-green-600 border-green-700 text-sm font-medium text-white">
               طبق نظر بیماران، مشابه ترین پزشک آنلاین به {displayName}:
             </Alert>
-            <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>
+            <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url, element: 'card' })}>
               <SearchCard
                 avatarSize="lg"
                 baseInfo={{
@@ -163,6 +166,9 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
                     text: `ویزیت آنلاین با دکتر ${substituteDoctor.title}`,
                     outline: false,
                     description: '',
+                    action() {
+                      handleClickDcotorCardDoctor({ url: substituteDoctor.url, element: 'button' });
+                    },
                   },
                 ]}
               />
