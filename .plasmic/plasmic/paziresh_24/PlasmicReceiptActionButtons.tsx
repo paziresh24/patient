@@ -582,21 +582,39 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 }}
               />
 
-              {(() => {
-                try {
-                  return $props.bookDetailsData.doctor.online_visit_channels.some(
-                    item => item.type === "secure_call"
-                  );
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })() ? (
+              {(
+                hasVariant($state, "type", "visitOnline")
+                  ? (() => {
+                      try {
+                        return $props.bookDetailsData.doctor.online_visit_channels.some(
+                          item => item.type === "secure_call"
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()
+                  : (() => {
+                      try {
+                        return $props.bookDetailsData.doctor.online_visit_channels.some(
+                          item => item.type === "secure_call"
+                        );
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()
+              ) ? (
                 <Button
                   children2={
                     <div
@@ -611,7 +629,13 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                       }
                     </div>
                   }
-                  className={classNames("__wab_instance", sty.button__zsQjd)}
+                  className={classNames("__wab_instance", sty.button__zsQjd, {
+                    [sty.buttontype_visitOnline__zsQjdlbrEa]: hasVariant(
+                      $state,
+                      "type",
+                      "visitOnline"
+                    )
+                  })}
                   loading={(() => {
                     try {
                       return $state.secureCallLoading;
