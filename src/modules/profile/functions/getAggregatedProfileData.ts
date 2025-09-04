@@ -85,23 +85,27 @@ export async function getAggregatedProfileData(slug: string, university: string 
   let userInfo = null;
 
   if (options?.useClApi) {
-    const slugInfoEndpoint = `https://apigw.paziresh24.com/prapi/v1/slugs/${slug}`;
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'profile_api_request',
-      type: 'profile_api_request',
-      event: {
-        endpoint: slugInfoEndpoint,
-        slug: slug,
-        isServer: isServer,
-      },
-    });
-    const data = await axios.get(slugInfoEndpoint, {
-      headers: {
-        Accept: 'application/json',
-      },
-      timeout: 1000,
-    });
-    userInfo = data?.data?.user_info;
+    try {
+      const slugInfoEndpoint = `https://apigw.paziresh24.com/prapi/v1/slugs/${slug}`;
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'profile_api_request',
+        type: 'profile_api_request',
+        event: {
+          endpoint: slugInfoEndpoint,
+          slug: slug,
+          isServer: isServer,
+        },
+      });
+      const data = await axios.get(slugInfoEndpoint, {
+        headers: {
+          Accept: 'application/json',
+        },
+        timeout: 1000,
+      });
+      userInfo = data?.data?.user_info;
+    } catch (error) {
+      //
+    }
   }
 
   let fullProfileData;
