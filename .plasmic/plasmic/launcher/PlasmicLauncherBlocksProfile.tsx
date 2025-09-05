@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Paziresh24Avatar from "../../Paziresh24Avatar"; // plasmic-import: zljt-TXjec48/component
+import LauncherBlockNotifications from "../../LauncherBlockNotifications"; // plasmic-import: GyA43SeYKJuf/component
 import LauncherBlocksWallet from "../../LauncherBlocksWallet"; // plasmic-import: h-1safqUkN1a/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
@@ -81,17 +82,23 @@ type VariantPropType = keyof PlasmicLauncherBlocksProfile__VariantsArgs;
 export const PlasmicLauncherBlocksProfile__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicLauncherBlocksProfile__ArgsType = {};
+export type PlasmicLauncherBlocksProfile__ArgsType = {
+  onAction?: (action: any) => void;
+};
 type ArgPropType = keyof PlasmicLauncherBlocksProfile__ArgsType;
-export const PlasmicLauncherBlocksProfile__ArgProps = new Array<ArgPropType>();
+export const PlasmicLauncherBlocksProfile__ArgProps = new Array<ArgPropType>(
+  "onAction"
+);
 
 export type PlasmicLauncherBlocksProfile__OverridesType = {
   root?: Flex__<"div">;
   paziresh24Avatar?: Flex__<typeof Paziresh24Avatar>;
+  launcherBlockNotifications?: Flex__<typeof LauncherBlockNotifications>;
   launcherBlocksWallet?: Flex__<typeof LauncherBlocksWallet>;
 };
 
 export interface DefaultLauncherBlocksProfileProps {
+  onAction?: (action: any) => void;
   className?: string;
 }
 
@@ -376,81 +383,92 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
             ) : null}
           </div>
         </div>
-        <div
-          className={classNames(projectcss.all, sty.freeBox__vXwnm)}
-          onClick={async event => {
-            const $steps = {};
-
-            $steps["sendLog"] = true
-              ? (() => {
-                  const actionArgs = {
-                    args: [
-                      (() => {
-                        try {
-                          return {
-                            evant_group: "launcher_statistics",
-                            event_type: "widget_features",
-                            feature: "edit_profile",
-                            user_id: $ctx.auth.info?.id,
-                            is_doctor: $ctx.auth.info?.is_doctor
-                          };
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()
-                    ]
-                  };
-                  return $globalActions["Splunk.sendLog"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
-              : undefined;
-            if (
-              $steps["sendLog"] != null &&
-              typeof $steps["sendLog"] === "object" &&
-              typeof $steps["sendLog"].then === "function"
-            ) {
-              $steps["sendLog"] = await $steps["sendLog"];
-            }
-
-            $steps["goToDashboardProfile"] = true
-              ? (() => {
-                  const actionArgs = { destination: "/dashboard/profile/" };
-                  return (({ destination }) => {
-                    if (
-                      typeof destination === "string" &&
-                      destination.startsWith("#")
-                    ) {
-                      document
-                        .getElementById(destination.substr(1))
-                        .scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      __nextRouter?.push(destination);
-                    }
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["goToDashboardProfile"] != null &&
-              typeof $steps["goToDashboardProfile"] === "object" &&
-              typeof $steps["goToDashboardProfile"].then === "function"
-            ) {
-              $steps["goToDashboardProfile"] = await $steps[
-                "goToDashboardProfile"
-              ];
-            }
-          }}
-        >
-          <LauncherIconsEditIcon
-            className={classNames(projectcss.all, sty.svg__usu5T)}
-            role={"img"}
+        <div className={classNames(projectcss.all, sty.freeBox___28PI2)}>
+          <LauncherBlockNotifications
+            data-plasmic-name={"launcherBlockNotifications"}
+            data-plasmic-override={overrides.launcherBlockNotifications}
+            className={classNames(
+              "__wab_instance",
+              sty.launcherBlockNotifications
+            )}
           />
+
+          <div
+            className={classNames(projectcss.all, sty.freeBox__tt4Ho)}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["sendLog"] = true
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        (() => {
+                          try {
+                            return {
+                              evant_group: "launcher_statistics",
+                              event_type: "widget_features",
+                              feature: "edit_profile",
+                              user_id: $ctx.auth.info?.id,
+                              is_doctor: $ctx.auth.info?.is_doctor
+                            };
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return $globalActions["Splunk.sendLog"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
+              if (
+                $steps["sendLog"] != null &&
+                typeof $steps["sendLog"] === "object" &&
+                typeof $steps["sendLog"].then === "function"
+              ) {
+                $steps["sendLog"] = await $steps["sendLog"];
+              }
+
+              $steps["goToDashboardProfile"] = true
+                ? (() => {
+                    const actionArgs = { destination: "/dashboard/profile/" };
+                    return (({ destination }) => {
+                      if (
+                        typeof destination === "string" &&
+                        destination.startsWith("#")
+                      ) {
+                        document
+                          .getElementById(destination.substr(1))
+                          .scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        __nextRouter?.push(destination);
+                      }
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["goToDashboardProfile"] != null &&
+                typeof $steps["goToDashboardProfile"] === "object" &&
+                typeof $steps["goToDashboardProfile"].then === "function"
+              ) {
+                $steps["goToDashboardProfile"] = await $steps[
+                  "goToDashboardProfile"
+                ];
+              }
+            }}
+          >
+            <LauncherIconsEditIcon
+              className={classNames(projectcss.all, sty.svg__gEbDn)}
+              role={"img"}
+            />
+          </div>
         </div>
       </div>
       {(() => {
@@ -480,8 +498,14 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "paziresh24Avatar", "launcherBlocksWallet"],
+  root: [
+    "root",
+    "paziresh24Avatar",
+    "launcherBlockNotifications",
+    "launcherBlocksWallet"
+  ],
   paziresh24Avatar: ["paziresh24Avatar"],
+  launcherBlockNotifications: ["launcherBlockNotifications"],
   launcherBlocksWallet: ["launcherBlocksWallet"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -490,6 +514,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   paziresh24Avatar: typeof Paziresh24Avatar;
+  launcherBlockNotifications: typeof LauncherBlockNotifications;
   launcherBlocksWallet: typeof LauncherBlocksWallet;
 };
 
@@ -554,6 +579,7 @@ export const PlasmicLauncherBlocksProfile = Object.assign(
   {
     // Helper components rendering sub-elements
     paziresh24Avatar: makeNodeComponent("paziresh24Avatar"),
+    launcherBlockNotifications: makeNodeComponent("launcherBlockNotifications"),
     launcherBlocksWallet: makeNodeComponent("launcherBlocksWallet"),
 
     // Metadata about props expected for PlasmicLauncherBlocksProfile

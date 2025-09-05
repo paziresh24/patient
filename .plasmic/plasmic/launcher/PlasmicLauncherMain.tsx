@@ -87,9 +87,11 @@ export type PlasmicLauncherMain__VariantsArgs = {};
 type VariantPropType = keyof PlasmicLauncherMain__VariantsArgs;
 export const PlasmicLauncherMain__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicLauncherMain__ArgsType = {};
+export type PlasmicLauncherMain__ArgsType = {
+  onAction?: (action: any) => void;
+};
 type ArgPropType = keyof PlasmicLauncherMain__ArgsType;
-export const PlasmicLauncherMain__ArgProps = new Array<ArgPropType>();
+export const PlasmicLauncherMain__ArgProps = new Array<ArgPropType>("onAction");
 
 export type PlasmicLauncherMain__OverridesType = {
   root?: Flex__<"div">;
@@ -105,6 +107,7 @@ export type PlasmicLauncherMain__OverridesType = {
 };
 
 export interface DefaultLauncherMainProps {
+  onAction?: (action: any) => void;
   className?: string;
 }
 

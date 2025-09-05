@@ -3294,6 +3294,19 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsBookingPanels.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "GyA43SeYKJuf",
+          "name": "LauncherBlockNotifications",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlockNotifications.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlockNotifications.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlockNotifications.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -3351,6 +3364,11 @@
           "id": "IiQOu5G1v-6J",
           "name": "Icon2Icon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon2.tsx"
+        },
+        {
+          "id": "sdMSydu-BA4J",
+          "name": "LauncherIconsBellIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsBell.tsx"
         }
       ],
       "images": [

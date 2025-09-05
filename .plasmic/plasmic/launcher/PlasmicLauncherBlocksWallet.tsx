@@ -154,19 +154,25 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
         path: "getCenters.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getCenters"
       },
       {
         path: "getCenters.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getCenters"
       },
       {
         path: "getCenters.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getCenters"
       },
       {
         path: "isLoading",
@@ -328,6 +334,9 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                 null,
                 eventArgs
               );
+            }}
+            ref={ref => {
+              $refs["getCenters"] = ref;
             }}
             url={(() => {
               try {
