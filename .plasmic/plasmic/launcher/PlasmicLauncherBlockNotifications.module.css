@@ -12,13 +12,14 @@
 .freeBox__hMf3O {
   display: flex;
   flex-direction: column;
-  width: auto;
-  height: auto;
+  width: 30px;
+  height: 30px;
   max-width: 100%;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
-  padding: 8px;
+  min-width: 30px;
+  flex-shrink: 0;
 }
 .svg__yg0YQ {
   object-fit: cover;
