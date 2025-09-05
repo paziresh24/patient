@@ -167,55 +167,73 @@ function PlasmicLauncherApps__RenderFunc(props: {
         path: "apiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
       },
       {
         path: "apiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
       },
       {
         path: "apiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
       },
       {
         path: "getCenters.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getCenters"
       },
       {
         path: "getCenters.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getCenters"
       },
       {
         path: "getCenters.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getCenters"
       },
       {
         path: "apiRequest2.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
       },
       {
         path: "apiRequest2.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
       },
       {
         path: "apiRequest2.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
       }
     ],
     [$props, $ctx, $refs]
@@ -285,6 +303,9 @@ function PlasmicLauncherApps__RenderFunc(props: {
             null,
             eventArgs
           );
+        }}
+        ref={ref => {
+          $refs["apiRequest2"] = ref;
         }}
         url={"https://apigw.paziresh24.com/v1/hamdast/apps"}
       >
@@ -1227,6 +1248,9 @@ function PlasmicLauncherApps__RenderFunc(props: {
             eventArgs
           );
         }}
+        ref={ref => {
+          $refs["apiRequest"] = ref;
+        }}
         url={
           "https://hamdast.paziresh24.com/api/v1/apps/launcher/developments/"
         }
@@ -1436,6 +1460,9 @@ function PlasmicLauncherApps__RenderFunc(props: {
             null,
             eventArgs
           );
+        }}
+        ref={ref => {
+          $refs["getCenters"] = ref;
         }}
         url={`https://apigw.paziresh24.com/v1/doctor/${$ctx.auth?.info?.id}/centers`}
       />
