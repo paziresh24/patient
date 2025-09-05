@@ -130,6 +130,9 @@
   height: 2.5rem;
   align-self: auto;
 }
+.buttontype_visitOnline__zsQjdlbrEa:global(.__wab_instance) {
+  display: flex;
+}
 .svg__pnuor {
   position: relative;
   object-fit: cover;
