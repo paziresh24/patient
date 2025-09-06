@@ -22,6 +22,22 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="google" content="notranslate" />
         <Script strategy="afterInteractive" src="https://gozargah.paziresh24.com/assets/js/gozar.js" />
         <Script strategy="afterInteractive" src="https://accounts.google.com/gsi/client" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+                window.addEventListener('error', function (e) {
+                  const tgt = e.target || e.srcElement;
+                  if (tgt.tagName === 'LINK' || tgt.tagName === 'SCRIPT') {
+                    const url = tgt.href || tgt.src;
+                    navigator.sendBeacon('https://apigw.paziresh24.com/api/log-resource-error', JSON.stringify({
+                      url,
+                      type: tgt.tagName
+                    }));
+                  }
+                }, true);
+              `,
+          }}
+        />
       </Head>
       <body
         className={classNames('bg-[#f2f3f5] antialiased  pwa:select-none', {
