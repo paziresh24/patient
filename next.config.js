@@ -6,14 +6,17 @@ const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const withPWA = require('@ducanh2912/next-pwa').default({
-  disable: !isProduction,
-  dest: 'public',
-  register: true,
-  runtimeCaching,
-});
+// const withPWA = require('@ducanh2912/next-pwa').default({
+//   disable: !isProduction,
+//   dest: 'public',
+//   register: false,
+//   runtimeCaching: [],
+//   cacheStartUrl: false,
+//   dynamicStartUrl: false,
+//   workboxOptions: { runtimeCaching: [] },
+// });
 
-const plugins = [nextTranslate, withPWA];
+const plugins = [nextTranslate];
 
 if (process.env.ANALYZE === 'true') {
   // only load dependency if env `ANALYZE` was set
