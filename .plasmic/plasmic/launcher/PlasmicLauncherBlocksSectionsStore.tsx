@@ -287,7 +287,7 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
                           item =>
                             defaultWidgets?.includes(item) ||
                             defaultWidgets.includes(item?.key)
-                        )?.length < defaultWidgets?.length
+                        )?.length != defaultWidgets?.length
                       ) {
                         return globalThis.localStorage.setItem(
                           "widgets",
