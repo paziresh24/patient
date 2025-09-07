@@ -156,37 +156,49 @@ function PlasmicBookingServiceList__RenderFunc(props: {
         path: "getFullProfileData.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getFullProfileData"
       },
       {
         path: "getFullProfileData.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getFullProfileData"
       },
       {
         path: "getFullProfileData.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getFullProfileData"
       },
       {
         path: "waitingApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "waitingApi"
       },
       {
         path: "waitingApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "waitingApi"
       },
       {
         path: "waitingApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "waitingApi"
       },
       {
         path: "centerListDialog.open",
@@ -279,6 +291,9 @@ function PlasmicBookingServiceList__RenderFunc(props: {
             "getFullProfileData",
             "data"
           ]).apply(null, eventArgs);
+        }}
+        ref={ref => {
+          $refs["getFullProfileData"] = ref;
         }}
         url={(() => {
           try {
@@ -868,6 +883,9 @@ function PlasmicBookingServiceList__RenderFunc(props: {
               null,
               eventArgs
             );
+          }}
+          ref={ref => {
+            $refs["waitingApi"] = ref;
           }}
           url={(() => {
             try {
