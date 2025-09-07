@@ -48,6 +48,7 @@ import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 
 const { publicRuntimeConfig } = config();
 
@@ -268,6 +269,13 @@ const DoctorProfile = (props: any) => {
   return (
     <RaviGlobalContextsProvider>
       <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
+        {hamdastWidgets
+          ?.filter?.((item: any) => item?.placement?.includes?.('profile_scripts_tag') && item?.script)
+          ?.map((item: any) => (
+            <Script key={item?.id} id={item?.id}>
+              {item?.script}
+            </Script>
+          ))}
         <main key={information?.id} className="lg:py-10 pwa:pb-24">
           {editable && (
             <div className="flex items-center p-2 !mb-4 bg-slate-200 lg:mb-0 lg:rounded-md text-slate-600 space-s-1">
