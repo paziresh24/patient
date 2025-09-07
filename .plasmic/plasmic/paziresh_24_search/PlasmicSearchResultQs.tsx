@@ -159,19 +159,25 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         path: "serchiaSuggestion.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "serchiaSuggestion"
       },
       {
         path: "serchiaSuggestion.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "serchiaSuggestion"
       },
       {
         path: "serchiaSuggestion.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "serchiaSuggestion"
       }
     ],
     [$props, $ctx, $refs]
@@ -256,6 +262,9 @@ function PlasmicSearchResultQs__RenderFunc(props: {
             "serchiaSuggestion",
             "data"
           ]).apply(null, eventArgs);
+        }}
+        ref={ref => {
+          $refs["serchiaSuggestion"] = ref;
         }}
         url={(() => {
           try {

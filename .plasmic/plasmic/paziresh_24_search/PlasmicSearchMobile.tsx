@@ -161,6 +161,8 @@ function PlasmicSearchMobile__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -179,37 +181,49 @@ function PlasmicSearchMobile__RenderFunc(props: {
         path: "suggestionApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "suggestionApi"
       },
       {
         path: "suggestionApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "suggestionApi"
       },
       {
         path: "suggestionApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "suggestionApi"
       },
       {
         path: "getLocationList.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getLocationList"
       },
       {
         path: "getLocationList.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getLocationList"
       },
       {
         path: "getLocationList.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getLocationList"
       },
       {
         path: "hasOverlay",
@@ -239,7 +253,6 @@ function PlasmicSearchMobile__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = _useGlobalVariants();
   const styleTokensClassNames = _useStyleTokens();
   const styleTokensClassNames_fragment_design_system =
     useStyleTokens_fragment_design_system();
@@ -323,6 +336,9 @@ function PlasmicSearchMobile__RenderFunc(props: {
                   "getLocationList",
                   "data"
                 ]).apply(null, eventArgs);
+              }}
+              ref={ref => {
+                $refs["getLocationList"] = ref;
               }}
               url={"https://www.paziresh24.com/api/getbaseinfo"}
             >
@@ -866,6 +882,9 @@ function PlasmicSearchMobile__RenderFunc(props: {
                     "suggestionApi",
                     "data"
                   ]).apply(null, eventArgs);
+                }}
+                ref={ref => {
+                  $refs["suggestionApi"] = ref;
                 }}
                 url={(() => {
                   try {

@@ -181,6 +181,8 @@ function PlasmicSearch__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const $globalActions = useGlobalActions?.();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
@@ -201,19 +203,25 @@ function PlasmicSearch__RenderFunc(props: {
         path: "getLocationList.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getLocationList"
       },
       {
         path: "getLocationList.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getLocationList"
       },
       {
         path: "getLocationList.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getLocationList"
       },
       {
         path: "hasOverlay",
@@ -255,7 +263,6 @@ function PlasmicSearch__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = _useGlobalVariants();
   const styleTokensClassNames = _useStyleTokens();
   const styleTokensClassNames_fragment_design_system =
     useStyleTokens_fragment_design_system();
@@ -1502,6 +1509,9 @@ function PlasmicSearch__RenderFunc(props: {
                     "getLocationList",
                     "data"
                   ]).apply(null, eventArgs);
+                }}
+                ref={ref => {
+                  $refs["getLocationList"] = ref;
                 }}
                 url={
                   'https://apigw.paziresh24.com/clinic/v2/baseinfo?table=["city","province"]'

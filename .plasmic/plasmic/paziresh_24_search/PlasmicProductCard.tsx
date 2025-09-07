@@ -261,6 +261,8 @@ function PlasmicProductCard__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -292,49 +294,67 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "cardActionSduiV2UiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "cardActionSduiV2UiRequest"
       },
       {
         path: "cardActionSduiV2UiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "cardActionSduiV2UiRequest"
       },
       {
         path: "cardActionSduiV2UiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "cardActionSduiV2UiRequest"
       },
       {
         path: "getProviderFromSlugApiRequest[].data",
         type: "private",
-        variableType: "object"
+        variableType: "object",
+
+        refName: "getProviderFromSlugApiRequest"
       },
       {
         path: "getProviderFromSlugApiRequest[].error",
         type: "private",
-        variableType: "object"
+        variableType: "object",
+
+        refName: "getProviderFromSlugApiRequest"
       },
       {
         path: "getProviderFromSlugApiRequest[].loading",
         type: "private",
-        variableType: "boolean"
+        variableType: "boolean",
+
+        refName: "getProviderFromSlugApiRequest"
       },
       {
         path: "availabilityStatus[].data",
         type: "private",
-        variableType: "object"
+        variableType: "object",
+
+        refName: "availabilityStatus"
       },
       {
         path: "availabilityStatus[].error",
         type: "private",
-        variableType: "object"
+        variableType: "object",
+
+        refName: "availabilityStatus"
       },
       {
         path: "availabilityStatus[].loading",
         type: "private",
-        variableType: "boolean"
+        variableType: "boolean",
+
+        refName: "availabilityStatus"
       },
       {
         path: "isSingleCard",
@@ -352,19 +372,25 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "rismanActionBtn.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "rismanActionBtn"
       },
       {
         path: "rismanActionBtn.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "rismanActionBtn"
       },
       {
         path: "rismanActionBtn.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "rismanActionBtn"
       }
     ],
     [$props, $ctx, $refs]
@@ -376,7 +402,6 @@ function PlasmicProductCard__RenderFunc(props: {
     $refs
   });
 
-  const globalVariants = _useGlobalVariants();
   const styleTokensClassNames = _useStyleTokens();
   const styleTokensClassNames_fragment_design_system =
     useStyleTokens_fragment_design_system();
@@ -2163,6 +2188,9 @@ function PlasmicProductCard__RenderFunc(props: {
                   }).apply(null, eventArgs);
                 }}
                 params={undefined}
+                ref={ref => {
+                  $refs["rismanActionBtn"] = ref;
+                }}
                 url={(() => {
                   try {
                     return `https://apigw.paziresh24.com/v1/risman/doctors/?doctor_id=${$props.searchCardId}`;
@@ -2284,7 +2312,7 @@ function PlasmicProductCard__RenderFunc(props: {
                           role={"img"}
                         />
                       }
-                      target={false}
+                      target={true}
                     />
 
                     <Button
@@ -2388,7 +2416,7 @@ function PlasmicProductCard__RenderFunc(props: {
                           role={"img"}
                         />
                       }
-                      target={false}
+                      target={true}
                     />
                   </div>
                 ) : null}
@@ -2502,6 +2530,9 @@ function PlasmicProductCard__RenderFunc(props: {
                     }).apply(null, eventArgs);
                   }}
                   params={undefined}
+                  ref={ref => {
+                    $refs["cardActionSduiV2UiRequest"] = ref;
+                  }}
                   url={(() => {
                     try {
                       return `https://apisix-hmr-2.paziresh24.com/v1/ui-jahannama/search-result-card-ui/${$props.searchCardId}`;
@@ -2995,6 +3026,9 @@ function PlasmicProductCard__RenderFunc(props: {
                                   "data"
                                 ]).apply(null, eventArgs);
                               }}
+                              ref={ref => {
+                                $refs["getProviderFromSlugApiRequest"] = ref;
+                              }}
                               url={(() => {
                                 try {
                                   return (
@@ -3080,6 +3114,9 @@ function PlasmicProductCard__RenderFunc(props: {
                                     __plasmic_idx_0,
                                     "data"
                                   ]).apply(null, eventArgs);
+                                }}
+                                ref={ref => {
+                                  $refs["availabilityStatus"] = ref;
                                 }}
                                 url={(() => {
                                   try {
