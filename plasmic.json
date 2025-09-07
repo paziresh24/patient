@@ -3283,19 +3283,6 @@
           "componentType": "component"
         },
         {
-          "id": "kf_mz8gXeCXH",
-          "name": "LauncherBlocksSectionsBookingPanels",
-          "type": "managed",
-          "projectId": "grxNYctbMek6PL66cujx3u",
-          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsBookingPanels.tsx",
-          "importSpec": {
-            "modulePath": "LauncherBlocksSectionsBookingPanels.tsx"
-          },
-          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsBookingPanels.module.css",
-          "scheme": "blackbox",
-          "componentType": "component"
-        },
-        {
           "id": "GyA43SeYKJuf",
           "name": "LauncherBlockNotifications",
           "type": "managed",
@@ -3305,6 +3292,32 @@
             "modulePath": "LauncherBlockNotifications.tsx"
           },
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlockNotifications.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "kf_mz8gXeCXH",
+          "name": "LauncherBlocksSectionsIframe",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsIframe.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksSectionsIframe.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsIframe.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "OyP9JLYhNZd5",
+          "name": "LauncherBlocksSectionsBookingPanels",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsBookingPanels.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksSectionsBookingPanels.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsBookingPanels.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
