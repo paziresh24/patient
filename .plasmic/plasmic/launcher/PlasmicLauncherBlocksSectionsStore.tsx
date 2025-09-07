@@ -61,7 +61,9 @@ import {
 
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import LauncherBlocksSectionsPrescription from "../../LauncherBlocksSectionsPrescription"; // plasmic-import: NaX6a-Bx6lRC/component
-import LauncherBlocksSectionsBookingPanels from "../../LauncherBlocksSectionsBookingPanels"; // plasmic-import: kf_mz8gXeCXH/component
+import LauncherBlocksSectionsBookingPanels from "../../LauncherBlocksSectionsBookingPanels"; // plasmic-import: OyP9JLYhNZd5/component
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
+import LauncherBlocksSectionsIframe from "../../LauncherBlocksSectionsIframe"; // plasmic-import: kf_mz8gXeCXH/component
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import LauncherBlocksSectionsStoreWidgetCard from "../../LauncherBlocksSectionsStoreWidgetCard"; // plasmic-import: u2wp7SlDTOsq/component
 import LauncherComponentsSeparator from "../../LauncherComponentsSeparator"; // plasmic-import: 1FBJsfya0Spv/component
@@ -101,6 +103,8 @@ export type PlasmicLauncherBlocksSectionsStore__OverridesType = {
   launcherBlocksSectionsBookingPanels?: Flex__<
     typeof LauncherBlocksSectionsBookingPanels
   >;
+  apiRequest?: Flex__<typeof ApiRequest>;
+  launcherBlocksSectionsIframe?: Flex__<typeof LauncherBlocksSectionsIframe>;
   svg?: Flex__<"svg">;
   modal?: Flex__<typeof Paziresh24Modal>;
 };
@@ -182,6 +186,30 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
           })(),
 
         onChangeProp: "onWidgetsChange"
+      },
+      {
+        path: "apiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
+      },
+      {
+        path: "apiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
+      },
+      {
+        path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
       }
     ],
     [$props, $ctx, $refs]
@@ -217,6 +245,23 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
         data-plasmic-name={"sideEffect"}
         data-plasmic-override={overrides.sideEffect}
         className={classNames("__wab_instance", sty.sideEffect)}
+        deps={(() => {
+          try {
+            return [
+              $state.apiRequest.data?.filter(item =>
+                item.placement?.includes("launcher_widget")
+              )
+            ];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         onMount={async () => {
           const $steps = {};
 
@@ -225,7 +270,15 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
                 const actionArgs = {
                   customFunction: async () => {
                     return (() => {
-                      const defaultWidgets = ["nelsun", "sanje"];
+                      const defaultWidgets = [
+                        "nelsun",
+                        "sanje",
+                        ...$state.apiRequest.data
+                          ?.filter(item =>
+                            item.placement?.includes("launcher_widget")
+                          )
+                          ?.map(item => item?.id)
+                      ];
 
                       if (
                         JSON.parse(
@@ -239,13 +292,18 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
                         return globalThis.localStorage.setItem(
                           "widgets",
                           JSON.stringify([
-                            ...JSON.parse(
-                              globalThis.localStorage.getItem("widgets") ?? "[]"
-                            ),
-                            ...defaultWidgets.map(item => ({
-                              key: item,
-                              enabled: true
-                            }))
+                            ...new Map(
+                              [
+                                ...JSON.parse(
+                                  globalThis.localStorage.getItem("widgets") ??
+                                    "[]"
+                                ),
+                                ...defaultWidgets.map(item => ({
+                                  key: item,
+                                  enabled: true
+                                }))
+                              ].map(item => [item["key"], item])
+                            ).values()
                           ])
                         );
                       }
@@ -321,6 +379,120 @@ function PlasmicLauncherBlocksSectionsStore__RenderFunc(props: {
           )}
         />
       ) : null}
+      <ApiRequest
+        data-plasmic-name={"apiRequest"}
+        data-plasmic-override={overrides.apiRequest}
+        className={classNames("__wab_instance", sty.apiRequest)}
+        errorDisplay={null}
+        loadingDisplay={null}
+        method={"GET"}
+        onError={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        onLoading={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        onSuccess={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        params={(() => {
+          try {
+            return {
+              user_id: $ctx?.auth?.info?.id
+            };
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        ref={ref => {
+          $refs["apiRequest"] = ref;
+        }}
+        url={"https://hamdast.paziresh24.com/api/v1/widgets/"}
+      >
+        {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+          (() => {
+            try {
+              return $state.apiRequest.data?.filter(item =>
+                item.placement?.includes("launcher_widget")
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return [];
+              }
+              throw e;
+            }
+          })()
+        ).map((__plasmic_item_0, __plasmic_idx_0) => {
+          const currentItem = __plasmic_item_0;
+          const currentIndex = __plasmic_idx_0;
+          return (
+            <div
+              className={classNames(projectcss.all, sty.freeBox___4F9Im)}
+              key={currentIndex}
+            >
+              {(() => {
+                try {
+                  return (
+                    $state.widgets?.includes?.(currentItem?.id) ||
+                    $state.widgets?.some?.(
+                      item =>
+                        item?.key == currentItem?.id && item.enabled == true
+                    )
+                  );
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <LauncherBlocksSectionsIframe
+                  data-plasmic-name={"launcherBlocksSectionsIframe"}
+                  data-plasmic-override={overrides.launcherBlocksSectionsIframe}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherBlocksSectionsIframe
+                  )}
+                  src={(() => {
+                    try {
+                      return currentItem.iframe_src;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
+              ) : null}
+            </div>
+          );
+        })}
+      </ApiRequest>
       <div
         className={classNames(projectcss.all, sty.freeBox__fGz6E)}
         onClick={async event => {
@@ -1037,12 +1209,16 @@ const PlasmicDescendants = {
     "sideEffect",
     "launcherBlocksSectionsPrescription",
     "launcherBlocksSectionsBookingPanels",
+    "apiRequest",
+    "launcherBlocksSectionsIframe",
     "svg",
     "modal"
   ],
   sideEffect: ["sideEffect"],
   launcherBlocksSectionsPrescription: ["launcherBlocksSectionsPrescription"],
   launcherBlocksSectionsBookingPanels: ["launcherBlocksSectionsBookingPanels"],
+  apiRequest: ["apiRequest", "launcherBlocksSectionsIframe"],
+  launcherBlocksSectionsIframe: ["launcherBlocksSectionsIframe"],
   svg: ["svg"],
   modal: ["modal"]
 } as const;
@@ -1054,6 +1230,8 @@ type NodeDefaultElementType = {
   sideEffect: typeof SideEffect;
   launcherBlocksSectionsPrescription: typeof LauncherBlocksSectionsPrescription;
   launcherBlocksSectionsBookingPanels: typeof LauncherBlocksSectionsBookingPanels;
+  apiRequest: typeof ApiRequest;
+  launcherBlocksSectionsIframe: typeof LauncherBlocksSectionsIframe;
   svg: "svg";
   modal: typeof Paziresh24Modal;
 };
@@ -1128,6 +1306,10 @@ export const PlasmicLauncherBlocksSectionsStore = Object.assign(
     ),
     launcherBlocksSectionsBookingPanels: makeNodeComponent(
       "launcherBlocksSectionsBookingPanels"
+    ),
+    apiRequest: makeNodeComponent("apiRequest"),
+    launcherBlocksSectionsIframe: makeNodeComponent(
+      "launcherBlocksSectionsIframe"
     ),
     svg: makeNodeComponent("svg"),
     modal: makeNodeComponent("modal"),
