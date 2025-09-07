@@ -60,8 +60,6 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: -32RqKI9mlfN/codeComponent
-import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
 import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
@@ -73,8 +71,6 @@ import sty from "./PlasmicBookingAddressesWrapper.module.css"; // plasmic-import
 
 import Icon17Icon from "./icons/PlasmicIcon__Icon17"; // plasmic-import: 808a21QqaoxC/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
-import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"; // plasmic-import: GHdF3hS-oP_3/icon
-import Icon18Icon from "./icons/PlasmicIcon__Icon18"; // plasmic-import: -yayxblt2ill/icon
 
 createPlasmicElementProxy;
 
@@ -98,8 +94,8 @@ export type PlasmicBookingAddressesWrapper__OverridesType = {
   root?: Flex__<"div">;
   h2?: Flex__<"h2">;
   button?: Flex__<typeof Button>;
-  apiRequest?: Flex__<typeof ApiRequest>;
-  dialog?: Flex__<typeof Dialog>;
+  svg?: Flex__<"svg">;
+  text?: Flex__<"div">;
 };
 
 export interface DefaultBookingAddressesWrapperProps {
@@ -147,48 +143,6 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
-    () => [
-      {
-        path: "apiRequest.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "dialog.open",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
-      }
-    ],
-    [$props, $ctx, $refs]
-  );
-  const $state = useDollarState(stateSpecs, {
-    $props,
-    $ctx,
-    $queries: {},
-    $refs
-  });
-
   const styleTokensClassNames = _useStyleTokens();
   const styleTokensClassNames_fragment_design_system =
     useStyleTokens_fragment_design_system();
@@ -229,10 +183,12 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
           data-plasmic-override={overrides.button}
           children2={
             <div
+              data-plasmic-name={"text"}
+              data-plasmic-override={overrides.text}
               className={classNames(
                 projectcss.all,
                 projectcss.__wab_text,
-                sty.text__lwA1
+                sty.text
               )}
             >
               {
@@ -288,7 +244,9 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
           showStartIcon={true}
           startIcon={
             <Icon17Icon
-              className={classNames(projectcss.all, sty.svg___8XMac)}
+              data-plasmic-name={"svg"}
+              data-plasmic-override={overrides.svg}
+              className={classNames(projectcss.all, sty.svg)}
               role={"img"}
             />
           }
@@ -300,171 +258,16 @@ function PlasmicBookingAddressesWrapper__RenderFunc(props: {
           value: args.children
         })}
       </div>
-      <ApiRequest
-        data-plasmic-name={"apiRequest"}
-        data-plasmic-override={overrides.apiRequest}
-        className={classNames("__wab_instance", sty.apiRequest)}
-        errorDisplay={null}
-        loadingDisplay={null}
-        method={"GET"}
-        onError={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onLoading={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
-            null,
-            eventArgs
-          );
-
-          (async data => {
-            const $steps = {};
-
-            $steps["updateDialogOpen"] =
-              $state.apiRequest.data?.list.length > 0
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["dialog", "open"]
-                      },
-                      operation: 0,
-                      value: true
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-            if (
-              $steps["updateDialogOpen"] != null &&
-              typeof $steps["updateDialogOpen"] === "object" &&
-              typeof $steps["updateDialogOpen"].then === "function"
-            ) {
-              $steps["updateDialogOpen"] = await $steps["updateDialogOpen"];
-            }
-          }).apply(null, eventArgs);
-        }}
-        ref={ref => {
-          $refs["apiRequest"] = ref;
-        }}
-        url={(() => {
-          try {
-            return `https://apigw.paziresh24.com/ravi/v3/absent_risk_for_profile?where=(slug,isnot,null)~and(slug,eq,${$props.slug})`;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-      >
-        <Dialog
-          data-plasmic-name={"dialog"}
-          data-plasmic-override={overrides.dialog}
-          body={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__gWav
-              )}
-            >
-              <React.Fragment>
-                <span
-                  className={"plasmic_default__all plasmic_default__span"}
-                  style={{ fontWeight: 700 }}
-                >
-                  {""}
-                </span>
-                <React.Fragment>{"\n"}</React.Fragment>
-                <span
-                  className={"plasmic_default__all plasmic_default__span"}
-                  style={{ fontWeight: 700 }}
-                >
-                  {
-                    "\u0644\u0637\u0641\u0627 \u0642\u0628\u0644 \u0627\u0632 \u0645\u0631\u0627\u062c\u0639\u0647 \u0627\u0632 \u062d\u0636\u0648\u0631 \u067e\u0632\u0634\u06a9 \u0645\u0637\u0645\u0626\u0646 \u0634\u0648\u06cc\u062f."
-                  }
-                </span>
-                <React.Fragment>{"\n"}</React.Fragment>
-                <span
-                  className={"plasmic_default__all plasmic_default__span"}
-                  style={{ fontWeight: 700 }}
-                >
-                  {""}
-                </span>
-                <React.Fragment>
-                  {
-                    "\n(\u0637\u0628\u0642 \u06af\u0632\u0627\u0631\u0634 \u0628\u06cc\u0645\u0627\u0631\u0627\u0646\u060c \u0627\u062d\u062a\u0645\u0627\u0644 \u0639\u062f\u0645 \u062d\u0636\u0648\u0631 \u067e\u0632\u0634\u06a9 \u062f\u0631 \u0645\u0637\u0628 \u06cc\u0627 \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0648\u062c\u0648\u062f \u062f\u0627\u0631\u062f.)\n"
-                  }
-                </React.Fragment>
-              </React.Fragment>
-            </div>
-          }
-          className={classNames("__wab_instance", sty.dialog)}
-          noTrigger={true}
-          onOpenChange={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["dialog", "open"]).apply(
-              null,
-              eventArgs
-            );
-
-            if (
-              eventArgs.length > 1 &&
-              eventArgs[1] &&
-              eventArgs[1]._plasmic_state_init_
-            ) {
-              return;
-            }
-          }}
-          open={generateStateValueProp($state, ["dialog", "open"])}
-          title={
-            <React.Fragment>
-              <Icon18Icon
-                className={classNames(projectcss.all, sty.svg__sf5Up)}
-                role={"img"}
-              />
-
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text___4Bx3
-                )}
-              >
-                {"\u062f\u0642\u062a \u06a9\u0646\u06cc\u062f :"}
-              </div>
-            </React.Fragment>
-          }
-        />
-      </ApiRequest>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "h2", "button", "apiRequest", "dialog"],
+  root: ["root", "h2", "button", "svg", "text"],
   h2: ["h2"],
-  button: ["button"],
-  apiRequest: ["apiRequest", "dialog"],
-  dialog: ["dialog"]
+  button: ["button", "svg", "text"],
+  svg: ["svg"],
+  text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -473,8 +276,8 @@ type NodeDefaultElementType = {
   root: "div";
   h2: "h2";
   button: typeof Button;
-  apiRequest: typeof ApiRequest;
-  dialog: typeof Dialog;
+  svg: "svg";
+  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -539,8 +342,8 @@ export const PlasmicBookingAddressesWrapper = Object.assign(
     // Helper components rendering sub-elements
     h2: makeNodeComponent("h2"),
     button: makeNodeComponent("button"),
-    apiRequest: makeNodeComponent("apiRequest"),
-    dialog: makeNodeComponent("dialog"),
+    svg: makeNodeComponent("svg"),
+    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicBookingAddressesWrapper
     internalVariantProps: PlasmicBookingAddressesWrapper__VariantProps,
