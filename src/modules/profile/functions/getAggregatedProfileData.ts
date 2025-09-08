@@ -12,7 +12,6 @@ import { splunkInstance } from '@/common/services/splunk';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
-  GOZARGARH_USER_ID: 'https://apigw.paziresh24.com/v1/gozargah/dr-userid',
   HAMDAST_WIDGETS: 'https://hamdast.paziresh24.com/api/v1/widgets/',
   RISMAN_DOCTORS: 'https://apigw.paziresh24.com/v1/risman/doctors/',
 };
@@ -178,12 +177,11 @@ export async function getAggregatedProfileData(slug: string, university: string 
   if (!university) {
     try {
       if (!userInfo?.user_id) {
-        const { data } = await axios.get(API_ENDPOINTS.GOZARGARH_USER_ID, {
-          params: { server_id: information.server_id, user_info_id: information?.id },
-          headers: { authorization: `Bearer tzDWVALYrMpF6w9Msju87wmc@kd)` },
+        const { data } = await axios.get(`https://apigw.paziresh24.com/prapi/v1/slugs/${slug}`, {
           timeout: 500,
         });
-        userData = data;
+
+        userData = data?.user_info;
       }
       const widgetResults = await fetchWidgetsData(information, userData);
       widgets = widgetResults.widgets;
