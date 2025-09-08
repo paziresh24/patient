@@ -25,7 +25,7 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
     const growthbook = new GrowthBook(growthbookContext);
     growthbook.setAttributes({ slug });
-    await growthbook.loadFeatures({ timeout: 1000 });
+    await growthbook.loadFeatures({ timeout: 500 });
 
     try {
       const finalProps = await getAggregatedProfileData(slug, university, true, {

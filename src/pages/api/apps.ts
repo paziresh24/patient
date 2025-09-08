@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const growthbookContext = getServerSideGrowthBookContext(req as NextApiRequest);
   const growthbook = new GrowthBook(growthbookContext);
   growthbook.setAttributes({ user_id: req.query.user_id });
-  await growthbook.loadFeatures({ timeout: 1000 });
+  await growthbook.loadFeatures({ timeout: 500 });
 
   const drappConfig = growthbook.getFeatureValue('hamdast::drapp', []);
 

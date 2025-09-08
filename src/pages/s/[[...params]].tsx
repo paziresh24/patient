@@ -347,7 +347,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
       growthbook.setAttributes({ url });
-      await growthbook.loadFeatures({ timeout: 1000 });
+      await growthbook.loadFeatures({ timeout: 500 });
       // Plasmic
       showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
       showPlasmicResult = growthbook.isOn('search_plasmic_result');
