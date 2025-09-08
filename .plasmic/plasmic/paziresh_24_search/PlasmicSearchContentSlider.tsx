@@ -140,19 +140,25 @@ function PlasmicSearchContentSlider__RenderFunc(props: {
         path: "getDoctorRate.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getDoctorRate"
       },
       {
         path: "getDoctorRate.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getDoctorRate"
       },
       {
         path: "getDoctorRate.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getDoctorRate"
       }
     ],
     [$props, $ctx, $refs]
@@ -210,6 +216,9 @@ function PlasmicSearchContentSlider__RenderFunc(props: {
           );
         }}
         params={undefined}
+        ref={ref => {
+          $refs["getDoctorRate"] = ref;
+        }}
         url={(() => {
           try {
             return (() => {

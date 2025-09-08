@@ -176,19 +176,24 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         variableType: "object",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
-        onChangeProp: "onApiRequestDataChange"
+        onChangeProp: "onApiRequestDataChange",
+        refName: "fragmentApiRequest"
       },
       {
         path: "fragmentApiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "fragmentApiRequest"
       },
       {
         path: "fragmentApiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "fragmentApiRequest"
       },
       {
         path: "page",
@@ -597,6 +602,9 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
             throw e;
           }
         })()}
+        ref={ref => {
+          $refs["fragmentApiRequest"] = ref;
+        }}
         url={"https://apigw.paziresh24.com/v1/jahannama"}
       />
 

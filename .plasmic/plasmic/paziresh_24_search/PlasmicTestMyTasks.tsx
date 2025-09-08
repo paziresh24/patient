@@ -134,19 +134,25 @@ function PlasmicTestMyTasks__RenderFunc(props: {
         path: "apiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
       },
       {
         path: "apiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
       },
       {
         path: "apiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
       }
     ],
     [$props, $ctx, $refs]
@@ -225,6 +231,9 @@ function PlasmicTestMyTasks__RenderFunc(props: {
         }}
         params={{
           headers: { "xc-token": "R1IGLVoZOd6azuOtSZ7pg0kHJF2Ne-u2a03alVvw" }
+        }}
+        ref={ref => {
+          $refs["apiRequest"] = ref;
         }}
         url={
           "https://sanje-nocodb.darkube.app/api/v2/tables/mbiod0m5dpvpo1p/records?limit=25&shuffle=0&offset=0"

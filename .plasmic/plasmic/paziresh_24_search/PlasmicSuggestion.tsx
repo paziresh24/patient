@@ -161,19 +161,25 @@ function PlasmicSuggestion__RenderFunc(props: {
         path: "fragmentApiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "fragmentApiRequest"
       },
       {
         path: "fragmentApiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "fragmentApiRequest"
       },
       {
         path: "fragmentApiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "fragmentApiRequest"
       },
       {
         path: "suggestionInput.suggestionTextInputValue",
@@ -729,6 +735,9 @@ function PlasmicSuggestion__RenderFunc(props: {
             throw e;
           }
         })()}
+        ref={ref => {
+          $refs["fragmentApiRequest"] = ref;
+        }}
         url={"https://searchia.ir/api/v2/qs/index/slim_clinic_query_su"}
       />
     </div>
