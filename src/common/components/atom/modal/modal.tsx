@@ -15,10 +15,11 @@ export interface ModalProps {
   className?: string;
   noHeader?: boolean;
   noScroll?: boolean;
+  noLine?: boolean;
 }
 
 export const Modal = (props: ModalProps) => {
-  const { title, isOpen, onClose, children, fullScreen, bodyClassName, className, noHeader = false, noScroll = false } = props;
+  const { title, isOpen, onClose, children, fullScreen, bodyClassName, className, noHeader = false, noLine, noScroll = false } = props;
   const { isMobile } = useResponsive();
 
   return (
@@ -44,7 +45,7 @@ export const Modal = (props: ModalProps) => {
           )}
           onClick={e => e.stopPropagation()}
         >
-          {noHeader && <div className="h-1 mx-auto mt-4 rounded-full w-11 md:hidden bg-slate-300" />}
+          {noHeader && !noLine && <div className="h-1 mx-auto mt-4 rounded-full w-11 md:hidden bg-slate-300" />}
           {!noHeader && (
             <div className="flex items-center justify-between p-4 border-b border-slate-100">
               <span className="font-bold line-clamp-1">{title}</span>

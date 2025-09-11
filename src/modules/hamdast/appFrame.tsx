@@ -21,7 +21,17 @@ import HamdastLanding from '.plasmic/HamdastLanding';
 import Logo from '@/common/components/atom/logo';
 import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key]/[...params]';
 
-export const AppFrame = ({ appKey, params, queries }: { appKey: string; params: string[]; queries?: string[] }) => {
+export const AppFrame = ({
+  appKey,
+  params,
+  queries,
+  showBackButton,
+}: {
+  appKey: string;
+  params: string[];
+  queries?: any;
+  showBackButton?: boolean;
+}) => {
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
   const [app, setApp] = useState<any>({});
   const [page, setPage] = useState<any>({});
@@ -93,7 +103,7 @@ export const AppFrame = ({ appKey, params, queries }: { appKey: string; params: 
     <div className="flex flex-col h-full w-full">
       <AppBar
         title={page?.name?.fa}
-        backButton={false}
+        backButton={showBackButton}
         titleLoading={!page?.name}
         actionButton={<Report app_key={appKey as string} page_key={page?.key} />}
       />

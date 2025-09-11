@@ -105,6 +105,7 @@ export const sections = (data: any) => {
             <Hamdast
               key={widget.id}
               id={widget.id}
+              app={widget?.app}
               backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
               profileData={profileData}
               widgetData={{
@@ -194,6 +195,7 @@ export const sections = (data: any) => {
             <Hamdast
               key={widget.id}
               id={widget.id}
+              app={widget?.app}
               backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
               profileData={profileData}
               widgetData={{
@@ -227,6 +229,7 @@ export const sections = (data: any) => {
             <Hamdast
               key={widget.id}
               id={widget.id}
+              app={widget?.app}
               backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
               profileData={profileData}
               widgetData={{
