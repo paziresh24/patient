@@ -43,3 +43,48 @@ deploy:
     - arvan
     - docker
   when: manual
+image: docker:20.10.16
+services:
+  - docker:20.10.16-dind
+
+stages:
+  - build_and_push
+  - deploy
+
+variables:
+  DOCKER_IMAGE: $DOCKER_REGISTRY_ADDRESS/$CI_PROJECT_NAME:latest
+  KUBE_NAMESPACE: "frontend" 
+  KUBE_APP: "patient"
+
+
+build_and_push:
+  stage: build_and_push
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - if [[ "$CI_COMMIT_REF_SLUG" == "main" ]]; then echo "Main branch, will deploy."; else echo "Not main branch, skipping deploy."; fi
+    - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH
+  tags:
+    - arvan
+    - docker
+
+deploy:
+  stage: deploy
+  image:
+    name: docker.arvancloud.ir/bitnami/kubectl:1.33.4
+    entrypoint: [""]   # disable kubectl as default entrypoint
+  script:
+    - mkdir -p ~/.kube
+    - echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
+    - chmod 600 ~/.kube/config
+    - kubectl --kubeconfig ~/.kube/config -n $KUBE_NAMESPACE rollout restart deployment/$KUBE_APP
+    - kubectl --kubeconfig ~/.kube/config -n $KUBE_NAMESPACE rollout status deployment/$KUBE_APP
+  needs: ["build_and_push"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  tags:
+    - arvan
+    - docker
+  when: manual
