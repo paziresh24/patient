@@ -1,7 +1,7 @@
 name: Trigger GitLab CI
 permissions:
   contents: read
-  
+
 on:
   push:
     branches:
@@ -15,7 +15,7 @@ jobs:
         run: |
           curl --request POST \
             --header "PRIVATE-TOKEN: ${{ secrets.GITLAB_TOKEN }}" \
-            "https://gitlab.com/api/v4/projects/17768/mirror/pull"
+            "https://hamgit.ir/api/v4/projects/17768/mirror/pull"
           sleep 15
 
       - name: Trigger GitLab Pipeline
@@ -23,4 +23,4 @@ jobs:
           curl --request POST \
             --form token=${{ secrets.GITLAB_TRIGGER_TOKEN }} \
             --form ref=main \
-            "https://gitlab.com/api/v4/projects/17768/trigger/pipeline"
+            "https://hamgit.ir/api/v4/projects/17768/trigger/pipeline"
