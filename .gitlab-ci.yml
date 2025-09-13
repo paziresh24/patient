@@ -1,98 +1,90 @@
-#image : node:14.17.6
+image: docker:20.10.16
+services:
+  - docker:20.10.16-dind
 
 stages:
-  - docker
-  - deploy-develop
+  - build_and_push
   - deploy
 
 variables:
-  STAGING_DOMAIN: sepehrsalamat.ir
-  PRODUCTION_DOMAIN: paziresh24.com
-  PROJECT_DOCKER_IMAGE_TAG: docker.paziresh24.info/patient-app
-  ANSIBLE_HOST_KEY_CHECKING: 'false'
-  ANSIBLE_FORCE_COLOR: 'true'
-  KUBERNETES_DOCKER_TAG: ${CI_COMMIT_REF_SLUG}-${CI_COMMIT_SHORT_SHA}-${CI_PIPELINE_ID}
-
-services:
-  - name: docker.paziresh24.info/docker:dind
-    alias: docker
-
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
+  DOCKER_IMAGE: $DOCKER_REGISTRY_ADDRESS/$CI_PROJECT_NAME:latest
+  KUBE_NAMESPACE: "frontend" 
+  KUBE_APP: "patient"
 
 
-
-# build all branches pushes except master branch and merge requests
-.package install feature branches:
-  stage: install_packages
-  except:
-    - master
-    - merge_requests
+build_and_push:
+  stage: build_and_push
   script:
-    - yarn install --prefer-offline  --frozen-lockfile  --non-interactive
-
-build and push docker develop image:
-  stage: docker
-  image: docker.paziresh24.info/docker:stable
-  only:
-    - develop
-  script:
-    - docker login $DOCKER_REGISTRY_URL -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD
-    - docker build
-      --build-arg BUILD_ARGUMENT_ENV=dev
-      --tag $PROJECT_DOCKER_IMAGE_TAG:develop
-      --cache-from $PROJECT_DOCKER_IMAGE_TAG:develop
-      .
-    - docker push $PROJECT_DOCKER_IMAGE_TAG:develop
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - if [[ "$CI_COMMIT_REF_SLUG" == "main" ]]; then echo "Main branch, will deploy."; else echo "Not main branch, skipping deploy."; fi
+    - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH
   tags:
-    - france-loc
+    - arvan
+    - docker
 
-build and push docker production image:
-  stage: docker
-  image: docker.paziresh24.info/docker:stable
-  only:
-    - master
+deploy:
+  stage: deploy
+  image:
+    name: docker.arvancloud.ir/bitnami/kubectl:1.33.4
+    entrypoint: [""]   # disable kubectl as default entrypoint
   script:
-    - docker login $DOCKER_REGISTRY_URL -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD
-    - docker build
-      --build-arg BUILD_ARGUMENT_ENV=prod
-      --tag $PROJECT_DOCKER_IMAGE_TAG:latest
-      --tag $PROJECT_DOCKER_IMAGE_TAG:$KUBERNETES_DOCKER_TAG
-      --cache-from $PROJECT_DOCKER_IMAGE_TAG:latest
-      .
-    - docker push $PROJECT_DOCKER_IMAGE_TAG:latest
-    - docker push $PROJECT_DOCKER_IMAGE_TAG:$KUBERNETES_DOCKER_TAG
+    - mkdir -p ~/.kube
+    - echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
+    - chmod 600 ~/.kube/config
+    - kubectl --kubeconfig ~/.kube/config -n $KUBE_NAMESPACE rollout restart deployment/$KUBE_APP
+    - kubectl --kubeconfig ~/.kube/config -n $KUBE_NAMESPACE rollout status deployment/$KUBE_APP
+  needs: ["build_and_push"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
   tags:
-    - france-loc
-
-
-
-deploy develop:
-  image: docker.paziresh24.info/docker-ansible:latest
-  stage: deploy-develop
-  only:
-    - develop
-  script:
-    - ansible-playbook ./ansible/playbook_develop.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
-
-
-deploy staging:
-  image: docker.paziresh24.info/docker-ansible:latest
-  stage: deploy
-  only:
-    - master
-  script:
-    - ansible-playbook ./ansible/playbook_staging.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
-
-
-deploy production:
-  image: docker.paziresh24.info/docker-ansible:latest
-  stage: deploy
-  only:
-    - master
+    - arvan
+    - docker
   when: manual
+image: docker:20.10.16
+services:
+  - docker:20.10.16-dind
+
+stages:
+  - build_and_push
+  - deploy
+
+variables:
+  DOCKER_IMAGE: $DOCKER_REGISTRY_ADDRESS/$CI_PROJECT_NAME:latest
+  KUBE_NAMESPACE: "frontend" 
+  KUBE_APP: "patient"
+
+
+build_and_push:
+  stage: build_and_push
   script:
-#    - ansible-playbook ./ansible/playbook.yml -i ./ansible/inventory.yml -e 'ansible_python_interpreter=/usr/bin/python3'
-    - curl -X POST -F variables[DOCKER_TAG_PATIENT]=${KUBERNETES_DOCKER_TAG} -F token=${KUBIT_WEBHOOK_TOKEN} https://api.kubit.ir/api/core/packs/pand5jlz/vars/
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - if [[ "$CI_COMMIT_REF_SLUG" == "main" ]]; then echo "Main branch, will deploy."; else echo "Not main branch, skipping deploy."; fi
+    - docker build -t $DOCKER_IMAGE .
+    - docker push $DOCKER_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH
+  tags:
+    - arvan
+    - docker
+
+deploy:
+  stage: deploy
+  image:
+    name: docker.arvancloud.ir/bitnami/kubectl:1.33.4
+    entrypoint: [""]   # disable kubectl as default entrypoint
+  script:
+    - mkdir -p ~/.kube
+    - echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
+    - chmod 600 ~/.kube/config
+    - kubectl --kubeconfig ~/.kube/config -n $KUBE_NAMESPACE rollout restart deployment/$KUBE_APP
+    - kubectl --kubeconfig ~/.kube/config -n $KUBE_NAMESPACE rollout status deployment/$KUBE_APP
+  needs: ["build_and_push"]
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  tags:
+    - arvan
+    - docker
+  when: manual
