@@ -1,33 +1,34 @@
+// useModal.ts
 import { useCallback, useEffect, useState } from 'react';
 import useLockScroll from './useLockScroll';
 import useVirtualBack from './useVirtualBack';
 
 type OnClose = () => void;
-type ModalProps = { isOpen: boolean; onClose: OnClose };
+type ModalProps = { isOpen: boolean; onClose: () => void };
 type HookProps = { onClose?: OnClose };
 
 export const useModal = (props?: HookProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const { lockScroll, openScroll } = useLockScroll();
 
-  const handleClose = useCallback(() => {
-    setIsOpen(false);
-    if (document.querySelectorAll('#modal').length === 1) {
+  const { neutralizeBack, programmaticBack, cleanupWithoutBack } = useVirtualBack({
+    handleClose: () => {
+      // این فقط در popstate صدا می‌خورد (back واقعی یا back برنامه‌ای)
+      setIsOpen(false);
       openScroll();
-    }
-    removeBack();
-  }, [openScroll]);
-
-  const { neutralizeBack, removeBack } = useVirtualBack({ handleClose });
+    },
+  });
 
   useEffect(() => {
     return () => {
-      if (document.querySelectorAll('#modal').length === 0) {
+      // اگر آن‌ماونت شد و مودال هنوز باز بود، بدون back فقط تمیز کن
+      if (isOpen) {
         openScroll();
+        cleanupWithoutBack();
       }
-      removeBack();
     };
-  }, [openScroll, removeBack]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleOpen = useCallback(() => {
     setIsOpen(true);
@@ -35,15 +36,19 @@ export const useModal = (props?: HookProps) => {
     neutralizeBack();
   }, [lockScroll, neutralizeBack]);
 
+  const handleClose = useCallback(() => {
+    // ⚠️ دیگر setIsOpen/openScroll اینجا نزن!
+    // فقط back بزن تا popstate بیاید و بالایی بسته شود.
+    programmaticBack();
+    props?.onClose?.();
+  }, [programmaticBack, props]);
+
   return {
     handleOpen,
     handleClose,
     modalProps: {
       isOpen,
-      onClose: () => {
-        handleClose();
-        props?.onClose?.();
-      },
+      onClose: handleClose, // همان
     } as ModalProps,
   };
 };

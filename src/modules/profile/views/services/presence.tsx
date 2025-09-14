@@ -95,7 +95,6 @@ export const Presence = memo((props: PresenceProps) => {
       ...options?.event,
     });
     setSelectedCenter(center);
-    handleCloseSelectCenterModal();
 
     if (center.is_center === 'mashhad') {
       handleOpenSelectExternalBookingModal();
