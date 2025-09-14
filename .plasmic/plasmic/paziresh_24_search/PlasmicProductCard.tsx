@@ -2271,20 +2271,7 @@ function PlasmicProductCard__RenderFunc(props: {
                                 eventRef: $props["eventTrigger"],
                                 args: [
                                   "action-button",
-                                  (() => {
-                                    try {
-                                      return actionButton.title;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return undefined;
-                                      }
-                                      throw e;
-                                    }
-                                  })()
+                                  "\u0645\u0634\u0627\u0647\u062f\u0647 \u0635\u0641\u062d\u0647"
                                 ]
                               };
                               return (({ eventRef, args }) => {
@@ -2381,7 +2368,8 @@ function PlasmicProductCard__RenderFunc(props: {
                                   "action-button",
                                   (() => {
                                     try {
-                                      return actionButton.title;
+                                      return $state.rismanActionBtn.data.data
+                                        .destination["btn-text"];
                                     } catch (e) {
                                       if (
                                         e instanceof TypeError ||
