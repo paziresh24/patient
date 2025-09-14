@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { modalBackManager } from './ModalBackManager';
+import { modalBackManager } from './modalBackManager';
 
 type UseVirtualBackArgs = { handleClose: () => void };
 
