@@ -54,7 +54,7 @@ const { publicRuntimeConfig } = config();
 
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
-  const { query } = useRouter();
+  const { query, ...router } = useRouter();
 
   const {
     data: clientData,
@@ -77,7 +77,7 @@ const DoctorProfile = (props: any) => {
   const userPending = useUserInfoStore(state => state.pending);
   const setProfileData = useProfileDataStore(state => state.setData);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
-  const { openScroll } = useLockScroll();
+  const { openScroll, lockScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
@@ -107,6 +107,32 @@ const DoctorProfile = (props: any) => {
   } = finalProps ?? {};
 
   useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
+
+  const [isPageLoading, setIsPageLoading] = useState(false);
+
+  useEffect(() => {
+    const handleRouteChangeStart = (url: string) => {
+      if (url.startsWith('/s') || url.startsWith('/booking')) {
+        setIsPageLoading(true);
+        lockScroll();
+      }
+    };
+
+    const handleRouteChangeComplete = () => {
+      setIsPageLoading(false);
+      openScroll();
+    };
+
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    router.events.on('routeChangeError', handleRouteChangeComplete);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      router.events.off('routeChangeError', handleRouteChangeComplete);
+    };
+  }, []);
 
   useEffect(() => {
     setIsOpenSuggestion(false);
@@ -267,123 +293,130 @@ const DoctorProfile = (props: any) => {
   }
 
   return (
-    <RaviGlobalContextsProvider>
-      <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
-        {hamdastWidgets
-          ?.filter?.((item: any) => item?.placement?.includes?.('profile_scripts_tag') && item?.script)
-          ?.map((item: any) => (
-            <Script key={item?.id} id={item?.id}>
-              {item?.script}
-            </Script>
-          ))}
-        <main key={information?.id} className="lg:py-10 pwa:pb-24">
-          {editable && (
-            <div className="flex items-center p-2 !mb-4 bg-slate-200 lg:mb-0 lg:rounded-md text-slate-600 space-s-1">
-              <InfoIcon className="min-w-6" />
-              <Text fontSize="sm" fontWeight="medium">
-                پزشک گرامی؛ تغییرات شما بعد از <strong className="font-bold">2 ساعت</strong> در پروفایل نمایش داده می‌شود.
-              </Text>
+    <>
+      <RaviGlobalContextsProvider>
+        <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
+          {hamdastWidgets
+            ?.filter?.((item: any) => item?.placement?.includes?.('profile_scripts_tag') && item?.script)
+            ?.map((item: any) => (
+              <Script key={item?.id} id={item?.id}>
+                {item?.script}
+              </Script>
+            ))}
+          <main key={information?.id} className="lg:py-10 pwa:pb-24">
+            {editable && (
+              <div className="flex items-center p-2 !mb-4 bg-slate-200 lg:mb-0 lg:rounded-md text-slate-600 space-s-1">
+                <InfoIcon className="min-w-6" />
+                <Text fontSize="sm" fontWeight="medium">
+                  پزشک گرامی؛ تغییرات شما بعد از <strong className="font-bold">2 ساعت</strong> در پروفایل نمایش داده می‌شود.
+                </Text>
+              </div>
+            )}
+
+            <div className="lg:float-right lg:w-[670px] mb-3">
+              <ProfileGlobalContextsProvider>
+                <Fragment
+                  name="ProfileHead"
+                  props={{
+                    pageViewCount: profileData.history?.count_of_page_view,
+                    serviceList: flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
+                    displayName: profileData.information.display_name,
+                    title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
+                    subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
+                    imageUrl: profileData.information?.image
+                      ? publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
+                      : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`,
+                    slug: slug,
+                    children: (
+                      <div className="flex flex-col w-full gap-2">
+                        {hamdastWidgets
+                          ?.filter((widget: any) => widget?.placement?.includes?.('head'))
+                          ?.map((widget: any) => (
+                            <Hamdast
+                              key={widget.id}
+                              id={widget.id}
+                              app={widget?.app}
+                              backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                              profileData={profileData}
+                              widgetData={{
+                                placement: widget?.placement,
+                                placement_metadata: widget.placements_metadata,
+                              }}
+                            />
+                          ))}
+                        <RaviGlobalContextsProvider>
+                          <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
+                            <Fragment
+                              name="RateAndCommentCount2"
+                              props={{
+                                ...profileData,
+                                rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
+                                rate:
+                                  customize.showRateAndReviews &&
+                                  !dontShowRateAndReviewMessage &&
+                                  (
+                                    (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                                      +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                                      +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                                    3
+                                  ).toFixed(1),
+                                hideRates: profileData.feedbacks?.details?.hide_rates,
+                              }}
+                            />
+                          </div>
+                        </RaviGlobalContextsProvider>
+                      </div>
+                    ),
+                  }}
+                />
+              </ProfileGlobalContextsProvider>
             </div>
-          )}
 
-          <div className="lg:float-right lg:w-[670px] mb-3">
-            <ProfileGlobalContextsProvider>
-              <Fragment
-                name="ProfileHead"
-                props={{
-                  pageViewCount: profileData.history?.count_of_page_view,
-                  serviceList: flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
-                  displayName: profileData.information.display_name,
-                  title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
-                  subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                  imageUrl: profileData.information?.image
-                    ? publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
-                    : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`,
-                  slug: slug,
-                  children: (
-                    <div className="flex flex-col w-full gap-2">
-                      {hamdastWidgets
-                        ?.filter((widget: any) => widget?.placement?.includes?.('head'))
-                        ?.map((widget: any) => (
-                          <Hamdast
-                            key={widget.id}
-                            id={widget.id}
-                            app={widget?.app}
-                            backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
-                            profileData={profileData}
-                            widgetData={{
-                              placement: widget?.placement,
-                              placement_metadata: widget.placements_metadata,
-                            }}
-                          />
-                        ))}
-                      <RaviGlobalContextsProvider>
-                        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-                          <Fragment
-                            name="RateAndCommentCount2"
-                            props={{
-                              ...profileData,
-                              rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
-                              rate:
-                                customize.showRateAndReviews &&
-                                !dontShowRateAndReviewMessage &&
-                                (
-                                  (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                                    +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                                    +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                                  3
-                                ).toFixed(1),
-                              hideRates: profileData.feedbacks?.details?.hide_rates,
-                            }}
-                          />
-                        </div>
-                      </RaviGlobalContextsProvider>
-                    </div>
-                  ),
-                }}
-              />
-            </ProfileGlobalContextsProvider>
-          </div>
+            <div className="flex flex-col space-y-3 lg:float-left lg:w-[calc(100%_-_690px)]">
+              {isLoading && shouldFetchOnClient && (
+                <div className="w-full py-20 flex justify-center items-center">
+                  <Loading />
+                </div>
+              )}
 
-          <div className="flex flex-col space-y-3 lg:float-left lg:w-[calc(100%_-_690px)]">
-            {isLoading && shouldFetchOnClient && (
-              <div className="w-full py-20 flex justify-center items-center">
-                <Loading />
-              </div>
-            )}
+              {(clientData?.props as any)?.isFullProfileError && (
+                <div className="w-full py-20 flex justify-center items-center">
+                  <ErrorPage message="در دریافت اطلاعات مطب/مرکز درمانی مشکلی بوجود آمده." refresh={refetch} />
+                </div>
+              )}
 
-            {(clientData?.props as any)?.isFullProfileError && (
-              <div className="w-full py-20 flex justify-center items-center">
-                <ErrorPage message="در دریافت اطلاعات مطب/مرکز درمانی مشکلی بوجود آمده." refresh={refetch} />
-              </div>
-            )}
+              {aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
+                .filter(({ isShow }: any) => Boolean(isShow))
+                .map((section: any, index: number) => (
+                  <Section key={index} {...section}>
+                    {section.children(section?.function?.())}
+                  </Section>
+                ))}
+            </div>
 
-            {aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
-              .filter(({ isShow }: any) => Boolean(isShow))
-              .map((section: any, index: number) => (
-                <Section key={index} {...section}>
-                  {section.children(section?.function?.())}
-                </Section>
-              ))}
-          </div>
+            <div className="lg:float-right lg:w-[670px] flex flex-col space-y-3">
+              {sections({ ...profileData, fragmentComponents })
+                .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
+                .map((section: any, index: number) => (
+                  <Section key={index} {...section}>
+                    {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
+                  </Section>
+                ))}
+            </div>
 
-          <div className="lg:float-right lg:w-[670px] flex flex-col space-y-3">
-            {sections({ ...profileData, fragmentComponents })
-              .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
-              .map((section: any, index: number) => (
-                <Section key={index} {...section}>
-                  {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
-                </Section>
-              ))}
-          </div>
-
-          <div className="clear-both"></div>
-        </main>
-        <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
-          <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
-        </Modal>
-      </div>
-    </RaviGlobalContextsProvider>
+            <div className="clear-both"></div>
+          </main>
+          <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
+            <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
+          </Modal>
+        </div>
+      </RaviGlobalContextsProvider>
+      {isPageLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-[99999999999999999999999]">
+          <Loading width={50} />
+        </div>
+      )}
+    </>
   );
 };
 
