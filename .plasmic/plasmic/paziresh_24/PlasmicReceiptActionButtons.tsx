@@ -65,6 +65,7 @@ import Dialog from "../../Dialog"; // plasmic-import: 5NUpgw2K0nJD/component
 import DoctorCard from "../../DoctorCard"; // plasmic-import: NhMGML-3Q4Pu/component
 import { Timer } from "@plasmicpkgs/plasmic-basic-components";
 import TextInput from "../../TextInput"; // plasmic-import: MB7oMSw7lp7m/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
 import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
@@ -124,6 +125,7 @@ export type PlasmicReceiptActionButtons__OverridesType = {
   form?: Flex__<"form">;
   textarea?: Flex__<"textarea">;
   textInput?: Flex__<typeof TextInput>;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultReceiptActionButtonsProps {
@@ -182,6 +184,8 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -2637,6 +2641,72 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
           ) : null}
         </div>
       ) : null}
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect, {
+          [sty.sideEffecttype_visitOnline]: hasVariant(
+            $state,
+            "type",
+            "visitOnline"
+          )
+        })}
+        deps={(() => {
+          try {
+            return [$props.bookDetailsData];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["sendEvent"] =
+            $props.bookDetailsData.center_id === "5532" &&
+            $props.bookDetailsData.doctor.id ===
+              "4b2dd0d3-6c2a-4750-9ce1-65a43de6e233"
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            group: "support-receipt",
+                            type: "online-visit-channel",
+                            event: { bookDetailsData: $props.bookDetailsData }
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return $globalActions["Splunk.sendLog"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+          if (
+            $steps["sendEvent"] != null &&
+            typeof $steps["sendEvent"] === "object" &&
+            typeof $steps["sendEvent"].then === "function"
+          ) {
+            $steps["sendEvent"] = await $steps["sendEvent"];
+          }
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
@@ -2652,7 +2722,8 @@ const PlasmicDescendants = {
     "timer",
     "form",
     "textarea",
-    "textInput"
+    "textInput",
+    "sideEffect"
   ],
   شرحاولیهبیماری: [
     "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
@@ -2664,7 +2735,8 @@ const PlasmicDescendants = {
   timer: ["timer"],
   form: ["form", "textarea", "textInput"],
   textarea: ["textarea"],
-  textInput: ["textInput"]
+  textInput: ["textInput"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2680,6 +2752,7 @@ type NodeDefaultElementType = {
   form: "form";
   textarea: "textarea";
   textInput: typeof TextInput;
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2753,6 +2826,7 @@ export const PlasmicReceiptActionButtons = Object.assign(
     form: makeNodeComponent("form"),
     textarea: makeNodeComponent("textarea"),
     textInput: makeNodeComponent("textInput"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicReceiptActionButtons
     internalVariantProps: PlasmicReceiptActionButtons__VariantProps,
