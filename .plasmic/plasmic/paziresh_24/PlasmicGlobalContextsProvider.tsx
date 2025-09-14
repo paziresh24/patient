@@ -18,15 +18,12 @@ export interface GlobalContextsProviderProps {
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
 }
@@ -91,12 +88,12 @@ export default function GlobalContextsProvider(
             defaultApiHost={
               splunkProps && "defaultApiHost" in splunkProps
                 ? splunkProps.defaultApiHost!
-                : undefined
+                : "https://p24-shelter-splunk-hec.paziresh24.com"
             }
             defaultApiKey={
               splunkProps && "defaultApiKey" in splunkProps
                 ? splunkProps.defaultApiKey!
-                : undefined
+                : "49a5600c-e81d-4b55-8e32-c668f0faf4f0"
             }
           >
             <PWA {...pwaProps}>{children}</PWA>
