@@ -2368,8 +2368,11 @@ function PlasmicProductCard__RenderFunc(props: {
                                   "action-button",
                                   (() => {
                                     try {
-                                      return $state.rismanActionBtn.data.data
-                                        .destination["btn-text"];
+                                      return (
+                                        "risman_" +
+                                        $state.rismanActionBtn.data.data
+                                          .destination["btn-text"]
+                                      );
                                     } catch (e) {
                                       if (
                                         e instanceof TypeError ||

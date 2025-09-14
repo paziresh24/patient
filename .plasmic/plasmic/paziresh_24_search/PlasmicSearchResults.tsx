@@ -1503,11 +1503,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                                         : "",
                                     elementContent:
                                       typeof elementContent !== "undefined"
-                                        ? elementContent
+                                        ? elementContent?.replace("risman_", "")
                                         : "",
                                     query_id:
                                       $props?.searchResultResponse?.search
                                         ?.query_id ?? "",
+                                    is_risman:
+                                      elementContent.includes("risman_"),
                                     terminal_id: (function () {
                                       try {
                                         return document.cookie.replace(
