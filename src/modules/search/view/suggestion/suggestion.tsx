@@ -74,9 +74,8 @@ export const Suggestion = (props: SuggestionProps) => {
   const handleClose = () => {
     setIsOpenSuggestion(false);
     openScroll();
-    removeBack();
   };
-  const { neutralizeBack, removeBack } = useVirtualBack({
+  const { neutralizeBack } = useVirtualBack({
     handleClose,
   });
   const { lockScroll, openScroll } = useLockScroll();
