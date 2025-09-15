@@ -29,7 +29,6 @@ exports.config = {
   error_collector: { enabled: true },
   slow_sql: { enabled: true },
   // EU region collector host
-  host: process.env.NEW_RELIC_HOST || 'eu01.nr-data.net',
   // Optional proxy, e.g. http://newrelic.paziresh24.com:10811
   proxy: process.env.NEW_RELIC_PROXY_URL || undefined,
 };
