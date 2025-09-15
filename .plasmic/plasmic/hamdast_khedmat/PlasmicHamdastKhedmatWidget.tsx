@@ -141,13 +141,16 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "modal.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $ctx }) =>
+          hasVariant(globalVariants, "screen", "mobileOnly") ? false : false
       }
     ],
     [$props, $ctx, $refs]

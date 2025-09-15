@@ -9,8 +9,6 @@ const CustomDocument: NextComponentType = (props: any) => {
   let newRelicBrowserHeader = '';
   try {
     if (process.env.NEW_RELIC_ENABLED === 'true') {
-      // This require only runs on server during Document render
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const newrelic = require('newrelic');
       if (newrelic && typeof newrelic.getBrowserTimingHeader === 'function') {
         newRelicBrowserHeader = newrelic.getBrowserTimingHeader({ hasToString: true });
