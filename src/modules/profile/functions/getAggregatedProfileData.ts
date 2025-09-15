@@ -1,6 +1,7 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
+import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -77,7 +78,7 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 
 // ================= Main Aggregator Function =================
 
-export async function getAggregatedProfileData(slug: string, university: string | undefined, isServer: boolean, options?: any) {
+export async function getAggregatedProfileData(slug: string, university: string | undefined, isServer: boolean, options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean }) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
 
@@ -130,7 +131,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
 
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
 
-  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult] = await Promise.allSettled([
+  const apiCalls = [
     internalLinks({
       links: getSearchLinks({ centers: fullProfileData?.centers, group_expertises: fullProfileData?.group_expertises ?? [] }),
     }),
@@ -143,7 +144,14 @@ export async function getAggregatedProfileData(slug: string, university: string 
       slug,
     }),
     axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: fullProfileData?.id }, timeout: 1500 }),
-  ]);
+  ];
+
+  // Conditionally add doctor full name API call (like clapi pattern)
+  if (options?.useNewDoctorFullNameAPI) {
+    apiCalls.push(getDoctorFullName(slug));
+  }
+
+  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult] = await Promise.allSettled(apiCalls);
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
@@ -160,13 +168,16 @@ export async function getAggregatedProfileData(slug: string, university: string 
     history: {},
   };
 
+  // Extract doctor full name from API response (like clapi pattern)
+  const doctorFullName = options?.useNewDoctorFullNameAPI && doctorFullNameResult?.status === 'fulfilled' ? doctorFullNameResult.value : null;
+
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
       ...fullProfileData,
       id: userInfo?.id ?? fullProfileData?.id,
       server_id: userInfo?.server_id ?? fullProfileData?.server_id,
-      name: userInfo?.name ?? fullProfileData?.name,
-      family: userInfo?.family ?? fullProfileData?.family,
+      name: doctorFullName?.name ?? userInfo?.name ?? fullProfileData?.name,
+      family: doctorFullName?.family ?? userInfo?.family ?? fullProfileData?.family,
     });
 
   // Step 4: Fetch server-specific data only if running on the server
