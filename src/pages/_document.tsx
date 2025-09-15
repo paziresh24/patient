@@ -6,6 +6,19 @@ import Script from 'next/script';
 const CustomDocument: NextComponentType = (props: any) => {
   const { locale } = props.__NEXT_DATA__;
   const dir = locale === 'fa' ? 'rtl' : 'ltr';
+  let newRelicBrowserHeader = '';
+  try {
+    if (process.env.NEW_RELIC_ENABLED === 'true') {
+      // This require only runs on server during Document render
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const newrelic = require('newrelic');
+      if (newrelic && typeof newrelic.getBrowserTimingHeader === 'function') {
+        newRelicBrowserHeader = newrelic.getBrowserTimingHeader({ hasToString: true });
+      }
+    }
+  } catch (e) {
+    // ignore
+  }
   ''.includes;
   return (
     <Html lang="fa-IR" dir={dir} className="scroll-smooth">
@@ -23,6 +36,16 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="google" content="notranslate" />
         <Script strategy="afterInteractive" src="https://gozargah.paziresh24.com/assets/js/gozar.js" />
         <Script strategy="afterInteractive" src="https://accounts.google.com/gsi/client" />
+        {newRelicBrowserHeader ? (
+          <>
+            {/* New Relic Browser timing header */}
+            <script
+              dangerouslySetInnerHTML={{
+                __html: newRelicBrowserHeader,
+              }}
+            />
+          </>
+        ) : null}
         <script
           dangerouslySetInnerHTML={{
             __html: `

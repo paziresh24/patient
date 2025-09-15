@@ -1,3 +1,7 @@
+// Conditionally load New Relic in development server to instrument Next.js custom server
+try {
+  if (process.env.NEW_RELIC_ENABLED === 'true') require('newrelic');
+} catch (e) {}
 const { createServer } = require('https');
 const fs = require('fs');
 const { parse } = require('url');
