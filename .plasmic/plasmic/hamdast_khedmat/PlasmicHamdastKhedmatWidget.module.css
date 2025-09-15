@@ -58,19 +58,18 @@
   overflow: auto;
   max-height: 220px;
   min-width: 0;
-  padding: 8px;
+  padding: 8px 5px;
   margin: 1px;
 }
 .freeBox__fGg6M {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 333px;
   height: auto;
   max-width: 100%;
   justify-content: flex-start;
   align-items: center;
-  min-width: 0;
-  padding: 0px 4px 0px 8px;
+  padding: 0px;
 }
 .freeBox__bpIu {
   display: flex;
@@ -90,13 +89,12 @@
   position: relative;
   align-items: stretch;
   justify-content: flex-start;
-  width: 100%;
+  width: 332px;
   height: auto;
   max-width: 100%;
   margin-bottom: 3px;
   margin-top: 3px;
-  min-width: 0;
-  padding: 8px 5px;
+  padding: 8px 0px;
 }
 .freeBox__y1Y7J {
   display: flex;
@@ -164,6 +162,7 @@
   text-align: left;
   margin-right: 0px;
   padding-left: 0px;
+  margin-left: 0px;
   min-width: 0;
 }
 .freeBox__q7ADd {
