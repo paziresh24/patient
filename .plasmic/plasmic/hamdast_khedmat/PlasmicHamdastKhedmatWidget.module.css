@@ -141,9 +141,14 @@
   left: auto;
   top: auto;
   color: #2b2e33;
-  padding-left: 0px;
-  margin-left: 0px;
+  padding-left: 5px;
+  margin-left: 114px;
   min-width: 0;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .text__jhxxi {
+    margin-left: 102px;
+  }
 }
 .text__oiOQf {
   padding-right: 0px;
