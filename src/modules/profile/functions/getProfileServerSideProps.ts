@@ -30,6 +30,7 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     try {
       const finalProps = await getAggregatedProfileData(slug, university, true, {
         useClApi: growthbook.isOn('use-clapi-profile-page'),
+        useNewDoctorFullNameAPI: growthbook.isOn('doctor_fullname_for_new_profileapi'),
       });
 
       return {
