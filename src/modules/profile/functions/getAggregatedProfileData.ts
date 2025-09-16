@@ -2,7 +2,6 @@ import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
-import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -79,7 +78,7 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 
 // ================= Main Aggregator Function =================
 
-export async function getAggregatedProfileData(slug: string, university: string | undefined, isServer: boolean, options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean }) {
+export async function getAggregatedProfileData(slug: string, university: string | undefined, isServer: boolean, options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean }) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
 
@@ -152,28 +151,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
     apiCalls.push(getDoctorFullName(slug));
   }
 
-  // Conditionally add doctor expertise API call (like clapi pattern)
-  if (options?.useNewDoctorExpertiseAPI) {
-    apiCalls.push(getDoctorExpertise(slug));
-  }
-
-  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult] = await Promise.allSettled(apiCalls);
-
-  // Extract doctor full name from API response (like clapi pattern)
-  const doctorFullName = options?.useNewDoctorFullNameAPI && doctorFullNameResult?.status === 'fulfilled' ? doctorFullNameResult.value : null;
-
-  // Extract doctor expertise from API response (like clapi pattern)
-  const doctorExpertise = options?.useNewDoctorExpertiseAPI && doctorExpertiseResult?.status === 'fulfilled' ? doctorExpertiseResult.value : null;
-
-  // Transform expertise data to match expected format
-  const transformedExpertise = doctorExpertise?.map((exp: any) => ({
-    id: exp.expertise.id,
-    name: exp.expertise.name,
-    slug: exp.expertise.slug,
-    alias_title: exp.alias_title,
-    degree: exp.degree,
-    groups: exp.groups,
-  })) ?? [];
+  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult] = await Promise.allSettled(apiCalls);
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
@@ -188,11 +166,10 @@ export async function getAggregatedProfileData(slug: string, university: string 
       waiting_time_info: averageWaitingTimeResult?.status === 'fulfilled' ? averageWaitingTimeResult.value : [],
     },
     history: {},
-    // Add expertises to overwriteData if new API is used and successful
-    ...(options?.useNewDoctorExpertiseAPI && doctorExpertise?.length > 0 && {
-      expertises: transformedExpertise,
-    }),
   };
+
+  // Extract doctor full name from API response (like clapi pattern)
+  const doctorFullName = options?.useNewDoctorFullNameAPI && doctorFullNameResult?.status === 'fulfilled' ? doctorFullNameResult.value : null;
 
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {

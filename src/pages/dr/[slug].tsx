@@ -42,7 +42,7 @@ import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24
 import { Fragment } from '@/common/fragment';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
-import { useFeatureIsOn, useGrowthBook } from '@growthbook/growthbook-react';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
@@ -55,16 +55,6 @@ const { publicRuntimeConfig } = config();
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
   const { query, ...router } = useRouter();
-  const growthbook = useGrowthBook();
-  
-  const currentSlug = initialSlug ?? query.slug;
-  
-  // Set slug in GrowthBook context for client-side
-  useEffect(() => {
-    if (currentSlug && growthbook) {
-      growthbook.setAttributes({ slug: currentSlug });
-    }
-  }, [currentSlug, growthbook]);
 
   const {
     data: clientData,
@@ -72,7 +62,7 @@ const DoctorProfile = (props: any) => {
     isError,
     error,
     refetch,
-  } = useProfileClientFetch(currentSlug, !!shouldFetchOnClient || !props?.information);
+  } = useProfileClientFetch(initialSlug ?? query.slug, !!shouldFetchOnClient || !props?.information);
 
   const { customize } = useCustomize();
   const isApplication = useApplication();
@@ -150,23 +140,21 @@ const DoctorProfile = (props: any) => {
   }, [slug]);
 
   useEffect(() => {
-    if (growthbook) {
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug,
+    });
+    return () => {
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
-        slug,
+        slug: undefined,
       });
-      return () => {
-        growthbook.setAttributes({
-          ...growthbook.getAttributes(),
-          slug: undefined,
-        });
-      };
-    }
-  }, [slug, growthbook]);
+    };
+  }, [slug]);
 
   useEffect(() => {
     if (information) {
-      if (growthbook?.ready && growthbook.getAttributes().slug === slug && !userPending) {
+      if (growthbook.ready && growthbook.getAttributes().slug === slug && !userPending) {
         pageViewEvent({
           information,
           centers,
@@ -185,7 +173,7 @@ const DoctorProfile = (props: any) => {
         });
       }
     }
-  }, [dontShowRateDetails, information, slug, growthbook?.getAttributes()?.slug, slug, growthbook?.ready, userPending]);
+  }, [dontShowRateDetails, information, slug, growthbook.getAttributes().slug, slug, growthbook.ready, userPending]);
 
   useEffect(() => {
     if (information) {
