@@ -28,9 +28,12 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     await growthbook.loadFeatures({ timeout: 500 });
 
     try {
+      const useNewDoctorExpertiseAPI = growthbook.isOn('doctor_expertise_for_new_profileapi');
+      
       const finalProps = await getAggregatedProfileData(slug, university, true, {
         useClApi: growthbook.isOn('use-clapi-profile-page'),
         useNewDoctorFullNameAPI: growthbook.isOn('doctor_fullname_for_new_profileapi'),
+        useNewDoctorExpertiseAPI: useNewDoctorExpertiseAPI,
       });
 
       return {

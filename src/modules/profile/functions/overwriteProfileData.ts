@@ -31,6 +31,7 @@ export type OverwriteProfileData = {
     satisfactionPercent?: number;
     hideRates?: boolean;
   };
+  expertises?: any;
 };
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
@@ -62,16 +63,16 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
       ? source?.group_expertises ?? []
       : group_expertises.map((item: any) => item && { id: item.id, en_slug: item.slug, icon: item.icon, name: item.title }),
     expertises:
-      source?.expertises?.map?.((item: any) => ({
+      (overwriteData?.expertises ?? source?.expertises)?.map?.((item: any) => ({
         alias_title: getDisplayDoctorExpertise({
           aliasTitle: item.alias_title,
           degree: item.degree?.name,
           expertise: item.expertise?.name,
         }),
-        expertise_id: item.expertise.id,
-        degree_id: item.degree.id,
+        expertise_id: item.expertise?.id,
+        degree_id: item.degree?.id,
         degree_name: item?.degree?.name ?? '',
-        expertise_name: item.expertise?.name,
+        expertise_name: item.expertise?.name ?? '',
       })) ?? [],
   };
 
