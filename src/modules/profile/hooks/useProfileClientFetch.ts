@@ -8,10 +8,6 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
   const isClapiActive = useFeatureIsOn('use-clapi-profile-page');
   const useNewDoctorFullNameAPI = useFeatureIsOn('doctor_fullname_for_new_profileapi');
   const useNewDoctorExpertiseAPI = useFeatureIsOn('doctor_expertise_for_new_profileapi');
-  
-  // Force enable for specific slug if feature flag is not working
-  const forceEnableExpertiseAPI = slug === 'دکتر-پروفسور-نور-بالا';
-  const finalUseNewDoctorExpertiseAPI = useNewDoctorExpertiseAPI || forceEnableExpertiseAPI;
 
   return useQuery(
     ['profileClientData', slug],
@@ -19,7 +15,7 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
       getAggregatedProfileData(slug, university, false, {
         useClApi: isClapiActive,
         useNewDoctorFullNameAPI: useNewDoctorFullNameAPI,
-        useNewDoctorExpertiseAPI: finalUseNewDoctorExpertiseAPI,
+        useNewDoctorExpertiseAPI: useNewDoctorExpertiseAPI,
       }),
     {
       enabled: enabled,

@@ -35,14 +35,13 @@ import flatMapDeep from 'lodash/flatMapDeep';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
 import { growthbook } from '../_app';
-import pick from 'lodash/pick';
 import moment from 'jalali-moment';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import { Fragment } from '@/common/fragment';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
-import { useFeatureIsOn, useGrowthBook } from '@growthbook/growthbook-react';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
@@ -55,14 +54,21 @@ const { publicRuntimeConfig } = config();
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
   const { query, ...router } = useRouter();
-  const growthbook = useGrowthBook();
-  
+
   const currentSlug = initialSlug ?? query.slug;
-  
-  // Set slug in GrowthBook context for client-side
+
   useEffect(() => {
-    if (currentSlug && growthbook) {
-      growthbook.setAttributes({ slug: currentSlug });
+    if (growthbook) {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        slug: currentSlug,
+      });
+      return () => {
+        growthbook.setAttributes({
+          ...growthbook.getAttributes(),
+          slug: undefined,
+        });
+      };
     }
   }, [currentSlug, growthbook]);
 
@@ -147,22 +153,7 @@ const DoctorProfile = (props: any) => {
   useEffect(() => {
     setIsOpenSuggestion(false);
     openScroll();
-  }, [slug]);
-
-  useEffect(() => {
-    if (growthbook) {
-      growthbook.setAttributes({
-        ...growthbook.getAttributes(),
-        slug,
-      });
-      return () => {
-        growthbook.setAttributes({
-          ...growthbook.getAttributes(),
-          slug: undefined,
-        });
-      };
-    }
-  }, [slug, growthbook]);
+  }, [currentSlug]);
 
   useEffect(() => {
     if (information) {
