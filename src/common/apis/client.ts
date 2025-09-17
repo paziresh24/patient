@@ -7,135 +7,79 @@ const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 import http from 'http';
 import https from 'https';
 
+const isServer = typeof window === 'undefined';
+
 export const httpAgent = new http.Agent({ keepAlive: true, timeout: 15_000 });
 export const httpsAgent = new https.Agent({ keepAlive: true, timeout: 15_000 });
+
+const baseConfig = {
+  maxRedirects: 5,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  ...(isServer && {
+    headers: {
+      'Accept': 'application/json',
+      'Accept-Encoding': 'gzip, deflate',
+      'Connection': 'keep-alive',
+    },
+  }),
+};
 
 export const paziresh24AppClient = axios.create({
   baseURL: serverRuntimeConfig.DOCTORS_BASE_URL ?? publicRuntimeConfig.DOCTORS_BASE_URL,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
-  maxRedirects: 5,
   withCredentials: true,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 export const feedbacksClient = axios.create({
   baseURL: publicRuntimeConfig.FEEDBACKS_BASE_URL,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
   timeout: 3000,
-  maxRedirects: 5,
   withCredentials: true,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 export const apiGatewayClient = axios.create({
   baseURL: publicRuntimeConfig.API_GATEWAY_BASE_URL ? publicRuntimeConfig.API_GATEWAY_BASE_URL : 'https://apigw.paziresh24.com',
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
-  maxRedirects: 5,
   withCredentials: true,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 export const searchClient = axios.create({
   baseURL: publicRuntimeConfig.SEARCH_BASE_URL ? publicRuntimeConfig.SEARCH_BASE_URL : 'https://apigw.paziresh24.com',
-  maxRedirects: 5,
   withCredentials: true,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 export const clinicClient = axios.create({
   baseURL: publicRuntimeConfig.CLINIC_BASE_URL ? publicRuntimeConfig.CLINIC_BASE_URL : 'https://www.paziresh24.com',
-  maxRedirects: 5,
   withCredentials: true,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 export const contentClient = axios.create({
   baseURL: publicRuntimeConfig.CONTENT_BASE_URL,
-  maxRedirects: 5,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 export const workflowClient = axios.create({
   baseURL: publicRuntimeConfig.WORKFLOW_BASE_URL,
-  maxRedirects: 5,
   withCredentials: true,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 export const hamdastClient = axios.create({
   baseURL: `https://hamdast.paziresh24.com`,
-  maxRedirects: 5,
   withCredentials: true,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 export const drProfileClient = axios.create({
   baseURL: `https://drprofile.paziresh24.com`,
-  maxRedirects: 5,
-  httpAgent,
-  httpsAgent,
-  transitional: { clarifyTimeoutError: true },
-  headers: {
-    'Accept': 'application/json',
-    'Accept-Encoding': 'gzip, deflate',
-    'Connection': 'keep-alive',
-  },
+  ...baseConfig,
 });
 
 clinicClient.interceptors.request.use(

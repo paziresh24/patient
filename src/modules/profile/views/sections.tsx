@@ -155,16 +155,6 @@ export const sections = (data: any) => {
         </div>
       ),
     },
-    // Activity
-    {
-      isShow: customize?.showActivityProfile,
-      noWrapper: true,
-      children: () => (
-        <ProfileGlobalContextsProvider>
-          <Fragment name="ProfileActivity" props={{ ...profileData }} />
-        </ProfileGlobalContextsProvider>
-      ),
-    },
     // Waiting Time Statistics
     {
       title: 'نمودار زمان انتظار بیماران ویزیت آنلاین',
