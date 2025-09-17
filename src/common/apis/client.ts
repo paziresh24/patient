@@ -87,7 +87,6 @@ export const clinicClient = axios.create({
 export const contentClient = axios.create({
   baseURL: publicRuntimeConfig.CONTENT_BASE_URL,
   maxRedirects: 5,
-  withCredentials: true,
   httpAgent,
   httpsAgent,
   transitional: { clarifyTimeoutError: true },
@@ -129,7 +128,6 @@ export const hamdastClient = axios.create({
 export const drProfileClient = axios.create({
   baseURL: `https://drprofile.paziresh24.com`,
   maxRedirects: 5,
-  withCredentials: true,
   httpAgent,
   httpsAgent,
   transitional: { clarifyTimeoutError: true },
