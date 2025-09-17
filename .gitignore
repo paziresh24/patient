@@ -44,7 +44,6 @@ yarn-error.log*
 
 # PWA
 /public/precache.*.*.js*
-/public/sw.js*
 /public/workbox-*.js*
 /public/worker-*.js*
 /public/fallback-*.js*
