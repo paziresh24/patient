@@ -150,7 +150,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
-          hasVariant(globalVariants, "screen", "mobileOnly") ? false : true
+          hasVariant(globalVariants, "screen", "mobileOnly") ? false : false
       }
     ],
     [$props, $ctx, $refs]
