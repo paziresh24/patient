@@ -79,15 +79,20 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 
 // ================= Main Aggregator Function =================
 
-export async function getAggregatedProfileData(slug: string, university: string | undefined, isServer: boolean, options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean }) {
+export async function getAggregatedProfileData(
+  slug: string,
+  university: string | undefined,
+  isServer: boolean,
+  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean },
+) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
 
-  let userInfo = null;
+  let slugInfo = null;
 
   if (options?.useClApi) {
     try {
-      const slugInfoEndpoint = `https://napigw.paziresh24.com/prapi/v1/slugs/${slug}`;
+      const slugInfoEndpoint = `https://drprofile.paziresh24.com/api/doctors/${slug}`;
       splunkInstance('doctor-profile').sendEvent({
         group: 'profile_api_request',
         type: 'profile_api_request',
@@ -103,7 +108,7 @@ export async function getAggregatedProfileData(slug: string, university: string 
         },
         timeout: 1000,
       });
-      userInfo = data?.data?.user_info;
+      slugInfo = data?.data;
     } catch (error) {
       //
     }
@@ -157,28 +162,32 @@ export async function getAggregatedProfileData(slug: string, university: string 
     apiCalls.push(getDoctorExpertise(slug));
   }
 
-  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult] = await Promise.allSettled(apiCalls);
+  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult] =
+    await Promise.allSettled(apiCalls);
 
   // Extract doctor full name from API response (like clapi pattern)
-  const doctorFullName = options?.useNewDoctorFullNameAPI && doctorFullNameResult?.status === 'fulfilled' ? doctorFullNameResult.value : null;
+  const doctorFullName =
+    options?.useNewDoctorFullNameAPI && doctorFullNameResult?.status === 'fulfilled' ? doctorFullNameResult.value : null;
 
   // Extract doctor expertise from API response (like clapi pattern)
-  const doctorExpertise = options?.useNewDoctorExpertiseAPI && doctorExpertiseResult?.status === 'fulfilled' ? doctorExpertiseResult.value : null;
+  const doctorExpertise =
+    options?.useNewDoctorExpertiseAPI && doctorExpertiseResult?.status === 'fulfilled' ? doctorExpertiseResult.value : null;
 
   // Transform expertise data to match expected format
-  const transformedExpertise = doctorExpertise?.map((exp: any) => ({
-    id: exp.expertise.id,
-    name: exp.expertise.name,
-    slug: exp.expertise.slug,
-    alias_title: exp.alias_title,
-    degree: exp.degree,
-    groups: exp.groups,
-  })) ?? [];
+  const transformedExpertise =
+    doctorExpertise?.map((exp: any) => ({
+      id: exp.expertise.id,
+      name: exp.expertise.name,
+      slug: exp.expertise.slug,
+      alias_title: exp.alias_title,
+      degree: exp.degree,
+      groups: exp.groups,
+    })) ?? [];
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
     provider: {
-      user_id: userInfo?.user_id ?? null,
+      user_id: slugInfo?.user_id ?? null,
     },
     feedbacks: {
       ...fullProfileData?.feedbacks,
@@ -189,18 +198,19 @@ export async function getAggregatedProfileData(slug: string, university: string 
     },
     history: {},
     // Add expertises to overwriteData if new API is used and successful
-    ...(options?.useNewDoctorExpertiseAPI && doctorExpertise?.length > 0 && {
-      expertises: transformedExpertise,
-    }),
+    ...(options?.useNewDoctorExpertiseAPI &&
+      doctorExpertise?.length > 0 && {
+        expertises: transformedExpertise,
+      }),
   };
 
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
       ...fullProfileData,
-      id: userInfo?.id ?? fullProfileData?.id,
-      server_id: userInfo?.server_id ?? fullProfileData?.server_id,
-      name: doctorFullName?.name ?? userInfo?.name ?? fullProfileData?.name,
-      family: doctorFullName?.family ?? userInfo?.family ?? fullProfileData?.family,
+      id: slugInfo?.owner_id ?? fullProfileData?.id,
+      server_id: slugInfo?.server_id ?? fullProfileData?.server_id,
+      name: doctorFullName?.name ?? fullProfileData?.name,
+      family: doctorFullName?.family ?? fullProfileData?.family,
     });
 
   // Step 4: Fetch server-specific data only if running on the server
@@ -210,12 +220,12 @@ export async function getAggregatedProfileData(slug: string, university: string 
 
   if (!university) {
     try {
-      if (!userInfo?.user_id) {
-        const { data } = await axios.get(`https://napigw.paziresh24.com/prapi/v1/slugs/${slug}`, {
+      if (!slugInfo?.user_id) {
+        const { data } = await axios.get(`https://drprofile.paziresh24.com/api/doctors/${slug}`, {
           timeout: 1000,
         });
 
-        userData = data?.user_info;
+        userData = data;
       }
       const widgetResults = await fetchWidgetsData(information, userData);
       widgets = widgetResults.widgets;
