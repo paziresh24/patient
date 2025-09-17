@@ -150,7 +150,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) =>
-          hasVariant(globalVariants, "screen", "mobileOnly") ? false : false
+          hasVariant(globalVariants, "screen", "mobileOnly") ? false : true
       }
     ],
     [$props, $ctx, $refs]
@@ -182,48 +182,49 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         sty.root
       )}
     >
-      <Paziresh24Button
-        data-plasmic-name={"paziresh24Button"}
-        data-plasmic-override={overrides.paziresh24Button}
-        children2={
-          "\u0645\u0634\u0627\u0647\u062f\u0647 \u062e\u062f\u0645\u0627\u062a \u0648 \u062a\u0639\u0631\u0641\u0647\u200c\u0647\u0627"
-        }
-        className={classNames("__wab_instance", sty.paziresh24Button)}
-        onClick={async event => {
-          const $steps = {};
-
-          $steps["updateModalOpen"] = true
-            ? (() => {
-                const actionArgs = {
-                  variable: {
-                    objRoot: $state,
-                    variablePath: ["modal", "open"]
-                  },
-                  operation: 0,
-                  value: true
-                };
-                return (({ variable, value, startIndex, deleteCount }) => {
-                  if (!variable) {
-                    return;
-                  }
-                  const { objRoot, variablePath } = variable;
-
-                  $stateSet(objRoot, variablePath, value);
-                  return value;
-                })?.apply(null, [actionArgs]);
-              })()
-            : undefined;
-          if (
-            $steps["updateModalOpen"] != null &&
-            typeof $steps["updateModalOpen"] === "object" &&
-            typeof $steps["updateModalOpen"].then === "function"
-          ) {
-            $steps["updateModalOpen"] = await $steps["updateModalOpen"];
+      <div className={classNames(projectcss.all, sty.freeBox__w2Kv8)}>
+        <Paziresh24Button
+          data-plasmic-name={"paziresh24Button"}
+          data-plasmic-override={overrides.paziresh24Button}
+          children2={
+            "\u0645\u0634\u0627\u0647\u062f\u0647 \u062e\u062f\u0645\u0627\u062a \u0648 \u062a\u0639\u0631\u0641\u0647\u200c\u0647\u0627"
           }
-        }}
-        outline={true}
-      />
+          className={classNames("__wab_instance", sty.paziresh24Button)}
+          onClick={async event => {
+            const $steps = {};
 
+            $steps["updateModalOpen"] = true
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["modal", "open"]
+                    },
+                    operation: 0,
+                    value: true
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["updateModalOpen"] != null &&
+              typeof $steps["updateModalOpen"] === "object" &&
+              typeof $steps["updateModalOpen"].then === "function"
+            ) {
+              $steps["updateModalOpen"] = await $steps["updateModalOpen"];
+            }
+          }}
+          outline={true}
+        />
+      </div>
       <Paziresh24Modal
         data-plasmic-name={"modal"}
         data-plasmic-override={overrides.modal}
@@ -342,26 +343,10 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                               className={classNames(
                                 projectcss.all,
                                 projectcss.__wab_text,
-                                sty.text__jhxxi
+                                sty.text__l8Ykl
                               )}
                             >
-                              <React.Fragment>
-                                {(() => {
-                                  try {
-                                    return $ctx.fetchedData[currentIndex]
-                                      .service;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return "";
-                                    }
-                                    throw e;
-                                  }
-                                })()}
-                              </React.Fragment>
+                              {"\u062a\u0648\u0645\u0627\u0646"}
                             </div>
                             {(() => {
                               try {
@@ -391,10 +376,16 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                                         ? Number(
                                             $ctx.fetchedData[currentIndex]
                                               .price_min
-                                          ).toLocaleString("en-US") + " تومان"
+                                          ).toLocaleString("en-US")
                                         : $ctx.fetchedData[currentIndex]
-                                            .price_min
+                                            .price_max == null ||
+                                          $ctx.fetchedData[currentIndex]
+                                            .price_max === ""
                                         ? Number(
+                                            $ctx.fetchedData[currentIndex]
+                                              .price_min
+                                          ).toLocaleString("en-US")
+                                        : Number(
                                             $ctx.fetchedData[currentIndex]
                                               .price_min
                                           ).toLocaleString("en-US") +
@@ -402,12 +393,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                                           Number(
                                             $ctx.fetchedData[currentIndex]
                                               .price_max
-                                          ).toLocaleString("en-US") +
-                                          " تومان"
-                                        : Number(
-                                            $ctx.fetchedData[currentIndex]
-                                              .price_min
-                                          ).toLocaleString("en-US") + " تومان";
+                                          ).toLocaleString("en-US");
                                     } catch (e) {
                                       if (
                                         e instanceof TypeError ||
@@ -422,6 +408,31 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                                 </React.Fragment>
                               </div>
                             ) : null}
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__jhxxi
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return $ctx.fetchedData[currentIndex]
+                                      .service;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </div>
                           </div>
                           {(() => {
                             try {
