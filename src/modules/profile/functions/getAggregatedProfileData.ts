@@ -11,10 +11,11 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { splunkInstance } from '@/common/services/splunk';
+import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
-  HAMDAST_WIDGETS: 'https://hamdast.paziresh24.com/api/v1/widgets/',
+  HAMDAST_WIDGETS: '/api/v1/widgets/',
   RISMAN_DOCTORS: 'https://apigw.paziresh24.com/v1/risman/doctors/',
 };
 
@@ -42,9 +43,9 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
   try {
     if (!userData?.user_id) return { widgets: [], widgetsData: {} };
 
-    const { data: widgets } = await axios.get(API_ENDPOINTS.HAMDAST_WIDGETS, {
+    const { data: widgets } = await hamdastClient.get(API_ENDPOINTS.HAMDAST_WIDGETS, {
       params: { user_id: userData.user_id },
-      timeout: 1000,
+      timeout: 3000,
     });
 
     if (!widgets || widgets.length === 0) return { widgets: [], widgetsData: {} };
@@ -52,7 +53,7 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
     const dataEndpoints = widgets.filter((item: any) => item.data_endpoint);
     const responses = await Promise.allSettled(
       dataEndpoints.map((item: any) =>
-        axios.get(item.data_endpoint, {
+        apiGatewayClient.get(item.data_endpoint, {
           params: { user_id: userData.user_id, doctor_id: information?.id, widget_id: item?.id },
           timeout: 1500,
         }),
@@ -92,7 +93,7 @@ export async function getAggregatedProfileData(
 
   if (options?.useClApi) {
     try {
-      const slugInfoEndpoint = `https://drprofile.paziresh24.com/api/doctors/${slug}`;
+      const slugInfoEndpoint = `/api/doctors/${encodeURIComponent(slug)}`;
       splunkInstance('doctor-profile').sendEvent({
         group: 'profile_api_request',
         type: 'profile_api_request',
@@ -102,10 +103,7 @@ export async function getAggregatedProfileData(
           isServer: isServer,
         },
       });
-      const data = await axios.get(slugInfoEndpoint, {
-        headers: {
-          Accept: 'application/json',
-        },
+      const data = await drProfileClient.get(slugInfoEndpoint, {
         timeout: 1000,
       });
       slugInfo = data?.data;
@@ -221,8 +219,8 @@ export async function getAggregatedProfileData(
   if (!university) {
     try {
       if (!slugInfo?.user_id) {
-        const { data } = await axios.get(`https://drprofile.paziresh24.com/api/doctors/${slug}`, {
-          timeout: 1000,
+        const { data } = await drProfileClient.get(`/api/doctors/${encodeURIComponent(slug)}`, {
+          timeout: 3000,
         });
 
         userData = data;

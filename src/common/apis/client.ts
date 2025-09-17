@@ -4,44 +4,140 @@ import getConfig from 'next/config';
 import { isPWA } from '../utils/isPwa';
 import { refresh } from './services/auth/refresh';
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
+import http from 'http';
+import https from 'https';
+
+export const httpAgent = new http.Agent({ keepAlive: true, timeout: 15_000 });
+export const httpsAgent = new https.Agent({ keepAlive: true, timeout: 15_000 });
 
 export const paziresh24AppClient = axios.create({
   baseURL: serverRuntimeConfig.DOCTORS_BASE_URL ?? publicRuntimeConfig.DOCTORS_BASE_URL,
-  withCredentials: true,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
+  maxRedirects: 5,
+  withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
 });
 
 export const feedbacksClient = axios.create({
   baseURL: publicRuntimeConfig.FEEDBACKS_BASE_URL,
-  withCredentials: true,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
   timeout: 3000,
+  maxRedirects: 5,
+  withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
 });
 
 export const apiGatewayClient = axios.create({
   baseURL: publicRuntimeConfig.API_GATEWAY_BASE_URL ? publicRuntimeConfig.API_GATEWAY_BASE_URL : 'https://apigw.paziresh24.com',
-  withCredentials: true,
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
+  maxRedirects: 5,
+  withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
 });
 
 export const searchClient = axios.create({
   baseURL: publicRuntimeConfig.SEARCH_BASE_URL ? publicRuntimeConfig.SEARCH_BASE_URL : 'https://apigw.paziresh24.com',
+  maxRedirects: 5,
   withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
 });
 
 export const clinicClient = axios.create({
   baseURL: publicRuntimeConfig.CLINIC_BASE_URL ? publicRuntimeConfig.CLINIC_BASE_URL : 'https://www.paziresh24.com',
+  maxRedirects: 5,
   withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
 });
 
 export const contentClient = axios.create({
   baseURL: publicRuntimeConfig.CONTENT_BASE_URL,
+  maxRedirects: 5,
   withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
 });
 
 export const workflowClient = axios.create({
   baseURL: publicRuntimeConfig.WORKFLOW_BASE_URL,
+  maxRedirects: 5,
   withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
+});
+
+export const hamdastClient = axios.create({
+  baseURL: `https://hamdast.paziresh24.com`,
+  maxRedirects: 5,
+  withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
+});
+
+export const drProfileClient = axios.create({
+  baseURL: `https://drprofile.paziresh24.com`,
+  maxRedirects: 5,
+  withCredentials: true,
+  httpAgent,
+  httpsAgent,
+  transitional: { clarifyTimeoutError: true },
+  headers: {
+    'Accept': 'application/json',
+    'Accept-Encoding': 'gzip, deflate',
+    'Connection': 'keep-alive',
+  },
 });
 
 clinicClient.interceptors.request.use(
