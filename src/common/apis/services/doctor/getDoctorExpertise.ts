@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { splunkInstance } from '@/common/services/splunk';
+import { drProfileClient } from '../../client';
 
 export interface DoctorExpertiseResponse {
   id: string;
@@ -22,14 +23,13 @@ export interface DoctorExpertiseResponse {
 }
 
 export const getDoctorExpertise = async (slug: string): Promise<DoctorExpertiseResponse[]> => {
+  const encodedSlug = encodeURIComponent(slug);
+  const url = `/api/doctors/${encodedSlug}/expertise`;
   try {
-    const encodedSlug = encodeURIComponent(slug);
-    const url = `https://drprofile.paziresh24.com/api/doctors/${encodedSlug}/expertise`;
-
-    const { data } = await axios.get<DoctorExpertiseResponse[]>(url, {
+    const { data } = await drProfileClient.get<DoctorExpertiseResponse[]>(url, {
       timeout: 5000,
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     });
 
@@ -56,7 +56,7 @@ export const getDoctorExpertise = async (slug: string): Promise<DoctorExpertiseR
       type: 'api_error',
       event: {
         slug: slug,
-        url: `https://drprofile.paziresh24.com/api/doctors/${encodeURIComponent(slug)}/expertise`,
+        url: url,
         error_message: error instanceof Error ? error.message : String(error),
         error_status: error instanceof Error && 'response' in error ? (error as any).response?.status : null,
         error_data: error instanceof Error && 'response' in error ? (error as any).response?.data : null,

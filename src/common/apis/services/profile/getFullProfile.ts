@@ -16,8 +16,8 @@ export const getProfileData = async ({ slug, ...params }: Params) => {
     params?.profile_page
       ? `${
           publicRuntimeConfig?.FULL_PROFILE_API_URL ?? serverRuntimeConfig?.FULL_PROFILE_API_URL ?? 'https://apigw.paziresh24.com'
-        }/${slug}/`
-      : `/v1/full-profile/${slug}/`,
+        }/${encodeURIComponent(slug)}/`
+      : `/v1/full-profile/${encodeURIComponent(slug)}/`,
     { params, timeout: 6000 },
   );
   return data;
