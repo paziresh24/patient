@@ -13,9 +13,6 @@ export const getDoctorFullName = async (slug: string): Promise<DoctorFullNameRes
   try {
     const { data } = await drProfileClient.get<DoctorFullNameResponse>(url, {
       timeout: 5000,
-      headers: {
-        Accept: 'application/json',
-      },
     });
 
     // Send success event to Splunk
