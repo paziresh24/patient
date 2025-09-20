@@ -32,6 +32,7 @@ export type OverwriteProfileData = {
     hideRates?: boolean;
   };
   expertises?: any;
+  image?: string;
 };
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
@@ -45,7 +46,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     employee_id: source?.medical_code,
     experience: source?.experience ?? null,
     gender: source?.gender ?? null,
-    image: source?.image ?? null,
+    image: overwriteData?.image ?? source?.image ?? null,
     city_en_slug: source?.city_en_slug ?? null,
     should_recommend_other_doctors: source?.should_recommend_other_doctors ?? null,
     ...overwriteData.provider,
