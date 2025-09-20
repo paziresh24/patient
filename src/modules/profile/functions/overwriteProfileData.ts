@@ -33,6 +33,7 @@ export type OverwriteProfileData = {
   };
   expertises?: any;
   image?: string;
+  biography?: string;
 };
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
@@ -42,7 +43,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     display_name: source?.name + ' ' + source?.family,
     name: source?.name,
     family: source?.family,
-    biography: source?.biography,
+    biography: overwriteData?.biography ?? source?.biography,
     employee_id: source?.medical_code,
     experience: source?.experience ?? null,
     gender: source?.gender ?? null,
