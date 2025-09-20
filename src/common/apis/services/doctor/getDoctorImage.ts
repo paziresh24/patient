@@ -12,9 +12,6 @@ export const getDoctorImage = async (slug: string): Promise<DoctorImageResponse>
 
     const { data } = await axios.get<DoctorImageResponse>(url, {
       timeout: 5000,
-      headers: {
-        'Accept': 'application/json',
-      },
     });
 
     // Send success event to Splunk
