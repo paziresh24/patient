@@ -31,9 +31,6 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
       const useNewDoctorExpertiseAPI = growthbook.isOn('doctor_expertise_for_new_profileapi');
       const useNewDoctorImageAPI = growthbook.isOn('doctor_image_for_new_profileapi');
       
-      console.log('🔍 Server-side feature flags for slug:', slug);
-      console.log('  - doctor_image_for_new_profileapi:', useNewDoctorImageAPI);
-      
       const finalProps = await getAggregatedProfileData(slug, university, true, {
         useClApi: growthbook.isOn('use-clapi-profile-page'),
         useNewDoctorFullNameAPI: growthbook.isOn('doctor_fullname_for_new_profileapi'),

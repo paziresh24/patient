@@ -10,9 +10,6 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
   const useNewDoctorExpertiseAPI = useFeatureIsOn('doctor_expertise_for_new_profileapi');
   const useNewDoctorImageAPI = useFeatureIsOn('doctor_image_for_new_profileapi');
 
-  console.log('🔍 Client-side feature flags for slug:', slug);
-  console.log('  - doctor_image_for_new_profileapi:', useNewDoctorImageAPI);
-
   return useQuery(
     ['profileClientData', slug],
     () =>

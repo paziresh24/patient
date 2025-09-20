@@ -163,10 +163,7 @@ export async function getAggregatedProfileData(
 
   // Conditionally add doctor image API call (like clapi pattern)
   if (options?.useNewDoctorImageAPI) {
-    console.log('🖼️ Using new doctor image API for slug:', slug);
     apiCalls.push(getDoctorImage(slug));
-  } else {
-    console.log('❌ Not using new doctor image API for slug:', slug);
   }
 
   const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult] =
@@ -183,12 +180,6 @@ export async function getAggregatedProfileData(
   // Extract doctor image from API response (like clapi pattern)
   const doctorImage =
     options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
-
-  console.log('🖼️ Doctor image API result:', {
-    useNewDoctorImageAPI: options?.useNewDoctorImageAPI,
-    resultStatus: doctorImageResult?.status,
-    imageData: doctorImage,
-  });
 
   // Transform expertise data to match expected format
   const transformedExpertise =
@@ -225,8 +216,6 @@ export async function getAggregatedProfileData(
         image: doctorImage.image,
       }),
   };
-
-  console.log('🖼️ OverwriteData image:', overwriteData.image);
 
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
