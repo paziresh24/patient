@@ -8,6 +8,10 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
   const isClapiActive = useFeatureIsOn('use-clapi-profile-page');
   const useNewDoctorFullNameAPI = useFeatureIsOn('doctor_fullname_for_new_profileapi');
   const useNewDoctorExpertiseAPI = useFeatureIsOn('doctor_expertise_for_new_profileapi');
+  const useNewDoctorImageAPI = useFeatureIsOn('doctor_image_for_new_profileapi');
+
+  console.log('🔍 Client-side feature flags for slug:', slug);
+  console.log('  - doctor_image_for_new_profileapi:', useNewDoctorImageAPI);
 
   return useQuery(
     ['profileClientData', slug],
@@ -16,6 +20,7 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
         useClApi: isClapiActive,
         useNewDoctorFullNameAPI: useNewDoctorFullNameAPI,
         useNewDoctorExpertiseAPI: useNewDoctorExpertiseAPI,
+        useNewDoctorImageAPI: useNewDoctorImageAPI,
       }),
     {
       enabled: enabled,

@@ -3,6 +3,7 @@ import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
+import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -84,7 +85,7 @@ export async function getAggregatedProfileData(
   slug: string,
   university: string | undefined,
   isServer: boolean,
-  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean },
+  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean },
 ) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
@@ -160,7 +161,15 @@ export async function getAggregatedProfileData(
     apiCalls.push(getDoctorExpertise(slug));
   }
 
-  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult] =
+  // Conditionally add doctor image API call (like clapi pattern)
+  if (options?.useNewDoctorImageAPI) {
+    console.log('🖼️ Using new doctor image API for slug:', slug);
+    apiCalls.push(getDoctorImage(slug));
+  } else {
+    console.log('❌ Not using new doctor image API for slug:', slug);
+  }
+
+  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult] =
     await Promise.allSettled(apiCalls);
 
   // Extract doctor full name from API response (like clapi pattern)
@@ -170,6 +179,16 @@ export async function getAggregatedProfileData(
   // Extract doctor expertise from API response (like clapi pattern)
   const doctorExpertise =
     options?.useNewDoctorExpertiseAPI && doctorExpertiseResult?.status === 'fulfilled' ? doctorExpertiseResult.value : null;
+
+  // Extract doctor image from API response (like clapi pattern)
+  const doctorImage =
+    options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
+
+  console.log('🖼️ Doctor image API result:', {
+    useNewDoctorImageAPI: options?.useNewDoctorImageAPI,
+    resultStatus: doctorImageResult?.status,
+    imageData: doctorImage,
+  });
 
   // Transform expertise data to match expected format
   const transformedExpertise =
@@ -200,7 +219,14 @@ export async function getAggregatedProfileData(
       doctorExpertise?.length > 0 && {
         expertises: transformedExpertise,
       }),
+    // Add image to overwriteData if new API is used and successful
+    ...(options?.useNewDoctorImageAPI &&
+      doctorImage?.image && {
+        image: doctorImage.image,
+      }),
   };
+
+  console.log('🖼️ OverwriteData image:', overwriteData.image);
 
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
