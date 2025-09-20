@@ -28,9 +28,6 @@ export const getDoctorExpertise = async (slug: string): Promise<DoctorExpertiseR
   try {
     const { data } = await drProfileClient.get<DoctorExpertiseResponse[]>(url, {
       timeout: 5000,
-      headers: {
-        Accept: 'application/json',
-      },
     });
 
     // Send success event to Splunk
