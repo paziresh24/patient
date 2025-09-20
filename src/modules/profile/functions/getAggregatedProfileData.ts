@@ -4,6 +4,7 @@ import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
+import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -85,7 +86,7 @@ export async function getAggregatedProfileData(
   slug: string,
   university: string | undefined,
   isServer: boolean,
-  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean },
+  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean },
 ) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
@@ -166,7 +167,12 @@ export async function getAggregatedProfileData(
     apiCalls.push(getDoctorImage(slug));
   }
 
-  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult] =
+  // Conditionally add doctor biography API call (like clapi pattern)
+  if (options?.useNewDoctorBiographyAPI) {
+    apiCalls.push(getDoctorBiography(slug));
+  }
+
+  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult] =
     await Promise.allSettled(apiCalls);
 
   // Extract doctor full name from API response (like clapi pattern)
@@ -180,6 +186,10 @@ export async function getAggregatedProfileData(
   // Extract doctor image from API response (like clapi pattern)
   const doctorImage =
     options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
+
+  // Extract doctor biography from API response (like clapi pattern)
+  const doctorBiography =
+    options?.useNewDoctorBiographyAPI && doctorBiographyResult?.status === 'fulfilled' ? doctorBiographyResult.value : null;
 
   // Transform expertise data to match expected format
   const transformedExpertise =
@@ -214,6 +224,11 @@ export async function getAggregatedProfileData(
     ...(options?.useNewDoctorImageAPI &&
       doctorImage?.image && {
         image: doctorImage.image,
+      }),
+    // Add biography to overwriteData if new API is used and successful
+    ...(options?.useNewDoctorBiographyAPI &&
+      doctorBiography?.biography && {
+        biography: doctorBiography.biography,
       }),
   };
 

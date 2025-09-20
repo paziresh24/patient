@@ -9,6 +9,7 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
   const useNewDoctorFullNameAPI = useFeatureIsOn('doctor_fullname_for_new_profileapi');
   const useNewDoctorExpertiseAPI = useFeatureIsOn('doctor_expertise_for_new_profileapi');
   const useNewDoctorImageAPI = useFeatureIsOn('doctor_image_for_new_profileapi');
+  const useNewDoctorBiographyAPI = useFeatureIsOn('doctor_bio_for_new_profileapi');
 
   return useQuery(
     ['profileClientData', slug],
@@ -18,6 +19,7 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
         useNewDoctorFullNameAPI: useNewDoctorFullNameAPI,
         useNewDoctorExpertiseAPI: useNewDoctorExpertiseAPI,
         useNewDoctorImageAPI: useNewDoctorImageAPI,
+        useNewDoctorBiographyAPI: useNewDoctorBiographyAPI,
       }),
     {
       enabled: enabled,
