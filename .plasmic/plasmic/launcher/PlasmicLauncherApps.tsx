@@ -68,7 +68,6 @@ import LauncherComponentsApp from "../../LauncherComponentsApp"; // plasmic-impo
 import LauncherComponentsSeparator from "../../LauncherComponentsSeparator"; // plasmic-import: 1FBJsfya0Spv/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -87,11 +86,13 @@ export const PlasmicLauncherApps__VariantProps = new Array<VariantPropType>();
 export type PlasmicLauncherApps__ArgsType = {
   widgetFrames?: boolean;
   onEvent?: () => void;
+  openAppFrame?: (key: string) => void;
 };
 type ArgPropType = keyof PlasmicLauncherApps__ArgsType;
 export const PlasmicLauncherApps__ArgProps = new Array<ArgPropType>(
   "widgetFrames",
-  "onEvent"
+  "onEvent",
+  "openAppFrame"
 );
 
 export type PlasmicLauncherApps__OverridesType = {
@@ -109,6 +110,7 @@ export type PlasmicLauncherApps__OverridesType = {
 export interface DefaultLauncherAppsProps {
   widgetFrames?: boolean;
   onEvent?: () => void;
+  openAppFrame?: (key: string) => void;
   className?: string;
 }
 
@@ -246,8 +248,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_paziresh_24_design_system =
-    useStyleTokens_paziresh_24_design_system();
 
   return (
     <div
@@ -261,7 +261,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >
@@ -630,7 +629,9 @@ function PlasmicLauncherApps__RenderFunc(props: {
                           key={currentIndex}
                           link={(() => {
                             try {
-                              return currentItem.link;
+                              return !!$props?.openAppFrame
+                                ? undefined
+                                : currentItem.link;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -718,6 +719,43 @@ function PlasmicLauncherApps__RenderFunc(props: {
                               typeof $steps["runOnEvent"].then === "function"
                             ) {
                               $steps["runOnEvent"] = await $steps["runOnEvent"];
+                            }
+
+                            $steps["runOpenAppFrame"] = !!$props?.openAppFrame
+                              ? (() => {
+                                  const actionArgs = {
+                                    eventRef: $props["openAppFrame"],
+                                    args: [
+                                      (() => {
+                                        try {
+                                          return currentItem.app_key;
+                                        } catch (e) {
+                                          if (
+                                            e instanceof TypeError ||
+                                            e?.plasmicType ===
+                                              "PlasmicUndefinedDataError"
+                                          ) {
+                                            return undefined;
+                                          }
+                                          throw e;
+                                        }
+                                      })()
+                                    ]
+                                  };
+                                  return (({ eventRef, args }) => {
+                                    return eventRef?.(...(args ?? []));
+                                  })?.apply(null, [actionArgs]);
+                                })()
+                              : undefined;
+                            if (
+                              $steps["runOpenAppFrame"] != null &&
+                              typeof $steps["runOpenAppFrame"] === "object" &&
+                              typeof $steps["runOpenAppFrame"].then ===
+                                "function"
+                            ) {
+                              $steps["runOpenAppFrame"] = await $steps[
+                                "runOpenAppFrame"
+                              ];
                             }
                           }}
                           pagekey={"launcher"}

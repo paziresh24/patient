@@ -64,7 +64,6 @@ import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmi
 import Paziresh24LineClamp from "../../Paziresh24LineClamp"; // plasmic-import: xFfrwlkCaWS8/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -185,8 +184,6 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_paziresh_24_design_system =
-    useStyleTokens_paziresh_24_design_system();
 
   return (
     <div
@@ -200,7 +197,6 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >
@@ -340,6 +336,30 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                       onClick={async event => {
                         const $steps = {};
 
+                        $steps["invokeGlobalAction"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  "PATCH",
+                                  `https://apigw.paziresh24.com/v1/hamdast/notifications/mark-as-read/${currentItem.id}`
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.apiRequest"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["invokeGlobalAction"] != null &&
+                          typeof $steps["invokeGlobalAction"] === "object" &&
+                          typeof $steps["invokeGlobalAction"].then ===
+                            "function"
+                        ) {
+                          $steps["invokeGlobalAction"] = await $steps[
+                            "invokeGlobalAction"
+                          ];
+                        }
+
                         $steps["goToPage"] = !currentItem.link?.includes(
                           "hamdast://"
                         )
@@ -382,59 +402,36 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                           $steps["goToPage"] = await $steps["goToPage"];
                         }
 
-                        $steps["invokeGlobalAction"] = true
-                          ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  "PATCH",
-                                  `https://apigw.paziresh24.com/v1/hamdast/notifications/mark-as-read/${currentItem.id}`
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.apiRequest"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
-                          : undefined;
-                        if (
-                          $steps["invokeGlobalAction"] != null &&
-                          typeof $steps["invokeGlobalAction"] === "object" &&
-                          typeof $steps["invokeGlobalAction"].then ===
-                            "function"
-                        ) {
-                          $steps["invokeGlobalAction"] = await $steps[
-                            "invokeGlobalAction"
-                          ];
-                        }
-
-                        $steps["updateModalOpen3"] = true
-                          ? (() => {
-                              const actionArgs = {
-                                eventRef: $props["onAction"],
-                                args: [
-                                  (() => {
-                                    try {
-                                      return {
-                                        link: currentItem.link,
-                                        notification_id: currentItem.id
-                                      };
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return undefined;
+                        $steps["updateModalOpen3"] =
+                          currentItem?.link?.includes?.("hamdast://")
+                            ? (() => {
+                                const actionArgs = {
+                                  eventRef: $props["onAction"],
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return {
+                                          link: currentItem.link,
+                                          notification_id: currentItem.id
+                                        };
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
                                       }
-                                      throw e;
-                                    }
-                                  })()
-                                ]
-                              };
-                              return (({ eventRef, args }) => {
-                                return eventRef?.(...(args ?? []));
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
+                                    })()
+                                  ]
+                                };
+                                return (({ eventRef, args }) => {
+                                  return eventRef?.(...(args ?? []));
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
                         if (
                           $steps["updateModalOpen3"] != null &&
                           typeof $steps["updateModalOpen3"] === "object" &&

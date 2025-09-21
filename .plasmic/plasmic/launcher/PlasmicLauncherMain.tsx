@@ -70,7 +70,6 @@ import LauncherBlocksSectionsStore from "../../LauncherBlocksSectionsStore"; // 
 import LauncherBlocksPatientServices from "../../LauncherBlocksPatientServices"; // plasmic-import: ofxhzuPg2IHJ/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -89,9 +88,13 @@ export const PlasmicLauncherMain__VariantProps = new Array<VariantPropType>();
 
 export type PlasmicLauncherMain__ArgsType = {
   onAction?: (action: any) => void;
+  openAppFrame?: (key: string) => void;
 };
 type ArgPropType = keyof PlasmicLauncherMain__ArgsType;
-export const PlasmicLauncherMain__ArgProps = new Array<ArgPropType>("onAction");
+export const PlasmicLauncherMain__ArgProps = new Array<ArgPropType>(
+  "onAction",
+  "openAppFrame"
+);
 
 export type PlasmicLauncherMain__OverridesType = {
   root?: Flex__<"div">;
@@ -108,6 +111,7 @@ export type PlasmicLauncherMain__OverridesType = {
 
 export interface DefaultLauncherMainProps {
   onAction?: (action: any) => void;
+  openAppFrame?: (key: string) => void;
   className?: string;
 }
 
@@ -171,8 +175,6 @@ function PlasmicLauncherMain__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_paziresh_24_design_system =
-    useStyleTokens_paziresh_24_design_system();
 
   return (
     <div
@@ -186,7 +188,6 @@ function PlasmicLauncherMain__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >
@@ -215,6 +216,42 @@ function PlasmicLauncherMain__RenderFunc(props: {
             data-plasmic-name={"launcherBlocksProfile"}
             data-plasmic-override={overrides.launcherBlocksProfile}
             className={classNames("__wab_instance", sty.launcherBlocksProfile)}
+            onAction={async action => {
+              const $steps = {};
+
+              $steps["runOnAction"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["onAction"],
+                      args: [
+                        (() => {
+                          try {
+                            return action;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runOnAction"] != null &&
+                typeof $steps["runOnAction"] === "object" &&
+                typeof $steps["runOnAction"].then === "function"
+              ) {
+                $steps["runOnAction"] = await $steps["runOnAction"];
+              }
+            }}
           />
 
           <Reveal
