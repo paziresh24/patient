@@ -64,7 +64,6 @@ import LauncherBlockNotifications from "../../LauncherBlockNotifications"; // pl
 import LauncherBlocksWallet from "../../LauncherBlocksWallet"; // plasmic-import: h-1safqUkN1a/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -144,8 +143,6 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
   const $globalActions = useGlobalActions?.();
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_paziresh_24_design_system =
-    useStyleTokens_paziresh_24_design_system();
 
   return (
     <div
@@ -159,7 +156,6 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >
@@ -391,6 +387,42 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
               "__wab_instance",
               sty.launcherBlockNotifications
             )}
+            onAction={async action => {
+              const $steps = {};
+
+              $steps["runOnAction"] = true
+                ? (() => {
+                    const actionArgs = {
+                      eventRef: $props["onAction"],
+                      args: [
+                        (() => {
+                          try {
+                            return action;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return (({ eventRef, args }) => {
+                      return eventRef?.(...(args ?? []));
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runOnAction"] != null &&
+                typeof $steps["runOnAction"] === "object" &&
+                typeof $steps["runOnAction"].then === "function"
+              ) {
+                $steps["runOnAction"] = await $steps["runOnAction"];
+              }
+            }}
           />
 
           <div
