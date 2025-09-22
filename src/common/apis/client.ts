@@ -80,6 +80,8 @@ export const hamdastClient = axios.create({
 export const drProfileClient = axios.create({
   baseURL: `https://drprofile.paziresh24.com`,
   ...baseConfig,
+  httpAgent: new http.Agent({ keepAlive: false }),
+  httpsAgent: new https.Agent({ keepAlive: false }),
 });
 
 clinicClient.interceptors.request.use(
