@@ -35,6 +35,7 @@ export type OverwriteProfileData = {
   image?: string;
   biography?: string;
   centers?: any;
+  gallery?: any;
 };
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
@@ -148,7 +149,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
 
   const media = {
     aparat: source?.aparat_video_code ?? null,
-    gallery: source?.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
+    gallery: overwriteData?.gallery ?? source?.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
   };
 
   const symptomes = source?.symptomes ?? [];

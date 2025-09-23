@@ -6,6 +6,7 @@ import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExper
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -87,7 +88,7 @@ export async function getAggregatedProfileData(
   slug: string,
   university: string | undefined,
   isServer: boolean,
-  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean },
+  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean; useNewDoctorGalleryAPI?: boolean },
 ) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
@@ -178,7 +179,14 @@ export async function getAggregatedProfileData(
     apiCalls.push(getDoctorCenters(slug));
   }
 
-  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult, doctorCentersResult] =
+  // Conditionally add doctor gallery API call (like clapi pattern)
+  if (options?.useNewDoctorGalleryAPI && fullProfileData?.centers?.length > 0) {
+    // Get gallery for the first center (or we could loop through all centers)
+    const firstCenterId = fullProfileData.centers[0].id;
+    apiCalls.push(getDoctorGallery(firstCenterId));
+  }
+
+  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult, doctorCentersResult, doctorGalleryResult] =
     await Promise.allSettled(apiCalls);
 
   // Extract doctor full name from API response (like clapi pattern)
@@ -200,6 +208,10 @@ export async function getAggregatedProfileData(
   // Extract doctor centers from API response (like clapi pattern)
   const doctorCenters =
     options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
+
+  // Extract doctor gallery from API response (like clapi pattern)
+  const doctorGallery =
+    options?.useNewDoctorGalleryAPI && doctorGalleryResult?.status === 'fulfilled' ? doctorGalleryResult.value : null;
 
 
   // Transform expertise data to match expected format
@@ -245,6 +257,11 @@ export async function getAggregatedProfileData(
     ...(options?.useNewDoctorCentersAPI &&
       doctorCenters?.length > 0 && {
         centers: doctorCenters,
+      }),
+    // Add gallery to overwriteData if new API is used and successful
+    ...(options?.useNewDoctorGalleryAPI &&
+      doctorGallery?.length > 0 && {
+        gallery: doctorGallery,
       }),
   };
 
