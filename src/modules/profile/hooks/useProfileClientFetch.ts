@@ -11,6 +11,7 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
   const useNewDoctorImageAPI = useFeatureIsOn('doctor_image_for_new_profileapi');
   const useNewDoctorBiographyAPI = useFeatureIsOn('doctor_bio_for_new_profileapi');
   const useNewDoctorCentersAPI = useFeatureIsOn('doctor_centers_for_new_profileapi');
+  const useNewDoctorGalleryAPI = useFeatureIsOn('doctor_galery_for_new_profileapi');
 
   return useQuery(
     ['profileClientData', slug],
@@ -22,6 +23,7 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
         useNewDoctorImageAPI: useNewDoctorImageAPI,
         useNewDoctorBiographyAPI: useNewDoctorBiographyAPI,
         useNewDoctorCentersAPI: useNewDoctorCentersAPI,
+        useNewDoctorGalleryAPI: useNewDoctorGalleryAPI,
       }),
     {
       enabled: enabled,

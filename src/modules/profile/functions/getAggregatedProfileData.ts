@@ -181,9 +181,11 @@ export async function getAggregatedProfileData(
 
   // Conditionally add doctor gallery API call (like clapi pattern)
   if (options?.useNewDoctorGalleryAPI && fullProfileData?.centers?.length > 0) {
-    // Get gallery for the first center (or we could loop through all centers)
-    const firstCenterId = fullProfileData.centers[0].id;
-    apiCalls.push(getDoctorGallery(firstCenterId));
+    // Get gallery for the first clinic center (center_type_id = 1)
+    const clinicCenter = fullProfileData.centers.find((center: any) => center.center_type_id === 1);
+    if (clinicCenter) {
+      apiCalls.push(getDoctorGallery(clinicCenter.id));
+    }
   }
 
   const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult, doctorCentersResult, doctorGalleryResult] =
