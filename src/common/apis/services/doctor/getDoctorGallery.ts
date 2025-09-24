@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { splunkInstance } from '@/common/services/splunk';
+import { drProfileClient } from '../../client';
 
 export interface DoctorGalleryResponse {
   id: string;
@@ -9,9 +10,9 @@ export interface DoctorGalleryResponse {
 }
 
 export const getDoctorGallery = async (centerId: string): Promise<DoctorGalleryResponse[]> => {
-  const url = `https://drprofile.paziresh24.com/api/centers/${centerId}/gallery`;
+  const url = `/api/centers/${centerId}/gallery`;
   try {
-    const { data } = await axios.get<DoctorGalleryResponse[]>(url, {
+    const { data } = await drProfileClient.get<DoctorGalleryResponse[]>(url, {
       timeout: 5000,
     });
 
@@ -38,7 +39,7 @@ export const getDoctorGallery = async (centerId: string): Promise<DoctorGalleryR
       type: 'api_error',
       event: {
         center_id: centerId,
-        url: `https://drprofile.paziresh24.com/api/centers/${centerId}/gallery`,
+        url: url,
         error_message: error instanceof Error ? error.message : String(error),
         error_status: error instanceof Error && 'response' in error ? (error as any).response?.status : null,
         error_data: error instanceof Error && 'response' in error ? (error as any).response?.data : null,
