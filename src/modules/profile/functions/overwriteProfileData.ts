@@ -149,7 +149,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
 
   const media = {
     aparat: source?.aparat_video_code ?? null,
-    gallery: overwriteData?.gallery ?? source?.centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
+    gallery: overwriteData?.gallery ?? source?.centers?.find((center: any) => center?.type_id === 1)?.gallery ?? [],
   };
 
   const symptomes = source?.symptomes ?? [];

@@ -181,8 +181,8 @@ export async function getAggregatedProfileData(
 
   // Conditionally add doctor gallery API call (like clapi pattern)
   if (options?.useNewDoctorGalleryAPI && fullProfileData?.centers?.length > 0) {
-    // Get gallery for the first clinic center (center_type_id = 1)
-    const clinicCenter = fullProfileData.centers.find((center: any) => center.center_type_id === 1);
+    // Get gallery for the first clinic center (type_id = 1)
+    const clinicCenter = fullProfileData.centers.find((center: any) => center.type_id === 1);
     if (clinicCenter) {
       apiCalls.push(getDoctorGallery(clinicCenter.id));
     }
