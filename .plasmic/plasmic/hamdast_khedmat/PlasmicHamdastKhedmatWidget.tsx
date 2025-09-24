@@ -64,7 +64,6 @@ import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBP
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 666TdydnqTmUJpihDvjWrt/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 666TdydnqTmUJpihDvjWrt/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -163,8 +162,6 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_paziresh_24_design_system =
-    useStyleTokens_paziresh_24_design_system();
 
   return (
     <div
@@ -178,7 +175,6 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >
@@ -270,130 +266,188 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
           >
             <DataCtxReader__>
               {$ctx => (
-                <div className={classNames(projectcss.all, sty.freeBox__lk2Ps)}>
-                  {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                    (() => {
-                      try {
-                        return $ctx.fetchedData;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
+                <React.Fragment>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__q61L5
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return (
+                            "آخرین بروزرسانی: " +
+                            $ctx.fetchedData[0]["last-update"]
+                          );
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0622\u062e\u0631\u06cc\u0646 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc:";
+                          }
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()
-                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                    const currentItem = __plasmic_item_0;
-                    const currentIndex = __plasmic_idx_0;
-                    return (
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox__fGg6M
-                        )}
-                        key={currentIndex}
-                      >
+                      })()}
+                    </React.Fragment>
+                  </div>
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__lk2Ps)}
+                  >
+                    {(_par =>
+                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                      (() => {
+                        try {
+                          return $ctx.fetchedData;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return [];
+                          }
+                          throw e;
+                        }
+                      })()
+                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                      const currentItem = __plasmic_item_0;
+                      const currentIndex = __plasmic_idx_0;
+                      return (
                         <div
                           className={classNames(
                             projectcss.all,
-                            sty.freeBox__bpIu
+                            sty.freeBox__fGg6M
                           )}
+                          key={currentIndex}
                         >
                           <div
                             className={classNames(
                               projectcss.all,
-                              sty.freeBox__bo6S4
+                              sty.freeBox__bpIu
                             )}
                           >
                             <div
                               className={classNames(
                                 projectcss.all,
-                                sty.freeBox__y1Y7J
+                                sty.freeBox__bo6S4
                               )}
                             >
                               <div
                                 className={classNames(
                                   projectcss.all,
-                                  projectcss.__wab_text,
-                                  sty.text___1EujM
+                                  sty.freeBox__y1Y7J
                                 )}
                               >
-                                <React.Fragment>
-                                  {(() => {
-                                    try {
-                                      return currentIndex + 1;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return "2";
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text___1EujM
+                                  )}
+                                >
+                                  <React.Fragment>
+                                    {(() => {
+                                      try {
+                                        return currentIndex + 1;
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return "2";
+                                        }
+                                        throw e;
                                       }
-                                      throw e;
-                                    }
-                                  })()}
-                                </React.Fragment>
+                                    })()}
+                                  </React.Fragment>
+                                </div>
                               </div>
-                            </div>
-                            <div
-                              className={classNames(
-                                projectcss.all,
-                                projectcss.__wab_text,
-                                sty.text__l8Ykl
-                              )}
-                            >
-                              {"\u062a\u0648\u0645\u0627\u0646"}
-                            </div>
-                            {(() => {
-                              try {
-                                return true;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return true;
-                                }
-                                throw e;
-                              }
-                            })() ? (
                               <div
                                 className={classNames(
                                   projectcss.all,
                                   projectcss.__wab_text,
-                                  sty.text__oiOQf
+                                  sty.text__l8Ykl
+                                )}
+                              >
+                                {"\u062a\u0648\u0645\u0627\u0646"}
+                              </div>
+                              {(() => {
+                                try {
+                                  return true;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return true;
+                                  }
+                                  throw e;
+                                }
+                              })() ? (
+                                <div
+                                  className={classNames(
+                                    projectcss.all,
+                                    projectcss.__wab_text,
+                                    sty.text__oiOQf
+                                  )}
+                                >
+                                  <React.Fragment>
+                                    {(() => {
+                                      try {
+                                        return null ==
+                                          $ctx.fetchedData[currentIndex]
+                                            .price_max
+                                          ? Number(
+                                              $ctx.fetchedData[currentIndex]
+                                                .price_min
+                                            ).toLocaleString("en-US")
+                                          : $ctx.fetchedData[currentIndex]
+                                              .price_max == null ||
+                                            $ctx.fetchedData[currentIndex]
+                                              .price_max === ""
+                                          ? Number(
+                                              $ctx.fetchedData[currentIndex]
+                                                .price_min
+                                            ).toLocaleString("en-US")
+                                          : Number(
+                                              $ctx.fetchedData[currentIndex]
+                                                .price_min
+                                            ).toLocaleString("en-US") +
+                                            " تا " +
+                                            Number(
+                                              $ctx.fetchedData[currentIndex]
+                                                .price_max
+                                            ).toLocaleString("en-US");
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return "";
+                                        }
+                                        throw e;
+                                      }
+                                    })()}
+                                  </React.Fragment>
+                                </div>
+                              ) : null}
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  projectcss.__wab_text,
+                                  sty.text__jhxxi
                                 )}
                               >
                                 <React.Fragment>
                                   {(() => {
                                     try {
-                                      return null ==
-                                        $ctx.fetchedData[currentIndex].price_max
-                                        ? Number(
-                                            $ctx.fetchedData[currentIndex]
-                                              .price_min
-                                          ).toLocaleString("en-US")
-                                        : $ctx.fetchedData[currentIndex]
-                                            .price_max == null ||
-                                          $ctx.fetchedData[currentIndex]
-                                            .price_max === ""
-                                        ? Number(
-                                            $ctx.fetchedData[currentIndex]
-                                              .price_min
-                                          ).toLocaleString("en-US")
-                                        : Number(
-                                            $ctx.fetchedData[currentIndex]
-                                              .price_min
-                                          ).toLocaleString("en-US") +
-                                          " تا " +
-                                          Number(
-                                            $ctx.fetchedData[currentIndex]
-                                              .price_max
-                                          ).toLocaleString("en-US");
+                                      return $ctx.fetchedData[currentIndex]
+                                        .service;
                                     } catch (e) {
                                       if (
                                         e instanceof TypeError ||
@@ -407,58 +461,35 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                                   })()}
                                 </React.Fragment>
                               </div>
-                            ) : null}
-                            <div
-                              className={classNames(
-                                projectcss.all,
-                                projectcss.__wab_text,
-                                sty.text__jhxxi
-                              )}
-                            >
-                              <React.Fragment>
-                                {(() => {
-                                  try {
-                                    return $ctx.fetchedData[currentIndex]
-                                      .service;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return "";
-                                    }
-                                    throw e;
-                                  }
-                                })()}
-                              </React.Fragment>
                             </div>
-                          </div>
-                          {(() => {
-                            try {
-                              return $ctx.fetchedData.length > currentIndex + 1;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return true;
+                            {(() => {
+                              try {
+                                return (
+                                  $ctx.fetchedData.length > currentIndex + 1
+                                );
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return true;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })() ? (
-                            <div
-                              className={classNames(
-                                projectcss.all,
-                                sty.freeBox__q7ADd
-                              )}
-                            />
-                          ) : null}
+                            })() ? (
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  sty.freeBox__q7ADd
+                                )}
+                              />
+                            ) : null}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                </React.Fragment>
               )}
             </DataCtxReader__>
           </DataFetcher>

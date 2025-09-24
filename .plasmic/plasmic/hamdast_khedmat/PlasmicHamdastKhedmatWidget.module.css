@@ -64,6 +64,16 @@
   height: 24px;
   align-self: center;
 }
+.text__q61L5 {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: right;
+  font-size: 13.5px;
+  font-weight: 400;
+  min-width: 0;
+}
 .freeBox__lk2Ps {
   display: flex;
   flex-direction: column;
@@ -194,8 +204,8 @@
   left: auto;
   top: 0;
   color: #2b2e33;
-  padding-left: 4px;
-  margin-left: 111px;
+  padding-left: 6px;
+  margin-left: 86px;
   font-size: 14px;
   padding-bottom: 0px;
   z-index: 1;
