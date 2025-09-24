@@ -181,7 +181,8 @@ export async function getAggregatedProfileData(
 
   // Conditionally add doctor gallery API call (like clapi pattern)
   if (options?.useNewDoctorGalleryAPI && fullProfileData?.centers?.length > 0) {
-    // Get gallery for the first clinic center (type_id = 1)
+    // Get gallery for the first clinic center (type_id = 1) from fullProfile
+    // Note: If new centers API is used, we'll handle it after Promise.allSettled
     const clinicCenter = fullProfileData.centers.find((center: any) => center.type_id === 1);
     if (clinicCenter) {
       apiCalls.push(getDoctorGallery(clinicCenter.id));
@@ -212,8 +213,17 @@ export async function getAggregatedProfileData(
     options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
 
   // Extract doctor gallery from API response (like clapi pattern)
-  const doctorGallery =
+  let doctorGallery =
     options?.useNewDoctorGalleryAPI && doctorGalleryResult?.status === 'fulfilled' ? doctorGalleryResult.value : null;
+
+  // If gallery API was not called but centers API was used, try to get gallery from centers API
+  if (!doctorGallery && options?.useNewDoctorGalleryAPI && options?.useNewDoctorCentersAPI && doctorCenters?.length > 0) {
+    const clinicCenter = doctorCenters.find((center: any) => center.type_id === 1);
+    if (clinicCenter) {
+      // We could make another API call here, but for now we'll use the gallery from centers data if available
+      doctorGallery = clinicCenter.gallery || null;
+    }
+  }
 
 
   // Transform expertise data to match expected format
