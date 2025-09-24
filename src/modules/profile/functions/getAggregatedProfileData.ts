@@ -6,6 +6,7 @@ import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExper
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -87,7 +88,7 @@ export async function getAggregatedProfileData(
   slug: string,
   university: string | undefined,
   isServer: boolean,
-  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean },
+  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean; useNewDoctorGalleryAPI?: boolean },
 ) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
@@ -178,6 +179,7 @@ export async function getAggregatedProfileData(
     apiCalls.push(getDoctorCenters(slug));
   }
 
+
   const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult, doctorCentersResult] =
     await Promise.allSettled(apiCalls);
 
@@ -200,6 +202,31 @@ export async function getAggregatedProfileData(
   // Extract doctor centers from API response (like clapi pattern)
   const doctorCenters =
     options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
+
+  // Handle gallery API call after all other requests (depends on centers)
+  let doctorGallery = null;
+  if (options?.useNewDoctorGalleryAPI) {
+    let clinicCenterId = null;
+    
+    if (options?.useNewDoctorCentersAPI && doctorCenters?.length > 0) {
+      // Use new centers API data with type_id
+      const clinicCenter = doctorCenters.find((center: any) => center.type_id === 1);
+      clinicCenterId = clinicCenter?.id;
+    } else if (fullProfileData?.centers?.length > 0) {
+      // Fallback to fullProfile data with center_type_id
+      const clinicCenter = fullProfileData.centers.find((center: any) => center.center_type === 1);
+      clinicCenterId = clinicCenter?.id;
+    }
+    
+    if (clinicCenterId) {
+      try {
+        doctorGallery = await getDoctorGallery(clinicCenterId);
+      } catch (error) {
+        console.error('Error fetching doctor gallery:', error);
+        doctorGallery = null;
+      }
+    }
+  }
 
 
   // Transform expertise data to match expected format
@@ -245,6 +272,11 @@ export async function getAggregatedProfileData(
     ...(options?.useNewDoctorCentersAPI &&
       doctorCenters?.length > 0 && {
         centers: doctorCenters,
+      }),
+    // Add gallery to overwriteData if new API is used and successful
+    ...(options?.useNewDoctorGalleryAPI &&
+      doctorGallery && doctorGallery.length > 0 && {
+        gallery: doctorGallery,
       }),
   };
 
