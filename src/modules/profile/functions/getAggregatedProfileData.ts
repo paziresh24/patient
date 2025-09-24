@@ -179,17 +179,8 @@ export async function getAggregatedProfileData(
     apiCalls.push(getDoctorCenters(slug));
   }
 
-  // Conditionally add doctor gallery API call (like clapi pattern)
-  if (options?.useNewDoctorGalleryAPI && fullProfileData?.centers?.length > 0) {
-    // Get gallery for the first clinic center (type_id = 1) from fullProfile
-    // Note: If new centers API is used, we'll handle it after Promise.allSettled
-    const clinicCenter = fullProfileData.centers.find((center: any) => center.type_id === 1);
-    if (clinicCenter) {
-      apiCalls.push(getDoctorGallery(clinicCenter.id));
-    }
-  }
 
-  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult, doctorCentersResult, doctorGalleryResult] =
+  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult, doctorCentersResult] =
     await Promise.allSettled(apiCalls);
 
   // Extract doctor full name from API response (like clapi pattern)
@@ -212,16 +203,28 @@ export async function getAggregatedProfileData(
   const doctorCenters =
     options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
 
-  // Extract doctor gallery from API response (like clapi pattern)
-  let doctorGallery =
-    options?.useNewDoctorGalleryAPI && doctorGalleryResult?.status === 'fulfilled' ? doctorGalleryResult.value : null;
-
-  // If gallery API was not called but centers API was used, try to get gallery from centers API
-  if (!doctorGallery && options?.useNewDoctorGalleryAPI && options?.useNewDoctorCentersAPI && doctorCenters?.length > 0) {
-    const clinicCenter = doctorCenters.find((center: any) => center.type_id === 1);
-    if (clinicCenter) {
-      // We could make another API call here, but for now we'll use the gallery from centers data if available
-      doctorGallery = clinicCenter.gallery || null;
+  // Handle gallery API call after all other requests (depends on centers)
+  let doctorGallery = null;
+  if (options?.useNewDoctorGalleryAPI) {
+    let clinicCenterId = null;
+    
+    if (options?.useNewDoctorCentersAPI && doctorCenters?.length > 0) {
+      // Use new centers API data with type_id
+      const clinicCenter = doctorCenters.find((center: any) => center.type_id === 1);
+      clinicCenterId = clinicCenter?.id;
+    } else if (fullProfileData?.centers?.length > 0) {
+      // Fallback to fullProfile data with center_type_id
+      const clinicCenter = fullProfileData.centers.find((center: any) => center.center_type === 1);
+      clinicCenterId = clinicCenter?.id;
+    }
+    
+    if (clinicCenterId) {
+      try {
+        doctorGallery = await getDoctorGallery(clinicCenterId);
+      } catch (error) {
+        console.error('Error fetching doctor gallery:', error);
+        doctorGallery = null;
+      }
     }
   }
 
@@ -272,7 +275,7 @@ export async function getAggregatedProfileData(
       }),
     // Add gallery to overwriteData if new API is used and successful
     ...(options?.useNewDoctorGalleryAPI &&
-      doctorGallery?.length > 0 && {
+      doctorGallery && doctorGallery.length > 0 && {
         gallery: doctorGallery,
       }),
   };
