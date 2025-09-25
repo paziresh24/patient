@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
-
 const isProduction = process.env.NODE_ENV === 'production';
 
 const plugins = [nextTranslate];
@@ -17,6 +16,7 @@ if (process.env.ANALYZE === 'true') {
 const nextConfig = {
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+    instrumentationHook: true,
   },
   webpack: (config, { webpack }) => {
     /**
@@ -113,5 +113,5 @@ const nextConfig = {
 
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-// Sentry should be the last thing to export to catch everything right
 module.exports = moduleExports;
+

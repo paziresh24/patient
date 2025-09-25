@@ -130,3 +130,4 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
 }
 
 export default MyApp;
+
