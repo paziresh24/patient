@@ -14,7 +14,11 @@ RUN npm config set fetch-retry-mintimeout 100000 && \
     npm config set fetch-retry-maxtimeout 600000 && \
     npm cache verify && \
     npm install --force && \
-    npm install --save-dev typescript @types/react eslint
+    npm install --save-dev typescript@latest @types/react @types/node @types/minimatch eslint
+
+# Fix audit issues and install remaining types
+RUN npm audit fix --force || true && \
+    npm i --save-dev @types/eslint @types/node @types/jest
 
 # Copy source files
 COPY . .
