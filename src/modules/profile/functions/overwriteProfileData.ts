@@ -79,9 +79,9 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         center_type: newCenter.type_id, // Map type_id to center_type
         status: newCenter.status,
         server_id: newCenter.server_id,
-        city: newCenter.city?.name || newCenter.city || sourceCenter.city,
+        city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null) || sourceCenter.city,
         city_en_slug: newCenter.city?.slug,
-        province: newCenter.city?.province?.name,
+        province: newCenter.city?.province?.name || (typeof newCenter.city?.province === 'string' ? newCenter.city.province : null),
         map: newCenter.location ? {
           lat: newCenter.location.lat,
           lon: newCenter.location.lon
