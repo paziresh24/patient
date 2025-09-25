@@ -1,33 +1,35 @@
-FROM node:18.19.1
+FROM node:18.19.1 as deps
 
 WORKDIR /app
 
-ENV DOCKER_BUILDKIT=1
-ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
-
-# Copy package files
-COPY package.json .npmrc ./
+# Copy all files
+COPY . .
 
 # Install dependencies with clean slate
-RUN npm config set fetch-retry-mintimeout 100000 && \
-    npm config set fetch-retry-maxtimeout 600000 && \
-    npm cache clean --force && \
-    rm -rf node_modules && \
-    npm install --force && \
-    npm install --save-dev typescript@latest @types/react @types/node @types/minimatch eslint
+RUN npm install --force
 
-# Generate fresh package-lock.json
-RUN npm install --package-lock-only && \
-    npm audit fix --force || true
+FROM node:18.19.1 as builder
 
-# Copy source files
-COPY . .
+WORKDIR /app
+
+# Copy from deps stage
+COPY --from=deps /app .
 
 # Build the application
 RUN npm run build
 
-EXPOSE 3000
+FROM node:18.19.1 as runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
 ENV PORT=3000
+
+# Copy necessary files from builder
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
+EXPOSE 3000
 
 CMD ["npm", "start"]
