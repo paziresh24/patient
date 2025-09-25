@@ -24,8 +24,15 @@ import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGl
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { initFaro } from '@/common/services/faro';
 
 const { publicRuntimeConfig } = getConfig();
+
+// Debug Faro configuration
+console.log('Faro ENV Variables:', {
+  url: process.env.NEXT_PUBLIC_GRAFANA_FARO_URL,
+  app: process.env.NEXT_PUBLIC_GRAFANA_FARO_APP,
+});
 
 const isEnabledGrowthbook = !!publicRuntimeConfig.GROWTHBOOK_API_HOST && !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
 
@@ -65,13 +72,14 @@ function MyApp(props: AppProps) {
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
         id: getCookie('terminal_id'),
+        userId: user?.id, // Add user ID for targeting
       });
       router.events.on('routeChangeComplete', updateGrowthBookURL);
     }
     return () => {
       if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
     };
-  }, [router.query]);
+  }, [router.query, user?.id]);
 
   useEffect(() => {
     growthbook.setAttributes({
@@ -97,6 +105,16 @@ function MyApp(props: AppProps) {
       };
     }
   }, [isLogin, isApplication]);
+
+  // Initialize Grafana Faro only for specific users based on feature flag
+  useEffect(() => {
+    if (growthbook.ready) {
+      const isFaroEnabled = growthbook.isOn('enable-faro');
+      if (isFaroEnabled) {
+        initFaro();
+      }
+    }
+  }, [growthbook.ready]);
 
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? (page => page);
@@ -130,3 +148,4 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
 }
 
 export default MyApp;
+

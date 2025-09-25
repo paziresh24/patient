@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -114,4 +115,17 @@ const nextConfig = {
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
 // Sentry should be the last thing to export to catch everything right
-module.exports = moduleExports;
+const updatedConfig = {
+  ...nextConfig,
+  experimental: {
+    ...nextConfig.experimental,
+    instrumentationHook: true,
+  },
+};
+
+// Apply each plugin to the config
+const finalConfig = plugins.reduce((acc, plugin) => plugin(acc), updatedConfig);
+
+// Finally, apply Sentry config
+module.exports = withSentryConfig(finalConfig);
+
