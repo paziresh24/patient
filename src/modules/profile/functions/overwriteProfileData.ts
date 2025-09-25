@@ -8,7 +8,6 @@ import isEmpty from 'lodash/isEmpty';
 const mapNewServicesToOldFormat = (newServices: any[]) => {
   return newServices.map((service: any) => ({
     is_default: 1, // Default value
-    user_center_id: "407",
     can_request: service.can_request ? 1 : 0,
     request_desc: service.request_description,
     terms_and_conditions: service.terms_and_conditions,
