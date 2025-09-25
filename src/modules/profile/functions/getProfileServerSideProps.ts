@@ -33,6 +33,7 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
       const useNewDoctorBiographyAPI = growthbook.isOn('doctor_bio_for_new_profileapi');
       const useNewDoctorCentersAPI = growthbook.isOn('doctor_centers_for_new_profileapi');
       const useNewDoctorGalleryAPI = growthbook.isOn('doctor_galery_for_new_profileapi');
+      const useNewDoctorServicesAPI = growthbook.isOn('doctor_sericeslift_for_new_profileapi');
       
       console.log('🔍 Server-side feature flags for slug:', slug);
       
@@ -44,6 +45,7 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
         useNewDoctorBiographyAPI: useNewDoctorBiographyAPI,
         useNewDoctorCentersAPI: useNewDoctorCentersAPI,
         useNewDoctorGalleryAPI: useNewDoctorGalleryAPI,
+        useNewDoctorServicesAPI: useNewDoctorServicesAPI,
       });
 
       return {
