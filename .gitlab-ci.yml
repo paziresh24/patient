@@ -42,4 +42,3 @@ deploy:
   tags:
     - arvan
     - docker
-  when: manual
