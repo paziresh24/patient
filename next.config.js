@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
-const { withSentryConfig } = require('@sentry/nextjs');
-
 const isProduction = process.env.NODE_ENV === 'production';
 
 const plugins = [nextTranslate];
@@ -18,6 +16,7 @@ if (process.env.ANALYZE === 'true') {
 const nextConfig = {
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+    instrumentationHook: true,
   },
   webpack: (config, { webpack }) => {
     /**
@@ -114,18 +113,5 @@ const nextConfig = {
 
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-// Sentry should be the last thing to export to catch everything right
-const updatedConfig = {
-  ...nextConfig,
-  experimental: {
-    ...nextConfig.experimental,
-    instrumentationHook: true,
-  },
-};
-
-// Apply each plugin to the config
-const finalConfig = plugins.reduce((acc, plugin) => plugin(acc), updatedConfig);
-
-// Finally, apply Sentry config
-module.exports = withSentryConfig(finalConfig);
+module.exports = moduleExports;
 
