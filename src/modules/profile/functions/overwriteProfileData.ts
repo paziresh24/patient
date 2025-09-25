@@ -4,6 +4,26 @@ import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
+// Helper function to map new services API format to old fullProfile format
+const mapNewServicesToOldFormat = (newServices: any[]) => {
+  return newServices.map((service: any) => ({
+    is_default: 1, // Default value
+    can_request: service.can_request ? 1 : 0,
+    request_desc: service.request_description,
+    terms_and_conditions: service.terms_and_conditions,
+    duration: service.duration,
+    can_booking: service.can_booking ? 1 : 0,
+    id: service.service.id,
+    alias_title: service.service.title,
+    free_price: service.service.price,
+    desk: null,
+    dollar_price: "0.00",
+    currency: "euro",
+    service_type_id: service.service.service_type_id,
+    service_length: null,
+  }));
+};
+
 export type OverwriteProfileData = {
   provider: {
     prefix?: string;
@@ -36,6 +56,8 @@ export type OverwriteProfileData = {
   biography?: string;
   centers?: any;
   gallery?: any;
+  services?: any;
+  servicesData?: any;
 };
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
@@ -86,8 +108,18 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
           lat: newCenter.location.lat,
           lon: newCenter.location.lon
         } : sourceCenter.map,
-        // Keep services from full profile
-        services: sourceCenter.services,
+        // Use new services API data for this specific center if available, otherwise keep services from full profile
+        services: (() => {
+          if (overwriteData?.servicesData) {
+            const centerServices = overwriteData.servicesData.find((serviceData: any) => serviceData.centerId === newCenter.id);
+            if (centerServices?.services) {
+              // Map new services format to old fullProfile format
+              return mapNewServicesToOldFormat(centerServices.services);
+            }
+            return sourceCenter.services;
+          }
+          return overwriteData?.services || sourceCenter.services;
+        })(),
         // Keep other full profile fields like freeturn, settings, etc.
       };
     } else {
@@ -104,10 +136,21 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
           lat: newCenter.location.lat,
           lon: newCenter.location.lon
         } : null,
-        services: []
+        services: (() => {
+          if (overwriteData?.servicesData) {
+            const centerServices = overwriteData.servicesData.find((serviceData: any) => serviceData.centerId === newCenter.id);
+            if (centerServices?.services) {
+              // Map new services format to old fullProfile format
+              return mapNewServicesToOldFormat(centerServices.services);
+            }
+            return [];
+          }
+          return overwriteData?.services || [];
+        })()
       };
     }
   }) ?? source?.centers ?? [];
+console.log('centers', centers);
 
   const expertises = {
     group_expertises: isEmpty(group_expertises)
