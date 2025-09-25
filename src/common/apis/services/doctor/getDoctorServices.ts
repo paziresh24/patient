@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { drProfileClient } from '../../client';
 import { splunkInstance } from '@/common/services/splunk';
 
 export interface DoctorServiceResponse {
@@ -19,13 +19,10 @@ export interface DoctorServiceResponse {
 }
 
 export const getDoctorServices = async (slug: string, centerId: string): Promise<DoctorServiceResponse[]> => {
-  const url = `https://drprofile.paziresh24.com/api/doctors/${slug}/centers/${centerId}/services`;
+  const url = `/api/doctors/${slug}/centers/${centerId}/services`;
   try {
-    const { data } = await axios.get<DoctorServiceResponse[]>(url, {
-      timeout: 5000,
-      headers: {
-        'Accept': 'application/json',
-      },
+    const { data } = await drProfileClient.get<DoctorServiceResponse[]>(url, {
+      timeout: 5000
     });
 
     // Send success event to Splunk
@@ -53,7 +50,7 @@ export const getDoctorServices = async (slug: string, centerId: string): Promise
       event: {
         slug: slug,
         center_id: centerId,
-        url: `https://drprofile.paziresh24.com/api/doctors/${slug}/centers/${centerId}/services`,
+        url: url,
         error_message: error instanceof Error ? error.message : String(error),
         error_status: error instanceof Error && 'response' in error ? (error as any).response?.status : null,
         error_data: error instanceof Error && 'response' in error ? (error as any).response?.data : null,
