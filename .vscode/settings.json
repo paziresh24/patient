@@ -1,6 +1,0 @@
-{
-  "yaml.schemas": {
-    "file:///home/plusin/.vscode/extensions/continue.continue-1.2.4-linux-x64/config-yaml-schema.json": [".continue/**/*.yaml"],
-    "https://www.schemastore.org/yamllint.json": "untitled:/etc/alloy/config.yaml"
-  }
-}
