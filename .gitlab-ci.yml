@@ -26,7 +26,6 @@ build_and_push:
     - arvan
     - docker
 
----
 
 deploy:
   stage: deploy
@@ -46,7 +45,6 @@ deploy:
     - arvan
     - docker
 
----
 
 webhook:
   stage: webhook
