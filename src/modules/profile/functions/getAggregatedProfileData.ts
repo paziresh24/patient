@@ -7,7 +7,6 @@ import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
-import { getDoctorServices } from '@/common/apis/services/doctor/getDoctorServices';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -89,7 +88,7 @@ export async function getAggregatedProfileData(
   slug: string,
   university: string | undefined,
   isServer: boolean,
-  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean; useNewDoctorGalleryAPI?: boolean; useNewDoctorServicesAPI?: boolean },
+  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean; useNewDoctorGalleryAPI?: boolean },
 ) {
   const queryClient = new QueryClient();
   const pageSlug = `/dr/${slug}`;
@@ -229,41 +228,6 @@ export async function getAggregatedProfileData(
     }
   }
 
-  // Handle services API call after gallery (depends on centers)
-  let doctorServices = null;
-  if (options?.useNewDoctorServicesAPI) {
-    let centersToFetch = [];
-    
-    if (options?.useNewDoctorCentersAPI && doctorCenters?.length > 0) {
-      // Use new centers API data
-      centersToFetch = doctorCenters;
-    } else if (fullProfileData?.centers?.length > 0) {
-      // Fallback to fullProfile data
-      centersToFetch = fullProfileData.centers;
-    }
-    
-    if (centersToFetch.length > 0) {
-      try {
-        // Fetch services for all centers
-        const servicesPromises = centersToFetch.map(async (center: any) => {
-          try {
-            const centerId = center.id;
-            const services = await getDoctorServices(slug, centerId);
-            return { centerId, services };
-          } catch (error) {
-            console.error(`Error fetching services for center ${center.id}:`, error);
-            return { centerId: center.id, services: [] };
-          }
-        });
-        
-        const servicesResults = await Promise.all(servicesPromises);
-        doctorServices = servicesResults;
-      } catch (error) {
-        console.error('Error fetching doctor services:', error);
-        doctorServices = null;
-      }
-    }
-  }
 
   // Transform expertise data to match expected format
   const transformedExpertise =
@@ -313,11 +277,6 @@ export async function getAggregatedProfileData(
     ...(options?.useNewDoctorGalleryAPI &&
       doctorGallery && doctorGallery.length > 0 && {
         gallery: doctorGallery,
-      }),
-    // Add services to overwriteData if new API is used and successful
-    ...(options?.useNewDoctorServicesAPI &&
-      doctorServices && doctorServices.length > 0 && {
-        servicesData: doctorServices,
       }),
   };
 
@@ -381,7 +340,7 @@ export async function getAggregatedProfileData(
       similarLinks,
       waitingTimeInfo,
       isBulk: !!(
-        centers?.every?.((c: any) => c.status === 2) 
+        centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services?.every?.((s: any) => !s.hours_of_work))
       ),
       breadcrumbs: createBreadcrumb(
         internalLinksResult.status === 'fulfilled' ? internalLinksResult.value : [],

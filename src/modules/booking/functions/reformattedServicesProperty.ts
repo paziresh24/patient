@@ -4,7 +4,7 @@ export const reformattedServicesProperty = ({ services, center }: { services: an
     return {
       id: service.id,
       name: service.alias_title,
-      isDisable: !service.can_booking || service.can_booking === 0,
+      isDisable: !service.hours_of_work || !service.can_booking || service.can_booking === 0,
       isAvailable: !freeturnsInfo?.available_time || freeturnsInfo?.available_time < Math.floor(new Date().getTime() / 1000),
       availableTime: freeturnsInfo?.availalbe_time_text,
       userCenterId: service.user_center_id,
