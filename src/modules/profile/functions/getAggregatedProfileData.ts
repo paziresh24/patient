@@ -7,6 +7,7 @@ import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
+import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -91,34 +92,44 @@ export async function getAggregatedProfileData(
   options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean; useNewDoctorGalleryAPI?: boolean },
 ) {
   const queryClient = new QueryClient();
-  const pageSlug = `/dr/${slug}`;
 
   let slugInfo = null;
+  let validatedSlug = slug;
 
   if (options?.useClApi) {
     try {
-      const slugInfoEndpoint = `/api/doctors/${encodeURIComponent(slug)}`;
-      splunkInstance('doctor-profile').sendEvent({
-        group: 'profile_api_request',
-        type: 'profile_api_request',
-        event: {
-          endpoint: slugInfoEndpoint,
-          slug: slug,
-          isServer: isServer,
-        },
-      });
-      const data = await drProfileClient.get(slugInfoEndpoint, {
-        timeout: 1000,
-      });
-      slugInfo = data?.data;
+      const slugValidationResult = await validateDoctorSlug(slug);
+      
+      // Check if response contains redirect information
+      if ('redirect' in slugValidationResult) {
+        if (isServer) {
+          return { 
+            redirect: { 
+              statusCode: slugValidationResult.redirect.statusCode, 
+              destination: encodeURI(slugValidationResult.redirect.route) 
+            }, 
+            props: {} 
+          };
+        } else {
+          return location.replace(encodeURI(slugValidationResult.redirect.route));
+        }
+      }
+
+      // Valid slug response - use the validated slug
+      slugInfo = slugValidationResult;
+      validatedSlug = slugValidationResult.slug;
+      
     } catch (error) {
-      //
+      console.error('Error validating doctor slug:', error);
+      // Continue with original slug if validation fails
     }
   }
 
+  const pageSlug = `/dr/${validatedSlug}`;
+
   let fullProfileData;
   try {
-    const { redirect, fullProfileData: data } = await getProfile({ slug, university, isServer: isServer });
+    const { redirect, fullProfileData: data } = await getProfile({ slug: validatedSlug, university, isServer: isServer });
     fullProfileData = data;
     if (redirect) {
       if (isServer) {
@@ -134,7 +145,7 @@ export async function getAggregatedProfileData(
   }
 
   const rateDetailsResult = await getRateDetailsData({
-    slug,
+    slug: validatedSlug,
   }).catch(() => null);
 
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
@@ -144,39 +155,39 @@ export async function getAggregatedProfileData(
       links: getSearchLinks({ centers: fullProfileData?.centers, group_expertises: fullProfileData?.group_expertises ?? [] }),
     }),
     shouldFetchReviews
-      ? queryClient.fetchQuery([ServerStateKeysEnum.Feedbacks, { slug, sort: 'default_order', showOnlyPositiveFeedbacks: true }], () =>
-          getReviews({ slug, sort: 'default_order', showOnlyPositiveFeedbacks: true }),
+      ? queryClient.fetchQuery([ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }], () =>
+          getReviews({ slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }),
         )
       : Promise.resolve(null),
     getAverageWaitingTime({
-      slug,
+      slug: validatedSlug,
     }),
     axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: fullProfileData?.id }, timeout: 1500 }),
   ];
 
   // Conditionally add doctor full name API call (like clapi pattern)
   if (options?.useNewDoctorFullNameAPI) {
-    apiCalls.push(getDoctorFullName(slug));
+    apiCalls.push(getDoctorFullName(validatedSlug));
   }
 
   // Conditionally add doctor expertise API call (like clapi pattern)
   if (options?.useNewDoctorExpertiseAPI) {
-    apiCalls.push(getDoctorExpertise(slug));
+    apiCalls.push(getDoctorExpertise(validatedSlug));
   }
 
   // Conditionally add doctor image API call (like clapi pattern)
   if (options?.useNewDoctorImageAPI) {
-    apiCalls.push(getDoctorImage(slug));
+    apiCalls.push(getDoctorImage(validatedSlug));
   }
 
   // Conditionally add doctor biography API call (like clapi pattern)
   if (options?.useNewDoctorBiographyAPI) {
-    apiCalls.push(getDoctorBiography(slug));
+    apiCalls.push(getDoctorBiography(validatedSlug));
   }
 
   // Conditionally add doctor centers API call (like clapi pattern)
   if (options?.useNewDoctorCentersAPI) {
-    apiCalls.push(getDoctorCenters(slug));
+    apiCalls.push(getDoctorCenters(validatedSlug));
   }
 
 
@@ -297,7 +308,7 @@ export async function getAggregatedProfileData(
   if (!university) {
     try {
       if (!slugInfo?.user_id) {
-        const { data } = await drProfileClient.get(`/api/doctors/${encodeURIComponent(slug)}`, {
+        const { data } = await drProfileClient.get(`/api/doctors/${encodeURIComponent(validatedSlug)}`, {
           timeout: 3000,
         });
 
@@ -347,7 +358,7 @@ export async function getAggregatedProfileData(
         information?.display_name,
         pageSlug,
       ),
-      slug,
+      slug: validatedSlug,
       fragmentComponents: {
         // Note: Flags would need to be handled differently on the client
         raviComponentTopOrderProfile: false, // Default value for client
