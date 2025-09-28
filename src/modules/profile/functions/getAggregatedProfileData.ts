@@ -89,60 +89,82 @@ export async function getAggregatedProfileData(
   slug: string,
   university: string | undefined,
   isServer: boolean,
-  options?: { useClApi?: boolean; useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean; useNewDoctorGalleryAPI?: boolean },
+  options?: { useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean; useNewDoctorGalleryAPI?: boolean },
 ) {
   const queryClient = new QueryClient();
 
   let slugInfo = null;
   let validatedSlug = slug;
+  let fullProfileData = null;
 
-  if (options?.useClApi) {
-    try {
-      const slugValidationResult = await validateDoctorSlug(slug);
-      
-      // Check if response contains redirect information
-      if ('redirect' in slugValidationResult) {
-        if (isServer) {
-          return { 
-            redirect: { 
-              statusCode: slugValidationResult.redirect.statusCode, 
-              destination: encodeURI(slugValidationResult.redirect.route) 
-            }, 
-            props: {} 
-          };
-        } else {
-          return location.replace(encodeURI(slugValidationResult.redirect.route));
-        }
+  // Start both slug validation and full profile calls in parallel
+  const [slugValidationResult, fullProfileResult] = await Promise.allSettled([
+    validateDoctorSlug(slug),
+    getProfile({ slug, university, isServer: isServer })
+  ]);
+
+  // Handle slug validation result first (this handles redirects)
+  if (slugValidationResult.status === 'fulfilled') {
+    const result = slugValidationResult.value;
+    
+    // Handle redirects from slug validation service
+    if ('redirect' in result) {
+      if (isServer) {
+        return { 
+          redirect: { 
+            statusCode: result.redirect.statusCode, 
+            destination: encodeURI(result.redirect.route) 
+          }, 
+          props: {} 
+        };
+      } else {
+        return location.replace(encodeURI(result.redirect.route));
       }
-
-      // Valid slug response - use the validated slug
-      slugInfo = slugValidationResult;
-      validatedSlug = slugValidationResult.slug;
-      
-    } catch (error) {
-      console.error('Error validating doctor slug:', error);
-      // Continue with original slug if validation fails
     }
+
+    // Valid slug response - use the validated slug
+    slugInfo = result;
+    validatedSlug = result.slug;
+    
+    // Log successful slug validation
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'profile_slug_validation_primary',
+      type: 'slug_validation_primary_success',
+      event: {
+        original_slug: slug,
+        validated_slug: validatedSlug,
+        doctor_id: result.id,
+        user_id: result.user_id,
+        isServer: isServer,
+        timestamp: new Date().toISOString(),
+      },
+    });
+  } else {
+    // Log slug validation error
+    console.error('Error validating doctor slug:', slugValidationResult.reason);
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'profile_slug_validation_error',
+      type: 'slug_validation_error',
+      event: {
+        original_slug: slug,
+        error_message: slugValidationResult.reason instanceof Error ? slugValidationResult.reason.message : String(slugValidationResult.reason),
+        isServer: isServer,
+        timestamp: new Date().toISOString(),
+      },
+    });
+  }
+
+  // Handle full profile result (no redirect handling - just get data)
+  if (fullProfileResult.status === 'fulfilled') {
+    const { fullProfileData: data } = fullProfileResult.value;
+    fullProfileData = data;
+  } else {
+    // Full profile failed - this is a critical error
+    console.error('Error in full profile:', fullProfileResult.reason);
+    return Promise.reject(fullProfileResult.reason);
   }
 
   const pageSlug = `/dr/${validatedSlug}`;
-
-  let fullProfileData;
-  try {
-    const { redirect, fullProfileData: data } = await getProfile({ slug: validatedSlug, university, isServer: isServer });
-    fullProfileData = data;
-    if (redirect) {
-      if (isServer) {
-        return { redirect: { statusCode: redirect.statusCode, destination: encodeURI(redirect.route) }, props: {} };
-      } else {
-        return location.replace(encodeURI(redirect.route));
-      }
-    }
-  } catch (error) {
-    if (!options?.useClApi) {
-      return Promise.reject(error);
-    }
-  }
 
   const rateDetailsResult = await getRateDetailsData({
     slug: validatedSlug,
@@ -165,27 +187,27 @@ export async function getAggregatedProfileData(
     axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: fullProfileData?.id }, timeout: 1500 }),
   ];
 
-  // Conditionally add doctor full name API call (like clapi pattern)
+  // Conditionally add doctor full name API call
   if (options?.useNewDoctorFullNameAPI) {
     apiCalls.push(getDoctorFullName(validatedSlug));
   }
 
-  // Conditionally add doctor expertise API call (like clapi pattern)
+  // Conditionally add doctor expertise API call
   if (options?.useNewDoctorExpertiseAPI) {
     apiCalls.push(getDoctorExpertise(validatedSlug));
   }
 
-  // Conditionally add doctor image API call (like clapi pattern)
+  // Conditionally add doctor image API call
   if (options?.useNewDoctorImageAPI) {
     apiCalls.push(getDoctorImage(validatedSlug));
   }
 
-  // Conditionally add doctor biography API call (like clapi pattern)
+  // Conditionally add doctor biography API call
   if (options?.useNewDoctorBiographyAPI) {
     apiCalls.push(getDoctorBiography(validatedSlug));
   }
 
-  // Conditionally add doctor centers API call (like clapi pattern)
+  // Conditionally add doctor centers API call
   if (options?.useNewDoctorCentersAPI) {
     apiCalls.push(getDoctorCenters(validatedSlug));
   }
@@ -194,23 +216,23 @@ export async function getAggregatedProfileData(
   const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult, doctorCentersResult] =
     await Promise.allSettled(apiCalls);
 
-  // Extract doctor full name from API response (like clapi pattern)
+  // Extract doctor full name from API response
   const doctorFullName =
     options?.useNewDoctorFullNameAPI && doctorFullNameResult?.status === 'fulfilled' ? doctorFullNameResult.value : null;
 
-  // Extract doctor expertise from API response (like clapi pattern)
+  // Extract doctor expertise from API response
   const doctorExpertise =
     options?.useNewDoctorExpertiseAPI && doctorExpertiseResult?.status === 'fulfilled' ? doctorExpertiseResult.value : null;
 
-  // Extract doctor image from API response (like clapi pattern)
+  // Extract doctor image from API response
   const doctorImage =
     options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
 
-  // Extract doctor biography from API response (like clapi pattern)
+  // Extract doctor biography from API response
   const doctorBiography =
     options?.useNewDoctorBiographyAPI && doctorBiographyResult?.status === 'fulfilled' ? doctorBiographyResult.value : null;
 
-  // Extract doctor centers from API response (like clapi pattern)
+  // Extract doctor centers from API response
   const doctorCenters =
     options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
 

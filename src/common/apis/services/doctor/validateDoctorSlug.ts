@@ -66,7 +66,33 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
   } catch (error) {
     console.error('Error validating doctor slug:', error);
 
-    // Send error to Splunk
+    // Check if it's a 400 error and has redirect data in response
+    if (error instanceof Error && 'response' in error) {
+      const axiosError = error as any;
+      const status = axiosError.response?.status;
+      const responseData = axiosError.response?.data;
+
+      // If it's a 400 error and response contains redirect information
+      if (status === 400 && responseData && 'redirect' in responseData) {
+        // Send redirect event to Splunk for 400 error
+        splunkInstance('doctor-profile').sendEvent({
+          group: 'doctor_slug_redirect_400',
+          type: 'slug_redirect_400',
+          event: {
+            original_slug: slug,
+            redirect_route: responseData.redirect.route,
+            redirect_status_code: responseData.redirect.statusCode,
+            url: url,
+            error_status: status,
+            timestamp: new Date().toISOString(),
+          },
+        });
+
+        return responseData as DoctorSlugRedirectResponse;
+      }
+    }
+
+    // Send error to Splunk for other errors
     splunkInstance('doctor-profile').sendEvent({
       group: 'doctor_slug_validation_error',
       type: 'api_error',
@@ -80,7 +106,7 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
       },
     });
 
-    // Return a redirect response in case of error to maintain consistency
+    // Return a fallback redirect response for other errors
     return {
       redirect: {
         route: `/dr/${slug}/`,
