@@ -18,15 +18,12 @@ export interface GlobalContextsProviderProps {
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
 }
@@ -91,12 +88,12 @@ export default function GlobalContextsProvider(
             defaultApiHost={
               splunkProps && "defaultApiHost" in splunkProps
                 ? splunkProps.defaultApiHost!
-                : undefined
+                : "https://splunk-ravi-hec.paziresh24.com"
             }
             defaultApiKey={
               splunkProps && "defaultApiKey" in splunkProps
                 ? splunkProps.defaultApiKey!
-                : undefined
+                : "eyJraWQiOiJzcGx1bmsuc2VjcmV0IiwiYWxnIjoiSFM1MTIiLCJ2ZXIiOiJ2MiIsInR0eXAiOiJzdGF0aWMifQ.eyJpc3MiOiJhZG1pbiBmcm9tIHNwbHVuay1yYXZpLTU1NGI0ODQ1NGItbG1tenMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImZvciBjcm91ZCBzb3VyY2UiLCJpZHAiOiJTcGx1bmsiLCJqdGkiOiI3YWM2ZGI4MmU1YzlmMWFkZmVhNzY2Y2M5YjIyMGU3NWI5YzJiZWZmZWRmYmE0ODA4MzhmZmRjNWE5MTU2NWRhIiwiaWF0IjoxNzU5MDUyNTU1LCJleHAiOjE3NjE2NDQ1NTUsIm5iciI6MTc1OTA1MjU1NX0.KgEP7OMKADURJxtSh31LBAAxXa1xdB7R9a3ny5nK5X_mxHZVCHcrqLhp6vh4KaiwGEwtVoZ9w5FBcK58gXMwYw"
             }
           >
             <PWA {...pwaProps}>{children}</PWA>
