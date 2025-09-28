@@ -64,7 +64,6 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import BookingSchedules from "../../BookingSchedules"; // plasmic-import: Mt_WMP6AHSGv/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -183,8 +182,6 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
   const globalVariants = _useGlobalVariants();
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_fragment_design_system =
-    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -198,7 +195,6 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
     >
@@ -439,6 +435,19 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
           }
         })()}
         className={classNames("__wab_instance", sty.bookingSchedules)}
+        slug={(() => {
+          try {
+            return $props.slug;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         userCenterId={(() => {
           try {
             return $props.userCenterId;
