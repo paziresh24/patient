@@ -62,9 +62,9 @@ import {
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
+import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 666TdydnqTmUJpihDvjWrt/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 666TdydnqTmUJpihDvjWrt/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -143,6 +143,8 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
 
   const globalVariants = _useGlobalVariants();
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -163,8 +165,6 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_paziresh_24_design_system =
-    useStyleTokens_paziresh_24_design_system();
 
   return (
     <div
@@ -178,7 +178,6 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >
@@ -220,6 +219,44 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
               typeof $steps["updateModalOpen"].then === "function"
             ) {
               $steps["updateModalOpen"] = await $steps["updateModalOpen"];
+            }
+
+            $steps["updateModalNotiff"] = true
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            event_group: "khedmat_click_button",
+                            doctor_user_id: $props.profileData.user_id,
+                            doctor_slug: $props.profileData.seo.slug
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })(),
+                      "https://splunk-ravi-hec.paziresh24.com",
+                      `eyJraWQiOiJzcGx1bmsuc2VjcmV0IiwiYWxnIjoiSFM1MTIiLCJ2ZXIiOiJ2MiIsInR0eXAiOiJzdGF0aWMifQ.eyJpc3MiOiJhZG1pbiBmcm9tIHNwbHVuay1yYXZpLTU1NGI0ODQ1NGItbG1tenMiLCJzdWIiOiJhZG1pbiIsImF1ZCI6ImZvciBjcm91ZCBzb3VyY2UiLCJpZHAiOiJTcGx1bmsiLCJqdGkiOiI3YWM2ZGI4MmU1YzlmMWFkZmVhNzY2Y2M5YjIyMGU3NWI5YzJiZWZmZWRmYmE0ODA4MzhmZmRjNWE5MTU2NWRhIiwiaWF0IjoxNzU5MDUyNTU1LCJleHAiOjE3NjE2NDQ1NTUsIm5iciI6MTc1OTA1MjU1NX0.KgEP7OMKADURJxtSh31LBAAxXa1xdB7R9a3ny5nK5X_mxHZVCHcrqLhp6vh4KaiwGEwtVoZ9w5FBcK58gXMwYw${undefined}`
+                    ]
+                  };
+                  return $globalActions["Splunk.sendLog"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+            if (
+              $steps["updateModalNotiff"] != null &&
+              typeof $steps["updateModalNotiff"] === "object" &&
+              typeof $steps["updateModalNotiff"].then === "function"
+            ) {
+              $steps["updateModalNotiff"] = await $steps["updateModalNotiff"];
             }
           }}
           outline={true}
@@ -458,6 +495,32 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                       </div>
                     );
                   })}
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__q61L5
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return (
+                            "آخرین بروزرسانی: " +
+                            $ctx.fetchedData[0]["last-update"]
+                          );
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0622\u062e\u0631\u06cc\u0646 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc:";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
                 </div>
               )}
             </DataCtxReader__>
