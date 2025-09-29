@@ -2,34 +2,26 @@ FROM node:18.19.1 as deps
 
 WORKDIR /app
 
-# Copy all files
+ENV DOCKER_BUILDKIT=1
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Copy package manifests first to leverage Docker layer caching
+COPY package.json package-lock.json .npmrc ./
+
+# Install dependencies defined in the lockfile
+RUN npm ci
+
+# Copy the rest of the source code
 COPY . .
 
-# Install dependencies with clean slate
-RUN npm install --force
-
-FROM node:18.19.1 as builder
-
-WORKDIR /app
-
-# Copy from deps stage
-COPY --from=deps /app .
-
-# Build the application
+# Build the production bundle
 RUN npm run build
 
-FROM node:18.19.1 as runner
-
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV PORT=3000
-
-# Copy necessary files from builder
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# Remove development-only packages to slim down the runtime image
+RUN npm prune --omit=dev && npm cache clean --force
 
 EXPOSE 3000
+ENV NODE_ENV=production
+ENV PORT=3000
 
 CMD ["npm", "start"]
