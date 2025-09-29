@@ -94,7 +94,6 @@ export type PlasmicBookingAddressesCard__ArgsType = {
   centerType?: string;
   description?: string;
   centerId?: string;
-  userCenterId?: string;
   centerName?: string;
   slug?: string;
   children?: React.ReactNode;
@@ -110,7 +109,6 @@ export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
   "centerType",
   "description",
   "centerId",
-  "userCenterId",
   "centerName",
   "slug",
   "children",
@@ -132,7 +130,6 @@ export interface DefaultBookingAddressesCardProps {
   centerType?: string;
   description?: string;
   centerId?: string;
-  userCenterId?: string;
   centerName?: string;
   slug?: string;
   children?: React.ReactNode;
@@ -438,19 +435,6 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         slug={(() => {
           try {
             return $props.slug;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        userCenterId={(() => {
-          try {
-            return $props.userCenterId;
           } catch (e) {
             if (
               e instanceof TypeError ||
