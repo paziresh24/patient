@@ -73,7 +73,7 @@ export const getCorrectDoctorSlug = async (slug: string): Promise<string> => {
   // If redirect is needed, extract slug from redirect route
   if (result.redirectInfo) {
     const route = result.redirectInfo.route;
-    const slugMatch = route.match(/\/dr\/([^\/]+)\//);
+    const slugMatch = route.match(/\/dr\/([^/]+)\//);
     if (slugMatch && slugMatch[1]) {
       return slugMatch[1];
     }
