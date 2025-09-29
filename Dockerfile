@@ -9,7 +9,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 COPY package.json package-lock.json .npmrc ./
 
 # Install dependencies defined in the lockfile
-RUN npm ci
+RUN npm i
 
 # Copy the rest of the source code
 COPY . .

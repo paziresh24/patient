@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_OPTIONS='--inspect' node server.js",
     "build": "next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
-    "start": "next start",
+    "start": "node ./scripts/next-start.js",
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
