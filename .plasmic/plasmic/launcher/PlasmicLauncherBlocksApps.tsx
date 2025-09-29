@@ -65,7 +65,6 @@ import LauncherComponentsApp from "../../LauncherComponentsApp"; // plasmic-impo
 import LauncherComponentsAppSquare from "../../LauncherComponentsAppSquare"; // plasmic-import: u4TwWczEaPgW/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_paziresh_24_design_system } from "../paziresh_24_design_system/PlasmicStyleTokensProvider"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -82,9 +81,13 @@ type VariantPropType = keyof PlasmicLauncherBlocksApps__VariantsArgs;
 export const PlasmicLauncherBlocksApps__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicLauncherBlocksApps__ArgsType = {};
+export type PlasmicLauncherBlocksApps__ArgsType = {
+  openAppFrame?: (key: string) => void;
+};
 type ArgPropType = keyof PlasmicLauncherBlocksApps__ArgsType;
-export const PlasmicLauncherBlocksApps__ArgProps = new Array<ArgPropType>();
+export const PlasmicLauncherBlocksApps__ArgProps = new Array<ArgPropType>(
+  "openAppFrame"
+);
 
 export type PlasmicLauncherBlocksApps__OverridesType = {
   root?: Flex__<"div">;
@@ -94,6 +97,7 @@ export type PlasmicLauncherBlocksApps__OverridesType = {
 };
 
 export interface DefaultLauncherBlocksAppsProps {
+  openAppFrame?: (key: string) => void;
   className?: string;
 }
 
@@ -175,8 +179,6 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_paziresh_24_design_system =
-    useStyleTokens_paziresh_24_design_system();
 
   return (
     <div
@@ -190,7 +192,6 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_paziresh_24_design_system,
         sty.root
       )}
     >
@@ -390,13 +391,15 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                         key={currentIndex}
                         link={(() => {
                           try {
-                            return currentItem.link;
+                            return !!$props?.openAppFrame
+                              ? undefined
+                              : currentItem?.link;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
                               e?.plasmicType === "PlasmicUndefinedDataError"
                             ) {
-                              return "";
+                              return undefined;
                             }
                             throw e;
                           }
@@ -416,6 +419,42 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                         })()}
                         onEvent={async () => {
                           const $steps = {};
+
+                          $steps["runOpenAppFrame"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  eventRef: $props["openAppFrame"],
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return currentItem.app_key;
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return (({ eventRef, args }) => {
+                                  return eventRef?.(...(args ?? []));
+                                })?.apply(null, [actionArgs]);
+                              })()
+                            : undefined;
+                          if (
+                            $steps["runOpenAppFrame"] != null &&
+                            typeof $steps["runOpenAppFrame"] === "object" &&
+                            typeof $steps["runOpenAppFrame"].then === "function"
+                          ) {
+                            $steps["runOpenAppFrame"] = await $steps[
+                              "runOpenAppFrame"
+                            ];
+                          }
 
                           $steps["sendLog"] = true
                             ? (() => {

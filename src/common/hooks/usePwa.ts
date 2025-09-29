@@ -22,7 +22,7 @@ export const usePwa = () => {
       direct: 'market://details?id=com.paziresh24.paziresh24',
       bazaar: 'bazaar://details?id=com.paziresh24.paziresh24',
       myket: 'myket://comment?id=com.paziresh24.paziresh24',
-      google_play: 'market://details?id=com.paziresh24.paziresh24',
+      google_play: 'https://play.google.com/store/apps/details?id=com.paziresh24.paziresh24',
     };
     return downloadSource && rateLinks[downloadSource as 'direct' | 'bazaar' | 'myket' | 'google_play'];
   };

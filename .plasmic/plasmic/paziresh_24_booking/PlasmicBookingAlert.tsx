@@ -61,7 +61,6 @@ import {
 
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -158,8 +157,6 @@ function PlasmicBookingAlert__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_fragment_design_system =
-    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -173,7 +170,6 @@ function PlasmicBookingAlert__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_fragment_design_system,
         sty.root,
         { [sty.rooterror]: hasVariant($state, "error", "error") }
       )}

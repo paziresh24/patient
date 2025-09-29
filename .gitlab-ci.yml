@@ -5,12 +5,13 @@ services:
 stages:
   - build_and_push
   - deploy
+  - webhook # مرحله جدید برای فراخوانی وب‌هوک
 
 variables:
   DOCKER_IMAGE: $DOCKER_REGISTRY_ADDRESS/$CI_PROJECT_NAME:latest
-  KUBE_NAMESPACE: "frontend" 
+  KUBE_NAMESPACE: "frontend"
   KUBE_APP: "patient"
-
+  WEBHOOK_URL: "https://n8n-search.darkube.app/webhook/test" # تعریف متغیر برای وب‌هوک
 
 build_and_push:
   stage: build_and_push
@@ -25,11 +26,12 @@ build_and_push:
     - arvan
     - docker
 
+
 deploy:
   stage: deploy
   image:
     name: docker.arvancloud.ir/bitnami/kubectl:1.33.4
-    entrypoint: [""]   # disable kubectl as default entrypoint
+    entrypoint: [""] # disable kubectl as default entrypoint
   script:
     - mkdir -p ~/.kube
     - echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
@@ -42,4 +44,23 @@ deploy:
   tags:
     - arvan
     - docker
-  when: manual
+
+
+webhook:
+  stage: webhook
+  image: curlimages/curl:latest # استفاده از یک ایمیج سبک که curl در آن موجود است
+  script:
+    # ارسال یک درخواست POST ساده به وب‌هوک
+    - |
+      echo "Calling webhook: $WEBHOOK_URL"
+      curl -X POST -H "Content-Type: application/json" -d "{
+        \"status\": \"build_pushed_to_arvan_and_deployed\",
+        \"project\": \"$CI_PROJECT_NAME\",
+        \"commit\": \"$CI_COMMIT_SHORT_SHA\",
+        \"branch\": \"$CI_COMMIT_REF_NAME\"
+      }" $WEBHOOK_URL
+  needs: ["deploy"] # مطمئن می‌شویم که بعد از deploy اجرا شود
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" # فقط اگر در main اجرا شده باشد
+    - when: manual # می‌توانید آن را به صورت دستی هم قابل اجرا کنید
+  allow_failure: true # اگر فراخوانی وب‌هوک شکست خورد، خط لوله شکست نخورد

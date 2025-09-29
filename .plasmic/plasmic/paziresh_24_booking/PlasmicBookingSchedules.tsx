@@ -65,7 +65,6 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { Popover } from "@plasmicpkgs/radix-ui";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -92,17 +91,20 @@ export type PlasmicBookingSchedules__ArgsType = {
   centerId?: string;
   userCenterId?: string;
   centerName?: string;
+  slug?: string;
 };
 type ArgPropType = keyof PlasmicBookingSchedules__ArgsType;
 export const PlasmicBookingSchedules__ArgProps = new Array<ArgPropType>(
   "centerId",
   "userCenterId",
-  "centerName"
+  "centerName",
+  "slug"
 );
 
 export type PlasmicBookingSchedules__OverridesType = {
   root?: Flex__<"div">;
-  apiRequest?: Flex__<typeof ApiRequest>;
+  apiGetCenter?: Flex__<typeof ApiRequest>;
+  apiGetWorkhour?: Flex__<typeof ApiRequest>;
   dialog?: Flex__<typeof Dialog>;
   popoverCore?: Flex__<typeof Popover>;
 };
@@ -111,6 +113,7 @@ export interface DefaultBookingSchedulesProps {
   centerId?: string;
   userCenterId?: string;
   centerName?: string;
+  slug?: string;
   className?: string;
 }
 
@@ -176,28 +179,58 @@ function PlasmicBookingSchedules__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => ""
       },
       {
-        path: "apiRequest.data",
+        path: "apiGetCenter.data",
         type: "private",
         variableType: "object",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
-        refName: "apiRequest"
+        refName: "apiGetCenter"
       },
       {
-        path: "apiRequest.error",
+        path: "apiGetCenter.error",
         type: "private",
         variableType: "object",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
-        refName: "apiRequest"
+        refName: "apiGetCenter"
       },
       {
-        path: "apiRequest.loading",
+        path: "apiGetCenter.loading",
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
-        refName: "apiRequest"
+        refName: "apiGetCenter"
+      },
+      {
+        path: "variable",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "apiGetWorkhour.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiGetWorkhour"
+      },
+      {
+        path: "apiGetWorkhour.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiGetWorkhour"
+      },
+      {
+        path: "apiGetWorkhour.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiGetWorkhour"
       }
     ],
     [$props, $ctx, $refs]
@@ -210,8 +243,6 @@ function PlasmicBookingSchedules__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_fragment_design_system =
-    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -225,49 +256,74 @@ function PlasmicBookingSchedules__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
       dir={"rtl"}
     >
       <ApiRequest
-        data-plasmic-name={"apiRequest"}
-        data-plasmic-override={overrides.apiRequest}
-        className={classNames("__wab_instance", sty.apiRequest)}
+        data-plasmic-name={"apiGetCenter"}
+        data-plasmic-override={overrides.apiGetCenter}
+        className={classNames("__wab_instance", sty.apiGetCenter)}
         errorDisplay={null}
         loadingDisplay={null}
         method={"GET"}
         onError={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
+          generateStateOnChangeProp($state, ["apiGetCenter", "error"]).apply(
             null,
             eventArgs
           );
         }}
         onLoading={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
+          generateStateOnChangeProp($state, ["apiGetCenter", "loading"]).apply(
             null,
             eventArgs
           );
         }}
         onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+          generateStateOnChangeProp($state, ["apiGetCenter", "data"]).apply(
             null,
             eventArgs
           );
+
+          (async data => {
+            const $steps = {};
+
+            $steps["updateService"] = true
+              ? (() => {
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["service"]
+                    },
+                    operation: 0,
+                    value: $state.apiGetCenter.data[0].id
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
+
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["updateService"] != null &&
+              typeof $steps["updateService"] === "object" &&
+              typeof $steps["updateService"].then === "function"
+            ) {
+              $steps["updateService"] = await $steps["updateService"];
+            }
+          }).apply(null, eventArgs);
         }}
         ref={ref => {
-          $refs["apiRequest"] = ref;
+          $refs["apiGetCenter"] = ref;
         }}
         url={(() => {
           try {
-            return `https://apigw.paziresh24.com/v1/centeral-booking/schedules?center_id=${
-              $props.centerId
-            }&user_center_id=${$props.userCenterId}&type=${
-              typeof window != "undefined" &&
-              window.location.host.includes(".paziresh24.com")
-                ? "7"
-                : "1"
-            }`;
+            return `https://drprofile.paziresh24.com/api/doctors/${$props.slug}/centers/${$props.centerId}/services`;
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -278,17 +334,79 @@ function PlasmicBookingSchedules__RenderFunc(props: {
             throw e;
           }
         })()}
-      />
-
+      >
+        <ApiRequest
+          data-plasmic-name={"apiGetWorkhour"}
+          data-plasmic-override={overrides.apiGetWorkhour}
+          className={classNames("__wab_instance", sty.apiGetWorkhour)}
+          errorDisplay={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__btewE
+              )}
+            >
+              {"Error fetching data"}
+            </div>
+          }
+          loadingDisplay={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__wsXmV
+              )}
+            >
+              {"Loading..."}
+            </div>
+          }
+          method={"GET"}
+          onError={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, [
+              "apiGetWorkhour",
+              "error"
+            ]).apply(null, eventArgs);
+          }}
+          onLoading={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, [
+              "apiGetWorkhour",
+              "loading"
+            ]).apply(null, eventArgs);
+          }}
+          onSuccess={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiGetWorkhour", "data"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          ref={ref => {
+            $refs["apiGetWorkhour"] = ref;
+          }}
+          url={(() => {
+            try {
+              return `https://drprofile.paziresh24.com/api/doctor-services/${$state.service}/schedules`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        />
+      </ApiRequest>
       {(() => {
         try {
-          return !!$state.apiRequest.data[0]?.center_id;
+          return !!$state.apiGetCenter.data[0]?.id;
         } catch (e) {
           if (
             e instanceof TypeError ||
             e?.plasmicType === "PlasmicUndefinedDataError"
           ) {
-            return true;
+            return false;
           }
           throw e;
         }
@@ -300,7 +418,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return $state.apiRequest.data.length > 0;
+                  return $state.apiGetCenter.data.length > 0;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -353,7 +471,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                           !_par ? [] : Array.isArray(_par) ? _par : [_par])(
                           (() => {
                             try {
-                              return $state.apiRequest.data[0].services;
+                              return $state.apiGetCenter.data;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -380,7 +498,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                                   <React.Fragment>
                                     {(() => {
                                       try {
-                                        return currentItem.title;
+                                        return currentItem.service.title;
                                       } catch (e) {
                                         if (
                                           e instanceof TypeError ||
@@ -492,8 +610,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                       projectcss.root_reset,
                       projectcss.plasmic_default_styles,
                       projectcss.plasmic_mixins,
-                      styleTokensClassNames,
-                      styleTokensClassNames_fragment_design_system
+                      styleTokensClassNames
                     )}
                   >
                     <Button
@@ -514,10 +631,10 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                               {(() => {
                                 try {
                                   return $state.service
-                                    ? $state.apiRequest?.data?.[0].services.find(
+                                    ? $state.apiGetCenter?.data?.[0].services.find(
                                         item => item.id === $state.service
                                       ).title
-                                    : $state.apiRequest?.data?.[0].services[0]
+                                    : $state.apiGetCenter?.data?.[0].services[0]
                                         .title;
                                 } catch (e) {
                                   if (
@@ -536,11 +653,10 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                               {(() => {
                                 try {
                                   return $state.service
-                                    ? $state.apiRequest.data[0].services.find(
+                                    ? $state.apiGetCenter.data.find(
                                         item => item.id === $state.service
-                                      ).title
-                                    : $state.apiRequest.data[0].services[0]
-                                        .title;
+                                      ).service.title
+                                    : $state.apiGetCenter.data[0].service.title;
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
@@ -662,12 +778,12 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                                   __html: (() => {
                                     try {
                                       return (
-                                        $state.apiRequest.data?.[0].services
+                                        $state.apiGetCenter.data?.[0].services
                                           .find(
                                             item =>
                                               item.id ===
                                               ($state.service ||
-                                                $state.apiRequest.data?.[0]
+                                                $state.apiGetCenter.data?.[0]
                                                   .services[0].id)
                                           )
                                           .schedules.filter(
@@ -715,15 +831,8 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                                   __html: (() => {
                                     try {
                                       return (
-                                        $state.apiRequest?.data?.[0].services
-                                          .find(
-                                            item =>
-                                              item.id ===
-                                              ($state.service ||
-                                                $state.apiRequest?.data?.[0]
-                                                  .services[0].id)
-                                          )
-                                          .schedules.filter(
+                                        $state.apiGetWorkhour?.data
+                                          ?.filter(
                                             item =>
                                               item.day === currentDay.english
                                           )
@@ -771,7 +880,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
               ) : null}
               {(() => {
                 try {
-                  return $state.apiRequest.data.length == 0;
+                  return $state.apiGetCenter.data.length == 0;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -803,7 +912,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
               ) : null}
               {(() => {
                 try {
-                  return $state.apiRequest.loading;
+                  return $state.apiGetCenter.loading;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -827,7 +936,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
               ) : null}
               {(() => {
                 try {
-                  return !!$state.apiRequest.error;
+                  return !!$state.apiGetCenter.error;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -935,8 +1044,9 @@ function PlasmicBookingSchedules__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest", "dialog", "popoverCore"],
-  apiRequest: ["apiRequest"],
+  root: ["root", "apiGetCenter", "apiGetWorkhour", "dialog", "popoverCore"],
+  apiGetCenter: ["apiGetCenter", "apiGetWorkhour"],
+  apiGetWorkhour: ["apiGetWorkhour"],
   dialog: ["dialog", "popoverCore"],
   popoverCore: ["popoverCore"]
 } as const;
@@ -945,7 +1055,8 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  apiRequest: typeof ApiRequest;
+  apiGetCenter: typeof ApiRequest;
+  apiGetWorkhour: typeof ApiRequest;
   dialog: typeof Dialog;
   popoverCore: typeof Popover;
 };
@@ -1010,7 +1121,8 @@ export const PlasmicBookingSchedules = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    apiRequest: makeNodeComponent("apiRequest"),
+    apiGetCenter: makeNodeComponent("apiGetCenter"),
+    apiGetWorkhour: makeNodeComponent("apiGetWorkhour"),
     dialog: makeNodeComponent("dialog"),
     popoverCore: makeNodeComponent("popoverCore"),
 

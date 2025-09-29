@@ -31,13 +31,18 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
       const useNewDoctorExpertiseAPI = growthbook.isOn('doctor_expertise_for_new_profileapi');
       const useNewDoctorImageAPI = growthbook.isOn('doctor_image_for_new_profileapi');
       const useNewDoctorBiographyAPI = growthbook.isOn('doctor_bio_for_new_profileapi');
+      const useNewDoctorCentersAPI = growthbook.isOn('doctor_centers_for_new_profileapi');
+      const useNewDoctorGalleryAPI = growthbook.isOn('doctor_galery_for_new_profileapi');
+      
+      console.log('🔍 Server-side feature flags for slug:', slug);
       
       const finalProps = await getAggregatedProfileData(slug, university, true, {
-        useClApi: growthbook.isOn('use-clapi-profile-page'),
         useNewDoctorFullNameAPI: growthbook.isOn('doctor_fullname_for_new_profileapi'),
         useNewDoctorExpertiseAPI: useNewDoctorExpertiseAPI,
         useNewDoctorImageAPI: useNewDoctorImageAPI,
         useNewDoctorBiographyAPI: useNewDoctorBiographyAPI,
+        useNewDoctorCentersAPI: useNewDoctorCentersAPI,
+        useNewDoctorGalleryAPI: useNewDoctorGalleryAPI,
       });
 
       return {
