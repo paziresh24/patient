@@ -98,6 +98,7 @@ export type PlasmicBookingAddressesCard__ArgsType = {
   slug?: string;
   children?: React.ReactNode;
   information?: any;
+  seo?: any;
 };
 type ArgPropType = keyof PlasmicBookingAddressesCard__ArgsType;
 export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
@@ -112,7 +113,8 @@ export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
   "centerName",
   "slug",
   "children",
-  "information"
+  "information",
+  "seo"
 );
 
 export type PlasmicBookingAddressesCard__OverridesType = {
@@ -134,6 +136,7 @@ export interface DefaultBookingAddressesCardProps {
   slug?: string;
   children?: React.ReactNode;
   information?: any;
+  seo?: any;
   className?: string;
 }
 
