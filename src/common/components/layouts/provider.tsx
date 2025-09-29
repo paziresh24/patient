@@ -9,9 +9,14 @@ import Splash from './splash';
 import config from 'next/config';
 import GoogleOneTap from '@/modules/login/components/googleOneTapLogin';
 const { publicRuntimeConfig } = config();
+import { initFaro } from '@/common/services/faro';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
+
 
 const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProps: any }) => {
   const appBridgeConfig = useSetupAppBridge();
+  const isFaroEnabled = useFeatureIsOn("enable-faro");
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -24,6 +29,13 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
         },
       }),
   );
+
+  // Initialize Grafana Faro only for specific users based on feature flag
+  useEffect(() => {
+      if (isFaroEnabled) {
+        initFaro();
+      }
+  }, [isFaroEnabled]);
 
   return (
     <QueryClientProvider client={queryClient}>

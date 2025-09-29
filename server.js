@@ -1,3 +1,11 @@
+// Initialize Pyroscope for server-side profiling
+try {
+  const pyroscope = require('./src/common/services/pyroscope.js');
+  pyroscope.initPyroscope();
+  console.log('Pyroscope initialization successful');
+} catch (e) {
+  console.error('Failed to initialize Pyroscope:', e);
+}
 const { createServer } = require('https');
 const fs = require('fs');
 const { parse } = require('url');
@@ -30,3 +38,4 @@ const handle = app.getRequestHandler();
     });
   });
 })();
+

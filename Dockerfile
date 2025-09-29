@@ -1,26 +1,27 @@
-FROM node:18.17.0
+FROM node:18.19.1 as deps
 
 WORKDIR /app
 
-ENV DOCKER_BUILDKIT 1
-ENV NEXT_TELEMETRY_DISABLED 1
-ENV NEW_RELIC_NO_CONFIG_FILE=true
-ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
-ENV NEW_RELIC_LOG=stdout
-ENV NODE_ENV=production
+ENV DOCKER_BUILDKIT=1
+ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY package.json package-lock.json .npmrc ./ 
-RUN npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000 
-RUN npm cache verify
-RUN npm install --force
+# Copy package manifests first to leverage Docker layer caching
+COPY package.json package-lock.json .npmrc ./
 
+# Install dependencies defined in the lockfile
+RUN npm ci
+
+# Copy the rest of the source code
 COPY . .
 
+# Build the production bundle
 RUN npm run build
 
-EXPOSE 3000
+# Remove development-only packages to slim down the runtime image
+RUN npm prune --omit=dev && npm cache clean --force
 
-ENV PORT 3000
+EXPOSE 3000
+ENV NODE_ENV=production
+ENV PORT=3000
 
 CMD ["npm", "start"]
-
