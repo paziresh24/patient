@@ -89,14 +89,12 @@ export const PlasmicBookingSchedules__VariantProps =
 
 export type PlasmicBookingSchedules__ArgsType = {
   centerId?: string;
-  userCenterId?: string;
   centerName?: string;
   slug?: string;
 };
 type ArgPropType = keyof PlasmicBookingSchedules__ArgsType;
 export const PlasmicBookingSchedules__ArgProps = new Array<ArgPropType>(
   "centerId",
-  "userCenterId",
   "centerName",
   "slug"
 );
@@ -111,7 +109,6 @@ export type PlasmicBookingSchedules__OverridesType = {
 
 export interface DefaultBookingSchedulesProps {
   centerId?: string;
-  userCenterId?: string;
   centerName?: string;
   slug?: string;
   className?: string;
@@ -631,11 +628,10 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                               {(() => {
                                 try {
                                   return $state.service
-                                    ? $state.apiGetCenter?.data?.[0].services.find(
+                                    ? $state.apiGetCenter.data.find(
                                         item => item.id === $state.service
-                                      ).title
-                                    : $state.apiGetCenter?.data?.[0].services[0]
-                                        .title;
+                                      ).service.title
+                                    : $state.apiGetCenter.data[0].service.title;
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
@@ -778,15 +774,8 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                                   __html: (() => {
                                     try {
                                       return (
-                                        $state.apiGetCenter.data?.[0].services
-                                          .find(
-                                            item =>
-                                              item.id ===
-                                              ($state.service ||
-                                                $state.apiGetCenter.data?.[0]
-                                                  .services[0].id)
-                                          )
-                                          .schedules.filter(
+                                        $state.apiGetWorkhour?.data
+                                          ?.filter(
                                             item =>
                                               item.day === currentDay.english
                                           )
