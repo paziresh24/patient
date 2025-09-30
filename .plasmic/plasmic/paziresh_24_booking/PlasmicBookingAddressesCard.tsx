@@ -94,11 +94,11 @@ export type PlasmicBookingAddressesCard__ArgsType = {
   centerType?: string;
   description?: string;
   centerId?: string;
-  userCenterId?: string;
   centerName?: string;
   slug?: string;
   children?: React.ReactNode;
   information?: any;
+  seo?: any;
 };
 type ArgPropType = keyof PlasmicBookingAddressesCard__ArgsType;
 export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
@@ -110,11 +110,11 @@ export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
   "centerType",
   "description",
   "centerId",
-  "userCenterId",
   "centerName",
   "slug",
   "children",
-  "information"
+  "information",
+  "seo"
 );
 
 export type PlasmicBookingAddressesCard__OverridesType = {
@@ -132,11 +132,11 @@ export interface DefaultBookingAddressesCardProps {
   centerType?: string;
   description?: string;
   centerId?: string;
-  userCenterId?: string;
   centerName?: string;
   slug?: string;
   children?: React.ReactNode;
   information?: any;
+  seo?: any;
   className?: string;
 }
 
@@ -437,20 +437,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         className={classNames("__wab_instance", sty.bookingSchedules)}
         slug={(() => {
           try {
-            return $props.slug;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-        userCenterId={(() => {
-          try {
-            return $props.userCenterId;
+            return $props.seo.slug;
           } catch (e) {
             if (
               e instanceof TypeError ||

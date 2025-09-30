@@ -91,12 +91,12 @@ export default function GlobalContextsProvider(
             defaultApiHost={
               splunkProps && "defaultApiHost" in splunkProps
                 ? splunkProps.defaultApiHost!
-                : undefined
+                : "https://splunk-ravi-hec.paziresh24.com"
             }
             defaultApiKey={
               splunkProps && "defaultApiKey" in splunkProps
                 ? splunkProps.defaultApiKey!
-                : undefined
+                : "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d"
             }
           >
             <PWA {...pwaProps}>{children}</PWA>

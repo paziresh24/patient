@@ -74,7 +74,7 @@
   justify-content: flex-start;
   align-items: center;
   overflow: auto;
-  max-height: 220px;
+  max-height: 280px;
   left: auto;
   top: auto;
   z-index: 1;
@@ -194,8 +194,8 @@
   left: auto;
   top: 0;
   color: #2b2e33;
-  padding-left: 4px;
-  margin-left: 111px;
+  padding-left: 6px;
+  margin-left: 86px;
   font-size: 14px;
   padding-bottom: 0px;
   z-index: 1;
@@ -219,4 +219,15 @@
   min-width: 0;
   flex-shrink: 0;
   padding: 0px;
+}
+.text__q61L5 {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-size: var(--token-P2saABvfDCPH);
+  font-weight: 400;
+  color: var(--token-ynsKl5i_n6Or);
+  min-width: 0;
 }
