@@ -77,6 +77,13 @@ const nextConfig = {
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
+    NEXT_PUBLIC_GRAFANA_FARO_URL: process.env.NEXT_PUBLIC_GRAFANA_FARO_URL,
+    NEXT_PUBLIC_GRAFANA_FARO_APP: process.env.NEXT_PUBLIC_GRAFANA_FARO_APP,
+    NEXT_PUBLIC_FARO_APP_NAMESPACE: process.env.NEXT_PUBLIC_FARO_APP_NAMESPACE,
+    OTEL_EXPORTER_OTLP_ENDPOINT: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
+    OTEL_EXPORTER_OTLP_PROTOCOL: process.env.OTEL_EXPORTER_OTLP_PROTOCOL,
+    OTEL_SERVICE_NAME: process.env.OTEL_SERVICE_NAME,
+    OTEL_RESOURCE_ATTRIBUTES: process.env.OTEL_RESOURCE_ATTRIBUTES,
   },
   images: {
     remotePatterns: [
@@ -115,4 +122,3 @@ const nextConfig = {
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
 module.exports = moduleExports;
-
