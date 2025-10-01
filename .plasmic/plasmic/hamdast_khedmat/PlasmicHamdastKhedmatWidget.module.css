@@ -17,7 +17,7 @@
   justify-content: flex-start;
   align-items: center;
   min-width: 0;
-  padding: 8px;
+  padding: 0px;
 }
 .paziresh24Button:global(.__wab_instance) {
   max-width: 100%;
