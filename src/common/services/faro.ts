@@ -1,12 +1,20 @@
 import { getWebInstrumentations, initializeFaro, faro, LogLevel } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
+import getConfig from 'next/config';
 
 export const initFaro = () => {
-  if (typeof window === 'undefined' || !process.env.NEXT_PUBLIC_GRAFANA_FARO_URL) {
+  const { publicRuntimeConfig } = getConfig?.() || {};
+  const faroUrl =
+    publicRuntimeConfig?.NEXT_PUBLIC_GRAFANA_FARO_URL || process.env.NEXT_PUBLIC_GRAFANA_FARO_URL;
+  const faroApp = publicRuntimeConfig?.NEXT_PUBLIC_GRAFANA_FARO_APP || process.env.NEXT_PUBLIC_GRAFANA_FARO_APP;
+  const faroNamespace =
+    publicRuntimeConfig?.NEXT_PUBLIC_FARO_APP_NAMESPACE || process.env.NEXT_PUBLIC_FARO_APP_NAMESPACE;
+
+  if (typeof window === 'undefined' || !faroUrl) {
     console.log('Faro initialization skipped:', {
       isServer: typeof window === 'undefined',
-      hasFaroUrl: !!process.env.NEXT_PUBLIC_GRAFANA_FARO_URL,
-      faroUrl: process.env.NEXT_PUBLIC_GRAFANA_FARO_URL,
+      hasFaroUrl: !!faroUrl,
+      faroUrl,
     });
     return;
   }
@@ -17,7 +25,7 @@ export const initFaro = () => {
     return;
   }
 
-  console.log('Initializing Faro with URL:', process.env.NEXT_PUBLIC_GRAFANA_FARO_URL);
+  console.log('Initializing Faro with URL:', faroUrl);
 
   try {
     // Configure tracing instrumentation
@@ -27,11 +35,11 @@ export const initFaro = () => {
 
     // Set up base configuration
     const config = {
-      url: process.env.NEXT_PUBLIC_GRAFANA_FARO_URL,
+      url: faroUrl,
       app: {
-        name: process.env.NEXT_PUBLIC_GRAFANA_FARO_APP || 'patient',
+        name: faroApp || 'patient',
         version: process.env.npm_package_version || '0.0.0',
-        namespace: 'patient',
+        namespace: faroNamespace || 'patient',
       },
       instrumentations: [
         ...getWebInstrumentations({
@@ -86,4 +94,3 @@ export const setupFaroSampling = () => {
   // This would typically be done through the tracing instrumentation configuration
   // or by using Faro's API to filter events before they're sent
 };
-
