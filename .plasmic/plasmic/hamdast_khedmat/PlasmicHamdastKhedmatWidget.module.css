@@ -45,6 +45,13 @@
 .text__xv2Zs {
   padding-left: 0px;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .text__xv2Zs {
+    padding-top: 13px;
+    padding-right: 20px;
+    font-size: var(--token-KUiXUfHPkqkm);
+  }
+}
 .httpRestApiFetcher:global(.__wab_instance) {
   width: auto;
   max-width: 100%;
@@ -80,6 +87,13 @@
   z-index: 1;
   padding: 8px 0px;
   margin: 1px 0px 1px 1px;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox__lk2Ps {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 0px;
+  }
 }
 .freeBox__fGg6M {
   display: flex;

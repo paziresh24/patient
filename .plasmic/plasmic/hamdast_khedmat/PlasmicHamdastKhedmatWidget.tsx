@@ -527,6 +527,9 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
           </DataFetcher>
         }
         className={classNames("__wab_instance", sty.modal)}
+        noSpacing={
+          hasVariant(globalVariants, "screen", "mobileOnly") ? true : undefined
+        }
         noTrigger={true}
         onOpenChange={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, ["modal", "open"]).apply(
