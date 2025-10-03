@@ -67,7 +67,6 @@ import MainSearchRequest from "../../MainSearchRequest"; // plasmic-import: Sctd
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -215,8 +214,6 @@ function PlasmicSearchPage__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_fragment_design_system =
-    useStyleTokens_fragment_design_system();
 
   return (
     <React.Fragment>
@@ -253,7 +250,6 @@ function PlasmicSearchPage__RenderFunc(props: {
             projectcss.plasmic_default_styles,
             projectcss.plasmic_mixins,
             styleTokensClassNames,
-            styleTokensClassNames_fragment_design_system,
             sty.root
           )}
         >

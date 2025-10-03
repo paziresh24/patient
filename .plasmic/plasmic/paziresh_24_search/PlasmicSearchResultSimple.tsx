@@ -63,7 +63,6 @@ import SearchContentItem from "../../SearchContentItem"; // plasmic-import: NqEx
 import SearchRequest from "../../SearchRequest"; // plasmic-import: 35vwUOYdUX87/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -150,8 +149,6 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
   const $refs = refsRef.current;
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_fragment_design_system =
-    useStyleTokens_fragment_design_system();
 
   return (
     <SearchContentItem

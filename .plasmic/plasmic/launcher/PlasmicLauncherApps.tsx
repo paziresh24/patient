@@ -347,21 +347,13 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                   t.key === item.key &&
                                   t.title === item.title
                               )
-                          ),
-                        {
-                          title: "خودتشخیصی",
-                          key: "self-diagnosis"
-                        }
+                          )
                       ];
                     }
                     return [
                       {
                         title: "همه",
                         key: "all"
-                      },
-                      {
-                        title: "خودتشخیصی",
-                        key: "self-diagnosis"
                       }
                     ];
                   })();
@@ -820,21 +812,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
               </div>
             );
           })}
-          {(() => {
-            try {
-              return ["all", "self-diagnosis"].includes(
-                $state.selectedCategory
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return true;
-              }
-              throw e;
-            }
-          })() ? (
+          {false ? (
             <div className={classNames(projectcss.all, sty.freeBox__nu6H4)}>
               {(() => {
                 try {

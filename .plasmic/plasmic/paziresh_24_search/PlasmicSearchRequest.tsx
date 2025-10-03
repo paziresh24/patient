@@ -64,7 +64,6 @@ import SearchResults from "../../SearchResults"; // plasmic-import: XhSI4pxMLR3L
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -153,8 +152,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
   const $globalActions = useGlobalActions?.();
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_fragment_design_system =
-    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -168,7 +165,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
     >
@@ -504,11 +500,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                 consult_search_index: "slim_clinic_online_visit"
                               },
                               expertises: item.source?.expertises ?? [],
-                              keyword_tags: {
-                                user_priority_1:
-                                  item.source?.keyword_tags?.user_priority_1 ??
-                                  []
-                              },
+                              keyword_tags_user_priority_1:
+                                item.source?.keyword_tags_user_priority_1 ?? [],
                               gender: item.source?.gender ?? null,
                               expertise: item.source?.expertise ?? [],
                               rate_info: item.source?.rate_info ?? {},
