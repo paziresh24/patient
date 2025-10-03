@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
-
 const isProduction = process.env.NODE_ENV === 'production';
 
 const plugins = [nextTranslate];
@@ -17,6 +16,7 @@ if (process.env.ANALYZE === 'true') {
 const nextConfig = {
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+    instrumentationHook: true,
   },
   webpack: (config, { webpack }) => {
     /**
@@ -59,6 +59,7 @@ const nextConfig = {
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     GROWTHBOOK_API_HOST: process.env.GROWTHBOOK_API_HOST,
     GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
+    GROWTHBOOK_DEV_MODE: process.env.GROWTHBOOK_DEV_MODE,
     FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
     FIREBASE_DATABASE_URL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
@@ -76,6 +77,13 @@ const nextConfig = {
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
+    NEXT_PUBLIC_GRAFANA_FARO_URL: process.env.NEXT_PUBLIC_GRAFANA_FARO_URL,
+    NEXT_PUBLIC_GRAFANA_FARO_APP: process.env.NEXT_PUBLIC_GRAFANA_FARO_APP,
+    NEXT_PUBLIC_FARO_APP_NAMESPACE: process.env.NEXT_PUBLIC_FARO_APP_NAMESPACE,
+    OTEL_EXPORTER_OTLP_ENDPOINT: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
+    OTEL_EXPORTER_OTLP_PROTOCOL: process.env.OTEL_EXPORTER_OTLP_PROTOCOL,
+    OTEL_SERVICE_NAME: process.env.OTEL_SERVICE_NAME,
+    OTEL_RESOURCE_ATTRIBUTES: process.env.OTEL_RESOURCE_ATTRIBUTES,
   },
   images: {
     remotePatterns: [
@@ -113,5 +121,4 @@ const nextConfig = {
 
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-// Sentry should be the last thing to export to catch everything right
 module.exports = moduleExports;

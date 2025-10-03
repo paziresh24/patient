@@ -28,6 +28,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 const { publicRuntimeConfig } = getConfig();
 
 const isEnabledGrowthbook = !!publicRuntimeConfig.GROWTHBOOK_API_HOST && !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
+const isEnabledDevMode = publicRuntimeConfig.GROWTHBOOK_DEV_MODE === 'true';
 
 export const growthbook = new GrowthBook({
   enabled: isEnabledGrowthbook,
@@ -35,6 +36,7 @@ export const growthbook = new GrowthBook({
   clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
   backgroundSync: true,
   realtimeInterval: 10000,
+  enableDevMode: isEnabledDevMode,
 });
 
 function updateGrowthBookURL() {
@@ -130,3 +132,4 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
 }
 
 export default MyApp;
+
