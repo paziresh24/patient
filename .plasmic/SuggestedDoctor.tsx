@@ -18,7 +18,7 @@ import { PlasmicSuggestedDoctor, DefaultSuggestedDoctorProps } from './plasmic/p
 // total control over the props for your component.
 export interface SuggestedDoctorProps extends DefaultSuggestedDoctorProps {}
 
-function SuggestedDoctor(props: SuggestedDoctorProps) {
+function SuggestedDoctor({ className, ...props }: SuggestedDoctorProps) {
   // Use PlasmicSuggestedDoctor to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
   // attaching the appropriate event handlers, etc.  You
