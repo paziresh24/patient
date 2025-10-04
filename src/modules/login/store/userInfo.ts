@@ -42,6 +42,7 @@ export type UserInfo = {
   provider?: {
     job_title?: 'doctor' | string | null;
     slug?: string;
+    centers?: any[];
   };
 };
 
@@ -56,8 +57,8 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     set(() => {
       const infoCopy = {
         ...get().info,
-        ...info,
         is_doctor: info.provider?.slug ? true : false,
+        ...info,
         ...(info.provider?.slug && {
           provider: {
             job_title: info.provider?.slug ? 'doctor' : null,

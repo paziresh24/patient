@@ -1,5 +1,6 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useGetMe } from '@/common/apis/services/auth/me';
+import { useGetCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
 import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -14,6 +15,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const removeInfo = useUserInfoStore(state => state.removeInfo);
   const info = useUserInfoStore(state => state.info);
   const autoLoginToGozargah = useFeatureIsOn('auto-login-to-gozargah');
+  const getCentersByUserId = useGetCentersByUserId(info?.id?.toString()!, { enabled: !!info?.id });
 
   const getMe = useGetMe();
   const getDoctorProfile = useGetDoctorProfile();
@@ -32,11 +34,20 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
         setPending(true);
       }
       const userData = await getMe.mutateAsync();
-      const doctorProfileData = await getDoctorProfile.mutateAsync();
+      let doctorProfileData = {};
+      try {
+        doctorProfileData = await getDoctorProfile.mutateAsync();
+      } catch (error) {
+        console.error(error);
+      }
 
       setUserInfo({
-        provider: doctorProfileData,
+        ...info,
         ...userData,
+        provider: {
+          ...info?.provider,
+          ...doctorProfileData,
+        },
       });
 
       setPending(false);
@@ -64,6 +75,20 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       }
     }
   }, [isLogin, info?.id]);
+
+  useEffect(() => {
+    if (getCentersByUserId?.data) {
+      setUserInfo({
+        ...info,
+        is_doctor: getCentersByUserId?.data?.length > 0 ? true : false,
+        provider: {
+          ...info?.provider,
+          job_title: getCentersByUserId?.data?.length > 0 ? 'doctor' : null,
+          centers: getCentersByUserId?.data,
+        },
+      });
+    }
+  }, [getCentersByUserId?.data]);
 
   return (
     <>

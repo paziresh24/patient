@@ -19,7 +19,6 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
           queries: {
             refetchOnWindowFocus: false,
             refetchOnReconnect: true,
-            retry: false,
           },
         },
       }),
