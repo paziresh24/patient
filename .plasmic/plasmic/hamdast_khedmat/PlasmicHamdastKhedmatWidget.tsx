@@ -230,7 +230,8 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                           return {
                             event_group: "khedmat_click_button",
                             doctor_user_id: $props.profileData.user_id,
-                            doctor_slug: $props.profileData.seo.slug
+                            doctor_slug: $props.profileData.seo.slug,
+                            user_id: $ctx.auth?.info?.id
                           };
                         } catch (e) {
                           if (
@@ -527,6 +528,9 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
           </DataFetcher>
         }
         className={classNames("__wab_instance", sty.modal)}
+        noSpacing={
+          hasVariant(globalVariants, "screen", "mobileOnly") ? true : undefined
+        }
         noTrigger={true}
         onOpenChange={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, ["modal", "open"]).apply(
