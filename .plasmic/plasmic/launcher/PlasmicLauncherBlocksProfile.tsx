@@ -505,16 +505,13 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
       </div>
       {(() => {
         try {
-          return (() => {
-            if ($ctx.auth.info?.provider?.job_title === "doctor") return true;
-            return $ctx.Growthbook.features["hamdast::katibe"]?.hide == false;
-          })();
+          return $ctx.auth.info.is_doctor;
         } catch (e) {
           if (
             e instanceof TypeError ||
             e?.plasmicType === "PlasmicUndefinedDataError"
           ) {
-            return true;
+            return false;
           }
           throw e;
         }

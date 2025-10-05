@@ -60,7 +60,6 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
-import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
 
@@ -90,7 +89,6 @@ export const PlasmicLauncherBlocksWallet__ArgProps = new Array<ArgPropType>();
 export type PlasmicLauncherBlocksWallet__OverridesType = {
   root?: Flex__<"div">;
   getCenters?: Flex__<typeof ApiRequest>;
-  sideEffect?: Flex__<typeof SideEffect>;
   span?: Flex__<"span">;
 };
 
@@ -330,6 +328,62 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                 null,
                 eventArgs
               );
+
+              (async data => {
+                const $steps = {};
+
+                $steps["runCode"] = !!$state.getCenters.data.items
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (async () => {
+                            try {
+                              const katibeWalletRequests =
+                                $state.getCenters.data?.items?.map(
+                                  async item =>
+                                    await $$.axios(
+                                      `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24?centerid=${
+                                        item.id
+                                      }${
+                                        item.id == "5532"
+                                          ? ``
+                                          : `&account=organization`
+                                      }`,
+                                      {
+                                        ...$ctx.Fragment.previewApiConfig,
+                                        ...$ctx.Fragment.apiConfig
+                                      }
+                                    )
+                                );
+                              const responses = await Promise.all(
+                                katibeWalletRequests
+                              );
+                              $state.katbeBalance = responses.reduce(
+                                (prev, current) => {
+                                  return prev + current.data?.data?.balance;
+                                },
+                                0
+                              );
+                              return ($state.isLoading = false);
+                            } catch (error) {
+                              return ($state.isLoading = false);
+                            }
+                          })();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+              }).apply(null, eventArgs);
             }}
             ref={ref => {
               $refs["getCenters"] = ref;
@@ -348,81 +402,6 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
               }
             })()}
           >
-            <SideEffect
-              data-plasmic-name={"sideEffect"}
-              data-plasmic-override={overrides.sideEffect}
-              className={classNames("__wab_instance", sty.sideEffect)}
-              deps={(() => {
-                try {
-                  return [$state.getCenters.data?.item];
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              onMount={async () => {
-                const $steps = {};
-
-                $steps["runCode"] =
-                  $state.getCenters.data.items?.length > 0
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return (async () => {
-                              try {
-                                const katibeWalletRequests =
-                                  $state.getCenters.data?.items?.map(
-                                    async item =>
-                                      await $$.axios(
-                                        `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24?centerid=${
-                                          item.id
-                                        }${
-                                          item.id == "5532"
-                                            ? ``
-                                            : `&account=organization`
-                                        }`,
-                                        {
-                                          ...$ctx.Fragment.previewApiConfig,
-                                          ...$ctx.Fragment.apiConfig
-                                        }
-                                      )
-                                  );
-                                const responses = await Promise.all(
-                                  katibeWalletRequests
-                                );
-                                $state.katbeBalance = responses.reduce(
-                                  (prev, current) => {
-                                    return prev + current.data?.data?.balance;
-                                  },
-                                  0
-                                );
-                                return ($state.isLoading = false);
-                              } catch (error) {
-                                return ($state.isLoading = false);
-                              }
-                            })();
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
-                ) {
-                  $steps["runCode"] = await $steps["runCode"];
-                }
-              }}
-            />
-
             {(() => {
               try {
                 return $state.isLoading;
@@ -516,9 +495,8 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "getCenters", "sideEffect", "span"],
-  getCenters: ["getCenters", "sideEffect", "span"],
-  sideEffect: ["sideEffect"],
+  root: ["root", "getCenters", "span"],
+  getCenters: ["getCenters", "span"],
   span: ["span"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -527,7 +505,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   getCenters: typeof ApiRequest;
-  sideEffect: typeof SideEffect;
   span: "span";
 };
 
@@ -592,7 +569,6 @@ export const PlasmicLauncherBlocksWallet = Object.assign(
   {
     // Helper components rendering sub-elements
     getCenters: makeNodeComponent("getCenters"),
-    sideEffect: makeNodeComponent("sideEffect"),
     span: makeNodeComponent("span"),
 
     // Metadata about props expected for PlasmicLauncherBlocksWallet

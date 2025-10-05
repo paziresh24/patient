@@ -44,7 +44,7 @@
   max-width: 100%;
   object-fit: cover;
 }
-.svg {
+.svg__gxvxz {
   object-fit: cover;
   max-width: 100%;
   width: 24px;
@@ -52,6 +52,36 @@
 }
 .launcherComponentsApp__c9Nm0:global(.__wab_instance) {
   max-width: 100%;
+}
+.freeBox__svwDl {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  column-gap: var(--token-omrXvBNBcWTN);
+  cursor: pointer;
+  min-width: 0;
+}
+.text {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-size: var(--token-0D6VF35kZC-C);
+  font-weight: 500;
+  color: var(--token-s_XuzePAGmOh);
+}
+.svg__h5KAq {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-s_XuzePAGmOh);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 .launcherComponentsApp__huggg:global(.__wab_instance) {
   max-width: 100%;

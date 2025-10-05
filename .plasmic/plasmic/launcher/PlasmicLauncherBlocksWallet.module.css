@@ -78,10 +78,6 @@
   width: 22px;
   height: 22px;
 }
-.sideEffect:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
 .svg__z79 {
   object-fit: cover;
   max-width: 100%;
