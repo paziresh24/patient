@@ -66,6 +66,9 @@ import LauncherComponentsCategory from "../../LauncherComponentsCategory"; // pl
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
 import LauncherComponentsApp from "../../LauncherComponentsApp"; // plasmic-import: 25u6_6Q-fQwp/component
 import LauncherComponentsSeparator from "../../LauncherComponentsSeparator"; // plasmic-import: 1FBJsfya0Spv/component
+import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
+import Paziresh24AtomsTextAreaInput from "../../Paziresh24AtomsTextAreaInput"; // plasmic-import: HOBObNXYC7Oc/component
+import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
 
@@ -75,6 +78,8 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL
 import sty from "./PlasmicLauncherApps.module.css"; // plasmic-import: Qz6g1T5BaK7n/css
 
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
+import ChevronRightIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
+import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 
 createPlasmicElementProxy;
 
@@ -103,6 +108,9 @@ export type PlasmicLauncherApps__OverridesType = {
   reveal?: Flex__<typeof Reveal>;
   launcherComponentsCategory?: Flex__<typeof LauncherComponentsCategory>;
   launcherComponentsSeparator?: Flex__<typeof LauncherComponentsSeparator>;
+  modal?: Flex__<typeof Paziresh24Modal>;
+  textAreaInput?: Flex__<typeof Paziresh24AtomsTextAreaInput>;
+  paziresh24Button?: Flex__<typeof Paziresh24Button>;
   apiRequest?: Flex__<typeof ApiRequest>;
   getCenters?: Flex__<typeof ApiRequest>;
 };
@@ -236,6 +244,18 @@ function PlasmicLauncherApps__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiRequest2"
+      },
+      {
+        path: "modal.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "textAreaInput.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -1237,6 +1257,223 @@ function PlasmicLauncherApps__RenderFunc(props: {
               />
             </div>
           ) : null}
+          <div className={classNames(projectcss.all, sty.freeBox__uqjzS)}>
+            <Paziresh24Modal
+              data-plasmic-name={"modal"}
+              data-plasmic-override={overrides.modal}
+              body={
+                <React.Fragment>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__nRtVa
+                    )}
+                  >
+                    {
+                      "\u062f\u0631 \u0627\u06cc\u0646\u062c\u0627 \u0645\u0634\u06a9\u0644 \u06cc\u0627 \u0645\u0648\u0636\u0648\u0639 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f."
+                    }
+                  </div>
+                  <Paziresh24AtomsTextAreaInput
+                    data-plasmic-name={"textAreaInput"}
+                    data-plasmic-override={overrides.textAreaInput}
+                    className={classNames("__wab_instance", sty.textAreaInput)}
+                    flat={[]}
+                    onChange={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "textAreaInput",
+                        "value"
+                      ]).apply(null, eventArgs);
+
+                      if (
+                        eventArgs.length > 1 &&
+                        eventArgs[1] &&
+                        eventArgs[1]._plasmic_state_init_
+                      ) {
+                        return;
+                      }
+                    }}
+                    padded={[]}
+                    value={generateStateValueProp($state, [
+                      "textAreaInput",
+                      "value"
+                    ])}
+                  />
+
+                  <Paziresh24Button
+                    data-plasmic-name={"paziresh24Button"}
+                    data-plasmic-override={overrides.paziresh24Button}
+                    children2={"\u0627\u0631\u0633\u0627\u0644"}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button
+                    )}
+                    isDisabled={(() => {
+                      try {
+                        return !$state.textAreaInput.value;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["invokeGlobalAction"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              args: [
+                                undefined,
+                                "\u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627 \u062b\u0628\u062a \u0634\u062f\u060c \u0628\u0627\u062a\u0634\u06a9\u0631 \u0627\u0632 \u0634\u0645\u0627",
+                                "top-center"
+                              ]
+                            };
+                            return $globalActions["Fragment.showToast"]?.apply(
+                              null,
+                              [...actionArgs.args]
+                            );
+                          })()
+                        : undefined;
+                      if (
+                        $steps["invokeGlobalAction"] != null &&
+                        typeof $steps["invokeGlobalAction"] === "object" &&
+                        typeof $steps["invokeGlobalAction"].then === "function"
+                      ) {
+                        $steps["invokeGlobalAction"] = await $steps[
+                          "invokeGlobalAction"
+                        ];
+                      }
+
+                      $steps["updateModalOpen"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["modal", "open"]
+                              },
+                              operation: 0,
+                              value: false
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateModalOpen"] != null &&
+                        typeof $steps["updateModalOpen"] === "object" &&
+                        typeof $steps["updateModalOpen"].then === "function"
+                      ) {
+                        $steps["updateModalOpen"] = await $steps[
+                          "updateModalOpen"
+                        ];
+                      }
+
+                      $steps["invokeGlobalAction2"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              args: [
+                                "POST",
+                                "https://apigw.paziresh24.com/v1/hamdast/app-suggestion",
+                                undefined,
+                                (() => {
+                                  try {
+                                    return {
+                                      content: $state.textAreaInput.value,
+                                      user_id: $ctx.auth.info?.id
+                                    };
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
+                                    }
+                                    throw e;
+                                  }
+                                })()
+                              ]
+                            };
+                            return $globalActions["Fragment.apiRequest"]?.apply(
+                              null,
+                              [...actionArgs.args]
+                            );
+                          })()
+                        : undefined;
+                      if (
+                        $steps["invokeGlobalAction2"] != null &&
+                        typeof $steps["invokeGlobalAction2"] === "object" &&
+                        typeof $steps["invokeGlobalAction2"].then === "function"
+                      ) {
+                        $steps["invokeGlobalAction2"] = await $steps[
+                          "invokeGlobalAction2"
+                        ];
+                      }
+                    }}
+                  />
+                </React.Fragment>
+              }
+              className={classNames("__wab_instance", sty.modal)}
+              onOpenChange={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, ["modal", "open"]).apply(
+                  null,
+                  eventArgs
+                );
+
+                if (
+                  eventArgs.length > 1 &&
+                  eventArgs[1] &&
+                  eventArgs[1]._plasmic_state_init_
+                ) {
+                  return;
+                }
+              }}
+              open={generateStateValueProp($state, ["modal", "open"])}
+              title={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__retC
+                  )}
+                >
+                  {
+                    "\u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0627\u0628\u0632\u0627\u0631\u06a9"
+                  }
+                </div>
+              }
+              trigger={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__mMc6Q
+                  )}
+                >
+                  {
+                    "\u0646\u06cc\u0627\u0632 \u0628\u0647 \u0627\u0628\u0632\u0627\u0631\u06a9\u06cc \u062f\u0627\u0631\u06cc\u062f \u06a9\u0647 \u0627\u06cc\u0646\u062c\u0627 \u0646\u06cc\u0633\u062a\u061f"
+                  }
+                </div>
+              }
+            />
+          </div>
         </Reveal>
       </ApiRequest>
       <ApiRequest
@@ -1455,6 +1692,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
       <ApiRequest
         data-plasmic-name={"getCenters"}
         data-plasmic-override={overrides.getCenters}
+        children={null}
         className={classNames("__wab_instance", sty.getCenters)}
         errorDisplay={null}
         loadingDisplay={null}
@@ -1495,6 +1733,9 @@ const PlasmicDescendants = {
     "reveal",
     "launcherComponentsCategory",
     "launcherComponentsSeparator",
+    "modal",
+    "textAreaInput",
+    "paziresh24Button",
     "apiRequest",
     "getCenters"
   ],
@@ -1504,16 +1745,25 @@ const PlasmicDescendants = {
     "svg",
     "reveal",
     "launcherComponentsCategory",
-    "launcherComponentsSeparator"
+    "launcherComponentsSeparator",
+    "modal",
+    "textAreaInput",
+    "paziresh24Button"
   ],
   svg: ["svg"],
   reveal: [
     "reveal",
     "launcherComponentsCategory",
-    "launcherComponentsSeparator"
+    "launcherComponentsSeparator",
+    "modal",
+    "textAreaInput",
+    "paziresh24Button"
   ],
   launcherComponentsCategory: ["launcherComponentsCategory"],
   launcherComponentsSeparator: ["launcherComponentsSeparator"],
+  modal: ["modal", "textAreaInput", "paziresh24Button"],
+  textAreaInput: ["textAreaInput"],
+  paziresh24Button: ["paziresh24Button"],
   apiRequest: ["apiRequest"],
   getCenters: ["getCenters"]
 } as const;
@@ -1528,6 +1778,9 @@ type NodeDefaultElementType = {
   reveal: typeof Reveal;
   launcherComponentsCategory: typeof LauncherComponentsCategory;
   launcherComponentsSeparator: typeof LauncherComponentsSeparator;
+  modal: typeof Paziresh24Modal;
+  textAreaInput: typeof Paziresh24AtomsTextAreaInput;
+  paziresh24Button: typeof Paziresh24Button;
   apiRequest: typeof ApiRequest;
   getCenters: typeof ApiRequest;
 };
@@ -1600,6 +1853,9 @@ export const PlasmicLauncherApps = Object.assign(
     launcherComponentsSeparator: makeNodeComponent(
       "launcherComponentsSeparator"
     ),
+    modal: makeNodeComponent("modal"),
+    textAreaInput: makeNodeComponent("textAreaInput"),
+    paziresh24Button: makeNodeComponent("paziresh24Button"),
     apiRequest: makeNodeComponent("apiRequest"),
     getCenters: makeNodeComponent("getCenters"),
 

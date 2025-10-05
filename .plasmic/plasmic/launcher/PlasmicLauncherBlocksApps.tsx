@@ -72,6 +72,7 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL
 import sty from "./PlasmicLauncherBlocksApps.module.css"; // plasmic-import: 1JVvWgQsicxr/css
 
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
+import LauncherIconsChevronDownIcon from "./icons/PlasmicIcon__LauncherIconsChevronDown"; // plasmic-import: QkcYbCaNRb2n/icon
 
 createPlasmicElementProxy;
 
@@ -93,7 +94,7 @@ export type PlasmicLauncherBlocksApps__OverridesType = {
   root?: Flex__<"div">;
   launcherComponentsTitle?: Flex__<typeof LauncherComponentsTitle>;
   apiRequest?: Flex__<typeof ApiRequest>;
-  svg?: Flex__<"svg">;
+  text?: Flex__<"div">;
 };
 
 export interface DefaultLauncherBlocksAppsProps {
@@ -201,21 +202,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
         className={classNames("__wab_instance", sty.launcherComponentsTitle)}
         isNew={true}
         moreLink={"/_/apps"}
-        moreTitle={(() => {
-          try {
-            return $ctx.auth.info?.provider?.job_title !== "doctor"
-              ? null
-              : "همه ابزارک ها";
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
+        moreTitle={``}
         subTitle={(() => {
           try {
             return $ctx.auth.info?.provider?.job_title === "doctor"
@@ -270,9 +257,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
               errorDisplay={null}
               loadingDisplay={
                 <LauncherIconsLoaderIcon
-                  data-plasmic-name={"svg"}
-                  data-plasmic-override={overrides.svg}
-                  className={classNames(projectcss.all, sty.svg)}
+                  className={classNames(projectcss.all, sty.svg__gxvxz)}
                   role={"img"}
                 />
               }
@@ -518,6 +503,55 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                     );
                   })
                 : null}
+              <div
+                className={classNames(projectcss.all, sty.freeBox__svwDl)}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["goToApps"] = true
+                    ? (() => {
+                        const actionArgs = { destination: "/_/apps" };
+                        return (({ destination }) => {
+                          if (
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
+                          ) {
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
+                          }
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["goToApps"] != null &&
+                    typeof $steps["goToApps"] === "object" &&
+                    typeof $steps["goToApps"].then === "function"
+                  ) {
+                    $steps["goToApps"] = await $steps["goToApps"];
+                  }
+                }}
+              >
+                <div
+                  data-plasmic-name={"text"}
+                  data-plasmic-override={overrides.text}
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text
+                  )}
+                >
+                  {
+                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u0647\u0645\u0647 \u0627\u0628\u0632\u0627\u0631\u06a9\u200c\u0647\u0627"
+                  }
+                </div>
+                <LauncherIconsChevronDownIcon
+                  className={classNames(projectcss.all, sty.svg__h5KAq)}
+                  role={"img"}
+                />
+              </div>
             </ApiRequest>
           </div>
         ) : null}
@@ -966,10 +1000,10 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "launcherComponentsTitle", "apiRequest", "svg"],
+  root: ["root", "launcherComponentsTitle", "apiRequest", "text"],
   launcherComponentsTitle: ["launcherComponentsTitle"],
-  apiRequest: ["apiRequest", "svg"],
-  svg: ["svg"]
+  apiRequest: ["apiRequest", "text"],
+  text: ["text"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -978,7 +1012,7 @@ type NodeDefaultElementType = {
   root: "div";
   launcherComponentsTitle: typeof LauncherComponentsTitle;
   apiRequest: typeof ApiRequest;
-  svg: "svg";
+  text: "div";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1043,7 +1077,7 @@ export const PlasmicLauncherBlocksApps = Object.assign(
     // Helper components rendering sub-elements
     launcherComponentsTitle: makeNodeComponent("launcherComponentsTitle"),
     apiRequest: makeNodeComponent("apiRequest"),
-    svg: makeNodeComponent("svg"),
+    text: makeNodeComponent("text"),
 
     // Metadata about props expected for PlasmicLauncherBlocksApps
     internalVariantProps: PlasmicLauncherBlocksApps__VariantProps,
