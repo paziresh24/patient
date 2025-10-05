@@ -30,9 +30,17 @@ export const BottomNavigation = () => {
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
   const isEnabledLauncher = useFeatureIsOn('launcher-flag');
+  const launcherAsMainHome = useFeatureIsOn('launcher-as-main-home');
+
   const isShowDashboard =
     !customize.partnerKey &&
     (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
+
+  useEffect(() => {
+    if (['/', '/apphome'].includes(router.pathname) && launcherAsMainHome) {
+      router.replace('/_');
+    }
+  }, [router.pathname, launcherAsMainHome]);
 
   const servicesMenu = useMemo(() => {
     if (!user?.id) {
@@ -101,6 +109,34 @@ export const BottomNavigation = () => {
     });
   };
 
+  const doctorMenu = [
+    {
+      name: 'خانه',
+      icon: <HomeIcon />,
+      fillIcon: <HomeIcon isSolid />,
+      link: isApplication ? '/_' : '/_',
+      pattern: isApplication ? '/_' : '/_',
+      privateRoute: true,
+    },
+    {
+      name: 'مراجعین من',
+      icon: <CalenderIcon />,
+      fillIcon: <CalenderIcon isSolid />,
+      link: '/dashboard/apps/drapp/appointments/',
+      exact: true,
+      pattern: '',
+      privateRoute: true,
+    },
+    {
+      name: 'جستجو',
+      icon: <SearchIcon />,
+      fillIcon: <SearchIcon />,
+      link: `/s${city.en_slug !== 'ir' ? `/${city.en_slug}` : ''}`,
+      pattern: '/s/[[...params]]',
+      privateRoute: false,
+    },
+  ];
+
   const menus = [
     {
       name: 'خانه',
@@ -162,19 +198,21 @@ export const BottomNavigation = () => {
 
   return (
     <div className="fixed bottom-0 left-0 z-40 flex items-center justify-between w-full min-h-16 h-16 px-4 bg-[#F9F9F9] border-t print:hidden md:hidden border-[#d5d8db]">
-      {menus.map(({ icon, fillIcon, name, link, privateRoute, pattern, exact }, index) => (
-        <div
-          key={index}
-          onClick={() => handleChangeRoute(link, privateRoute)}
-          className={classNames('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all scale-95', {
-            '!text-primary font-bold scale-100': exact ? router.asPath === link : router.pathname === pattern,
-          })}
-        >
-          {fillIcon && (exact ? router.asPath === link : router.pathname === pattern) ? fillIcon : icon}
+      {(user.provider?.job_title === 'doctor' && launcherAsMainHome ? doctorMenu : menus).map(
+        ({ icon, fillIcon, name, link, privateRoute, pattern, exact }, index) => (
+          <div
+            key={index}
+            onClick={() => handleChangeRoute(link, privateRoute)}
+            className={classNames('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all scale-95', {
+              '!text-primary font-bold scale-100': exact ? router.asPath === link : router.pathname === pattern,
+            })}
+          >
+            {fillIcon && (exact ? router.asPath === link : router.pathname === pattern) ? fillIcon : icon}
 
-          <Text fontSize="xs">{name}</Text>
-        </div>
-      ))}
+            <Text fontSize="xs">{name}</Text>
+          </div>
+        ),
+      )}
     </div>
   );
 };
