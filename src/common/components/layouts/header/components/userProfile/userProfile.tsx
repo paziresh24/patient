@@ -71,7 +71,7 @@ export const UserProfile = () => {
         {
           name: 'داشبورد',
           icon: <ElementIcon width={22} height={22} />,
-          link: '/dashboard',
+          link: '/_',
           shouldShow: true,
         },
         {
