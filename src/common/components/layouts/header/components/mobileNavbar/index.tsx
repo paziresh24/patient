@@ -12,6 +12,8 @@ import { articleMenus, consultMenus, developersMenu, medicalCenterMenu, withDoct
 import HeaderLogo from '../logo/logo';
 import UserProfile from '../userProfile';
 const Sidebar = dynamic(() => import('./sidebar'));
+import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
+import LauncherBlockNotifications from '.plasmic/LauncherBlockNotifications';
 
 interface MobileNavbarProps {
   shouldShowBrand?: boolean;
@@ -84,6 +86,18 @@ const MobileNavbar = (props: MobileNavbarProps) => {
   return (
     <div ref={ref} className="block w-full text-sm z-infinity md:hidden">
       <div className="relative flex items-center justify-between max-w-screen-xl mx-auto">
+        {shouldShowBrand && (
+          <div className="absolute hidden justify-center items-center pwa:flex right-0 w-full -z-10">
+            <Link href="/" shallow prefetch={false}>
+              <HeaderLogo
+                showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
+                partnerLogo={customize.partnerLogo}
+                brandType="compact"
+                size="mobile"
+              />
+            </Link>
+          </div>
+        )}
         <div className="flex flex-row items-center gap-2">
           {(customize.showSideBar || !!customize.menuNavigation?.length) && (
             <div className="flex items-center justify-center w-8 h-8" onClick={() => setOpen(true)}>
@@ -91,7 +105,7 @@ const MobileNavbar = (props: MobileNavbarProps) => {
             </div>
           )}
           {shouldShowBrand && (
-            <Link href="/" shallow prefetch={false}>
+            <Link href="/" shallow prefetch={false} className="pwa:hidden">
               <HeaderLogo
                 showPartnerLogo={customize.showPartnerLogoInPrimaryPlace}
                 partnerLogo={customize.partnerLogo}
@@ -112,6 +126,11 @@ const MobileNavbar = (props: MobileNavbarProps) => {
         <div className="flex items-center space-s-3">
           <SupportButtonBamdad />
           {showSearchSuggestionButton && <ButtonSuggestion />}
+          <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[6px] ![&>div>div>div]:right-[7px]">
+            <GlobalContextsProvider>
+              <LauncherBlockNotifications />
+            </GlobalContextsProvider>
+          </div>
           {customize.showUserProfile && <UserProfile />}
         </div>
         <Sidebar
