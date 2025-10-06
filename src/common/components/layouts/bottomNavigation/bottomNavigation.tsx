@@ -14,6 +14,7 @@ import ElementIcon from '../../icons/element';
 import HomeIcon from '../../icons/home';
 import SearchIcon from '../../icons/search';
 import UserCircle from '../../icons/userCircle';
+import useResponsive from '@/common/hooks/useResponsive';
 
 export const BottomNavigation = () => {
   const router = useRouter();
@@ -26,6 +27,7 @@ export const BottomNavigation = () => {
   const city = useSearchStore(state => state.city);
   const isApplication = useApplication();
   const customize = useCustomize(state => state.customize);
+  const { isMobile } = useResponsive();
 
   const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
@@ -37,10 +39,10 @@ export const BottomNavigation = () => {
     (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
 
   useEffect(() => {
-    if (['/', '/apphome'].includes(router.pathname) && launcherAsMainHome) {
+    if (['/', '/apphome'].includes(router.pathname) && launcherAsMainHome && isMobile && user.provider?.job_title == 'doctor') {
       router.replace('/_');
     }
-  }, [router.pathname, launcherAsMainHome]);
+  }, [router.pathname, launcherAsMainHome, isMobile, user.provider?.job_title]);
 
   const servicesMenu = useMemo(() => {
     if (!user?.id) {
@@ -203,9 +205,12 @@ export const BottomNavigation = () => {
           <div
             key={index}
             onClick={() => handleChangeRoute(link, privateRoute)}
-            className={classNames('flex flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all scale-95', {
-              '!text-primary font-bold scale-100': exact ? router.asPath === link : router.pathname === pattern,
-            })}
+            className={classNames(
+              'flex cursor-pointer flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all scale-95',
+              {
+                '!text-primary font-bold scale-100': exact ? router.asPath === link : router.pathname === pattern,
+              },
+            )}
           >
             {fillIcon && (exact ? router.asPath === link : router.pathname === pattern) ? fillIcon : icon}
 
