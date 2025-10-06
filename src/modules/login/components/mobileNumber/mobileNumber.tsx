@@ -110,7 +110,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
           {showOidcLogin && (
             <Button
               loading={oidcOauthLoading}
-              icon={<img src={ITOLogo.src} className="h-6 w-7" />}
+              icon={<img src={ITOLogo.src} className="h-6 w-7" alt="" />}
               variant="secondary"
               onClick={() => {
                 splunkInstance('gozargah').sendEvent({
@@ -138,7 +138,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
           {showGoogleLogin && (
             <Button
               loading={googleOauthLoading}
-              icon={<img src={GoogleLogo.src} className="h-6 w-7" />}
+              icon={<img src={GoogleLogo.src} className="h-6 w-7" alt="" />}
               variant="secondary"
               onClick={() => {
                 splunkInstance('gozargah').sendEvent({

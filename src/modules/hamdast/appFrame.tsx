@@ -143,7 +143,7 @@ export const AppFrame = ({
                 </svg>
 
                 <div className="bg-white rounded-xl shadow-card w-16 h-16 flex justify-center items-center">
-                  <img src={app?.icon} className="w-10 h-10 rounded-xl" />
+                  <img src={app?.icon} className="w-10 h-10 rounded-xl" alt="" />
                 </div>
               </div>
               <span className="text-sm">
