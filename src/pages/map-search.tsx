@@ -265,9 +265,9 @@ const MapSearchPage: React.FC<MapSearchPageProps> = () => {
                 </h2>
                 
                 <div className="flex items-center space-x-2 space-x-reverse">
-                  {/* Resize Buttons */}
+                  {/* Expand/Collapse Toggle Button */}
                   <button
-                    onClick={() => setMobileResultsHeight(mobileResultsHeight === '25vh' ? '60vh' : '25vh')}
+                    onClick={() => setMobileResultsHeight(mobileResultsHeight === '25vh' ? '80vh' : '25vh')}
                     className="p-2 text-gray-500 hover:text-gray-700 transition-colors duration-150"
                     title={mobileResultsHeight === '25vh' ? 'بزرگ کردن' : 'کوچک کردن'}
                   >
@@ -277,17 +277,6 @@ const MapSearchPage: React.FC<MapSearchPageProps> = () => {
                       ) : (
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 10l-3 3-3-3m0 8l3-3 3-3" />
                       )}
-                    </svg>
-                  </button>
-                  
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setShowMobileResults(false)}
-                    className="p-2 text-gray-500 hover:text-gray-700 transition-colors duration-150"
-                    title="بستن"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>

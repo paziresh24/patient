@@ -87,7 +87,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
         </div>
 
         {/* Loading Spinner */}
-        {(isLoading || suggestionsQuery.isLoading) && (
+        {isLoading && (
           <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
           </div>
@@ -98,7 +98,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       {showSuggestions && suggestions.length > 0 && (
         <div 
           ref={suggestionContainerRef}
-          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[1001] max-h-60 overflow-y-auto"
         >
           {suggestions.map((suggestion, index) => (
             <button
@@ -114,7 +114,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
       {/* No Results Message */}
       {showSuggestions && suggestionsQuery.isSuccess && suggestions.length === 0 && debouncedQuery.length > 1 && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[1001]">
           <div className="px-4 py-3 text-right text-gray-500 text-sm">
             پیشنهادی یافت نشد
           </div>

@@ -69,27 +69,34 @@ const MapEventsHandler = ({ onMapMove }: { onMapMove?: (center: [number, number]
   });
 };
 
-// Custom marker icon
-const createCustomIcon = (isSelected: boolean = false) => {
+// Custom marker icon with doctor avatar
+const createCustomIcon = (doctor: any, isSelected: boolean = false) => {
   if (typeof window === 'undefined') return null;
   
   const L = require('leaflet');
   
+  const avatarUrl = doctor.source.image 
+    ? `https://cdn.paziresh24.com/getImage/p24/search-men/${doctor.source.image}`
+    : 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png';
+  
   return L.divIcon({
     html: `
       <div class="relative">
-        <div class="w-8 h-8 ${isSelected ? 'bg-blue-600' : 'bg-red-500'} rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-          <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-          </svg>
+        <div class="w-10 h-10 ${isSelected ? 'ring-2 ring-blue-500' : 'ring-1 ring-white'} rounded-full overflow-hidden border-2 border-white shadow-lg bg-white">
+          <img 
+            src="${avatarUrl}" 
+            alt="${doctor.source.display_name}"
+            class="w-full h-full object-cover"
+            onerror="this.src='https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png'"
+          />
         </div>
         ${isSelected ? '<div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-blue-600 rotate-45"></div>' : ''}
       </div>
     `,
     className: 'custom-doctor-marker',
-    iconSize: [32, 40],
-    iconAnchor: [16, 40],
-    popupAnchor: [0, -40],
+    iconSize: [40, 50],
+    iconAnchor: [20, 50],
+    popupAnchor: [0, -50],
   });
 };
 
@@ -162,17 +169,26 @@ const MapComponent: React.FC<MapComponentProps> = ({
         
         {/* Doctor Markers */}
         {doctors.map((doctor, index) => {
-          // For demo purposes, generate positions around the map center
-          // In a real implementation, you'd get lat/lng from the doctor data
-          const offsetLat = (Math.random() - 0.5) * 0.02; // ~1-2km radius
-          const offsetLng = (Math.random() - 0.5) * 0.02;
+          // Generate meaningful positions around the search area in a grid pattern
+          // This provides consistent positioning that doesn't change on map movement
+          const gridSize = Math.ceil(Math.sqrt(doctors.length));
+          const row = Math.floor(index / gridSize);
+          const col = index % gridSize;
+          
+          // Create a grid pattern around the map center with some randomization
+          const baseOffset = 0.01; // Base offset for grid spacing
+          const randomOffset = 0.003; // Small random offset for natural distribution
+          
+          const latOffset = (row - gridSize / 2) * baseOffset + (Math.random() - 0.5) * randomOffset;
+          const lngOffset = (col - gridSize / 2) * baseOffset + (Math.random() - 0.5) * randomOffset;
+          
           const position: [number, number] = [
-            center[0] + offsetLat,
-            center[1] + offsetLng
+            center[0] + latOffset,
+            center[1] + lngOffset
           ];
 
           const isSelected = selectedDoctorId === doctor.documentId;
-          const customIcon = createCustomIcon(isSelected);
+          const customIcon = createCustomIcon(doctor, isSelected);
 
           return (
             <Marker

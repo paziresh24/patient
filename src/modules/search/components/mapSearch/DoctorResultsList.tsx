@@ -60,7 +60,13 @@ const DoctorCard: React.FC<{
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 truncate">
+              <h3 className="text-lg font-semibold text-gray-900 truncate cursor-pointer hover:text-blue-600 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Navigate to doctor profile page using doctor slug
+                    const currentOrigin = window.location.origin;
+                    window.open(`${currentOrigin}/dr/${doctor.source.slug}`, '_blank');
+                  }}>
                 {doctor.source.prefix} {doctor.source.display_name}
               </h3>
               
@@ -125,7 +131,9 @@ const DoctorCard: React.FC<{
             <button 
               onClick={(e) => {
                 e.stopPropagation();
-                onBookAppointment?.(doctor);
+                // Navigate to booking page using doctor slug
+                const currentOrigin = window.location.origin;
+                window.open(`${currentOrigin}/booking/${doctor.source.slug}`, '_blank');
               }}
               className={classNames(
                 "text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-150 flex items-center justify-center",
@@ -142,7 +150,9 @@ const DoctorCard: React.FC<{
               <button 
                 onClick={(e) => {
                   e.stopPropagation();
-                  onOnlineConsult?.(doctor);
+                  // Navigate to online consultation page using doctor slug
+                  const currentOrigin = window.location.origin;
+                  window.open(`${currentOrigin}/booking/${doctor.source.slug}/?centerId=5532&skipTimeSelectStep=true`, '_blank');
                 }}
                 className={classNames(
                   "text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-150 flex items-center justify-center",
