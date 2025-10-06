@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Head from 'next/head';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { useSearchDoctors } from '@/common/apis/services/search/jahannamaSearch';
@@ -33,9 +33,14 @@ const MapSearchPage: React.FC<MapSearchPageProps> = () => {
   // Get initial values from URL
   const urlParams = getCurrentParams();
   
-  // Debug: Log URL parameter changes
+  // Debug: Log URL parameter changes (with throttling to prevent spam)
+  const lastLogRef = useRef<number>(0);
   useEffect(() => {
-    console.log('URL params changed:', urlParams);
+    const now = Date.now();
+    if (now - lastLogRef.current > 1000) { // Log max once per second
+      console.log('URL params changed:', urlParams);
+      lastLogRef.current = now;
+    }
   }, [urlParams.q, urlParams.lat, urlParams.lng]);
   
   // State management
@@ -84,29 +89,45 @@ const MapSearchPage: React.FC<MapSearchPageProps> = () => {
     if (geolocation.position && !urlParams.lat && !urlParams.lng) {
       const newCenter: [number, number] = [geolocation.position.lat, geolocation.position.lng];
       setMapCenter(newCenter);
+      // Update the ref to prevent loop in the debounced effect
+      lastUrlUpdateRef.current = newCenter;
       updateLocation(geolocation.position.lat, geolocation.position.lng);
     }
   }, [geolocation.position, urlParams.lat, urlParams.lng, updateLocation]);
 
   // Update URL when search query changes
   useEffect(() => {
-    if (debouncedQuery !== urlParams.q) {
+    if (debouncedQuery !== urlParams.q && debouncedQuery !== undefined) {
       console.log('Updating search query in URL:', debouncedQuery); // Debug log
       updateSearchQuery(debouncedQuery);
     }
   }, [debouncedQuery, urlParams.q, updateSearchQuery]);
 
-  // Debounced URL update for map position changes
+  // Debounced URL update for map position changes - with ref to prevent loops
+  const mapCenterRef = useRef<[number, number]>(mapCenter);
+  const lastUrlUpdateRef = useRef<[number, number]>([urlParams.lat || 35.6892, urlParams.lng || 51.3890]);
+  
+  useEffect(() => {
+    mapCenterRef.current = mapCenter;
+  }, [mapCenter]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       // Only update URL if map center is significantly different from URL params
       const threshold = 0.001;
       const urlLat = urlParams.lat || 35.6892;
       const urlLng = urlParams.lng || 51.3890;
+      const currentCenter = mapCenterRef.current;
+      const lastUpdate = lastUrlUpdateRef.current;
       
-      if (Math.abs(mapCenter[0] - urlLat) > threshold || Math.abs(mapCenter[1] - urlLng) > threshold) {
-        console.log('Updating location in URL:', mapCenter); // Debug log
-        updateLocation(mapCenter[0], mapCenter[1]);
+      // Check if map center changed significantly AND we haven't just updated the URL
+      const centerChanged = Math.abs(currentCenter[0] - urlLat) > threshold || Math.abs(currentCenter[1] - urlLng) > threshold;
+      const notJustUpdated = Math.abs(currentCenter[0] - lastUpdate[0]) > threshold || Math.abs(currentCenter[1] - lastUpdate[1]) > threshold;
+      
+      if (centerChanged && notJustUpdated) {
+        console.log('Updating location in URL:', currentCenter); // Debug log
+        lastUrlUpdateRef.current = currentCenter;
+        updateLocation(currentCenter[0], currentCenter[1]);
       }
     }, 2000); // 2 second debounce for map movements
     

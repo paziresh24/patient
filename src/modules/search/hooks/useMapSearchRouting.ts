@@ -13,24 +13,34 @@ export const useMapSearchRouting = () => {
   // Update URL with new parameters
   const updateParams = useCallback((newParams: Partial<MapSearchParams>, replace = true) => {
     const currentQuery = { ...router.query };
+    let hasChanges = false;
     
-    // Update parameters
+    // Update parameters and check for changes
     Object.entries(newParams).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        currentQuery[key] = String(value);
-      } else {
-        delete currentQuery[key];
+      const stringValue = value !== undefined && value !== null && value !== '' ? String(value) : undefined;
+      const currentValue = currentQuery[key];
+      
+      if (stringValue !== currentValue) {
+        hasChanges = true;
+        if (stringValue) {
+          currentQuery[key] = stringValue;
+        } else {
+          delete currentQuery[key];
+        }
       }
     });
 
-    const method = replace ? router.replace : router.push;
-    method({
-      pathname: router.pathname,
-      query: currentQuery,
-    }, undefined, { 
-      shallow: true,
-      scroll: false,
-    });
+    // Only update if there are actual changes
+    if (hasChanges) {
+      const method = replace ? router.replace : router.push;
+      method({
+        pathname: router.pathname,
+        query: currentQuery,
+      }, undefined, { 
+        shallow: true,
+        scroll: false,
+      });
+    }
   }, [router]);
 
   // Get current parameters from URL
@@ -42,7 +52,7 @@ export const useMapSearchRouting = () => {
       lat: lat ? parseFloat(lat as string) : undefined,
       lng: lng ? parseFloat(lng as string) : undefined,
     };
-  }, [router.asPath]); // Use asPath instead of router.query to prevent infinite loops
+  }, [router.query]); // Use router.query instead of asPath to prevent infinite loops
 
   // Update search query
   const updateSearchQuery = useCallback((query: string) => {
