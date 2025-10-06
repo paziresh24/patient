@@ -3,6 +3,8 @@ import Text from '@/components/atom/text';
 import { useRouter } from 'next/router';
 import { HTMLAttributes, ReactNode } from 'react';
 import Skeleton from '../atom/skeleton';
+import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
+import LauncherBlockNotifications from '.plasmic/LauncherBlockNotifications';
 
 interface AppBarProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
@@ -48,7 +50,16 @@ export const AppBar = ({ title, backButton, titleLoading = false, className, act
         </Text>
       )}
 
-      {actionButton && <div className="cursor-pointer left-5 absolute">{actionButton}</div>}
+      {actionButton && (
+        <div className="cursor-pointer left-5 absolute flex gap-2 items-center">
+          <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[6px] ![&>div>div>div]:right-[7px]">
+            <GlobalContextsProvider>
+              <LauncherBlockNotifications />
+            </GlobalContextsProvider>
+          </div>
+          {actionButton}
+        </div>
+      )}
     </div>
   );
 };

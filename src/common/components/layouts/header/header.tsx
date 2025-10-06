@@ -21,6 +21,7 @@ const PromoteAppBanner = dynamic(() => import('../promoteAppBanner'));
 import LauncherDesktopApps from '.plasmic/LauncherDesktopApps';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import LauncherBlockNotifications from '.plasmic/LauncherBlockNotifications';
 
 enum MegaMenuItem {
   CONSULT = 'consult',
@@ -60,7 +61,7 @@ const Header = (props: HeaderProps) => {
   return (
     <>
       {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
-      <header className="z-50 flex items-center min-h-14 h-14 px-3 text-lg bg-white border-b border-solid shadow-sm print:hidden pwa:hidden text-slate-700 md:px-4 md:min-h-20 md:h-20 border-slate-100">
+      <header className="z-50 flex items-center min-h-14 h-14 px-3 text-lg bg-white border-b border-solid shadow-sm print:hidden text-slate-700 md:px-4 md:min-h-20 md:h-20 border-slate-100">
         <div className="max-w-screen-xl relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (
             <div className="flex items-center space-s-4">
@@ -154,9 +155,16 @@ const Header = (props: HeaderProps) => {
             <SupportButtonBamdad />
             {showSearchSuggestionButton && <ButtonSuggestion />}
             {isLogin && user.provider?.job_title === 'doctor' && (
-              <GlobalContextsProvider>
-                <LauncherDesktopApps />
-              </GlobalContextsProvider>
+              <>
+                <GlobalContextsProvider>
+                  <LauncherDesktopApps />
+                </GlobalContextsProvider>
+                <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[5px] [&>div>div>div]:right-[6px]">
+                  <GlobalContextsProvider>
+                    <LauncherBlockNotifications />
+                  </GlobalContextsProvider>
+                </div>
+              </>
             )}
             {customize.showUserProfile && <UserProfile />}
           </div>
