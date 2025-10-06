@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { DoctorSearchResult } from '@/common/apis/services/search/jahannamaSearch';
 import 'leaflet/dist/leaflet.css';
@@ -37,6 +37,7 @@ interface MapComponentProps {
 const MapEventsHandler = ({ onMapMove }: { onMapMove?: (center: [number, number], zoom: number) => void }) => {
   // This will be dynamically imported and used only client-side
   const [mapEvents, setMapEvents] = useState<any>(null);
+  const lastUpdateRef = useRef<{ center: [number, number], zoom: number } | null>(null);
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -54,14 +55,33 @@ const MapEventsHandler = ({ onMapMove }: { onMapMove?: (center: [number, number]
         if (onMapMove) {
           const center = map.getCenter();
           const zoom = map.getZoom();
-          onMapMove([center.lat, center.lng], zoom);
+          const newCenter: [number, number] = [center.lat, center.lng];
+          
+          // Prevent redundant updates by checking if position actually changed
+          const last = lastUpdateRef.current;
+          const threshold = 0.0001; // Minimum change threshold
+          
+          if (!last || 
+              Math.abs(last.center[0] - newCenter[0]) > threshold ||
+              Math.abs(last.center[1] - newCenter[1]) > threshold ||
+              last.zoom !== zoom) {
+            lastUpdateRef.current = { center: newCenter, zoom };
+            onMapMove(newCenter, zoom);
+          }
         }
       },
       zoomend: () => {
         if (onMapMove) {
           const center = map.getCenter();
           const zoom = map.getZoom();
-          onMapMove([center.lat, center.lng], zoom);
+          const newCenter: [number, number] = [center.lat, center.lng];
+          
+          // Prevent redundant updates
+          const last = lastUpdateRef.current;
+          if (!last || last.zoom !== zoom) {
+            lastUpdateRef.current = { center: newCenter, zoom };
+            onMapMove(newCenter, zoom);
+          }
         }
       },
     });
@@ -136,6 +156,33 @@ const MapComponent: React.FC<MapComponentProps> = ({
     setIsClient(true);
   }, []);
 
+  // Memoize doctor positions to prevent regeneration on every render
+  const doctorPositions = useMemo(() => {
+    if (!doctors.length) return [];
+    
+    const gridSize = Math.ceil(Math.sqrt(doctors.length));
+    const baseOffset = 0.01; // Base offset for grid spacing
+    const randomOffset = 0.003; // Small random offset for natural distribution
+    
+    return doctors.map((doctor, index) => {
+      const row = Math.floor(index / gridSize);
+      const col = index % gridSize;
+      
+      // Use doctor ID to create consistent "random" offset
+      const seed = doctor.documentId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const randomLat = ((seed % 1000) / 1000 - 0.5) * randomOffset;
+      const randomLng = (((seed * 7) % 1000) / 1000 - 0.5) * randomOffset;
+      
+      const latOffset = (row - gridSize / 2) * baseOffset + randomLat;
+      const lngOffset = (col - gridSize / 2) * baseOffset + randomLng;
+      
+      return {
+        doctor,
+        position: [center[0] + latOffset, center[1] + lngOffset] as [number, number]
+      };
+    });
+  }, [doctors, center[0], center[1]]); // Dependencies that actually should trigger recalculation
+
   if (!isClient) {
     return (
       <div className={`flex items-center justify-center bg-gray-100 ${className}`}>
@@ -168,25 +215,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         {isClient && <MapEventsHandler onMapMove={onMapMove} />}
         
         {/* Doctor Markers */}
-        {doctors.map((doctor, index) => {
-          // Generate meaningful positions around the search area in a grid pattern
-          // This provides consistent positioning that doesn't change on map movement
-          const gridSize = Math.ceil(Math.sqrt(doctors.length));
-          const row = Math.floor(index / gridSize);
-          const col = index % gridSize;
-          
-          // Create a grid pattern around the map center with some randomization
-          const baseOffset = 0.01; // Base offset for grid spacing
-          const randomOffset = 0.003; // Small random offset for natural distribution
-          
-          const latOffset = (row - gridSize / 2) * baseOffset + (Math.random() - 0.5) * randomOffset;
-          const lngOffset = (col - gridSize / 2) * baseOffset + (Math.random() - 0.5) * randomOffset;
-          
-          const position: [number, number] = [
-            center[0] + latOffset,
-            center[1] + lngOffset
-          ];
-
+        {doctorPositions.map(({ doctor, position }, index) => {
           const isSelected = selectedDoctorId === doctor.documentId;
           const customIcon = createCustomIcon(doctor, isSelected);
 

@@ -42,7 +42,7 @@ export const useMapSearchRouting = () => {
       lat: lat ? parseFloat(lat as string) : undefined,
       lng: lng ? parseFloat(lng as string) : undefined,
     };
-  }, [router.query]);
+  }, [router.asPath]); // Use asPath instead of router.query to prevent infinite loops
 
   // Update search query
   const updateSearchQuery = useCallback((query: string) => {

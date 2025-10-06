@@ -33,6 +33,11 @@ const MapSearchPage: React.FC<MapSearchPageProps> = () => {
   // Get initial values from URL
   const urlParams = getCurrentParams();
   
+  // Debug: Log URL parameter changes
+  useEffect(() => {
+    console.log('URL params changed:', urlParams);
+  }, [urlParams.q, urlParams.lat, urlParams.lng]);
+  
   // State management
   const [searchQuery, setSearchQuery] = useState<string>(urlParams.q || '');
   const [debouncedQuery, setDebouncedQuery] = useState<string>(searchQuery);
@@ -86,9 +91,27 @@ const MapSearchPage: React.FC<MapSearchPageProps> = () => {
   // Update URL when search query changes
   useEffect(() => {
     if (debouncedQuery !== urlParams.q) {
+      console.log('Updating search query in URL:', debouncedQuery); // Debug log
       updateSearchQuery(debouncedQuery);
     }
   }, [debouncedQuery, urlParams.q, updateSearchQuery]);
+
+  // Debounced URL update for map position changes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Only update URL if map center is significantly different from URL params
+      const threshold = 0.001;
+      const urlLat = urlParams.lat || 35.6892;
+      const urlLng = urlParams.lng || 51.3890;
+      
+      if (Math.abs(mapCenter[0] - urlLat) > threshold || Math.abs(mapCenter[1] - urlLng) > threshold) {
+        console.log('Updating location in URL:', mapCenter); // Debug log
+        updateLocation(mapCenter[0], mapCenter[1]);
+      }
+    }, 2000); // 2 second debounce for map movements
+    
+    return () => clearTimeout(timer);
+  }, [mapCenter, urlParams.lat, urlParams.lng, updateLocation]);
 
   // Handle suggestion selection
   const handleSuggestionSelect = useCallback((suggestion: string) => {
@@ -98,15 +121,11 @@ const MapSearchPage: React.FC<MapSearchPageProps> = () => {
 
   // Handle map events - simplified without ref dependency
   const handleMapMove = useCallback((center: [number, number], zoom: number) => {
+    console.log('Map moved to:', center, 'zoom:', zoom); // Debug log
     setMapCenter(center);
     setMapZoom(zoom);
-    // Debounce URL updates to avoid too many updates
-    const timeoutId = setTimeout(() => {
-      updateLocation(center[0], center[1]);
-    }, 1000);
-    
-    return () => clearTimeout(timeoutId);
-  }, [updateLocation]);
+    // Don't update URL immediately to prevent loops
+  }, []);
 
   // Handle doctor card click
   const handleDoctorClick = useCallback((doctorId: string) => {
