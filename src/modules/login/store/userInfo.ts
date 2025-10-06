@@ -2,6 +2,7 @@
 import { clinicClient } from '@/common/apis/client';
 import axios from 'axios';
 import { getCookie, removeCookies } from 'cookies-next';
+import isEmpty from 'lodash/isEmpty';
 import { growthbook } from 'src/pages/_app';
 import { create } from 'zustand';
 
@@ -56,15 +57,14 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   setUserInfo: info => {
     set(() => {
       const infoCopy = {
+        is_doctor: info.provider?.slug || !isEmpty(info.provider?.centers) ? true : false,
         ...get().info,
-        is_doctor: info.provider?.slug ? true : false,
         ...info,
-        ...(info.provider?.slug && {
-          provider: {
-            job_title: info.provider?.slug ? 'doctor' : null,
-            ...info?.provider,
-          },
-        }),
+        provider: {
+          job_title: info.provider?.slug || !isEmpty(info.provider?.centers) ? 'doctor' : null,
+          ...get().info?.provider,
+          ...info?.provider,
+        },
       };
 
       growthbook.setAttributes({
