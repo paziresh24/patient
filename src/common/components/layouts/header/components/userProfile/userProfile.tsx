@@ -34,6 +34,7 @@ import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
+import useResponsive from '@/common/hooks/useResponsive';
 
 export const UserProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -56,6 +57,7 @@ export const UserProfile = () => {
   }>('redirect-to-gozargah', {});
   const loginPopup = useFeatureIsOn('gozargah::popup-login');
   const showSupportMenuButton = useFeatureIsOn('show-support-menu-button');
+  const { isMobile } = useResponsive();
 
   const isShowDashboard =
     !customize.partnerKey &&
@@ -71,7 +73,7 @@ export const UserProfile = () => {
         {
           name: 'داشبورد',
           icon: <ElementIcon width={22} height={22} />,
-          link: '/_',
+          link: isMobile ? '/_/' : '/dashboard/',
           shouldShow: true,
         },
         {
