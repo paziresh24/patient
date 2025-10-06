@@ -12,6 +12,7 @@ interface DoctorResultsListProps {
   onBookAppointment?: (doctor: DoctorSearchResult) => void;
   onOnlineConsult?: (doctor: DoctorSearchResult) => void;
   className?: string;
+  isMobile?: boolean;
 }
 
 const DoctorCard: React.FC<{
@@ -20,18 +21,21 @@ const DoctorCard: React.FC<{
   onDoctorClick?: (doctorId: string) => void;
   onBookAppointment?: (doctor: DoctorSearchResult) => void;
   onOnlineConsult?: (doctor: DoctorSearchResult) => void;
+  isMobile?: boolean;
 }> = ({
   doctor,
   isSelected,
   onDoctorClick,
   onBookAppointment,
   onOnlineConsult,
+  isMobile = false,
 }) => {
   return (
     <div
       id={`doctor-card-${doctor.documentId}`}
       className={classNames(
-        'p-4 border rounded-lg cursor-pointer transition-all duration-200',
+        'border rounded-lg cursor-pointer transition-all duration-200 doctor-card-hover',
+        isMobile ? 'p-3 active:bg-gray-50' : 'p-4',
         isSelected
           ? 'border-blue-500 bg-blue-50 shadow-md'
           : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
@@ -114,13 +118,19 @@ const DoctorCard: React.FC<{
           )}
 
           {/* Action Buttons */}
-          <div className="flex space-x-2 space-x-reverse mt-3">
+          <div className={classNames(
+            "flex space-x-2 space-x-reverse mt-3",
+            isMobile ? "flex-col space-y-2 space-x-0" : ""
+          )}>
             <button 
               onClick={(e) => {
                 e.stopPropagation();
                 onBookAppointment?.(doctor);
               }}
-              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-150 flex items-center"
+              className={classNames(
+                "text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-150 flex items-center justify-center",
+                isMobile ? "py-2.5 px-4 w-full" : "px-3 py-1.5"
+              )}
             >
               <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -134,7 +144,10 @@ const DoctorCard: React.FC<{
                   e.stopPropagation();
                   onOnlineConsult?.(doctor);
                 }}
-                className="px-3 py-1.5 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-150 flex items-center"
+                className={classNames(
+                  "text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors duration-150 flex items-center justify-center",
+                  isMobile ? "py-2.5 px-4 w-full" : "px-3 py-1.5"
+                )}
               >
                 <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -202,32 +215,38 @@ const DoctorResultsList: React.FC<DoctorResultsListProps> = ({
   onBookAppointment,
   onOnlineConsult,
   className = "",
+  isMobile = false,
 }) => {
   return (
     <div className={classNames("h-full flex flex-col", className)}>
-      {/* Header */}
-      <div className="flex-shrink-0 p-4 border-b border-gray-200 bg-white">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">
-            نتایج جستجو
-            {totalResults !== undefined && totalResults > 0 && (
-              <span className="text-sm font-normal text-gray-500 mr-2">
-                ({totalResults.toLocaleString()} نتیجه)
-              </span>
+      {/* Header - Hide on mobile when in bottom sheet mode */}
+      {!isMobile && (
+        <div className="flex-shrink-0 p-4 border-b border-gray-200 bg-white">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">
+              نتایج جستجو
+              {totalResults !== undefined && totalResults > 0 && (
+                <span className="text-sm font-normal text-gray-500 mr-2">
+                  ({totalResults.toLocaleString()} نتیجه)
+                </span>
+              )}
+            </h2>
+            
+            {isLoading && (
+              <div className="flex items-center text-gray-500">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500 ml-2"></div>
+                <span className="text-sm">در حال جستجو...</span>
+              </div>
             )}
-          </h2>
-          
-          {isLoading && (
-            <div className="flex items-center text-gray-500">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500 ml-2"></div>
-              <span className="text-sm">در حال جستجو...</span>
-            </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Results Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className={classNames(
+        "flex-1 overflow-y-auto",
+        isMobile ? "results-scroll" : ""
+      )}>
         {isLoading && doctors.length === 0 ? (
           /* Loading State */
           <div className="p-4 space-y-4">
@@ -250,7 +269,10 @@ const DoctorResultsList: React.FC<DoctorResultsListProps> = ({
           </div>
         ) : doctors.length > 0 ? (
           /* Doctor Cards */
-          <div className="p-4 space-y-4">
+          <div className={classNames(
+            "space-y-4",
+            isMobile ? "p-3" : "p-4"
+          )}>
             {doctors.map((doctor) => (
               <DoctorCard
                 key={doctor.documentId}
@@ -259,6 +281,7 @@ const DoctorResultsList: React.FC<DoctorResultsListProps> = ({
                 onDoctorClick={onDoctorClick}
                 onBookAppointment={onBookAppointment}
                 onOnlineConsult={onOnlineConsult}
+                isMobile={isMobile}
               />
             ))}
           </div>

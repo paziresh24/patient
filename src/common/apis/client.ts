@@ -144,6 +144,22 @@ apiGatewayClient.interceptors.request.use(
       (config as any).headers['accept-timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
     
+    // Add CORS headers for proper cross-origin requests
+    if (typeof window !== 'undefined') {
+      // Add origin header to match working requests
+      (config as any).headers['origin'] = window.location.origin;
+      
+      // Add proper accept headers
+      if (!(config as any).headers['Accept']) {
+        (config as any).headers['Accept'] = 'application/json, text/plain, */*';
+      }
+      
+      // Add fetch-related headers
+      (config as any).headers['sec-fetch-dest'] = 'empty';
+      (config as any).headers['sec-fetch-mode'] = 'cors';
+      (config as any).headers['sec-fetch-site'] = 'same-site';
+    }
+    
     // Add user_id and terminal_id only if available (to prevent console errors)
     if (typeof window !== 'undefined') {
       try {

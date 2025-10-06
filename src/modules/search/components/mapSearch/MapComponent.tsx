@@ -30,6 +30,7 @@ interface MapComponentProps {
   onMapMove?: (center: [number, number], zoom: number) => void;
   onMarkerClick?: (doctorId: string) => void;
   className?: string;
+  isMobile?: boolean;
 }
 
 // Simple MapEvents component using the standard approach
@@ -120,6 +121,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   onMapMove,
   onMarkerClick,
   className = "",
+  isMobile = false,
 }) => {
   const [isClient, setIsClient] = useState(false);
 
@@ -144,8 +146,10 @@ const MapComponent: React.FC<MapComponentProps> = ({
         center={center}
         zoom={zoom}
         className="h-full w-full"
-        zoomControl={true}
+        zoomControl={!isMobile} // Hide zoom controls on mobile for cleaner UI
         scrollWheelZoom={true}
+        touchZoom={isMobile}
+        doubleClickZoom={true}
         style={{ direction: 'ltr' }}
       >
         <TileLayer

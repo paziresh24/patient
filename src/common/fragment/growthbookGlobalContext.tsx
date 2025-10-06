@@ -42,11 +42,11 @@ export const GrowthbookGlobalContext = ({
   }, [apiHost, clientKey]);
 
   useEffect(() => {
-    if (apiHost && clientKey) {
+    if (apiHost && clientKey && !isReady) {
       growthbook?.refreshFeatures?.();
       growthbook?.loadFeatures?.({ autoRefresh: true });
     }
-  }, [previewAttributes, apiHost, clientKey, isReady]);
+  }, [previewAttributes, apiHost, clientKey, growthbook]);
 
   useEffect(() => {
     growthbook.setAttributes({
@@ -133,7 +133,7 @@ export const GrowthbookGlobalContext = ({
         };
       }, {});
     }
-  }, [previewAttributes, apiHost, clientKey, isReady, attr, growthbook?.ready, growthbook?.getAttributes?.()]);
+  }, [isReady, growthbook?.ready]);
 
   return (
     <GlobalActionsProvider contextName="GrowthbookGlobalContext" actions={actions}>
