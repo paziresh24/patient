@@ -89,7 +89,7 @@ export const useGeolocation = (options: UseGeolocationOptions = {}) => {
       },
       (error) => {
         let errorMessage = 'Failed to get location';
-        let hasPermission = null;
+        let hasPermission: boolean | null = null;
         
         switch (error.code) {
           case error.PERMISSION_DENIED:
