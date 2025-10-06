@@ -42,12 +42,12 @@ const DoctorCard: React.FC<{
         {/* Doctor Image */}
         <div className="flex-shrink-0">
           <img
-            src={doctor.source.image || '/default-doctor.png'}
+            src={doctor.source.image ? `https://cdn.paziresh24.com/getImage/p24/search-men/${doctor.source.image}` : 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png'}
             alt={doctor.source.display_name}
             className="w-16 h-16 rounded-full object-cover"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = '/default-doctor.png';
+              target.src = 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png';
             }}
           />
         </div>

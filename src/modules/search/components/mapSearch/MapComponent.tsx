@@ -4,10 +4,22 @@ import { DoctorSearchResult } from '@/common/apis/services/search/jahannamaSearc
 import 'leaflet/dist/leaflet.css';
 
 // Dynamic imports to avoid SSR issues
-const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false }) as any;
-const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false }) as any;
-const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false }) as any;
-const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false }) as any;
+const MapContainer = dynamic(
+  () => import('react-leaflet').then(mod => mod.MapContainer),
+  { ssr: false }
+) as React.ComponentType<any>;
+const TileLayer = dynamic(
+  () => import('react-leaflet').then(mod => mod.TileLayer),
+  { ssr: false }
+) as React.ComponentType<any>;
+const Marker = dynamic(
+  () => import('react-leaflet').then(mod => mod.Marker),
+  { ssr: false }
+) as React.ComponentType<any>;
+const Popup = dynamic(
+  () => import('react-leaflet').then(mod => mod.Popup),
+  { ssr: false }
+) as React.ComponentType<any>;
 
 interface MapComponentProps {
   center: [number, number];
@@ -171,9 +183,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
                 <div className="text-right min-w-[200px]" dir="rtl">
                   <div className="flex items-start space-x-3 space-x-reverse">
                     <img
-                      src={doctor.source.image || '/default-doctor.png'}
+                      src={doctor.source.image ? `https://cdn.paziresh24.com/getImage/p24/search-men/${doctor.source.image}` : 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png'}
                       alt={doctor.source.display_name}
                       className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png';
+                      }}
                     />
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 text-sm mb-1">
