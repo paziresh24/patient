@@ -72,6 +72,7 @@ import sty from "./PlasmicLauncherBlockNotifications.module.css"; // plasmic-imp
 
 import LauncherIconsBellIcon from "./icons/PlasmicIcon__LauncherIconsBell"; // plasmic-import: sdMSydu-BA4J/icon
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
+import nelsonNotificationPng0T3CEexzk6Xe from "./images/nelsonNotificationPng.png"; // plasmic-import: 0t3cEexzk6xe/picture
 
 createPlasmicElementProxy;
 
@@ -301,7 +302,7 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
           <div className={classNames(projectcss.all, sty.freeBox__il1Ao)}>
             {(() => {
               try {
-                return $state.apiRequest.data?.length > 0;
+                return $state.apiRequest.data?.items?.length > 0;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -315,7 +316,7 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
               ? (_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                   (() => {
                     try {
-                      return $state.apiRequest.data;
+                      return $state.apiRequest.data.items;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -335,30 +336,6 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                       key={currentIndex}
                       onClick={async event => {
                         const $steps = {};
-
-                        $steps["invokeGlobalAction"] = true
-                          ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  "PATCH",
-                                  `https://apigw.paziresh24.com/v1/hamdast/notifications/mark-as-read/${currentItem.id}`
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.apiRequest"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
-                          : undefined;
-                        if (
-                          $steps["invokeGlobalAction"] != null &&
-                          typeof $steps["invokeGlobalAction"] === "object" &&
-                          typeof $steps["invokeGlobalAction"].then ===
-                            "function"
-                        ) {
-                          $steps["invokeGlobalAction"] = await $steps[
-                            "invokeGlobalAction"
-                          ];
-                        }
 
                         $steps["goToPage"] = !currentItem.link?.includes(
                           "hamdast://"
@@ -400,6 +377,30 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                           typeof $steps["goToPage"].then === "function"
                         ) {
                           $steps["goToPage"] = await $steps["goToPage"];
+                        }
+
+                        $steps["invokeGlobalAction"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  "PATCH",
+                                  `https://apigw.paziresh24.com/v1/hamdast/notifications/mark-as-read/${currentItem.id}`
+                                ]
+                              };
+                              return $globalActions[
+                                "Fragment.apiRequest"
+                              ]?.apply(null, [...actionArgs.args]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["invokeGlobalAction"] != null &&
+                          typeof $steps["invokeGlobalAction"] === "object" &&
+                          typeof $steps["invokeGlobalAction"].then ===
+                            "function"
+                        ) {
+                          $steps["invokeGlobalAction"] = await $steps[
+                            "invokeGlobalAction"
+                          ];
                         }
 
                         $steps["updateModalOpen3"] =
@@ -507,22 +508,27 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                         data-plasmic-override={overrides.img}
                         alt={""}
                         className={classNames(sty.img)}
-                        displayHeight={"45px"}
+                        displayHeight={"40px"}
                         displayMaxHeight={"none"}
                         displayMaxWidth={"100%"}
                         displayMinHeight={"0"}
                         displayMinWidth={"0"}
-                        displayWidth={"45px"}
+                        displayWidth={"40px"}
                         loading={"lazy"}
                         src={(() => {
                           try {
-                            return $state.apiRequest.data[0].icon;
+                            return currentItem.icon;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
                               e?.plasmicType === "PlasmicUndefinedDataError"
                             ) {
-                              return undefined;
+                              return {
+                                src: nelsonNotificationPng0T3CEexzk6Xe,
+                                fullWidth: 745,
+                                fullHeight: 745,
+                                aspectRatio: undefined
+                              };
                             }
                             throw e;
                           }
@@ -551,7 +557,7 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                             <React.Fragment>
                               {(() => {
                                 try {
-                                  return $state.apiRequest.data[0].title;
+                                  return currentItem.title;
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
@@ -583,7 +589,7 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                             <React.Fragment>
                               {(() => {
                                 try {
-                                  return $state.apiRequest.data[0].description;
+                                  return currentItem.description;
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
@@ -611,13 +617,13 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                             try {
                               return (
                                 new Date(
-                                  $state.apiRequest.data[0].created_at
+                                  currentItem.created
                                 ).toLocaleTimeString("fa-IR", {
                                   timeStyle: "short"
                                 }) +
                                 " " +
                                 new Date(
-                                  $state.apiRequest.data[0].created_at
+                                  currentItem.created
                                 ).toLocaleDateString("fa-IR")
                               );
                             } catch (e) {
@@ -639,7 +645,7 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
             {(() => {
               try {
                 return (
-                  $state.apiRequest.data?.length == 0 &&
+                  $state.apiRequest.data?.items?.length == 0 &&
                   !$state.apiRequest.loading
                 );
               } catch (e) {

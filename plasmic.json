@@ -3389,6 +3389,11 @@
           "id": "ok_csAiGiEdj",
           "name": "Launcher/Image/Performance",
           "filePath": "plasmic/launcher/images/launcherImagePerformance.png"
+        },
+        {
+          "id": "0t3cEexzk6xe",
+          "name": "nelson-notification.png",
+          "filePath": "plasmic/launcher/images/nelsonNotificationPng.png"
         }
       ],
       "indirect": false,
