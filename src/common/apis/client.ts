@@ -124,18 +124,42 @@ clinicClient.interceptors.response.use(
 
 apiGatewayClient.interceptors.request.use(
   config => {
+    // Add token if available
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
     }
+    
+    // Add preview token if available
     if (typeof window !== 'undefined' && window.localStorage?.getItem('fragment::previewToken')) {
       (config as any).headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('fragment::previewToken');
     }
+    
+    // Add PWA header if applicable
     if (isPWA()) {
       (config as any).headers['isApplication'] = true;
     }
+    
+    // Add timezone if available
     if (typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone == 'string') {
       (config as any).headers['accept-timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
+    
+    // Add user_id and terminal_id only if available (to prevent console errors)
+    if (typeof window !== 'undefined') {
+      try {
+        if (window.user?.id) {
+          (config as any).headers['user_id'] = window.user.id;
+        }
+        const terminalId = getCookie('terminal_id');
+        if (terminalId) {
+          (config as any).headers['terminal_id'] = terminalId;
+        }
+      } catch (error) {
+        // Silently ignore user context errors for map search
+        console.debug('User context not available:', error);
+      }
+    }
+    
     return config;
   },
   err => {
@@ -145,19 +169,37 @@ apiGatewayClient.interceptors.request.use(
 
 paziresh24AppClient.interceptors.request.use(
   config => {
+    // Safely handle user context
     if (typeof window !== 'undefined') {
-      if (window.user?.id) (config as any).headers['user_id'] = window.user?.id;
-      (config as any).headers['terminal_id'] = getCookie('terminal_id');
+      try {
+        if (window.user?.id) {
+          (config as any).headers['user_id'] = window.user.id;
+        }
+        const terminalId = getCookie('terminal_id');
+        if (terminalId) {
+          (config as any).headers['terminal_id'] = terminalId;
+        }
+      } catch (error) {
+        // Silently ignore user context errors
+        console.debug('User context not available:', error);
+      }
     }
+    
+    // Add authentication token
     if (getCookie('token')) {
       (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
     }
+    
+    // Add preview token if available
     if (typeof window !== 'undefined' && window.localStorage?.getItem('fragment::previewToken')) {
       (config as any).headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('fragment::previewToken');
     }
+    
+    // Add timezone if available
     if (typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone == 'string') {
       (config as any).headers['accept-timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
     }
+    
     return config;
   },
   err => {
