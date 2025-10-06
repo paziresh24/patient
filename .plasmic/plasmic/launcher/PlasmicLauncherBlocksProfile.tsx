@@ -60,7 +60,6 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Paziresh24Avatar from "../../Paziresh24Avatar"; // plasmic-import: zljt-TXjec48/component
-import LauncherBlockNotifications from "../../LauncherBlockNotifications"; // plasmic-import: GyA43SeYKJuf/component
 import LauncherBlocksWallet from "../../LauncherBlocksWallet"; // plasmic-import: h-1safqUkN1a/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
@@ -92,7 +91,6 @@ export const PlasmicLauncherBlocksProfile__ArgProps = new Array<ArgPropType>(
 export type PlasmicLauncherBlocksProfile__OverridesType = {
   root?: Flex__<"div">;
   paziresh24Avatar?: Flex__<typeof Paziresh24Avatar>;
-  launcherBlockNotifications?: Flex__<typeof LauncherBlockNotifications>;
   launcherBlocksWallet?: Flex__<typeof LauncherBlocksWallet>;
 };
 
@@ -380,51 +378,6 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
           </div>
         </div>
         <div className={classNames(projectcss.all, sty.freeBox___28PI2)}>
-          <LauncherBlockNotifications
-            data-plasmic-name={"launcherBlockNotifications"}
-            data-plasmic-override={overrides.launcherBlockNotifications}
-            className={classNames(
-              "__wab_instance",
-              sty.launcherBlockNotifications
-            )}
-            onAction={async action => {
-              const $steps = {};
-
-              $steps["runOnAction"] = true
-                ? (() => {
-                    const actionArgs = {
-                      eventRef: $props["onAction"],
-                      args: [
-                        (() => {
-                          try {
-                            return action;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      ]
-                    };
-                    return (({ eventRef, args }) => {
-                      return eventRef?.(...(args ?? []));
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["runOnAction"] != null &&
-                typeof $steps["runOnAction"] === "object" &&
-                typeof $steps["runOnAction"].then === "function"
-              ) {
-                $steps["runOnAction"] = await $steps["runOnAction"];
-              }
-            }}
-          />
-
           <div
             className={classNames(projectcss.all, sty.freeBox__tt4Ho)}
             onClick={async event => {
@@ -527,14 +480,8 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "paziresh24Avatar",
-    "launcherBlockNotifications",
-    "launcherBlocksWallet"
-  ],
+  root: ["root", "paziresh24Avatar", "launcherBlocksWallet"],
   paziresh24Avatar: ["paziresh24Avatar"],
-  launcherBlockNotifications: ["launcherBlockNotifications"],
   launcherBlocksWallet: ["launcherBlocksWallet"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -543,7 +490,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   paziresh24Avatar: typeof Paziresh24Avatar;
-  launcherBlockNotifications: typeof LauncherBlockNotifications;
   launcherBlocksWallet: typeof LauncherBlocksWallet;
 };
 
@@ -608,7 +554,6 @@ export const PlasmicLauncherBlocksProfile = Object.assign(
   {
     // Helper components rendering sub-elements
     paziresh24Avatar: makeNodeComponent("paziresh24Avatar"),
-    launcherBlockNotifications: makeNodeComponent("launcherBlockNotifications"),
     launcherBlocksWallet: makeNodeComponent("launcherBlocksWallet"),
 
     // Metadata about props expected for PlasmicLauncherBlocksProfile
