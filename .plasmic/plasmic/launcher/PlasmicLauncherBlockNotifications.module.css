@@ -80,8 +80,8 @@
 .img {
   object-fit: cover;
   max-width: 100%;
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
   border-radius: 120px;
 }
@@ -133,7 +133,7 @@
   max-width: 100%;
   left: 10px;
   top: auto;
-  font-size: 10px;
+  font-size: 9px;
   opacity: 0.7;
   bottom: 6px;
 }
