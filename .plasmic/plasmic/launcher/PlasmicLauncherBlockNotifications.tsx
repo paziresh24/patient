@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
+import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import Paziresh24LineClamp from "../../Paziresh24LineClamp"; // plasmic-import: xFfrwlkCaWS8/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
@@ -71,6 +72,8 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL
 import sty from "./PlasmicLauncherBlockNotifications.module.css"; // plasmic-import: GyA43SeYKJuf/css
 
 import LauncherIconsBellIcon from "./icons/PlasmicIcon__LauncherIconsBell"; // plasmic-import: sdMSydu-BA4J/icon
+import Icon3Icon from "./icons/PlasmicIcon__Icon3"; // plasmic-import: mTXzdsPjtVAd/icon
+import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
 import nelsonNotificationPng0T3CEexzk6Xe from "./images/nelsonNotificationPng.png"; // plasmic-import: 0t3cEexzk6xe/picture
 
@@ -92,6 +95,7 @@ export const PlasmicLauncherBlockNotifications__ArgProps =
 export type PlasmicLauncherBlockNotifications__OverridesType = {
   root?: Flex__<"div">;
   modal?: Flex__<typeof Paziresh24Modal>;
+  paziresh24Button?: Flex__<typeof Paziresh24Button>;
   img?: Flex__<typeof PlasmicImg__>;
   apiRequest?: Flex__<typeof ApiRequest>;
 };
@@ -173,6 +177,12 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiRequest"
+      },
+      {
+        path: "isLoading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -512,7 +522,7 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                         displayMaxHeight={"none"}
                         displayMaxWidth={"100%"}
                         displayMinHeight={"0"}
-                        displayMinWidth={"0"}
+                        displayMinWidth={"40px"}
                         displayWidth={"40px"}
                         loading={"lazy"}
                         src={(() => {
@@ -707,7 +717,193 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
           }
         }}
         open={generateStateValueProp($state, ["modal", "open"])}
-        title={"\u0627\u0639\u0644\u0627\u0646\u200c\u0647\u0627"}
+        title={
+          <div className={classNames(projectcss.all, sty.freeBox__f2F9W)}>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__bVzY
+              )}
+            >
+              {"\u0627\u0639\u0644\u0627\u0646\u200c\u0647\u0627"}
+            </div>
+            {(() => {
+              try {
+                return $state.apiRequest.data.items?.length > 0;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })() ? (
+              <Paziresh24Button
+                data-plasmic-name={"paziresh24Button"}
+                data-plasmic-override={overrides.paziresh24Button}
+                children2={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__lr7Jv
+                    )}
+                  >
+                    {
+                      "\u0647\u0645\u0647 \u0631\u0627 \u062e\u0648\u0627\u0646\u062f\u0645"
+                    }
+                  </div>
+                }
+                className={classNames("__wab_instance", sty.paziresh24Button)}
+                color={"text"}
+                loading={(() => {
+                  try {
+                    return $state.isLoading;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["updateIsLoading"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["isLoading"]
+                          },
+                          operation: 0,
+                          value: true
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateIsLoading"] != null &&
+                    typeof $steps["updateIsLoading"] === "object" &&
+                    typeof $steps["updateIsLoading"].then === "function"
+                  ) {
+                    $steps["updateIsLoading"] = await $steps["updateIsLoading"];
+                  }
+
+                  $steps["invokeGlobalAction"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            "PATCH",
+                            "https://apigw.paziresh24.com/v1/hamdast/notifications/mark-as-read"
+                          ]
+                        };
+                        return $globalActions["Fragment.apiRequest"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
+                    : undefined;
+                  if (
+                    $steps["invokeGlobalAction"] != null &&
+                    typeof $steps["invokeGlobalAction"] === "object" &&
+                    typeof $steps["invokeGlobalAction"].then === "function"
+                  ) {
+                    $steps["invokeGlobalAction"] = await $steps[
+                      "invokeGlobalAction"
+                    ];
+                  }
+
+                  $steps["updateIsLoading2"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["isLoading"]
+                          },
+                          operation: 0,
+                          value: false
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateIsLoading2"] != null &&
+                    typeof $steps["updateIsLoading2"] === "object" &&
+                    typeof $steps["updateIsLoading2"].then === "function"
+                  ) {
+                    $steps["updateIsLoading2"] = await $steps[
+                      "updateIsLoading2"
+                    ];
+                  }
+
+                  $steps["runActionOnApiRequest"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          tplRef: "apiRequest",
+                          action: "refresh"
+                        };
+                        return (({ tplRef, action, args }) => {
+                          return $refs?.[tplRef]?.[action]?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runActionOnApiRequest"] != null &&
+                    typeof $steps["runActionOnApiRequest"] === "object" &&
+                    typeof $steps["runActionOnApiRequest"].then === "function"
+                  ) {
+                    $steps["runActionOnApiRequest"] = await $steps[
+                      "runActionOnApiRequest"
+                    ];
+                  }
+                }}
+                outline={true}
+                shape={"rounded"}
+                showStartIcon={true}
+                size={"compact"}
+                startIcon={
+                  <Icon3Icon
+                    className={classNames(projectcss.all, sty.svg__qo4Dq)}
+                    role={"img"}
+                  />
+                }
+              />
+            ) : null}
+          </div>
+        }
         trigger={null}
       />
 
@@ -746,8 +942,9 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "modal", "img", "apiRequest"],
-  modal: ["modal", "img"],
+  root: ["root", "modal", "paziresh24Button", "img", "apiRequest"],
+  modal: ["modal", "paziresh24Button", "img"],
+  paziresh24Button: ["paziresh24Button"],
   img: ["img"],
   apiRequest: ["apiRequest"]
 } as const;
@@ -757,6 +954,7 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   modal: typeof Paziresh24Modal;
+  paziresh24Button: typeof Paziresh24Button;
   img: typeof PlasmicImg__;
   apiRequest: typeof ApiRequest;
 };
@@ -823,6 +1021,7 @@ export const PlasmicLauncherBlockNotifications = Object.assign(
   {
     // Helper components rendering sub-elements
     modal: makeNodeComponent("modal"),
+    paziresh24Button: makeNodeComponent("paziresh24Button"),
     img: makeNodeComponent("img"),
     apiRequest: makeNodeComponent("apiRequest"),
 
