@@ -3382,6 +3382,11 @@
           "id": "sdMSydu-BA4J",
           "name": "LauncherIconsBellIcon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__LauncherIconsBell.tsx"
+        },
+        {
+          "id": "mTXzdsPjtVAd",
+          "name": "Icon3Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon3.tsx"
         }
       ],
       "images": [
