@@ -89,7 +89,14 @@ export async function getAggregatedProfileData(
   slug: string,
   university: string | undefined,
   isServer: boolean,
-  options?: { useNewDoctorFullNameAPI?: boolean; useNewDoctorExpertiseAPI?: boolean; useNewDoctorImageAPI?: boolean; useNewDoctorBiographyAPI?: boolean; useNewDoctorCentersAPI?: boolean; useNewDoctorGalleryAPI?: boolean },
+  options?: {
+    useNewDoctorFullNameAPI?: boolean;
+    useNewDoctorExpertiseAPI?: boolean;
+    useNewDoctorImageAPI?: boolean;
+    useNewDoctorBiographyAPI?: boolean;
+    useNewDoctorCentersAPI?: boolean;
+    useNewDoctorGalleryAPI?: boolean;
+  },
 ) {
   const queryClient = new QueryClient();
 
@@ -100,22 +107,22 @@ export async function getAggregatedProfileData(
   // Start both slug validation and full profile calls in parallel
   const [slugValidationResult, fullProfileResult] = await Promise.allSettled([
     validateDoctorSlug(slug),
-    getProfile({ slug, university, isServer: isServer })
+    getProfile({ slug, university, isServer: isServer }),
   ]);
 
   // Handle slug validation result first (this handles redirects)
   if (slugValidationResult.status === 'fulfilled') {
     const result = slugValidationResult.value;
-    
+
     // Handle redirects from slug validation service
     if ('redirect' in result) {
       if (isServer) {
-        return { 
-          redirect: { 
-            statusCode: result.redirect.statusCode, 
-            destination: encodeURI(result.redirect.route) 
-          }, 
-          props: {} 
+        return {
+          redirect: {
+            statusCode: result.redirect.statusCode,
+            destination: encodeURI(result.redirect.route),
+          },
+          props: {},
         };
       } else {
         return location.replace(encodeURI(result.redirect.route));
@@ -125,7 +132,7 @@ export async function getAggregatedProfileData(
     // Valid slug response - use the validated slug
     slugInfo = result;
     validatedSlug = result.slug;
-    
+
     // Log successful slug validation
     splunkInstance('doctor-profile').sendEvent({
       group: 'profile_slug_validation_primary',
@@ -147,7 +154,8 @@ export async function getAggregatedProfileData(
       type: 'slug_validation_error',
       event: {
         original_slug: slug,
-        error_message: slugValidationResult.reason instanceof Error ? slugValidationResult.reason.message : String(slugValidationResult.reason),
+        error_message:
+          slugValidationResult.reason instanceof Error ? slugValidationResult.reason.message : String(slugValidationResult.reason),
         isServer: isServer,
         timestamp: new Date().toISOString(),
       },
@@ -177,8 +185,9 @@ export async function getAggregatedProfileData(
       links: getSearchLinks({ centers: fullProfileData?.centers, group_expertises: fullProfileData?.group_expertises ?? [] }),
     }),
     shouldFetchReviews
-      ? queryClient.fetchQuery([ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }], () =>
-          getReviews({ slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }),
+      ? queryClient.fetchQuery(
+          [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }],
+          () => getReviews({ slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }),
         )
       : Promise.resolve(null),
     getAverageWaitingTime({
@@ -209,12 +218,20 @@ export async function getAggregatedProfileData(
 
   // Conditionally add doctor centers API call
   if (options?.useNewDoctorCentersAPI) {
-    apiCalls.push(getDoctorCenters(validatedSlug));
+    apiCalls.push(getDoctorCenters(validatedSlug, university));
   }
 
-
-  const [internalLinksResult, reviewsResult, averageWaitingTimeResult, rismanResult, doctorFullNameResult, doctorExpertiseResult, doctorImageResult, doctorBiographyResult, doctorCentersResult] =
-    await Promise.allSettled(apiCalls);
+  const [
+    internalLinksResult,
+    reviewsResult,
+    averageWaitingTimeResult,
+    rismanResult,
+    doctorFullNameResult,
+    doctorExpertiseResult,
+    doctorImageResult,
+    doctorBiographyResult,
+    doctorCentersResult,
+  ] = await Promise.allSettled(apiCalls);
 
   // Extract doctor full name from API response
   const doctorFullName =
@@ -225,22 +242,20 @@ export async function getAggregatedProfileData(
     options?.useNewDoctorExpertiseAPI && doctorExpertiseResult?.status === 'fulfilled' ? doctorExpertiseResult.value : null;
 
   // Extract doctor image from API response
-  const doctorImage =
-    options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
+  const doctorImage = options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
 
   // Extract doctor biography from API response
   const doctorBiography =
     options?.useNewDoctorBiographyAPI && doctorBiographyResult?.status === 'fulfilled' ? doctorBiographyResult.value : null;
 
   // Extract doctor centers from API response
-  const doctorCenters =
-    options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
+  const doctorCenters = options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
 
   // Handle gallery API call after all other requests (depends on centers)
   let doctorGallery = null;
   if (options?.useNewDoctorGalleryAPI) {
     let clinicCenterId = null;
-    
+
     if (options?.useNewDoctorCentersAPI && doctorCenters?.length > 0) {
       // Use new centers API data with type_id
       const clinicCenter = doctorCenters.find((center: any) => center.type_id === 1);
@@ -250,7 +265,7 @@ export async function getAggregatedProfileData(
       const clinicCenter = fullProfileData.centers.find((center: any) => center.center_type === 1);
       clinicCenterId = clinicCenter?.id;
     }
-    
+
     if (clinicCenterId) {
       try {
         doctorGallery = await getDoctorGallery(clinicCenterId);
@@ -260,7 +275,6 @@ export async function getAggregatedProfileData(
       }
     }
   }
-
 
   // Transform expertise data to match expected format
   const transformedExpertise =
@@ -308,7 +322,8 @@ export async function getAggregatedProfileData(
       }),
     // Add gallery to overwriteData if new API is used and successful
     ...(options?.useNewDoctorGalleryAPI &&
-      doctorGallery && doctorGallery.length > 0 && {
+      doctorGallery &&
+      doctorGallery.length > 0 && {
         gallery: doctorGallery,
       }),
   };

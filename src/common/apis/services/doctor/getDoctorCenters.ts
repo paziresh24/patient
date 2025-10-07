@@ -27,12 +27,18 @@ export interface DoctorCentersResponse {
   };
 }
 
-export const getDoctorCenters = async (slug: string): Promise<DoctorCentersResponse[]> => {
+export const getDoctorCenters = async (slug: string, university?: string): Promise<DoctorCentersResponse[]> => {
+  console.log('🔍 University:', university);
   const encodedSlug = encodeURIComponent(slug);
   const url = `/api/doctors/${encodedSlug}/centers`;
+  const params: Record<string, string> = {};
+  if (university) {
+    params.university = university;
+  }
   try {
     const { data } = await drProfileClient.get<DoctorCentersResponse[]>(url, {
       timeout: 5000,
+      params,
     });
 
     // Send success event to Splunk
