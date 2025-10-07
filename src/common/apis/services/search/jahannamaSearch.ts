@@ -83,6 +83,7 @@ export const searchDoctors = async (params: JahannamaSearchParams): Promise<Jaha
         from,
         size,
         query,
+        semantic_search: 'false', // Add this to prevent CORS preflight
         ...(lat && lon && { lat, lon }), // Only include location if both are provided
         fl,
       },

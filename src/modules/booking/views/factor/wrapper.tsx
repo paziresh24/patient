@@ -270,3 +270,6 @@ const FactorWrapper = (props: FactorWrapperProps) => {
 };
 
 export default FactorWrapper;
+
+// Export Factor component for Plasmic
+export { Factor };

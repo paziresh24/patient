@@ -154,10 +154,10 @@ apiGatewayClient.interceptors.request.use(
         (config as any).headers['Accept'] = 'application/json, text/plain, */*';
       }
       
-      // Add fetch-related headers
+      // Add fetch-related headers - use 'cross-site' for external API calls
       (config as any).headers['sec-fetch-dest'] = 'empty';
       (config as any).headers['sec-fetch-mode'] = 'cors';
-      (config as any).headers['sec-fetch-site'] = 'same-site';
+      (config as any).headers['sec-fetch-site'] = 'cross-site';
     }
     
     // Add user_id and terminal_id only if available (to prevent console errors)
