@@ -126,13 +126,7 @@ const Home = ({ fragmentComponents }: any) => {
 
 Home.getLayout = function getLayout(page: ReactElement) {
   return (
-    <LayoutWithHeaderAndFooter
-      shouldShowBrand={false}
-      shouldShowPromoteApp={false}
-      {...page.props.config}
-      showHeader={false}
-      showFooter={false}
-    >
+    <LayoutWithHeaderAndFooter shouldShowBrand={false} shouldShowPromoteApp={false} {...page.props.config} showFooter={false}>
       {page}
     </LayoutWithHeaderAndFooter>
   );

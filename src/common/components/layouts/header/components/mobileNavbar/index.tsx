@@ -14,12 +14,14 @@ import UserProfile from '../userProfile';
 const Sidebar = dynamic(() => import('./sidebar'));
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import LauncherBlockNotifications from '.plasmic/LauncherBlockNotifications';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 interface MobileNavbarProps {
   shouldShowBrand?: boolean;
   showSearchSuggestionButton?: boolean;
 }
 const MobileNavbar = (props: MobileNavbarProps) => {
+  const isLogin = useUserInfoStore(state => state.isLogin);
   const { shouldShowBrand = true, showSearchSuggestionButton = false } = props;
   const [open, setOpen] = useState(false);
   const [expertiseItems, setExpertiseItems] = useState([]);
@@ -126,11 +128,13 @@ const MobileNavbar = (props: MobileNavbarProps) => {
         <div className="flex items-center space-s-3">
           <SupportButtonBamdad />
           {showSearchSuggestionButton && <ButtonSuggestion />}
-          <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[6px] ![&>div>div>div]:right-[7px]">
-            <GlobalContextsProvider>
-              <LauncherBlockNotifications />
-            </GlobalContextsProvider>
-          </div>
+          {isLogin && (
+            <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[6px] ![&>div>div>div]:right-[7px]">
+              <GlobalContextsProvider>
+                <LauncherBlockNotifications />
+              </GlobalContextsProvider>
+            </div>
+          )}
           {customize.showUserProfile && <UserProfile />}
         </div>
         <Sidebar
