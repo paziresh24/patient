@@ -5,6 +5,7 @@ import { HTMLAttributes, ReactNode } from 'react';
 import Skeleton from '../atom/skeleton';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import LauncherBlockNotifications from '.plasmic/LauncherBlockNotifications';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 interface AppBarProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
@@ -15,6 +16,7 @@ interface AppBarProps extends HTMLAttributes<HTMLDivElement> {
 
 export const AppBar = ({ title, backButton, titleLoading = false, className, actionButton, ...rest }: AppBarProps) => {
   const router = useRouter();
+  const isLogin = useUserInfoStore(state => state.isLogin);
   return (
     <div
       className={classNames(
@@ -51,12 +53,14 @@ export const AppBar = ({ title, backButton, titleLoading = false, className, act
       )}
 
       {actionButton && (
-        <div className="cursor-pointer left-5 absolute flex gap-2 items-center">
-          <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[6px] ![&>div>div>div]:right-[7px]">
-            <GlobalContextsProvider>
-              <LauncherBlockNotifications />
-            </GlobalContextsProvider>
-          </div>
+        <div className="cursor-pointer left-5 absolute flex gap-3 items-center">
+          {isLogin && (
+            <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[6px] ![&>div>div>div]:right-[7px]">
+              <GlobalContextsProvider>
+                <LauncherBlockNotifications />
+              </GlobalContextsProvider>
+            </div>
+          )}
           {actionButton}
         </div>
       )}
