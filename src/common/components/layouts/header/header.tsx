@@ -155,16 +155,16 @@ const Header = (props: HeaderProps) => {
             <SupportButtonBamdad />
             {showSearchSuggestionButton && <ButtonSuggestion />}
             {isLogin && user.provider?.job_title === 'doctor' && (
-              <>
+              <GlobalContextsProvider>
+                <LauncherDesktopApps />
+              </GlobalContextsProvider>
+            )}
+            {isLogin && (
+              <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[5px] [&>div>div>div]:right-[6px]">
                 <GlobalContextsProvider>
-                  <LauncherDesktopApps />
+                  <LauncherBlockNotifications />
                 </GlobalContextsProvider>
-                <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[5px] [&>div>div>div]:right-[6px]">
-                  <GlobalContextsProvider>
-                    <LauncherBlockNotifications />
-                  </GlobalContextsProvider>
-                </div>
-              </>
+              </div>
             )}
             {customize.showUserProfile && <UserProfile />}
           </div>
