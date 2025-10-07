@@ -144,6 +144,8 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const $globalActions = useGlobalActions?.();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
@@ -556,6 +558,11 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                             "__wab_instance",
                             sty.paziresh24LineClamp___9AgWu
                           )}
+                          numberOfLines={
+                            hasVariant(globalVariants, "screen", "mobileOnly")
+                              ? 2
+                              : undefined
+                          }
                         >
                           <div
                             className={classNames(
@@ -564,22 +571,45 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                               sty.text__dprCd
                             )}
                           >
-                            <React.Fragment>
-                              {(() => {
-                                try {
-                                  return currentItem.title;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return "";
+                            {hasVariant(
+                              globalVariants,
+                              "screen",
+                              "mobileOnly"
+                            ) ? (
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return currentItem.title.trim();
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "";
+                                    }
+                                    throw e;
                                   }
-                                  throw e;
-                                }
-                              })()}
-                            </React.Fragment>
+                                })()}
+                              </React.Fragment>
+                            ) : (
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return currentItem.title;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            )}
                           </div>
                         </Paziresh24LineClamp>
                         <Paziresh24LineClamp
@@ -599,7 +629,7 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                             <React.Fragment>
                               {(() => {
                                 try {
-                                  return currentItem.description;
+                                  return currentItem.description?.trim();
                                 } catch (e) {
                                   if (
                                     e instanceof TypeError ||
@@ -614,39 +644,39 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                             </React.Fragment>
                           </div>
                         </Paziresh24LineClamp>
-                      </div>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__u6Ny4
-                        )}
-                      >
-                        <React.Fragment>
-                          {(() => {
-                            try {
-                              return (
-                                new Date(
-                                  currentItem.created
-                                ).toLocaleTimeString("fa-IR", {
-                                  timeStyle: "short"
-                                }) +
-                                " " +
-                                new Date(
-                                  currentItem.created
-                                ).toLocaleDateString("fa-IR")
-                              );
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__u6Ny4
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return (
+                                  new Date(
+                                    currentItem.created
+                                  ).toLocaleTimeString("fa-IR", {
+                                    timeStyle: "short"
+                                  }) +
+                                  " " +
+                                  new Date(
+                                    currentItem.created
+                                  ).toLocaleDateString("fa-IR")
+                                );
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                        </React.Fragment>
+                            })()}
+                          </React.Fragment>
+                        </div>
                       </div>
                     </div>
                   );
