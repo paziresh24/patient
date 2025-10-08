@@ -13,11 +13,9 @@ import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import moment from 'jalali-moment';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useCallback, useEffect, useMemo } from 'react';
-const { publicRuntimeConfig } = getConfig();
 
 const Booking = () => {
   const router = useRouter();
@@ -126,17 +124,7 @@ const Booking = () => {
           </Transition>
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
-          <DoctorInfo
-            className="p-4 rounded-lg bg-slate-100"
-            isLoading={isLoading || !profileData}
-            avatar={publicRuntimeConfig.CDN_BASE_URL + profileData?.image}
-            fullName={doctorName}
-            expertise={getDisplayDoctorExpertise({
-              aliasTitle: profileData?.expertises?.[0]?.alias_title,
-              degree: profileData?.expertises?.[0]?.degree?.name,
-              expertise: profileData?.expertises?.[0]?.expertise?.name,
-            })}
-          />
+          <DoctorInfo className="p-4 rounded-lg bg-slate-100" slug={router.query?.slug?.toString()} />
 
           {router.query.centerId && (
             <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">
