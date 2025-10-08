@@ -2341,7 +2341,10 @@ function PlasmicProductCard__RenderFunc(props: {
                             "https://sanje.paziresh24.com/interstitial_page/?provide=page&display_name=" +
                             $state.rismanActionBtn.data.data.fullName +
                             "&uri=" +
-                            $state.rismanActionBtn.data.data.destination.url
+                            $state.rismanActionBtn.data.data.destination.url +
+                            "&platform=" +
+                            $state.rismanActionBtn.data.data.destination
+                              .platform
                           );
                         } catch (e) {
                           if (
