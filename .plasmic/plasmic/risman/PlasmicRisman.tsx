@@ -60,10 +60,11 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: bN5uNsAhTefwW3S14VjvMG/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: bN5uNsAhTefwW3S14VjvMG/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "../hamdast_risman/plasmic.module.css"; // plasmic-import: bN5uNsAhTefwW3S14VjvMG/projectcss
 import sty from "./PlasmicRisman.module.css"; // plasmic-import: KinPlL1Jj1j3/css
 
@@ -132,6 +133,8 @@ function PlasmicRisman__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -143,8 +146,7 @@ function PlasmicRisman__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
@@ -226,7 +228,7 @@ function PlasmicRisman__RenderFunc(props: {
           }
           link={(() => {
             try {
-              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${$props.data?.data?.fullName}&uri=${$props.data.data?.destination?.url}`;
+              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${$props.data?.data?.fullName}&uri=${$props.data.data?.destination?.url}$platform=${$props.data.data?.destination?.platform}`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -272,15 +274,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicRisman__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicRisman__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicRisman__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicRisman__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
