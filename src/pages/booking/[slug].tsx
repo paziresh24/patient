@@ -12,6 +12,7 @@ import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise'
 import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
+import { useDoctorFullName } from '@/common/hooks/useDoctorFullName';
 import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -37,7 +38,14 @@ const Booking = () => {
 
   const profileData = data?.data;
 
-  const doctorName = `${profileData?.name} ${profileData?.family}`;
+  const slug = router.query?.slug?.toString();
+  const { data: doctorFullNameData } = useDoctorFullName(slug, !!router.isReady);
+
+  const doctorName = useMemo(() => {
+    const fromHook = `${doctorFullNameData?.name ?? ''} ${doctorFullNameData?.family ?? ''}`.trim();
+    if (fromHook) return fromHook;
+    return '';
+  }, [doctorFullNameData]);
 
   useEffect(() => {
     if (data?.redirect) {
