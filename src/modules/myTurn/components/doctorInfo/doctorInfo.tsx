@@ -61,13 +61,11 @@ export const DoctorInfo: React.FC<DoctorInfoProps> = props => {
   }, [fullName, doctorFullNameData, firstName, lastName]);
 
   // Determine the final doctor image
-  const finalDoctorImage =
-    publicRuntimeConfig.CDN_BASE_URL +
-    React.useMemo(() => {
-      if (avatar) return avatar;
-      if (doctorImageData?.image) return doctorImageData.image;
-      return '';
-    }, [avatar, doctorImageData]);
+  const finalDoctorImage = React.useMemo(() => {
+    if (avatar) return avatar;
+    if (doctorImageData?.image) return publicRuntimeConfig.CDN_BASE_URL + doctorImageData.image;
+    return '';
+  }, [avatar, doctorImageData]);
 
   // Determine the final doctor expertise
   const finalDoctorExpertise = React.useMemo(() => {
