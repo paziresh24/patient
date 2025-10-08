@@ -6569,9 +6569,8 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/risman/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/risman/plasmic.tsx"
     },
     {
       "projectId": "85GFtqPAFvUkDYJxzFDEYS",
