@@ -228,7 +228,11 @@ function PlasmicRisman__RenderFunc(props: {
           }
           link={(() => {
             try {
-              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${$props.data?.data?.fullName}&uri=${$props.data.data?.destination?.url}$platform=${$props.data.data?.destination?.platform}`;
+              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${
+                $props.data?.data?.fullName
+              }&uri=${globalThis.encodeURIComponent(
+                $props.data.data?.destination?.url
+              )}&platform=${$props.data.data?.destination?.platform}`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
