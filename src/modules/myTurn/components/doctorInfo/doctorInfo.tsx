@@ -53,11 +53,8 @@ export const DoctorInfo: React.FC<DoctorInfoProps> = props => {
   // Determine the final doctor name
   const finalDoctorName = React.useMemo(() => {
     if (fullName) return fullName;
-    if (doctorFullNameData?.name && doctorFullNameData?.family) {
-      return `${doctorFullNameData.name} ${doctorFullNameData.family}`;
-    }
     if (firstName && lastName) return `${firstName} ${lastName}`;
-    return '';
+    return `${doctorFullNameData?.name ?? ''} ${doctorFullNameData?.family ?? ''}`.trim();
   }, [fullName, doctorFullNameData, firstName, lastName]);
 
   // Determine the final doctor image
