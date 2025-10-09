@@ -64,12 +64,11 @@ import Collapsible from "../../Collapsible"; // plasmic-import: kYXN54tCkD2S/com
 import { Accordion } from "@/common/fragment/components/accordion"; // plasmic-import: hxayod_-dwXy/codeComponent
 import ProfileSeoSimilarLinks from "../../ProfileSeoSimilarLinks"; // plasmic-import: t9YD5mtJ9Hq-/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectcss
 import sty from "./PlasmicProfileSeo.module.css"; // plasmic-import: AyZkzO0Ld0SI/css
 
@@ -170,9 +169,9 @@ function PlasmicProfileSeo__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const globalVariants = _useGlobalVariants();
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -185,8 +184,7 @@ function PlasmicProfileSeo__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
@@ -246,11 +244,7 @@ function PlasmicProfileSeo__RenderFunc(props: {
             </div>
           }
           slot2={
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__psc85)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__psc85)}>
               <div
                 className={classNames(
                   projectcss.all,
@@ -373,11 +367,7 @@ function PlasmicProfileSeo__RenderFunc(props: {
                   "\u062a\u062e\u0635\u0635 \u0647\u0627\u06cc \u0645\u0631\u062a\u0628\u0637"
                 }
               >
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__wprRi)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__wprRi)}>
                   {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                     (() => {
                       try {
@@ -433,9 +423,9 @@ function PlasmicProfileSeo__RenderFunc(props: {
                       />
                     );
                   })}
-                </Stack__>
+                </div>
               </Accordion>
-            </Stack__>
+            </div>
           }
         >
           <div className={classNames(projectcss.all, sty.freeBox__zoS6D)}>
@@ -507,15 +497,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicProfileSeo__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicProfileSeo__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicProfileSeo__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicProfileSeo__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

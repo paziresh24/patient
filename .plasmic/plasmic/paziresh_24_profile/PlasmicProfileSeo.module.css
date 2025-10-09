@@ -49,30 +49,15 @@
   width: 100%;
   height: auto;
   max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
   background: none;
   margin-bottom: var(--token-_c276Gs_1FIE);
   margin-top: var(--token-_c276Gs_1FIE);
+  row-gap: var(--token-vMUQwr5Jto1d);
   min-width: 0;
   border-radius: 0px;
   padding: 0px;
-}
-.freeBox__psc85 > :global(.__wab_flex-container) {
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  min-width: 0;
-  margin-top: calc(0px - var(--token-vMUQwr5Jto1d));
-  height: calc(100% + var(--token-vMUQwr5Jto1d));
-}
-.freeBox__psc85 > :global(.__wab_flex-container) > *,
-.freeBox__psc85 > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__psc85 > :global(.__wab_flex-container) > picture > img,
-.freeBox__psc85
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-top: var(--token-vMUQwr5Jto1d);
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .freeBox__psc85 {
@@ -102,30 +87,13 @@
   height: auto;
   max-width: 100%;
   flex-direction: column;
-  min-width: 0;
-}
-.freeBox__wprRi > :global(.__wab_flex-container) {
-  flex-direction: column;
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: center;
   align-content: stretch;
+  column-gap: var(--token-_c276Gs_1FIE);
+  row-gap: var(--token-_c276Gs_1FIE);
   min-width: 0;
-  margin-left: calc(0px - var(--token-_c276Gs_1FIE));
-  width: calc(100% + var(--token-_c276Gs_1FIE));
-  margin-top: calc(0px - var(--token-_c276Gs_1FIE));
-  height: calc(100% + var(--token-_c276Gs_1FIE));
-}
-.freeBox__wprRi > :global(.__wab_flex-container) > *,
-.freeBox__wprRi > :global(.__wab_flex-container) > :global(.__wab_slot) > *,
-.freeBox__wprRi > :global(.__wab_flex-container) > picture > img,
-.freeBox__wprRi
-  > :global(.__wab_flex-container)
-  > :global(.__wab_slot)
-  > picture
-  > img {
-  margin-left: var(--token-_c276Gs_1FIE);
-  margin-top: var(--token-_c276Gs_1FIE);
 }
 .profileSeoSimilarLinks:global(.__wab_instance) {
   position: relative;

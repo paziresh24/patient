@@ -61,10 +61,11 @@ import {
 
 import Collapsible from "../../Collapsible"; // plasmic-import: kYXN54tCkD2S/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectcss
 import sty from "./PlasmicProfileAbout.module.css"; // plasmic-import: VlJvd0AHTT9_/css
 
@@ -135,6 +136,8 @@ function PlasmicProfileAbout__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -146,16 +149,11 @@ function PlasmicProfileAbout__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__q5Jgk)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__q5Jgk)}>
         <h2
           data-plasmic-name={"h2"}
           data-plasmic-override={overrides.h2}
@@ -168,11 +166,7 @@ function PlasmicProfileAbout__RenderFunc(props: {
         >
           {"\u062f\u0631\u0628\u0627\u0631\u0647 \u0645\u0646"}
         </h2>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__djeR5)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__djeR5)}>
           {(() => {
             try {
               return (
@@ -306,8 +300,8 @@ function PlasmicProfileAbout__RenderFunc(props: {
               />
             </div>
           ) : null}
-        </Stack__>
-      </Stack__>
+        </div>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -338,15 +332,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicProfileAbout__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicProfileAbout__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicProfileAbout__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicProfileAbout__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
