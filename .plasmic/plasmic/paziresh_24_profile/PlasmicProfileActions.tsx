@@ -61,10 +61,11 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: KYyoqoJ8cPoi/codeComponent
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectcss
 import sty from "./PlasmicProfileActions.module.css"; // plasmic-import: VtINgkEb27Pn/css
 
@@ -159,19 +160,25 @@ function PlasmicProfileActions__RenderFunc(props: {
         path: "getIsBookedMark.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getIsBookedMark"
       },
       {
         path: "getIsBookedMark.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getIsBookedMark"
       },
       {
         path: "getIsBookedMark.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getIsBookedMark"
       },
       {
         path: "isBookMarked",
@@ -189,6 +196,8 @@ function PlasmicProfileActions__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -200,16 +209,11 @@ function PlasmicProfileActions__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__jYihM)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__jYihM)}>
         <ApiRequest
           data-plasmic-name={"getIsBookedMark"}
           data-plasmic-override={overrides.getIsBookedMark}
@@ -231,9 +235,7 @@ function PlasmicProfileActions__RenderFunc(props: {
           loadingDisplay={
             <Button
               children2={
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
+                <div
                   className={classNames(projectcss.all, sty.freeBox___9AqJn)}
                 >
                   {(() => {
@@ -281,7 +283,7 @@ function PlasmicProfileActions__RenderFunc(props: {
                   >
                     {"\u0630\u062e\u06cc\u0631\u0647"}
                   </div>
-                </Stack__>
+                </div>
               }
               className={classNames("__wab_instance", sty.button__gj1H3)}
               color={"clear"}
@@ -343,15 +345,14 @@ function PlasmicProfileActions__RenderFunc(props: {
             }).apply(null, eventArgs);
           }}
           params={undefined}
+          ref={ref => {
+            $refs["getIsBookedMark"] = ref;
+          }}
           url={"https://www.paziresh24.com/api/isBookmark"}
         >
           <Button
             children2={
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox___51XSf)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox___51XSf)}>
                 {(() => {
                   try {
                     return !$state.isBookMarked;
@@ -397,7 +398,7 @@ function PlasmicProfileActions__RenderFunc(props: {
                 >
                   {"\u0630\u062e\u06cc\u0631\u0647"}
                 </div>
-              </Stack__>
+              </div>
             }
             className={classNames("__wab_instance", sty.button___0Gl8R)}
             color={"clear"}
@@ -539,11 +540,7 @@ function PlasmicProfileActions__RenderFunc(props: {
         </ApiRequest>
         <Button
           children2={
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__uYlGw)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__uYlGw)}>
               <Icon2Icon
                 className={classNames(projectcss.all, sty.svg__jnLwj)}
                 role={"img"}
@@ -560,7 +557,7 @@ function PlasmicProfileActions__RenderFunc(props: {
                   "\u0627\u0634\u062a\u0631\u0627\u06a9 \u06af\u0630\u0627\u0631\u06cc"
                 }
               </div>
-            </Stack__>
+            </div>
           }
           className={classNames("__wab_instance", sty.button__dta93)}
           color={"clear"}
@@ -605,11 +602,7 @@ function PlasmicProfileActions__RenderFunc(props: {
 
         <Button
           children2={
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__ccKef)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__ccKef)}>
               <Icon18Icon
                 className={classNames(projectcss.all, sty.svg__mdGYz)}
                 role={"img"}
@@ -626,7 +619,7 @@ function PlasmicProfileActions__RenderFunc(props: {
                   "\u06af\u0632\u0627\u0631\u0634 \u0627\u0634\u062a\u0628\u0627\u0647"
                 }
               </div>
-            </Stack__>
+            </div>
           }
           className={classNames("__wab_instance", sty.button__rWXt)}
           color={"clear"}
@@ -674,7 +667,7 @@ function PlasmicProfileActions__RenderFunc(props: {
           }}
           startIcon={null}
         />
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
