@@ -328,13 +328,37 @@ export async function getAggregatedProfileData(
       }),
   };
 
+  // Handle null values from fullname web service
+  const processedName = doctorFullName?.name ?? fullProfileData?.name;
+  const processedFamily = doctorFullName?.family ?? fullProfileData?.family;
+  
+  // Set empty strings if values are null
+  const finalName = processedName === null ? '' : processedName;
+  const finalFamily = processedFamily === null ? '' : processedFamily;
+
+  // Log to Splunk if fullname values were null
+  if (options?.useNewDoctorFullNameAPI && doctorFullName && (doctorFullName.name === null || doctorFullName.family === null)) {
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'doctor_fullname_null_values',
+      type: 'api_null_values',
+      event: {
+        slug: validatedSlug,
+        name_value: doctorFullName.name,
+        family_value: doctorFullName.family,
+        final_name: finalName,
+        final_family: finalFamily,
+        timestamp: new Date().toISOString(),
+      },
+    });
+  }
+
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
       ...fullProfileData,
       id: slugInfo?.owner_id ?? fullProfileData?.id,
       server_id: slugInfo?.server_id ?? fullProfileData?.server_id,
-      name: doctorFullName?.name ?? fullProfileData?.name,
-      family: doctorFullName?.family ?? fullProfileData?.family,
+      name: finalName,
+      family: finalFamily,
     });
 
   // Step 4: Fetch server-specific data only if running on the server
