@@ -42,9 +42,14 @@ const Booking = () => {
   const { data: doctorFullNameData } = useDoctorFullName(slug, !!router.isReady);
 
   const doctorName = useMemo(() => {
-    const fromHook = `${doctorFullNameData?.name ?? ''} ${doctorFullNameData?.family ?? ''}`.trim();
-    if (fromHook) return fromHook;
-    return '';
+    const name = doctorFullNameData?.name?.trim() || '';
+    const family = doctorFullNameData?.family?.trim() || '';
+    
+    if (!name && !family) return '';
+    if (!name) return family;
+    if (!family) return name;
+    
+    return `${name} ${family}`;
   }, [doctorFullNameData]);
 
   useEffect(() => {
@@ -114,8 +119,12 @@ const Booking = () => {
 
   const centerName = useMemo(() => {
     const center = profileData?.centers?.find((center: any) => center.id === router.query.centerId);
-    return center?.center_type === 1 ? `مطب ${doctorName}` : center?.name;
-  }, [router.query.centerId, profileData]);
+    if (center?.center_type === 1) {
+      const safeDoctorName = doctorName?.trim() || '';
+      return safeDoctorName ? `مطب ${safeDoctorName}` : 'مطب';
+    }
+    return center?.name;
+  }, [router.query.centerId, profileData, doctorName]);
 
   return (
     <>

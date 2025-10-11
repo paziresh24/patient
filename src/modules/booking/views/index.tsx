@@ -388,7 +388,14 @@ const BookingSteps = (props: BookingStepsProps) => {
       description: dataForm.description,
       gender: user.gender,
       cell: user.cell,
-      name: `${user.name} ${user.family}`,
+      name: (() => {
+        const name = user.name?.trim() || '';
+        const family = user.family?.trim() || '';
+        if (!name && !family) return '';
+        if (!name) return family;
+        if (!family) return name;
+        return `${name} ${family}`;
+      })(),
       national_code: user?.national_code ?? FakeData.NATIONAL_CODE,
     });
     if (data.status === ClinicStatus.SUCCESS) {

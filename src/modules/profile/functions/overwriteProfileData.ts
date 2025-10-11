@@ -39,10 +39,22 @@ export type OverwriteProfileData = {
 };
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
+  // Helper function to construct display name properly
+  const constructDisplayName = (name: string | null | undefined, family: string | null | undefined): string => {
+    const trimmedName = name?.trim() || '';
+    const trimmedFamily = family?.trim() || '';
+    
+    if (!trimmedName && !trimmedFamily) return '';
+    if (!trimmedName) return trimmedFamily;
+    if (!trimmedFamily) return trimmedName;
+    
+    return `${trimmedName} ${trimmedFamily}`;
+  };
+
   const information = {
     id: source?.id ?? null,
     server_id: source?.server_id ?? null,
-    display_name: source?.name + ' ' + source?.family,
+    display_name: constructDisplayName(source?.name, source?.family),
     name: source?.name,
     family: source?.family,
     biography: overwriteData?.biography ?? source?.biography,
