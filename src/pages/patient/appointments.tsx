@@ -103,7 +103,14 @@ export const Appointments = () => {
               type: 'see-local-book',
               event: {
                 data: {
-                  patient_fullname: `${user.name} ${user.family}`,
+                  patient_fullname: (() => {
+                    const name = user.name?.trim() || '';
+                    const family = user.family?.trim() || '';
+                    if (!name && !family) return '';
+                    if (!name) return family;
+                    if (!family) return name;
+                    return `${name} ${family}`;
+                  })(),
                   patient_cell: user.cell,
                   book_type_id: item.book_type_id,
                   book_center_id: item.center_id,
@@ -209,7 +216,14 @@ export const Appointments = () => {
                 waitingTime: turn.doctor_info?.waiting_time_info?.waiting_time_title,
                 trackingCode: turn.ref_id,
                 centerName: turn.center?.name,
-                patientName: `${turn.patient_info?.name ?? ''} ${turn.patient_info?.family ?? ''}`,
+                patientName: (() => {
+                  const name = turn.patient_info?.name?.trim() || '';
+                  const family = turn.patient_info?.family?.trim() || '';
+                  if (!name && !family) return '';
+                  if (!name) return family;
+                  if (!family) return name;
+                  return `${name} ${family}`;
+                })(),
                 description: turn.comment ?? '',
                 respiteDeleteTurn: turn.respite_to_refund_after_delete ?? '',
                 notRefundable: turn.payment_status === 'paid' && turn.refundable === 0,

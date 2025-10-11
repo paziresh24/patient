@@ -112,7 +112,16 @@ const Receipt = () => {
   });
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
   const showDoctorAvailabilityWarning = useFeatureValue('show-doctor-availability-warning', '');
-  const doctorName = bookDetailsData?.doctor?.display_name;
+  const doctorName = (() => {
+    const name = bookDetailsData?.doctor?.doctor_name?.trim() || '';
+    const family = bookDetailsData?.doctor?.doctor_family?.trim() || '';
+    
+    if (!name && !family) return bookDetailsData?.doctor?.display_name || '';
+    if (!name) return family;
+    if (!family) return name;
+    
+    return `${name} ${family}`;
+  })();
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
@@ -218,7 +227,14 @@ const Receipt = () => {
                   phoneNumber: bookDetailsData?.patient?.cell,
                   nationalCode: bookDetailsData?.patient?.national_code,
                   trackingCode: bookDetailsData?.reference_code,
-                  patientName: `${bookDetailsData?.patient?.name} ${bookDetailsData?.patient?.family}`,
+                  patientName: (() => {
+                    const name = bookDetailsData?.patient?.name?.trim() || '';
+                    const family = bookDetailsData?.patient?.family?.trim() || '';
+                    if (!name && !family) return '';
+                    if (!name) return family;
+                    if (!family) return name;
+                    return `${name} ${family}`;
+                  })(),
                   reason: reasonDeleteTurn,
                   isVisited: turnStatus.visitedTurn,
                 },
@@ -258,7 +274,14 @@ const Receipt = () => {
 
   const handleShareAction = () => {
     share({
-      text: `رسید نوبت ${doctorName} برای ${bookDetailsData?.patient?.name} ${bookDetailsData?.patient?.family}`,
+      text: `رسید نوبت ${doctorName} برای ${(() => {
+        const name = bookDetailsData?.patient?.name?.trim() || '';
+        const family = bookDetailsData?.patient?.family?.trim() || '';
+        if (!name && !family) return '';
+        if (!name) return family;
+        if (!family) return name;
+        return `${name} ${family}`;
+      })()}`,
       title: 'رسیدنوبت',
       url: bookDetailsData.share_url,
     });
@@ -283,7 +306,14 @@ const Receipt = () => {
           doctor: { centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name },
           patient: {
             cell: bookDetailsData.patient.cell,
-            name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+            name: (() => {
+              const name = bookDetailsData.patient.name?.trim() || '';
+              const family = bookDetailsData.patient.family?.trim() || '';
+              if (!name && !family) return '';
+              if (!name) return family;
+              if (!family) return name;
+              return `${name} ${family}`;
+            })(),
             nationalCode: bookDetailsData.national_code,
           },
         },
@@ -302,7 +332,14 @@ const Receipt = () => {
           doctor: { centerId: bookDetailsData.center_id, name: bookDetailsData?.doctor?.doctor_name },
           patient: {
             cell: bookDetailsData.patient.cell,
-            name: `${bookDetailsData.patient.name} ${bookDetailsData.patient.family}`,
+            name: (() => {
+              const name = bookDetailsData.patient.name?.trim() || '';
+              const family = bookDetailsData.patient.family?.trim() || '';
+              if (!name && !family) return '';
+              if (!name) return family;
+              if (!family) return name;
+              return `${name} ${family}`;
+            })(),
             nationalCode: bookDetailsData.national_code,
           },
         },

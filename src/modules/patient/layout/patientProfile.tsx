@@ -39,7 +39,14 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
       <div className="hidden col-span-3 px-5 bg-white rounded-lg shadow-sm md:sticky md:top-10 h-fit md:pb-2 md:block">
         <Link href="/patient/profile">
           <div className="flex items-center p-5 px-0 space-s-5">
-            <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
+            <Avatar name={(() => {
+              const name = userInfo.name?.trim() || '';
+              const family = userInfo.family?.trim() || '';
+              if (!name && !family) return '';
+              if (!name) return family;
+              if (!family) return name;
+              return `${name} ${family}`;
+            })()} src={userInfo.image ?? ''} />
             <div className="flex flex-col space-y-2">
               {loginPending ? (
                 <>

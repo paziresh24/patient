@@ -11,7 +11,16 @@ const { publicRuntimeConfig } = getConfig();
 export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; serviceId: string }) => {
   const { isLoading, data: profile } = useGetProfileData({ slug: slug as string });
 
-  const doctorName = `${profile?.data?.name} ${profile?.data?.family}`;
+  const doctorName = (() => {
+    const name = profile?.data?.name?.trim() || '';
+    const family = profile?.data?.family?.trim() || '';
+    
+    if (!name && !family) return '';
+    if (!name) return family;
+    if (!family) return name;
+    
+    return `${name} ${family}`;
+  })();
 
   const convertTime = (time: number) => {
     return moment(time)?.locale('fa')?.calendar(undefined, {

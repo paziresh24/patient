@@ -168,7 +168,10 @@ export const aside = (data: any) => {
               slug: center.center_type === 1 ? `/dr/${seo.slug}` : `/center/${center.slug}`,
               description: center.description,
               phoneNumbers: center?.display_number_array,
-              name: center.center_type !== 1 ? center.name : `مطب ${information?.display_name}`,
+              name: center.center_type !== 1 ? center.name : (() => {
+                const displayName = information?.display_name?.trim() || '';
+                return displayName ? `مطب ${displayName}` : 'مطب';
+              })(),
               location: center.map,
             })),
           onEventPhoneNumber: (centerId: any) => {

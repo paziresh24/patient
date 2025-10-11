@@ -57,7 +57,18 @@ interface SearchCardProps {
 export const SearchCard = (props: SearchCardProps) => {
   const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className, avatarPriority = false, alt } = props;
 
-  const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
+  const fullName = useMemo(() => {
+    if (baseInfo?.displayName) return baseInfo.displayName;
+    
+    const name = baseInfo?.name?.trim() || '';
+    const family = baseInfo?.family?.trim() || '';
+    
+    if (!name && !family) return '';
+    if (!name) return family;
+    if (!family) return name;
+    
+    return `${name} ${family}`;
+  }, [baseInfo]);
 
   const imageAlt = useMemo(() => `${fullName} ${baseInfo?.expertise}`, [fullName, baseInfo.expertise]);
 
@@ -90,12 +101,12 @@ export const SearchCard = (props: SearchCardProps) => {
             <LinkInhance
               className="w-4/5"
               onClick={() =>
-                sendEventWhenClick?.({ element: 'display_name', content: baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}` })
+                sendEventWhenClick?.({ element: 'display_name', content: fullName })
               }
               {...(baseInfo?.url && { href: baseInfo?.url, title: alt })}
             >
               <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
-                {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
+                {fullName}
               </Text>
             </LinkInhance>
             {!!baseInfo?.viewCount && (

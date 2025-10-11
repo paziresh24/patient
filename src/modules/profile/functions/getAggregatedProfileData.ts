@@ -361,14 +361,15 @@ export async function getAggregatedProfileData(
 
   // Step 5: Construct the final props object
   const doctorCity = centers?.find?.((center: any) => center.id !== IGNORED_CENTER_ID)?.city;
-  const title = `${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${
+  const safeDisplayName = information?.display_name?.trim() || 'پزشک';
+  const title = `${safeDisplayName}، ${expertises?.expertises?.[0]?.alias_title} ${
     doctorCity ? `${doctorCity}،` : ''
   } نوبت دهی آنلاین و شماره تلفن`;
-  const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
+  const description = `نوبت دهی اینترنتی ${safeDisplayName}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const finalProps = {
     props: {
-      title: university ? information?.display_name : title,
+      title: university ? safeDisplayName : title,
       description: university ? '' : description,
       information: {
         ...information,
