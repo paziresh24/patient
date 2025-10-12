@@ -1,5 +1,5 @@
 // Doctor profile API services
-export { validateDoctorSlug, type DoctorSlugValidationResponse, type DoctorSlugRedirectResponse, type DoctorSlugResponse } from './validateDoctorSlug';
+export { validateDoctorSlug, type DoctorSlugValidationResponse, type DoctorSlugRedirectResponse, type DoctorSlugErrorResponse, type DoctorSlugResponse } from './validateDoctorSlug';
 export { handleDoctorSlug, isDoctorSlugValid, getCorrectDoctorSlug } from './doctorSlugHandler';
 export { getDoctorFullName, type DoctorFullNameResponse } from './getDoctorFullName';
 export { getDoctorBiography, type DoctorBiographyResponse } from './getDoctorBiography';
