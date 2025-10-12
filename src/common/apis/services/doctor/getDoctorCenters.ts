@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { splunkInstance } from '@/common/services/splunk';
 import { drProfileClient } from '../../client';
 
 export interface DoctorCentersResponse {
@@ -11,6 +10,7 @@ export interface DoctorCentersResponse {
   type_id: number;
   status: number;
   server_id: number;
+  has_bookable_services: boolean;
   city: {
     id: number;
     name: string;
@@ -31,7 +31,9 @@ export const getDoctorCenters = async (slug: string, university?: string): Promi
   console.log('🔍 University:', university);
   const encodedSlug = encodeURIComponent(slug);
   const url = `/api/doctors/${encodedSlug}/centers`;
-  const params: Record<string, string> = {};
+  const params: Record<string, string> = {
+    check_bookable_services: 'true'
+  };
   if (university) {
     params.university = university;
   }
@@ -41,36 +43,14 @@ export const getDoctorCenters = async (slug: string, university?: string): Promi
       params,
     });
 
-    // Send success event to Splunk
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'doctor_centers_api_success',
-      type: 'api_success',
-      event: {
-        slug: slug,
-        url: url,
-        response_data: data,
-        centers_count: data.length,
-        timestamp: new Date().toISOString(),
-      },
-    });
+    // Filter centers that have bookable services
+    const filteredData = data.filter(center => center.has_bookable_services === true);
 
-    return data;
+
+    return filteredData;
   } catch (error) {
     console.error('Error fetching doctor centers:', error);
 
-    // Send error to Splunk
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'doctor_centers_api_error',
-      type: 'api_error',
-      event: {
-        slug: slug,
-        url: `https://drprofile.paziresh24.com/api/doctors/${encodeURIComponent(slug)}/centers`,
-        error_message: error instanceof Error ? error.message : String(error),
-        error_status: error instanceof Error && 'response' in error ? (error as any).response?.status : null,
-        error_data: error instanceof Error && 'response' in error ? (error as any).response?.data : null,
-        timestamp: new Date().toISOString(),
-      },
-    });
 
     // Return fallback data in case of error
     return [];
