@@ -17,7 +17,11 @@ export interface DoctorSlugRedirectResponse {
   };
 }
 
-export type DoctorSlugResponse = DoctorSlugValidationResponse | DoctorSlugRedirectResponse;
+export interface DoctorSlugErrorResponse {
+  error: string;
+}
+
+export type DoctorSlugResponse = DoctorSlugValidationResponse | DoctorSlugRedirectResponse | DoctorSlugErrorResponse;
 
 export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugResponse> => {
   const encodedSlug = encodeURIComponent(slug);
@@ -27,6 +31,23 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
     const { data } = await drProfileClient.get<DoctorSlugResponse>(url, {
       timeout: 5000,
     });
+
+    // Check if response contains error information (like "Slug not found")
+    if ('error' in data) {
+      // Send error event to Splunk for slug not found
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'doctor_slug_not_found',
+        type: 'slug_not_found',
+        event: {
+          original_slug: slug,
+          error_message: data.error,
+          url: url,
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      return data;
+    }
 
     // Check if response contains redirect information
     if ('redirect' in data) {
@@ -106,12 +127,22 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
       },
     });
 
-    // Return a fallback redirect response for other errors
-    return {
-      redirect: {
-        route: `/dr/${slug}/`,
-        statusCode: 301,
+    // Send 404 event to Splunk for fallback errors
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'doctor_profile_404',
+      type: 'page_not_found_fallback',
+      event: {
+        original_slug: slug,
+        error_message: "Slug not found (fallback)",
+        url: url,
+        error_details: error instanceof Error ? error.message : String(error),
+        timestamp: new Date().toISOString(),
       },
+    });
+
+    // Return error response for other errors to show 404 page
+    return {
+      error: "Slug not found",
     };
   }
 };

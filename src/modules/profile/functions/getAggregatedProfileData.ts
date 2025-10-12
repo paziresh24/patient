@@ -110,9 +110,33 @@ export async function getAggregatedProfileData(
     getProfile({ slug, university, isServer: isServer }),
   ]);
 
-  // Handle slug validation result first (this handles redirects)
+  // Handle slug validation result first (this handles redirects and errors)
   if (slugValidationResult.status === 'fulfilled') {
     const result = slugValidationResult.value;
+
+    // Handle error responses (like "Slug not found")
+    if ('error' in result) {
+      // Send 404 event to Splunk
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'doctor_profile_404',
+        type: 'page_not_found',
+        event: {
+          original_slug: slug,
+          error_message: result.error,
+          isServer: isServer,
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      if (isServer) {
+        return {
+          notFound: true,
+        };
+      } else {
+        // For client-side, we'll let the error propagate
+        throw new Error(result.error);
+      }
+    }
 
     // Handle redirects from slug validation service
     if ('redirect' in result) {

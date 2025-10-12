@@ -1,4 +1,5 @@
-import { validateDoctorSlug, DoctorSlugResponse, DoctorSlugValidationResponse, DoctorSlugRedirectResponse } from './validateDoctorSlug';
+import { validateDoctorSlug, DoctorSlugResponse, DoctorSlugValidationResponse, DoctorSlugRedirectResponse, DoctorSlugErrorResponse } from './validateDoctorSlug';
+import { splunkInstance } from '@/common/services/splunk';
 
 /**
  * Handles doctor slug validation and redirect logic
@@ -12,10 +13,34 @@ export const handleDoctorSlug = async (slug: string): Promise<{
     route: string;
     statusCode: number;
   };
+  errorInfo?: {
+    error: string;
+  };
   doctorInfo?: DoctorSlugValidationResponse;
 }> => {
   try {
     const response: DoctorSlugResponse = await validateDoctorSlug(slug);
+
+    // Check if response contains error information (like "Slug not found")
+    if ('error' in response) {
+      // Send 404 event to Splunk
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'doctor_profile_404',
+        type: 'page_not_found_handler',
+        event: {
+          original_slug: slug,
+          error_message: response.error,
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      return {
+        isValid: false,
+        errorInfo: {
+          error: response.error,
+        },
+      };
+    }
 
     // Check if response contains redirect information
     if ('redirect' in response) {
@@ -37,12 +62,23 @@ export const handleDoctorSlug = async (slug: string): Promise<{
   } catch (error) {
     console.error('Error in handleDoctorSlug:', error);
     
-    // Return invalid with fallback redirect
+    // Send 404 event to Splunk for catch block errors
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'doctor_profile_404',
+      type: 'page_not_found_catch',
+      event: {
+        original_slug: slug,
+        error_message: "Slug not found (catch)",
+        error_details: error instanceof Error ? error.message : String(error),
+        timestamp: new Date().toISOString(),
+      },
+    });
+    
+    // Return invalid with error info to show 404 page
     return {
       isValid: false,
-      redirectInfo: {
-        route: `/dr/${slug}/`,
-        statusCode: 301,
+      errorInfo: {
+        error: "Slug not found",
       },
     };
   }
