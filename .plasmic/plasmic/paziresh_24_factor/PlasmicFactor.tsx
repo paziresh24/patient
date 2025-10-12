@@ -69,12 +69,11 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import Paziresh24Dialog from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import { Embed } from "@plasmicpkgs/plasmic-basic-components";
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 85GFtqPAFvUkDYJxzFDEYS/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 85GFtqPAFvUkDYJxzFDEYS/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_antd_5_hostless_css from "../antd_5_hostless/plasmic.module.css"; // plasmic-import: ohDidvG9XsCeFumugENU3J/projectcss
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 85GFtqPAFvUkDYJxzFDEYS/projectcss
 import sty from "./PlasmicFactor.module.css"; // plasmic-import: x0UykBoeZWyL/css
 
@@ -115,7 +114,6 @@ export type PlasmicFactor__OverridesType = {
   doctorInfo?: Flex__<"div">;
   img?: Flex__<typeof PlasmicImg__>;
   dialog2?: Flex__<typeof Paziresh24Dialog>;
-  embedHtml?: Flex__<typeof Embed>;
   sideEffect?: Flex__<typeof SideEffect>;
   getDoctorInfo?: Flex__<typeof ApiRequest>;
 };
@@ -169,19 +167,25 @@ function PlasmicFactor__RenderFunc(props: {
         path: "priceCalculator.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "priceCalculator"
       },
       {
         path: "priceCalculator.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "priceCalculator"
       },
       {
         path: "priceCalculator.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "priceCalculator"
       },
       {
         path: "accordion.activePanelId",
@@ -204,19 +208,25 @@ function PlasmicFactor__RenderFunc(props: {
         path: "getDoctorInfo.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getDoctorInfo"
       },
       {
         path: "getDoctorInfo.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getDoctorInfo"
       },
       {
         path: "getDoctorInfo.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getDoctorInfo"
       },
       {
         path: "discountShow",
@@ -277,19 +287,25 @@ function PlasmicFactor__RenderFunc(props: {
         path: "getWallet.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getWallet"
       },
       {
         path: "getWallet.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getWallet"
       },
       {
         path: "getWallet.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "getWallet"
       },
       {
         path: "paymentLoading",
@@ -313,19 +329,25 @@ function PlasmicFactor__RenderFunc(props: {
         path: "cancellationPolicy.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "cancellationPolicy"
       },
       {
         path: "cancellationPolicy.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "cancellationPolicy"
       },
       {
         path: "cancellationPolicy.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "cancellationPolicy"
       }
     ],
     [$props, $ctx, $refs]
@@ -336,6 +358,8 @@ function PlasmicFactor__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <React.Fragment>
@@ -384,10 +408,7 @@ function PlasmicFactor__RenderFunc(props: {
               projectcss.root_reset,
               projectcss.plasmic_default_styles,
               projectcss.plasmic_mixins,
-              projectcss.plasmic_tokens,
-              plasmic_fragment_design_system_css.plasmic_tokens,
-              plasmic_antd_5_hostless_css.plasmic_tokens,
-              plasmic_paziresh_24_design_system_css.plasmic_tokens,
+              styleTokensClassNames,
               sty.root
             )}
           >
@@ -530,6 +551,9 @@ function PlasmicFactor__RenderFunc(props: {
                           throw e;
                         }
                       })()}
+                      ref={ref => {
+                        $refs["priceCalculator"] = ref;
+                      }}
                       url={(() => {
                         try {
                           return (
@@ -706,6 +730,9 @@ function PlasmicFactor__RenderFunc(props: {
                                   "getWallet",
                                   "data"
                                 ]).apply(null, eventArgs);
+                              }}
+                              ref={ref => {
+                                $refs["getWallet"] = ref;
                               }}
                               url={
                                 "https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24"
@@ -1054,6 +1081,9 @@ function PlasmicFactor__RenderFunc(props: {
                         throw e;
                       }
                     })()}
+                    ref={ref => {
+                      $refs["cancellationPolicy"] = ref;
+                    }}
                     url={
                       "https://apigw.paziresh24.com/payment/v1/cancellation-policy"
                     }
@@ -2937,9 +2967,7 @@ function PlasmicFactor__RenderFunc(props: {
             />
 
             <Embed
-              data-plasmic-name={"embedHtml"}
-              data-plasmic-override={overrides.embedHtml}
-              className={classNames("__wab_instance", sty.embedHtml)}
+              className={classNames("__wab_instance", sty.embedHtml___9R6)}
               code={
                 '<script type="text/javascript">\r\n    (function(c,l,a,r,i,t,y){\r\n        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};\r\n        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;\r\n        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\r\n    })(window, document, "clarity", "script", "olg10k4yi3");\r\n</script>'
               }
@@ -3114,7 +3142,17 @@ function PlasmicFactor__RenderFunc(props: {
                   "data"
                 ]).apply(null, eventArgs);
               }}
+              ref={ref => {
+                $refs["getDoctorInfo"] = ref;
+              }}
               url={`https://api.paziresh24.com/user/v1/book/${$ctx.query.centerId}/${$ctx.query.bookId}`}
+            />
+
+            <Embed
+              className={classNames("__wab_instance", sty.embedHtml__nwnwn)}
+              code={
+                '\r\n<script type="text/javascript">\r\n    (function(c,l,a,r,i,t,y){\r\n        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};\r\n        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;\r\n        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\r\n    })(window, document, "clarity", "script", "toems92djk");\r\n</script>\r\n'
+              }
             />
           </div>
         ) : null}
@@ -3140,7 +3178,6 @@ const PlasmicDescendants = {
     "doctorInfo",
     "img",
     "dialog2",
-    "embedHtml",
     "sideEffect",
     "getDoctorInfo"
   ],
@@ -3175,7 +3212,6 @@ const PlasmicDescendants = {
   doctorInfo: ["doctorInfo", "img"],
   img: ["img"],
   dialog2: ["dialog2"],
-  embedHtml: ["embedHtml"],
   sideEffect: ["sideEffect"],
   getDoctorInfo: ["getDoctorInfo"]
 } as const;
@@ -3198,7 +3234,6 @@ type NodeDefaultElementType = {
   doctorInfo: "div";
   img: typeof PlasmicImg__;
   dialog2: typeof Paziresh24Dialog;
-  embedHtml: typeof Embed;
   sideEffect: typeof SideEffect;
   getDoctorInfo: typeof ApiRequest;
 };
@@ -3277,7 +3312,6 @@ export const PlasmicFactor = Object.assign(
     doctorInfo: makeNodeComponent("doctorInfo"),
     img: makeNodeComponent("img"),
     dialog2: makeNodeComponent("dialog2"),
-    embedHtml: makeNodeComponent("embedHtml"),
     sideEffect: makeNodeComponent("sideEffect"),
     getDoctorInfo: makeNodeComponent("getDoctorInfo"),
 
