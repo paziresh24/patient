@@ -21,6 +21,7 @@ import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalConte
 import HamdastLanding from '.plasmic/HamdastLanding';
 import Logo from '@/common/components/atom/logo';
 import { splunkInstance } from '@/common/services/splunk';
+import Permissions from '@/modules/hamdast/components/permissions';
 
 export function replaceKeysInString(template: string, keys: string[], values: string[]) {
   // Create a regular expression to find placeholders like {{key}}
@@ -55,7 +56,9 @@ const Page = ({ page, app }: any) => {
   const {
     asPath,
     query: { app_key, params, ...queries },
+    ...router
   } = useRouter();
+
   const iframeRef = useRef<any>(null);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const user = useUserInfoStore(state => state.info);
@@ -181,6 +184,8 @@ const Page = ({ page, app }: any) => {
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+      {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}
+
       <div className={classNames('w-full flex-grow flex flex-col', { '!hidden !opacity-0': !showApp })}>
         {(!showIframe || isAppLoading) && (
           <div className="w-full bg-white justify-center flex items-center h-full flex-grow">

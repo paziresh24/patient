@@ -20,6 +20,7 @@ import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalConte
 import HamdastLanding from '.plasmic/HamdastLanding';
 import Logo from '@/common/components/atom/logo';
 import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key]/[...params]';
+import Permissions from '@/modules/hamdast/components/permissions';
 
 export const AppFrame = ({
   appKey,
@@ -32,6 +33,7 @@ export const AppFrame = ({
   queries?: any;
   showBackButton?: boolean;
 }) => {
+  const router = useRouter();
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
   const [app, setApp] = useState<any>({});
   const [page, setPage] = useState<any>({});
@@ -112,7 +114,7 @@ export const AppFrame = ({
           <HamdastPayment app_key={appKey} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
-
+          <Permissions onClose={() => router.push('/dashboard')} />
           {showTranslation && (
             <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center">
               <div className="flex items-center gap-5">
