@@ -84,6 +84,11 @@ export const drProfileClient = axios.create({
   httpsAgent: new https.Agent({ keepAlive: false }),
 });
 
+export const samanClient = axios.create({
+  baseURL: `https://saman.paziresh24.com`,
+  ...baseConfig,
+});
+
 clinicClient.interceptors.request.use(
   config => {
     if (typeof window !== 'undefined') {
