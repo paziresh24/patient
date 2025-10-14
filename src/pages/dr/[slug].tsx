@@ -26,7 +26,7 @@ import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
-import { aside } from '@/modules/profile/views/aside';
+import { Aside } from '@/modules/profile/views/aside';
 import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
@@ -388,7 +388,7 @@ const DoctorProfile = (props: any) => {
                 </div>
               )}
 
-              {aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
+              {Aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
                 .filter(({ isShow }: any) => Boolean(isShow))
                 .map((section: any, index: number) => (
                   <Section key={index} {...section}>

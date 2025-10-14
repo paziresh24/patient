@@ -15,10 +15,12 @@ import { ActionButton } from './centersInfo/actionButton';
 import Hamdast from '@/modules/hamdast/render';
 import IframeHamdast from '@/modules/hamdast/iframe-render';
 import { isEmpty } from 'lodash';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { SamanBooking } from '@/modules/samanBooking';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 
-export const aside = (data: any) => {
+export const Aside = (data: any) => {
   const {
     information,
     centers,
@@ -42,6 +44,8 @@ export const aside = (data: any) => {
     user_id,
   } = data;
 
+  const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
+
   const profileData = pick(data, [
     'information',
     'centers',
@@ -58,8 +62,19 @@ export const aside = (data: any) => {
 
   return [
     {
+      id: 'saman-booking',
+      isShow: isSamanBookingEnabled,
+      function: () => {
+        return {
+          expertises,
+          doctorCity: information.city_en_slug,
+        };
+      },
+      children: (props: any) => <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} {...props} />,
+    },
+    {
       id: 'book-me',
-      isShow: centers?.length > 0,
+      isShow: centers?.length > 0 && !isSamanBookingEnabled,
       function: () => {
         return {
           id: information.id,
