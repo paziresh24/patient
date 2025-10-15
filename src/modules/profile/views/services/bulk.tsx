@@ -18,9 +18,6 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
     <>
       {!customize.partnerKey && (
         <Card className="space-y-3 !rounded-none md:!rounded-lg">
-          <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
-            <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
-          </Alert>
           {availableTime && (
             <div className="flex justify-between text-sm">
               <Text className="text-slate-500">زمان اعلام نوبت های جدید: </Text>

@@ -10,8 +10,6 @@ import InActiveDoctor from './inActiveDoctor';
 interface SamanBookingProps {
   displayName: string;
   slug: string;
-  expertises?: any;
-  doctorCity?: string;
 }
 
 interface AvailabilityResponse {
@@ -20,7 +18,7 @@ interface AvailabilityResponse {
   nearest_available_time: string | null;
 }
 
-const SamanBooking = ({ slug, displayName, expertises, doctorCity }: SamanBookingProps) => {
+const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
   const router = useRouter();
 
   const {
@@ -77,9 +75,7 @@ const SamanBooking = ({ slug, displayName, expertises, doctorCity }: SamanBookin
   return (
     <div className="flex flex-col space-y-3">
       <Card className="space-y-3 !rounded-none md:!rounded-lg">
-        {!booking_available && !nearest_available_time && (
-          <InActiveDoctor displayName={displayName} expertises={expertises} doctorCity={doctorCity} showSubstituteButton={true} />
-        )}
+        {!booking_available && !nearest_available_time && <InActiveDoctor displayName={displayName} />}
       </Card>
     </div>
   );
