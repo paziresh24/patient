@@ -12,10 +12,15 @@ interface SamanBookingProps {
   slug: string;
 }
 
-interface AvailabilityResponse {
+interface AvailabilityData {
   booking_available: boolean;
   nearest_time_slot: string | null;
   nearest_available_time: string | null;
+}
+
+interface AvailabilityResponse {
+  in_person_availability: AvailabilityData;
+  online_visit_availability: AvailabilityData;
 }
 
 const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
@@ -70,12 +75,18 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
     return <Skeleton w="100%" h="120px" rounded="lg" />;
   }
 
-  const { booking_available, nearest_time_slot, nearest_available_time } = availabilityData ?? {};
+  const { in_person_availability, online_visit_availability } = availabilityData ?? {};
+
+  // Check if any type of booking is available
+  const isAnyBookingAvailable = in_person_availability?.booking_available || online_visit_availability?.booking_available;
+
+  // Get the nearest available time from either type
+  const nearestAvailableTime = in_person_availability?.nearest_available_time || online_visit_availability?.nearest_available_time;
 
   return (
     <div className="flex flex-col space-y-3">
       <Card className="space-y-3 !rounded-none md:!rounded-lg">
-        {!booking_available && !nearest_available_time && <InActiveDoctor displayName={displayName} />}
+        {!isAnyBookingAvailable && !nearestAvailableTime && <InActiveDoctor displayName={displayName} />}
       </Card>
     </div>
   );
