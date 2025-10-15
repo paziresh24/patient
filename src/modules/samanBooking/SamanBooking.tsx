@@ -1,11 +1,9 @@
-import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import { samanClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
-import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
-import Card from '@/common/components/atom/card';
 import InActiveDoctor from './inActiveDoctor';
+import FutureBookingDoctor from './FutureBookingDoctor';
 
 interface SamanBookingProps {
   displayName: string;
@@ -61,16 +59,6 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
   //   router.push('/s?q=' + encodeURIComponent('پزشک'));
   // };
 
-  const formatTime = (timeString: string | null) => {
-    if (!timeString) return null;
-
-    return moment(timeString).locale('fa').calendar(undefined, {
-      sameDay: '[امروز] ساعت HH:mm',
-      nextDay: '[فردا] ساعت HH:mm',
-      sameElse: 'jD jMMMM ساعت HH:mm',
-    });
-  };
-
   if (isLoading) {
     return <Skeleton w="100%" h="120px" rounded="lg" />;
   }
@@ -85,9 +73,10 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
 
   return (
     <div className="flex flex-col space-y-3">
-      <Card className="space-y-3 !rounded-none md:!rounded-lg">
-        {!isAnyBookingAvailable && !nearestAvailableTime && <InActiveDoctor displayName={displayName} />}
-      </Card>
+      {!isAnyBookingAvailable && !nearestAvailableTime && <InActiveDoctor displayName={displayName} />}
+      {!in_person_availability?.booking_available && in_person_availability?.nearest_available_time && (
+        <FutureBookingDoctor availableTime={in_person_availability.nearest_available_time || ''} />
+      )}
     </div>
   );
 };
