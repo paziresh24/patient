@@ -15,7 +15,7 @@ const InActiveDoctor = ({ displayName }: InActiveDoctorProps) => {
     <Card className="space-y-3">
       <div className="space-y-3">
         <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
-          <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
+          <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} در پذیرش24 تعریف نشده است.</Text>
         </Alert>
       </div>
     </Card>

@@ -293,7 +293,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                       variablePath: ["service"]
                     },
                     operation: 0,
-                    value: $state.apiGetCenter.data[0].id
+                    value: $state.apiGetCenter.data?.[0]?.id
                   };
                   return (({ variable, value, startIndex, deleteCount }) => {
                     if (!variable) {
