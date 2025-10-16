@@ -60,10 +60,11 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Avatar from "../../Avatar"; // plasmic-import: 3i84rYjQRrs4/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectcss
 import sty from "./PlasmicProfileInfo.module.css"; // plasmic-import: rFaRrp2J8jq8/css
 
@@ -152,6 +153,8 @@ function PlasmicProfileInfo__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -163,16 +166,11 @@ function PlasmicProfileInfo__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__iaDop)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__iaDop)}>
         <Avatar
           data-plasmic-name={"avatar"}
           data-plasmic-override={overrides.avatar}
@@ -219,11 +217,7 @@ function PlasmicProfileInfo__RenderFunc(props: {
           })()}
         />
 
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__v8PvT)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__v8PvT)}>
           {(() => {
             try {
               return !!$props.displayName;
@@ -277,11 +271,7 @@ function PlasmicProfileInfo__RenderFunc(props: {
               throw e;
             }
           })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__n2ZAh)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__n2ZAh)}>
               <Icon5Icon
                 data-plasmic-name={"svg"}
                 data-plasmic-override={overrides.svg}
@@ -313,7 +303,7 @@ function PlasmicProfileInfo__RenderFunc(props: {
                   })()}
                 </React.Fragment>
               </span>
-            </Stack__>
+            </div>
           ) : null}
           {false ? (
             <span
@@ -341,9 +331,7 @@ function PlasmicProfileInfo__RenderFunc(props: {
               </React.Fragment>
             </span>
           ) : null}
-          <Stack__
-            as={"div"}
-            hasGap={true}
+          <div
             className={classNames(
               projectcss.all,
               sty.freeBox__qjWEy,
@@ -470,9 +458,9 @@ function PlasmicProfileInfo__RenderFunc(props: {
                 </div>
               );
             })}
-          </Stack__>
-        </Stack__>
-      </Stack__>
+          </div>
+        </div>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }

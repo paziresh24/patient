@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata%3Aital%2Cwght%400%2C200%3B0%2C400%3B0%2C500%3B0%2C600%3B0%2C700&display=swap");
 
 .plasmic_tokens {
   --token-KeHe2fFUQ6pK: 0.875rem;
@@ -240,6 +241,8 @@
   background: none;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  row-gap: 0px;
+  column-gap: 0px;
   box-shadow: none;
   box-sizing: border-box;
   text-decoration-line: none;
@@ -253,6 +256,8 @@
   background: none;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  row-gap: 0px;
+  column-gap: 0px;
   box-shadow: none;
   box-sizing: border-box;
   margin: 0;
@@ -687,7 +692,7 @@ ul:where(.root_reset_tags) {
   padding-left: var(--mixin-TiAtu9HyDGK__padding-left);
   position: var(--mixin-TiAtu9HyDGK__position);
   list-style-type: var(--mixin-TiAtu9HyDGK__list-style-type);
-  flex-column-gap: var(--mixin-TiAtu9HyDGK__flex-column-gap);
+  column-gap: var(--mixin-TiAtu9HyDGK__column-gap);
 }
 
 :where(.root_reset) ol:where(.ol),
@@ -703,7 +708,7 @@ ol:where(.root_reset_tags) {
   padding-left: var(--mixin-3KdbzamYzTn__padding-left);
   position: var(--mixin-3KdbzamYzTn__position);
   list-style-type: var(--mixin-3KdbzamYzTn__list-style-type);
-  flex-column-gap: var(--mixin-3KdbzamYzTn__flex-column-gap);
+  column-gap: var(--mixin-3KdbzamYzTn__column-gap);
 }
 
 :where(.root_reset) h5:where(.h5),

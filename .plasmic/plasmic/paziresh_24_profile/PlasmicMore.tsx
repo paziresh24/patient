@@ -61,10 +61,11 @@ import {
 
 import { Popover } from "@plasmicpkgs/radix-ui";
 import ProfileActions2 from "../../ProfileActions2"; // plasmic-import: l1A3UpFFipsx/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectcss
 import sty from "./PlasmicMore.module.css"; // plasmic-import: _AH4Ju8JTju3/css
 
@@ -150,6 +151,8 @@ function PlasmicMore__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -161,8 +164,7 @@ function PlasmicMore__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
@@ -205,8 +207,7 @@ function PlasmicMore__RenderFunc(props: {
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_fragment_design_system_css.plasmic_tokens
+          styleTokensClassNames
         )}
       >
         <div className={classNames(projectcss.all, sty.freeBox__zv3Qa)}>

@@ -61,10 +61,11 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: KYyoqoJ8cPoi/codeComponent
 import { Popover } from "@plasmicpkgs/radix-ui";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectcss
 import sty from "./PlasmicProfileActivity.module.css"; // plasmic-import: LIHtK_X7GpDY/css
 
@@ -163,37 +164,49 @@ function PlasmicProfileActivity__RenderFunc(props: {
         path: "allVisitOnlineCountBook.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "allVisitOnlineCountBook"
       },
       {
         path: "allVisitOnlineCountBook.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "allVisitOnlineCountBook"
       },
       {
         path: "allVisitOnlineCountBook.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "allVisitOnlineCountBook"
       },
       {
         path: "removedVisitOnlineCountBook.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "removedVisitOnlineCountBook"
       },
       {
         path: "removedVisitOnlineCountBook.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "removedVisitOnlineCountBook"
       },
       {
         path: "removedVisitOnlineCountBook.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "removedVisitOnlineCountBook"
       }
     ],
     [$props, $ctx, $refs]
@@ -204,6 +217,8 @@ function PlasmicProfileActivity__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -216,14 +231,11 @@ function PlasmicProfileActivity__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__fYPi)}
         dir={"rtl"}
       >
@@ -239,11 +251,7 @@ function PlasmicProfileActivity__RenderFunc(props: {
         >
           {"\u0641\u0639\u0627\u0644\u06cc\u062a \u0647\u0627"}
         </h2>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__a0EzN)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__a0EzN)}>
           <ApiRequest
             data-plasmic-name={"removedVisitOnlineCountBook"}
             data-plasmic-override={overrides.removedVisitOnlineCountBook}
@@ -305,6 +313,9 @@ function PlasmicProfileActivity__RenderFunc(props: {
                 throw e;
               }
             })()}
+            ref={ref => {
+              $refs["removedVisitOnlineCountBook"] = ref;
+            }}
             url={"https://apigw.paziresh24.com/v2/appointments/count"}
           />
 
@@ -368,6 +379,9 @@ function PlasmicProfileActivity__RenderFunc(props: {
                 throw e;
               }
             })()}
+            ref={ref => {
+              $refs["allVisitOnlineCountBook"] = ref;
+            }}
             url={"https://apigw.paziresh24.com/v2/appointments/count"}
           />
 
@@ -384,11 +398,7 @@ function PlasmicProfileActivity__RenderFunc(props: {
               throw e;
             }
           })() ? (
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox___6Sb1M)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox___6Sb1M)}>
               <Icon9Icon
                 className={classNames(projectcss.all, sty.svg__idGbo)}
                 role={"img"}
@@ -420,23 +430,15 @@ function PlasmicProfileActivity__RenderFunc(props: {
                   }}
                 />
               </div>
-            </Stack__>
+            </div>
           ) : null}
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__chLj)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__chLj)}>
             <Icon10Icon
               className={classNames(projectcss.all, sty.svg__jfAu9)}
               role={"img"}
             />
 
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__s7TW)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__s7TW)}>
               {(() => {
                 try {
                   return (
@@ -568,8 +570,7 @@ function PlasmicProfileActivity__RenderFunc(props: {
                   projectcss.root_reset,
                   projectcss.plasmic_default_styles,
                   projectcss.plasmic_mixins,
-                  projectcss.plasmic_tokens,
-                  plasmic_fragment_design_system_css.plasmic_tokens
+                  styleTokensClassNames
                 )}
                 trigger={true}
               >
@@ -582,13 +583,9 @@ function PlasmicProfileActivity__RenderFunc(props: {
                   />
                 </div>
               </Popover>
-            </Stack__>
-          </Stack__>
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox___7Mrs)}
-          >
+            </div>
+          </div>
+          <div className={classNames(projectcss.all, sty.freeBox___7Mrs)}>
             <Icon15Icon
               className={classNames(projectcss.all, sty.svg___6IqcG)}
               role={"img"}
@@ -617,9 +614,9 @@ function PlasmicProfileActivity__RenderFunc(props: {
                 })()}
               </React.Fragment>
             </div>
-          </Stack__>
-        </Stack__>
-      </Stack__>
+          </div>
+        </div>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -660,15 +657,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicProfileActivity__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicProfileActivity__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicProfileActivity__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicProfileActivity__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
