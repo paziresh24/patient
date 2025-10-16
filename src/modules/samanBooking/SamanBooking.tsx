@@ -64,10 +64,7 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
   const nearestAvailableTime = in_person_availability?.nearest_available_time || online_visit_availability?.nearest_available_time;
 
   // Check if there are multiple centers available
-  const hasMultipleCenters =
-    centers &&
-    // .filter(center => center.availability_status.nearest_available_time)
-    centers.length > 1;
+  const hasMultipleCenters = centers && centers.filter(center => center.availability_status.nearest_available_time).length > 1;
 
   const navigateToBooking = () => {
     const params = new URLSearchParams();
