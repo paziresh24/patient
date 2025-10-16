@@ -8,8 +8,6 @@ import { splunkInstance } from '@/common/services/splunk';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import { handleSsrError } from '@/common/utils/handleSsrError';
 import { withCSR } from '@/common/hoc/withCsr';
-import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
-import { GrowthBook } from '@growthbook/growthbook-react';
 
 export const getProfileServerSideProps: GetServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
@@ -22,27 +20,17 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     const slug = decodeURIComponent(rawSlug as string);
     const university = themeConfing?.partnerKey as string;
 
-    const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-    const growthbook = new GrowthBook(growthbookContext);
-    growthbook.setAttributes({ slug });
-    await growthbook.loadFeatures({ timeout: 500 });
-
     try {
-      const useNewDoctorExpertiseAPI = growthbook.isOn('doctor_expertise_for_new_profileapi');
-      const useNewDoctorImageAPI = growthbook.isOn('doctor_image_for_new_profileapi');
-      const useNewDoctorBiographyAPI = growthbook.isOn('doctor_bio_for_new_profileapi');
-      const useNewDoctorCentersAPI = growthbook.isOn('doctor_centers_for_new_profileapi');
-      const useNewDoctorGalleryAPI = growthbook.isOn('doctor_galery_for_new_profileapi');
       
       console.log('🔍 Server-side feature flags for slug:', slug);
       
       const finalProps = await getAggregatedProfileData(slug, university, true, {
-        useNewDoctorFullNameAPI: growthbook.isOn('doctor_fullname_for_new_profileapi'),
-        useNewDoctorExpertiseAPI: useNewDoctorExpertiseAPI,
-        useNewDoctorImageAPI: useNewDoctorImageAPI,
-        useNewDoctorBiographyAPI: useNewDoctorBiographyAPI,
-        useNewDoctorCentersAPI: useNewDoctorCentersAPI,
-        useNewDoctorGalleryAPI: useNewDoctorGalleryAPI,
+        useNewDoctorFullNameAPI: true,
+        useNewDoctorExpertiseAPI: true,
+        useNewDoctorImageAPI: true,
+        useNewDoctorBiographyAPI: true,
+        useNewDoctorCentersAPI: true,
+        useNewDoctorGalleryAPI: true,
       });
 
       return {
