@@ -4120,9 +4120,8 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/paziresh_24_profile/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/paziresh_24_profile/plasmic.tsx"
     },
     {
       "projectId": "6HBcNwr8dz9LuS1Qe36xa5",

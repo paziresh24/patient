@@ -63,12 +63,11 @@ import More from "../../More"; // plasmic-import: _AH4Ju8JTju3/component
 import ProfileActions from "../../ProfileActions"; // plasmic-import: VtINgkEb27Pn/component
 import ProfileInfo from "../../ProfileInfo"; // plasmic-import: rFaRrp2J8jq8/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
-
-import { useScreenVariants as useScreenVariantsbr2UhI7UlpvR } from "../fragment_icons/PlasmicGlobalVariant__Screen"; // plasmic-import: BR2UhI7ulpvR/globalVariant
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectcss
 import sty from "./PlasmicProfileHead.module.css"; // plasmic-import: fKBGdItR62E2/css
 
@@ -166,38 +165,27 @@ function PlasmicProfileHead__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const globalVariants = ensureGlobalVariants({
-    screen: useScreenVariantsbr2UhI7UlpvR()
-  });
+  const globalVariants = _useGlobalVariants();
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__zmn0Z)}
-      >
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__exjNw)}
-        >
+      <div className={classNames(projectcss.all, sty.freeBox__zmn0Z)}>
+        <div className={classNames(projectcss.all, sty.freeBox__exjNw)}>
           <div className={classNames(projectcss.all, sty.freeBox__tuVqM)}>
             <div
               data-plasmic-name={"viewCount"}
@@ -277,7 +265,7 @@ function PlasmicProfileHead__RenderFunc(props: {
               })()}
             />
           </div>
-        </Stack__>
+        </div>
         <ProfileInfo
           data-plasmic-name={"profileInfo"}
           data-plasmic-override={overrides.profileInfo}
@@ -349,9 +337,7 @@ function PlasmicProfileHead__RenderFunc(props: {
           })()}
         />
 
-        <Stack__
-          as={"div"}
-          hasGap={true}
+        <div
           className={classNames(
             projectcss.all,
             sty.freeBox__ekp4F,
@@ -403,14 +389,14 @@ function PlasmicProfileHead__RenderFunc(props: {
               </div>
             );
           })}
-        </Stack__>
+        </div>
         <div className={classNames(projectcss.all, sty.freeBox__k5Fnv)}>
           {renderPlasmicSlot({
             defaultContents: null,
             value: args.children
           })}
         </div>
-      </Stack__>
+      </div>
       <div className={classNames(projectcss.all, sty.freeBox__dtZp8)}>
         <Button
           children2={
@@ -502,7 +488,7 @@ function PlasmicProfileHead__RenderFunc(props: {
           }}
         />
       </div>
-    </Stack__>
+    </div>
   ) as React.ReactElement | null;
 }
 
