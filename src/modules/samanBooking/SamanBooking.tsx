@@ -18,9 +18,15 @@ interface AvailabilityData {
   nearest_available_time: string | null;
 }
 
+interface Center {
+  id: string;
+  availability_status: AvailabilityData;
+}
+
 interface AvailabilityResponse {
   in_person_availability: AvailabilityData;
   online_visit_availability: AvailabilityData;
+  centers: Center[];
 }
 
 const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
@@ -49,7 +55,7 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
     return <Skeleton w="100%" h="120px" rounded="lg" />;
   }
 
-  const { in_person_availability, online_visit_availability } = availabilityData ?? {};
+  const { in_person_availability, online_visit_availability, centers } = availabilityData ?? {};
 
   // Check if any type of booking is available
   const isAnyBookingAvailable = in_person_availability?.booking_available || online_visit_availability?.booking_available;
@@ -57,12 +63,30 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
   // Get the nearest available time from either type
   const nearestAvailableTime = in_person_availability?.nearest_available_time || online_visit_availability?.nearest_available_time;
 
+  // Check if there are multiple centers available
+  const hasMultipleCenters =
+    centers &&
+    // .filter(center => center.availability_status.nearest_available_time)
+    centers.length > 1;
+
+  const navigateToBooking = () => {
+    const params = new URLSearchParams();
+    Object.entries(router.query).forEach(([key, value]) => {
+      params.append(key, value as string);
+    });
+    router.push(`/booking/${slug}?${params.toString()}`);
+  };
+
   if (!in_person_availability?.booking_available) {
     return (
       <div className="flex flex-col space-y-3">
         {!isAnyBookingAvailable && !nearestAvailableTime && <InActiveDoctor displayName={displayName} />}
         {!in_person_availability?.booking_available && in_person_availability?.nearest_available_time && (
-          <FutureBookingDoctor availableTime={in_person_availability.nearest_available_time || ''} />
+          <FutureBookingDoctor
+            availableTime={in_person_availability.nearest_available_time || ''}
+            hasMultipleCenters={hasMultipleCenters}
+            onNavigateToBooking={navigateToBooking}
+          />
         )}
       </div>
     );
@@ -96,13 +120,9 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
         actions: [
           {
             text: 'دریافت نوبت',
-            onClick: () => {
-              const params = new URLSearchParams();
-              // append current query params
-              router.push(`/booking/${slug}?${params.toString()}`);
-            },
+            onClick: navigateToBooking,
           },
-        ],
+        ].filter(Boolean),
       }}
     />
   );
