@@ -6,6 +6,7 @@ import InActiveDoctor from './inActiveDoctor';
 import FutureBookingDoctor from './FutureBookingDoctor';
 import ServiceCard from '../profile/components/serviceCard';
 import { formatTime } from '@/common/utils/formatTime';
+import { getAverageWaitingTime } from '../profile/functions/getAverageWaitingTime';
 
 interface SamanBookingProps {
   displayName: string;
@@ -51,11 +52,47 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
     enabled: !!slug,
   });
 
+  const { data: averageWaitingTimeData, isLoading: isWaitingTimeLoading } = useQuery({
+    queryKey: ['average-waiting-time', slug],
+    queryFn: () => getAverageWaitingTime({ slug }),
+    enabled: !!slug,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
   if (isLoading) {
     return <Skeleton w="100%" h="120px" rounded="lg" />;
   }
 
   const { in_person_availability, online_visit_availability, centers } = availabilityData ?? {};
+
+  // Sort centers by nearest_available_time
+  const sortedCenters =
+    centers?.sort((a, b) => {
+      const timeA = a.availability_status.nearest_available_time;
+      const timeB = b.availability_status.nearest_available_time;
+
+      if (!timeA && !timeB) return 0;
+      if (!timeA) return 1;
+      if (!timeB) return -1;
+
+      return new Date(timeA).getTime() - new Date(timeB).getTime();
+    }) || [];
+
+  // Sort averageWaitingTimeData by sortedCenters order and get the first one
+  const sortedWaitingTimeData = averageWaitingTimeData?.sort((a: any, b: any) => {
+    const centerAIndex = sortedCenters.findIndex(center => center.id === a.center_id);
+    const centerBIndex = sortedCenters.findIndex(center => center.id === b.center_id);
+
+    // If center not found in sortedCenters, put it at the end
+    if (centerAIndex === -1) return 1;
+    if (centerBIndex === -1) return -1;
+
+    return centerAIndex - centerBIndex;
+  });
+
+  // Use the first waiting time from sorted data
+  const averageWaitingTime = sortedWaitingTimeData?.[0]?.avg_waiting_time;
+  const formattedWaitingTime = averageWaitingTime ? Math.ceil(averageWaitingTime / 5) * 5 + ' دقیقه' : null;
 
   // Check if any type of booking is available
   const isAnyBookingAvailable = in_person_availability?.booking_available || online_visit_availability?.booking_available;
@@ -111,6 +148,7 @@ const SamanBooking = ({ slug, displayName }: SamanBookingProps) => {
           'امکان دریافت زودترین نوبت',
           in_person_availability?.nearest_time_slot &&
             `اولین نوبت خالی: <strong>${formatTime(in_person_availability?.nearest_time_slot)}</strong>`,
+          formattedWaitingTime && `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>${formattedWaitingTime}</strong>`,
         ].filter(Boolean) as string[],
       }}
       footer={{
