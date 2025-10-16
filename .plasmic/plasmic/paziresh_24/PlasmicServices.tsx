@@ -59,11 +59,9 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: J-umObTYZwAG/codeComponent
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -113,8 +111,7 @@ export const PlasmicServices__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicServices__OverridesType = {
   root?: Flex__<"div">;
-  apiRequest2?: Flex__<typeof ApiRequest>;
-  apiRequest?: Flex__<typeof ApiRequest>;
+  button?: Flex__<typeof Button>;
 };
 
 export interface DefaultServicesProps {
@@ -178,54 +175,6 @@ function PlasmicServices__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.type
-      },
-      {
-        path: "apiRequest.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest2.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest2"
-      },
-      {
-        path: "apiRequest2.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest2"
-      },
-      {
-        path: "apiRequest2.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest2"
       }
     ],
     [$props, $ctx, $refs]
@@ -238,8 +187,6 @@ function PlasmicServices__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_fragment_design_system =
-    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -253,7 +200,6 @@ function PlasmicServices__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_fragment_design_system,
         sty.root,
         {
           [sty.roottype_onlineVisit]: hasVariant($state, "type", "onlineVisit")
@@ -768,238 +714,9 @@ function PlasmicServices__RenderFunc(props: {
             </div>
           ) : null}
         </div>
-        <div
-          className={classNames(projectcss.all, sty.freeBox___6ASCm, {
-            [sty.freeBoxtype_onlineVisit___6ASCm7QAlK]: hasVariant(
-              $state,
-              "type",
-              "onlineVisit"
-            )
-          })}
-        >
-          <ApiRequest
-            data-plasmic-name={"apiRequest2"}
-            data-plasmic-override={overrides.apiRequest2}
-            className={classNames("__wab_instance", sty.apiRequest2, {
-              [sty.apiRequest2type_onlineVisit]: hasVariant(
-                $state,
-                "type",
-                "onlineVisit"
-              )
-            })}
-            errorDisplay={null}
-            loadingDisplay={null}
-            method={"GET"}
-            onError={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["apiRequest2", "error"]).apply(
-                null,
-                eventArgs
-              );
-            }}
-            onLoading={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "apiRequest2",
-                "loading"
-              ]).apply(null, eventArgs);
-            }}
-            onSuccess={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["apiRequest2", "data"]).apply(
-                null,
-                eventArgs
-              );
-            }}
-            params={(() => {
-              try {
-                return {
-                  where: `${$props.seo.slug}`
-                };
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
-            ref={ref => {
-              $refs["apiRequest2"] = ref;
-            }}
-            url={"https://apigw.paziresh24.com/ravi/v1/came_sensore"}
-          >
-            <Button
-              children2={
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__rZHtS,
-                    {
-                      [sty.texttype_onlineVisit__rZHtS7QAlK]: hasVariant(
-                        $state,
-                        "type",
-                        "onlineVisit"
-                      )
-                    }
-                  )}
-                >
-                  {
-                    "\u062f\u0642\u062a \u06a9\u0646\u06cc\u062f: \u067e\u0632\u0634\u06a9 \u0647\u0646\u0648\u0632 \u0628\u06cc\u0645\u0627\u0631 \u0642\u0628\u0644\u06cc \u0631\u0627 \u0648\u06cc\u0632\u06cc\u062a \u0646\u06a9\u0631\u062f\u0647 \u0627\u0633\u062a."
-                  }
-                </div>
-              }
-              className={classNames("__wab_instance", sty.button__vm8Im, {
-                [sty.buttontype_onlineVisit__vm8Im7QAlK]: hasVariant(
-                  $state,
-                  "type",
-                  "onlineVisit"
-                )
-              })}
-              color={"softYellow"}
-              endIcon={null}
-              startIcon={null}
-            />
-          </ApiRequest>
-        </div>
-        <ApiRequest
-          data-plasmic-name={"apiRequest"}
-          data-plasmic-override={overrides.apiRequest}
-          className={classNames("__wab_instance", sty.apiRequest, {
-            [sty.apiRequesttype_onlineVisit]: hasVariant(
-              $state,
-              "type",
-              "onlineVisit"
-            )
-          })}
-          errorDisplay={null}
-          loadingDisplay={null}
-          method={
-            hasVariant($state, "type", "onlineVisit") &&
-            hasVariant(globalVariants, "screen", "mobileOnly")
-              ? "GET"
-              : "GET"
-          }
-          onError={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          onLoading={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          onSuccess={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          params={
-            hasVariant($state, "type", "onlineVisit") &&
-            hasVariant(globalVariants, "screen", "mobileOnly")
-              ? (() => {
-                  try {
-                    return {
-                      where: `(slug,eq,${$props.seo.slug})`
-                    };
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()
-              : undefined
-          }
-          ref={ref => {
-            $refs["apiRequest"] = ref;
-          }}
-          url={
-            hasVariant($state, "type", "onlineVisit") &&
-            hasVariant(globalVariants, "screen", "mobileOnly")
-              ? "https://apigw.paziresh24.com/ravi/v1/anomali"
-              : undefined
-          }
-        >
-          {(
-            hasVariant($state, "type", "onlineVisit") &&
-            hasVariant(globalVariants, "screen", "mobileOnly")
-              ? (() => {
-                  try {
-                    return (() => {
-                      const currentDate = new globalThis.Date();
-                      const currentHour = currentDate.getHours();
-                      const currentMinute = currentDate.getMinutes();
-                      function isInTimeRange(hour) {
-                        const startHour = hour;
-                        const endHour = hour + 1;
-                        if (
-                          (currentHour === startHour && currentMinute >= 0) ||
-                          (currentHour === endHour && currentMinute === 0) ||
-                          (currentHour > startHour && currentHour < endHour)
-                        ) {
-                          return true;
-                        }
-                        return false;
-                      }
-                      const result =
-                        $state.apiRequest.data?.list?.[0]?.anomali?.data?.some(
-                          item => isInTimeRange(item.hour)
-                        );
-                      return result;
-                    })();
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })()
-              : true
-          ) ? (
-            <Button
-              children2={
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text___8Cplp,
-                    {
-                      [sty.texttype_onlineVisit___8Cplp7QAlK]: hasVariant(
-                        $state,
-                        "type",
-                        "onlineVisit"
-                      )
-                    }
-                  )}
-                >
-                  {
-                    " \u0632\u0645\u0627\u0646 \u067e\u0627\u0633\u062e\u06af\u0648\u06cc\u06cc \u067e\u0632\u0634\u06a9\u060c \u0628\u06cc\u0634\u062a\u0631 \u0627\u0632 \u0632\u0645\u0627\u0646 \u0627\u0646\u062a\u0638\u0627\u0631 \u062f\u0631\u062c \u0634\u062f\u0647 \u0645\u06cc \u0628\u0627\u0634\u062f."
-                  }
-                </div>
-              }
-              className={classNames("__wab_instance", sty.button__hPh8A, {
-                [sty.buttontype_onlineVisit__hPh8A7QAlK]: hasVariant(
-                  $state,
-                  "type",
-                  "onlineVisit"
-                )
-              })}
-              color={"softRed"}
-            />
-          ) : null}
-        </ApiRequest>
         <Button
+          data-plasmic-name={"button"}
+          data-plasmic-override={overrides.button}
           children2={
             hasVariant($state, "type", "onlineVisit") &&
             hasVariant(globalVariants, "screen", "mobileOnly") ? (
@@ -1038,8 +755,8 @@ function PlasmicServices__RenderFunc(props: {
               "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a"
             )
           }
-          className={classNames("__wab_instance", sty.button___3VCfh, {
-            [sty.buttontype_onlineVisit___3VCfh7QAlK]: hasVariant(
+          className={classNames("__wab_instance", sty.button, {
+            [sty.buttontype_onlineVisit]: hasVariant(
               $state,
               "type",
               "onlineVisit"
@@ -1170,17 +887,15 @@ function PlasmicServices__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest2", "apiRequest"],
-  apiRequest2: ["apiRequest2"],
-  apiRequest: ["apiRequest"]
+  root: ["root", "button"],
+  button: ["button"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  apiRequest2: typeof ApiRequest;
-  apiRequest: typeof ApiRequest;
+  button: typeof Button;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1243,8 +958,7 @@ export const PlasmicServices = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    apiRequest2: makeNodeComponent("apiRequest2"),
-    apiRequest: makeNodeComponent("apiRequest"),
+    button: makeNodeComponent("button"),
 
     // Metadata about props expected for PlasmicServices
     internalVariantProps: PlasmicServices__VariantProps,
