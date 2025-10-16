@@ -74,7 +74,7 @@ export const Aside = (data: any) => {
     },
     {
       id: 'book-me',
-      isShow: centers?.length > 0 && !isSamanBookingEnabled,
+      isShow: centers?.length > 0,
       function: () => {
         return {
           id: information.id,
