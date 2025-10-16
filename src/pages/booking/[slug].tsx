@@ -1,4 +1,4 @@
-import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
+import { useGetProfileData, getProfileData } from '@/common/apis/services/profile/getFullProfile';
 import Loading from '@/common/components/atom/loading/loading';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
@@ -183,7 +183,9 @@ Booking.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext) => {
-    const { id, center_id } = context.query;
+    const { id, center_id, slug, centerId } = context.query;
+
+    // Handle receipt redirect
     if (id && center_id) {
       return {
         redirect: {
@@ -191,6 +193,27 @@ export const getServerSideProps = withCSR(
           destination: `/receipt/${center_id}/${id}`,
         },
       };
+    }
+
+    // Handle single center redirect - server-side
+    if (slug && !centerId) {
+      try {
+        const profileData = await getProfileData({ slug: slug.toString() });
+        const centers = profileData?.data?.centers || [];
+
+        // If there's only one center, redirect to it on the server
+        if (centers.length === 1) {
+          return {
+            redirect: {
+              statusCode: 302,
+              destination: `/booking/${encodeURIComponent(slug.toString())}?centerId=${centers[0].id}`,
+            },
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching profile data for single center redirect:', error);
+        // Continue with normal flow if there's an error
+      }
     }
 
     return {

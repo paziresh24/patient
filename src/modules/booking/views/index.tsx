@@ -518,9 +518,12 @@ const BookingSteps = (props: BookingStepsProps) => {
     }
   }, [isLogin, step, center, service, slug]);
 
-  if (step === 'SELECT_CENTER' && centers.length === 1) {
-    return router.replace(`/booking/${slug}?centerId=${centers[0].id}`);
-  }
+  // Handle single center redirect for SPA navigation (client-side)
+  useEffect(() => {
+    if (step === 'SELECT_CENTER' && centers.length === 1 && !router.query.centerId) {
+      router.replace(`/booking/${slug}?centerId=${centers[0].id}`, undefined, { shallow: true });
+    }
+  }, [step, centers, slug, router]);
 
   return (
     <div className={classNames('p-5 bg-white rounded-lg', className)}>
