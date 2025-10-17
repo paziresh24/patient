@@ -6,7 +6,7 @@ import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureValue, useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { uniqMessengers } from '../functions/uniqMessengers';
@@ -29,6 +29,9 @@ import SelectService from './selectService';
 import SelectTimeWrapper from './selectTime/wrapper';
 import SelectUserWrapper from './selectUser/wrapper';
 import TurnRequest, { TurnRequestInformation } from './turnRequest/turnRequest';
+
+// SamanBooking Components
+import { SamanBookingFlow } from '@/modules/samanBooking';
 
 // Analytics
 import { sendGaEvent } from '@/common/services/sendGaEvent';
@@ -150,6 +153,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     slugs: [],
   });
   const shouldShowOnlineVistRecommendModal = onlineVisitDoctorList?.slugs?.includes?.(profile?.slug);
+  const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
 
   const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
   const shouldShowMessengers = doctorMessenger.length > 1 && center?.id === CENTERS.CONSULT;
@@ -528,34 +532,68 @@ const BookingSteps = (props: BookingStepsProps) => {
   return (
     <div className={classNames('p-5 bg-white rounded-lg', className)}>
       {step === 'SELECT_CENTER' && (
-        <Wrapper
-          title="انتخاب مرکز درمانی"
-          Component={SelectCenter}
-          data={{
-            loading: isLoading && !profile,
-            centers: reformattedCentersProperty({ centers, displayName: profile?.display_name }),
-            doctorName: profile?.display_name,
-          }}
-          nextStep={(center: Center) => {
-            const selectedCenter = centers.find((c: { id: string }) => c.id === center.id);
-            sendSelectCenterEvent({
-              center: selectedCenter,
-              doctorInfo: reformattedDoctorInfoForEvent({ center: selectedCenter, doctor: profile }),
-            });
-            setCenter(selectedCenter);
-            if (selectedCenter.services.length === 1) {
-              const service = selectedCenter.services[0];
-              const payload = {
-                centerId: center.id,
-                serviceId: service.id,
-              };
-              setService(service);
-              if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
-              return handleChangeStep('SELECT_TIME', payload);
-            }
-            handleChangeStep('SELECT_SERVICES', { centerId: center.id });
-          }}
-        />
+        <>
+          {isSamanBookingEnabled ? (
+            <SamanBookingFlow
+              slug={slug}
+              displayName={profile?.display_name || ''}
+              university={router.query.university as string}
+              onCenterSelect={center => {
+                // Find the corresponding center in the existing centers data
+                const selectedCenter = centers.find((c: any) => c.id === center.id);
+                if (selectedCenter) {
+                  sendSelectCenterEvent({
+                    center: selectedCenter,
+                    doctorInfo: reformattedDoctorInfoForEvent({ center: selectedCenter, doctor: profile }),
+                  });
+                  setCenter(selectedCenter);
+
+                  // Navigate to the next step based on services
+                  if (selectedCenter.services.length === 1) {
+                    const service = selectedCenter.services[0];
+                    const payload = {
+                      centerId: center.id,
+                      serviceId: service.id,
+                    };
+                    setService(service);
+                    if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
+                    return handleChangeStep('SELECT_TIME', payload);
+                  }
+                  handleChangeStep('SELECT_SERVICES', { centerId: center.id });
+                }
+              }}
+            />
+          ) : (
+            <Wrapper
+              title="انتخاب مرکز درمانی"
+              Component={SelectCenter}
+              data={{
+                loading: isLoading && !profile,
+                centers: reformattedCentersProperty({ centers, displayName: profile?.display_name }),
+                doctorName: profile?.display_name,
+              }}
+              nextStep={(center: Center) => {
+                const selectedCenter = centers.find((c: { id: string }) => c.id === center.id);
+                sendSelectCenterEvent({
+                  center: selectedCenter,
+                  doctorInfo: reformattedDoctorInfoForEvent({ center: selectedCenter, doctor: profile }),
+                });
+                setCenter(selectedCenter);
+                if (selectedCenter.services.length === 1) {
+                  const service = selectedCenter.services[0];
+                  const payload = {
+                    centerId: center.id,
+                    serviceId: service.id,
+                  };
+                  setService(service);
+                  if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
+                  return handleChangeStep('SELECT_TIME', payload);
+                }
+                handleChangeStep('SELECT_SERVICES', { centerId: center.id });
+              }}
+            />
+          )}
+        </>
       )}
       {step === 'SELECT_SERVICES' && (
         <Wrapper
