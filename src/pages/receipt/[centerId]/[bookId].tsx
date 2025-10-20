@@ -39,6 +39,7 @@ import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/s
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
+import ReceiptError from '@/modules/receipt/components/ReceiptError';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import moment from 'jalali-moment';
@@ -83,6 +84,18 @@ const Receipt = () => {
     center_id: centerId as string,
     pincode: pincode as string,
   });
+
+  // Error handling function
+  const getErrorStatusCode = () => {
+    if (getReceiptDetails.error && axios.isAxiosError(getReceiptDetails.error)) {
+      return getReceiptDetails.error.response?.status;
+    }
+    return null;
+  };
+
+  const handleRetry = () => {
+    getReceiptDetails.refetch();
+  };
   const pdfGenerator = usePdfGenerator({
     ref: 'receipt',
     fileName: 'Paziresh24-Receipt',
@@ -237,7 +250,43 @@ const Receipt = () => {
         },
         onError: (error: any) => {
           if (axios.isAxiosError(error)) {
-            toast.error(error.response?.data?.message);
+            const statusCode = error.response?.status;
+            const errorMessage = error.response?.data?.message;
+            
+            // Handle specific error codes for remove book action
+            switch (statusCode) {
+              case 400:
+                toast.error('درخواست لغو نوبت نامعتبر است');
+                break;
+              case 401:
+                toast.error('برای لغو نوبت باید وارد حساب کاربری خود شوید');
+                break;
+              case 403:
+                toast.error('شما دسترسی لازم برای لغو این نوبت را ندارید');
+                break;
+              case 404:
+                toast.error('نوبت مورد نظر یافت نشد');
+                break;
+              case 409:
+                toast.error('امکان لغو این نوبت وجود ندارد');
+                break;
+              case 422:
+                toast.error('اطلاعات ارسالی معتبر نیست');
+                break;
+              case 429:
+                toast.error('تعداد درخواست‌های شما از حد مجاز بیشتر است');
+                break;
+              case 500:
+              case 502:
+              case 503:
+              case 504:
+                toast.error('مشکلی در سرور رخ داده است. لطفاً بعداً تلاش کنید');
+                break;
+              default:
+                toast.error(errorMessage || 'خطایی در لغو نوبت رخ داده است');
+            }
+          } else {
+            toast.error('خطایی در لغو نوبت رخ داده است');
           }
         },
       },
@@ -415,6 +464,25 @@ const Receipt = () => {
       });
     };
   }, [bookDetailsData?.id]);
+
+  // Show error component if there's an error
+  if (getReceiptDetails.isError) {
+    const errorStatusCode = getErrorStatusCode();
+    return (
+      <>
+        <Seo title="خطا در بارگذاری رسید نوبت" noIndex />
+        <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
+          <div className="w-full md:basis-4/6">
+            <ReceiptError 
+              statusCode={errorStatusCode || 500} 
+              message={getReceiptDetails.error?.message}
+              onRetry={handleRetry}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
