@@ -68,7 +68,14 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               receiptLink: turnData?.share_url,
               centerId: centerId,
               patientInfo: {
-                name: `${turnData?.patient?.name} ${turnData?.patient?.family}`,
+                name: (() => {
+                  const name = turnData?.patient?.name?.trim() || '';
+                  const family = turnData?.patient?.family?.trim() || '';
+                  if (!name && !family) return '';
+                  if (!name) return family;
+                  if (!family) return name;
+                  return `${name} ${family}`;
+                })(),
                 cell: turnData?.patient?.cell,
                 nationalCode: turnData?.patient?.national_code,
                 selectServeis: turnData?.services?.[0]?.title,

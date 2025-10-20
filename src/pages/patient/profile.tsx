@@ -73,7 +73,14 @@ export const PatinetProfile = () => {
         >
           <Avatar
             className="transition-all brightness-50 hover:brightness-100"
-            name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`}
+            name={(() => {
+              const name = userInfo.name?.trim() || '';
+              const family = userInfo.family?.trim() || '';
+              if (!name && !family) return '';
+              if (!name) return family;
+              if (!family) return name;
+              return `${name} ${family}`;
+            })()}
             src={userInfo.image ?? ''}
             width={120}
             height={120}

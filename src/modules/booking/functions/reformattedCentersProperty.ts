@@ -7,7 +7,10 @@ export const reformattedCentersProperty = ({ centers, displayName }: { centers: 
         const freeturnsInfo = center.freeturns_info?.[0];
         return {
           ...center,
-          name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.center_type === 1 ? `مطب ${displayName}` : center.name,
+          name: center.id === CENTERS.CONSULT ? 'ویزیت آنلاین' : center.center_type === 1 ? (() => {
+            const safeDisplayName = displayName?.trim() || '';
+            return safeDisplayName ? `مطب ${safeDisplayName}` : 'مطب';
+          })() : center.name,
           address: center.id === CENTERS.CONSULT ? '' : center.address,
           freeturn: center.freeturn_text,
           type: center.id === '5532' ? 'consult' : center.center_type === 1 ? 'office' : 'hospital',

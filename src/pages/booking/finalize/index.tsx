@@ -58,7 +58,16 @@ const Booking = () => {
       });
   }, [bookId, isLogin, userPending]);
 
-  const doctorName = `${bookDetailsData?.doctor_name} ${bookDetailsData?.doctor_family}`;
+  const doctorName = (() => {
+    const name = bookDetailsData?.doctor_name?.trim() || '';
+    const family = bookDetailsData?.doctor_family?.trim() || '';
+    
+    if (!name && !family) return '';
+    if (!name) return family;
+    if (!family) return name;
+    
+    return `${name} ${family}`;
+  })();
 
   const isLoading = getBookDetails.isLoading || getBookDetails?.isIdle || onlineChannelLoading;
 
