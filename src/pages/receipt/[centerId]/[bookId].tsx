@@ -475,7 +475,7 @@ const Receipt = () => {
           <div className="w-full md:basis-4/6">
             <ReceiptError 
               statusCode={errorStatusCode || 500} 
-              message={getReceiptDetails.error?.message}
+              message={getReceiptDetails.error && typeof getReceiptDetails.error === 'object' && 'message' in getReceiptDetails.error ? String((getReceiptDetails.error as any).message) : undefined}
               onRetry={handleRetry}
             />
           </div>
