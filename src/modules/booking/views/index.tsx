@@ -518,10 +518,6 @@ const BookingSteps = (props: BookingStepsProps) => {
     }
   }, [isLogin, step, center, service, slug]);
 
-  if (step === 'SELECT_CENTER' && centers.length === 1) {
-    return router.replace(`/booking/${slug}?centerId=${centers[0].id}`);
-  }
-
   return (
     <div className={classNames('p-5 bg-white rounded-lg', className)}>
       {step === 'SELECT_CENTER' && (
