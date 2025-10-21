@@ -17,7 +17,6 @@ import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import orderBy from 'lodash/orderBy';
 import SelectService from '@/modules/booking/views/selectService';
 import SelectCenter from '@/modules/booking/views/selectCenter';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
 interface PresenceProps {
   centers: any[];
@@ -27,8 +26,6 @@ interface PresenceProps {
 }
 
 export const Presence = memo((props: PresenceProps) => {
-  const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
-
   const { centers, waitingTime, onBook, displayName } = props;
   const customise = useCustomize(state => state.customize);
   const isWebView = useWebView();
@@ -141,8 +138,6 @@ export const Presence = memo((props: PresenceProps) => {
   }
 
   const mainCenterWaitingTime = orderBy(centers, ['isDisable', o => !o.isAvailable])[0]?.waiting_time_info;
-
-  if (isSamanBookingEnabled) return null;
 
   return (
     <div>
