@@ -27,19 +27,6 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
   const encodedSlug = encodeURIComponent(slug);
   const url = `/api/doctors/${encodedSlug}`;
   
-  // Send API request start event to Splunk
-  splunkInstance('doctor-profile').sendEvent({
-    group: 'doctor_slug_api_request',
-    type: 'api_request_start',
-    event: {
-      original_slug: slug,
-      encoded_slug: encodedSlug,
-      url: url,
-      full_url: `https://drprofile.paziresh24.com${url}`,
-      timestamp: new Date().toISOString(),
-    },
-  });
-  
   try {
     const { data } = await drProfileClient.get<DoctorSlugResponse>(url, {
       timeout: 5000,
