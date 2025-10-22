@@ -47,6 +47,8 @@ Returns the correct slug to use, handling redirects automatically.
 
 All services include comprehensive Splunk logging with appropriate groups and types:
 
+- **API Request Events**: `doctor_slug_api_request`
+  - `api_request_start`: When API request starts (tracks all requests)
 - **Success Events**: `doctor_slug_validation_success`, `doctor_slug_redirect`
 - **400 Error Events**: `doctor_slug_redirect_400` (when 400 error contains redirect)
 - **Slug Not Found Events**: `doctor_slug_not_found` (when slug doesn't exist)
@@ -56,6 +58,43 @@ All services include comprehensive Splunk logging with appropriate groups and ty
   - `page_not_found_handler`: 404 from doctorSlugHandler
   - `page_not_found_catch`: 404 from catch block in doctorSlugHandler
 - **Other Error Events**: `doctor_slug_validation_error`
+
+## Splunk Queries
+
+### **شمارش کل درخواست‌ها:**
+```splunk
+index="doctor-profile" group="doctor_slug_api_request" | stats count by type
+```
+
+### **شمارش موفقیت‌ها:**
+```splunk
+index="doctor-profile" group="doctor_slug_validation_success" | stats count
+```
+
+### **شمارش redirect ها:**
+```splunk
+index="doctor-profile" group="doctor_slug_redirect" | stats count by type
+```
+
+### **شمارش خطاها:**
+```splunk
+index="doctor-profile" group="doctor_slug_validation_error" | stats count
+```
+
+### **جزئیات خطاها:**
+```splunk
+index="doctor-profile" group="doctor_slug_validation_error" | table timestamp, slug, error_message, error_status
+```
+
+### **شمارش 404 errors:**
+```splunk
+index="doctor-profile" group="doctor_profile_404" | stats count by type
+```
+
+### **تحلیل عملکرد API:**
+```splunk
+index="doctor-profile" group="doctor_slug_api_request" earliest=-24h | stats count by _time span=1h
+```
 
 ## Integration
 
