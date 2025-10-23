@@ -6,7 +6,7 @@ import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { uniqMessengers } from '../functions/uniqMessengers';
@@ -76,6 +76,7 @@ import { template, templateSettings } from 'lodash';
 import { useGetServices } from '@/common/apis/services/profile/services';
 import { toastActionble } from '@/common/utils/toastActionble';
 import useResponsive from '@/common/hooks/useResponsive';
+import { bookRequestAvailability } from '@/common/apis/services/booking/bookRequestAvailability';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -192,6 +193,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
   const { data: services } = useGetServices({ slug, center_id: center?.id }, { enabled: !!center?.id && !!service?.id });
+  const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
   useEffect(() => {
     if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
@@ -675,6 +677,33 @@ const BookingSteps = (props: BookingStepsProps) => {
             nextStep={async (intialUser: UserInfo) => {
               let user = { ...intialUser };
               if (service?.can_request) {
+                if (checkBookRequestAvailability) {
+                  try {
+                    const availabilityResponse = await bookRequestAvailability({
+                      center_id: center.id,
+                      user_center_id: service.user_center_id,
+                      service_id: service.id,
+                    });
+
+                    if (availabilityResponse.available_time) {
+                      const formattedTime = moment(availabilityResponse.available_time).locale('fa').calendar(undefined, {
+                        sameDay: '[امروز] ساعت HH:mm',
+                        nextDay: '[فردا] ساعت HH:mm',
+                        sameElse: 'jD jMMMM ساعت HH:mm',
+                      });
+                      toast.error(`در حال حاضر امکان ثبت درخواست نوبت وجود ندارد. لطفاً ${formattedTime} تلاش کنید.`);
+                      return;
+                    }
+
+                    if (!availabilityResponse.status) {
+                      toast.error('در حال حاضر امکان ثبت درخواست نوبت وجود ندارد. لطفاً چند دقیقه دیگر تلاش کنید.');
+                      return;
+                    }
+                  } catch (error) {
+                    toast.error('در حال حاضر امکان ثبت درخواست نوبت وجود ندارد. لطفاً چند دقیقه دیگر تلاش کنید.');
+                    return;
+                  }
+                }
                 setUser(user);
                 handleChangeStep('BOOK_REQUEST');
                 return;

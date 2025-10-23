@@ -1,8 +1,11 @@
 import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
+import Modal from '@/common/components/atom/modal/modal';
+import Text from '@/common/components/atom/text/text';
 import { Fragment } from '@/common/fragment';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
+import useModal from '@/common/hooks/useModal';
 import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import { isNativeWebView } from '@/common/utils/isNativeWebView';
@@ -12,8 +15,10 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
+import { useState } from 'react';
 import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
+import { bookRequestAvailability } from '@/common/apis/services/booking/bookRequestAvailability';
 import { growthbook } from 'src/pages/_app';
 import moment from 'jalali-moment';
 import { isEmpty, sortBy } from 'lodash';
@@ -57,6 +62,7 @@ export const Services = ({
   });
 
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
+  const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
   const alabilityStatus = useAvailabilityStatus(
     { user_id: doctor.user_id, center_id: centers.map(center => center.id), slug: slug },
@@ -67,6 +73,8 @@ export const Services = ({
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
   const customize = useCustomize(state => state.customize);
+  const { handleOpen: handleOpenAvailabilityModal, modalProps: availabilityModalProps } = useModal();
+  const [availabilityMessage, setAvailabilityMessage] = useState<string>('');
 
   const onEvent = ({ centerId, serviceId }: { centerId: string; serviceId: string }) => {
     splunkInstance('doctor-profile').sendEvent({
@@ -86,7 +94,7 @@ export const Services = ({
     });
   };
 
-  const handleOpenBookingPage = (
+  const handleOpenBookingPage = async (
     slug: string,
     centerId: string,
     serviceId: string,
@@ -97,6 +105,41 @@ export const Services = ({
     const isBookRequest = centers
       ?.find?.(center => center.id === centerId)
       ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
+
+    // Check book request availability if feature flag is enabled and it's a book request
+    if (isBookRequest && checkBookRequestAvailability) {
+      const userCenterId = centers
+        ?.find?.(center => center.id === centerId)
+        ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.user_center_id;
+
+      if (userCenterId) {
+        try {
+          const availabilityResponse = await bookRequestAvailability({
+            center_id: centerId,
+            user_center_id: userCenterId,
+            service_id: serviceId,
+          });
+
+          if (!availabilityResponse.status && availabilityResponse.available_time) {
+            // Format ISO time to Jalali readable format
+            const formattedTime = moment(availabilityResponse.available_time).locale('fa').calendar(undefined, {
+              sameDay: '[امروز] ساعت HH:mm',
+              nextDay: '[فردا] ساعت HH:mm',
+              sameElse: 'jD jMMMM ساعت HH:mm',
+            });
+
+            // Show message to user in modal
+            setAvailabilityMessage(`در حال حاضر امکان ثبت درخواست نوبت وجود ندارد. لطفاً ${formattedTime} تلاش کنید.`);
+            handleOpenAvailabilityModal();
+            return;
+          }
+        } catch (error) {
+          setAvailabilityMessage('در حال حاضر امکان ثبت درخواست نوبت وجود ندارد. لطفاً چند دقیقه دیگر تلاش کنید.');
+          handleOpenAvailabilityModal();
+          return;
+        }
+      }
+    }
 
     const params = {
       centerId,
@@ -220,6 +263,15 @@ export const Services = ({
           </Button>
         </div>
       )}
+
+      <Modal title="درخواست نوبت" {...availabilityModalProps} bodyClassName="space-y-3">
+        <Text fontWeight="medium" className="leading-7">
+          {availabilityMessage}
+        </Text>
+        <Button block onClick={() => availabilityModalProps.onClose()}>
+          متوجه شدم
+        </Button>
+      </Modal>
     </>
   );
 };
