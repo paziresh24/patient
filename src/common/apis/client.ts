@@ -3,6 +3,7 @@ import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { isPWA } from '../utils/isPwa';
 import { refresh } from './services/auth/refresh';
+import { isAuthenticationError } from '../utils/errorHandler';
 const { publicRuntimeConfig, serverRuntimeConfig } = getConfig();
 import http from 'http';
 import https from 'https';
@@ -123,6 +124,16 @@ clinicClient.interceptors.response.use(
     return res;
   },
   err => {
+    // Log error details for debugging
+    if (err?.response?.status === 401 || err?.response?.status === 400) {
+      console.log('API Error:', {
+        status: err.response?.status,
+        url: err.config?.url,
+        message: err.response?.data?.message,
+        isAuthError: isAuthenticationError(err),
+        timestamp: new Date().toISOString()
+      });
+    }
     return Promise.reject(err);
   },
 );
