@@ -3,6 +3,7 @@ import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import { getErrorMessage } from '@/common/utils/errorHandler';
 import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -80,33 +81,47 @@ export const OtpCode = (props: OtpCodeProps) => {
 
       postLogin && postLogin(data);
     } catch (error) {
-      toast.error((error as any).message);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     }
   };
 
   const handleReset = async () => {
     if (!shouldShowResetButton) return;
     setShouldShowResetButton(false);
-    const { data: resetPasswordRes } = await resetPassword.mutateAsync({
-      cell: +mobileNumberValue,
-      number_reset_password: retryGetPasswordNumber + 1,
-    });
-    splunkInstance('gozargah').sendEvent({
-      group: 'legacy-login-steps',
-      type: 'resend-otp-code',
-      event: {
+    
+    try {
+      const { data: resetPasswordRes } = await resetPassword.mutateAsync({
+        cell: +mobileNumberValue,
         number_reset_password: retryGetPasswordNumber + 1,
-      },
-    });
-    setRetryGetPasswordNumber(prev => ++prev);
-    if (resetPasswordRes.status === ClinicStatus.SUCCESS) {
-      return;
+      });
+      
+      splunkInstance('gozargah').sendEvent({
+        group: 'legacy-login-steps',
+        type: 'resend-otp-code',
+        event: {
+          number_reset_password: retryGetPasswordNumber + 1,
+        },
+      });
+      
+      setRetryGetPasswordNumber(prev => ++prev);
+      
+      if (resetPasswordRes.status === ClinicStatus.SUCCESS) {
+        return;
+      }
+      
+      if (resetPasswordRes.status === 39) {
+        const errorMessage = resetPasswordRes.message || 'خطا در ارسال مجدد کد تایید';
+        toast.error(errorMessage);
+        return setStep('otp_code');
+      }
+      
+      const errorMessage = resetPasswordRes.message || 'خطا در ارسال مجدد کد تایید';
+      toast.error(errorMessage);
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     }
-    if (resetPasswordRes.status === 39) {
-      toast.error(resetPasswordRes.message);
-      return setStep('otp_code');
-    }
-    toast.error(resetPasswordRes.message);
   };
 
   return (

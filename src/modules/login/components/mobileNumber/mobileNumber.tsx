@@ -5,6 +5,7 @@ import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
+import { getErrorMessage } from '@/common/utils/errorHandler';
 import { digitsFaToEn } from '@persian-tools/persian-tools';
 import Trans from 'next-translate/Trans';
 import useTranslation from 'next-translate/useTranslation';
@@ -47,31 +48,47 @@ export const MobileNumber = (props: MobileNumberProps) => {
     e.preventDefault();
     if (!mobileNumberValue) {
       toast.error('لطفا شماره موبایل را وارد کنید.');
+      return;
     }
     if (!phoneNumberValidator(mobileNumberValue)) {
       setIsFieldError(true);
       return;
     }
-    splunkInstance('gozargah').sendEvent({
-      group: 'legacy-login-steps',
-      type: 'submit-mobile-number',
-    });
-    const { data: registerRes } = await register.mutateAsync({
-      cell: +mobileNumberValue,
-    });
-    if (registerRes.status === 0) {
-      return toast.error(registerRes.details['تلفن همراه']);
-    }
-    const { data: resetPasswordRes } = await resetPassword.mutateAsync({
-      cell: +mobileNumberValue,
-    });
-    if (resetPasswordRes.status === ClinicStatus.SUCCESS || resetPasswordRes.status === 39) {
-      if (resetPasswordRes.status === 39) toast.error(resetPasswordRes.message);
-      if (resetPasswordRes?.result?.has_static_password) return setStep('password');
-      return setStep('otp_code');
-    }
+    
+    try {
+      splunkInstance('gozargah').sendEvent({
+        group: 'legacy-login-steps',
+        type: 'submit-mobile-number',
+      });
+      
+      const { data: registerRes } = await register.mutateAsync({
+        cell: +mobileNumberValue,
+      });
+      
+      if (registerRes.status === 0) {
+        const errorMessage = registerRes.details?.['تلفن همراه'] || 'خطا در ثبت شماره موبایل';
+        return toast.error(errorMessage);
+      }
+      
+      const { data: resetPasswordRes } = await resetPassword.mutateAsync({
+        cell: +mobileNumberValue,
+      });
+      
+      if (resetPasswordRes.status === ClinicStatus.SUCCESS || resetPasswordRes.status === 39) {
+        if (resetPasswordRes.status === 39) {
+          const errorMessage = resetPasswordRes.message || 'خطا در ارسال کد تایید';
+          toast.error(errorMessage);
+        }
+        if (resetPasswordRes?.result?.has_static_password) return setStep('password');
+        return setStep('otp_code');
+      }
 
-    toast.error(resetPasswordRes.message);
+      const errorMessage = resetPasswordRes.message || 'خطا در ارسال کد تایید';
+      toast.error(errorMessage);
+    } catch (error) {
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
+    }
   };
 
   return (
