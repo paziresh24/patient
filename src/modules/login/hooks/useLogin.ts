@@ -4,6 +4,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import useCustomize from '@/common/hooks/useCustomize';
 import { dayToSecond } from '@/common/utils/dayToSecond';
+import { getErrorMessage } from '@/common/utils/errorHandler';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
@@ -57,8 +58,13 @@ export const useLogin = () => {
         if (error.response?.status === 401 || error.response?.status === 400) {
           logout();
         }
-        return Promise.reject(error.response?.data);
+        // استفاده از helper function برای نمایش پیام مناسب
+        const errorMessage = getErrorMessage(error);
+        return Promise.reject({ message: errorMessage });
       }
+      // برای خطاهای غیر axios
+      const errorMessage = getErrorMessage(error);
+      return Promise.reject({ message: errorMessage });
     }
   };
 
