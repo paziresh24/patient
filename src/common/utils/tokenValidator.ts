@@ -10,7 +10,7 @@ export interface TokenInfo {
 export const validateToken = (): TokenInfo => {
   const token = getCookie('token');
   
-  if (!token) {
+  if (!token || typeof token !== 'string') {
     return {
       isValid: false,
       isExpired: true

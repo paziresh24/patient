@@ -70,7 +70,7 @@ export const useLogin = () => {
         return Promise.reject({ message: errorMessage });
       }
       // برای خطاهای غیر axios
-      const errorMessage = getErrorMessage(error);
+      const errorMessage = (error as any)?.message || 'خطایی پیش آمده است';
       return Promise.reject({ message: errorMessage });
     }
   };

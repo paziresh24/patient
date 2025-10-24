@@ -10,11 +10,7 @@ export const useNetworkErrorHandler = () => {
     
     const errorMessage = getNetworkErrorMessage(error);
     toast.error(errorMessage, {
-      duration: 5000,
-      action: retryFn ? {
-        label: 'تلاش مجدد',
-        onClick: retryFn
-      } : undefined
+      duration: 5000
     });
     
     return true; // خطا handle شده

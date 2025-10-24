@@ -64,7 +64,7 @@ export const isRetryableError = (error: any): boolean => {
   if (error.message?.includes('timeout')) return true;
   
   // خطاهای سرور (5xx)
-  if (error.response?.status >= 500 && error.response?.status < 600) return true;
+  if (error.response?.status && error.response.status >= 500 && error.response.status < 600) return true;
   
   // خطاهای rate limiting (429)
   if (error.response?.status === 429) return true;
