@@ -126,6 +126,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
           </div>
           {showOidcLogin && (
             <Button
+              type="button"
               loading={oidcOauthLoading}
               icon={<img src={ITOLogo.src} className="h-6 w-7" />}
               variant="secondary"
@@ -154,6 +155,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
           )}
           {showGoogleLogin && (
             <Button
+              type="button"
               loading={googleOauthLoading}
               icon={<img src={GoogleLogo.src} className="h-6 w-7" />}
               variant="secondary"
