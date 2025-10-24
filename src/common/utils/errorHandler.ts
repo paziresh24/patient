@@ -1,4 +1,34 @@
 import axios from 'axios';
+import { isTokenExpired } from './tokenValidator';
+
+export const isAuthenticationError = (error: any): boolean => {
+  if (!axios.isAxiosError(error)) return false;
+  
+  const status = error.response?.status;
+  if (status !== 401) return false;
+  
+  const errorData = error.response?.data;
+  const errorMessage = (errorData?.message || '').toLowerCase();
+  
+  // بررسی کلمات کلیدی که نشان‌دهنده authentication error واقعی هستند
+  const authKeywords = [
+    'token',
+    'expired',
+    'invalid',
+    'unauthorized',
+    'authentication',
+    'login',
+    'credential',
+    'session'
+  ];
+  
+  const hasAuthKeyword = authKeywords.some(keyword => errorMessage.includes(keyword));
+  
+  // اگر token واقعاً منقضی شده، authentication error است
+  const tokenExpired = isTokenExpired();
+  
+  return hasAuthKeyword || tokenExpired;
+};
 
 export const getErrorMessage = (error: any): string => {
   // اگر error یک string باشد

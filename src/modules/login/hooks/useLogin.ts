@@ -4,7 +4,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import useCustomize from '@/common/hooks/useCustomize';
 import { dayToSecond } from '@/common/utils/dayToSecond';
-import { getErrorMessage } from '@/common/utils/errorHandler';
+import { useErrorHandler } from '@/common/hooks/useErrorHandler';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
@@ -19,6 +19,7 @@ export const useLogin = () => {
   const getDoctorProfile = useGetDoctorProfile();
   const university = useCustomize(state => state.customize?.partnerKey);
   const webPushNotificationUserList = useFeatureValue<{ ids: string[] }>('notification:web-push|enabled', { ids: [] });
+  const { handleError } = useErrorHandler();
 
   const handleLogin = async ({ username, password }: { username: string; password: string }) => {
     try {
@@ -54,12 +55,18 @@ export const useLogin = () => {
       return Promise.reject(data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.error(error.response?.data);
-        if (error.response?.status === 401 || error.response?.status === 400) {
-          logout();
-        }
-        // استفاده از helper function برای نمایش پیام مناسب
-        const errorMessage = getErrorMessage(error);
+        console.error('Login error:', {
+          status: error.response?.status,
+          url: error.config?.url,
+          message: error.response?.data?.message,
+          timestamp: new Date().toISOString()
+        });
+        
+        // استفاده از hook جامع برای مدیریت errors
+        handleError(error, { showToast: false }); // toast را در اینجا نشان نمی‌دهیم
+        
+        // پیام خطا را برای caller برگردانیم
+        const errorMessage = error.response?.data?.message || 'خطایی در ورود رخ داده است';
         return Promise.reject({ message: errorMessage });
       }
       // برای خطاهای غیر axios
