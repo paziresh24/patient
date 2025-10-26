@@ -14,6 +14,7 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
+import { sendProfilePageViewLog, createProfilePageViewLogData } from '@/common/services/elasticLog';
 import { CENTERS } from '@/common/types/centers';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -56,6 +57,7 @@ const DoctorProfile = (props: any) => {
   const { query, ...router } = useRouter();
 
   const currentSlug = initialSlug ?? query.slug;
+  
 
   useEffect(() => {
     if (growthbook) {
@@ -79,6 +81,7 @@ const DoctorProfile = (props: any) => {
     error,
     refetch,
   } = useProfileClientFetch(currentSlug, !!shouldFetchOnClient || !props?.information);
+  
 
   const { customize } = useCustomize();
   const isApplication = useApplication();
@@ -99,6 +102,7 @@ const DoctorProfile = (props: any) => {
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
 
   const finalProps = (!!shouldFetchOnClient && !props?.information) || (clientData?.props as any)?.information ? clientData?.props : props;
+  
   const {
     slug,
     title,
@@ -197,7 +201,16 @@ const DoctorProfile = (props: any) => {
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
-  }, [isBulk, information]);
+  }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
+
+  // Separate useEffect specifically for elastic logging
+  useEffect(() => {
+    if (information && slug) {
+      console.log('📊 Sending elastic log for profile page view:', slug);
+      const logData = createProfilePageViewLogData(slug, userInfo);
+      sendProfilePageViewLog(logData);
+    }
+  }, [information, slug, userInfo]);
 
   useEffect(() => {
     if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
