@@ -100,6 +100,16 @@
 .span {
   width: auto;
 }
+.text__lCtr7 {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: right;
+  font-weight: 700;
+  align-self: auto;
+  min-width: 0;
+}
 .svg__exgej {
   position: relative;
   object-fit: cover;
