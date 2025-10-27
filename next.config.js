@@ -20,6 +20,9 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
+  // اضافه کردن تنظیمات برای production deployment
+  output: 'standalone',
+  distDir: '.next',
   webpack: (config, { webpack }) => {
     /**
      * TODO: Find more possible barrels for this project.
