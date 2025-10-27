@@ -6941,6 +6941,19 @@
           "cssFilePath": "plasmic/hamdast_cheragh/PlasmicHamdastCheraghWidget.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "4wkSuiQ1n2zj",
+          "name": "HamdastCheraghWidget2",
+          "type": "managed",
+          "projectId": "4fjEYDyHsDvAphaYRHZchB",
+          "renderModuleFilePath": "plasmic/hamdast_cheragh/PlasmicHamdastCheraghWidget2.tsx",
+          "importSpec": {
+            "modulePath": "HamdastCheraghWidget2.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_cheragh/PlasmicHamdastCheraghWidget2.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -7083,9 +7096,8 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/hamdast_cheragh/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/hamdast_cheragh/plasmic.tsx"
     },
     {
       "projectId": "5MMYVxpXKV5JuJRaJPvqek",
