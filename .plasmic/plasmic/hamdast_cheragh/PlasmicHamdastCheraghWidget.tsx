@@ -59,12 +59,14 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 4fjEYDyHsDvAphaYRHZchB/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 4fjEYDyHsDvAphaYRHZchB/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: 4fjEYDyHsDvAphaYRHZchB/projectcss
 import sty from "./PlasmicHamdastCheraghWidget.module.css"; // plasmic-import: ZjqBgretf8Lk/css
 
@@ -79,20 +81,26 @@ type VariantPropType = keyof PlasmicHamdastCheraghWidget__VariantsArgs;
 export const PlasmicHamdastCheraghWidget__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicHamdastCheraghWidget__ArgsType = { data?: any };
+export type PlasmicHamdastCheraghWidget__ArgsType = {
+  data?: any;
+  profileData?: any;
+};
 type ArgPropType = keyof PlasmicHamdastCheraghWidget__ArgsType;
 export const PlasmicHamdastCheraghWidget__ArgProps = new Array<ArgPropType>(
-  "data"
+  "data",
+  "profileData"
 );
 
 export type PlasmicHamdastCheraghWidget__OverridesType = {
   root?: Flex__<"div">;
+  sideEffect?: Flex__<typeof SideEffect>;
   modal?: Flex__<typeof Paziresh24Modal>;
   paziresh24Button?: Flex__<typeof Paziresh24Button>;
 };
 
 export interface DefaultHamdastCheraghWidgetProps {
   data?: any;
+  profileData?: any;
   className?: string;
 }
 
@@ -135,6 +143,8 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -153,6 +163,8 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -164,11 +176,63 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["sendLog"] = true
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          event_group: "cheragh_widget",
+                          event_type: "view",
+                          widget_name: "cheragh",
+                          user_id: 0,
+                          doctor_data: {
+                            name:
+                              $props.profileData.information.name +
+                              " " +
+                              $props.profileData.information.family,
+                            profile_slug: $props.profileData.seo.slug
+                          }
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
+            : undefined;
+          if (
+            $steps["sendLog"] != null &&
+            typeof $steps["sendLog"] === "object" &&
+            typeof $steps["sendLog"].then === "function"
+          ) {
+            $steps["sendLog"] = await $steps["sendLog"];
+          }
+        }}
+      />
+
       <div className={classNames(projectcss.all, sty.freeBox__ylkfx)}>
         <div
           className={classNames(
@@ -367,6 +431,55 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
                   role={"img"}
                 />
               }
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["sendLog"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                event_group: "cheragh_widget",
+                                event_type: "click",
+                                click_element: "cheragh_modal",
+                                click_context: "modal",
+                                widget_name: "cheragh",
+                                user_id: 0,
+                                doctor_data: {
+                                  name:
+                                    $props.profileData.information.name +
+                                    " " +
+                                    $props.profileData.information.family,
+                                  profile_slug: $props.profileData.seo.slug
+                                }
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendLog"] != null &&
+                  typeof $steps["sendLog"] === "object" &&
+                  typeof $steps["sendLog"].then === "function"
+                ) {
+                  $steps["sendLog"] = await $steps["sendLog"];
+                }
+              }}
               showEndIcon={true}
               size={"minimal"}
               startIcon={
@@ -384,33 +497,50 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
         onClick={async event => {
           const $steps = {};
 
-          $steps["updateModalOpen"] = true
+          $steps["sendLog"] = true
             ? (() => {
                 const actionArgs = {
-                  variable: {
-                    objRoot: $state,
-                    variablePath: ["modal", "open"]
-                  },
-                  operation: 0,
-                  value: true
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          event_group: "cheragh_widget",
+                          event_type: "click",
+                          click_element: "cheragh_section",
+                          click_context: "box",
+                          widget_name: "cheragh",
+                          user_id: 0,
+                          doctor_data: {
+                            name:
+                              $props.profileData.information.name +
+                              " " +
+                              $props.profileData.information.family,
+                            profile_slug: $props.profileData.seo.slug
+                          }
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
                 };
-                return (({ variable, value, startIndex, deleteCount }) => {
-                  if (!variable) {
-                    return;
-                  }
-                  const { objRoot, variablePath } = variable;
-
-                  $stateSet(objRoot, variablePath, value);
-                  return value;
-                })?.apply(null, [actionArgs]);
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
               })()
             : undefined;
           if (
-            $steps["updateModalOpen"] != null &&
-            typeof $steps["updateModalOpen"] === "object" &&
-            typeof $steps["updateModalOpen"].then === "function"
+            $steps["sendLog"] != null &&
+            typeof $steps["sendLog"] === "object" &&
+            typeof $steps["sendLog"].then === "function"
           ) {
-            $steps["updateModalOpen"] = await $steps["updateModalOpen"];
+            $steps["sendLog"] = await $steps["sendLog"];
           }
         }}
       >
@@ -493,7 +623,8 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "modal", "paziresh24Button"],
+  root: ["root", "sideEffect", "modal", "paziresh24Button"],
+  sideEffect: ["sideEffect"],
   modal: ["modal", "paziresh24Button"],
   paziresh24Button: ["paziresh24Button"]
 } as const;
@@ -502,6 +633,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  sideEffect: typeof SideEffect;
   modal: typeof Paziresh24Modal;
   paziresh24Button: typeof Paziresh24Button;
 };
@@ -566,6 +698,7 @@ export const PlasmicHamdastCheraghWidget = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    sideEffect: makeNodeComponent("sideEffect"),
     modal: makeNodeComponent("modal"),
     paziresh24Button: makeNodeComponent("paziresh24Button"),
 
