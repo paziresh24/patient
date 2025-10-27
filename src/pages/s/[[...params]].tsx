@@ -29,14 +29,20 @@ import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState, useMemo, useCallback } from 'react';
 import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
-const Sort = dynamic(() => import('@/modules/search/components/filters/sort'));
-const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'));
+const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
+  loading: () => <Skeleton w="100%" h="3rem" />,
+  ssr: false
+});
+const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'), {
+  loading: () => <Skeleton w="100%" h="4rem" />,
+  ssr: false
+});
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
@@ -191,7 +197,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
     }
   }, [result, userPending, isLoading, growthbook.ready]);
 
-  const handleNextPage = () => {
+  const handleNextPage = useCallback(() => {
     const currentPage = (queries?.page as string) ? (queries?.page as string) : 1;
     changeRoute({
       query: {
@@ -199,7 +205,13 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
       },
       scroll: false,
     });
-  };
+  }, [queries?.page, changeRoute]);
+
+  const memoizedFilters = useMemo(() => filters, [filters.sortBy, filters.freeturn]);
+
+  const handleChangeMemoized = useCallback((key: string, value: any) => {
+    handleChange(key, value);
+  }, [handleChange]);
 
   return (
     <>
@@ -224,8 +236,8 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
                   isHideConsultBanner: isConsult,
                   // sort
                   orderItems: orderItems,
-                  selectedSort: filters['sortBy'],
-                  selectedTurn: filters['freeturn'],
+                  selectedSort: memoizedFilters['sortBy'],
+                  selectedTurn: memoizedFilters['freeturn'],
                   isLoadingResult: isLoading,
                   onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
                   onChangeSort: (value: any) => handleChange('sortBy', value),
@@ -258,8 +270,8 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
                       name="Sort"
                       props={{
                         orderItems: orderItems,
-                        selectedSort: filters['sortBy'],
-                        selectedTurn: filters['freeturn'],
+                        selectedSort: memoizedFilters['sortBy'],
+                        selectedTurn: memoizedFilters['freeturn'],
                         total: addCommas(total),
                         isLoading: isLoading,
                         onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
