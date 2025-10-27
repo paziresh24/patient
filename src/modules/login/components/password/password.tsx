@@ -37,7 +37,7 @@ export const Password = (props: PasswordProps) => {
       });
       postLogin && postLogin(data);
     } catch (error) {
-      toast.error((error as any).message);
+      toast.error((error as any)?.message || 'خطایی پیش آمده است. لطفاً دوباره تلاش کنید.');
     }
   };
 
