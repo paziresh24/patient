@@ -55,9 +55,6 @@ export const useLogin = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error(error.response?.data);
-        if (error.response?.status === 401 || error.response?.status === 400) {
-          logout();
-        }
         // استفاده از helper function برای نمایش پیام مناسب
         const errorMessage = getErrorMessage(error);
         return Promise.reject({ message: errorMessage });
