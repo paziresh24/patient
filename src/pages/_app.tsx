@@ -106,7 +106,7 @@ function MyApp(props: AppProps) {
         <Provider pageProps={pageProps}>
           <GlobalContextsProvider>
             <PlasmicRootProvider disableLoadingBoundary>
-              <NextNProgress height={3} color="#3861fb" options={{ showSpinner: false }} transformCSS={() => <></>} />
+              <NextNProgress height={2} color="#3861fb" options={{ showSpinner: false, minimum: 0.3 }} />
               <Head>
                 <meta
                   name="viewport"
@@ -116,7 +116,9 @@ function MyApp(props: AppProps) {
                 />
               </Head>
               <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-              <GoogleTagManager gtmId="GTM-P5RPLDP" />
+              {typeof window !== 'undefined' && (
+                <GoogleTagManager gtmId="GTM-P5RPLDP" />
+              )}
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
