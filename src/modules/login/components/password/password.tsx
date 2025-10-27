@@ -2,6 +2,7 @@ import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField/textField';
 import PasswordIcon from '@/common/components/icons/password';
+import { getErrorMessage } from '@/common/utils/errorHandler';
 import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
 import { Dispatch, SetStateAction, useState } from 'react';
@@ -37,7 +38,8 @@ export const Password = (props: PasswordProps) => {
       });
       postLogin && postLogin(data);
     } catch (error) {
-      toast.error((error as any).message);
+      const errorMessage = getErrorMessage(error);
+      toast.error(errorMessage);
     }
   };
 
