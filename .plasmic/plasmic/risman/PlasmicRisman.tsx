@@ -173,51 +173,110 @@ function PlasmicRisman__RenderFunc(props: {
           data-plasmic-name={"paziresh24Button"}
           data-plasmic-override={overrides.paziresh24Button}
           children2={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__oWbWq
-              )}
-            >
-              <React.Fragment>
-                <React.Fragment>
-                  {
-                    "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u062f\u0631 "
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $props.data.data.destination["btn-text"] ===
+                    "نوبت‌دهی تلفنی مطب"
+                    ? false
+                    : true;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
                   }
-                </React.Fragment>
-                {
-                  <span
-                    data-plasmic-name={"span"}
-                    data-plasmic-override={overrides.span}
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.span,
-                      projectcss.__wab_text,
-                      projectcss.plasmic_default__inline,
-                      sty.span
-                    )}
-                  >
-                    <React.Fragment>
-                      {(() => {
-                        try {
-                          return $props.data.data.destination.platform;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return "-";
-                          }
-                          throw e;
-                        }
-                      })()}
-                    </React.Fragment>
-                  </span>
+                  throw e;
                 }
-                <React.Fragment>{""}</React.Fragment>
-              </React.Fragment>
-            </div>
+              })() ? (
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__oWbWq
+                  )}
+                >
+                  <React.Fragment>
+                    <React.Fragment>
+                      {
+                        "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a \u062f\u0631 "
+                      }
+                    </React.Fragment>
+                    {
+                      <span
+                        data-plasmic-name={"span"}
+                        data-plasmic-override={overrides.span}
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.span,
+                          projectcss.__wab_text,
+                          projectcss.plasmic_default__inline,
+                          sty.span
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return $props.data.data.destination.platform;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "-";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </span>
+                    }
+                    <React.Fragment>{""}</React.Fragment>
+                  </React.Fragment>
+                </div>
+              ) : null}
+              {(() => {
+                try {
+                  return $props.data.data.destination["btn-text"] ===
+                    "نوبت‌دهی تلفنی مطب"
+                    ? true
+                    : false;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__lCtr7
+                  )}
+                >
+                  <React.Fragment>
+                    {(() => {
+                      try {
+                        return $props.data.data.destination["btn-text"];
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "\u0646\u0627\u0645\u0634\u062e\u0635";
+                        }
+                        throw e;
+                      }
+                    })()}
+                  </React.Fragment>
+                </div>
+              ) : null}
+            </React.Fragment>
           }
           className={classNames("__wab_instance", sty.paziresh24Button)}
           endIcon={
