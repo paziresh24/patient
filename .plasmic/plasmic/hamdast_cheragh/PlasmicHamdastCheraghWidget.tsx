@@ -215,7 +215,9 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
                         }
                         throw e;
                       }
-                    })()
+                    })(),
+                    "https://splunk-risman-hec.paziresh24.com",
+                    "9c0ebe1a-f62a-4d3f-a127-49035eac1c4f"
                   ]
                 };
                 return $globalActions["Splunk.sendLog"]?.apply(null, [
@@ -464,7 +466,9 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
                               }
                               throw e;
                             }
-                          })()
+                          })(),
+                          "https://splunk-risman-hec.paziresh24.com",
+                          "9c0ebe1a-f62a-4d3f-a127-49035eac1c4f"
                         ]
                       };
                       return $globalActions["Splunk.sendLog"]?.apply(null, [
@@ -527,7 +531,9 @@ function PlasmicHamdastCheraghWidget__RenderFunc(props: {
                         }
                         throw e;
                       }
-                    })()
+                    })(),
+                    "https://splunk-risman-hec.paziresh24.com",
+                    "9c0ebe1a-f62a-4d3f-a127-49035eac1c4f"
                   ]
                 };
                 return $globalActions["Splunk.sendLog"]?.apply(null, [
