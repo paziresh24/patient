@@ -2,9 +2,10 @@ import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
 import Script from 'next/script';
+import { DocumentContext } from 'next/document';
 
 const CustomDocument: NextComponentType = (props: any) => {
-  const { locale } = props.__NEXT_DATA__;
+  const { locale, xSid } = props.__NEXT_DATA__;
   const dir = locale === 'fa' ? 'rtl' : 'ltr';
   ''.includes;
   return (
@@ -21,6 +22,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="format-detection" content="telephone=no" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <meta name="google" content="notranslate" />
+        {xSid && <meta name="x-sid" content={xSid} />}
         <Script strategy="afterInteractive" src="https://gozargah.paziresh24.com/assets/js/gozar.js" />
         <Script strategy="afterInteractive" src="https://accounts.google.com/gsi/client" />
         <script
@@ -31,9 +33,8 @@ const CustomDocument: NextComponentType = (props: any) => {
                   if (tgt.tagName === 'LINK' || tgt.tagName === 'SCRIPT') {
                     const url = tgt.href || tgt.src;
                     if(url.includes('_next')){
-                      // Get x-sid header from current request
-                      const xSid = document.querySelector('meta[name="x-sid"]')?.getAttribute('content') || 
-                                   (window.location.search.match(/[?&]x-sid=([^&]+)/) ? window.location.search.match(/[?&]x-sid=([^&]+)/)[1] : null);
+                      // Get x-sid from meta tag
+                      const xSid = document.querySelector('meta[name="x-sid"]')?.getAttribute('content');
                       
                       navigator.sendBeacon('https://apigw.paziresh24.com/api/log-resource-error', JSON.stringify({
                         url,
@@ -61,4 +62,15 @@ const CustomDocument: NextComponentType = (props: any) => {
     </Html>
   );
 };
+
+CustomDocument.getInitialProps = async (ctx: DocumentContext) => {
+  const initialProps = await ctx.defaultGetInitialProps(ctx);
+  const xSid = ctx.req?.headers['x-sid'] as string;
+  
+  return {
+    ...initialProps,
+    xSid
+  };
+};
+
 export default CustomDocument;
