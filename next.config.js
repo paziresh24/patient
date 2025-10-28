@@ -18,6 +18,8 @@ const nextConfig = {
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
   },
+  compress: true,
+  poweredByHeader: false,
   webpack: (config, { webpack }) => {
     /**
      * TODO: Find more possible barrels for this project.
@@ -27,6 +29,30 @@ const nextConfig = {
       test: [/lib\/.*.tsx?/i],
       sideEffects: false,
     });
+
+    // بهینه‌سازی webpack splitChunks
+    config.optimization = {
+      ...config.optimization,
+      moduleIds: 'deterministic',
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          commons: {
+            name: 'commons',
+            chunks: 'all',
+            minChunks: 2,
+          },
+          lib: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'lib',
+            priority: 10,
+            chunks: 'all',
+          },
+        },
+      },
+    };
 
     return config;
   },
@@ -78,6 +104,9 @@ const nextConfig = {
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
   },
   images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    minimumCacheTTL: 31536000,
     remotePatterns: [
       {
         protocol: 'https',
