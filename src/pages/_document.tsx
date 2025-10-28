@@ -31,12 +31,17 @@ const CustomDocument: NextComponentType = (props: any) => {
                   if (tgt.tagName === 'LINK' || tgt.tagName === 'SCRIPT') {
                     const url = tgt.href || tgt.src;
                     if(url.includes('_next')){
+                      // Get x-sid header from current request
+                      const xSid = document.querySelector('meta[name="x-sid"]')?.getAttribute('content') || 
+                                   (window.location.search.match(/[?&]x-sid=([^&]+)/) ? window.location.search.match(/[?&]x-sid=([^&]+)/)[1] : null);
+                      
                       navigator.sendBeacon('https://apigw.paziresh24.com/api/log-resource-error', JSON.stringify({
                         url,
                         type: tgt.tagName,
                         current_url: window.location.href,
-                        referer: window.document.referrer
-                      }));referrer
+                        referer: window.document.referrer,
+                        x_sid: xSid
+                      }));
                     }
                   }
                 }, true);
