@@ -20,7 +20,7 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
-  webpack: (config, { webpack }) => {
+  webpack: (config, { webpack, dev, isServer }) => {
     /**
      * TODO: Find more possible barrels for this project.
      *  @see https://github.com/vercel/next.js/issues/12557#issuecomment-1196931845
@@ -29,20 +29,63 @@ const nextConfig = {
       test: [/lib\/.*.tsx?/i],
       sideEffects: false,
     });
-
-    // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
       moduleIds: 'deterministic',
       splitChunks: {
         chunks: 'all',
+        minSize: 20000,
+        maxSize: 244000,
         cacheGroups: {
           default: false,
           vendors: false,
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
+            priority: 20,
+            chunks: 'all',
+          },
+          growthbook: {
+            test: /[\\/]node_modules[\\/]@growthbook[\\/]/,
+            name: 'growthbook',
+            priority: 15,
+            chunks: 'all',
+          },
+          plasmic: {
+            test: /[\\/]node_modules[\\/]@plasmicapp[\\/]/,
+            name: 'plasmic',
+            priority: 15,
+            chunks: 'all',
+          },
+          antd: {
+            test: /[\\/]node_modules[\\/]@ant-design[\\/]/,
+            name: 'antd',
+            priority: 15,
+            chunks: 'all',
+          },
+          tanstack: {
+            test: /[\\/]node_modules[\\/]@tanstack[\\/]/,
+            name: 'tanstack',
+            priority: 15,
+            chunks: 'all',
+          },
+          firebase: {
+            test: /[\\/]node_modules[\\/]firebase[\\/]/,
+            name: 'firebase',
+            priority: 15,
+            chunks: 'all',
+          },
+          largeLibs: {
+            test: /[\\/]node_modules[\\/](axios|lodash|chart\.js|leaflet)[\\/]/,
+            name: 'large-libs',
+            priority: 12,
+            chunks: 'all',
+          },
           commons: {
             name: 'commons',
             chunks: 'all',
             minChunks: 2,
+            priority: 5,
           },
           lib: {
             test: /[\\/]node_modules[\\/]/,
@@ -54,11 +97,20 @@ const nextConfig = {
       },
     };
 
+    if (!dev && !isServer) {
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
+    }
+
     return config;
   },
   swcMinify: true,
   reactStrictMode: true,
   trailingSlash: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  optimizeFonts: true,
   serverRuntimeConfig: {
     DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
@@ -107,10 +159,17 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200],
     minimumCacheTTL: 31536000,
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '**.paziresh24.**',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.paziresh24.com',
         port: '',
       },
     ],

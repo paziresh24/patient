@@ -3,9 +3,9 @@ import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useNetworkStatus } from '@/common/hooks/useNetworkStatus';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
-import '@/firebase/analytics';
+import ServiceWorkerOptimizer from '@/common/components/serviceWorkerOptimizer';
+import LazyGoogleTagManager from '@/common/components/lazyGoogleTagManager';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 import { PlasmicRootProvider } from '@plasmicapp/react-web';
 import { Hydrate } from '@tanstack/react-query';
@@ -21,9 +21,6 @@ import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
 import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import axios from 'axios';
-import { GoogleTagManager } from '@next/third-parties/google';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -56,47 +53,42 @@ function MyApp(props: AppProps) {
   useNetworkStatus();
   const isApplication = useApplication();
   const { asPath } = useRouter();
-  const isLogin = useUserInfoStore(state => state.isLogin);
-  const user = useUserInfoStore(state => state.info);
 
   useEffect(() => {
     if (isEnabledGrowthbook) {
-      growthbook.loadFeatures({ autoRefresh: true, skipCache: router.query.skipFlagsCache === 'true' });
-      growthbook.setAttributes({
-        ...growthbook.getAttributes(),
-        id: getCookie('terminal_id'),
-      });
-      router.events.on('routeChangeComplete', updateGrowthBookURL);
+      const timer = setTimeout(() => {
+        growthbook.loadFeatures({ autoRefresh: true, skipCache: router.query.skipFlagsCache === 'true' });
+        growthbook.setAttributes({
+          ...growthbook.getAttributes(),
+          id: getCookie('terminal_id'),
+        });
+        router.events.on('routeChangeComplete', updateGrowthBookURL);
+      }, 100);
+
+      return () => {
+        clearTimeout(timer);
+        if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
+      };
     }
-    return () => {
-      if (growthbook.ready) router.events.off('routeChangeComplete', updateGrowthBookURL);
-    };
   }, [router.query]);
 
   useEffect(() => {
-    growthbook.setAttributes({
-      ...growthbook.getAttributes(),
-      url: location.href,
-      host: location.host,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    });
+    const timer = setTimeout(() => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        url: location.href,
+        host: location.host,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      });
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, [asPath]);
 
   useEffect(() => {
     useCustomize.getState().setCustomize(pageProps?.themeConfing);
     useServerQuery.getState().setQueries(pageProps?.query);
   }, [pageProps?.query, pageProps?.themeConfing]);
-
-  useEffect(() => {
-    if (isLogin && (isApplication || ('Notification' in window && Notification?.permission === 'granted'))) {
-      window.najvaUserSubscribed = function (najva_user_token: string) {
-        axios.post(`${publicRuntimeConfig.API_GATEWAY_BASE_URL}/v1/notification/subscribers`, {
-          user_id: user.id,
-          subscriber_token: najva_user_token,
-        });
-      };
-    }
-  }, [isLogin, isApplication]);
 
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? (page => page);
@@ -116,9 +108,8 @@ function MyApp(props: AppProps) {
                 />
               </Head>
               <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-              {typeof window !== 'undefined' && (
-                <GoogleTagManager gtmId="GTM-P5RPLDP" />
-              )}
+              {typeof window !== 'undefined' && <LazyGoogleTagManager />}
+              <ServiceWorkerOptimizer delay={10000} />
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
