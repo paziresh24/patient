@@ -16,20 +16,8 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="dns-prefetch" href="https://accounts.google.com" />
         <link rel="preconnect" href="https://api.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
-        <link 
-          rel="preload" 
-          href="/fonts/IRANSansXFaNum-Medium.woff2" 
-          as="font" 
-          type="font/woff2" 
-          crossOrigin="anonymous" 
-        />
-        <link 
-          rel="preload" 
-          href="/fonts/IRANSansXFaNum-Regular.woff2" 
-          as="font" 
-          type="font/woff2" 
-          crossOrigin="anonymous" 
-        />
+        <link rel="preload" href="/fonts/IRANSansXFaNum-Medium.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/IRANSansXFaNum-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <link rel="manifest" href="/manifest.json" />

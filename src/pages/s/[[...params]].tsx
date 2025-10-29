@@ -9,18 +9,15 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
+import LazySplunk from '@/common/components/lazySplunk';
 import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import MobileRowFilter from '@/modules/search/components/filters/rowFilter';
-import UnknownCity from '@/modules/search/components/unknownCity';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useSearchStore } from '@/modules/search/store/search';
-import Filter from '@/modules/search/view/filter';
-import { Result } from '@/modules/search/view/result';
-import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
 import { useFeatureValue, useFeatureIsOn, GrowthBook } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
@@ -41,6 +38,21 @@ const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
 });
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'), {
   loading: () => <Skeleton w="100%" h="4rem" />,
+  ssr: false
+});
+const Filter = dynamic(() => import('@/modules/search/view/filter'), {
+  loading: () => <Skeleton w="100%" h="4rem" />,
+  ssr: false
+});
+const Result = dynamic(() => import('@/modules/search/view/result'), {
+  loading: () => <Skeleton w="100%" h="20rem" />,
+  ssr: false
+});
+const SearchSeoBox = dynamic(() => import('@/modules/search/view/seoBox'), {
+  loading: () => <Skeleton w="100%" h="2rem" />,
+  ssr: false
+});
+const UnknownCity = dynamic(() => import('@/modules/search/components/unknownCity'), {
   ssr: false
 });
 const { publicRuntimeConfig } = getConfig();
@@ -128,11 +140,49 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
-        if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
-          splunkInstance('search').sendEvent({
+        // تاخیر در ارسال Splunk events برای بهبود عملکرد اولیه
+        const timer = setTimeout(() => {
+          if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
+            splunkInstance('search').sendEvent({
+              group: 'search_metrics',
+              type: 'search_view',
+              event: {
+                filters: selectedFilters,
+                result_count: result.length,
+                location: city.en_slug,
+                ...(geoLocation ?? null),
+                city_id: city.id,
+                query_id: search.query_id,
+                user_id: userInfo?.id ?? null,
+                user_type: userInfo.provider?.job_title ?? 'normal-user',
+                ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
+                url: {
+                  href: window.location.href,
+                  qurey: { ...queries },
+                  pathname: window.location.pathname,
+                  host: window.location.host,
+                },
+              },
+            });
+          }
+
+          splunkInstance('search').sendBatchEvent({
             group: 'search_metrics',
-            type: 'search_view',
-            event: {
+            type: 'search_card_view',
+            events: result.map(item => ({
+              card_data: {
+                action: item.actions?.map?.(item =>
+                  JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
+                ),
+                _id: item._id,
+                position: item.position,
+                server_id: item.server_id,
+                title: item.title,
+                type: item.type,
+                url: item.url,
+                rates_count: item.rates_count,
+                satisfaction: item.satisfaction,
+              },
               filters: selectedFilters,
               result_count: result.length,
               location: city.en_slug,
@@ -141,52 +191,17 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
               query_id: search.query_id,
               user_id: userInfo?.id ?? null,
               user_type: userInfo.provider?.job_title ?? 'normal-user',
-              ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
               url: {
                 href: window.location.href,
                 qurey: { ...queries },
                 pathname: window.location.pathname,
                 host: window.location.host,
               },
-            },
+            })),
           });
-        }
+        }, 2000);
 
-        splunkInstance('search').sendBatchEvent({
-          group: 'search_metrics',
-          type: 'search_card_view',
-          events: result.map(item => ({
-            card_data: {
-              action: item.actions?.map?.(item =>
-                JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
-              ),
-              _id: item._id,
-              position: item.position,
-              server_id: item.server_id,
-              title: item.title,
-              type: item.type,
-              url: item.url,
-              rates_count: item.rates_count,
-              satisfaction: item.satisfaction,
-            },
-            filters: selectedFilters,
-            result_count: result.length,
-            location: city.en_slug,
-            ...(geoLocation ?? null),
-            city_id: city.id,
-            query_id: search.query_id,
-            user_id: userInfo?.id ?? null,
-            user_type: userInfo.provider?.job_title ?? 'normal-user',
-            url: {
-              href: window.location.href,
-              qurey: { ...queries },
-              pathname: window.location.pathname,
-              host: window.location.host,
-            },
-          })),
-        });
-
-        return;
+        return () => clearTimeout(timer);
       }
       stat.mutate({
         route: asPath,

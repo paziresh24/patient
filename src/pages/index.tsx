@@ -15,8 +15,14 @@ import { useRouter } from 'next/dist/client/router';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
 import { ReactElement, useEffect, useState } from 'react';
-const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
-const Promote = dynamic(() => import('@/modules/home/components/promote'));
+const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'), {
+  loading: () => <div className="w-full h-32 bg-gray-100 animate-pulse rounded-lg" />,
+  ssr: false,
+});
+const Promote = dynamic(() => import('@/modules/home/components/promote'), {
+  loading: () => <div className="w-full h-20 bg-gray-100 animate-pulse rounded-lg" />,
+  ssr: false,
+});
 import RecentSearch from '@/modules/search/view/recentSearch';
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
@@ -24,11 +30,9 @@ import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_sea
 import { useSearchStore } from '@/modules/search/store/search';
 import { GrowthBook, useFeatureIsOn } from '@growthbook/growthbook-react';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
-import toast from 'react-hot-toast';
-import { toastActionble } from '@/common/utils/toastActionble';
 import Button from '@/common/components/atom/button';
 import ChevronIcon from '@/common/components/icons/chevron';
-import { splunkInstance } from '@/common/services/splunk';
+import LazySplunk from '@/common/components/lazySplunk';
 
 const Home = ({ fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
@@ -41,15 +45,6 @@ const Home = ({ fragmentComponents }: any) => {
   const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
 
   useEffect(() => {
-    splunkInstance('homepage').sendEvent({
-      group: 'home-page-load',
-      type: 'home-page-load',
-      event: {
-        features: {
-          'health-assistants-button': showHealthAssistantsButton,
-        },
-      },
-    });
     // Prefetch the search page
     router.prefetch('/s/[[...params]]');
   }, []);
@@ -156,6 +151,20 @@ const Home = ({ fragmentComponents }: any) => {
         {customize?.partnerKey && <CentersList />}
       </main>
       {isMobile && customize.showPromoteApp && <Promote />}
+      {/* تاخیر در ارسال Splunk events برای بهبود عملکرد اولیه */}
+      <LazySplunk
+        eventName="homepage"
+        eventData={{
+          group: 'home-page-load',
+          type: 'home-page-load',
+          event: {
+            features: {
+              'health-assistants-button': showHealthAssistantsButton,
+            },
+          },
+        }}
+        delay={1500}
+      />
       {!customize.partnerKey && (
         <div className="w-full max-w-screen-lg py-4 mx-auto text-center ">
           <Text fontWeight="semiBold" fontSize="sm" as="h2" className="text-slate-400">
