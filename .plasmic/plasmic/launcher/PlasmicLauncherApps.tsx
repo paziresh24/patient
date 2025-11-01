@@ -110,6 +110,7 @@ export type PlasmicLauncherApps__OverridesType = {
   launcherComponentsSeparator?: Flex__<typeof LauncherComponentsSeparator>;
   modal?: Flex__<typeof Paziresh24Modal>;
   textAreaInput?: Flex__<typeof Paziresh24AtomsTextAreaInput>;
+  textAreaInput2?: Flex__<typeof Paziresh24AtomsTextAreaInput>;
   paziresh24Button?: Flex__<typeof Paziresh24Button>;
   apiRequest?: Flex__<typeof ApiRequest>;
 };
@@ -228,6 +229,12 @@ function PlasmicLauncherApps__RenderFunc(props: {
       },
       {
         path: "textAreaInput.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "textAreaInput2.value",
         type: "private",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined
@@ -1246,7 +1253,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                     )}
                   >
                     {
-                      "\u062f\u0631 \u0627\u06cc\u0646\u062c\u0627 \u0645\u0634\u06a9\u0644 \u06cc\u0627 \u0645\u0648\u0636\u0648\u0639 \u062e\u0648\u062f \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f."
+                      "\u0686\u06cc \u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0645\u06cc\u200c\u06a9\u0646\u06cc \u0648 \u0642\u0631\u0627\u0631\u0647 \u0686\u0647 \u0645\u0634\u06a9\u0644\u06cc \u0631\u0648 \u062d\u0644 \u06a9\u0646\u0647\u061f"
                     }
                   </div>
                   <Paziresh24AtomsTextAreaInput
@@ -1269,8 +1276,57 @@ function PlasmicLauncherApps__RenderFunc(props: {
                       }
                     }}
                     padded={[]}
+                    placeholder={``}
                     value={generateStateValueProp($state, [
                       "textAreaInput",
+                      "value"
+                    ])}
+                  />
+
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__urgN
+                    )}
+                  >
+                    {
+                      "\u062d\u0627\u0644\u0627 \u06a9\u0647 \u0627\u06cc\u0646 \u0627\u0645\u06a9\u0627\u0646 \u0631\u0648 \u0646\u062f\u0627\u0631\u06cc\u0645\u060c \u0686\u0647\u200c\u062c\u0648\u0631\u06cc \u06a9\u0627\u0631\u062a\u0648 \u0631\u0627\u0647 \u0645\u06cc\u200c\u0646\u062f\u0627\u0632\u06cc\u061f"
+                    }
+                  </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__prHst
+                    )}
+                  >
+                    {
+                      "\u0627\u0644\u0627\u0646 \u0628\u0631\u0627\u06cc \u062d\u0644 \u0627\u06cc\u0646 \u0645\u0633\u0626\u0644\u0647\u060c \u0686\u0647 \u0631\u0627\u0647\u06cc \u067e\u06cc\u062f\u0627 \u06a9\u0631\u062f\u06cc \u06cc\u0627 \u0627\u0632 \u0686\u0647 \u0686\u06cc\u0632\u06cc \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u0645\u06cc\u200c\u06a9\u0646\u06cc\u061f"
+                    }
+                  </div>
+                  <Paziresh24AtomsTextAreaInput
+                    data-plasmic-name={"textAreaInput2"}
+                    data-plasmic-override={overrides.textAreaInput2}
+                    className={classNames("__wab_instance", sty.textAreaInput2)}
+                    flat={[]}
+                    onChange={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "textAreaInput2",
+                        "value"
+                      ]).apply(null, eventArgs);
+
+                      if (
+                        eventArgs.length > 1 &&
+                        eventArgs[1] &&
+                        eventArgs[1]._plasmic_state_init_
+                      ) {
+                        return;
+                      }
+                    }}
+                    padded={[]}
+                    value={generateStateValueProp($state, [
+                      "textAreaInput2",
                       "value"
                     ])}
                   />
@@ -1278,7 +1334,9 @@ function PlasmicLauncherApps__RenderFunc(props: {
                   <Paziresh24Button
                     data-plasmic-name={"paziresh24Button"}
                     data-plasmic-override={overrides.paziresh24Button}
-                    children2={"\u0627\u0631\u0633\u0627\u0644"}
+                    children2={
+                      "\u0627\u0631\u0633\u0627\u0644 \u067e\u06cc\u0634\u0646\u0647\u0627\u062f"
+                    }
                     className={classNames(
                       "__wab_instance",
                       sty.paziresh24Button
@@ -1371,6 +1429,8 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                   try {
                                     return {
                                       content: $state.textAreaInput.value,
+                                      workaround:
+                                        $state?.textAreaInput2?.value ?? "",
                                       user_id: $ctx.auth.info?.id
                                     };
                                   } catch (e) {
@@ -1679,6 +1739,7 @@ const PlasmicDescendants = {
     "launcherComponentsSeparator",
     "modal",
     "textAreaInput",
+    "textAreaInput2",
     "paziresh24Button",
     "apiRequest"
   ],
@@ -1691,6 +1752,7 @@ const PlasmicDescendants = {
     "launcherComponentsSeparator",
     "modal",
     "textAreaInput",
+    "textAreaInput2",
     "paziresh24Button"
   ],
   svg: ["svg"],
@@ -1700,12 +1762,14 @@ const PlasmicDescendants = {
     "launcherComponentsSeparator",
     "modal",
     "textAreaInput",
+    "textAreaInput2",
     "paziresh24Button"
   ],
   launcherComponentsCategory: ["launcherComponentsCategory"],
   launcherComponentsSeparator: ["launcherComponentsSeparator"],
-  modal: ["modal", "textAreaInput", "paziresh24Button"],
+  modal: ["modal", "textAreaInput", "textAreaInput2", "paziresh24Button"],
   textAreaInput: ["textAreaInput"],
+  textAreaInput2: ["textAreaInput2"],
   paziresh24Button: ["paziresh24Button"],
   apiRequest: ["apiRequest"]
 } as const;
@@ -1722,6 +1786,7 @@ type NodeDefaultElementType = {
   launcherComponentsSeparator: typeof LauncherComponentsSeparator;
   modal: typeof Paziresh24Modal;
   textAreaInput: typeof Paziresh24AtomsTextAreaInput;
+  textAreaInput2: typeof Paziresh24AtomsTextAreaInput;
   paziresh24Button: typeof Paziresh24Button;
   apiRequest: typeof ApiRequest;
 };
@@ -1796,6 +1861,7 @@ export const PlasmicLauncherApps = Object.assign(
     ),
     modal: makeNodeComponent("modal"),
     textAreaInput: makeNodeComponent("textAreaInput"),
+    textAreaInput2: makeNodeComponent("textAreaInput2"),
     paziresh24Button: makeNodeComponent("paziresh24Button"),
     apiRequest: makeNodeComponent("apiRequest"),
 
