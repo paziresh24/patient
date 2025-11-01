@@ -1,20 +1,26 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { search as searchApi } from '@/common/apis/services/search/search';
 import { useStat } from '@/common/apis/services/search/stat';
+import Loading from '@/common/components/atom/loading';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { Fragment } from '@/common/fragment';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
+import useLockScroll from '@/common/hooks/useLockScroll';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
+import classNames from '@/common/utils/classNames';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import MobileRowFilter from '@/modules/search/components/filters/rowFilter';
 import UnknownCity from '@/modules/search/components/unknownCity';
+import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useSearchStore } from '@/modules/search/store/search';
@@ -22,32 +28,26 @@ import Filter from '@/modules/search/view/filter';
 import { Result } from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
-import { useFeatureValue, useFeatureIsOn, GrowthBook } from '@growthbook/growthbook-react';
+import { GrowthBook, useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
+import getConfig from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState, useMemo, useCallback } from 'react';
+import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { growthbook } from '../_app';
-import { Fragment } from '@/common/fragment';
-import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
-import classNames from '@/common/utils/classNames';
-import getConfig from 'next/config';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
-  ssr: false
+  ssr: false,
 });
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'), {
   loading: () => <Skeleton w="100%" h="4rem" />,
-  ssr: false
+  ssr: false,
 });
 const { publicRuntimeConfig } = getConfig();
-import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
-import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
-import Loading from '@/common/components/atom/loading';
-import useLockScroll from '@/common/hooks/useLockScroll';
 
 const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   const { isMobile } = useResponsive();
@@ -209,9 +209,12 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
 
   const memoizedFilters = useMemo(() => filters, [filters.sortBy, filters.freeturn]);
 
-  const handleChangeMemoized = useCallback((key: string, value: any) => {
-    handleChange(key, value);
-  }, [handleChange]);
+  const handleChangeMemoized = useCallback(
+    (key: string, value: any) => {
+      handleChange(key, value);
+    },
+    [handleChange],
+  );
 
   return (
     <>
@@ -355,82 +358,64 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     const path = context.resolvedUrl;
     const url = `https://${host}${path}`;
     const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
-    try {
-      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-      const growthbook = new GrowthBook(growthbookContext);
-      growthbook.setAttributes({ url });
-      await growthbook.loadFeatures({ timeout: 500 });
-      // Plasmic
-      showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
-      showPlasmicResult = growthbook.isOn('search_plasmic_result');
-      showPlasmicSort = growthbook.isOn('search_plasmic_sort');
-      showPlasmicConsultBanner = growthbook.isOn('search_plasmic_consult_banner');
-      showSuggestedDoctor = growthbook.getFeatureValue('fragment::top-suggested-card-feature', { enable: true });
-    } catch (error) {
-      console.error(error);
-    }
+
+    const queryClient = new QueryClient();
+    const university = themeConfing?.partnerKey;
 
     try {
-      const queryClient = new QueryClient();
+      const [growthbookResult, searchData] = await Promise.all([
+        (async () => {
+          try {
+            const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+            const growthbook = new GrowthBook(growthbookContext);
+            growthbook.setAttributes({ url });
+            await growthbook.loadFeatures({ timeout: 200 });
+            return {
+              showPlasmicSuggestion: growthbook.isOn('search_plasmic_suggestion'),
+              showPlasmicResult: growthbook.isOn('search_plasmic_result'),
+              showPlasmicSort: growthbook.isOn('search_plasmic_sort'),
+              showPlasmicConsultBanner: growthbook.isOn('search_plasmic_consult_banner'),
+              showSuggestedDoctor: growthbook.getFeatureValue('fragment::top-suggested-card-feature', { enable: true }),
+            };
+          } catch (error) {
+            console.error('GrowthBook error:', error);
+            return {
+              showPlasmicSuggestion: false,
+              showPlasmicResult: false,
+              showPlasmicSort: false,
+              showPlasmicConsultBanner: false,
+              showSuggestedDoctor: { enable: true },
+            };
+          }
+        })(),
 
-      const university = themeConfing?.partnerKey;
-
-      const searchData = await queryClient.fetchQuery(
-        [
-          ServerStateKeysEnum.Search,
-          {
-            route: (params as string[])?.join('/') ?? '',
-            query: {
-              ...query,
-              ...(university && { university }),
-            },
-          },
-        ],
-        () =>
-          searchApi({
-            route: (params as string[])?.join('/') ?? '',
-            query: {
-              ...query,
-              ...(university && { university }),
-            },
-          }),
-      );
-
-      if (
-        !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
-        (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
-        !searchData?.selected_filters?.result_type &&
-        (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
-        !searchData?.search?.is_landing &&
-        showSuggestedDoctor?.enable
-      ) {
-        try {
-          await queryClient.fetchQuery(
-            [
-              ServerStateKeysEnum.SearchConsult,
-              {
-                route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-                query: {
-                  ...query,
-                  turn_type: 'consult',
-                  limit: 2,
-                },
+        queryClient.fetchQuery(
+          [
+            ServerStateKeysEnum.Search,
+            {
+              route: (params as string[])?.join('/') ?? '',
+              query: {
+                ...query,
+                ...(university && { university }),
               },
-            ],
-            () =>
-              searchApi({
-                route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-                query: {
-                  ...query,
-                  turn_type: 'consult',
-                  limit: 2,
-                },
-              }),
-          );
-        } catch (error) {
-          console.error(error);
-        }
-      }
+            },
+          ],
+          () =>
+            searchApi({
+              route: (params as string[])?.join('/') ?? '',
+              query: {
+                ...query,
+                ...(university && { university }),
+              },
+            }),
+        ),
+      ]);
+
+      showPlasmicSuggestion = growthbookResult.showPlasmicSuggestion;
+      showPlasmicResult = growthbookResult.showPlasmicResult;
+      showPlasmicSort = growthbookResult.showPlasmicSort;
+      showPlasmicConsultBanner = growthbookResult.showPlasmicConsultBanner;
+      showSuggestedDoctor = growthbookResult.showSuggestedDoctor;
 
       return {
         props: {

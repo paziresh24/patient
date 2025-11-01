@@ -25,7 +25,7 @@ interface AvatarProps extends Omit<ImageProps, 'alt' | 'src'> {
 }
 
 export const Avatar: React.FC<AvatarProps> = props => {
-  const { src, width = 70, height = 70, className, name, as = 'img', alt = 'avatar', ...rest } = props;
+  const { src, width = 70, height = 70, className, name, as = 'img', alt = 'avatar', loading, fetchPriority, ...rest } = props;
 
   const Component = as;
 
@@ -37,6 +37,8 @@ export const Avatar: React.FC<AvatarProps> = props => {
       style={{ minWidth: width, height }}
       className={classNames('rounded-full bg-gray', className)}
       src={src}
+      loading={loading}
+      fetchPriority={fetchPriority}
       {...rest}
     />
   ) : (
@@ -54,3 +56,4 @@ export const Avatar: React.FC<AvatarProps> = props => {
 };
 
 export default Avatar;
+
