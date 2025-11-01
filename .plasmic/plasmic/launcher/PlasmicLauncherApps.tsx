@@ -112,7 +112,6 @@ export type PlasmicLauncherApps__OverridesType = {
   textAreaInput?: Flex__<typeof Paziresh24AtomsTextAreaInput>;
   paziresh24Button?: Flex__<typeof Paziresh24Button>;
   apiRequest?: Flex__<typeof ApiRequest>;
-  getCenters?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultLauncherAppsProps {
@@ -196,30 +195,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiRequest"
-      },
-      {
-        path: "getCenters.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "getCenters"
-      },
-      {
-        path: "getCenters.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "getCenters"
-      },
-      {
-        path: "getCenters.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "getCenters"
       },
       {
         path: "apiRequest2.data",
@@ -1689,37 +1664,6 @@ function PlasmicLauncherApps__RenderFunc(props: {
           })}
         </div>
       </ApiRequest>
-      <ApiRequest
-        data-plasmic-name={"getCenters"}
-        data-plasmic-override={overrides.getCenters}
-        children={null}
-        className={classNames("__wab_instance", sty.getCenters)}
-        errorDisplay={null}
-        loadingDisplay={null}
-        method={"GET"}
-        onError={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["getCenters", "error"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onLoading={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["getCenters", "loading"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["getCenters", "data"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        ref={ref => {
-          $refs["getCenters"] = ref;
-        }}
-        url={`https://apigw.paziresh24.com/v1/doctor/${$ctx.auth?.info?.id}/centers`}
-      />
     </div>
   ) as React.ReactElement | null;
 }
@@ -1736,8 +1680,7 @@ const PlasmicDescendants = {
     "modal",
     "textAreaInput",
     "paziresh24Button",
-    "apiRequest",
-    "getCenters"
+    "apiRequest"
   ],
   launcherWrapper: ["launcherWrapper"],
   apiRequest2: [
@@ -1764,8 +1707,7 @@ const PlasmicDescendants = {
   modal: ["modal", "textAreaInput", "paziresh24Button"],
   textAreaInput: ["textAreaInput"],
   paziresh24Button: ["paziresh24Button"],
-  apiRequest: ["apiRequest"],
-  getCenters: ["getCenters"]
+  apiRequest: ["apiRequest"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1782,7 +1724,6 @@ type NodeDefaultElementType = {
   textAreaInput: typeof Paziresh24AtomsTextAreaInput;
   paziresh24Button: typeof Paziresh24Button;
   apiRequest: typeof ApiRequest;
-  getCenters: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1857,7 +1798,6 @@ export const PlasmicLauncherApps = Object.assign(
     textAreaInput: makeNodeComponent("textAreaInput"),
     paziresh24Button: makeNodeComponent("paziresh24Button"),
     apiRequest: makeNodeComponent("apiRequest"),
-    getCenters: makeNodeComponent("getCenters"),
 
     // Metadata about props expected for PlasmicLauncherApps
     internalVariantProps: PlasmicLauncherApps__VariantProps,

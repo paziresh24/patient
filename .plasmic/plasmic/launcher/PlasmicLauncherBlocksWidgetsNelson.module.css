@@ -12,22 +12,6 @@
   border-radius: 14px;
   padding: 20px;
 }
-.apiRequest:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
-.svg__nBwz4 {
-  object-fit: cover;
-  max-width: 100%;
-  width: 22px;
-  height: 22px;
-}
-.svg__y4P0L {
-  object-fit: cover;
-  max-width: 100%;
-  width: 22px;
-  height: 22px;
-}
 .apiRequest2:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;

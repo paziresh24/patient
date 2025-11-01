@@ -211,7 +211,7 @@
   width: auto;
   height: auto;
   max-width: 100%;
-  font-size: 11px;
+  font-size: 10px;
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .text__xiGce {
@@ -224,14 +224,13 @@
 .freeBox__tPtNx {
   display: flex;
   flex-direction: row;
-  position: absolute;
+  position: relative;
   align-items: center;
   justify-content: flex-start;
-  width: auto;
+  width: 100%;
   height: auto;
   max-width: 100%;
-  left: 0px;
-  top: auto;
+  min-width: 0;
 }
 @media (min-width: 0px) and (max-width: 768px) {
   .freeBox__tPtNx {
@@ -244,6 +243,43 @@
   max-width: 100%;
   object-fit: cover;
 }
+.freeBox__vIhjf {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 48px;
+  height: auto;
+  max-width: 100%;
+}
+.freeBox__yocM3 {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 23px;
+  height: 23px;
+  max-width: 100%;
+  margin-left: -14px;
+  background: var(--token-M8SHDPuEHkX2);
+  flex-shrink: 0;
+  border-radius: 250px;
+  border: 2px solid #ffffff;
+}
+.freeBox__kn2P4 {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 45px;
+  height: 8px;
+  max-width: 100%;
+  background: var(--token-M8SHDPuEHkX2);
+  margin-right: 5px;
+  border-radius: 70px;
+}
 .modal:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;
 }
@@ -252,8 +288,8 @@
   flex-direction: row;
   position: relative;
   align-items: center;
-  justify-content: flex-end;
-  width: auto;
+  justify-content: flex-start;
+  width: 49px;
   height: auto;
   max-width: 100%;
   left: auto;
@@ -261,12 +297,14 @@
 }
 .img__tUwbH {
   object-fit: cover;
-  max-width: 100%;
+  max-width: 23%;
   width: 28px;
-  height: 28px;
-  margin-left: 0px;
-  margin-right: -14px;
-  min-width: 28px;
+  height: 23px;
+  margin-left: -14px;
+  margin-right: 0px;
+  min-width: 23px;
+  min-height: 23px;
+  max-height: 23px;
   flex-shrink: 0;
   border-radius: 80px;
   border: 2px solid #ffffff;
@@ -278,6 +316,18 @@
   .img__tUwbH {
     width: auto;
   }
+}
+.text__iNssD {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-size: 9px;
+  opacity: 0.7;
+  margin-right: 2px;
+}
+.textsoon__iNssDwdK6 {
+  opacity: 0.5;
 }
 .freeBox__qxIby {
   display: flex;
