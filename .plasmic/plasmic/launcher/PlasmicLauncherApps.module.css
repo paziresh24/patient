@@ -158,6 +158,29 @@
   max-width: 100%;
   margin-top: 10px;
 }
+.text__urgN {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-0D6VF35kZC-C);
+  font-weight: 500;
+  margin-top: 10px;
+  min-width: 0;
+}
+.text__prHst {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-P2saABvfDCPH);
+  font-weight: 500;
+  margin-top: 0px;
+  opacity: 0.7;
+  min-width: 0;
+}
+.textAreaInput2:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+  margin-top: 10px;
+}
 .paziresh24Button:global(.__wab_instance) {
   max-width: 100%;
   margin-top: 10px;
@@ -187,12 +210,13 @@
   max-width: 100%;
   justify-content: flex-start;
   align-items: center;
-  background: #fcf7ee;
+  background: linear-gradient(0deg, #fcf7ee 55%, #56b9ff00 100%);
   row-gap: 10px;
   margin-top: 20px;
   min-width: 0;
   border-radius: 10px;
   padding: 15px;
+  border: 2px dotted #efe6d8;
 }
 .launcherComponentsTitle__fsOfS:global(.__wab_instance) {
   max-width: 100%;
