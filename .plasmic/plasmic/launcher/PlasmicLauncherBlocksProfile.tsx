@@ -456,25 +456,11 @@ function PlasmicLauncherBlocksProfile__RenderFunc(props: {
           </div>
         </div>
       </div>
-      {(() => {
-        try {
-          return $ctx.auth.info.is_doctor;
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return false;
-          }
-          throw e;
-        }
-      })() ? (
-        <LauncherBlocksWallet
-          data-plasmic-name={"launcherBlocksWallet"}
-          data-plasmic-override={overrides.launcherBlocksWallet}
-          className={classNames("__wab_instance", sty.launcherBlocksWallet)}
-        />
-      ) : null}
+      <LauncherBlocksWallet
+        data-plasmic-name={"launcherBlocksWallet"}
+        data-plasmic-override={overrides.launcherBlocksWallet}
+        className={classNames("__wab_instance", sty.launcherBlocksWallet)}
+      />
     </div>
   ) as React.ReactElement | null;
 }

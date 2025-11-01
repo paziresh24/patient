@@ -62,27 +62,16 @@
   max-width: 100%;
   column-gap: 10px;
 }
-.getCenters:global(.__wab_instance) {
+.sideEffect:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
-}
-.svg__wIjLu {
-  object-fit: cover;
-  max-width: 100%;
-  width: 22px;
-  height: 22px;
-}
-.svg__bnGad {
-  object-fit: cover;
-  max-width: 100%;
-  width: 22px;
-  height: 22px;
 }
 .svg__z79 {
   object-fit: cover;
   max-width: 100%;
   width: 22px;
   height: 22px;
+  flex-shrink: 0;
 }
 .freeBox__ixcoN {
   display: flex;

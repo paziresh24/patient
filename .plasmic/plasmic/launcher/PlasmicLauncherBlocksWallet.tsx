@@ -59,7 +59,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
 
@@ -88,7 +88,7 @@ export const PlasmicLauncherBlocksWallet__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicLauncherBlocksWallet__OverridesType = {
   root?: Flex__<"div">;
-  getCenters?: Flex__<typeof ApiRequest>;
+  sideEffect?: Flex__<typeof SideEffect>;
   span?: Flex__<"span">;
 };
 
@@ -146,30 +146,6 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
         type: "private",
         variableType: "number",
         initFunc: ({ $props, $state, $queries, $ctx }) => 0
-      },
-      {
-        path: "getCenters.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "getCenters"
-      },
-      {
-        path: "getCenters.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "getCenters"
-      },
-      {
-        path: "getCenters.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "getCenters"
       },
       {
         path: "isLoading",
@@ -294,52 +270,35 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
           </div>
         </div>
         <div className={classNames(projectcss.all, sty.freeBox__j27OP)}>
-          <ApiRequest
-            data-plasmic-name={"getCenters"}
-            data-plasmic-override={overrides.getCenters}
-            className={classNames("__wab_instance", sty.getCenters)}
-            errorDisplay={
-              <LauncherIconsLoaderIcon
-                className={classNames(projectcss.all, sty.svg__bnGad)}
-                role={"img"}
-              />
-            }
-            loadingDisplay={
-              <LauncherIconsLoaderIcon
-                className={classNames(projectcss.all, sty.svg__wIjLu)}
-                role={"img"}
-              />
-            }
-            method={"GET"}
-            onError={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["getCenters", "error"]).apply(
-                null,
-                eventArgs
-              );
-            }}
-            onLoading={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, [
-                "getCenters",
-                "loading"
-              ]).apply(null, eventArgs);
-            }}
-            onSuccess={async (...eventArgs: any) => {
-              generateStateOnChangeProp($state, ["getCenters", "data"]).apply(
-                null,
-                eventArgs
-              );
+          <SideEffect
+            data-plasmic-name={"sideEffect"}
+            data-plasmic-override={overrides.sideEffect}
+            className={classNames("__wab_instance", sty.sideEffect)}
+            deps={(() => {
+              try {
+                return [$ctx.auth?.info?.provider?.centers];
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return undefined;
+                }
+                throw e;
+              }
+            })()}
+            onMount={async () => {
+              const $steps = {};
 
-              (async data => {
-                const $steps = {};
-
-                $steps["runCode"] = !!$state.getCenters.data.items
+              $steps["forDoctor"] =
+                $ctx?.auth?.info?.provider?.centers?.length > 0
                   ? (() => {
                       const actionArgs = {
                         customFunction: async () => {
                           return (async () => {
                             try {
                               const katibeWalletRequests =
-                                $state.getCenters.data?.items?.map(
+                                $ctx.auth?.info?.provider?.centers?.map(
                                   async item =>
                                     await $$.axios(
                                       `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24?centerid=${
@@ -376,114 +335,143 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                       })?.apply(null, [actionArgs]);
                     })()
                   : undefined;
-                if (
-                  $steps["runCode"] != null &&
-                  typeof $steps["runCode"] === "object" &&
-                  typeof $steps["runCode"].then === "function"
-                ) {
-                  $steps["runCode"] = await $steps["runCode"];
-                }
-              }).apply(null, eventArgs);
-            }}
-            ref={ref => {
-              $refs["getCenters"] = ref;
-            }}
-            url={(() => {
-              try {
-                return `https://apigw.paziresh24.com/v1/doctor/${$ctx.auth?.info?.id}/centers`;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
+              if (
+                $steps["forDoctor"] != null &&
+                typeof $steps["forDoctor"] === "object" &&
+                typeof $steps["forDoctor"].then === "function"
+              ) {
+                $steps["forDoctor"] = await $steps["forDoctor"];
               }
-            })()}
-          >
-            {(() => {
-              try {
-                return $state.isLoading;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
-            })() ? (
-              <LauncherIconsLoaderIcon
-                className={classNames(projectcss.all, sty.svg__z79)}
-                role={"img"}
-              />
-            ) : null}
-            {(() => {
-              try {
-                return !$state.isLoading;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <div className={classNames(projectcss.all, sty.freeBox__ixcoN)}>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__qGszz
-                  )}
-                >
-                  <React.Fragment>
-                    <React.Fragment>{""}</React.Fragment>
-                    {
-                      <span
-                        data-plasmic-name={"span"}
-                        data-plasmic-override={overrides.span}
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.span,
-                          projectcss.__wab_text,
-                          projectcss.plasmic_default__inline,
-                          sty.span
-                        )}
-                      >
-                        <React.Fragment>
-                          {(() => {
+
+              $steps["forPatient"] =
+                $ctx.auth?.info?.is_doctor == false &&
+                $ctx?.auth?.info?.provider?.centers?.length == 0
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return (async () => {
                             try {
-                              return (() => {
-                                return (
-                                  ($state.katbeBalance ?? 0) / 10
-                                )?.toLocaleString("fa-IR");
-                              })();
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "-";
-                              }
-                              throw e;
+                              const katibeWalletRequests = [
+                                await $$.axios(
+                                  `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24`,
+                                  {
+                                    ...$ctx.Fragment.previewApiConfig,
+                                    ...$ctx.Fragment.apiConfig
+                                  }
+                                )
+                              ];
+                              const responses = await Promise.all(
+                                katibeWalletRequests
+                              );
+                              $state.katbeBalance = responses.reduce(
+                                (prev, current) => {
+                                  return prev + current.data?.data?.balance;
+                                },
+                                0
+                              );
+                              return ($state.isLoading = false);
+                            } catch (error) {
+                              return ($state.isLoading = false);
                             }
-                          })()}
-                        </React.Fragment>
-                      </span>
-                    }
-                    <React.Fragment>
-                      {" \u062a\u0648\u0645\u0627\u0646"}
-                    </React.Fragment>
+                          })();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+              if (
+                $steps["forPatient"] != null &&
+                typeof $steps["forPatient"] === "object" &&
+                typeof $steps["forPatient"].then === "function"
+              ) {
+                $steps["forPatient"] = await $steps["forPatient"];
+              }
+            }}
+          />
+
+          {(() => {
+            try {
+              return $state.isLoading;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return false;
+              }
+              throw e;
+            }
+          })() ? (
+            <LauncherIconsLoaderIcon
+              className={classNames(projectcss.all, sty.svg__z79)}
+              role={"img"}
+            />
+          ) : null}
+          {(() => {
+            try {
+              return !$state.isLoading;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
+              }
+              throw e;
+            }
+          })() ? (
+            <div className={classNames(projectcss.all, sty.freeBox__ixcoN)}>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__qGszz
+                )}
+              >
+                <React.Fragment>
+                  <React.Fragment>{""}</React.Fragment>
+                  {
+                    <span
+                      data-plasmic-name={"span"}
+                      data-plasmic-override={overrides.span}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.span,
+                        projectcss.__wab_text,
+                        projectcss.plasmic_default__inline,
+                        sty.span
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return (() => {
+                              return (
+                                ($state.katbeBalance ?? 0) / 10
+                              )?.toLocaleString("fa-IR");
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "-";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </span>
+                  }
+                  <React.Fragment>
+                    {" \u062a\u0648\u0645\u0627\u0646"}
                   </React.Fragment>
-                </div>
+                </React.Fragment>
               </div>
-            ) : null}
-          </ApiRequest>
+            </div>
+          ) : null}
           <LauncherIconsChevronLeftIcon
             className={classNames(projectcss.all, sty.svg__wJkmF)}
             role={"img"}
@@ -495,8 +483,8 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "getCenters", "span"],
-  getCenters: ["getCenters", "span"],
+  root: ["root", "sideEffect", "span"],
+  sideEffect: ["sideEffect"],
   span: ["span"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -504,7 +492,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  getCenters: typeof ApiRequest;
+  sideEffect: typeof SideEffect;
   span: "span";
 };
 
@@ -568,7 +556,7 @@ export const PlasmicLauncherBlocksWallet = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    getCenters: makeNodeComponent("getCenters"),
+    sideEffect: makeNodeComponent("sideEffect"),
     span: makeNodeComponent("span"),
 
     // Metadata about props expected for PlasmicLauncherBlocksWallet
