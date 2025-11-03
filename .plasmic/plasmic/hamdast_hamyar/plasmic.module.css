@@ -1,17 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&display=swap");
-
 .plasmic_tokens {
   --plsmc-standard-width: 800px;
   --plsmc-wide-width: 1280px;
   --plsmc-viewport-gap: 16px;
-  --plsmc-wide-chunk: calc(
-    ((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) -
-      var(--plsmc-viewport-gap)
-  );
+  --plsmc-wide-chunk: calc(((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) - var(--plsmc-viewport-gap));
 }
 
 .plasmic_default_styles {
-  --mixin-i71HvVDV_wM3_font-family: "Inter", sans-serif;
+  --mixin-i71HvVDV_wM3_font-family: 'Inter', sans-serif;
   --mixin-i71HvVDV_wM3_font-size: 16px;
   --mixin-i71HvVDV_wM3_font-weight: 400;
   --mixin-i71HvVDV_wM3_font-style: normal;
@@ -65,7 +60,7 @@
   --mixin-lGWycKOqvFq5_border-bottom-right-radius: 3px;
   --mixin-lGWycKOqvFq5_border-top-left-radius: 3px;
   --mixin-lGWycKOqvFq5_border-top-right-radius: 3px;
-  --mixin-lGWycKOqvFq5_font-family: "Inconsolata";
+  --mixin-lGWycKOqvFq5_font-family: 'Inconsolata';
   --mixin-lGWycKOqvFq5_padding-bottom: 1px;
   --mixin-lGWycKOqvFq5_padding-left: 4px;
   --mixin-lGWycKOqvFq5_padding-right: 4px;
@@ -94,7 +89,7 @@
   --mixin-ey9a3_MZ53DA_border-bottom-right-radius: 3px;
   --mixin-ey9a3_MZ53DA_border-top-left-radius: 3px;
   --mixin-ey9a3_MZ53DA_border-top-right-radius: 3px;
-  --mixin-ey9a3_MZ53DA_font-family: "Inconsolata";
+  --mixin-ey9a3_MZ53DA_font-family: 'Inconsolata';
   --mixin-ey9a3_MZ53DA_padding-bottom: 3px;
   --mixin-ey9a3_MZ53DA_padding-left: 6px;
   --mixin-ey9a3_MZ53DA_padding-right: 6px;
@@ -515,25 +510,17 @@ code:where(.root_reset.code),
 code:where(.root_reset_tags) {
   background: #f8f8f8;
   font-family: var(--mixin-lGWycKOqvFq5_font-family);
-  border-radius: var(--mixin-lGWycKOqvFq5_border-top-left-radius)
-    var(--mixin-lGWycKOqvFq5_border-top-right-radius)
-    var(--mixin-lGWycKOqvFq5_border-bottom-right-radius)
-    var(--mixin-lGWycKOqvFq5_border-bottom-left-radius);
-  padding: var(--mixin-lGWycKOqvFq5_padding-top)
-    var(--mixin-lGWycKOqvFq5_padding-right)
-    var(--mixin-lGWycKOqvFq5_padding-bottom)
+  border-radius: var(--mixin-lGWycKOqvFq5_border-top-left-radius) var(--mixin-lGWycKOqvFq5_border-top-right-radius)
+    var(--mixin-lGWycKOqvFq5_border-bottom-right-radius) var(--mixin-lGWycKOqvFq5_border-bottom-left-radius);
+  padding: var(--mixin-lGWycKOqvFq5_padding-top) var(--mixin-lGWycKOqvFq5_padding-right) var(--mixin-lGWycKOqvFq5_padding-bottom)
     var(--mixin-lGWycKOqvFq5_padding-left);
-  border-top: var(--mixin-lGWycKOqvFq5_border-top-width)
-    var(--mixin-lGWycKOqvFq5_border-top-style)
+  border-top: var(--mixin-lGWycKOqvFq5_border-top-width) var(--mixin-lGWycKOqvFq5_border-top-style)
     var(--mixin-lGWycKOqvFq5_border-top-color);
-  border-right: var(--mixin-lGWycKOqvFq5_border-right-width)
-    var(--mixin-lGWycKOqvFq5_border-right-style)
+  border-right: var(--mixin-lGWycKOqvFq5_border-right-width) var(--mixin-lGWycKOqvFq5_border-right-style)
     var(--mixin-lGWycKOqvFq5_border-right-color);
-  border-bottom: var(--mixin-lGWycKOqvFq5_border-bottom-width)
-    var(--mixin-lGWycKOqvFq5_border-bottom-style)
+  border-bottom: var(--mixin-lGWycKOqvFq5_border-bottom-width) var(--mixin-lGWycKOqvFq5_border-bottom-style)
     var(--mixin-lGWycKOqvFq5_border-bottom-color);
-  border-left: var(--mixin-lGWycKOqvFq5_border-left-width)
-    var(--mixin-lGWycKOqvFq5_border-left-style)
+  border-left: var(--mixin-lGWycKOqvFq5_border-left-width) var(--mixin-lGWycKOqvFq5_border-left-style)
     var(--mixin-lGWycKOqvFq5_border-left-color);
 }
 
@@ -544,8 +531,7 @@ blockquote:where(.root_reset.blockquote),
 blockquote:where(.root_reset_tags) {
   color: var(--mixin-ExQ4Ef7eIAd__color);
   padding-left: var(--mixin-ExQ4Ef7eIAd__padding-left);
-  border-left: var(--mixin-ExQ4Ef7eIAd__border-left-width)
-    var(--mixin-ExQ4Ef7eIAd__border-left-style)
+  border-left: var(--mixin-ExQ4Ef7eIAd__border-left-width) var(--mixin-ExQ4Ef7eIAd__border-left-style)
     var(--mixin-ExQ4Ef7eIAd__border-left-color);
 }
 
@@ -556,25 +542,17 @@ pre:where(.root_reset.pre),
 pre:where(.root_reset_tags) {
   background: #f8f8f8;
   font-family: var(--mixin-ey9a3_MZ53DA_font-family);
-  border-radius: var(--mixin-ey9a3_MZ53DA_border-top-left-radius)
-    var(--mixin-ey9a3_MZ53DA_border-top-right-radius)
-    var(--mixin-ey9a3_MZ53DA_border-bottom-right-radius)
-    var(--mixin-ey9a3_MZ53DA_border-bottom-left-radius);
-  padding: var(--mixin-ey9a3_MZ53DA_padding-top)
-    var(--mixin-ey9a3_MZ53DA_padding-right)
-    var(--mixin-ey9a3_MZ53DA_padding-bottom)
+  border-radius: var(--mixin-ey9a3_MZ53DA_border-top-left-radius) var(--mixin-ey9a3_MZ53DA_border-top-right-radius)
+    var(--mixin-ey9a3_MZ53DA_border-bottom-right-radius) var(--mixin-ey9a3_MZ53DA_border-bottom-left-radius);
+  padding: var(--mixin-ey9a3_MZ53DA_padding-top) var(--mixin-ey9a3_MZ53DA_padding-right) var(--mixin-ey9a3_MZ53DA_padding-bottom)
     var(--mixin-ey9a3_MZ53DA_padding-left);
-  border-top: var(--mixin-ey9a3_MZ53DA_border-top-width)
-    var(--mixin-ey9a3_MZ53DA_border-top-style)
+  border-top: var(--mixin-ey9a3_MZ53DA_border-top-width) var(--mixin-ey9a3_MZ53DA_border-top-style)
     var(--mixin-ey9a3_MZ53DA_border-top-color);
-  border-right: var(--mixin-ey9a3_MZ53DA_border-right-width)
-    var(--mixin-ey9a3_MZ53DA_border-right-style)
+  border-right: var(--mixin-ey9a3_MZ53DA_border-right-width) var(--mixin-ey9a3_MZ53DA_border-right-style)
     var(--mixin-ey9a3_MZ53DA_border-right-color);
-  border-bottom: var(--mixin-ey9a3_MZ53DA_border-bottom-width)
-    var(--mixin-ey9a3_MZ53DA_border-bottom-style)
+  border-bottom: var(--mixin-ey9a3_MZ53DA_border-bottom-width) var(--mixin-ey9a3_MZ53DA_border-bottom-style)
     var(--mixin-ey9a3_MZ53DA_border-bottom-color);
-  border-left: var(--mixin-ey9a3_MZ53DA_border-left-width)
-    var(--mixin-ey9a3_MZ53DA_border-left-style)
+  border-left: var(--mixin-ey9a3_MZ53DA_border-left-width) var(--mixin-ey9a3_MZ53DA_border-left-style)
     var(--mixin-ey9a3_MZ53DA_border-left-color);
 }
 

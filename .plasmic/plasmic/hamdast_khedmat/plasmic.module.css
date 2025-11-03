@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C600%3B0%2C700&display=swap");
-
 .plasmic_tokens {
   --token-8PAyMUV1FIA1: 11px;
   --plasmic-token-unnamed-style-token: var(--token-8PAyMUV1FIA1);
@@ -9,14 +7,11 @@
   --plsmc-standard-width: 800px;
   --plsmc-wide-width: 1280px;
   --plsmc-viewport-gap: 16px;
-  --plsmc-wide-chunk: calc(
-    ((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) -
-      var(--plsmc-viewport-gap)
-  );
+  --plsmc-wide-chunk: calc(((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) - var(--plsmc-viewport-gap));
 }
 
 .plasmic_default_styles {
-  --mixin-pg6xcYd7B0Xh_font-family: "Inter", sans-serif;
+  --mixin-pg6xcYd7B0Xh_font-family: 'Inter', sans-serif;
   --mixin-pg6xcYd7B0Xh_font-size: 16px;
   --mixin-pg6xcYd7B0Xh_font-weight: 400;
   --mixin-pg6xcYd7B0Xh_font-style: normal;
@@ -70,7 +65,7 @@
   --mixin-72EY4Tgujnku_border-bottom-right-radius: 3px;
   --mixin-72EY4Tgujnku_border-top-left-radius: 3px;
   --mixin-72EY4Tgujnku_border-top-right-radius: 3px;
-  --mixin-72EY4Tgujnku_font-family: "Inconsolata";
+  --mixin-72EY4Tgujnku_font-family: 'Inconsolata';
   --mixin-72EY4Tgujnku_padding-bottom: 1px;
   --mixin-72EY4Tgujnku_padding-left: 4px;
   --mixin-72EY4Tgujnku_padding-right: 4px;
@@ -99,7 +94,7 @@
   --mixin-2Xy-GhfaFknm_border-bottom-right-radius: 3px;
   --mixin-2Xy-GhfaFknm_border-top-left-radius: 3px;
   --mixin-2Xy-GhfaFknm_border-top-right-radius: 3px;
-  --mixin-2Xy-GhfaFknm_font-family: "Inconsolata";
+  --mixin-2Xy-GhfaFknm_font-family: 'Inconsolata';
   --mixin-2Xy-GhfaFknm_padding-bottom: 3px;
   --mixin-2Xy-GhfaFknm_padding-left: 6px;
   --mixin-2Xy-GhfaFknm_padding-right: 6px;
@@ -529,25 +524,17 @@ code:where(.root_reset.code),
 code:where(.root_reset_tags) {
   background: #f8f8f8;
   font-family: var(--mixin-72EY4Tgujnku_font-family);
-  border-radius: var(--mixin-72EY4Tgujnku_border-top-left-radius)
-    var(--mixin-72EY4Tgujnku_border-top-right-radius)
-    var(--mixin-72EY4Tgujnku_border-bottom-right-radius)
-    var(--mixin-72EY4Tgujnku_border-bottom-left-radius);
-  padding: var(--mixin-72EY4Tgujnku_padding-top)
-    var(--mixin-72EY4Tgujnku_padding-right)
-    var(--mixin-72EY4Tgujnku_padding-bottom)
+  border-radius: var(--mixin-72EY4Tgujnku_border-top-left-radius) var(--mixin-72EY4Tgujnku_border-top-right-radius)
+    var(--mixin-72EY4Tgujnku_border-bottom-right-radius) var(--mixin-72EY4Tgujnku_border-bottom-left-radius);
+  padding: var(--mixin-72EY4Tgujnku_padding-top) var(--mixin-72EY4Tgujnku_padding-right) var(--mixin-72EY4Tgujnku_padding-bottom)
     var(--mixin-72EY4Tgujnku_padding-left);
-  border-top: var(--mixin-72EY4Tgujnku_border-top-width)
-    var(--mixin-72EY4Tgujnku_border-top-style)
+  border-top: var(--mixin-72EY4Tgujnku_border-top-width) var(--mixin-72EY4Tgujnku_border-top-style)
     var(--mixin-72EY4Tgujnku_border-top-color);
-  border-right: var(--mixin-72EY4Tgujnku_border-right-width)
-    var(--mixin-72EY4Tgujnku_border-right-style)
+  border-right: var(--mixin-72EY4Tgujnku_border-right-width) var(--mixin-72EY4Tgujnku_border-right-style)
     var(--mixin-72EY4Tgujnku_border-right-color);
-  border-bottom: var(--mixin-72EY4Tgujnku_border-bottom-width)
-    var(--mixin-72EY4Tgujnku_border-bottom-style)
+  border-bottom: var(--mixin-72EY4Tgujnku_border-bottom-width) var(--mixin-72EY4Tgujnku_border-bottom-style)
     var(--mixin-72EY4Tgujnku_border-bottom-color);
-  border-left: var(--mixin-72EY4Tgujnku_border-left-width)
-    var(--mixin-72EY4Tgujnku_border-left-style)
+  border-left: var(--mixin-72EY4Tgujnku_border-left-width) var(--mixin-72EY4Tgujnku_border-left-style)
     var(--mixin-72EY4Tgujnku_border-left-color);
 }
 
@@ -558,8 +545,7 @@ blockquote:where(.root_reset.blockquote),
 blockquote:where(.root_reset_tags) {
   color: var(--mixin-kw7zL_M48VnT_color);
   padding-left: var(--mixin-kw7zL_M48VnT_padding-left);
-  border-left: var(--mixin-kw7zL_M48VnT_border-left-width)
-    var(--mixin-kw7zL_M48VnT_border-left-style)
+  border-left: var(--mixin-kw7zL_M48VnT_border-left-width) var(--mixin-kw7zL_M48VnT_border-left-style)
     var(--mixin-kw7zL_M48VnT_border-left-color);
 }
 
@@ -570,25 +556,17 @@ pre:where(.root_reset.pre),
 pre:where(.root_reset_tags) {
   background: #f8f8f8;
   font-family: var(--mixin-2Xy-GhfaFknm_font-family);
-  border-radius: var(--mixin-2Xy-GhfaFknm_border-top-left-radius)
-    var(--mixin-2Xy-GhfaFknm_border-top-right-radius)
-    var(--mixin-2Xy-GhfaFknm_border-bottom-right-radius)
-    var(--mixin-2Xy-GhfaFknm_border-bottom-left-radius);
-  padding: var(--mixin-2Xy-GhfaFknm_padding-top)
-    var(--mixin-2Xy-GhfaFknm_padding-right)
-    var(--mixin-2Xy-GhfaFknm_padding-bottom)
+  border-radius: var(--mixin-2Xy-GhfaFknm_border-top-left-radius) var(--mixin-2Xy-GhfaFknm_border-top-right-radius)
+    var(--mixin-2Xy-GhfaFknm_border-bottom-right-radius) var(--mixin-2Xy-GhfaFknm_border-bottom-left-radius);
+  padding: var(--mixin-2Xy-GhfaFknm_padding-top) var(--mixin-2Xy-GhfaFknm_padding-right) var(--mixin-2Xy-GhfaFknm_padding-bottom)
     var(--mixin-2Xy-GhfaFknm_padding-left);
-  border-top: var(--mixin-2Xy-GhfaFknm_border-top-width)
-    var(--mixin-2Xy-GhfaFknm_border-top-style)
+  border-top: var(--mixin-2Xy-GhfaFknm_border-top-width) var(--mixin-2Xy-GhfaFknm_border-top-style)
     var(--mixin-2Xy-GhfaFknm_border-top-color);
-  border-right: var(--mixin-2Xy-GhfaFknm_border-right-width)
-    var(--mixin-2Xy-GhfaFknm_border-right-style)
+  border-right: var(--mixin-2Xy-GhfaFknm_border-right-width) var(--mixin-2Xy-GhfaFknm_border-right-style)
     var(--mixin-2Xy-GhfaFknm_border-right-color);
-  border-bottom: var(--mixin-2Xy-GhfaFknm_border-bottom-width)
-    var(--mixin-2Xy-GhfaFknm_border-bottom-style)
+  border-bottom: var(--mixin-2Xy-GhfaFknm_border-bottom-width) var(--mixin-2Xy-GhfaFknm_border-bottom-style)
     var(--mixin-2Xy-GhfaFknm_border-bottom-color);
-  border-left: var(--mixin-2Xy-GhfaFknm_border-left-width)
-    var(--mixin-2Xy-GhfaFknm_border-left-style)
+  border-left: var(--mixin-2Xy-GhfaFknm_border-left-width) var(--mixin-2Xy-GhfaFknm_border-left-style)
     var(--mixin-2Xy-GhfaFknm_border-left-color);
 }
 
