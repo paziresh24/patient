@@ -17,6 +17,8 @@ import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import orderBy from 'lodash/orderBy';
 import SelectService from '@/modules/booking/views/selectService';
 import SelectCenter from '@/modules/booking/views/selectCenter';
+import { useRouter } from 'next/router';
+import { useAbsentScore } from '@/common/apis/services/ravi/absentScore';
 
 interface PresenceProps {
   centers: any[];
@@ -27,11 +29,51 @@ interface PresenceProps {
 
 export const Presence = memo((props: PresenceProps) => {
   const { centers, waitingTime, onBook, displayName } = props;
+  const router = useRouter();
+  const slug = router.query.slug as string;
+  const { data: absentScoreData } = useAbsentScore(slug);
   const customise = useCustomize(state => state.customize);
   const isWebView = useWebView();
   const isApplication = useApplication();
   const { profileEvent } = useProfileSplunkEvent();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
+  
+  const penaltyScoreItem = absentScoreData?.list?.find(item => item.penalty_score != null && item.penalty_score !== undefined);
+  const penaltyScore = penaltyScoreItem?.penalty_score;
+  
+  const getAlertConfig = () => {
+    if (!penaltyScore || penaltyScore === 0) {
+      return null;
+    }
+    
+    if (penaltyScore >= 1) {
+      return {
+        bgColor: 'bg-red-50',
+        textColor: 'text-red-600',
+        message: '"حتما" پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+      };
+    }
+    
+    if (penaltyScore > 0.1 && penaltyScore < 1) {
+      return {
+        bgColor: 'bg-yellow-50',
+        textColor: 'text-black',
+        message: 'حتما پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+      };
+    }
+    
+    if (penaltyScore <= 0.1) {
+      return {
+        bgColor: 'bg-[#f1f5f9]',
+        textColor: 'text-black',
+        message: 'پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+      };
+    }
+    
+    return null;
+  };
+  
+  const alertConfig = getAlertConfig();
   const {
     handleOpen: handleOpenSelectCenterModal,
     handleClose: handleCloseSelectCenterModal,
@@ -164,6 +206,15 @@ export const Presence = memo((props: PresenceProps) => {
               `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
           ].filter(Boolean),
         }}
+        alert={
+          alertConfig ? (
+            <div className={`${alertConfig.bgColor} rounded-lg p-3`}>
+              <Text fontSize="sm" className={alertConfig.textColor}>
+                {alertConfig.message}
+              </Text>
+            </div>
+          ) : undefined
+        }
         footer={{
           actions: [
             {

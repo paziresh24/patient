@@ -13,6 +13,7 @@ interface ServiceCardProps {
   body?: {
     description: Array<string | undefined>;
   };
+  alert?: ReactNode;
   footer?: {
     component?: ReactNode;
     actions?: {
@@ -27,7 +28,7 @@ interface ServiceCardProps {
 }
 
 export const ServiceCard = (props: ServiceCardProps) => {
-  const { header, footer, body } = props;
+  const { header, footer, body, alert } = props;
   return (
     <Card className="!p-0 !py-4 space-y-3 !rounded-none md:!rounded-lg">
       {header && (
@@ -54,6 +55,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
           ))}
         </ul>
       )}
+      {alert && <div className="px-4">{alert}</div>}
       {footer && (
         <div className="px-4">
           {footer.actions?.map((action, index) => (
