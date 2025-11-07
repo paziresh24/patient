@@ -50,7 +50,7 @@ export const Presence = memo((props: PresenceProps) => {
       return {
         bgColor: 'bg-red-50',
         textColor: 'text-red-600',
-        message: '"حتما" پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+        message: 'طبق نظر بیماران، "حتما" پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
     }
     
@@ -58,7 +58,7 @@ export const Presence = memo((props: PresenceProps) => {
       return {
         bgColor: 'bg-yellow-50',
         textColor: 'text-black',
-        message: 'حتما پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+        message: 'طبق نظر بیماران، حتما پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
     }
     
@@ -66,7 +66,7 @@ export const Presence = memo((props: PresenceProps) => {
       return {
         bgColor: 'bg-[#f1f5f9]',
         textColor: 'text-black',
-        message: 'پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+        message: 'طبق نظر بیماران، پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
     }
     
