@@ -49,6 +49,7 @@ export const Presence = memo((props: PresenceProps) => {
     if (penaltyScore >= 1) {
       return {
         bgColor: 'bg-red-50',
+        borderColor: 'border-red-300',
         textColor: 'text-red-600',
         message: 'طبق نظر بیماران، "حتما" پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
@@ -57,6 +58,7 @@ export const Presence = memo((props: PresenceProps) => {
     if (penaltyScore > 0.1 && penaltyScore < 1) {
       return {
         bgColor: 'bg-yellow-50',
+        borderColor: 'border-yellow-300',
         textColor: 'text-black',
         message: 'طبق نظر بیماران، حتما پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
@@ -65,6 +67,7 @@ export const Presence = memo((props: PresenceProps) => {
     if (penaltyScore <= 0.1) {
       return {
         bgColor: 'bg-[#f1f5f9]',
+        borderColor: 'border-gray-300',
         textColor: 'text-black',
         message: 'طبق نظر بیماران، پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
@@ -208,7 +211,7 @@ export const Presence = memo((props: PresenceProps) => {
         }}
         alert={
           alertConfig ? (
-            <div className={`${alertConfig.bgColor} rounded-lg p-3`}>
+            <div className={`${alertConfig.bgColor} ${alertConfig.borderColor} border rounded-lg p-3`}>
               <Text fontSize="sm" className={alertConfig.textColor}>
                 {alertConfig.message}
               </Text>
