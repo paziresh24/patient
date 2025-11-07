@@ -3320,6 +3320,32 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsBookingPanels.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "4rd_pgdJHWS1",
+          "name": "LauncherBlocksStory",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksStory.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksStory.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksStory.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "xfVvnkpNLmWn",
+          "name": "LauncherBlocksOneStory",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksOneStory.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksOneStory.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksOneStory.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
