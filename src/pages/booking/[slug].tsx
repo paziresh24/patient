@@ -13,6 +13,7 @@ import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { useDoctorFullName } from '@/common/hooks/useDoctorFullName';
+import { useAbsentScore } from '@/common/apis/services/ravi/absentScore';
 import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
@@ -40,6 +41,7 @@ const Booking = () => {
 
   const slug = router.query?.slug?.toString();
   const { data: doctorFullNameData } = useDoctorFullName(slug, !!router.isReady);
+  const { data: absentScoreData } = useAbsentScore(slug, !!router.isReady);
 
   const doctorName = useMemo(() => {
     const fromHook = `${doctorFullNameData?.name ?? ''} ${doctorFullNameData?.family ?? ''}`.trim();
@@ -117,9 +119,58 @@ const Booking = () => {
     return center?.center_type === 1 ? `مطب ${doctorName}` : center?.name;
   }, [router.query.centerId, profileData]);
 
+  const penaltyScoreItem = absentScoreData?.list?.find(item => item.penalty_score != null && item.penalty_score !== undefined);
+  const penaltyScore = penaltyScoreItem?.penalty_score;
+  
+  const getAlertConfig = () => {
+    if (!penaltyScore || penaltyScore === 0) {
+      return null;
+    }
+    
+    if (penaltyScore >= 1) {
+      return {
+        bgColor: 'bg-red-50',
+        borderColor: 'border-red-300',
+        textColor: 'text-red-600',
+        message: 'طبق نظر بیماران، "حتما" پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+      };
+    }
+    
+    if (penaltyScore > 0.1 && penaltyScore < 1) {
+      return {
+        bgColor: 'bg-yellow-50',
+        borderColor: 'border-yellow-300',
+        textColor: 'text-black',
+        message: 'طبق نظر بیماران، حتما پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+      };
+    }
+    
+    if (penaltyScore <= 0.1) {
+      return {
+        bgColor: 'bg-[#f1f5f9]',
+        borderColor: 'border-gray-300',
+        textColor: 'text-black',
+        message: 'طبق نظر بیماران، پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
+      };
+    }
+    
+    return null;
+  };
+  
+  const alertConfig = getAlertConfig();
+
   return (
     <>
       <Seo title={`دریافت نوبت ${doctorName ? `از ${doctorName}` : ''}`} noIndex />
+      {alertConfig && (
+        <div className="w-full max-w-screen-lg mx-auto px-4 pt-4 md:px-0">
+          <div className={`${alertConfig.bgColor} ${alertConfig.borderColor} border rounded-lg p-3`}>
+            <Text fontSize="sm" className={alertConfig.textColor}>
+              {alertConfig.message}
+            </Text>
+          </div>
+        </div>
+      )}
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="flex flex-col w-full bg-white md:basis-4/6 md:rounded-lg shadow-card mb-28">
           {isLoading && (
