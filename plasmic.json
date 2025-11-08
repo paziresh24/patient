@@ -3320,6 +3320,45 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksSectionsBookingPanels.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "4rd_pgdJHWS1",
+          "name": "LauncherBlocksStory",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksStory.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksStory.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksStory.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "xfVvnkpNLmWn",
+          "name": "LauncherBlocksOneStory",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksOneStory.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksOneStory.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksOneStory.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "dgAswYcMiMr9",
+          "name": "LauncherBlocksStoryTimeLine",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksStoryTimeLine.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksStoryTimeLine.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksStoryTimeLine.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -3387,6 +3426,21 @@
           "id": "mTXzdsPjtVAd",
           "name": "Icon3Icon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon3.tsx"
+        },
+        {
+          "id": "jL-srmS19kSe",
+          "name": "Icon4Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon4.tsx"
+        },
+        {
+          "id": "IxcB9kGsaO5M",
+          "name": "Icon5Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon5.tsx"
+        },
+        {
+          "id": "bXJJPikRYRrj",
+          "name": "Icon6Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon6.tsx"
         }
       ],
       "images": [
@@ -3399,6 +3453,11 @@
           "id": "0t3cEexzk6xe",
           "name": "nelson-notification.png",
           "filePath": "plasmic/launcher/images/nelsonNotificationPng.png"
+        },
+        {
+          "id": "ESYxiogpucLk",
+          "name": "image",
+          "filePath": "plasmic/launcher/images/image.svg"
         }
       ],
       "indirect": false,
