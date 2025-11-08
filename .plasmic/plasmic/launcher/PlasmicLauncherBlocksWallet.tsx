@@ -301,12 +301,10 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                                 $ctx.auth?.info?.provider?.centers?.map(
                                   async item =>
                                     await $$.axios(
-                                      `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24?centerid=${
-                                        item.id
-                                      }${
+                                      `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24${
                                         item.id == "5532"
                                           ? ``
-                                          : `&account=organization`
+                                          : `?centerid=${item.id}&account=organization`
                                       }`,
                                       {
                                         ...$ctx.Fragment.previewApiConfig,

@@ -147,6 +147,8 @@ function PlasmicLauncherBlocksStory__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -338,6 +340,45 @@ function PlasmicLauncherBlocksStory__RenderFunc(props: {
                   typeof $steps["updateShowStory2"].then === "function"
                 ) {
                   $steps["updateShowStory2"] = await $steps["updateShowStory2"];
+                }
+
+                $steps["updateShowStory4"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "story",
+                                action: "open_story",
+                                story_id: currentItem.id,
+                                title: currentItem.title,
+                                user_id: $ctx.auth.info.id
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateShowStory4"] != null &&
+                  typeof $steps["updateShowStory4"] === "object" &&
+                  typeof $steps["updateShowStory4"].then === "function"
+                ) {
+                  $steps["updateShowStory4"] = await $steps["updateShowStory4"];
                 }
               }}
               seen={(() => {
@@ -625,6 +666,49 @@ function PlasmicLauncherBlocksStory__RenderFunc(props: {
                         ) {
                           $steps["updateShowStory3"] = await $steps[
                             "updateShowStory3"
+                          ];
+                        }
+
+                        $steps["updateShowStory4"] = true
+                          ? (() => {
+                              const actionArgs = {
+                                args: [
+                                  (() => {
+                                    try {
+                                      return {
+                                        evant_group: "launcher_statistics",
+                                        event_type: "story",
+                                        action: "next_story",
+                                        story_id: currentItem.id,
+                                        title: currentItem.title,
+                                        user_id: $ctx.auth.info.id
+                                      };
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()
+                                ]
+                              };
+                              return $globalActions["Splunk.sendLog"]?.apply(
+                                null,
+                                [...actionArgs.args]
+                              );
+                            })()
+                          : undefined;
+                        if (
+                          $steps["updateShowStory4"] != null &&
+                          typeof $steps["updateShowStory4"] === "object" &&
+                          typeof $steps["updateShowStory4"].then === "function"
+                        ) {
+                          $steps["updateShowStory4"] = await $steps[
+                            "updateShowStory4"
                           ];
                         }
                       }}
@@ -964,6 +1048,53 @@ function PlasmicLauncherBlocksStory__RenderFunc(props: {
                             typeof $steps["updatePuase"].then === "function"
                           ) {
                             $steps["updatePuase"] = await $steps["updatePuase"];
+                          }
+
+                          $steps["invokeGlobalAction"] = true
+                            ? (() => {
+                                const actionArgs = {
+                                  args: [
+                                    (() => {
+                                      try {
+                                        return {
+                                          evant_group: "launcher_statistics",
+                                          event_type: "story",
+                                          action: "click_button",
+                                          story_id: currentItem.id,
+                                          title: currentItem.title,
+                                          button_text: currentItem.buttonText,
+                                          app_key: currentItem.appKey,
+                                          button_link: currentItem.buttonLink,
+                                          user_id: $ctx.auth.info.id
+                                        };
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                            "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return $globalActions["Splunk.sendLog"]?.apply(
+                                  null,
+                                  [...actionArgs.args]
+                                );
+                              })()
+                            : undefined;
+                          if (
+                            $steps["invokeGlobalAction"] != null &&
+                            typeof $steps["invokeGlobalAction"] === "object" &&
+                            typeof $steps["invokeGlobalAction"].then ===
+                              "function"
+                          ) {
+                            $steps["invokeGlobalAction"] = await $steps[
+                              "invokeGlobalAction"
+                            ];
                           }
                         }}
                       />
