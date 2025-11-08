@@ -65,6 +65,7 @@ import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import LauncherBlocksShortcuts from "../../LauncherBlocksShortcuts"; // plasmic-import: SALc6_vQPXlG/component
 import LauncherBlocksWidgetsSanje from "../../LauncherBlocksWidgetsSanje"; // plasmic-import: p_ncR6UWroPY/component
 import LauncherBlocksWidgetsNelson from "../../LauncherBlocksWidgetsNelson"; // plasmic-import: kPpI69i3raKy/component
+import LauncherBlocksStory from "../../LauncherBlocksStory"; // plasmic-import: 4rd_pgdJHWS1/component
 import LauncherBlocksApps from "../../LauncherBlocksApps"; // plasmic-import: 1JVvWgQsicxr/component
 import LauncherBlocksSectionsStore from "../../LauncherBlocksSectionsStore"; // plasmic-import: eAgPCQOGXT3k/component
 import LauncherBlocksPatientServices from "../../LauncherBlocksPatientServices"; // plasmic-import: ofxhzuPg2IHJ/component
@@ -103,6 +104,7 @@ export type PlasmicLauncherMain__OverridesType = {
   launcherBlocksShortcuts?: Flex__<typeof LauncherBlocksShortcuts>;
   launcherBlocksWidgetsSanje?: Flex__<typeof LauncherBlocksWidgetsSanje>;
   launcherBlocksWidgetsNelson?: Flex__<typeof LauncherBlocksWidgetsNelson>;
+  launcherBlocksStory?: Flex__<typeof LauncherBlocksStory>;
   launcherBlocksApps?: Flex__<typeof LauncherBlocksApps>;
   launcherBlocksSectionsStore?: Flex__<typeof LauncherBlocksSectionsStore>;
   launcherBlocksPatientServices?: Flex__<typeof LauncherBlocksPatientServices>;
@@ -347,6 +349,56 @@ function PlasmicLauncherMain__RenderFunc(props: {
             </Reveal>
           ) : null}
           <Reveal
+            className={classNames("__wab_instance", sty.reveal__j5ZyC)}
+            duration={300}
+            triggerOnce={true}
+          >
+            <LauncherBlocksStory
+              data-plasmic-name={"launcherBlocksStory"}
+              data-plasmic-override={overrides.launcherBlocksStory}
+              className={classNames("__wab_instance", sty.launcherBlocksStory)}
+              onOpenApp={async appKey => {
+                const $steps = {};
+
+                $steps["runOnAction"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onAction"],
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                action: "OPEN_APP",
+                                appKey: appKey
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnAction"] != null &&
+                  typeof $steps["runOnAction"] === "object" &&
+                  typeof $steps["runOnAction"].then === "function"
+                ) {
+                  $steps["runOnAction"] = await $steps["runOnAction"];
+                }
+              }}
+            />
+          </Reveal>
+          <Reveal
             className={classNames("__wab_instance", sty.reveal__vvBKi)}
             duration={300}
             triggerOnce={true}
@@ -574,6 +626,7 @@ const PlasmicDescendants = {
     "launcherBlocksShortcuts",
     "launcherBlocksWidgetsSanje",
     "launcherBlocksWidgetsNelson",
+    "launcherBlocksStory",
     "launcherBlocksApps",
     "launcherBlocksSectionsStore",
     "launcherBlocksPatientServices",
@@ -584,6 +637,7 @@ const PlasmicDescendants = {
   launcherBlocksShortcuts: ["launcherBlocksShortcuts"],
   launcherBlocksWidgetsSanje: ["launcherBlocksWidgetsSanje"],
   launcherBlocksWidgetsNelson: ["launcherBlocksWidgetsNelson"],
+  launcherBlocksStory: ["launcherBlocksStory"],
   launcherBlocksApps: ["launcherBlocksApps"],
   launcherBlocksSectionsStore: ["launcherBlocksSectionsStore"],
   launcherBlocksPatientServices: ["launcherBlocksPatientServices"],
@@ -599,6 +653,7 @@ type NodeDefaultElementType = {
   launcherBlocksShortcuts: typeof LauncherBlocksShortcuts;
   launcherBlocksWidgetsSanje: typeof LauncherBlocksWidgetsSanje;
   launcherBlocksWidgetsNelson: typeof LauncherBlocksWidgetsNelson;
+  launcherBlocksStory: typeof LauncherBlocksStory;
   launcherBlocksApps: typeof LauncherBlocksApps;
   launcherBlocksSectionsStore: typeof LauncherBlocksSectionsStore;
   launcherBlocksPatientServices: typeof LauncherBlocksPatientServices;
@@ -672,6 +727,7 @@ export const PlasmicLauncherMain = Object.assign(
     launcherBlocksWidgetsNelson: makeNodeComponent(
       "launcherBlocksWidgetsNelson"
     ),
+    launcherBlocksStory: makeNodeComponent("launcherBlocksStory"),
     launcherBlocksApps: makeNodeComponent("launcherBlocksApps"),
     launcherBlocksSectionsStore: makeNodeComponent(
       "launcherBlocksSectionsStore"
