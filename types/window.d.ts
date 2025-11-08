@@ -8,6 +8,9 @@ interface Window {
   };
   doctor: any;
   paziresh24: any;
+  pishani?: {
+    sendEvent: (event: 'CLICK' | 'PAGE_VIEW', payload?: Record<string, unknown>) => Promise<void> | void;
+  };
   user: any;
   najvaUserSubscribed: any;
   clarity: any;
