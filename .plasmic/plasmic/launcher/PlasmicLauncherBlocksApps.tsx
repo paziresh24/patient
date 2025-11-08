@@ -872,7 +872,7 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                 $steps["goToPage"] = true
                   ? (() => {
                       const actionArgs = {
-                        destination: "/_/blood_pressure/launcher/"
+                        destination: "/_/diabetes_risk/launcher/"
                       };
                       return (({ destination }) => {
                         if (
@@ -959,10 +959,10 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                   ];
                 }
 
-                $steps["goToDiabetesRiskLauncher"] = true
+                $steps["goToBloodPressureLauncher"] = true
                   ? (() => {
                       const actionArgs = {
-                        destination: "/_/diabetes_risk/launcher/"
+                        destination: "/_/blood_pressure/launcher/"
                       };
                       return (({ destination }) => {
                         if (
@@ -979,12 +979,12 @@ function PlasmicLauncherBlocksApps__RenderFunc(props: {
                     })()
                   : undefined;
                 if (
-                  $steps["goToDiabetesRiskLauncher"] != null &&
-                  typeof $steps["goToDiabetesRiskLauncher"] === "object" &&
-                  typeof $steps["goToDiabetesRiskLauncher"].then === "function"
+                  $steps["goToBloodPressureLauncher"] != null &&
+                  typeof $steps["goToBloodPressureLauncher"] === "object" &&
+                  typeof $steps["goToBloodPressureLauncher"].then === "function"
                 ) {
-                  $steps["goToDiabetesRiskLauncher"] = await $steps[
-                    "goToDiabetesRiskLauncher"
+                  $steps["goToBloodPressureLauncher"] = await $steps[
+                    "goToBloodPressureLauncher"
                   ];
                 }
               }}
