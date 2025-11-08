@@ -78,9 +78,19 @@ const Receipt = () => {
   const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
   const [hasHolidays, setHasHolidays] = useState(false);
-  const normalizedCenterId = Array.isArray(centerId) ? centerId[0] : centerId;
-  const normalizedBookId = Array.isArray(bookId) ? bookId[0] : bookId;
-  const hasTrackedConsultReceiptView = useRef(false);
+
+  useEffect(() => {
+    if (bookId && centerId === '5532' && user?.id && typeof window !== 'undefined') {
+      console.log('sendEvent', user?.id, centerId, bookId);
+      setTimeout(() => {
+        window.pishani?.sendEvent?.('PAGE_VIEW', {
+          user_id: user?.id,
+          center_id: centerId,
+          book_id: bookId,
+        });
+      }, 2000);
+    }
+  }, [centerId, bookId, user?.id]);
 
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -135,19 +145,6 @@ const Receipt = () => {
       router.replace(`/login?redirect_url=${router.asPath}`);
     }
   }, [isLogin, userPednding, pincode]);
-
-  useEffect(() => {
-    if (hasTrackedConsultReceiptView.current) return;
-    if (typeof window === 'undefined') return;
-    if (normalizedCenterId !== '5532' || !normalizedBookId) return;
-
-    hasTrackedConsultReceiptView.current = true;
-    window.pishani?.sendEvent?.('PAGE_VIEW', {
-      user_id: user?.id,
-      center_id: normalizedCenterId,
-      book_id: normalizedBookId,
-    });
-  }, [normalizedCenterId, normalizedBookId, router.asPath, user?.id]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
@@ -268,7 +265,7 @@ const Receipt = () => {
           if (axios.isAxiosError(error)) {
             const statusCode = error.response?.status;
             const errorMessage = error.response?.data?.message;
-            
+
             // Handle specific error codes for remove book action
             switch (statusCode) {
               case 400:
@@ -489,9 +486,13 @@ const Receipt = () => {
         <Seo title="خطا در بارگذاری رسید نوبت" noIndex />
         <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
           <div className="w-full md:basis-4/6">
-            <ReceiptError 
-              statusCode={errorStatusCode || 500} 
-              message={getReceiptDetails.error && typeof getReceiptDetails.error === 'object' && 'message' in getReceiptDetails.error ? String((getReceiptDetails.error as any).message) : undefined}
+            <ReceiptError
+              statusCode={errorStatusCode || 500}
+              message={
+                getReceiptDetails.error && typeof getReceiptDetails.error === 'object' && 'message' in getReceiptDetails.error
+                  ? String((getReceiptDetails.error as any).message)
+                  : undefined
+              }
               onRetry={handleRetry}
             />
           </div>
