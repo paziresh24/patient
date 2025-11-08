@@ -146,7 +146,6 @@ const Receipt = () => {
       user_id: user?.id,
       center_id: normalizedCenterId,
       book_id: normalizedBookId,
-      path: router.asPath,
     });
   }, [normalizedCenterId, normalizedBookId, router.asPath, user?.id]);
 
