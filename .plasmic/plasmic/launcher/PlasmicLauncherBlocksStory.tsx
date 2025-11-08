@@ -61,8 +61,9 @@ import {
 
 import LauncherBlocksOneStory from "../../LauncherBlocksOneStory"; // plasmic-import: xfVvnkpNLmWn/component
 import { Portal } from "@/common/fragment/components/portal"; // plasmic-import: 8JnrBOuqUY30/codeComponent
-import LauncherBlocksStoryTimeLine from "../../LauncherBlocksStoryTimeLine"; // plasmic-import: dgAswYcMiMr9/component
+import Paziresh24AtomsTextAreaInput from "../../Paziresh24AtomsTextAreaInput"; // plasmic-import: HOBObNXYC7Oc/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
+import LauncherBlocksStoryTimeLine from "../../LauncherBlocksStoryTimeLine"; // plasmic-import: dgAswYcMiMr9/component
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
@@ -72,9 +73,9 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import sty from "./PlasmicLauncherBlocksStory.module.css"; // plasmic-import: 4rd_pgdJHWS1/css
 
-import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: bXJJPikRYRrj/icon
 import ChevronRightIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
 import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
+import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: bXJJPikRYRrj/icon
 
 createPlasmicElementProxy;
 
@@ -96,9 +97,9 @@ export type PlasmicLauncherBlocksStory__OverridesType = {
   root?: Flex__<"div">;
   launcherBlocksOneStory?: Flex__<typeof LauncherBlocksOneStory>;
   fragmentPortal?: Flex__<typeof Portal>;
+  textAreaInput?: Flex__<typeof Paziresh24AtomsTextAreaInput>;
   launcherBlocksStoryTimeLine?: Flex__<typeof LauncherBlocksStoryTimeLine>;
   svg?: Flex__<"svg">;
-  paziresh24Button?: Flex__<typeof Paziresh24Button>;
   reveal?: Flex__<typeof Reveal>;
   img?: Flex__<typeof PlasmicImg__>;
 };
@@ -185,6 +186,11 @@ function PlasmicLauncherBlocksStory__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "textAreaInput[].value",
+        type: "private",
+        variableType: "text"
       }
     ],
     [$props, $ctx, $refs]
@@ -428,6 +434,221 @@ function PlasmicLauncherBlocksStory__RenderFunc(props: {
                 }
               })() ? (
                 <div className={classNames(projectcss.all, sty.freeBox__z69Rp)}>
+                  {(() => {
+                    try {
+                      return currentItem.component === "question_box";
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <div
+                      className={classNames(projectcss.all, sty.freeBox__l2V7K)}
+                    >
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox__o105E
+                        )}
+                      >
+                        {(() => {
+                          const child$Props = {
+                            className: classNames(
+                              "__wab_instance",
+                              sty.textAreaInput
+                            ),
+                            onChange: async (...eventArgs: any) => {
+                              generateStateOnChangeProp($state, [
+                                "textAreaInput",
+                                __plasmic_idx_0,
+                                "value"
+                              ]).apply(null, eventArgs);
+
+                              if (
+                                eventArgs.length > 1 &&
+                                eventArgs[1] &&
+                                eventArgs[1]._plasmic_state_init_
+                              ) {
+                                return;
+                              }
+
+                              (async val => {
+                                const $steps = {};
+
+                                $steps["updatePuase"] = true
+                                  ? (() => {
+                                      const actionArgs = {
+                                        variable: {
+                                          objRoot: $state,
+                                          variablePath: ["puase"]
+                                        },
+                                        operation: 0,
+                                        value: true
+                                      };
+                                      return (({
+                                        variable,
+                                        value,
+                                        startIndex,
+                                        deleteCount
+                                      }) => {
+                                        if (!variable) {
+                                          return;
+                                        }
+                                        const { objRoot, variablePath } =
+                                          variable;
+
+                                        $stateSet(objRoot, variablePath, value);
+                                        return value;
+                                      })?.apply(null, [actionArgs]);
+                                    })()
+                                  : undefined;
+                                if (
+                                  $steps["updatePuase"] != null &&
+                                  typeof $steps["updatePuase"] === "object" &&
+                                  typeof $steps["updatePuase"].then ===
+                                    "function"
+                                ) {
+                                  $steps["updatePuase"] = await $steps[
+                                    "updatePuase"
+                                  ];
+                                }
+                              }).apply(null, eventArgs);
+                            },
+                            placeholder:
+                              "\u0627\u06cc\u0646\u062c\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f ...",
+                            value: generateStateValueProp($state, [
+                              "textAreaInput",
+                              __plasmic_idx_0,
+                              "value"
+                            ])
+                          };
+
+                          initializePlasmicStates(
+                            $state,
+                            [
+                              {
+                                name: "textAreaInput[].value",
+                                initFunc: ({ $props, $state, $queries }) =>
+                                  undefined
+                              }
+                            ],
+                            [__plasmic_idx_0]
+                          );
+                          return (
+                            <Paziresh24AtomsTextAreaInput
+                              data-plasmic-name={"textAreaInput"}
+                              data-plasmic-override={overrides.textAreaInput}
+                              {...child$Props}
+                            />
+                          );
+                        })()}
+                        <Paziresh24Button
+                          children2={"\u0627\u0631\u0633\u0627\u0644"}
+                          className={classNames(
+                            "__wab_instance",
+                            sty.paziresh24Button__javBp
+                          )}
+                          isDisabled={(() => {
+                            try {
+                              return (
+                                $state.textAreaInput?.[currentIndex].value
+                                  ?.length == 0
+                              );
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "isDisabled";
+                              }
+                              throw e;
+                            }
+                          })()}
+                          onClick={async event => {
+                            const $steps = {};
+
+                            $steps["invokeGlobalAction2"] = true
+                              ? (() => {
+                                  const actionArgs = {
+                                    args: [
+                                      undefined,
+                                      "\u0627\u0631\u0633\u0627\u0644 \u0634\u062f\u060c \u0628\u0627 \u062a\u0634\u06a9\u0631 \u0627\u0632 \u0645\u0634\u0627\u0631\u06a9\u062a \u0634\u0645\u0627 \ud83d\ude4f",
+                                      "top-center"
+                                    ]
+                                  };
+                                  return $globalActions[
+                                    "Fragment.showToast"
+                                  ]?.apply(null, [...actionArgs.args]);
+                                })()
+                              : undefined;
+                            if (
+                              $steps["invokeGlobalAction2"] != null &&
+                              typeof $steps["invokeGlobalAction2"] ===
+                                "object" &&
+                              typeof $steps["invokeGlobalAction2"].then ===
+                                "function"
+                            ) {
+                              $steps["invokeGlobalAction2"] = await $steps[
+                                "invokeGlobalAction2"
+                              ];
+                            }
+
+                            $steps["invokeGlobalAction"] = true
+                              ? (() => {
+                                  const actionArgs = {
+                                    args: [
+                                      (() => {
+                                        try {
+                                          return {
+                                            evant_group: "launcher_statistics",
+                                            event_type: "question_box",
+                                            story_id: currentItem.id,
+                                            story_title: currentItem.title,
+                                            response:
+                                              $state.textAreaInput?.[
+                                                currentIndex
+                                              ]?.value,
+                                            user_id: $ctx.auth?.info?.id
+                                          };
+                                        } catch (e) {
+                                          if (
+                                            e instanceof TypeError ||
+                                            e?.plasmicType ===
+                                              "PlasmicUndefinedDataError"
+                                          ) {
+                                            return undefined;
+                                          }
+                                          throw e;
+                                        }
+                                      })()
+                                    ]
+                                  };
+                                  return $globalActions[
+                                    "Splunk.sendLog"
+                                  ]?.apply(null, [...actionArgs.args]);
+                                })()
+                              : undefined;
+                            if (
+                              $steps["invokeGlobalAction"] != null &&
+                              typeof $steps["invokeGlobalAction"] ===
+                                "object" &&
+                              typeof $steps["invokeGlobalAction"].then ===
+                                "function"
+                            ) {
+                              $steps["invokeGlobalAction"] = await $steps[
+                                "invokeGlobalAction"
+                              ];
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
                   <div
                     className={classNames(projectcss.all, sty.freeBox__bmaFq)}
                   >
@@ -913,8 +1134,6 @@ function PlasmicLauncherBlocksStory__RenderFunc(props: {
                       }
                     })() ? (
                       <Paziresh24Button
-                        data-plasmic-name={"paziresh24Button"}
-                        data-plasmic-override={overrides.paziresh24Button}
                         children2={
                           <React.Fragment>
                             {(() => {
@@ -934,7 +1153,7 @@ function PlasmicLauncherBlocksStory__RenderFunc(props: {
                         }
                         className={classNames(
                           "__wab_instance",
-                          sty.paziresh24Button
+                          sty.paziresh24Button___79VTh
                         )}
                         onClick={async event => {
                           const $steps = {};
@@ -1178,24 +1397,24 @@ const PlasmicDescendants = {
     "root",
     "launcherBlocksOneStory",
     "fragmentPortal",
+    "textAreaInput",
     "launcherBlocksStoryTimeLine",
     "svg",
-    "paziresh24Button",
     "reveal",
     "img"
   ],
   launcherBlocksOneStory: ["launcherBlocksOneStory"],
   fragmentPortal: [
     "fragmentPortal",
+    "textAreaInput",
     "launcherBlocksStoryTimeLine",
     "svg",
-    "paziresh24Button",
     "reveal",
     "img"
   ],
+  textAreaInput: ["textAreaInput"],
   launcherBlocksStoryTimeLine: ["launcherBlocksStoryTimeLine"],
   svg: ["svg"],
-  paziresh24Button: ["paziresh24Button"],
   reveal: ["reveal", "img"],
   img: ["img"]
 } as const;
@@ -1206,9 +1425,9 @@ type NodeDefaultElementType = {
   root: "div";
   launcherBlocksOneStory: typeof LauncherBlocksOneStory;
   fragmentPortal: typeof Portal;
+  textAreaInput: typeof Paziresh24AtomsTextAreaInput;
   launcherBlocksStoryTimeLine: typeof LauncherBlocksStoryTimeLine;
   svg: "svg";
-  paziresh24Button: typeof Paziresh24Button;
   reveal: typeof Reveal;
   img: typeof PlasmicImg__;
 };
@@ -1275,11 +1494,11 @@ export const PlasmicLauncherBlocksStory = Object.assign(
     // Helper components rendering sub-elements
     launcherBlocksOneStory: makeNodeComponent("launcherBlocksOneStory"),
     fragmentPortal: makeNodeComponent("fragmentPortal"),
+    textAreaInput: makeNodeComponent("textAreaInput"),
     launcherBlocksStoryTimeLine: makeNodeComponent(
       "launcherBlocksStoryTimeLine"
     ),
     svg: makeNodeComponent("svg"),
-    paziresh24Button: makeNodeComponent("paziresh24Button"),
     reveal: makeNodeComponent("reveal"),
     img: makeNodeComponent("img"),
 

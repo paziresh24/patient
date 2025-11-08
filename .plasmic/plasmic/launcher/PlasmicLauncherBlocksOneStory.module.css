@@ -21,12 +21,14 @@
   outline-style: solid;
   outline-offset: var(--token-omrXvBNBcWTN);
   outline-color: var(--token-IFYe29KCwQQV);
+  outline-width: medium;
   flex-shrink: 0;
   border-radius: 110px;
   border: 1px solid var(--token-4iQ-8GWBqX6X);
 }
 .freeBoxseen {
   outline-color: var(--token-ezMpHdKVwSWQ);
+  outline-width: medium;
 }
 .img {
   object-fit: cover;
