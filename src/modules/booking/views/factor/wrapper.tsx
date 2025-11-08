@@ -243,6 +243,14 @@ const FactorWrapper = (props: FactorWrapperProps) => {
       <div className="fixed bottom-0 right-0 flex flex-col w-full p-4 bg-white md:p-0 md:static md:w-auto md:bg-transparent shadow-card md:shadow-none">
         <Button
           onClick={() => {
+            if (centerId === CENTERS.CONSULT && typeof window !== 'undefined') {
+              window.pishani?.sendEvent?.('CLICK', {
+                action: 'consult_payment_start_chat',
+                center_id: centerId,
+                user_id: userInfo?.id,
+                book_id: bookId ?? '',
+              });
+            }
             if (!isLogin) {
               return loginModal.handleOpenLoginModal({
                 state: true,

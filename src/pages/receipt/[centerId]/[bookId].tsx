@@ -78,6 +78,9 @@ const Receipt = () => {
   const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
   const [hasHolidays, setHasHolidays] = useState(false);
+  const normalizedCenterId = Array.isArray(centerId) ? centerId[0] : centerId;
+  const normalizedBookId = Array.isArray(bookId) ? bookId[0] : bookId;
+  const hasTrackedConsultReceiptView = useRef(false);
 
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -132,6 +135,20 @@ const Receipt = () => {
       router.replace(`/login?redirect_url=${router.asPath}`);
     }
   }, [isLogin, userPednding, pincode]);
+
+  useEffect(() => {
+    if (hasTrackedConsultReceiptView.current) return;
+    if (typeof window === 'undefined') return;
+    if (normalizedCenterId !== '5532' || !normalizedBookId) return;
+
+    hasTrackedConsultReceiptView.current = true;
+    window.pishani?.sendEvent?.('PAGE_VIEW', {
+      user_id: user?.id,
+      center_id: normalizedCenterId,
+      book_id: normalizedBookId,
+      path: router.asPath,
+    });
+  }, [normalizedCenterId, normalizedBookId, router.asPath, user?.id]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
