@@ -1,0 +1,166 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  column-gap: var(--token-KDnC5QlJdkgq);
+  min-width: 0;
+}
+.freeBox__gh58J {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+.fragmentPortal:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.reveal:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
+}
+.freeBox__qljdH {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  left: 0;
+  top: 0;
+  z-index: 999999999999;
+  background: #ffffff;
+  right: 0;
+  bottom: 0;
+}
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox__qljdH {
+    left: auto;
+    top: auto;
+    bottom: auto;
+    right: auto;
+  }
+}
+.freeBox__bmaFq {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 100px;
+  z-index: 4;
+}
+.freeBox__siZSv {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox___09PLj {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox__gwBrj {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: auto;
+  max-width: 100%;
+  left: 0;
+  top: 0;
+  column-gap: 10px;
+  right: 0;
+  padding: 20px;
+}
+.launcherBlocksStoryTimeLine:global(.__wab_instance) {
+  position: relative;
+  top: auto;
+  left: auto;
+}
+.img {
+  object-fit: cover;
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+.img > picture > img {
+  object-fit: cover;
+}
+.freeBox___8Q6J {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  top: auto;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  box-shadow: none;
+  background: linear-gradient(0deg, #a3b4f5 0%, #56b8ff03 99%, #ffffff00 100%)
+    0% 0% / 100% 190% repeat;
+  padding: 40px;
+}
+.svg {
+  object-fit: cover;
+  max-width: 100%;
+  color: #3861fb;
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+.paziresh24Button:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.svg___0PH {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__tz8Bo {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
