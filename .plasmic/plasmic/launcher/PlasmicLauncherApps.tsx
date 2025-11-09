@@ -305,6 +305,28 @@ function PlasmicLauncherApps__RenderFunc(props: {
             eventArgs
           );
         }}
+        params={(() => {
+          try {
+            return Object.entries($ctx?.Growthbook?.features ?? {})
+              ?.filter?.(
+                ([key, value]) => key.startsWith("hamdast::apps::") && !!value
+              )
+              .reduce((prev, curr) => {
+                return {
+                  ...prev,
+                  [curr[0]?.replace("hamdast::apps::", "")]: curr[1]
+                };
+              }, {});
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
         ref={ref => {
           $refs["apiRequest2"] = ref;
         }}

@@ -216,7 +216,20 @@ function PlasmicLauncherWrapper__RenderFunc(props: {
                           event_type: "page_load",
                           user_id: $ctx.auth.info?.id,
                           is_doctor: $ctx.auth.info?.is_doctor,
-                          page: $props.page
+                          page: $props.page,
+                          features: Object.entries(
+                            $ctx?.Growthbook?.features ?? {}
+                          )
+                            ?.filter?.(([key, value]) =>
+                              key.startsWith("hamdast::")
+                            )
+                            .reduce((prev, curr) => {
+                              return {
+                                ...prev,
+                                [curr[0]?.replace("hamdast::apps::", "")]:
+                                  curr[1]
+                              };
+                            }, {})
                         };
                       } catch (e) {
                         if (
