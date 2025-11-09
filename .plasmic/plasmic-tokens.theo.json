@@ -3861,6 +3861,16 @@
       }
     },
     {
+      "name": "Unnamed Style Token 3",
+      "type": "color",
+      "value": "#FFE3E3",
+      "category": "color",
+      "meta": {
+        "projectId": "iDYgiKJB9Yi7CUB81stQBK",
+        "id": "0iXMCY2dd8BF"
+      }
+    },
+    {
       "name": "Unnamed Style Token 4",
       "type": "color",
       "value": "#E0FFEC",
