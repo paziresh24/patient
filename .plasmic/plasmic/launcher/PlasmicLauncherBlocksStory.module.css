@@ -6,7 +6,7 @@
   height: auto;
   justify-content: flex-start;
   align-items: flex-start;
-  column-gap: var(--token-KDnC5QlJdkgq);
+  column-gap: var(--token-3WxvfyIdJppy);
   min-width: 0;
 }
 .freeBox__gh58J {
@@ -38,6 +38,58 @@
   right: 0;
   z-index: 99;
   background: #ffffff;
+}
+.freeBox__l2V7K {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  left: 0;
+  top: auto;
+  z-index: 5;
+  right: 0;
+  bottom: 150px;
+  padding: 30px;
+}
+.freeBox__o105E {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: 0px 10px 25px 0px #0000001f;
+  row-gap: 10px;
+  min-width: 0;
+  border-radius: 11px;
+  padding: 20px;
+}
+.textAreaInput:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+}
+.paziresh24Button__javBp:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.svg__ii4SY {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__q2J8I {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
 }
 .freeBox__bmaFq {
   display: flex;
@@ -123,7 +175,7 @@
   height: 50px;
   flex-shrink: 0;
 }
-.paziresh24Button:global(.__wab_instance) {
+.paziresh24Button___79VTh:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
   min-width: 0;
