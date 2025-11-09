@@ -817,8 +817,8 @@ function PlasmicServices__RenderFunc(props: {
                     ? (() => {
                         try {
                           return (
-                            $ctx.fetchedData.list[0].penalty_score >= 0.1 &&
-                            $ctx.fetchedData.list[0].penalty_score <= 1
+                            $ctx.fetchedData.list[0].penalty_score > 0.1 &&
+                            $ctx.fetchedData.list[0].penalty_score < 1
                           );
                         } catch (e) {
                           if (
