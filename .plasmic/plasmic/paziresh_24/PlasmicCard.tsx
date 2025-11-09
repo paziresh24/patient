@@ -61,7 +61,6 @@ import {
 
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/styleTokensProvider
-import { _useStyleTokens as useStyleTokens_fragment_design_system } from "../fragment_design_system/PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
@@ -161,8 +160,6 @@ function PlasmicCard__RenderFunc(props: {
   });
 
   const styleTokensClassNames = _useStyleTokens();
-  const styleTokensClassNames_fragment_design_system =
-    useStyleTokens_fragment_design_system();
 
   return (
     <div
@@ -176,7 +173,6 @@ function PlasmicCard__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        styleTokensClassNames_fragment_design_system,
         sty.root
       )}
     >
