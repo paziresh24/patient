@@ -303,7 +303,7 @@
   padding: 8px;
 }
 ._15type_onlineVisit {
-  background: var(--token-1jTXKEDkeRHC);
+  background: var(--token-0iXMCY2dd8BF);
   display: flex;
   border-radius: var(--token-3GkKk-9XllPR);
   border: 1px solid var(--token-rjAIDXsTjJqJ);
@@ -318,6 +318,7 @@
 .texttype_onlineVisit__pSbQw7QAlK {
   text-align: center;
   color: var(--token-u3OudfMChOo3);
+  font-size: var(--token-9YpWDRZpBZcs);
 }
 ._011 {
   flex-direction: column;
@@ -346,6 +347,7 @@
 .texttype_onlineVisit__owqFp7QAlK {
   text-align: center;
   color: var(--token-u3OudfMChOo3);
+  font-size: var(--token-9YpWDRZpBZcs);
 }
 ._001 {
   flex-direction: column;
@@ -374,6 +376,7 @@
 .texttype_onlineVisit__etniR7QAlK {
   text-align: center;
   color: var(--token-u3OudfMChOo3);
+  font-size: var(--token-9YpWDRZpBZcs);
 }
 .button:global(.__wab_instance) {
   max-width: 100%;
