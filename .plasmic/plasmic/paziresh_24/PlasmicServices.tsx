@@ -768,7 +768,7 @@ function PlasmicServices__RenderFunc(props: {
                   hasVariant($state, "type", "onlineVisit")
                     ? (() => {
                         try {
-                          return $ctx.fetchedData.list[0].penalty_score >= 1;
+                          return $ctx.fetchedData.list[0].penalty_score >= 2;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -812,26 +812,7 @@ function PlasmicServices__RenderFunc(props: {
                     </div>
                   </div>
                 ) : null}
-                {(
-                  hasVariant($state, "type", "onlineVisit")
-                    ? (() => {
-                        try {
-                          return (
-                            $ctx.fetchedData.list[0].penalty_score > 0.1 &&
-                            $ctx.fetchedData.list[0].penalty_score < 1
-                          );
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return false;
-                          }
-                          throw e;
-                        }
-                      })()
-                    : false
-                ) ? (
+                {(hasVariant($state, "type", "onlineVisit") ? false : false) ? (
                   <div
                     data-plasmic-name={"_011"}
                     data-plasmic-override={overrides._011}
@@ -863,23 +844,7 @@ function PlasmicServices__RenderFunc(props: {
                     </div>
                   </div>
                 ) : null}
-                {(
-                  hasVariant($state, "type", "onlineVisit")
-                    ? (() => {
-                        try {
-                          return $ctx.fetchedData.list[0].penalty_score === 0.1;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return false;
-                          }
-                          throw e;
-                        }
-                      })()
-                    : false
-                ) ? (
+                {(hasVariant($state, "type", "onlineVisit") ? false : false) ? (
                   <div
                     data-plasmic-name={"_001"}
                     data-plasmic-override={overrides._001}

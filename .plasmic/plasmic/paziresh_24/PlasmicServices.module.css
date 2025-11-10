@@ -303,10 +303,10 @@
   padding: 8px;
 }
 ._15type_onlineVisit {
-  background: var(--token-0iXMCY2dd8BF);
+  background: var(--token-BU1JCAY6hntB);
   display: flex;
   border-radius: var(--token-3GkKk-9XllPR);
-  border: 1px solid var(--token-rjAIDXsTjJqJ);
+  border: 1px solid var(--token-Y3HOiwZmAcAF);
 }
 .text__pSbQw {
   position: relative;
@@ -334,7 +334,6 @@
 }
 ._011type_onlineVisit {
   background: var(--token-2Trprz3QsHRO);
-  display: flex;
   border-radius: var(--token-3GkKk-9XllPR);
   border: 1px solid var(--token-rjAIDXsTjJqJ);
 }
@@ -363,7 +362,6 @@
 }
 ._001type_onlineVisit {
   background: var(--token-Y3HOiwZmAcAF);
-  display: flex;
   border-radius: var(--token-3GkKk-9XllPR);
   border: 1px solid var(--token-rjAIDXsTjJqJ);
 }
