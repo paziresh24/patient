@@ -154,7 +154,7 @@ export const AppFrame = ({
             </div>
           )}
           {!showApp && app?.key && !showTranslation && page?.layout?.show_landing && (
-            <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center">
+            <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center overflow-x-auto">
               <GlobalContextsProvider>
                 <HamdastLanding appKey={app?.key} onClick={() => setShowTranslation(true)} mobileView />
               </GlobalContextsProvider>
