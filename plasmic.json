@@ -5751,9 +5751,8 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/hamdast_bimehnama/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/hamdast_bimehnama/plasmic.tsx"
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
