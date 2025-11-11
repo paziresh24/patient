@@ -6,22 +6,27 @@
 // Plasmic Project: iDYgiKJB9Yi7CUB81stQBK
 
 import {
-  createStyleTokensProvider,
-  createUseStyleTokens
+  createUseStyleTokens,
+  createStyleTokensProvider
 } from "@plasmicapp/react-web";
 
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectModule
 
 import projectcss from "./plasmic.module.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
 
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+
 const data = {
-  base: projectcss.plasmic_tokens,
+  base: `${projectcss.plasmic_tokens} ${plasmic_fragment_design_system_css.plasmic_tokens}`,
   varianted: []
 };
 
 export const _useStyleTokens = createUseStyleTokens(data, _useGlobalVariants);
 
 export const StyleTokensProvider = createStyleTokensProvider(
-  data,
+  {
+    base: `${projectcss.plasmic_tokens_override} ${data.base}`,
+    varianted: data.varianted
+  },
   _useGlobalVariants
 );
