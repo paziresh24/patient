@@ -327,10 +327,10 @@
 .freeBoxmobileView__mGtJhybl4O {
   left: auto;
   top: auto;
-  position: relative;
-  right: auto;
-  bottom: auto;
+  position: sticky;
   width: 100%;
+  height: auto;
+  bottom: 0px;
   min-width: 0;
   display: flex;
   padding: 15px;
