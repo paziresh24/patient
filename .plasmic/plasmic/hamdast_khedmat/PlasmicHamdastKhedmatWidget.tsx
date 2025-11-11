@@ -259,6 +259,46 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
             ) {
               $steps["updateModalNotiff"] = await $steps["updateModalNotiff"];
             }
+
+            $steps["updateModalOpen2"] = true
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      "POST",
+                      "https://hosseinz.liara.run/webhook/log-webhook",
+                      undefined,
+                      (() => {
+                        try {
+                          return {
+                            event_group: "khedmat_click_button",
+                            doctor_user_id: $props.profileData.user_id,
+                            doctor_slug: $props.profileData.seo.slug,
+                            user_id: $ctx.auth?.info?.id
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+            if (
+              $steps["updateModalOpen2"] != null &&
+              typeof $steps["updateModalOpen2"] === "object" &&
+              typeof $steps["updateModalOpen2"].then === "function"
+            ) {
+              $steps["updateModalOpen2"] = await $steps["updateModalOpen2"];
+            }
           }}
           outline={true}
         />
@@ -292,7 +332,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
             url={(() => {
               try {
                 return (
-                  "https://mahya-n8n.darkube.app/webhook/servises?user_id=" +
+                  "https://hosseinz.liara.run/webhook/servises?user_id=" +
                   $props.profileData.user_id
                 );
               } catch (e) {
