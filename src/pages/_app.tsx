@@ -116,9 +116,7 @@ function MyApp(props: AppProps) {
                 />
               </Head>
               <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-              {typeof window !== 'undefined' && (
-                <GoogleTagManager gtmId="GTM-P5RPLDP" />
-              )}
+              {typeof window !== 'undefined' && <GoogleTagManager gtmId="GTM-P5RPLDP" />}
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
