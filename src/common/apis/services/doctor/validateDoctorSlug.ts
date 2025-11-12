@@ -23,6 +23,83 @@ export interface DoctorSlugErrorResponse {
 
 export type DoctorSlugResponse = DoctorSlugValidationResponse | DoctorSlugRedirectResponse | DoctorSlugErrorResponse;
 
+export interface DoctorSlug500ErrorResponse {
+  error: string;
+  statusCode: 500;
+}
+
+/**
+ * Validates doctor slug with retry mechanism for client-side requests
+ * @param slug - The doctor slug to validate
+ * @param isClient - Whether this is a client-side request (default: false)
+ * @param maxRetries - Maximum number of retries (default: 3)
+ * @returns Promise with validated slug, redirect info, or error
+ */
+export const validateDoctorSlugWithRetry = async (
+  slug: string,
+  isClient: boolean = false,
+  maxRetries: number = 3,
+): Promise<DoctorSlugResponse | DoctorSlug500ErrorResponse> => {
+  if (!isClient) {
+    // Server-side: no retry, use original function
+    return validateDoctorSlug(slug);
+  }
+
+  let lastError: any = null;
+  let attempt = 0;
+
+  while (attempt < maxRetries) {
+    try {
+      const result = await validateDoctorSlug(slug);
+      
+      // If we get a valid response (not an error), return it
+      // Note: 'error' in result means slug not found (404), which is a valid response
+      // We only retry on network/timeout errors, not on 404 or redirect responses
+      return result;
+    } catch (error) {
+      lastError = error;
+      attempt++;
+
+      // Log retry attempt
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'doctor_slug_retry',
+        type: 'retry_attempt',
+        event: {
+          original_slug: slug,
+          attempt: attempt,
+          max_retries: maxRetries,
+          error_message: error instanceof Error ? error.message : String(error),
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      // If this is not the last attempt, wait a bit before retrying
+      if (attempt < maxRetries) {
+        // Exponential backoff: wait 500ms, 1000ms, 2000ms
+        const delay = Math.min(500 * Math.pow(2, attempt - 1), 2000);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  // All retries failed, return 500 error
+  splunkInstance('doctor-profile').sendEvent({
+    group: 'doctor_slug_validation_error',
+    type: 'retry_exhausted',
+    event: {
+      original_slug: slug,
+      max_retries: maxRetries,
+      final_error_message: lastError instanceof Error ? lastError.message : String(lastError),
+      timestamp: new Date().toISOString(),
+    },
+  });
+
+  return {
+    error: 'Internal server error - Unable to validate doctor slug after multiple attempts',
+    statusCode: 500,
+  } as DoctorSlug500ErrorResponse;
+};
+
 export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugResponse> => {
   const encodedSlug = encodeURIComponent(slug);
   const url = `/api/doctors/${encodedSlug}`;
@@ -126,7 +203,35 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
       }
     }
 
-    // Send error to Splunk for other errors
+    // Check if it's a network/timeout error (should be retried)
+    const axiosError = error as any;
+    const isNetworkError = 
+      !axiosError.response || // No response (network error)
+      axiosError.code === 'ECONNABORTED' || // Timeout
+      axiosError.code === 'ETIMEDOUT' || // Timeout
+      axiosError.message?.includes('timeout') || // Timeout message
+      axiosError.message?.includes('Network Error'); // Network error
+
+    // If it's a network/timeout error, throw it so retry mechanism can handle it
+    if (isNetworkError) {
+      // Send error to Splunk for network errors
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'doctor_slug_validation_error',
+        type: 'network_error',
+        event: {
+          slug: slug,
+          url: url,
+          error_message: error instanceof Error ? error.message : String(error),
+          error_code: axiosError.code,
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      // Throw the error so retry mechanism can catch it
+      throw error;
+    }
+
+    // For other errors (like 500, 502, etc.), send to Splunk and return 404 response
     splunkInstance('doctor-profile').sendEvent({
       group: 'doctor_slug_validation_error',
       type: 'api_error',
@@ -134,8 +239,8 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
         slug: slug,
         url: url,
         error_message: error instanceof Error ? error.message : String(error),
-        error_status: error instanceof Error && 'response' in error ? (error as any).response?.status : null,
-        error_data: error instanceof Error && 'response' in error ? (error as any).response?.data : null,
+        error_status: axiosError.response?.status || null,
+        error_data: axiosError.response?.data || null,
         timestamp: new Date().toISOString(),
       },
     });

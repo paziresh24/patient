@@ -7,7 +7,7 @@ import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
-import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
+import { validateDoctorSlugWithRetry } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -105,14 +105,44 @@ export async function getAggregatedProfileData(
   let fullProfileData = null;
 
   // Start both slug validation and full profile calls in parallel
+  // Use retry mechanism for client-side requests
   const [slugValidationResult, fullProfileResult] = await Promise.allSettled([
-    validateDoctorSlug(slug),
+    validateDoctorSlugWithRetry(slug, !isServer, 3),
     getProfile({ slug, university, isServer: isServer }),
   ]);
 
   // Handle slug validation result first (this handles redirects and errors)
   if (slugValidationResult.status === 'fulfilled') {
     const result = slugValidationResult.value;
+
+    // Handle 500 error (retry exhausted)
+    if ('statusCode' in result && result.statusCode === 500) {
+      // Send 500 event to Splunk
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'doctor_profile_500',
+        type: 'internal_server_error',
+        event: {
+          original_slug: slug,
+          error_message: result.error,
+          isServer: isServer,
+          timestamp: new Date().toISOString(),
+        },
+      });
+
+      if (isServer) {
+        return {
+          props: {
+            error: {
+              statusCode: 500,
+              message: result.error,
+            },
+          },
+        };
+      } else {
+        // For client-side, throw error to show 500 page
+        throw new Error(result.error);
+      }
+    }
 
     // Handle error responses (like "Slug not found")
     if ('error' in result) {
