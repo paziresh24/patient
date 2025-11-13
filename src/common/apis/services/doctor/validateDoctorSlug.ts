@@ -28,82 +28,10 @@ export interface DoctorSlug500ErrorResponse {
   statusCode: 500;
 }
 
-/**
- * Validates doctor slug with retry mechanism for client-side requests
- * @param slug - The doctor slug to validate
- * @param isClient - Whether this is a client-side request (default: false)
- * @param maxRetries - Maximum number of retries (default: 3)
- * @returns Promise with validated slug, redirect info, or error
- */
-export const validateDoctorSlugWithRetry = async (
-  slug: string,
-  isClient: boolean = false,
-  maxRetries: number = 3,
-): Promise<DoctorSlugResponse | DoctorSlug500ErrorResponse> => {
-  if (!isClient) {
-    // Server-side: no retry, use original function
-    return validateDoctorSlug(slug);
-  }
-
-  let lastError: any = null;
-  let attempt = 0;
-
-  while (attempt < maxRetries) {
-    try {
-      const result = await validateDoctorSlug(slug);
-      
-      // If we get a valid response (not an error), return it
-      // Note: 'error' in result means slug not found (404), which is a valid response
-      // We only retry on network/timeout errors, not on 404 or redirect responses
-      return result;
-    } catch (error) {
-      lastError = error;
-      attempt++;
-
-      // Log retry attempt
-      splunkInstance('doctor-profile').sendEvent({
-        group: 'doctor_slug_retry',
-        type: 'retry_attempt',
-        event: {
-          original_slug: slug,
-          attempt: attempt,
-          max_retries: maxRetries,
-          error_message: error instanceof Error ? error.message : String(error),
-          timestamp: new Date().toISOString(),
-        },
-      });
-
-      // If this is not the last attempt, wait a bit before retrying
-      if (attempt < maxRetries) {
-        // Exponential backoff: wait 500ms, 1000ms, 2000ms
-        const delay = Math.min(500 * Math.pow(2, attempt - 1), 2000);
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-  }
-
-  // All retries failed, return 500 error
-  splunkInstance('doctor-profile').sendEvent({
-    group: 'doctor_slug_validation_error',
-    type: 'retry_exhausted',
-    event: {
-      original_slug: slug,
-      max_retries: maxRetries,
-      final_error_message: lastError instanceof Error ? lastError.message : String(lastError),
-      timestamp: new Date().toISOString(),
-    },
-  });
-
-  return {
-    error: 'Internal server error - Unable to validate doctor slug after multiple attempts',
-    statusCode: 500,
-  } as DoctorSlug500ErrorResponse;
-};
-
 export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugResponse> => {
   const encodedSlug = encodeURIComponent(slug);
   const url = `/api/doctors/${encodedSlug}`;
-  
+
   // Send API request start event to Splunk
   splunkInstance('doctor-profile').sendEvent({
     group: 'doctor_slug_api_request',
@@ -116,7 +44,7 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
       timestamp: new Date().toISOString(),
     },
   });
-  
+
   try {
     const { data } = await drProfileClient.get<DoctorSlugResponse>(url, {
       timeout: 5000,
@@ -205,7 +133,7 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
 
     // Check if it's a network/timeout error (should be retried)
     const axiosError = error as any;
-    const isNetworkError = 
+    const isNetworkError =
       !axiosError.response || // No response (network error)
       axiosError.code === 'ECONNABORTED' || // Timeout
       axiosError.code === 'ETIMEDOUT' || // Timeout
@@ -251,7 +179,7 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
       type: 'page_not_found_fallback',
       event: {
         original_slug: slug,
-        error_message: "Slug not found (fallback)",
+        error_message: 'Slug not found (fallback)',
         url: url,
         error_details: error instanceof Error ? error.message : String(error),
         timestamp: new Date().toISOString(),
@@ -260,7 +188,7 @@ export const validateDoctorSlug = async (slug: string): Promise<DoctorSlugRespon
 
     // Return error response for other errors to show 404 page
     return {
-      error: "Slug not found",
+      error: 'Slug not found',
     };
   }
 };

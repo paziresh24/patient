@@ -7,7 +7,7 @@ import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
-import { validateDoctorSlugWithRetry } from '@/common/apis/services/doctor/validateDoctorSlug';
+import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
@@ -107,42 +107,13 @@ export async function getAggregatedProfileData(
   // Start both slug validation and full profile calls in parallel
   // Use retry mechanism for client-side requests
   const [slugValidationResult, fullProfileResult] = await Promise.allSettled([
-    validateDoctorSlugWithRetry(slug, !isServer, 3),
+    validateDoctorSlug(slug),
     getProfile({ slug, university, isServer: isServer }),
   ]);
 
   // Handle slug validation result first (this handles redirects and errors)
   if (slugValidationResult.status === 'fulfilled') {
     const result = slugValidationResult.value;
-
-    // Handle 500 error (retry exhausted)
-    if ('statusCode' in result && result.statusCode === 500) {
-      // Send 500 event to Splunk
-      splunkInstance('doctor-profile').sendEvent({
-        group: 'doctor_profile_500',
-        type: 'internal_server_error',
-        event: {
-          original_slug: slug,
-          error_message: result.error,
-          isServer: isServer,
-          timestamp: new Date().toISOString(),
-        },
-      });
-
-      if (isServer) {
-        return {
-          props: {
-            error: {
-              statusCode: 500,
-              message: result.error,
-            },
-          },
-        };
-      } else {
-        // For client-side, throw error to show 500 page
-        throw new Error(result.error);
-      }
-    }
 
     // Handle error responses (like "Slug not found")
     if ('error' in result) {
@@ -214,6 +185,7 @@ export async function getAggregatedProfileData(
         timestamp: new Date().toISOString(),
       },
     });
+    throw slugValidationResult.reason;
   }
 
   // Handle full profile result (no redirect handling - just get data)
@@ -240,9 +212,9 @@ export async function getAggregatedProfileData(
     }),
     shouldFetchReviews
       ? queryClient.fetchQuery(
-        [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }],
-        () => getReviews({ slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }),
-      )
+          [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }],
+          () => getReviews({ slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }),
+        )
       : Promise.resolve(null),
     getAverageWaitingTime({
       slug: validatedSlug,
@@ -314,7 +286,6 @@ export async function getAggregatedProfileData(
     const clinicCenter = doctorCenters.find((center: any) => center.type_id === 1);
     clinicCenterId = clinicCenter?.id;
 
-
     if (clinicCenterId) {
       try {
         doctorGallery = await getDoctorGallery(clinicCenterId);
@@ -351,33 +322,33 @@ export async function getAggregatedProfileData(
     // Add expertises to overwriteData if new API is used and successful
     ...(options?.useNewDoctorExpertiseAPI &&
       doctorExpertise?.length > 0 && {
-      expertises: transformedExpertise,
-    }),
+        expertises: transformedExpertise,
+      }),
     // Add image to overwriteData if new API is used and successful
     ...(options?.useNewDoctorImageAPI &&
       doctorImage?.image && {
-      image: doctorImage.image,
-    }),
+        image: doctorImage.image,
+      }),
     // Add biography to overwriteData if new API is used and successful
     ...(options?.useNewDoctorBiographyAPI &&
       doctorBiography?.biography && {
-      biography: doctorBiography.biography,
-    }),
+        biography: doctorBiography.biography,
+      }),
     // Add centers to overwriteData if new API is used and successful
     ...(options?.useNewDoctorCentersAPI &&
       doctorCenters?.length > 0 && {
-      centers: doctorCenters,
-    }),
+        centers: doctorCenters,
+      }),
     // Add gallery to overwriteData if new API is used and successful
     ...(options?.useNewDoctorGalleryAPI &&
       doctorGallery &&
       doctorGallery.length > 0 && {
-      gallery: doctorGallery,
-    }),
+        gallery: doctorGallery,
+      }),
   };
 
   // Handle null values from fullname web service
-  const processedName = doctorFullName?.name ;
+  const processedName = doctorFullName?.name;
   const processedFamily = doctorFullName?.family;
 
   // Set empty strings if values are null
@@ -403,8 +374,8 @@ export async function getAggregatedProfileData(
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
       ...fullProfileData,
-      id: slugInfo?.owner_id ,
-      server_id: slugInfo?.server_id ,
+      id: slugInfo?.owner_id,
+      server_id: slugInfo?.server_id,
       name: finalName,
       family: finalFamily,
     });
@@ -433,8 +404,9 @@ export async function getAggregatedProfileData(
 
   // Step 5: Construct the final props object
   const doctorCity = centers?.find?.((center: any) => center.id !== IGNORED_CENTER_ID)?.city;
-  const title = `${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${doctorCity ? `${doctorCity}،` : ''
-    } نوبت دهی آنلاین و شماره تلفن`;
+  const title = `${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${
+    doctorCity ? `${doctorCity}،` : ''
+  } نوبت دهی آنلاین و شماره تلفن`;
   const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const finalProps = {
