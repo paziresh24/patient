@@ -215,7 +215,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     {
       icon: <HeadphoneIcon />,
       label: 'پشتیبانی',
-      url: 'https://supporto.paziresh24.com',
+      url: 'https://support.paziresh24.com',
       shouldShowDoctor: true,
       shouldShow: user.provider?.job_title === 'doctor' && showSupportMenuButton,
     },
