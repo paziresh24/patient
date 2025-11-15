@@ -18,7 +18,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
-import HamdastLanding from '.plasmic/HamdastLanding';
+import LauncherProfile from '.plasmic/LauncherProfile';
 import Logo from '@/common/components/atom/logo';
 import { splunkInstance } from '@/common/services/splunk';
 import Permissions from '@/modules/hamdast/components/permissions';
@@ -112,18 +112,19 @@ const Page = ({ page, app }: any) => {
   }, []);
 
   useEffect(() => {
-    if (showTranslation && page?.layout?.show_landing) {
+    if (showTranslation) {
       setTimeout(() => {
         setShowApp(true);
         setShowTranslation(false);
       }, 3000);
     }
-  }, [showTranslation, page?.layout?.show_landing]);
+  }, [showTranslation]);
+
   useEffect(() => {
-    if (page?.layout && !page?.layout?.show_landing) {
+    if (params?.[0] != 'launcher') {
       setShowApp(true);
     }
-  }, [page?.layout?.show_landing]);
+  }, [params?.[0]]);
 
   return (
     <LayoutWithHeaderAndFooter
@@ -176,10 +177,12 @@ const Page = ({ page, app }: any) => {
           </span>
         </div>
       )}
-      {!showApp && !showTranslation && page?.layout?.show_landing && (
-        <GlobalContextsProvider>
-          <HamdastLanding appKey={app?.key} onClick={() => setShowTranslation(true)} />
-        </GlobalContextsProvider>
+      {!showApp && !showTranslation && params?.[0] == 'launcher' && (
+        <div className="w-full flex-grow bg-[#f4f5f8] flex flex-col gap-5 pb-16 justify-center items-center overflow-x-auto">
+          <GlobalContextsProvider>
+            <LauncherProfile appKey={app?.key} onClick={() => setShowTranslation(true)} />
+          </GlobalContextsProvider>
+        </div>
       )}
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />

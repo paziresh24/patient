@@ -20,7 +20,7 @@ export const Gallery = (props: GalleryProps) => {
     <PhotoProvider>
       <div className={classNames('flex pb-1 overflow-auto gap-3', className)}>
         {items.map((item, index) => (
-          <PhotoView key={index} src={item + '?size=100'}>
+          <PhotoView key={index} src={item ? (item?.includes('?') ? item : item + '?size=100') : ''}>
             <Image
               key={item}
               src={item}

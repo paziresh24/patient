@@ -113,6 +113,11 @@ const nextConfig = {
         hostname: '**.paziresh24.**',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: '**.arvanstorage.**',
+        port: '',
+      },
     ],
   },
   async redirects() {

@@ -17,7 +17,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
-import HamdastLanding from '.plasmic/HamdastLanding';
+import LauncherProfile from '.plasmic/LauncherProfile';
 import Logo from '@/common/components/atom/logo';
 import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key]/[...params]';
 import Permissions from '@/modules/hamdast/components/permissions';
@@ -45,9 +45,6 @@ export const AppFrame = ({
         ?.find((item: any) => item.type === 'pages')
         ?.options?.find((item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1);
 
-      if (page?.layout && !page?.layout?.show_landing) {
-        setShowApp(true);
-      }
       setApp(app);
       setPage(page);
     }
@@ -93,13 +90,13 @@ export const AppFrame = ({
   }, []);
 
   useEffect(() => {
-    if (showTranslation && page?.layout?.show_landing) {
+    if (showTranslation) {
       setTimeout(() => {
         setShowApp(true);
         setShowTranslation(false);
       }, 3000);
     }
-  }, [showTranslation, page?.layout?.show_landing]);
+  }, [showTranslation]);
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -153,21 +150,16 @@ export const AppFrame = ({
               </span>
             </div>
           )}
-          {!showApp && app?.key && !showTranslation && page?.layout?.show_landing && (
-            <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center overflow-x-auto">
+          {!showApp && app?.key && !showTranslation && (
+            <div className="w-full flex-grow bg-[#f4f5f8] flex flex-col gap-5 pb-16 justify-center items-center overflow-x-auto">
               <GlobalContextsProvider>
-                <HamdastLanding appKey={app?.key} onClick={() => setShowTranslation(true)} mobileView />
+                <LauncherProfile appKey={app?.key} onClick={() => setShowTranslation(true)} />
               </GlobalContextsProvider>
             </div>
           )}
         </>
       )}
 
-      {(!showIframe || isAppLoading || !app?.key) && !page?.layout?.show_landing && (
-        <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
-          <Loading />
-        </div>
-      )}
       <div className={classNames('w-full flex-grow flex flex-col', { hidden: !showApp })}>
         {showIframe && embedSrc && (
           <iframe
