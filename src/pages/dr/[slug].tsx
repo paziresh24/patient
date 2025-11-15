@@ -14,7 +14,6 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
-import { sendProfilePageViewLog, createProfilePageViewLogData } from '@/common/services/elasticLog';
 import { CENTERS } from '@/common/types/centers';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -202,15 +201,6 @@ const DoctorProfile = (props: any) => {
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
   }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
-
-  // Separate useEffect specifically for elastic logging
-  useEffect(() => {
-    if (information && slug) {
-      console.log('📊 Sending elastic log for profile page view:', slug);
-      const logData = createProfilePageViewLogData(slug, userInfo);
-      sendProfilePageViewLog(logData);
-    }
-  }, [information, slug, userInfo]);
 
   useEffect(() => {
     if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
