@@ -11,11 +11,11 @@
 // Plasmic Project: h9Dbk9ygddw7UVEq1NNhKi
 // Component: 3i84rYjQRrs4
 
-import * as React from "react";
+import * as React from 'react';
 
-import Head from "next/head";
-import Link, { LinkProps } from "next/link";
-import { useRouter } from "next/router";
+import Head from 'next/head';
+import Link, { LinkProps } from 'next/link';
+import { useRouter } from 'next/router';
 
 import {
   Flex as Flex__,
@@ -51,39 +51,32 @@ import {
   useDollarState,
   usePlasmicTranslator,
   useTrigger,
-  wrapWithClassName
-} from "@plasmicapp/react-web";
-import {
-  DataCtxReader as DataCtxReader__,
-  useDataEnv,
-  useGlobalActions
-} from "@plasmicapp/react-web/lib/host";
+  wrapWithClassName,
+} from '@plasmicapp/react-web';
+import { DataCtxReader as DataCtxReader__, useDataEnv, useGlobalActions } from '@plasmicapp/react-web/lib/host';
 
-import { _useGlobalVariants } from "./plasmic"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectModule
-import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
+import { _useGlobalVariants } from './plasmic'; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectModule
+import { _useStyleTokens } from './PlasmicStyleTokensProvider'; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/styleTokensProvider
 
-import "@plasmicapp/react-web/lib/plasmic.css";
+import '@plasmicapp/react-web/lib/plasmic.css';
 
-import projectcss from "./plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import sty from "./PlasmicAvatar.module.css"; // plasmic-import: 3i84rYjQRrs4/css
+import projectcss from './plasmic.module.css'; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import sty from './PlasmicAvatar.module.css'; // plasmic-import: 3i84rYjQRrs4/css
 
-import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: xYtO5aWYRBvW/icon
+import IconIcon from './icons/PlasmicIcon__Icon'; // plasmic-import: xYtO5aWYRBvW/icon
 
 createPlasmicElementProxy;
 
 export type PlasmicAvatar__VariantMembers = {
-  ring: "blue" | "green" | "slate";
-  badge: "check";
+  ring: 'blue' | 'green' | 'slate';
+  badge: 'check';
 };
 export type PlasmicAvatar__VariantsArgs = {
-  ring?: SingleChoiceArg<"blue" | "green" | "slate">;
-  badge?: SingleChoiceArg<"check">;
+  ring?: SingleChoiceArg<'blue' | 'green' | 'slate'>;
+  badge?: SingleChoiceArg<'check'>;
 };
 type VariantPropType = keyof PlasmicAvatar__VariantsArgs;
-export const PlasmicAvatar__VariantProps = new Array<VariantPropType>(
-  "ring",
-  "badge"
-);
+export const PlasmicAvatar__VariantProps = new Array<VariantPropType>('ring', 'badge');
 
 export type PlasmicAvatar__ArgsType = {
   src?: string;
@@ -91,26 +84,22 @@ export type PlasmicAvatar__ArgsType = {
   alt?: string;
 };
 type ArgPropType = keyof PlasmicAvatar__ArgsType;
-export const PlasmicAvatar__ArgProps = new Array<ArgPropType>(
-  "src",
-  "name",
-  "alt"
-);
+export const PlasmicAvatar__ArgProps = new Array<ArgPropType>('src', 'name', 'alt');
 
 export type PlasmicAvatar__OverridesType = {
-  root?: Flex__<"div">;
+  root?: Flex__<'div'>;
   img?: Flex__<typeof PlasmicImg__>;
-  freeBox?: Flex__<"div">;
-  text?: Flex__<"div">;
-  svg?: Flex__<"svg">;
+  freeBox?: Flex__<'div'>;
+  text?: Flex__<'div'>;
+  svg?: Flex__<'svg'>;
 };
 
 export interface DefaultAvatarProps {
   src?: string;
   name?: string;
   alt?: string;
-  ring?: SingleChoiceArg<"blue" | "green" | "slate">;
-  badge?: SingleChoiceArg<"check">;
+  ring?: SingleChoiceArg<'blue' | 'green' | 'slate'>;
+  badge?: SingleChoiceArg<'check'>;
   className?: string;
 }
 
@@ -135,18 +124,16 @@ function PlasmicAvatar__RenderFunc(props: {
     () =>
       Object.assign(
         {
-          src: "https://avatar.iran.liara.run/public/43"
+          src: 'https://avatar.iran.liara.run/public/43',
         },
-        Object.fromEntries(
-          Object.entries(props.args).filter(([_, v]) => v !== undefined)
-        )
+        Object.fromEntries(Object.entries(props.args).filter(([_, v]) => v !== undefined)),
       ),
-    [props.args]
+    [props.args],
   );
 
   const $props = {
     ...args,
-    ...variants
+    ...variants,
   };
 
   const __nextRouter = useNextRouter();
@@ -158,32 +145,32 @@ function PlasmicAvatar__RenderFunc(props: {
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
-        path: "ring",
-        type: "private",
-        variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.ring
+        path: 'ring',
+        type: 'private',
+        variableType: 'variant',
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.ring,
       },
       {
-        path: "badge",
-        type: "private",
-        variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.badge
-      }
+        path: 'badge',
+        type: 'private',
+        variableType: 'variant',
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.badge,
+      },
     ],
-    [$props, $ctx, $refs]
+    [$props, $ctx, $refs],
   );
   const $state = useDollarState(stateSpecs, {
     $props,
     $ctx,
     $queries: {},
-    $refs
+    $refs,
   });
 
   const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
-      data-plasmic-name={"root"}
+      data-plasmic-name={'root'}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
@@ -195,61 +182,52 @@ function PlasmicAvatar__RenderFunc(props: {
         styleTokensClassNames,
         sty.root,
         {
-          [sty.rootring_green]: hasVariant($state, "ring", "green"),
-          [sty.rootring_slate]: hasVariant($state, "ring", "slate")
-        }
+          [sty.rootring_green]: hasVariant($state, 'ring', 'green'),
+          [sty.rootring_slate]: hasVariant($state, 'ring', 'slate'),
+        },
       )}
     >
       {(() => {
         try {
           return $props.src;
         } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
+          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
             return true;
           }
           throw e;
         }
       })() ? (
         <PlasmicImg__
-          data-plasmic-name={"img"}
+          data-plasmic-name={'img'}
           data-plasmic-override={overrides.img}
           alt={(() => {
             try {
               return $props.alt;
             } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
+              if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
                 return undefined;
               }
               throw e;
             }
           })()}
           className={classNames(sty.img, {
-            [sty.imgring_blue]: hasVariant($state, "ring", "blue"),
-            [sty.imgring_green]: hasVariant($state, "ring", "green"),
-            [sty.imgring_slate]: hasVariant($state, "ring", "slate")
+            [sty.imgring_blue]: hasVariant($state, 'ring', 'blue'),
+            [sty.imgring_green]: hasVariant($state, 'ring', 'green'),
+            [sty.imgring_slate]: hasVariant($state, 'ring', 'slate'),
           })}
-          displayHeight={"100%"}
-          displayMaxHeight={"none"}
-          displayMaxWidth={"100%"}
-          displayMinHeight={"0"}
-          displayMinWidth={"0"}
-          displayWidth={"100%"}
-          loading={"lazy"}
+          displayHeight={'100%'}
+          displayMaxHeight={'none'}
+          displayMaxWidth={'100%'}
+          displayMinHeight={'0'}
+          displayMinWidth={'0'}
+          displayWidth={'100%'}
+          loading={'lazy'}
           src={(() => {
             try {
               return $props.src;
             } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return "https://avatar.iran.liara.run/public/43";
+              if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                return 'https://avatar.iran.liara.run/public/43';
               }
               throw e;
             }
@@ -260,46 +238,40 @@ function PlasmicAvatar__RenderFunc(props: {
         try {
           return !$props.src;
         } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
+          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
             return true;
           }
           throw e;
         }
       })() ? (
         <div
-          data-plasmic-name={"freeBox"}
+          data-plasmic-name={'freeBox'}
           data-plasmic-override={overrides.freeBox}
           className={classNames(projectcss.all, sty.freeBox, {
-            [sty.freeBoxring_blue]: hasVariant($state, "ring", "blue"),
-            [sty.freeBoxring_green]: hasVariant($state, "ring", "green"),
-            [sty.freeBoxring_slate]: hasVariant($state, "ring", "slate")
+            [sty.freeBoxring_blue]: hasVariant($state, 'ring', 'blue'),
+            [sty.freeBoxring_green]: hasVariant($state, 'ring', 'green'),
+            [sty.freeBoxring_slate]: hasVariant($state, 'ring', 'slate'),
           })}
           style={(() => {
             try {
               return (() => {
                 const randomColor = str => {
-                  if (!str) return "#000000";
+                  if (!str) return '#000000';
                   let hash = 0;
                   for (let i = 0; i < str.length; i++) {
                     hash = str.charCodeAt(i) + ((hash << 5) - hash);
                   }
-                  let colour = "#";
+                  let colour = '#';
                   for (let i = 0; i < 3; i++) {
                     const value = (hash >> (i * 8)) & 255;
-                    colour += ("00" + value.toString(16)).substr(-2);
+                    colour += ('00' + value.toString(16)).substr(-2);
                   }
                   return colour;
                 };
                 return { backgroundColor: randomColor($props.name) };
               })();
             } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
+              if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
                 return undefined;
               }
               throw e;
@@ -307,26 +279,17 @@ function PlasmicAvatar__RenderFunc(props: {
           })()}
         >
           <div
-            data-plasmic-name={"text"}
+            data-plasmic-name={'text'}
             data-plasmic-override={overrides.text}
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text
-            )}
+            className={classNames(projectcss.all, projectcss.__wab_text, sty.text)}
           >
             <React.Fragment>
               {(() => {
                 try {
-                  return `${$props.name.split(" ")?.[0]?.[0] ?? ""}${
-                    $props.name.split(" ")?.[1]?.[0] ?? ""
-                  }`;
+                  return `${$props.name.split(' ')?.[0]?.[0] ?? ''}${$props.name.split(' ')?.[1]?.[0] ?? ''}`;
                 } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return "";
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return '';
                   }
                   throw e;
                 }
@@ -336,41 +299,37 @@ function PlasmicAvatar__RenderFunc(props: {
         </div>
       ) : null}
       <IconIcon
-        data-plasmic-name={"svg"}
+        data-plasmic-name={'svg'}
         data-plasmic-override={overrides.svg}
         className={classNames(projectcss.all, sty.svg, {
-          [sty.svgbadge_check]: hasVariant($state, "badge", "check"),
-          [sty.svgring_slate]: hasVariant($state, "ring", "slate")
+          [sty.svgbadge_check]: hasVariant($state, 'badge', 'check'),
+          [sty.svgring_slate]: hasVariant($state, 'ring', 'slate'),
         })}
-        role={"img"}
+        role={'img'}
       />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "img", "freeBox", "text", "svg"],
-  img: ["img"],
-  freeBox: ["freeBox", "text"],
-  text: ["text"],
-  svg: ["svg"]
+  root: ['root', 'img', 'freeBox', 'text', 'svg'],
+  img: ['img'],
+  freeBox: ['freeBox', 'text'],
+  text: ['text'],
+  svg: ['svg'],
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
-type DescendantsType<T extends NodeNameType> =
-  (typeof PlasmicDescendants)[T][number];
+type DescendantsType<T extends NodeNameType> = typeof PlasmicDescendants[T][number];
 type NodeDefaultElementType = {
-  root: "div";
+  root: 'div';
   img: typeof PlasmicImg__;
-  freeBox: "div";
-  text: "div";
-  svg: "svg";
+  freeBox: 'div';
+  text: 'div';
+  svg: 'svg';
 };
 
-type ReservedPropsType = "variants" | "args" | "overrides";
-type NodeOverridesType<T extends NodeNameType> = Pick<
-  PlasmicAvatar__OverridesType,
-  DescendantsType<T>
->;
+type ReservedPropsType = 'variants' | 'args' | 'overrides';
+type NodeOverridesType<T extends NodeNameType> = Pick<PlasmicAvatar__OverridesType, DescendantsType<T>>;
 type NodeComponentProps<T extends NodeNameType> =
   // Explicitly specify variants, args, and overrides as objects
   {
@@ -381,40 +340,32 @@ type NodeComponentProps<T extends NodeNameType> =
     // Specify args directly as props
     Omit<PlasmicAvatar__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
+    Omit<NodeOverridesType<T>, ReservedPropsType | VariantPropType | ArgPropType> &
     // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+    Omit<Partial<React.ComponentProps<NodeDefaultElementType[T]>>, ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>>;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };
-  const func = function <T extends PropsType>(
-    props: T & StrictProps<T, PropsType>
-  ) {
+  const func = function <T extends PropsType>(props: T & StrictProps<T, PropsType>) {
     const { variants, args, overrides } = React.useMemo(
       () =>
         deriveRenderOpts(props, {
           name: nodeName,
           descendantNames: PlasmicDescendants[nodeName],
           internalArgPropNames: PlasmicAvatar__ArgProps,
-          internalVariantPropNames: PlasmicAvatar__VariantProps
+          internalVariantPropNames: PlasmicAvatar__VariantProps,
         }),
-      [props, nodeName]
+      [props, nodeName],
     );
     return PlasmicAvatar__RenderFunc({
       variants,
       args,
       overrides,
-      forNode: nodeName
+      forNode: nodeName,
     });
   };
-  if (nodeName === "root") {
-    func.displayName = "PlasmicAvatar";
+  if (nodeName === 'root') {
+    func.displayName = 'PlasmicAvatar';
   } else {
     func.displayName = `PlasmicAvatar.${nodeName}`;
   }
@@ -423,18 +374,18 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 
 export const PlasmicAvatar = Object.assign(
   // Top-level PlasmicAvatar renders the root element
-  makeNodeComponent("root"),
+  makeNodeComponent('root'),
   {
     // Helper components rendering sub-elements
-    img: makeNodeComponent("img"),
-    freeBox: makeNodeComponent("freeBox"),
-    text: makeNodeComponent("text"),
-    svg: makeNodeComponent("svg"),
+    img: makeNodeComponent('img'),
+    freeBox: makeNodeComponent('freeBox'),
+    text: makeNodeComponent('text'),
+    svg: makeNodeComponent('svg'),
 
     // Metadata about props expected for PlasmicAvatar
     internalVariantProps: PlasmicAvatar__VariantProps,
-    internalArgProps: PlasmicAvatar__ArgProps
-  }
+    internalArgProps: PlasmicAvatar__ArgProps,
+  },
 );
 
 export default PlasmicAvatar;

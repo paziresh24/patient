@@ -3,15 +3,7 @@
 @tailwind utilities;
 
 @supports (font-variation-settings: normal) {
-  @font-face {
-    font-family: 'IRANSansXV';
-    src: url('../../public/fonts/IRANSansXV.woff2') format('woff2-variations'), url('../../public/fonts/IRANSansXV.woff2') format('woff2');
-    font-weight: 100 900;
-    font-display: swap;
-  }
-
   * {
-    font-family: 'IRANSansXV', tahoma;
     -moz-font-feature-settings: 'ss02';
     -webkit-font-feature-settings: 'ss02';
     font-feature-settings: 'ss02';
@@ -54,84 +46,6 @@
       font-weight: 900;
       font-variation-settings: 'wght' 900;
     }
-  }
-}
-
-@supports not (font-variation-settings: normal) {
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: 100;
-    src: url('../../public/fonts/IRANSansXFaNum-Thin.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: 200;
-    src: url('../../public/fonts/IRANSansXFaNum-UltraLight.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: 300;
-    src: url('../../public/fonts/IRANSansXFaNum-Light.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: 500;
-    src: url('../../public/fonts/IRANSansXFaNum-Medium.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: 600;
-    src: url('../../public/fonts/IRANSansXFaNum-DemiBold.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: 800;
-    src: url('../../public/fonts/IRANSansXFaNum-ExtraBold.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: 900;
-    src: url('../../public/fonts/IRANSansXFaNum-Black.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: bold;
-    src: url('../../public/fonts/IRANSansXFaNum-Bold.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: IRANSansX;
-    font-style: normal;
-    font-weight: normal;
-    src: url('../../public/fonts/IRANSansXFaNum-Regular.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  * {
-    font-family: IRANSansX, tahoma;
   }
 }
 
