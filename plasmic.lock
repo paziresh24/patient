@@ -2255,6 +2255,16 @@
           "assetId": "grxNYctbMek6PL66cujx3u",
           "type": "projectCss",
           "checksum": "700aa81feea5475f4ffc6846d5873f22"
+        },
+        {
+          "type": "renderModule",
+          "assetId": "rq9ty8U4CjL3",
+          "checksum": "230d7246e9ea8b06701c8541fe1eebb6"
+        },
+        {
+          "type": "cssRules",
+          "assetId": "rq9ty8U4CjL3",
+          "checksum": "230d7246e9ea8b06701c8541fe1eebb6"
         }
       ],
       "codegenVersion": "0.0.2"

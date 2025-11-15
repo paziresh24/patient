@@ -3359,6 +3359,19 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksStoryTimeLine.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "rq9ty8U4CjL3",
+          "name": "LauncherProfile",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherProfile.tsx",
+          "importSpec": {
+            "modulePath": "LauncherProfile.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherProfile.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
