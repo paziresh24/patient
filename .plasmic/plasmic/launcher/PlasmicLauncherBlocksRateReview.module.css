@@ -1,0 +1,237 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  background: #ffffff;
+  row-gap: 15px;
+  position: relative;
+  min-width: 0;
+  padding: 20px;
+}
+.freeBox__w0Ud {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 10px;
+  min-width: 0;
+}
+.text__zlBGw {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-weight: 500;
+  font-size: var(--token-P2saABvfDCPH);
+  color: var(--token-s_XuzePAGmOh);
+  min-width: 0;
+}
+.freeBox__ebizj {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  min-width: 0;
+}
+.freeBox___7Myos {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  column-gap: 5px;
+}
+.svg__lFuH6 {
+  object-fit: cover;
+  max-width: 100%;
+  color: var(--token-s_XuzePAGmOh);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.text__zTUd {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  color: var(--token-s_XuzePAGmOh);
+  font-weight: 600;
+  font-size: var(--token-0D6VF35kZC-C);
+  margin-top: 6px;
+  align-self: flex-start;
+  min-width: 0;
+}
+.freeBox__iVfQ {
+  animation: none;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 60px;
+  height: 15px;
+  max-width: 100%;
+  background: var(--token-4iQ-8GWBqX6X);
+  flex-shrink: 0;
+  border-radius: 40px;
+}
+.modal2:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+}
+.paziresh24Button___9ByF:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100px;
+}
+.svg___2K9VH {
+  position: relative;
+  object-fit: cover;
+  width: 15px;
+  height: 15px;
+  color: #ffffff;
+  min-width: 15px;
+}
+.text__a5F0I {
+  font-size: var(--token-P2saABvfDCPH);
+}
+.svg__tVcfP {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.launcherBlocksWriteReview:global(.__wab_instance) {
+  max-width: 100%;
+}
+.freeBox__pvpPr {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 7px;
+  min-width: 0;
+}
+.apiRequest4:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.apiRequest3:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.svg__ylqd5 {
+  object-fit: cover;
+  max-width: 100%;
+  width: 30px;
+  height: 30px;
+  align-self: center;
+}
+.launcherBlocksReviewCard__sx0Of:global(.__wab_instance) {
+  position: relative;
+}
+.svg__miJs {
+  object-fit: cover;
+  max-width: 100%;
+  width: 30px;
+  height: 30px;
+  align-self: center;
+}
+.text__t4F3X {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-size: var(--token-0D6VF35kZC-C);
+  font-weight: 500;
+  text-align: center;
+  opacity: 0.8;
+  min-width: 0;
+}
+.modal:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+}
+.paziresh24Button__blmzN:global(.__wab_instance) {
+  max-width: 100%;
+}
+.svg__whZ02 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.text__jfExx {
+  font-size: var(--token-P2saABvfDCPH);
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+.span {
+  font-size: 10px;
+  font-weight: 500;
+}
+.strong {
+  font-weight: 500;
+  font-size: 10px;
+}
+.svg__x55P1 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.apiRequest:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.svg__ltJ27 {
+  object-fit: cover;
+  max-width: 100%;
+  width: 30px;
+  height: 30px;
+  align-self: center;
+}
+.freeBox___3U7Mx {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 15px;
+  max-height: 360px;
+  overflow: auto;
+  min-width: 0;
+}
+.paziresh24Button___5GPji:global(.__wab_instance) {
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+.svg__uxd2X {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg___2EQbY {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}

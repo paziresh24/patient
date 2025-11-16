@@ -62,6 +62,7 @@ import {
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { Gallery } from "@/common/fragment/components/gallery"; // plasmic-import: OPegsXy4dTwC/codeComponent
+import LauncherBlocksRateReview from "../../LauncherBlocksRateReview"; // plasmic-import: T_aUMqQUBscZ/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
 
@@ -71,6 +72,7 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL
 import sty from "./PlasmicLauncherProfile.module.css"; // plasmic-import: rq9ty8U4CjL3/css
 
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
+import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: tltd2ahuz9sI/icon
 import ChevronRightIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
 import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 
@@ -97,8 +99,11 @@ export type PlasmicLauncherProfile__OverridesType = {
   apiRequest?: Flex__<typeof ApiRequest>;
   img?: Flex__<typeof PlasmicImg__>;
   apiRequest2?: Flex__<typeof ApiRequest>;
+  apiRequest3?: Flex__<typeof ApiRequest>;
+  span?: Flex__<"span">;
   paziresh24Button?: Flex__<typeof Paziresh24Button>;
   paizresh24Gallery?: Flex__<typeof Gallery>;
+  launcherBlocksRateReview?: Flex__<typeof LauncherBlocksRateReview>;
 };
 
 export interface DefaultLauncherProfileProps {
@@ -195,6 +200,30 @@ function PlasmicLauncherProfile__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiRequest2"
+      },
+      {
+        path: "apiRequest3.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest3"
+      },
+      {
+        path: "apiRequest3.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest3"
+      },
+      {
+        path: "apiRequest3.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest3"
       }
     ],
     [$props, $ctx, $refs]
@@ -451,6 +480,210 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   </div>
                 </div>
                 <div
+                  className={classNames(projectcss.all, sty.freeBox__wBgZq)}
+                />
+
+                <div
+                  className={classNames(projectcss.all, sty.freeBox___5ZxC)}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["goToReviews"] = true
+                      ? (() => {
+                          const actionArgs = { destination: "#reviews" };
+                          return (({ destination }) => {
+                            if (
+                              typeof destination === "string" &&
+                              destination.startsWith("#")
+                            ) {
+                              document
+                                .getElementById(destination.substr(1))
+                                .scrollIntoView({ behavior: "smooth" });
+                            } else {
+                              __nextRouter?.push(destination);
+                            }
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["goToReviews"] != null &&
+                      typeof $steps["goToReviews"] === "object" &&
+                      typeof $steps["goToReviews"].then === "function"
+                    ) {
+                      $steps["goToReviews"] = await $steps["goToReviews"];
+                    }
+                  }}
+                >
+                  <ApiRequest
+                    data-plasmic-name={"apiRequest3"}
+                    data-plasmic-override={overrides.apiRequest3}
+                    className={classNames("__wab_instance", sty.apiRequest3)}
+                    errorDisplay={null}
+                    loadingDisplay={
+                      <React.Fragment>
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__iA00M
+                          )}
+                        />
+
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox__ol1XI
+                          )}
+                        />
+                      </React.Fragment>
+                    }
+                    method={"GET"}
+                    onError={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "apiRequest3",
+                        "error"
+                      ]).apply(null, eventArgs);
+                    }}
+                    onLoading={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "apiRequest3",
+                        "loading"
+                      ]).apply(null, eventArgs);
+                    }}
+                    onSuccess={async (...eventArgs: any) => {
+                      generateStateOnChangeProp($state, [
+                        "apiRequest3",
+                        "data"
+                      ]).apply(null, eventArgs);
+                    }}
+                    ref={ref => {
+                      $refs["apiRequest3"] = ref;
+                    }}
+                    url={(() => {
+                      try {
+                        return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/rates`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                  >
+                    {(() => {
+                      try {
+                        return !!$state.apiRequest3.data;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          sty.freeBox__fTbcr
+                        )}
+                      >
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__igeAm
+                          )}
+                        >
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return $state.apiRequest3.data.average;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "0";
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        </div>
+                        <Icon4Icon
+                          className={classNames(
+                            projectcss.all,
+                            sty.svg___00Nhq
+                          )}
+                          role={"img"}
+                        />
+                      </div>
+                    ) : null}
+                    {(() => {
+                      try {
+                        return !!$state.apiRequest3.data;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__jlJab
+                        )}
+                      >
+                        <React.Fragment>
+                          <React.Fragment>{"\u0627\u0632 "}</React.Fragment>
+                          {
+                            <span
+                              data-plasmic-name={"span"}
+                              data-plasmic-override={overrides.span}
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.span,
+                                projectcss.__wab_text,
+                                projectcss.plasmic_default__inline,
+                                sty.span
+                              )}
+                            >
+                              <React.Fragment>
+                                {(() => {
+                                  try {
+                                    return $state.apiRequest3.data.count;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return "-";
+                                    }
+                                    throw e;
+                                  }
+                                })()}
+                              </React.Fragment>
+                            </span>
+                          }
+                          <React.Fragment>
+                            {" \u0646\u0638\u0631"}
+                          </React.Fragment>
+                        </React.Fragment>
+                      </div>
+                    ) : null}
+                  </ApiRequest>
+                </div>
+                <div
                   className={classNames(projectcss.all, sty.freeBox__pJ7W)}
                 />
 
@@ -705,25 +938,35 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                 ) : null}
               </div>
             ) : null}
-            <div className={classNames(projectcss.all, sty.freeBox__jupGf)}>
-              <div className={classNames(projectcss.all, sty.freeBox__ajt1W)}>
+            <LauncherBlocksRateReview
+              data-plasmic-name={"launcherBlocksRateReview"}
+              data-plasmic-override={overrides.launcherBlocksRateReview}
+              appKey={args.appKey}
+              className={classNames(
+                "__wab_instance",
+                sty.launcherBlocksRateReview
+              )}
+            />
+
+            <div className={classNames(projectcss.all, sty.freeBox___0MbC)}>
+              <div className={classNames(projectcss.all, sty.freeBox__r2Evf)}>
                 <div
                   className={classNames(
                     projectcss.all,
                     projectcss.__wab_text,
-                    sty.text__sk7J
+                    sty.text__klpB4
                   )}
                 >
                   {
                     "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0627\u0628\u0632\u0627\u0631\u06a9"
                   }
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__kv2Y4)}>
+                <div className={classNames(projectcss.all, sty.freeBox__h6ALu)}>
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__jlBv
+                      sty.text__sukt1
                     )}
                   >
                     {
@@ -734,7 +977,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__zzbnd
+                      sty.text__ae2Io
                     )}
                   >
                     <div
@@ -759,12 +1002,12 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     />
                   </div>
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__s3A5C)}>
+                <div className={classNames(projectcss.all, sty.freeBox__pnYx4)}>
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__o4V68
+                      sty.text__g82Zl
                     )}
                   >
                     {"\u062f\u0633\u062a\u0647 \u0628\u0646\u062f\u06cc:"}
@@ -773,7 +1016,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__zJi7N
+                      sty.text__eWzXz
                     )}
                   >
                     <div
@@ -831,20 +1074,29 @@ const PlasmicDescendants = {
     "apiRequest",
     "img",
     "apiRequest2",
+    "apiRequest3",
+    "span",
     "paziresh24Button",
-    "paizresh24Gallery"
+    "paizresh24Gallery",
+    "launcherBlocksRateReview"
   ],
   apiRequest: [
     "apiRequest",
     "img",
     "apiRequest2",
+    "apiRequest3",
+    "span",
     "paziresh24Button",
-    "paizresh24Gallery"
+    "paizresh24Gallery",
+    "launcherBlocksRateReview"
   ],
   img: ["img"],
   apiRequest2: ["apiRequest2"],
+  apiRequest3: ["apiRequest3", "span"],
+  span: ["span"],
   paziresh24Button: ["paziresh24Button"],
-  paizresh24Gallery: ["paizresh24Gallery"]
+  paizresh24Gallery: ["paizresh24Gallery"],
+  launcherBlocksRateReview: ["launcherBlocksRateReview"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -854,8 +1106,11 @@ type NodeDefaultElementType = {
   apiRequest: typeof ApiRequest;
   img: typeof PlasmicImg__;
   apiRequest2: typeof ApiRequest;
+  apiRequest3: typeof ApiRequest;
+  span: "span";
   paziresh24Button: typeof Paziresh24Button;
   paizresh24Gallery: typeof Gallery;
+  launcherBlocksRateReview: typeof LauncherBlocksRateReview;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -921,8 +1176,11 @@ export const PlasmicLauncherProfile = Object.assign(
     apiRequest: makeNodeComponent("apiRequest"),
     img: makeNodeComponent("img"),
     apiRequest2: makeNodeComponent("apiRequest2"),
+    apiRequest3: makeNodeComponent("apiRequest3"),
+    span: makeNodeComponent("span"),
     paziresh24Button: makeNodeComponent("paziresh24Button"),
     paizresh24Gallery: makeNodeComponent("paizresh24Gallery"),
+    launcherBlocksRateReview: makeNodeComponent("launcherBlocksRateReview"),
 
     // Metadata about props expected for PlasmicLauncherProfile
     internalVariantProps: PlasmicLauncherProfile__VariantProps,
