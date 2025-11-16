@@ -3372,6 +3372,58 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherProfile.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "Ryf7wvUcVDQV",
+          "name": "LauncherBlocksRateRow",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksRateRow.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksRateRow.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksRateRow.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "DrNNuC_MkTfg",
+          "name": "LauncherBlocksReviewCard",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksReviewCard.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksReviewCard.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksReviewCard.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "T_aUMqQUBscZ",
+          "name": "LauncherBlocksRateReview",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksRateReview.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksRateReview.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksRateReview.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "3E3zip3yhAhO",
+          "name": "LauncherBlocksWriteReview",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksWriteReview.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksWriteReview.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksWriteReview.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -3444,6 +3496,26 @@
           "id": "bXJJPikRYRrj",
           "name": "Icon6Icon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon6.tsx"
+        },
+        {
+          "id": "tltd2ahuz9sI",
+          "name": "Icon4Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon4.tsx"
+        },
+        {
+          "id": "5F-ErxOAtGpo",
+          "name": "Icon5Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon5.tsx"
+        },
+        {
+          "id": "MBlXZa85RkZG",
+          "name": "CircleIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Circle.tsx"
+        },
+        {
+          "id": "yX3QBDwLir0A",
+          "name": "ChevronDownIcon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__ChevronDown.tsx"
         }
       ],
       "images": [

@@ -1,0 +1,121 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 10px;
+  min-width: 0;
+}
+.freeBox__bEUp {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  column-gap: 5px;
+  min-width: 0;
+}
+.freeBox__sVyEm {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+}
+.svg__b2DHa {
+  object-fit: cover;
+  max-width: 100%;
+  width: 35px;
+  height: 35px;
+  color: var(--token-s_XuzePAGmOh);
+  flex-shrink: 0;
+}
+.svg__u51PQ {
+  object-fit: cover;
+  max-width: 100%;
+  width: 35px;
+  height: 35px;
+  color: var(--token-s_XuzePAGmOh);
+  flex-shrink: 0;
+}
+.text__u4Mwz {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-size: var(--token-P2saABvfDCPH);
+  font-weight: 500;
+  opacity: 0.8;
+  min-width: 0;
+}
+.text__x3SAs {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-size: var(--token-P2saABvfDCPH);
+  font-weight: 500;
+  opacity: 0.8;
+  min-width: 0;
+}
+.multilineTextInput:global(.__wab_instance) {
+  max-width: 100%;
+}
+.freeBox__dNmti {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  column-gap: 10px;
+  min-width: 0;
+}
+.paziresh24Button__ewbSu:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.svg___3FfXf {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__hfgd3 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.paziresh24Button__kQkDb:global(.__wab_instance) {
+  max-width: 100%;
+  width: 80px;
+  flex-shrink: 0;
+}
+.svg__vScat {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__fMvR {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
