@@ -280,15 +280,21 @@ export async function getAggregatedProfileData(
   // Handle gallery API call after all other requests (depends on centers)
   let doctorGallery = null;
   if (options?.useNewDoctorGalleryAPI) {
-    let clinicCenterId = null;
+    // Find all centers with type_id = 1
+    const clinicCenters = doctorCenters.filter((center: any) => center.type_id === 1);
 
-    // Use new centers API data with type_id
-    const clinicCenter = doctorCenters.find((center: any) => center.type_id === 1);
-    clinicCenterId = clinicCenter?.id;
-
-    if (clinicCenterId) {
+    if (clinicCenters.length > 0) {
       try {
-        doctorGallery = await getDoctorGallery(clinicCenterId);
+        // Fetch galleries for all clinic centers in parallel
+        const galleryPromises = clinicCenters.map((center: any) => getDoctorGallery(center.id));
+        const galleryResults = await Promise.allSettled(galleryPromises);
+
+        // Merge all successful gallery results into a single array
+        doctorGallery = galleryResults
+          .filter((result) => result.status === 'fulfilled')
+          .map((result) => (result as PromiseFulfilledResult<any>).value)
+          .flat()
+          .filter(Boolean);
       } catch (error) {
         console.error('Error fetching doctor gallery:', error);
         doctorGallery = null;
