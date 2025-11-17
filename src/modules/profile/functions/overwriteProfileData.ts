@@ -147,9 +147,15 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     },
   };
 
+  // Merge galleries from all centers with center_type = 1 (fallback logic)
+  const fallbackGallery = centers
+    ?.filter((center: any) => center?.center_type === 1)
+    ?.flatMap((center: any) => center?.gallery ?? [])
+    ?.filter(Boolean) ?? [];
+
   const media = {
     aparat: source?.aparat_video_code ?? null,
-    gallery: overwriteData?.gallery && overwriteData?.gallery?.length > 0 ? overwriteData?.gallery : centers?.find((center: any) => center?.center_type === 1)?.gallery ?? [],
+    gallery: overwriteData?.gallery && overwriteData?.gallery?.length > 0 ? overwriteData?.gallery : fallbackGallery,
   };
 
   const symptomes = source?.symptomes ?? [];
