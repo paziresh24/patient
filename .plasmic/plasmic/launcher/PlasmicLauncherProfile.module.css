@@ -345,6 +345,48 @@
   max-width: 100%;
   object-fit: cover;
 }
+.apiRequest4:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.freeBox__kh6I1 {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  background: #ffffff;
+  row-gap: 0px;
+  min-width: 0;
+  padding: 20px;
+}
+.text__uEwc {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-weight: 600;
+  font-size: var(--token-0D6VF35kZC-C);
+  min-width: 0;
+}
+.text__cZjFh {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  text-align: center;
+  font-weight: 400;
+  font-size: var(--token-P2saABvfDCPH);
+  min-width: 0;
+}
+.launcherBlocksWriteReview:global(.__wab_instance) {
+  max-width: 100%;
+  margin-top: 10px;
+}
 .freeBox__pTskf {
   display: flex;
   flex-direction: column;

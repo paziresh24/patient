@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Paziresh24MultilineTextInput from "../../Paziresh24MultilineTextInput"; // plasmic-import: 5O8XqcSJJk6J/component
+import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
@@ -76,11 +77,15 @@ import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__Che
 
 createPlasmicElementProxy;
 
-export type PlasmicLauncherBlocksWriteReview__VariantMembers = {};
-export type PlasmicLauncherBlocksWriteReview__VariantsArgs = {};
+export type PlasmicLauncherBlocksWriteReview__VariantMembers = {
+  instance: "instance";
+};
+export type PlasmicLauncherBlocksWriteReview__VariantsArgs = {
+  instance?: SingleBooleanChoiceArg<"instance">;
+};
 type VariantPropType = keyof PlasmicLauncherBlocksWriteReview__VariantsArgs;
 export const PlasmicLauncherBlocksWriteReview__VariantProps =
-  new Array<VariantPropType>();
+  new Array<VariantPropType>("instance");
 
 export type PlasmicLauncherBlocksWriteReview__ArgsType = {
   appKey?: string;
@@ -94,12 +99,15 @@ export const PlasmicLauncherBlocksWriteReview__ArgProps =
 export type PlasmicLauncherBlocksWriteReview__OverridesType = {
   root?: Flex__<"div">;
   multilineTextInput?: Flex__<typeof Paziresh24MultilineTextInput>;
+  modal?: Flex__<typeof Paziresh24Modal>;
+  multilineTextInput2?: Flex__<typeof Paziresh24MultilineTextInput>;
 };
 
 export interface DefaultLauncherBlocksWriteReviewProps {
   appKey?: string;
   onCancel?: () => void;
   onSubmit?: () => void;
+  instance?: SingleBooleanChoiceArg<"instance">;
   className?: string;
 }
 
@@ -163,6 +171,24 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "instance",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.instance
+      },
+      {
+        path: "modal.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "multilineTextInput2.value",
+        type: "private",
+        variableType: "text",
+        initFunc: ({ $props, $state, $queries, $ctx }) => ""
       }
     ],
     [$props, $ctx, $refs]
@@ -188,10 +214,19 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        sty.root
+        sty.root,
+        { [sty.rootinstance]: hasVariant($state, "instance", "instance") }
       )}
     >
-      <div className={classNames(projectcss.all, sty.freeBox__bEUp)}>
+      <div
+        className={classNames(projectcss.all, sty.freeBox__bEUp, {
+          [sty.freeBoxinstance__bEUpO8D7G]: hasVariant(
+            $state,
+            "instance",
+            "instance"
+          )
+        })}
+      >
         {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
           (() => {
             try {
@@ -211,7 +246,13 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
           const currentIndex = __plasmic_idx_0;
           return (
             <div
-              className={classNames(projectcss.all, sty.freeBox__sVyEm)}
+              className={classNames(projectcss.all, sty.freeBox__sVyEm, {
+                [sty.freeBoxinstance__sVyEmO8D7G]: hasVariant(
+                  $state,
+                  "instance",
+                  "instance"
+                )
+              })}
               key={currentIndex}
               onClick={async event => {
                 const $steps = {};
@@ -251,6 +292,40 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
                     "updateSelectedRate"
                   ];
                 }
+
+                $steps["updateModalOpen"] = !!$state.instance
+                  ? (() => {
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["modal", "open"]
+                        },
+                        operation: 0,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
+
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["updateModalOpen"] != null &&
+                  typeof $steps["updateModalOpen"] === "object" &&
+                  typeof $steps["updateModalOpen"].then === "function"
+                ) {
+                  $steps["updateModalOpen"] = await $steps["updateModalOpen"];
+                }
               }}
             >
               {(() => {
@@ -288,7 +363,13 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
                 }
               })() ? (
                 <Icon5Icon
-                  className={classNames(projectcss.all, sty.svg__u51PQ)}
+                  className={classNames(projectcss.all, sty.svg__u51PQ, {
+                    [sty.svginstance__u51PQo8D7G]: hasVariant(
+                      $state,
+                      "instance",
+                      "instance"
+                    )
+                  })}
                   onClick={async event => {
                     const $steps = {};
                   }}
@@ -299,24 +380,35 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
           );
         })}
       </div>
-      {(() => {
-        try {
-          return $state.selectedRate == 0;
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return true;
-          }
-          throw e;
-        }
-      })() ? (
+      {(
+        hasVariant($state, "instance", "instance")
+          ? true
+          : (() => {
+              try {
+                return $state.selectedRate == 0;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return true;
+                }
+                throw e;
+              }
+            })()
+      ) ? (
         <div
           className={classNames(
             projectcss.all,
             projectcss.__wab_text,
-            sty.text__u4Mwz
+            sty.text__u4Mwz,
+            {
+              [sty.textinstance__u4Mwzo8D7G]: hasVariant(
+                $state,
+                "instance",
+                "instance"
+              )
+            }
           )}
         >
           {
@@ -367,7 +459,13 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
         data-plasmic-name={"multilineTextInput"}
         data-plasmic-override={overrides.multilineTextInput}
         autoSize={true}
-        className={classNames("__wab_instance", sty.multilineTextInput)}
+        className={classNames("__wab_instance", sty.multilineTextInput, {
+          [sty.multilineTextInputinstance]: hasVariant(
+            $state,
+            "instance",
+            "instance"
+          )
+        })}
         onValueChange={async (...eventArgs: any) => {
           generateStateOnChangeProp($state, [
             "multilineTextInput",
@@ -383,12 +481,385 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
           }
         }}
         placeholder={
-          "\u0646\u0638\u0631\u062a \u062f\u0631\u0628\u0627\u0631\u0647 \u0627\u06cc\u0646 \u0628\u0631\u0646\u0627\u0645\u0647 \u0631\u0648 \u0628\u0646\u0648\u06cc\u0633"
+          "\u0646\u0638\u0631\u062a \u062f\u0631\u0628\u0627\u0631\u0647 \u0627\u06cc\u0646 \u0627\u0628\u0632\u0627\u0631\u06a9 \u0631\u0648 \u0628\u0646\u0648\u06cc\u0633"
         }
         value={generateStateValueProp($state, ["multilineTextInput", "value"])}
       />
 
-      <div className={classNames(projectcss.all, sty.freeBox__dNmti)}>
+      <Paziresh24Modal
+        data-plasmic-name={"modal"}
+        data-plasmic-override={overrides.modal}
+        body={
+          <React.Fragment>
+            {(hasVariant($state, "instance", "instance") ? true : false) ? (
+              <Paziresh24MultilineTextInput
+                data-plasmic-name={"multilineTextInput2"}
+                data-plasmic-override={overrides.multilineTextInput2}
+                autoSize={true}
+                className={classNames(
+                  "__wab_instance",
+                  sty.multilineTextInput2,
+                  {
+                    [sty.multilineTextInput2instance]: hasVariant(
+                      $state,
+                      "instance",
+                      "instance"
+                    )
+                  }
+                )}
+                onValueChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "multilineTextInput2",
+                    "value"
+                  ]).apply(null, eventArgs);
+
+                  if (
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
+                  ) {
+                    return;
+                  }
+                }}
+                placeholder={
+                  "\u0646\u0638\u0631\u062a \u062f\u0631\u0628\u0627\u0631\u0647 \u0627\u06cc\u0646 \u0627\u0628\u0632\u0627\u0631\u06a9 \u0631\u0648 \u0628\u0646\u0648\u06cc\u0633"
+                }
+                value={generateStateValueProp($state, [
+                  "multilineTextInput2",
+                  "value"
+                ])}
+              />
+            ) : null}
+            {(hasVariant($state, "instance", "instance") ? true : false) ? (
+              <div
+                className={classNames(projectcss.all, sty.freeBox___7AoY6, {
+                  [sty.freeBoxinstance___7AoY6O8D7G]: hasVariant(
+                    $state,
+                    "instance",
+                    "instance"
+                  )
+                })}
+              >
+                <Paziresh24Button
+                  children2={"\u062b\u0628\u062a \u0646\u0638\u0631"}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.paziresh24Button__iqFqI
+                  )}
+                  isDisabled={(() => {
+                    try {
+                      return (
+                        $state.selectedRate == 0 ||
+                        !$state.multilineTextInput2?.value?.trim()
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()}
+                  loading={(() => {
+                    try {
+                      return $state.loading;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return [];
+                      }
+                      throw e;
+                    }
+                  })()}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["updateLoading"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["loading"]
+                            },
+                            operation: 0,
+                            value: true
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateLoading"] != null &&
+                      typeof $steps["updateLoading"] === "object" &&
+                      typeof $steps["updateLoading"].then === "function"
+                    ) {
+                      $steps["updateLoading"] = await $steps["updateLoading"];
+                    }
+
+                    $steps["invokeGlobalAction"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              "POST",
+                              (() => {
+                                try {
+                                  return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews`;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })(),
+                              undefined,
+                              (() => {
+                                try {
+                                  return {
+                                    rate: $state.selectedRate,
+                                    content: $state.multilineTextInput2.value
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Fragment.apiRequest"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                    if (
+                      $steps["invokeGlobalAction"] != null &&
+                      typeof $steps["invokeGlobalAction"] === "object" &&
+                      typeof $steps["invokeGlobalAction"].then === "function"
+                    ) {
+                      $steps["invokeGlobalAction"] = await $steps[
+                        "invokeGlobalAction"
+                      ];
+                    }
+
+                    $steps["updateLoading2"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["loading"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateLoading2"] != null &&
+                      typeof $steps["updateLoading2"] === "object" &&
+                      typeof $steps["updateLoading2"].then === "function"
+                    ) {
+                      $steps["updateLoading2"] = await $steps["updateLoading2"];
+                    }
+
+                    $steps["runOnSubmit"] = true
+                      ? (() => {
+                          const actionArgs = { eventRef: $props["onSubmit"] };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnSubmit"] != null &&
+                      typeof $steps["runOnSubmit"] === "object" &&
+                      typeof $steps["runOnSubmit"].then === "function"
+                    ) {
+                      $steps["runOnSubmit"] = await $steps["runOnSubmit"];
+                    }
+
+                    $steps["updateModalOpen"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["modal", "open"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateModalOpen"] != null &&
+                      typeof $steps["updateModalOpen"] === "object" &&
+                      typeof $steps["updateModalOpen"].then === "function"
+                    ) {
+                      $steps["updateModalOpen"] = await $steps[
+                        "updateModalOpen"
+                      ];
+                    }
+                  }}
+                />
+
+                <Paziresh24Button
+                  children2={"\u0627\u0646\u0635\u0631\u0627\u0641"}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.paziresh24Button__g9Xt
+                  )}
+                  onClick={async event => {
+                    const $steps = {};
+
+                    $steps["updateModalOpen"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["modal", "open"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
+
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["updateModalOpen"] != null &&
+                      typeof $steps["updateModalOpen"] === "object" &&
+                      typeof $steps["updateModalOpen"].then === "function"
+                    ) {
+                      $steps["updateModalOpen"] = await $steps[
+                        "updateModalOpen"
+                      ];
+                    }
+
+                    $steps["runOnCancel"] = true
+                      ? (() => {
+                          const actionArgs = { eventRef: $props["onCancel"] };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnCancel"] != null &&
+                      typeof $steps["runOnCancel"] === "object" &&
+                      typeof $steps["runOnCancel"].then === "function"
+                    ) {
+                      $steps["runOnCancel"] = await $steps["runOnCancel"];
+                    }
+                  }}
+                  outline={true}
+                />
+              </div>
+            ) : null}
+          </React.Fragment>
+        }
+        className={classNames("__wab_instance", sty.modal, {
+          [sty.modalinstance]: hasVariant($state, "instance", "instance")
+        })}
+        noTrigger={
+          hasVariant($state, "instance", "instance") ? true : undefined
+        }
+        onOpenChange={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["modal", "open"]).apply(
+            null,
+            eventArgs
+          );
+
+          if (
+            eventArgs.length > 1 &&
+            eventArgs[1] &&
+            eventArgs[1]._plasmic_state_init_
+          ) {
+            return;
+          }
+        }}
+        open={generateStateValueProp($state, ["modal", "open"])}
+        title={
+          hasVariant($state, "instance", "instance")
+            ? "\u0646\u0638\u0631\u062a \u062f\u0631\u0628\u0627\u0631\u0647 \u0627\u06cc\u0646 \u0627\u0628\u0632\u0627\u0631\u06a9\r"
+            : "Title"
+        }
+        trigger={null}
+      />
+
+      <div
+        className={classNames(projectcss.all, sty.freeBox__dNmti, {
+          [sty.freeBoxinstance__dNmtiO8D7G]: hasVariant(
+            $state,
+            "instance",
+            "instance"
+          )
+        })}
+      >
         <Paziresh24Button
           children2={"\u062b\u0628\u062a \u0646\u0638\u0631"}
           className={classNames("__wab_instance", sty.paziresh24Button__ewbSu)}
@@ -580,8 +1051,10 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "multilineTextInput"],
-  multilineTextInput: ["multilineTextInput"]
+  root: ["root", "multilineTextInput", "modal", "multilineTextInput2"],
+  multilineTextInput: ["multilineTextInput"],
+  modal: ["modal", "multilineTextInput2"],
+  multilineTextInput2: ["multilineTextInput2"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -589,6 +1062,8 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   multilineTextInput: typeof Paziresh24MultilineTextInput;
+  modal: typeof Paziresh24Modal;
+  multilineTextInput2: typeof Paziresh24MultilineTextInput;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -653,6 +1128,8 @@ export const PlasmicLauncherBlocksWriteReview = Object.assign(
   {
     // Helper components rendering sub-elements
     multilineTextInput: makeNodeComponent("multilineTextInput"),
+    modal: makeNodeComponent("modal"),
+    multilineTextInput2: makeNodeComponent("multilineTextInput2"),
 
     // Metadata about props expected for PlasmicLauncherBlocksWriteReview
     internalVariantProps: PlasmicLauncherBlocksWriteReview__VariantProps,

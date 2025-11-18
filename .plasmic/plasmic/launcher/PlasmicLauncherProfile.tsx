@@ -62,6 +62,7 @@ import {
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { Gallery } from "@/common/fragment/components/gallery"; // plasmic-import: OPegsXy4dTwC/codeComponent
+import LauncherBlocksWriteReview from "../../LauncherBlocksWriteReview"; // plasmic-import: 3E3zip3yhAhO/component
 import LauncherBlocksRateReview from "../../LauncherBlocksRateReview"; // plasmic-import: T_aUMqQUBscZ/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
@@ -103,6 +104,8 @@ export type PlasmicLauncherProfile__OverridesType = {
   span?: Flex__<"span">;
   paziresh24Button?: Flex__<typeof Paziresh24Button>;
   paizresh24Gallery?: Flex__<typeof Gallery>;
+  apiRequest4?: Flex__<typeof ApiRequest>;
+  launcherBlocksWriteReview?: Flex__<typeof LauncherBlocksWriteReview>;
   launcherBlocksRateReview?: Flex__<typeof LauncherBlocksRateReview>;
 };
 
@@ -150,6 +153,8 @@ function PlasmicLauncherProfile__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -224,6 +229,30 @@ function PlasmicLauncherProfile__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiRequest3"
+      },
+      {
+        path: "apiRequest4.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest4"
+      },
+      {
+        path: "apiRequest4.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest4"
+      },
+      {
+        path: "apiRequest4.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest4"
       }
     ],
     [$props, $ctx, $refs]
@@ -287,7 +316,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
         ref={ref => {
           $refs["apiRequest"] = ref;
         }}
-        url={`https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}`}
+        url={`https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/`}
       >
         {(() => {
           try {
@@ -788,6 +817,140 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                 </div>
               ) : null}
             </div>
+            <ApiRequest
+              data-plasmic-name={"apiRequest4"}
+              data-plasmic-override={overrides.apiRequest4}
+              className={classNames("__wab_instance", sty.apiRequest4)}
+              errorDisplay={null}
+              loadingDisplay={null}
+              method={"GET"}
+              onError={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest4",
+                  "error"
+                ]).apply(null, eventArgs);
+              }}
+              onLoading={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest4",
+                  "loading"
+                ]).apply(null, eventArgs);
+              }}
+              onSuccess={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, [
+                  "apiRequest4",
+                  "data"
+                ]).apply(null, eventArgs);
+              }}
+              ref={ref => {
+                $refs["apiRequest4"] = ref;
+              }}
+              url={(() => {
+                try {
+                  return `https://apigw.paziresh24.com/v1/hamdast/apps/cheragh/reviews?user_id=${$ctx.auth?.info?.id}`;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return undefined;
+                  }
+                  throw e;
+                }
+              })()}
+            >
+              {(() => {
+                try {
+                  return $state.apiRequest4?.data?.length === 0;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return true;
+                  }
+                  throw e;
+                }
+              })() ? (
+                <div className={classNames(projectcss.all, sty.freeBox__kh6I1)}>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__uEwc
+                    )}
+                  >
+                    {
+                      "\u0628\u0647 \u0627\u06cc\u0646 \u0627\u0628\u0632\u0627\u0631\u06a9 \u0686\u0647 \u0627\u0645\u062a\u06cc\u0627\u0632\u06cc \u0645\u06cc\u200c\u062f\u06cc\u062f\u061f"
+                    }
+                  </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__cZjFh
+                    )}
+                  >
+                    {
+                      "\u06cc\u06a9 \u0627\u0645\u062a\u06cc\u0627\u0632 \u0628\u0647 \u0627\u0628\u0632\u0627\u0631\u06a9 \u0628\u062f\u0647 \u0627\u0632 \u06f1 \u062a\u0627 \u06f5"
+                    }
+                  </div>
+                  <LauncherBlocksWriteReview
+                    data-plasmic-name={"launcherBlocksWriteReview"}
+                    data-plasmic-override={overrides.launcherBlocksWriteReview}
+                    appKey={(() => {
+                      try {
+                        return $props.appKey;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.launcherBlocksWriteReview
+                    )}
+                    instance={true}
+                    onCancel={async () => {
+                      const $steps = {};
+                    }}
+                    onSubmit={async () => {
+                      const $steps = {};
+
+                      $steps["invokeGlobalAction"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              args: [
+                                undefined,
+                                "\u0646\u0638\u0631 \u0634\u0645\u0627 \u062b\u0628\u062a \u0634\u062f\u060c \u067e\u0633 \u0627\u0632 \u062a\u0627\u06cc\u06cc\u062f \u0646\u0645\u0627\u06cc\u0634 \u062f\u0627\u062f\u0647 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                                "top-center"
+                              ]
+                            };
+                            return $globalActions["Fragment.showToast"]?.apply(
+                              null,
+                              [...actionArgs.args]
+                            );
+                          })()
+                        : undefined;
+                      if (
+                        $steps["invokeGlobalAction"] != null &&
+                        typeof $steps["invokeGlobalAction"] === "object" &&
+                        typeof $steps["invokeGlobalAction"].then === "function"
+                      ) {
+                        $steps["invokeGlobalAction"] = await $steps[
+                          "invokeGlobalAction"
+                        ];
+                      }
+                    }}
+                  />
+                </div>
+              ) : null}
+            </ApiRequest>
             {(() => {
               try {
                 return (
@@ -1078,6 +1241,8 @@ const PlasmicDescendants = {
     "span",
     "paziresh24Button",
     "paizresh24Gallery",
+    "apiRequest4",
+    "launcherBlocksWriteReview",
     "launcherBlocksRateReview"
   ],
   apiRequest: [
@@ -1088,6 +1253,8 @@ const PlasmicDescendants = {
     "span",
     "paziresh24Button",
     "paizresh24Gallery",
+    "apiRequest4",
+    "launcherBlocksWriteReview",
     "launcherBlocksRateReview"
   ],
   img: ["img"],
@@ -1096,6 +1263,8 @@ const PlasmicDescendants = {
   span: ["span"],
   paziresh24Button: ["paziresh24Button"],
   paizresh24Gallery: ["paizresh24Gallery"],
+  apiRequest4: ["apiRequest4", "launcherBlocksWriteReview"],
+  launcherBlocksWriteReview: ["launcherBlocksWriteReview"],
   launcherBlocksRateReview: ["launcherBlocksRateReview"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
@@ -1110,6 +1279,8 @@ type NodeDefaultElementType = {
   span: "span";
   paziresh24Button: typeof Paziresh24Button;
   paizresh24Gallery: typeof Gallery;
+  apiRequest4: typeof ApiRequest;
+  launcherBlocksWriteReview: typeof LauncherBlocksWriteReview;
   launcherBlocksRateReview: typeof LauncherBlocksRateReview;
 };
 
@@ -1180,6 +1351,8 @@ export const PlasmicLauncherProfile = Object.assign(
     span: makeNodeComponent("span"),
     paziresh24Button: makeNodeComponent("paziresh24Button"),
     paizresh24Gallery: makeNodeComponent("paizresh24Gallery"),
+    apiRequest4: makeNodeComponent("apiRequest4"),
+    launcherBlocksWriteReview: makeNodeComponent("launcherBlocksWriteReview"),
     launcherBlocksRateReview: makeNodeComponent("launcherBlocksRateReview"),
 
     // Metadata about props expected for PlasmicLauncherProfile
