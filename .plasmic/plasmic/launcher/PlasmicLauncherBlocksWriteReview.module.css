@@ -59,6 +59,9 @@
   opacity: 0.8;
   min-width: 0;
 }
+.textinstance__u4Mwzo8D7G {
+  display: none;
+}
 .text__x3SAs {
   position: relative;
   width: 100%;
@@ -73,6 +76,68 @@
 .multilineTextInput:global(.__wab_instance) {
   max-width: 100%;
 }
+.multilineTextInputinstance:global(.__wab_instance) {
+  display: none;
+}
+.modal:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+}
+.multilineTextInput2:global(.__wab_instance) {
+  max-width: 100%;
+}
+.multilineTextInput2instance:global(.__wab_instance) {
+  display: flex;
+}
+.freeBox___7AoY6 {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  column-gap: 10px;
+  margin-top: 10px;
+  min-width: 0;
+}
+.freeBoxinstance___7AoY6O8D7G {
+  display: flex;
+}
+.paziresh24Button__iqFqI:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
+}
+.svg__sw0Wq {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__lWceq {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.paziresh24Button__g9Xt:global(.__wab_instance) {
+  max-width: 100%;
+  width: 80px;
+  flex-shrink: 0;
+}
+.svg__kwaTb {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.svg__oHJi {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
 .freeBox__dNmti {
   display: flex;
   flex-direction: row;
@@ -84,6 +149,9 @@
   max-width: 100%;
   column-gap: 10px;
   min-width: 0;
+}
+.freeBoxinstance__dNmtiO8D7G {
+  display: none;
 }
 .paziresh24Button__ewbSu:global(.__wab_instance) {
   max-width: 100%;

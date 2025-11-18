@@ -496,7 +496,7 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
             }}
             open={generateStateValueProp($state, ["modal2", "open"])}
             title={
-              "\u0646\u0638\u0631\u062a \u062f\u0631\u0628\u0627\u0631\u0647 \u0627\u06cc\u0646 \u0628\u0631\u0646\u0627\u0645\u0647\r"
+              "\u0646\u0638\u0631\u062a \u062f\u0631\u0628\u0627\u0631\u0647 \u0627\u06cc\u0646 \u0627\u0628\u0632\u0627\u0631\u06a9\r"
             }
             trigger={
               <Paziresh24Button
