@@ -847,7 +847,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
               }}
               url={(() => {
                 try {
-                  return `https://apigw.paziresh24.com/v1/hamdast/apps/cheragh/reviews?user_id=${$ctx.auth?.info?.id}`;
+                  return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews?user_id=${$ctx.auth?.info?.id}`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -867,7 +867,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return true;
+                    return false;
                   }
                   throw e;
                 }
