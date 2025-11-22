@@ -374,7 +374,7 @@ function PlasmicProfileInfo__RenderFunc(props: {
                           const actionArgs = {
                             destination: (() => {
                               try {
-                                return `http://www.paziresh24.com/s?turn_type=consult&text=${currentItem}&ref=profile&click=spec_title&dr=${$props.displayName}`;
+                                return `https://www.paziresh24.com/s?turn_type=consult&text=${currentItem}&ref=profile&click=spec_title&dr=${$props.displayName}`;
                               } catch (e) {
                                 if (
                                   e instanceof TypeError ||
