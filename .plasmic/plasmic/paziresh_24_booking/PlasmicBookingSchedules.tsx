@@ -102,9 +102,9 @@ export const PlasmicBookingSchedules__ArgProps = new Array<ArgPropType>(
 export type PlasmicBookingSchedules__OverridesType = {
   root?: Flex__<"div">;
   apiGetCenter?: Flex__<typeof ApiRequest>;
-  apiGetWorkhour?: Flex__<typeof ApiRequest>;
   dialog?: Flex__<typeof Dialog>;
   popoverCore?: Flex__<typeof Popover>;
+  apiGetWorkhour?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultBookingSchedulesProps {
@@ -260,6 +260,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
       <ApiRequest
         data-plasmic-name={"apiGetCenter"}
         data-plasmic-override={overrides.apiGetCenter}
+        children={null}
         className={classNames("__wab_instance", sty.apiGetCenter)}
         errorDisplay={null}
         loadingDisplay={null}
@@ -285,7 +286,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
           (async data => {
             const $steps = {};
 
-            $steps["updateService"] = true
+            $steps["updateService"] = $state.apiGetCenter?.data?.[0]?.id
               ? (() => {
                   const actionArgs = {
                     variable: {
@@ -293,7 +294,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                       variablePath: ["service"]
                     },
                     operation: 0,
-                    value: $state.apiGetCenter.data[0].id
+                    value: $state.apiGetCenter?.data?.[0]?.id
                   };
                   return (({ variable, value, startIndex, deleteCount }) => {
                     if (!variable) {
@@ -331,70 +332,8 @@ function PlasmicBookingSchedules__RenderFunc(props: {
             throw e;
           }
         })()}
-      >
-        <ApiRequest
-          data-plasmic-name={"apiGetWorkhour"}
-          data-plasmic-override={overrides.apiGetWorkhour}
-          className={classNames("__wab_instance", sty.apiGetWorkhour)}
-          errorDisplay={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__btewE
-              )}
-            >
-              {"Error fetching data"}
-            </div>
-          }
-          loadingDisplay={
-            <div
-              className={classNames(
-                projectcss.all,
-                projectcss.__wab_text,
-                sty.text__wsXmV
-              )}
-            >
-              {"Loading..."}
-            </div>
-          }
-          method={"GET"}
-          onError={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, [
-              "apiGetWorkhour",
-              "error"
-            ]).apply(null, eventArgs);
-          }}
-          onLoading={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, [
-              "apiGetWorkhour",
-              "loading"
-            ]).apply(null, eventArgs);
-          }}
-          onSuccess={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["apiGetWorkhour", "data"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          ref={ref => {
-            $refs["apiGetWorkhour"] = ref;
-          }}
-          url={(() => {
-            try {
-              return `https://drprofile.paziresh24.com/api/doctor-services/${$state.service}/schedules`;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        />
-      </ApiRequest>
+      />
+
       {(() => {
         try {
           return !!$state.apiGetCenter.data[0]?.id;
@@ -415,7 +354,10 @@ function PlasmicBookingSchedules__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return $state.apiGetCenter.data.length > 0;
+                  return (
+                    $state.apiGetCenter.data.length > 0 &&
+                    $state.apiGetWorkhour?.data?.length > 0
+                  );
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -869,7 +811,10 @@ function PlasmicBookingSchedules__RenderFunc(props: {
               ) : null}
               {(() => {
                 try {
-                  return $state.apiGetCenter.data.length == 0;
+                  return (
+                    $state.apiGetCenter.data.length == 0 ||
+                    $state.apiGetWorkhour?.data?.length == 0
+                  );
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -901,7 +846,10 @@ function PlasmicBookingSchedules__RenderFunc(props: {
               ) : null}
               {(() => {
                 try {
-                  return $state.apiGetCenter.loading;
+                  return (
+                    $state.apiGetCenter.loading ||
+                    $state.apiGetWorkhour?.loading
+                  );
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -925,7 +873,10 @@ function PlasmicBookingSchedules__RenderFunc(props: {
               ) : null}
               {(() => {
                 try {
-                  return !!$state.apiGetCenter.error;
+                  return (
+                    !!$state.apiGetCenter.error ||
+                    !!$state.apiGetWorkhour?.error
+                  );
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -955,6 +906,68 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                   </div>
                 </div>
               ) : null}
+              <ApiRequest
+                data-plasmic-name={"apiGetWorkhour"}
+                data-plasmic-override={overrides.apiGetWorkhour}
+                className={classNames("__wab_instance", sty.apiGetWorkhour)}
+                errorDisplay={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__btewE
+                    )}
+                  >
+                    {"Error fetching data"}
+                  </div>
+                }
+                loadingDisplay={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__wsXmV
+                    )}
+                  >
+                    {"Loading..."}
+                  </div>
+                }
+                method={"GET"}
+                onError={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiGetWorkhour",
+                    "error"
+                  ]).apply(null, eventArgs);
+                }}
+                onLoading={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiGetWorkhour",
+                    "loading"
+                  ]).apply(null, eventArgs);
+                }}
+                onSuccess={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiGetWorkhour",
+                    "data"
+                  ]).apply(null, eventArgs);
+                }}
+                ref={ref => {
+                  $refs["apiGetWorkhour"] = ref;
+                }}
+                url={(() => {
+                  try {
+                    return `https://drprofile.paziresh24.com/api/doctor-services/${$state.service}/schedules`;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
             </React.Fragment>
           }
           className={classNames("__wab_instance", sty.dialog)}
@@ -1033,11 +1046,11 @@ function PlasmicBookingSchedules__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiGetCenter", "apiGetWorkhour", "dialog", "popoverCore"],
-  apiGetCenter: ["apiGetCenter", "apiGetWorkhour"],
-  apiGetWorkhour: ["apiGetWorkhour"],
-  dialog: ["dialog", "popoverCore"],
-  popoverCore: ["popoverCore"]
+  root: ["root", "apiGetCenter", "dialog", "popoverCore", "apiGetWorkhour"],
+  apiGetCenter: ["apiGetCenter"],
+  dialog: ["dialog", "popoverCore", "apiGetWorkhour"],
+  popoverCore: ["popoverCore"],
+  apiGetWorkhour: ["apiGetWorkhour"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1045,9 +1058,9 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   apiGetCenter: typeof ApiRequest;
-  apiGetWorkhour: typeof ApiRequest;
   dialog: typeof Dialog;
   popoverCore: typeof Popover;
+  apiGetWorkhour: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1111,9 +1124,9 @@ export const PlasmicBookingSchedules = Object.assign(
   {
     // Helper components rendering sub-elements
     apiGetCenter: makeNodeComponent("apiGetCenter"),
-    apiGetWorkhour: makeNodeComponent("apiGetWorkhour"),
     dialog: makeNodeComponent("dialog"),
     popoverCore: makeNodeComponent("popoverCore"),
+    apiGetWorkhour: makeNodeComponent("apiGetWorkhour"),
 
     // Metadata about props expected for PlasmicBookingSchedules
     internalVariantProps: PlasmicBookingSchedules__VariantProps,
