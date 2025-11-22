@@ -30,7 +30,7 @@
   -webkit-transition-duration: 0.2s;
 }
 .root:hover .freeBox {
-  transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  transform: skew(0deg, 0deg);
 }
 .text {
   position: relative;
@@ -57,11 +57,11 @@
   -webkit-transition-duration: 0.2s;
 }
 .svgisHover {
-  transform: rotateX(0deg) rotateY(0deg) rotateZ(180deg);
+  transform: rotate3d(0, 0, 1, 180deg);
 }
 .svgnoIcon {
   display: none;
 }
 .root:hover .svg {
-  transform: rotateX(0deg) rotateY(0deg) rotateZ(180deg);
+  transform: rotate3d(0, 0, 1, 180deg);
 }
