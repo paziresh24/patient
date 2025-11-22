@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
+import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { Gallery } from "@/common/fragment/components/gallery"; // plasmic-import: OPegsXy4dTwC/codeComponent
 import LauncherBlocksWriteReview from "../../LauncherBlocksWriteReview"; // plasmic-import: 3E3zip3yhAhO/component
@@ -98,15 +99,16 @@ export const PlasmicLauncherProfile__ArgProps = new Array<ArgPropType>(
 export type PlasmicLauncherProfile__OverridesType = {
   root?: Flex__<"div">;
   apiRequest?: Flex__<typeof ApiRequest>;
-  img?: Flex__<typeof PlasmicImg__>;
   apiRequest2?: Flex__<typeof ApiRequest>;
   apiRequest3?: Flex__<typeof ApiRequest>;
   span?: Flex__<"span">;
-  paziresh24Button?: Flex__<typeof Paziresh24Button>;
+  modal?: Flex__<typeof Paziresh24Modal>;
+  apiRequest5?: Flex__<typeof ApiRequest>;
   paizresh24Gallery?: Flex__<typeof Gallery>;
   apiRequest4?: Flex__<typeof ApiRequest>;
   launcherBlocksWriteReview?: Flex__<typeof LauncherBlocksWriteReview>;
   launcherBlocksRateReview?: Flex__<typeof LauncherBlocksRateReview>;
+  apiRequest6?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultLauncherProfileProps {
@@ -253,6 +255,66 @@ function PlasmicLauncherProfile__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiRequest4"
+      },
+      {
+        path: "apiRequest5.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest5"
+      },
+      {
+        path: "apiRequest5.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest5"
+      },
+      {
+        path: "apiRequest5.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest5"
+      },
+      {
+        path: "apiRequest6.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest6"
+      },
+      {
+        path: "apiRequest6.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest6"
+      },
+      {
+        path: "apiRequest6.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest6"
+      },
+      {
+        path: "isLoadingButton",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "modal.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -335,10 +397,8 @@ function PlasmicLauncherProfile__RenderFunc(props: {
             <div className={classNames(projectcss.all, sty.freeBox__yYw4Q)}>
               <div className={classNames(projectcss.all, sty.freeBox___0AEqg)}>
                 <PlasmicImg__
-                  data-plasmic-name={"img"}
-                  data-plasmic-override={overrides.img}
                   alt={""}
-                  className={classNames(sty.img)}
+                  className={classNames(sty.img___0ByT)}
                   displayHeight={"80px"}
                   displayMaxHeight={"none"}
                   displayMaxWidth={"100%"}
@@ -751,32 +811,684 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   </div>
                 </div>
               </div>
-              <Paziresh24Button
-                data-plasmic-name={"paziresh24Button"}
-                data-plasmic-override={overrides.paziresh24Button}
-                children2={"\u0627\u062c\u0631\u0627"}
-                className={classNames("__wab_instance", sty.paziresh24Button)}
-                onClick={async event => {
-                  const $steps = {};
+              <Paziresh24Modal
+                data-plasmic-name={"modal"}
+                data-plasmic-override={overrides.modal}
+                body={
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__g5Cfr)}
+                  >
+                    {(() => {
+                      try {
+                        return $state.apiRequest6?.data?.successful_popup.image;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })() ? (
+                      <PlasmicImg__
+                        alt={""}
+                        className={classNames(sty.img___3ZFmb)}
+                        displayHeight={"auto"}
+                        displayMaxHeight={"none"}
+                        displayMaxWidth={"100%"}
+                        displayMinHeight={"0"}
+                        displayMinWidth={"0"}
+                        displayWidth={"100%"}
+                        loading={"lazy"}
+                        src={(() => {
+                          try {
+                            return $state.apiRequest6.data.successful_popup
+                              .image;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                      />
+                    ) : null}
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__dj33U
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return $state.apiRequest6.data.successful_popup
+                              .title;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "You can insert body content here in this slot.";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__cRyWt
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return $state.apiRequest6.data.successful_popup
+                              .description;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "You can insert body content here in this slot.";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </div>
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        sty.freeBox___83RMa
+                      )}
+                    >
+                      <Paziresh24Button
+                        children2={
+                          "\u0645\u0634\u0627\u0647\u062f\u0647 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646 \u0645\u0646"
+                        }
+                        className={classNames(
+                          "__wab_instance",
+                          sty.paziresh24Button___77Prq
+                        )}
+                      />
 
-                  $steps["runOnClick"] = true
-                    ? (() => {
-                        const actionArgs = { eventRef: $props["onClick"] };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
+                      <Paziresh24Button
+                        children2={
+                          "\u0645\u062a\u0648\u062c\u0647 \u0634\u062f\u0645"
+                        }
+                        className={classNames(
+                          "__wab_instance",
+                          sty.paziresh24Button___5Nm5S
+                        )}
+                        outline={true}
+                      />
+                    </div>
+                  </div>
+                }
+                className={classNames("__wab_instance", sty.modal)}
+                noTrigger={true}
+                onOpenChange={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, ["modal", "open"]).apply(
+                    null,
+                    eventArgs
+                  );
+
                   if (
-                    $steps["runOnClick"] != null &&
-                    typeof $steps["runOnClick"] === "object" &&
-                    typeof $steps["runOnClick"].then === "function"
+                    eventArgs.length > 1 &&
+                    eventArgs[1] &&
+                    eventArgs[1]._plasmic_state_init_
                   ) {
-                    $steps["runOnClick"] = await $steps["runOnClick"];
+                    return;
                   }
                 }}
+                open={generateStateValueProp($state, ["modal", "open"])}
+                title={null}
+                trigger={null}
               />
 
+              <ApiRequest
+                data-plasmic-name={"apiRequest5"}
+                data-plasmic-override={overrides.apiRequest5}
+                className={classNames("__wab_instance", sty.apiRequest5)}
+                errorDisplay={null}
+                loadingDisplay={
+                  <Paziresh24Button
+                    children2={
+                      "\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc"
+                    }
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button__qkFr9
+                    )}
+                    loading={true}
+                  />
+                }
+                method={"GET"}
+                onError={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest5",
+                    "error"
+                  ]).apply(null, eventArgs);
+                }}
+                onLoading={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest5",
+                    "loading"
+                  ]).apply(null, eventArgs);
+                }}
+                onSuccess={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest5",
+                    "data"
+                  ]).apply(null, eventArgs);
+                }}
+                ref={ref => {
+                  $refs["apiRequest5"] = ref;
+                }}
+                url={`https://hamdast.paziresh24.com/api/v1/widgets/?user_id=${$ctx.auth.info.id}`}
+              >
+                {(() => {
+                  try {
+                    return $props.appKey != "bimecheck";
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Paziresh24Button
+                    children2={"\u0627\u062c\u0631\u0627"}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button__hufy1
+                    )}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["runOnClick"] = true
+                        ? (() => {
+                            const actionArgs = { eventRef: $props["onClick"] };
+                            return (({ eventRef, args }) => {
+                              return eventRef?.(...(args ?? []));
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["runOnClick"] != null &&
+                        typeof $steps["runOnClick"] === "object" &&
+                        typeof $steps["runOnClick"].then === "function"
+                      ) {
+                        $steps["runOnClick"] = await $steps["runOnClick"];
+                      }
+                    }}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return (
+                      $props.appKey == "bimecheck" &&
+                      !$state.apiRequest5?.data?.some(
+                        item => item.app == $props.appKey
+                      )
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Paziresh24Button
+                    children2={
+                      "\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc"
+                    }
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button__qbsI
+                    )}
+                    loading={(() => {
+                      try {
+                        return $state.isLoadingButton;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["updateIsLoadingButton"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["isLoadingButton"]
+                              },
+                              operation: 0,
+                              value: true
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton"] != null &&
+                        typeof $steps["updateIsLoadingButton"] === "object" &&
+                        typeof $steps["updateIsLoadingButton"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton"] = await $steps[
+                          "updateIsLoadingButton"
+                        ];
+                      }
+
+                      $steps["invokeGlobalAction"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              args: [
+                                "POST",
+                                "https://hamdast.paziresh24.com/api/v1/widgets/",
+                                undefined,
+                                (() => {
+                                  try {
+                                    return {
+                                      app_id: $state?.apiRequest?.data?.id
+                                    };
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
+                                    }
+                                    throw e;
+                                  }
+                                })()
+                              ]
+                            };
+                            return $globalActions["Fragment.apiRequest"]?.apply(
+                              null,
+                              [...actionArgs.args]
+                            );
+                          })()
+                        : undefined;
+                      if (
+                        $steps["invokeGlobalAction"] != null &&
+                        typeof $steps["invokeGlobalAction"] === "object" &&
+                        typeof $steps["invokeGlobalAction"].then === "function"
+                      ) {
+                        $steps["invokeGlobalAction"] = await $steps[
+                          "invokeGlobalAction"
+                        ];
+                      }
+
+                      $steps["updateIsLoadingButton2"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["modal", "open"]
+                              },
+                              operation: 0,
+                              value: true
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton2"] != null &&
+                        typeof $steps["updateIsLoadingButton2"] === "object" &&
+                        typeof $steps["updateIsLoadingButton2"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton2"] = await $steps[
+                          "updateIsLoadingButton2"
+                        ];
+                      }
+
+                      $steps["updateIsLoadingButton4"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              tplRef: "apiRequest5",
+                              action: "refresh"
+                            };
+                            return (({ tplRef, action, args }) => {
+                              return $refs?.[tplRef]?.[action]?.(
+                                ...(args ?? [])
+                              );
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton4"] != null &&
+                        typeof $steps["updateIsLoadingButton4"] === "object" &&
+                        typeof $steps["updateIsLoadingButton4"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton4"] = await $steps[
+                          "updateIsLoadingButton4"
+                        ];
+                      }
+
+                      $steps["updateIsLoadingButton3"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["isLoadingButton"]
+                              },
+                              operation: 0,
+                              value: false
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton3"] != null &&
+                        typeof $steps["updateIsLoadingButton3"] === "object" &&
+                        typeof $steps["updateIsLoadingButton3"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton3"] = await $steps[
+                          "updateIsLoadingButton3"
+                        ];
+                      }
+
+                      $steps["updateIsLoadingButton5"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              tplRef: "apiRequest2",
+                              action: "refresh"
+                            };
+                            return (({ tplRef, action, args }) => {
+                              return $refs?.[tplRef]?.[action]?.(
+                                ...(args ?? [])
+                              );
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton5"] != null &&
+                        typeof $steps["updateIsLoadingButton5"] === "object" &&
+                        typeof $steps["updateIsLoadingButton5"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton5"] = await $steps[
+                          "updateIsLoadingButton5"
+                        ];
+                      }
+                    }}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return (
+                      $props.appKey == "bimecheck" &&
+                      $state.apiRequest5?.data?.some(
+                        item => item.app == $props.appKey
+                      )
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Paziresh24Button
+                    children2={
+                      "\u063a\u06cc\u0631\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc"
+                    }
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button__kls46
+                    )}
+                    loading={(() => {
+                      try {
+                        return $state.isLoadingButton;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["updateIsLoadingButton"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["isLoadingButton"]
+                              },
+                              operation: 0,
+                              value: true
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton"] != null &&
+                        typeof $steps["updateIsLoadingButton"] === "object" &&
+                        typeof $steps["updateIsLoadingButton"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton"] = await $steps[
+                          "updateIsLoadingButton"
+                        ];
+                      }
+
+                      $steps["invokeGlobalAction"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              args: [
+                                "DELETE",
+                                "https://hamdast.paziresh24.com/api/v1/widgets/",
+                                undefined,
+                                (() => {
+                                  try {
+                                    return {
+                                      app_id: $state?.apiRequest?.data?.id
+                                    };
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
+                                    }
+                                    throw e;
+                                  }
+                                })()
+                              ]
+                            };
+                            return $globalActions["Fragment.apiRequest"]?.apply(
+                              null,
+                              [...actionArgs.args]
+                            );
+                          })()
+                        : undefined;
+                      if (
+                        $steps["invokeGlobalAction"] != null &&
+                        typeof $steps["invokeGlobalAction"] === "object" &&
+                        typeof $steps["invokeGlobalAction"].then === "function"
+                      ) {
+                        $steps["invokeGlobalAction"] = await $steps[
+                          "invokeGlobalAction"
+                        ];
+                      }
+
+                      $steps["updateIsLoadingButton3"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              tplRef: "apiRequest5",
+                              action: "refresh"
+                            };
+                            return (({ tplRef, action, args }) => {
+                              return $refs?.[tplRef]?.[action]?.(
+                                ...(args ?? [])
+                              );
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton3"] != null &&
+                        typeof $steps["updateIsLoadingButton3"] === "object" &&
+                        typeof $steps["updateIsLoadingButton3"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton3"] = await $steps[
+                          "updateIsLoadingButton3"
+                        ];
+                      }
+
+                      $steps["updateIsLoadingButton2"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["isLoadingButton"]
+                              },
+                              operation: 0,
+                              value: false
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton2"] != null &&
+                        typeof $steps["updateIsLoadingButton2"] === "object" &&
+                        typeof $steps["updateIsLoadingButton2"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton2"] = await $steps[
+                          "updateIsLoadingButton2"
+                        ];
+                      }
+
+                      $steps["updateIsLoadingButton4"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              tplRef: "apiRequest2",
+                              action: "refresh"
+                            };
+                            return (({ tplRef, action, args }) => {
+                              return $refs?.[tplRef]?.[action]?.(
+                                ...(args ?? [])
+                              );
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["updateIsLoadingButton4"] != null &&
+                        typeof $steps["updateIsLoadingButton4"] === "object" &&
+                        typeof $steps["updateIsLoadingButton4"].then ===
+                          "function"
+                      ) {
+                        $steps["updateIsLoadingButton4"] = await $steps[
+                          "updateIsLoadingButton4"
+                        ];
+                      }
+                    }}
+                    outline={true}
+                  />
+                ) : null}
+              </ApiRequest>
               {(() => {
                 try {
                   return $state.apiRequest.data.screenshots?.length > 0;
@@ -847,7 +1559,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
               }}
               url={(() => {
                 try {
-                  return `https://apigw.paziresh24.com/v1/hamdast/apps/cheragh/reviews?user_id=${$ctx.auth?.info?.id}`;
+                  return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews?user_id=${$ctx.auth?.info?.id}`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -867,7 +1579,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     e instanceof TypeError ||
                     e?.plasmicType === "PlasmicUndefinedDataError"
                   ) {
-                    return true;
+                    return false;
                   }
                   throw e;
                 }
@@ -1226,6 +1938,36 @@ function PlasmicLauncherProfile__RenderFunc(props: {
             />
           </div>
         ) : null}
+        <ApiRequest
+          data-plasmic-name={"apiRequest6"}
+          data-plasmic-override={overrides.apiRequest6}
+          className={classNames("__wab_instance", sty.apiRequest6)}
+          errorDisplay={null}
+          loadingDisplay={null}
+          method={"GET"}
+          onError={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest6", "error"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onLoading={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest6", "loading"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onSuccess={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest6", "data"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          ref={ref => {
+            $refs["apiRequest6"] = ref;
+          }}
+          url={`https://hamdast.paziresh24.com/api/v1/apps/${$state.apiRequest?.data?.id}/widgets/info/`}
+        />
       </ApiRequest>
     </div>
   ) as React.ReactElement | null;
@@ -1235,37 +1977,40 @@ const PlasmicDescendants = {
   root: [
     "root",
     "apiRequest",
-    "img",
     "apiRequest2",
     "apiRequest3",
     "span",
-    "paziresh24Button",
+    "modal",
+    "apiRequest5",
     "paizresh24Gallery",
     "apiRequest4",
     "launcherBlocksWriteReview",
-    "launcherBlocksRateReview"
+    "launcherBlocksRateReview",
+    "apiRequest6"
   ],
   apiRequest: [
     "apiRequest",
-    "img",
     "apiRequest2",
     "apiRequest3",
     "span",
-    "paziresh24Button",
+    "modal",
+    "apiRequest5",
     "paizresh24Gallery",
     "apiRequest4",
     "launcherBlocksWriteReview",
-    "launcherBlocksRateReview"
+    "launcherBlocksRateReview",
+    "apiRequest6"
   ],
-  img: ["img"],
   apiRequest2: ["apiRequest2"],
   apiRequest3: ["apiRequest3", "span"],
   span: ["span"],
-  paziresh24Button: ["paziresh24Button"],
+  modal: ["modal"],
+  apiRequest5: ["apiRequest5"],
   paizresh24Gallery: ["paizresh24Gallery"],
   apiRequest4: ["apiRequest4", "launcherBlocksWriteReview"],
   launcherBlocksWriteReview: ["launcherBlocksWriteReview"],
-  launcherBlocksRateReview: ["launcherBlocksRateReview"]
+  launcherBlocksRateReview: ["launcherBlocksRateReview"],
+  apiRequest6: ["apiRequest6"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1273,15 +2018,16 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   apiRequest: typeof ApiRequest;
-  img: typeof PlasmicImg__;
   apiRequest2: typeof ApiRequest;
   apiRequest3: typeof ApiRequest;
   span: "span";
-  paziresh24Button: typeof Paziresh24Button;
+  modal: typeof Paziresh24Modal;
+  apiRequest5: typeof ApiRequest;
   paizresh24Gallery: typeof Gallery;
   apiRequest4: typeof ApiRequest;
   launcherBlocksWriteReview: typeof LauncherBlocksWriteReview;
   launcherBlocksRateReview: typeof LauncherBlocksRateReview;
+  apiRequest6: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1345,15 +2091,16 @@ export const PlasmicLauncherProfile = Object.assign(
   {
     // Helper components rendering sub-elements
     apiRequest: makeNodeComponent("apiRequest"),
-    img: makeNodeComponent("img"),
     apiRequest2: makeNodeComponent("apiRequest2"),
     apiRequest3: makeNodeComponent("apiRequest3"),
     span: makeNodeComponent("span"),
-    paziresh24Button: makeNodeComponent("paziresh24Button"),
+    modal: makeNodeComponent("modal"),
+    apiRequest5: makeNodeComponent("apiRequest5"),
     paizresh24Gallery: makeNodeComponent("paizresh24Gallery"),
     apiRequest4: makeNodeComponent("apiRequest4"),
     launcherBlocksWriteReview: makeNodeComponent("launcherBlocksWriteReview"),
     launcherBlocksRateReview: makeNodeComponent("launcherBlocksRateReview"),
+    apiRequest6: makeNodeComponent("apiRequest6"),
 
     // Metadata about props expected for PlasmicLauncherProfile
     internalVariantProps: PlasmicLauncherProfile__VariantProps,
