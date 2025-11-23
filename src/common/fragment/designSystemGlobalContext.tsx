@@ -38,8 +38,20 @@ export const Fragment = ({ children, apiConfig, previewApiConfig }: React.PropsW
               ...config,
             });
           }
-          if (method !== 'GET') {
-            result = await axios[method.toLowerCase() as 'post' | 'delete' | 'put' | 'patch'](url, body, {
+          if (method === 'DELETE') {
+            console.log('heelo', method, url, params, body, config);
+            result = await axios.delete(url, {
+              params,
+              data: {
+                ...body,
+              },
+              ...apiConfig,
+              ...previewApiConfig,
+              ...config,
+            });
+          }
+          if (method !== 'GET' && method !== 'DELETE') {
+            result = await axios[method.toLowerCase() as 'post' | 'put' | 'patch'](url, body, {
               params,
               ...apiConfig,
               ...previewApiConfig,
