@@ -229,7 +229,7 @@
   }
 }
 .img {
-  object-fit: cover;
+  object-fit: scale-down;
   max-width: 100%;
   width: 100%;
   height: 100%;
@@ -237,5 +237,5 @@
   min-height: 0;
 }
 .img > picture > img {
-  object-fit: cover;
+  object-fit: scale-down;
 }
