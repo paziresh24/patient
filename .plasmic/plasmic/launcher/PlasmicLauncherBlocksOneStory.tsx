@@ -213,12 +213,12 @@ function PlasmicLauncherBlocksOneStory__RenderFunc(props: {
           className={classNames(sty.img, {
             [sty.imgseen]: hasVariant($state, "seen", "seen")
           })}
-          displayHeight={"50px"}
+          displayHeight={"100%"}
           displayMaxHeight={"none"}
           displayMaxWidth={"100%"}
           displayMinHeight={"0"}
           displayMinWidth={"0"}
-          displayWidth={"50px"}
+          displayWidth={"100%"}
           loading={"lazy"}
           src={(() => {
             try {
