@@ -16,6 +16,7 @@ import { defaultMessengers } from '../../constants/defaultMessengers';
 import { uniqMessengers } from '../../functions/uniqMessengers';
 import Select from '../select';
 import Loading from '@/common/components/atom/loading/loading';
+import { useShouldHideMobileField } from '../../hooks/useShouldHideMobileField';
 
 interface UserCardProps {
   name: string;
@@ -76,22 +77,33 @@ export const UserCard = (props: UserCardProps) => {
 
   const userInfo = useUserInfoStore(state => state.info);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
+  const { shouldHide: shouldHideMobileField } = useShouldHideMobileField();
 
-  const fields = useMemo(
-    () =>
-      type === 'subUser'
-        ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER']
-        : [
-            'NAME',
-            'FAMILY',
-            'GENDER',
-            'NATIONAL_CODE',
-            'IS_FOREIGNER',
-            userInfo?.cell ? undefined : 'CELL',
-            userInfo?.cell ? undefined : 'COUNTRY_CODE',
-          ],
-    [type],
-  );
+  const fields = useMemo(() => {
+    const hasNoMobileInAccount = !userInfo?.cell && !cell;
+    const shouldHideCell = shouldHideMobileField && hasNoMobileInAccount;
+
+    if (type === 'subUser') {
+      return shouldHideCell
+        ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'IS_FOREIGNER']
+        : ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'];
+    }
+
+    // برای type === 'user'
+    if (shouldHideCell) {
+      return ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'IS_FOREIGNER'];
+    }
+
+    const userFields: (FormFields[number] | undefined)[] = [
+      'NAME',
+      'FAMILY',
+      'GENDER',
+      'NATIONAL_CODE',
+      'IS_FOREIGNER',
+      userInfo?.cell ? undefined : 'CELL',
+    ];
+    return userFields.filter((field): field is FormFields[number] => field !== undefined) as FormFields;
+  }, [type, userInfo?.cell, cell, shouldHideMobileField]);
 
   useEffect(() => {
     if (!name) {
@@ -200,7 +212,6 @@ export const UserCard = (props: UserCardProps) => {
             GENDER: gender,
             CELL: cell,
             IS_FOREIGNER: isForeigner,
-            COUNTRY_CODE: country_code ? country_code.toString() : '98',
           }}
           onSubmit={handleEditUser}
           loading={editSubuser.isLoading || patchUser.isLoading}
