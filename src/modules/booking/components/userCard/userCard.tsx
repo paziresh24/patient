@@ -15,14 +15,11 @@ import toast from 'react-hot-toast';
 import { defaultMessengers } from '../../constants/defaultMessengers';
 import { uniqMessengers } from '../../functions/uniqMessengers';
 import Select from '../select';
-import Loading from '@/common/components/atom/loading/loading';
-import { useShouldHideMobileField } from '../../hooks/useShouldHideMobileField';
 
 interface UserCardProps {
   name: string;
   family: string;
   cell?: string;
-  country_code?: string;
   email?: string;
   nationalCode: string;
   userId: string;
@@ -51,9 +48,7 @@ export const UserCard = (props: UserCardProps) => {
     userId,
     name,
     family,
-    cell,
     email,
-    country_code,
     nationalCode,
     isForeigner,
     gender,
@@ -64,6 +59,7 @@ export const UserCard = (props: UserCardProps) => {
     shouldShowMessengers,
     loading,
     editable,
+    cell,
   } = props;
 
   const editSubuser = useEditSubuser();
@@ -77,33 +73,23 @@ export const UserCard = (props: UserCardProps) => {
 
   const userInfo = useUserInfoStore(state => state.info);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
-  const { shouldHide: shouldHideMobileField } = useShouldHideMobileField();
 
   const fields = useMemo(() => {
-    const hasNoMobileInAccount = !userInfo?.cell && !cell;
-    const shouldHideCell = shouldHideMobileField && hasNoMobileInAccount;
-
     if (type === 'subUser') {
-      return shouldHideCell
-        ? ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'IS_FOREIGNER']
-        : ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'];
+      return ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'CELL', 'IS_FOREIGNER'];
     }
 
-    // برای type === 'user'
-    if (shouldHideCell) {
-      return ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'IS_FOREIGNER'];
-    }
+    return ['NAME', 'FAMILY', 'GENDER', 'NATIONAL_CODE', 'IS_FOREIGNER'];
+  }, [type]);
 
-    const userFields: (FormFields[number] | undefined)[] = [
-      'NAME',
-      'FAMILY',
-      'GENDER',
-      'NATIONAL_CODE',
-      'IS_FOREIGNER',
-      userInfo?.cell ? undefined : 'CELL',
-    ];
-    return userFields.filter((field): field is FormFields[number] => field !== undefined) as FormFields;
-  }, [type, userInfo?.cell, cell, shouldHideMobileField]);
+  const isForeignerBasedOnTimezone = useMemo(() => {
+    try {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      return timezone !== 'Asia/Tehran';
+    } catch {
+      return false;
+    }
+  }, []);
 
   useEffect(() => {
     if (!name) {
@@ -114,7 +100,7 @@ export const UserCard = (props: UserCardProps) => {
   const handleEditUser = async (data: any) => {
     if (type === 'user') {
       try {
-        const { is_foreigner, cell, country_code, ...userData } = data;
+        const { is_foreigner, cell, ...userData } = data;
         await patchUser.mutateAsync({
           ...userData,
           user_id: userId,
@@ -126,7 +112,7 @@ export const UserCard = (props: UserCardProps) => {
           ...userInfo,
           ...data,
           gender: data.gender.value,
-          cell: country_code?.value == '98' ? cell.replace(/^0/, '') : userInfo.cell,
+          cell: userInfo?.cell,
         });
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -210,8 +196,7 @@ export const UserCard = (props: UserCardProps) => {
             FAMILY: family,
             NATIONAL_CODE: nationalCode,
             GENDER: gender,
-            CELL: cell,
-            IS_FOREIGNER: isForeigner,
+            IS_FOREIGNER: isForeigner || isForeignerBasedOnTimezone,
           }}
           onSubmit={handleEditUser}
           loading={editSubuser.isLoading || patchUser.isLoading}
