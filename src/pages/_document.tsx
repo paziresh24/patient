@@ -13,6 +13,7 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
+        <link rel="dns-prefetch" href="https://growthbook-api.paziresh24.com" />
         <link rel="preconnect" href="https://growthbook-api.paziresh24.com" />
         <link rel="preload" href="/fonts/IRANSansXFaNum-Medium.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/IRANSansXFaNum-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
@@ -71,3 +72,4 @@ const CustomDocument: NextComponentType = (props: any) => {
   );
 };
 export default CustomDocument;
+

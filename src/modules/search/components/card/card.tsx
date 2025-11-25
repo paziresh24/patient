@@ -70,7 +70,10 @@ export const SearchCard = (props: SearchCardProps) => {
           onClick={() => sendEventWhenClick?.({ element: 'avatar' })}
           {...(baseInfo?.url && { href: baseInfo?.url, title: alt })}
         >
-          <div className="relative">
+          <div
+            className="relative"
+            style={{ width: avatarSize === 'md' ? 80 : 100, height: avatarSize === 'md' ? 80 : 100, aspectRatio: '1/1' }}
+          >
             <Avatar
               src={publicRuntimeConfig.CDN_BASE_URL + baseInfo?.avatar}
               alt={alt ?? imageAlt}
@@ -81,6 +84,7 @@ export const SearchCard = (props: SearchCardProps) => {
                 'border-green-400': baseInfo?.isOnline,
               })}
               {...(!avatarPriority && { loading: 'lazy' })}
+              {...(avatarPriority && { fetchPriority: 'high' })}
             />
             {baseInfo?.isVerify && <VerifyIcon className="absolute bottom-0 left-0 fill-primary" />}
           </div>
