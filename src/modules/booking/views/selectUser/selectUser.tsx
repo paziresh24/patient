@@ -105,7 +105,6 @@ export const SelectUser = (props: SelectUserProps) => {
               userId={userInfo.id ?? ''}
               name={userInfo.name ?? ''}
               family={userInfo.family ?? ''}
-              country_code={userInfo?.country_code_id}
               cell={userInfo?.cell ? (userInfo.cell?.startsWith('0') ? userInfo.cell : `0${userInfo.cell}`) : undefined}
               email={userInfo.email}
               nationalCode={userInfo.national_code ?? ''}
