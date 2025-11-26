@@ -34,7 +34,7 @@ export const Avatar: React.FC<AvatarProps> = props => {
       width={width}
       height={height}
       alt={alt}
-      style={{ minWidth: width, height }}
+      style={{ minWidth: width, height, aspectRatio: `${width}/${height}` }}
       className={classNames('rounded-full bg-gray', className)}
       src={src}
       {...rest}

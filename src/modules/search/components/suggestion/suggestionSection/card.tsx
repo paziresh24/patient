@@ -48,13 +48,14 @@ export const CardSection = (props: CardSectionProps) => {
           className={classNames('flex items-center cursor-pointer py-1 px-3 rounded-lg space-s-3', style.wrapper)}
           onClick={() => handleItemClick(item, index)}
         >
-          <div>
+          <div className="w-11 min-w-[2.75rem]" style={{ aspectRatio: '1/1' }}>
             <img
               src={`${publicRuntimeConfig.CDN_BASE_URL}${item.image}`}
               alt=""
-              className="rounded-full w-11 min-w-[2.75rem]"
+              className="rounded-full w-full h-full"
               width={44}
               height={44}
+              {...(index < 3 && { fetchPriority: 'high' })}
             />
           </div>
           <div className="flex flex-col">
@@ -62,7 +63,7 @@ export const CardSection = (props: CardSectionProps) => {
               className={style.title}
               fontWeight="medium"
               fontSize="sm"
-              dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' ?? '' }}
+              dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }}
             />
             <Text fontSize="xs" className="line-clamp-1">
               {item.sub_title}

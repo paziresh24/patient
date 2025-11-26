@@ -29,7 +29,7 @@ import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState, useMemo, useCallback } from 'react';
+import { ReactElement, useEffect, useState, useMemo, useCallback, startTransition } from 'react';
 import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
@@ -37,11 +37,11 @@ import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
-  ssr: false
+  ssr: false,
 });
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'), {
   loading: () => <Skeleton w="100%" h="4rem" />,
-  ssr: false
+  ssr: false,
 });
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
@@ -108,31 +108,72 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   }, []);
 
   useEffect(() => {
-    if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
-    if (lat && lon) setGeoLocation({ lat: +lat, lon: +lon });
+    setTimeout(() => {
+      if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
+      if (lat && lon) setGeoLocation({ lat: +lat, lon: +lon });
+    }, 0);
   }, []);
 
   useEffect(() => {
-    if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
-      changeRoute({ params: { city: '' }, replace: true });
-    }
+    startTransition(() => {
+      if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
+        changeRoute({ params: { city: '' }, replace: true });
+      }
 
-    if (!isLoading && !selectedFilters.city && city.en_slug !== 'ir') {
-      changeRoute({ params: { city: city?.en_slug }, query: { lat: null, lon: null }, replace: true });
-    }
+      if (!isLoading && !selectedFilters.city && city.en_slug !== 'ir') {
+        changeRoute({ params: { city: city?.en_slug }, query: { lat: null, lon: null }, replace: true });
+      }
+    });
   }, [params, city, isLoading]);
 
   useEffect(() => {
-    if (growthbook.ready && !userPending && !isLoading) {
-      if (
-        shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
-        shouldUseSearchViewEventRoutesList.routes?.includes('*')
-      ) {
-        if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
-          splunkInstance('search').sendEvent({
+    const timeoutId = setTimeout(() => {
+      if (growthbook.ready && !userPending && !isLoading) {
+        if (
+          shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
+          shouldUseSearchViewEventRoutesList.routes?.includes('*')
+        ) {
+          if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
+            splunkInstance('search').sendEvent({
+              group: 'search_metrics',
+              type: 'search_view',
+              event: {
+                filters: selectedFilters,
+                result_count: result.length,
+                location: city.en_slug,
+                ...(geoLocation ?? null),
+                city_id: city.id,
+                query_id: search.query_id,
+                user_id: userInfo?.id ?? null,
+                user_type: userInfo.provider?.job_title ?? 'normal-user',
+                ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
+                url: {
+                  href: window.location.href,
+                  qurey: { ...queries },
+                  pathname: window.location.pathname,
+                  host: window.location.host,
+                },
+              },
+            });
+          }
+
+          splunkInstance('search').sendBatchEvent({
             group: 'search_metrics',
-            type: 'search_view',
-            event: {
+            type: 'search_card_view',
+            events: result.map(item => ({
+              card_data: {
+                action: item.actions?.map?.(item =>
+                  JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
+                ),
+                _id: item._id,
+                position: item.position,
+                server_id: item.server_id,
+                title: item.title,
+                type: item.type,
+                url: item.url,
+                rates_count: item.rates_count,
+                satisfaction: item.satisfaction,
+              },
               filters: selectedFilters,
               result_count: result.length,
               location: city.en_slug,
@@ -141,60 +182,27 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
               query_id: search.query_id,
               user_id: userInfo?.id ?? null,
               user_type: userInfo.provider?.job_title ?? 'normal-user',
-              ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
               url: {
                 href: window.location.href,
                 qurey: { ...queries },
                 pathname: window.location.pathname,
                 host: window.location.host,
               },
-            },
+            })),
           });
+
+          return;
         }
-
-        splunkInstance('search').sendBatchEvent({
-          group: 'search_metrics',
-          type: 'search_card_view',
-          events: result.map(item => ({
-            card_data: {
-              action: item.actions?.map?.(item =>
-                JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
-              ),
-              _id: item._id,
-              position: item.position,
-              server_id: item.server_id,
-              title: item.title,
-              type: item.type,
-              url: item.url,
-              rates_count: item.rates_count,
-              satisfaction: item.satisfaction,
-            },
-            filters: selectedFilters,
-            result_count: result.length,
-            location: city.en_slug,
-            ...(geoLocation ?? null),
-            city_id: city.id,
-            query_id: search.query_id,
-            user_id: userInfo?.id ?? null,
-            user_type: userInfo.provider?.job_title ?? 'normal-user',
-            url: {
-              href: window.location.href,
-              qurey: { ...queries },
-              pathname: window.location.pathname,
-              host: window.location.host,
-            },
-          })),
+        stat.mutate({
+          route: asPath,
+          filters: selectedFilters,
+          result: result,
+          ...(!isLanding && { centerTypeFilterPresence: 1 }),
         });
-
-        return;
       }
-      stat.mutate({
-        route: asPath,
-        filters: selectedFilters,
-        result: result,
-        ...(!isLanding && { centerTypeFilterPresence: 1 }),
-      });
-    }
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
   }, [result, userPending, isLoading, growthbook.ready]);
 
   const handleNextPage = useCallback(() => {
@@ -209,9 +217,12 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
 
   const memoizedFilters = useMemo(() => filters, [filters.sortBy, filters.freeturn]);
 
-  const handleChangeMemoized = useCallback((key: string, value: any) => {
-    handleChange(key, value);
-  }, [handleChange]);
+  const handleChangeMemoized = useCallback(
+    (key: string, value: any) => {
+      handleChange(key, value);
+    },
+    [handleChange],
+  );
 
   return (
     <>
@@ -355,27 +366,36 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     const path = context.resolvedUrl;
     const url = `https://${host}${path}`;
     const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
-    try {
-      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-      const growthbook = new GrowthBook(growthbookContext);
-      growthbook.setAttributes({ url });
-      await growthbook.loadFeatures({ timeout: 500 });
-      // Plasmic
-      showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
-      showPlasmicResult = growthbook.isOn('search_plasmic_result');
-      showPlasmicSort = growthbook.isOn('search_plasmic_sort');
-      showPlasmicConsultBanner = growthbook.isOn('search_plasmic_consult_banner');
-      showSuggestedDoctor = growthbook.getFeatureValue('fragment::top-suggested-card-feature', { enable: true });
-    } catch (error) {
-      console.error(error);
-    }
 
-    try {
-      const queryClient = new QueryClient();
+    const queryClient = new QueryClient();
+    const university = themeConfing?.partnerKey;
 
-      const university = themeConfing?.partnerKey;
-
-      const searchData = await queryClient.fetchQuery(
+    const [growthbookResult, searchData] = await Promise.allSettled([
+      (async () => {
+        try {
+          const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+          const growthbook = new GrowthBook(growthbookContext);
+          growthbook.setAttributes({ url });
+          await growthbook.loadFeatures({ timeout: 300 });
+          return {
+            showPlasmicSuggestion: growthbook.isOn('search_plasmic_suggestion'),
+            showPlasmicResult: growthbook.isOn('search_plasmic_result'),
+            showPlasmicSort: growthbook.isOn('search_plasmic_sort'),
+            showPlasmicConsultBanner: growthbook.isOn('search_plasmic_consult_banner'),
+            showSuggestedDoctor: growthbook.getFeatureValue('fragment::top-suggested-card-feature', { enable: true }),
+          };
+        } catch (error) {
+          console.error(error);
+          return {
+            showPlasmicSuggestion: false,
+            showPlasmicResult: false,
+            showPlasmicSort: false,
+            showPlasmicConsultBanner: false,
+            showSuggestedDoctor: { enable: true },
+          };
+        }
+      })(),
+      queryClient.fetchQuery(
         [
           ServerStateKeysEnum.Search,
           {
@@ -394,14 +414,30 @@ export const getServerSideProps: GetServerSideProps = withCSR(
               ...(university && { university }),
             },
           }),
-      );
+      ),
+    ]);
 
+    if (growthbookResult.status === 'fulfilled') {
+      showPlasmicSuggestion = growthbookResult.value.showPlasmicSuggestion;
+      showPlasmicResult = growthbookResult.value.showPlasmicResult;
+      showPlasmicSort = growthbookResult.value.showPlasmicSort;
+      showPlasmicConsultBanner = growthbookResult.value.showPlasmicConsultBanner;
+      showSuggestedDoctor = growthbookResult.value.showSuggestedDoctor;
+    }
+
+    if (searchData.status === 'rejected') {
+      throw searchData.reason;
+    }
+
+    const searchDataValue = searchData.value;
+
+    try {
       if (
-        !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
-        (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
-        !searchData?.selected_filters?.result_type &&
-        (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
-        !searchData?.search?.is_landing &&
+        !searchDataValue.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
+        (!searchDataValue?.selected_filters?.turn_type || searchDataValue?.selected_filters?.turn_type !== 'consult') &&
+        !searchDataValue?.selected_filters?.result_type &&
+        (!searchDataValue.search.pagination?.page || searchDataValue?.search?.pagination?.page === 1) &&
+        !searchDataValue?.search?.is_landing &&
         showSuggestedDoctor?.enable
       ) {
         try {
