@@ -385,11 +385,7 @@ const DoctorProfile = (props: any) => {
                 </div>
               )}
 
-              {(clientData?.props as any)?.isFullProfileError && (
-                <div className="w-full py-20 flex justify-center items-center">
-                  <ErrorPage message="در دریافت اطلاعات مطب/مرکز درمانی مشکلی بوجود آمده." refresh={refetch} />
-                </div>
-              )}
+              {/* Continue showing page even if full profile has error */}
 
               {Aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
                 .filter(({ isShow }: any) => Boolean(isShow))

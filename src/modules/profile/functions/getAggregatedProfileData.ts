@@ -193,9 +193,9 @@ export async function getAggregatedProfileData(
     const { fullProfileData: data } = fullProfileResult.value;
     fullProfileData = data;
   } else {
-    // Full profile failed - this is a critical error
+    // Full profile failed - log error but continue to show page
     console.error('Error in full profile:', fullProfileResult.reason);
-    return Promise.reject(fullProfileResult.reason);
+    fullProfileData = null;
   }
 
   const pageSlug = `/dr/${validatedSlug}`;
@@ -379,7 +379,7 @@ export async function getAggregatedProfileData(
 
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
-      ...fullProfileData,
+      ...(fullProfileData ?? {}),
       id: slugInfo?.owner_id,
       server_id: slugInfo?.server_id,
       name: finalName,
