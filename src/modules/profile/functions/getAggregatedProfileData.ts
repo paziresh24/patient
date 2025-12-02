@@ -377,6 +377,9 @@ export async function getAggregatedProfileData(
     });
   }
 
+  // Check disable_booking from fullProfileData centers settings before merge
+  const hasDisableBooking = fullProfileData?.centers && fullProfileData.centers.length > 0 && fullProfileData.centers.some((c: any) => c.settings?.disable_booking === "1" || c.settings?.disable_booking === 1);
+
   const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
     overwriteProfileData(overwriteData, {
       ...(fullProfileData ?? {}),
@@ -437,7 +440,11 @@ export async function getAggregatedProfileData(
       similarLinks,
       waitingTimeInfo,
       isBulk: !!(
-        centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services?.every?.((s: any) => !s.hours_of_work))
+        // Check disable_booking from fullProfileData centers settings (before merge) or merged centers settings
+        hasDisableBooking ||
+        (centers && centers.length > 0 && centers.some((c: any) => c.settings?.disable_booking === "1" || c.settings?.disable_booking === 1)) ||
+        centers?.every?.((c: any) => c.status === 2) || 
+        centers?.every?.((c: any) => c.services?.every?.((s: any) => !s.hours_of_work))
       ),
       breadcrumbs: createBreadcrumb(
         internalLinksResult.status === 'fulfilled' ? internalLinksResult.value : [],
