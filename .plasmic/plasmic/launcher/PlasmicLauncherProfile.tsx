@@ -89,11 +89,13 @@ export const PlasmicLauncherProfile__VariantProps =
 export type PlasmicLauncherProfile__ArgsType = {
   appKey?: string;
   onClick?: () => void;
+  onSubscribe?: (planKey: string) => void;
 };
 type ArgPropType = keyof PlasmicLauncherProfile__ArgsType;
 export const PlasmicLauncherProfile__ArgProps = new Array<ArgPropType>(
   "appKey",
-  "onClick"
+  "onClick",
+  "onSubscribe"
 );
 
 export type PlasmicLauncherProfile__OverridesType = {
@@ -109,11 +111,13 @@ export type PlasmicLauncherProfile__OverridesType = {
   launcherBlocksWriteReview?: Flex__<typeof LauncherBlocksWriteReview>;
   launcherBlocksRateReview?: Flex__<typeof LauncherBlocksRateReview>;
   apiRequest6?: Flex__<typeof ApiRequest>;
+  apiRequest7?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultLauncherProfileProps {
   appKey?: string;
   onClick?: () => void;
+  onSubscribe?: (planKey: string) => void;
   className?: string;
 }
 
@@ -315,6 +319,30 @@ function PlasmicLauncherProfile__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "apiRequest7.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest7"
+      },
+      {
+        path: "apiRequest7.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest7"
+      },
+      {
+        path: "apiRequest7.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest7"
       }
     ],
     [$props, $ctx, $refs]
@@ -998,7 +1026,9 @@ function PlasmicLauncherProfile__RenderFunc(props: {
               >
                 {(() => {
                   try {
-                    return $props.appKey != "bimecheck";
+                    return (
+                      $props.appKey != "bimecheck" && $props.appKey != "Monshi"
+                    );
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1276,6 +1306,124 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                         $steps["updateIsLoadingButton5"] = await $steps[
                           "updateIsLoadingButton5"
                         ];
+                      }
+                    }}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return (
+                      $props.appKey == "Monshi" &&
+                      $state.apiRequest7.data?.user_usages?.length == 0
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Paziresh24Button
+                    children2={
+                      "\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc"
+                    }
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button__xkQkp
+                    )}
+                    loading={(() => {
+                      try {
+                        return $state.isLoadingButton;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["runOnSubscribe"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              eventRef: $props["onSubscribe"]
+                            };
+                            return (({ eventRef, args }) => {
+                              return eventRef?.(...(args ?? []));
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["runOnSubscribe"] != null &&
+                        typeof $steps["runOnSubscribe"] === "object" &&
+                        typeof $steps["runOnSubscribe"].then === "function"
+                      ) {
+                        $steps["runOnSubscribe"] = await $steps[
+                          "runOnSubscribe"
+                        ];
+                      }
+                    }}
+                  />
+                ) : null}
+                {(() => {
+                  try {
+                    return (
+                      $props.appKey == "Monshi" &&
+                      $state.apiRequest7.data?.user_usages?.length > 0
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <Paziresh24Button
+                    children2={"\u0627\u062c\u0631\u0627"}
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button__tk1Pm
+                    )}
+                    loading={(() => {
+                      try {
+                        return $state.isLoadingButton;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["runOnClick"] = true
+                        ? (() => {
+                            const actionArgs = { eventRef: $props["onClick"] };
+                            return (({ eventRef, args }) => {
+                              return eventRef?.(...(args ?? []));
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["runOnClick"] != null &&
+                        typeof $steps["runOnClick"] === "object" &&
+                        typeof $steps["runOnClick"].then === "function"
+                      ) {
+                        $steps["runOnClick"] = await $steps["runOnClick"];
                       }
                     }}
                   />
@@ -1968,6 +2116,37 @@ function PlasmicLauncherProfile__RenderFunc(props: {
           }}
           url={`https://hamdast.paziresh24.com/api/v1/apps/${$state.apiRequest?.data?.id}/widgets/info/`}
         />
+
+        <ApiRequest
+          data-plasmic-name={"apiRequest7"}
+          data-plasmic-override={overrides.apiRequest7}
+          className={classNames("__wab_instance", sty.apiRequest7)}
+          errorDisplay={null}
+          loadingDisplay={null}
+          method={"GET"}
+          onError={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest7", "error"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onLoading={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest7", "loading"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onSuccess={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest7", "data"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          ref={ref => {
+            $refs["apiRequest7"] = ref;
+          }}
+          url={`https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/plans/823n7zb7xr3dfjn`}
+        />
       </ApiRequest>
     </div>
   ) as React.ReactElement | null;
@@ -1986,7 +2165,8 @@ const PlasmicDescendants = {
     "apiRequest4",
     "launcherBlocksWriteReview",
     "launcherBlocksRateReview",
-    "apiRequest6"
+    "apiRequest6",
+    "apiRequest7"
   ],
   apiRequest: [
     "apiRequest",
@@ -1999,7 +2179,8 @@ const PlasmicDescendants = {
     "apiRequest4",
     "launcherBlocksWriteReview",
     "launcherBlocksRateReview",
-    "apiRequest6"
+    "apiRequest6",
+    "apiRequest7"
   ],
   apiRequest2: ["apiRequest2"],
   apiRequest3: ["apiRequest3", "span"],
@@ -2010,7 +2191,8 @@ const PlasmicDescendants = {
   apiRequest4: ["apiRequest4", "launcherBlocksWriteReview"],
   launcherBlocksWriteReview: ["launcherBlocksWriteReview"],
   launcherBlocksRateReview: ["launcherBlocksRateReview"],
-  apiRequest6: ["apiRequest6"]
+  apiRequest6: ["apiRequest6"],
+  apiRequest7: ["apiRequest7"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2028,6 +2210,7 @@ type NodeDefaultElementType = {
   launcherBlocksWriteReview: typeof LauncherBlocksWriteReview;
   launcherBlocksRateReview: typeof LauncherBlocksRateReview;
   apiRequest6: typeof ApiRequest;
+  apiRequest7: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2101,6 +2284,7 @@ export const PlasmicLauncherProfile = Object.assign(
     launcherBlocksWriteReview: makeNodeComponent("launcherBlocksWriteReview"),
     launcherBlocksRateReview: makeNodeComponent("launcherBlocksRateReview"),
     apiRequest6: makeNodeComponent("apiRequest6"),
+    apiRequest7: makeNodeComponent("apiRequest7"),
 
     // Metadata about props expected for PlasmicLauncherProfile
     internalVariantProps: PlasmicLauncherProfile__VariantProps,
