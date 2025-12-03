@@ -775,6 +775,21 @@ function PlasmicLauncherApps__RenderFunc(props: {
                             }
                           }}
                           pagekey={"launcher"}
+                          showUsers={(() => {
+                            try {
+                              return currentItem.functions?.includes?.(
+                                "widget"
+                              );
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return false;
+                              }
+                              throw e;
+                            }
+                          })()}
                           soon={(() => {
                             try {
                               return currentItem.badges?.includes("SOON");

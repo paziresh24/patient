@@ -499,107 +499,140 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                 </div>
               </div>
               <div className={classNames(projectcss.all, sty.freeBox__vl1Xl)}>
-                <div className={classNames(projectcss.all, sty.freeBox__t1SAz)}>
-                  <ApiRequest
-                    data-plasmic-name={"apiRequest2"}
-                    data-plasmic-override={overrides.apiRequest2}
-                    className={classNames("__wab_instance", sty.apiRequest2)}
-                    errorDisplay={
+                {(() => {
+                  try {
+                    return $state.apiRequest.data.functions?.includes?.(
+                      "widget"
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__t1SAz)}
+                  >
+                    <ApiRequest
+                      data-plasmic-name={"apiRequest2"}
+                      data-plasmic-override={overrides.apiRequest2}
+                      className={classNames("__wab_instance", sty.apiRequest2)}
+                      errorDisplay={
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            projectcss.__wab_text,
+                            sty.text__mtZaT
+                          )}
+                        >
+                          {"100+"}
+                        </div>
+                      }
+                      loadingDisplay={
+                        <div
+                          className={classNames(
+                            projectcss.all,
+                            sty.freeBox___26Bhn
+                          )}
+                        />
+                      }
+                      method={"GET"}
+                      onError={async (...eventArgs: any) => {
+                        generateStateOnChangeProp($state, [
+                          "apiRequest2",
+                          "error"
+                        ]).apply(null, eventArgs);
+                      }}
+                      onLoading={async (...eventArgs: any) => {
+                        generateStateOnChangeProp($state, [
+                          "apiRequest2",
+                          "loading"
+                        ]).apply(null, eventArgs);
+                      }}
+                      onSuccess={async (...eventArgs: any) => {
+                        generateStateOnChangeProp($state, [
+                          "apiRequest2",
+                          "data"
+                        ]).apply(null, eventArgs);
+                      }}
+                      ref={ref => {
+                        $refs["apiRequest2"] = ref;
+                      }}
+                      url={(() => {
+                        try {
+                          return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/users?page=1&limit=1`;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                    >
                       <div
                         className={classNames(
                           projectcss.all,
                           projectcss.__wab_text,
-                          sty.text__mtZaT
+                          sty.text___8ECv
                         )}
                       >
-                        {"100+"}
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return (
+                                $state.apiRequest2.data?.active_users?.toLocaleString() ??
+                                "100+"
+                              );
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "100+";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
                       </div>
-                    }
-                    loadingDisplay={
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          sty.freeBox___26Bhn
-                        )}
-                      />
-                    }
-                    method={"GET"}
-                    onError={async (...eventArgs: any) => {
-                      generateStateOnChangeProp($state, [
-                        "apiRequest2",
-                        "error"
-                      ]).apply(null, eventArgs);
-                    }}
-                    onLoading={async (...eventArgs: any) => {
-                      generateStateOnChangeProp($state, [
-                        "apiRequest2",
-                        "loading"
-                      ]).apply(null, eventArgs);
-                    }}
-                    onSuccess={async (...eventArgs: any) => {
-                      generateStateOnChangeProp($state, [
-                        "apiRequest2",
-                        "data"
-                      ]).apply(null, eventArgs);
-                    }}
-                    ref={ref => {
-                      $refs["apiRequest2"] = ref;
-                    }}
-                    url={(() => {
-                      try {
-                        return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/users?page=1&limit=1`;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()}
-                  >
+                    </ApiRequest>
                     <div
                       className={classNames(
                         projectcss.all,
                         projectcss.__wab_text,
-                        sty.text___8ECv
+                        sty.text__eHyWt
                       )}
                     >
-                      <React.Fragment>
-                        {(() => {
-                          try {
-                            return (
-                              $state.apiRequest2.data?.active_users?.toLocaleString() ??
-                              "100+"
-                            );
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return "100+";
-                            }
-                            throw e;
-                          }
-                        })()}
-                      </React.Fragment>
+                      {"\u0646\u0635\u0628 \u0641\u0639\u0627\u0644"}
                     </div>
-                  </ApiRequest>
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__eHyWt
-                    )}
-                  >
-                    {"\u0646\u0635\u0628 \u0641\u0639\u0627\u0644"}
                   </div>
-                </div>
-                <div
-                  className={classNames(projectcss.all, sty.freeBox__wBgZq)}
-                />
-
+                ) : null}
+                {(() => {
+                  try {
+                    return $state.apiRequest.data.functions?.includes?.(
+                      "widget"
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__wBgZq)}
+                  />
+                ) : null}
                 <div
                   className={classNames(projectcss.all, sty.freeBox___5ZxC)}
                   onClick={async event => {
