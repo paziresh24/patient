@@ -69,6 +69,7 @@ export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
       },
       keepPreviousData: false,
       refetchOnWindowFocus: false,
+      retry: false,
     },
   );
 

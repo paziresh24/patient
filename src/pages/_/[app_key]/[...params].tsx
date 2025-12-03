@@ -22,6 +22,7 @@ import LauncherProfile from '.plasmic/LauncherProfile';
 import Logo from '@/common/components/atom/logo';
 import { splunkInstance } from '@/common/services/splunk';
 import Permissions from '@/modules/hamdast/components/permissions';
+import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from '@/modules/hamdast/components/subscription-payment';
 
 export function replaceKeysInString(template: string, keys: string[], values: string[]) {
   // Create a regular expression to find placeholders like {{key}}
@@ -67,6 +68,7 @@ const Page = ({ page, app }: any) => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const [showApp, setShowApp] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
+  const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
 
   const embedSrc = useMemo(() => {
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
@@ -180,13 +182,25 @@ const Page = ({ page, app }: any) => {
       {!showApp && !showTranslation && params?.[0] == 'launcher' && (
         <div className="w-full flex-grow bg-[#f4f5f8] flex flex-col gap-5 pb-16 justify-center items-center overflow-x-auto">
           <GlobalContextsProvider>
-            <LauncherProfile appKey={app?.key} onClick={() => setShowTranslation(true)} />
+            <LauncherProfile
+              appKey={app?.key}
+              onClick={() => setShowTranslation(true)}
+              onSubscribe={async planKey => {
+                const result = await subscriptionPaymentRef.current?.open(planKey);
+                if (result?.success) {
+                  // اکشن مورد نظر بعدی را انجام دهید
+                  // مثلاً: router.push('/some-page') یا setShowTranslation(true)
+                  setShowTranslation(true);
+                }
+              }}
+            />
           </GlobalContextsProvider>
         </div>
       )}
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+      <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.name?.fa} iframeRef={iframeRef} />
       {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}
 
       <div className={classNames('w-full flex-grow flex flex-col', { '!hidden !opacity-0': !showApp })}>

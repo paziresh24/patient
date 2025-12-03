@@ -28,6 +28,21 @@ export const GrowthbookGlobalContext = ({
   const [attr, setAttr] = useState({});
   const user = useUserInfoStore(state => state.info);
 
+  // استخراج تخصص‌های پزشک از user
+  const getDoctorSpecialties = useMemo(() => {
+    if (!user?.is_doctor) {
+      return [];
+    }
+
+    // Attempt to safely extract the doctor's expertise IDs, fallback to empty array if not available
+    const expertises =
+      user?.provider && Array.isArray((user.provider as any).expertises)
+        ? (user.provider as any).expertises.map((item: any) => item?.expertise?.id).filter((id: any) => id !== undefined && id !== null)
+        : [];
+
+    return expertises;
+  }, [user]);
+
   useEffect(() => {
     if (apiHost && clientKey) {
       setGrowthbook(
@@ -57,8 +72,9 @@ export const GrowthbookGlobalContext = ({
       user_id: user?.id,
       host: window.location.host,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      doctor_specialties: getDoctorSpecialties,
     });
-  }, [attr, previewAttributes, user]);
+  }, [attr, previewAttributes, user, getDoctorSpecialties]);
 
   useEffect(() => {
     setIsReady(growthbook?.ready);
@@ -79,9 +95,10 @@ export const GrowthbookGlobalContext = ({
         user_id: user?.id,
         host: window.location.host,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        doctor_specialties: getDoctorSpecialties,
       });
     }
-  }, [previewAttributes, isReady]);
+  }, [previewAttributes, isReady, user, getDoctorSpecialties]);
 
   const actions = useMemo(
     () => ({
@@ -95,6 +112,7 @@ export const GrowthbookGlobalContext = ({
             user_id: user?.id,
             host: window.location.host,
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            doctor_specialties: getDoctorSpecialties,
           });
 
           setAttr(attributes);
@@ -111,13 +129,14 @@ export const GrowthbookGlobalContext = ({
             user_id: user?.id,
             host: window.location.host,
             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            doctor_specialties: getDoctorSpecialties,
           });
 
           setAttr(attributes);
         }, 100);
       },
     }),
-    [isReady, growthbook, apiHost, clientKey],
+    [isReady, growthbook, apiHost, clientKey, user, getDoctorSpecialties],
   );
 
   const features = useMemo(() => {
