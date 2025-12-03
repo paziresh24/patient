@@ -21,6 +21,7 @@ import LauncherProfile from '.plasmic/LauncherProfile';
 import Logo from '@/common/components/atom/logo';
 import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key]/[...params]';
 import Permissions from '@/modules/hamdast/components/permissions';
+import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './components/subscription-payment';
 
 export const AppFrame = ({
   appKey,
@@ -51,6 +52,7 @@ export const AppFrame = ({
   }, [getOneApp?.data?.data, getOneApp.isSuccess]);
 
   const iframeRef = useRef<any>(null);
+  const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -109,6 +111,7 @@ export const AppFrame = ({
       {app?.id && (
         <>
           <HamdastPayment app_key={appKey} iframeRef={iframeRef} />
+          <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.name?.fa} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
           <Permissions onClose={() => router.push('/dashboard')} />
@@ -142,7 +145,7 @@ export const AppFrame = ({
                 </svg>
 
                 <div className="bg-white rounded-xl shadow-card w-16 h-16 flex justify-center items-center">
-                  <img src={app?.icon} className="w-10 h-10 rounded-xl" />
+                  <img src={app?.icon} alt={app?.name?.fa || 'App icon'} className="w-10 h-10 rounded-xl" />
                 </div>
               </div>
               <span className="text-sm">
@@ -153,7 +156,16 @@ export const AppFrame = ({
           {!showApp && app?.key && !showTranslation && (
             <div className="w-full flex-grow bg-[#f4f5f8] flex flex-col gap-5 pb-16 justify-center items-center overflow-x-auto">
               <GlobalContextsProvider>
-                <LauncherProfile appKey={app?.key} onClick={() => setShowTranslation(true)} />
+                <LauncherProfile
+                  appKey={app?.key}
+                  onClick={() => setShowTranslation(true)}
+                  onSubscribe={async planKey => {
+                    const result = await subscriptionPaymentRef.current?.open(planKey);
+                    if (result?.success) {
+                      setShowTranslation(true);
+                    }
+                  }}
+                />
               </GlobalContextsProvider>
             </div>
           )}
