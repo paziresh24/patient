@@ -51,28 +51,6 @@ interface HamdastSubscriptionPaymentProps {
 
 export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentRef, HamdastSubscriptionPaymentProps>(
   ({ app_key, app_name, iframeRef }, ref) => {
-    const { handleClose, handleOpen, modalProps } = useModal({
-      onClose: () => {
-        iframeRef.current?.contentWindow?.postMessage(
-          {
-            hamdast: {
-              event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-              action: 'forwardToApp',
-              data: {
-                event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-                payload: subscriptionData.current?.payload,
-                plan_key: subscriptionData.current?.plan_key,
-              },
-              hash_id: subscriptionData.current?.hash_id,
-            },
-          },
-          '*',
-        );
-        subscriptionPromiseRef.current?.resolve({ success: false, plan_key: subscriptionData.current?.plan_key });
-        subscriptionPromiseRef.current = null;
-        resetStates();
-      },
-    });
     const { isLogin, info } = useUserInfoStore();
     const { handleOpenLoginModal } = useLoginModalContext();
 
@@ -84,13 +62,50 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
     const [showPlansList, setShowPlansList] = useState(false);
     const [plansList, setPlansList] = useState<PlanListItem[]>([]);
     const [isSubscribing, setIsSubscribing] = useState(false);
+
     const intervalCloseRef = useRef<any>();
     const subscriptionPromiseRef = useRef<{
       resolve: (value: { success: boolean; plan_key?: string }) => void;
       reject: (reason?: any) => void;
     } | null>(null);
-
     const subscriptionData = useRef<any>({});
+
+    const sendEvent = useCallback(
+      (event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL' | 'HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS' | 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR', data?: any) => {
+        const currentData = subscriptionData.current;
+        if (!currentData?.hash_id && !currentData?.plan_key && !data?.plan_key) return;
+
+        iframeRef.current?.contentWindow?.postMessage(
+          {
+            hamdast: {
+              event,
+              action: 'forwardToApp',
+              data: {
+                event,
+                payload: currentData?.payload,
+                plan_key: currentData?.plan_key || data?.plan_key,
+                receipt_id: currentData?.receipt_id || data?.receipt_id,
+                ...(data || {}),
+              },
+              hash_id: currentData?.hash_id || data?.hash_id,
+            },
+          },
+          '*',
+        );
+      },
+      [iframeRef],
+    );
+
+    const sendCancelEvent = useCallback(() => {
+      sendEvent('HAMDAST_PAYMENT_SUBSCRIBE_CANCEL');
+    }, [sendEvent]);
+
+    const sendSuccessEvent = useCallback(
+      (plan_key?: string) => {
+        sendEvent('HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS', { plan_key });
+      },
+      [sendEvent],
+    );
 
     const resetStates = useCallback(() => {
       setIsLoading(true);
@@ -102,6 +117,16 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       setPlansList([]);
       subscriptionData.current = {};
     }, []);
+
+    const { handleClose, handleOpen, modalProps } = useModal({
+      onClose: () => {
+        const currentData = { ...subscriptionData.current };
+        sendCancelEvent();
+        subscriptionPromiseRef.current?.resolve({ success: false, plan_key: currentData?.plan_key });
+        subscriptionPromiseRef.current = null;
+        resetStates();
+      },
+    });
 
     const checkActiveSubscription = async (): Promise<{
       hasActive: boolean;
@@ -127,26 +152,24 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       }
     };
 
+    const handleActiveSubscription = useCallback(
+      (subscriptionInfo: { activeSubscription?: any }) => {
+        handleClose();
+        const plan_key = subscriptionData.current?.plan_key || subscriptionInfo.activeSubscription?.plan_key;
+        sendSuccessEvent(plan_key);
+        subscriptionPromiseRef.current?.resolve({ success: true, plan_key });
+        subscriptionPromiseRef.current = null;
+      },
+      [handleClose, sendSuccessEvent],
+    );
+
     const fetchPlansList = async () => {
       try {
         setIsLoading(true);
-
         const subscriptionInfo = await checkActiveSubscription();
+
         if (subscriptionInfo.hasActive) {
-          handleClose();
-          iframeRef.current?.contentWindow?.postMessage(
-            {
-              hamdast: {
-                event: 'HAMDAST_SUBSCRIPTION_ACTIVE',
-                action: 'forwardToApp',
-                data: {
-                  event: 'HAMDAST_SUBSCRIPTION_ACTIVE',
-                },
-              },
-            },
-            '*',
-          );
-          return;
+          return handleActiveSubscription(subscriptionInfo);
         }
 
         const response = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/`, {
@@ -157,26 +180,28 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
         if (plans.length === 0) {
           toast.error('پلنی برای این اپلیکیشن یافت نشد');
           setIsLoading(false);
+          sendCancelEvent();
           handleClose();
           return;
         }
 
         if (plans.length === 1) {
           const planKey = plans[0].key || plans[0].id;
-          subscriptionData.current = {
-            plan_key: planKey,
-          };
+          subscriptionData.current = { ...subscriptionData.current, plan_key: planKey };
           fetchPlanData(planKey);
           return;
         }
 
         setPlansList(plans);
         setShowPlansList(true);
+        setShowPlanSelection(false);
+        setId(null);
         setIsLoading(false);
       } catch (error: any) {
         console.error('Error fetching plans:', error);
         toast.error(error?.response?.data?.message || 'خطا در دریافت لیست پلن‌ها');
         setIsLoading(false);
+        sendCancelEvent();
         handleClose();
       }
     };
@@ -186,20 +211,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
         const subscriptionInfo = await checkActiveSubscription();
 
         if (subscriptionInfo.hasActive) {
-          handleClose();
-          iframeRef.current?.contentWindow?.postMessage(
-            {
-              hamdast: {
-                event: 'HAMDAST_SUBSCRIPTION_ACTIVE',
-                action: 'forwardToApp',
-                data: {
-                  event: 'HAMDAST_SUBSCRIPTION_ACTIVE',
-                },
-              },
-            },
-            '*',
-          );
-          return;
+          return handleActiveSubscription(subscriptionInfo);
         }
 
         const planResponse = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${plan_key}`, {
@@ -215,20 +227,132 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
         if (hasTrial) {
           setShowPlanSelection(false);
           setShowPlansList(false);
+          setId(null);
           openAndCreateReceipt();
         } else if (hasNoSubscription && hasTrialPeriod) {
           setShowPlanSelection(true);
           setShowPlansList(false);
+          setId(null);
         } else {
           setShowPlanSelection(false);
           setShowPlansList(false);
+          setId(null);
           openAndCreateReceipt();
         }
       } catch (error: any) {
         toast.error(error?.response?.data?.message || 'خطا در دریافت اطلاعات پلن');
         setIsLoading(false);
+        sendCancelEvent();
         handleClose();
       }
+    };
+
+    const openAndCreateReceipt = () => {
+      deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+      setShowPlanSelection(false);
+      setShowPlansList(false);
+      setId(null);
+      setIsLoading(true);
+
+      if (subscriptionData.current?.receipt_id) {
+        setId(subscriptionData.current.receipt_id);
+        logSplunkEvent('show_receipt');
+        setIsLoading(false);
+        return;
+      }
+
+      axios
+        .post(
+          `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/payment/`,
+          {
+            plan_key: subscriptionData.current?.plan_key,
+            ...(subscriptionData.current?.payload && { payload: subscriptionData.current.payload }),
+          },
+          { withCredentials: true },
+        )
+        .then(data => {
+          setId(data.data?.receipt_id);
+          subscriptionData.current = {
+            ...subscriptionData.current,
+            receipt_id: data.data?.receipt_id,
+          };
+          logSplunkEvent('show_receipt');
+          setIsLoading(false);
+        })
+        .catch(error => {
+          toast.error(error?.response?.data?.message || 'خطا در ایجاد فاکتور');
+          setIsLoading(false);
+          sendCancelEvent();
+          handleClose();
+        });
+    };
+
+    const logSplunkEvent = (type: string, extraData?: any) => {
+      splunkInstance('dashboard').sendEvent({
+        group: 'hamdast_subscription_payment',
+        type,
+        event: {
+          is_doctor: info?.is_doctor,
+          user_id: info?.id,
+          meta_data: {
+            app_key,
+            plan_key: subscriptionData.current?.plan_key,
+            receipt_id: subscriptionData.current?.receipt_id,
+            ...extraData,
+          },
+        },
+      });
+    };
+
+    const subscribeToPlan = async (receipt_id: string) => {
+      try {
+        await axios.post(
+          `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
+          { receipt_id },
+          { withCredentials: true },
+        );
+        sendSuccessEvent();
+        subscriptionPromiseRef.current?.resolve({ success: true, plan_key: subscriptionData.current?.plan_key });
+        subscriptionPromiseRef.current = null;
+        handleClose();
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message || 'خطا در فعال‌سازی اشتراک');
+        sendEvent('HAMDAST_PAYMENT_SUBSCRIBE_ERROR', { message: error?.response?.data?.message });
+        handleClose();
+      }
+    };
+
+    const activateTrialPeriod = async () => {
+      setIsSubscribing(true);
+      try {
+        await axios.post(
+          `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
+          { trial: true },
+          { withCredentials: true },
+        );
+        logSplunkEvent('trial_activated');
+        sendSuccessEvent();
+        subscriptionPromiseRef.current?.resolve({ success: true, plan_key: subscriptionData.current?.plan_key });
+        subscriptionPromiseRef.current = null;
+        handleClose();
+        toast.success('دوره آزمایشی با موفقیت فعال شد');
+      } catch (error: any) {
+        toast.error(error?.response?.data?.message || 'خطا در فعال‌سازی دوره آزمایشی');
+        logSplunkEvent('trial_error', { message: error?.response?.data?.message });
+        sendCancelEvent();
+      } finally {
+        setIsSubscribing(false);
+      }
+    };
+
+    const handleCancelPayment = () => {
+      clearInterval(intervalCloseRef.current);
+      deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+      logSplunkEvent('cancel_receipt');
+      sendCancelEvent();
+      subscriptionPromiseRef.current?.resolve({ success: false, plan_key: subscriptionData.current?.plan_key });
+      subscriptionPromiseRef.current = null;
+      handleClose();
     };
 
     useImperativeHandle(
@@ -243,37 +367,15 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           return new Promise((resolve, reject) => {
             subscriptionPromiseRef.current = { resolve, reject };
             resetStates();
-            if (plan_key) {
-              subscriptionData.current = {
-                plan_key,
-                payload,
-                hash_id,
-                receipt_id,
-              };
+            subscriptionData.current = { plan_key, payload, hash_id, receipt_id };
+
+            const handleOpenWithLogin = (callback: () => void) => {
               if (!isLogin) {
                 handleOpenLoginModal({
                   state: true,
-                  postLogin(userInfo) {
-                    handleOpen();
-                    return fetchPlanData(plan_key);
-                  },
+                  postLogin: callback,
                   onClose: () => {
-                    iframeRef.current?.contentWindow?.postMessage(
-                      {
-                        hamdast: {
-                          event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-                          action: 'forwardToApp',
-                          data: {
-                            event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-                            payload: subscriptionData.current?.payload,
-                            plan_key: subscriptionData.current?.plan_key,
-                            receipt_id: subscriptionData.current?.receipt_id,
-                          },
-                          hash_id: subscriptionData.current?.hash_id,
-                        },
-                      },
-                      '*',
-                    );
+                    sendCancelEvent();
                     subscriptionPromiseRef.current?.resolve({ success: false, plan_key });
                     subscriptionPromiseRef.current = null;
                   },
@@ -281,202 +383,43 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
                 return;
               }
               handleOpen();
-              fetchPlanData(plan_key);
+              callback();
+            };
+
+            if (plan_key) {
+              handleOpenWithLogin(() => fetchPlanData(plan_key));
             } else {
-              if (!isLogin) {
-                handleOpenLoginModal({
-                  state: true,
-                  postLogin(userInfo) {
-                    handleOpen();
-                    fetchPlansList();
-                  },
-                  onClose: () => {
-                    subscriptionPromiseRef.current?.resolve({ success: false });
-                    subscriptionPromiseRef.current = null;
-                  },
-                });
-                return;
-              }
-              handleOpen();
-              fetchPlansList();
+              handleOpenWithLogin(() => fetchPlansList());
             }
           });
         },
         close: handleClose,
       }),
-      [isLogin, handleOpen, handleClose, handleOpenLoginModal, app_key, iframeRef, resetStates],
+      [isLogin, handleOpen, handleClose, handleOpenLoginModal, resetStates, sendCancelEvent],
     );
-
-    const openAndCreateReceipt = () => {
-      deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-      setShowPlanSelection(false);
-      setShowPlansList(false);
-      setIsLoading(true);
-      if (subscriptionData.current?.receipt_id) {
-        setId(subscriptionData.current?.receipt_id);
-        splunkInstance('dashboard').sendEvent({
-          group: 'hamdast_subscription_payment',
-          type: 'show_receipt',
-          event: {
-            is_doctor: info?.is_doctor,
-            user_id: info?.id,
-            meta_data: {
-              app_key: app_key,
-              plan_key: subscriptionData.current?.plan_key,
-              receipt_id: subscriptionData.current?.receipt_id,
-            },
-          },
-        });
-        setIsLoading(false);
-        return;
-      }
-      axios
-        .post(
-          `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/payment/`,
-          {
-            plan_key: subscriptionData.current?.plan_key,
-            ...(subscriptionData.current?.payload && { payload: subscriptionData.current?.payload }),
-          },
-          {
-            withCredentials: true,
-          },
-        )
-        .then(data => {
-          setId(data.data?.receipt_id);
-          subscriptionData.current = {
-            ...subscriptionData.current,
-            receipt_id: data.data?.receipt_id,
-          };
-          splunkInstance('dashboard').sendEvent({
-            group: 'hamdast_subscription_payment',
-            type: 'show_receipt',
-            event: {
-              is_doctor: info?.is_doctor,
-              user_id: info?.id,
-              meta_data: {
-                app_key: app_key,
-                plan_key: subscriptionData.current?.plan_key,
-                receipt_id: subscriptionData.current?.receipt_id,
-              },
-            },
-          });
-          setIsLoading(false);
-        })
-        .catch(error => {
-          toast.error(error?.response?.data?.message || 'خطا در ایجاد فاکتور');
-          setIsLoading(false);
-          handleClose();
-        });
-    };
-
-    const activateTrialPeriod = async () => {
-      setIsSubscribing(true);
-      try {
-        await axios.post(
-          `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
-          {
-            trial: true,
-          },
-          {
-            withCredentials: true,
-          },
-        );
-        splunkInstance('dashboard').sendEvent({
-          group: 'hamdast_subscription_payment',
-          type: 'trial_activated',
-          event: {
-            is_doctor: info?.is_doctor,
-            user_id: info?.id,
-            meta_data: {
-              app_key: app_key,
-              plan_key: subscriptionData.current?.plan_key,
-            },
-          },
-        });
-        iframeRef.current?.contentWindow?.postMessage(
-          {
-            hamdast: {
-              event: 'HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS',
-              action: 'forwardToApp',
-              data: {
-                event: 'HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS',
-                payload: subscriptionData.current?.payload,
-                plan_key: subscriptionData.current?.plan_key,
-                trial: true,
-              },
-              hash_id: subscriptionData.current?.hash_id,
-            },
-          },
-          '*',
-        );
-        subscriptionPromiseRef.current?.resolve({ success: true, plan_key: subscriptionData.current?.plan_key });
-        subscriptionPromiseRef.current = null;
-        handleClose();
-        toast.success('دوره آزمایشی با موفقیت فعال شد');
-      } catch (error: any) {
-        toast.error(error?.response?.data?.message || 'خطا در فعال‌سازی دوره آزمایشی');
-        splunkInstance('dashboard').sendEvent({
-          group: 'hamdast_subscription_payment',
-          type: 'trial_error',
-          event: {
-            is_doctor: info?.is_doctor,
-            user_id: info?.id,
-            meta_data: {
-              app_key: app_key,
-              plan_key: subscriptionData.current?.plan_key,
-              message: error?.response?.data?.message,
-            },
-          },
-        });
-      } finally {
-        setIsSubscribing(false);
-      }
-    };
-
-    const handleSubscribe = () => {
-      openAndCreateReceipt();
-    };
-
-    const handleCancelPayment = () => {
-      clearInterval(intervalCloseRef.current);
-      deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-      splunkInstance('dashboard').sendEvent({
-        group: 'hamdast_subscription_payment',
-        type: 'cancel_receipt',
-        event: {
-          is_doctor: info?.is_doctor,
-          user_id: info?.id,
-          meta_data: {
-            app_key: app_key,
-            plan_key: subscriptionData.current?.plan_key,
-            receipt_id: subscriptionData.current?.receipt_id,
-          },
-        },
-      });
-      iframeRef.current?.contentWindow?.postMessage(
-        {
-          hamdast: {
-            event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-            action: 'forwardToApp',
-            data: {
-              event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-              payload: subscriptionData.current?.payload,
-              plan_key: subscriptionData.current?.plan_key,
-            },
-            hash_id: subscriptionData.current?.hash_id,
-          },
-        },
-        '*',
-      );
-      subscriptionPromiseRef.current?.resolve({ success: false, plan_key: subscriptionData.current?.plan_key });
-      subscriptionPromiseRef.current = null;
-      handleClose();
-    };
 
     useEffect(() => {
       let gatewayWindow: any;
+
+      const handlePaymentSuccess = () => {
+        clearInterval(intervalCloseRef.current);
+        deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+        if (gatewayWindow) gatewayWindow.close();
+        logSplunkEvent('success_receipt');
+        subscribeToPlan(subscriptionData.current?.receipt_id);
+      };
+
+      const handlePaymentError = (message?: string) => {
+        clearInterval(intervalCloseRef.current);
+        deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+        if (gatewayWindow) gatewayWindow.close();
+        if (message) toast.error(message);
+        logSplunkEvent('error_receipt', { message });
+        sendEvent('HAMDAST_PAYMENT_SUBSCRIBE_ERROR', { message });
+        handleClose();
+      };
+
       const handleEventFunction = (messageEvent: MessageEvent) => {
-        console.log('HAMDAST_PAYMENT_SUBSCRIBE', messageEvent.data);
         if (messageEvent.data?.hamdast?.event === 'HAMDAST_PAYMENT_SUBSCRIBE') {
           setFullScreen(false);
           setIsLoading(true);
@@ -490,51 +433,22 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           };
 
           const plan_key = subscriptionData.current?.plan_key;
+          const handleOpenWithLogin = (callback: () => void) => {
+            if (!isLogin) {
+              return handleOpenLoginModal({
+                state: true,
+                postLogin: callback,
+                onClose: sendCancelEvent,
+              });
+            }
+            handleOpen();
+            callback();
+          };
 
           if (plan_key) {
-            if (!isLogin) {
-              return handleOpenLoginModal({
-                state: true,
-                postLogin(userInfo) {
-                  handleOpen();
-                  return fetchPlanData(plan_key);
-                },
-                onClose: () => {
-                  iframeRef.current?.contentWindow?.postMessage(
-                    {
-                      hamdast: {
-                        event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-                        action: 'forwardToApp',
-                        data: {
-                          event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-                          payload: subscriptionData.current?.payload,
-                          plan_key: subscriptionData.current?.plan_key,
-                          receipt_id: subscriptionData.current?.receipt_id,
-                        },
-                        hash_id: subscriptionData.current?.hash_id,
-                      },
-                    },
-                    '*',
-                  );
-                },
-              });
-            }
-
-            handleOpen();
-            fetchPlanData(plan_key);
+            handleOpenWithLogin(() => fetchPlanData(plan_key));
           } else {
-            if (!isLogin) {
-              return handleOpenLoginModal({
-                state: true,
-                postLogin(userInfo) {
-                  handleOpen();
-                  fetchPlansList();
-                },
-                onClose: () => {},
-              });
-            }
-            handleOpen();
-            fetchPlansList();
+            handleOpenWithLogin(() => fetchPlansList());
           }
         }
 
@@ -543,116 +457,13 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
         }
 
         if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_SUCCESS') {
-          clearInterval(intervalCloseRef.current);
-          deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-          if (gatewayWindow) {
-            gatewayWindow?.close();
-          }
-          splunkInstance('dashboard').sendEvent({
-            group: 'hamdast_subscription_payment',
-            type: 'success_receipt',
-            event: {
-              is_doctor: info?.is_doctor,
-              user_id: info?.id,
-              meta_data: {
-                app_key: app_key,
-                plan_key: subscriptionData.current?.plan_key,
-                receipt_id: subscriptionData.current?.receipt_id,
-              },
-            },
-          });
-
-          axios
-            .post(
-              `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
-              {
-                receipt_id: subscriptionData.current?.receipt_id,
-              },
-              {
-                withCredentials: true,
-              },
-            )
-            .then(() => {
-              iframeRef.current?.contentWindow?.postMessage(
-                {
-                  hamdast: {
-                    event: 'HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS',
-                    action: 'forwardToApp',
-                    data: {
-                      event: 'HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS',
-                      payload: subscriptionData.current?.payload,
-                      plan_key: subscriptionData.current?.plan_key,
-                      receipt_id: subscriptionData.current?.receipt_id,
-                    },
-                    hash_id: subscriptionData.current?.hash_id,
-                  },
-                },
-                '*',
-              );
-              subscriptionPromiseRef.current?.resolve({ success: true, plan_key: subscriptionData.current?.plan_key });
-              subscriptionPromiseRef.current = null;
-              handleClose();
-            })
-            .catch(error => {
-              toast.error(error?.response?.data?.message || 'خطا در فعال‌سازی اشتراک');
-              iframeRef.current?.contentWindow?.postMessage(
-                {
-                  hamdast: {
-                    event: 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR',
-                    action: 'forwardToApp',
-                    data: {
-                      event: 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR',
-                      payload: subscriptionData.current?.payload,
-                      plan_key: subscriptionData.current?.plan_key,
-                      message: error?.response?.data?.message,
-                    },
-                    hash_id: subscriptionData.current?.hash_id,
-                  },
-                },
-                '*',
-              );
-              handleClose();
-            });
+          handlePaymentSuccess();
+          return;
         }
 
         if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_ERROR') {
-          clearInterval(intervalCloseRef.current);
-          deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-          if (gatewayWindow) {
-            gatewayWindow?.close();
-          }
-          toast.error(messageEvent.data?.payman?.data?.message);
-          splunkInstance('dashboard').sendEvent({
-            group: 'hamdast_subscription_payment',
-            type: 'error_receipt',
-            event: {
-              is_doctor: info?.is_doctor,
-              user_id: info?.id,
-              meta_data: {
-                app_key: app_key,
-                plan_key: subscriptionData.current?.plan_key,
-                receipt_id: subscriptionData.current?.receipt_id,
-                message: messageEvent.data?.payman?.data?.message,
-              },
-            },
-          });
-          iframeRef.current?.contentWindow?.postMessage(
-            {
-              hamdast: {
-                event: 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR',
-                action: 'forwardToApp',
-                data: {
-                  event: 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR',
-                  payload: subscriptionData.current?.payload,
-                  plan_key: subscriptionData.current?.plan_key,
-                  message: messageEvent.data?.payman?.data?.message,
-                },
-                hash_id: subscriptionData.current?.hash_id,
-              },
-            },
-            '*',
-          );
-          handleClose();
+          handlePaymentError(messageEvent.data?.payman?.data?.message);
+          return;
         }
 
         if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_OPEN_GATEWAY') {
@@ -660,121 +471,17 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           if (gatewayLink) {
             gatewayWindow = window.open(gatewayLink, '_blank');
             setFullScreen(true);
-            splunkInstance('dashboard').sendEvent({
-              group: 'hamdast_subscription_payment',
-              type: 'open_gateway',
-              event: {
-                is_doctor: info?.is_doctor,
-                user_id: info?.id,
-                meta_data: {
-                  app_key: app_key,
-                  plan_key: subscriptionData.current?.plan_key,
-                  receipt_id: subscriptionData.current?.receipt_id,
-                },
-              },
-            });
+            logSplunkEvent('open_gateway');
 
             intervalCloseRef.current = setInterval(() => {
               if (!getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })) return;
               const status = getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })?.toString().includes('SUCCESS');
 
               if (status) {
-                splunkInstance('dashboard').sendEvent({
-                  group: 'hamdast_subscription_payment',
-                  type: 'success_receipt',
-                  event: {
-                    is_doctor: info?.is_doctor,
-                    user_id: info?.id,
-                    meta_data: {
-                      app_key: app_key,
-                      plan_key: subscriptionData.current?.plan_key,
-                      receipt_id: subscriptionData.current?.receipt_id,
-                    },
-                  },
-                });
-
-                axios
-                  .post(
-                    `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
-                    {
-                      receipt_id: subscriptionData.current?.receipt_id,
-                    },
-                    {
-                      withCredentials: true,
-                    },
-                  )
-                  .then(() => {
-                    iframeRef.current?.contentWindow?.postMessage(
-                      {
-                        hamdast: {
-                          event: 'HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS',
-                          action: 'forwardToApp',
-                          data: {
-                            event: 'HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS',
-                            payload: subscriptionData.current?.payload,
-                            plan_key: subscriptionData.current?.plan_key,
-                            receipt_id: subscriptionData.current?.receipt_id,
-                          },
-                          hash_id: subscriptionData.current?.hash_id,
-                        },
-                      },
-                      '*',
-                    );
-                    subscriptionPromiseRef.current?.resolve({ success: true, plan_key: subscriptionData.current?.plan_key });
-                    subscriptionPromiseRef.current = null;
-                  })
-                  .catch(error => {
-                    toast.error(error?.response?.data?.message || 'خطا در فعال‌سازی اشتراک');
-                    iframeRef.current?.contentWindow?.postMessage(
-                      {
-                        hamdast: {
-                          event: 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR',
-                          action: 'forwardToApp',
-                          data: {
-                            event: 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR',
-                            payload: subscriptionData.current?.payload,
-                            plan_key: subscriptionData.current?.plan_key,
-                            message: error?.response?.data?.message,
-                          },
-                          hash_id: subscriptionData.current?.hash_id,
-                        },
-                      },
-                      '*',
-                    );
-                  });
-              }
-
-              if (!status) {
-                toast.error(messageEvent.data?.payman?.data?.message);
-                splunkInstance('dashboard').sendEvent({
-                  group: 'hamdast_subscription_payment',
-                  type: 'error_receipt',
-                  event: {
-                    is_doctor: info?.is_doctor,
-                    user_id: info?.id,
-                    meta_data: {
-                      app_key: app_key,
-                      plan_key: subscriptionData.current?.plan_key,
-                      receipt_id: subscriptionData.current?.receipt_id,
-                      message: messageEvent.data?.payman?.data?.message,
-                    },
-                  },
-                });
-                iframeRef.current?.contentWindow?.postMessage(
-                  {
-                    hamdast: {
-                      event: 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR',
-                      action: 'forwardToApp',
-                      data: {
-                        event: 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR',
-                        payload: subscriptionData.current?.payload,
-                        plan_key: subscriptionData.current?.plan_key,
-                      },
-                      hash_id: subscriptionData.current?.hash_id,
-                    },
-                  },
-                  '*',
-                );
+                logSplunkEvent('success_receipt');
+                subscribeToPlan(subscriptionData.current?.receipt_id);
+              } else {
+                handlePaymentError(messageEvent.data?.payman?.data?.message);
               }
 
               handleClose();
@@ -784,26 +491,19 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           }
         }
       };
-      window.addEventListener('message', handleEventFunction);
 
-      return () => {
-        window.removeEventListener('message', handleEventFunction);
-      };
-    }, [isLogin]);
+      window.addEventListener('message', handleEventFunction);
+      return () => window.removeEventListener('message', handleEventFunction);
+    }, [isLogin, handleOpen, handleClose, handleOpenLoginModal, sendCancelEvent, sendSuccessEvent, sendEvent]);
 
     const getIntervalText = (interval: string) => {
-      switch (interval) {
-        case 'monthly':
-          return 'ماهانه';
-        case 'quarterly':
-          return 'فصلی';
-        case 'yearly':
-          return 'سالانه';
-        case 'weekly':
-          return 'هفتگی';
-        default:
-          return interval;
-      }
+      const intervals: Record<string, string> = {
+        monthly: 'ماهانه',
+        quarterly: 'فصلی',
+        yearly: 'سالانه',
+        weekly: 'هفتگی',
+      };
+      return intervals[interval] || interval;
     };
 
     const formatPrice = (amount: number) => {
@@ -813,9 +513,9 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
 
     const handleSelectPlan = (planKeyOrId: string) => {
       setShowPlansList(false);
-      subscriptionData.current = {
-        plan_key: planKeyOrId,
-      };
+      setShowPlanSelection(false);
+      setId(null);
+      subscriptionData.current = { ...subscriptionData.current, plan_key: planKeyOrId };
       fetchPlanData(planKeyOrId);
     };
 
@@ -828,10 +528,10 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           })}
           {...modalProps}
           fullScreen={fullScreen}
-          onClose={fullScreen ? () => {} : modalProps.onClose}
+          onClose={fullScreen && id ? handleCancelPayment : modalProps.onClose}
         >
           {isLoading && <Loading />}
-          {!isLoading && showPlansList && plansList.length > 0 && (
+          {!isLoading && showPlansList && plansList.length > 0 && !showPlanSelection && !id && (
             <div className="flex-grow flex flex-col overflow-y-auto">
               <div className="border-b border-slate-200 pb-4 mb-4">
                 <span className="font-bold text-lg">{app_name}</span>
@@ -864,7 +564,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
               </Button>
             </div>
           )}
-          {!isLoading && showPlanSelection && planData && (
+          {!isLoading && showPlanSelection && planData && !showPlansList && !id && (
             <div className="flex-grow flex flex-col px-4">
               <div className="border-b border-slate-200 pb-4">
                 <span className="font-bold">{app_name}</span>
@@ -875,14 +575,12 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
                   </span>
                 </div>
               </div>
-
               <div>
                 <div className="py-4">
-                  <p className=" font-extrabold line-through decoration-2 decoration-slate-500 text-sm">{formatPrice(planData.amount)}</p>
-                  <p className=" font-extrabold text-2xl">{formatPrice(0)}</p>
+                  <p className="font-extrabold line-through decoration-2 decoration-slate-500 text-sm">{formatPrice(planData.amount)}</p>
+                  <p className="font-extrabold text-2xl">{formatPrice(0)}</p>
                 </div>
               </div>
-
               <div className="flex flex-col gap-2 border-t border-slate-200 pt-4">
                 <Button variant="primary" block onClick={activateTrialPeriod} loading={isSubscribing} disabled={isSubscribing}>
                   فعال‌سازی دوره آزمایشی{' '}
@@ -894,7 +592,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
               </div>
             </div>
           )}
-          {!isLoading && !showPlanSelection && id && (
+          {!isLoading && !showPlanSelection && !showPlansList && id && (
             <iframe className="w-full h-[22.5rem]" src={`https://pay.paziresh24.com/${id}?embeded=true`} />
           )}
         </Modal>
