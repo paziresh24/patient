@@ -88,14 +88,10 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         } : sourceCenter.map,
         // Keep services from full profile
         services: sourceCenter.services,
-        // Keep settings (including disable_booking) from full profile
-        settings: sourceCenter.settings,
-        // Keep other full profile fields like freeturn, etc.
+        // Keep other full profile fields like freeturn, settings, etc.
       };
     } else {
       // If no matching center in full profile, use new center data with empty services
-      // Try to find settings (including disable_booking) from source centers if available
-      const sourceCenterForSettings = source?.centers?.find((sc: any) => sc.id === newCenter.id);
       return {
         ...newCenter,
         display_number_array: newCenter.display_number, // Map display_number to display_number_array
@@ -108,9 +104,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
           lat: newCenter.location.lat,
           lon: newCenter.location.lon
         } : null,
-        services: [],
-        // Keep settings (including disable_booking) from source if available
-        settings: sourceCenterForSettings?.settings,
+        services: []
       };
     }
   }) ?? source?.centers ?? [];
