@@ -188,8 +188,6 @@ const Page = ({ page, app }: any) => {
               onSubscribe={async planKey => {
                 const result = await subscriptionPaymentRef.current?.open(planKey);
                 if (result?.success) {
-                  // اکشن مورد نظر بعدی را انجام دهید
-                  // مثلاً: router.push('/some-page') یا setShowTranslation(true)
                   setShowTranslation(true);
                 }
               }}
@@ -200,7 +198,7 @@ const Page = ({ page, app }: any) => {
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
-      <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.name?.fa} iframeRef={iframeRef} />
+      <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} iframeRef={iframeRef} />
       {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}
 
       <div className={classNames('w-full flex-grow flex flex-col', { '!hidden !opacity-0': !showApp })}>

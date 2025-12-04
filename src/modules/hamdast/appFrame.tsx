@@ -111,7 +111,7 @@ export const AppFrame = ({
       {app?.id && (
         <>
           <HamdastPayment app_key={appKey} iframeRef={iframeRef} />
-          <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.name?.fa} iframeRef={iframeRef} />
+          <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
           <Permissions onClose={() => router.push('/dashboard')} />

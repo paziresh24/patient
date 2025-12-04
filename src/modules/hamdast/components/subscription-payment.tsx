@@ -109,7 +109,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       history: any[];
     }> => {
       try {
-        const response = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/subscriptions/`, {
+        const response = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/subscriptions`, {
           withCredentials: true,
         });
         return {
@@ -131,12 +131,9 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       try {
         setIsLoading(true);
 
-        // بررسی اشتراک فعال
         const subscriptionInfo = await checkActiveSubscription();
         if (subscriptionInfo.hasActive) {
-          // اگر اشتراک فعال دارد، modal را نمی‌بازیم و کاربر را به اپ هدایت می‌کنیم
           handleClose();
-          // می‌توانیم یک postMessage به iframe بفرستیم که کاربر را به اپ هدایت کند
           iframeRef.current?.contentWindow?.postMessage(
             {
               hamdast: {
@@ -164,7 +161,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           return;
         }
 
-        // اگر تنها یک پلن دارد، مستقیماً آن را باز می‌کنیم
         if (plans.length === 1) {
           const planKey = plans[0].key || plans[0].id;
           subscriptionData.current = {
@@ -174,7 +170,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           return;
         }
 
-        // اگر بیشتر از یک پلن دارد، لیست را نمایش می‌دهیم
         setPlansList(plans);
         setShowPlansList(true);
         setIsLoading(false);
@@ -188,10 +183,8 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
 
     const fetchPlanData = async (plan_key: string) => {
       try {
-        // بررسی اشتراک فعال
         const subscriptionInfo = await checkActiveSubscription();
 
-        // اگر کاربر اشتراک فعال دارد، modal را نمی‌بازیم و کاربر را به اپ هدایت می‌کنیم
         if (subscriptionInfo.hasActive) {
           handleClose();
           iframeRef.current?.contentWindow?.postMessage(
@@ -209,7 +202,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           return;
         }
 
-        // دریافت اطلاعات پلن
         const planResponse = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${plan_key}`, {
           withCredentials: true,
         });
@@ -220,19 +212,14 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
         const hasTrialPeriod = planResponse.data.trial_period > 0;
         const hasNoSubscription = subscriptionInfo.history.length === 0;
 
-        // اگر trial را استفاده کرده، مستقیماً به پرداخت می‌رویم
         if (hasTrial) {
           setShowPlanSelection(false);
           setShowPlansList(false);
           openAndCreateReceipt();
-        }
-        // اگر کاربر تا بحال اشتراکی نداشته و پلن دارای دوره آزمایشی است، پاپ‌آپ trial را نشان می‌دهیم
-        else if (hasNoSubscription && hasTrialPeriod) {
+        } else if (hasNoSubscription && hasTrialPeriod) {
           setShowPlanSelection(true);
           setShowPlansList(false);
-        }
-        // در غیر این صورت، مستقیماً به پرداخت می‌رویم
-        else {
+        } else {
           setShowPlanSelection(false);
           setShowPlansList(false);
           openAndCreateReceipt();
@@ -296,7 +283,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
               handleOpen();
               fetchPlanData(plan_key);
             } else {
-              // اگر plan_key نداشتیم، لیست پلن‌ها را نمایش می‌دهیم
               if (!isLogin) {
                 handleOpenLoginModal({
                   state: true,
@@ -305,7 +291,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
                     fetchPlansList();
                   },
                   onClose: () => {
-                    // در صورت بستن، هیچ postMessage ای ارسال نمی‌کنیم چون plan_key نداریم
                     subscriptionPromiseRef.current?.resolve({ success: false });
                     subscriptionPromiseRef.current = null;
                   },
@@ -504,36 +489,53 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
             receipt_id: messageEvent.data?.hamdast?.data?.receipt_id,
           };
 
-          if (!isLogin) {
-            return handleOpenLoginModal({
-              state: true,
-              postLogin(userInfo) {
-                handleOpen();
-                return fetchPlanData(subscriptionData.current?.plan_key);
-              },
-              onClose: () => {
-                iframeRef.current?.contentWindow?.postMessage(
-                  {
-                    hamdast: {
-                      event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-                      action: 'forwardToApp',
-                      data: {
-                        event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
-                        payload: subscriptionData.current?.payload,
-                        plan_key: subscriptionData.current?.plan_key,
-                        receipt_id: subscriptionData.current?.receipt_id,
-                      },
-                      hash_id: subscriptionData.current?.hash_id,
-                    },
-                  },
-                  '*',
-                );
-              },
-            });
-          }
+          const plan_key = subscriptionData.current?.plan_key;
 
-          handleOpen();
-          fetchPlanData(subscriptionData.current?.plan_key);
+          if (plan_key) {
+            if (!isLogin) {
+              return handleOpenLoginModal({
+                state: true,
+                postLogin(userInfo) {
+                  handleOpen();
+                  return fetchPlanData(plan_key);
+                },
+                onClose: () => {
+                  iframeRef.current?.contentWindow?.postMessage(
+                    {
+                      hamdast: {
+                        event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
+                        action: 'forwardToApp',
+                        data: {
+                          event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL',
+                          payload: subscriptionData.current?.payload,
+                          plan_key: subscriptionData.current?.plan_key,
+                          receipt_id: subscriptionData.current?.receipt_id,
+                        },
+                        hash_id: subscriptionData.current?.hash_id,
+                      },
+                    },
+                    '*',
+                  );
+                },
+              });
+            }
+
+            handleOpen();
+            fetchPlanData(plan_key);
+          } else {
+            if (!isLogin) {
+              return handleOpenLoginModal({
+                state: true,
+                postLogin(userInfo) {
+                  handleOpen();
+                  fetchPlansList();
+                },
+                onClose: () => {},
+              });
+            }
+            handleOpen();
+            fetchPlansList();
+          }
         }
 
         if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_CANCEL') {
@@ -560,7 +562,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
             },
           });
 
-          // Call subscribe endpoint after payment success
           axios
             .post(
               `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
@@ -692,7 +693,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
                   },
                 });
 
-                // Call subscribe endpoint after payment success
                 axios
                   .post(
                     `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
@@ -795,19 +795,18 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       switch (interval) {
         case 'monthly':
           return 'ماهانه';
+        case 'quarterly':
+          return 'فصلی';
         case 'yearly':
           return 'سالانه';
         case 'weekly':
           return 'هفتگی';
-        case 'daily':
-          return 'روزانه';
         default:
           return interval;
       }
     };
 
     const formatPrice = (amount: number) => {
-      // تبدیل از ریال به تومان (1 تومان = 10 ریال)
       const tomanAmount = amount / 10;
       return new Intl.NumberFormat('fa-IR').format(tomanAmount) + ' تومان';
     };
@@ -824,8 +823,8 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       <div>
         <Modal
           noHeader
-          bodyClassName={classNames('px-0 justify-center flex items-center', {
-            'h-[22.5rem]': !showPlanSelection && !showPlansList,
+          bodyClassName={classNames('justify-center flex items-center', {
+            'h-[22.5rem] px-3': !showPlanSelection && !showPlansList,
           })}
           {...modalProps}
           fullScreen={fullScreen}
@@ -833,7 +832,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
         >
           {isLoading && <Loading />}
           {!isLoading && showPlansList && plansList.length > 0 && (
-            <div className="flex-grow flex flex-col px-4 py-4 max-h-[80vh] overflow-y-auto">
+            <div className="flex-grow flex flex-col overflow-y-auto">
               <div className="border-b border-slate-200 pb-4 mb-4">
                 <span className="font-bold text-lg">{app_name}</span>
                 <p className="text-sm text-slate-600 mt-1">لطفاً یک پلن را انتخاب کنید</p>
@@ -847,7 +846,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex flex-col gap-1">
-                        <span className="font-semibold">{plan.title}</span>
+                        <span className="font-semibold text-sm">{plan.title}</span>
                         <span className="bg-slate-100 rounded-md text-xs text-slate-700 font-medium p-1 px-3 w-fit">
                           {getIntervalText(plan.interval)}
                         </span>
@@ -867,7 +866,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           )}
           {!isLoading && showPlanSelection && planData && (
             <div className="flex-grow flex flex-col px-4">
-              {/* Header Section */}
               <div className="border-b border-slate-200 pb-4">
                 <span className="font-bold">{app_name}</span>
                 <div className="flex flex-wrap gap-1 items-center">
@@ -885,7 +883,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
                 </div>
               </div>
 
-              {/* Divider */}
               <div className="flex flex-col gap-2 border-t border-slate-200 pt-4">
                 <Button variant="primary" block onClick={activateTrialPeriod} loading={isSubscribing} disabled={isSubscribing}>
                   فعال‌سازی دوره آزمایشی{' '}
