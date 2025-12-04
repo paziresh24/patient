@@ -1,0 +1,107 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 10px;
+  min-width: 0;
+}
+.launcherComponentsTitle:global(.__wab_instance) {
+  max-width: 100%;
+}
+.freeBox__kUujr {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: none;
+  row-gap: 15px;
+  min-width: 0;
+  border-radius: 12px;
+  padding: 16px;
+}
+.freeBox__iMBva {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 15px;
+  min-width: 0;
+}
+.apiRequest:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.svg__a76XG {
+  object-fit: cover;
+  max-width: 100%;
+  width: 24px;
+  height: 24px;
+}
+.text__utctf {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-weight: 600;
+  font-size: var(--token-0D6VF35kZC-C);
+  color: var(--token-IFYe29KCwQQV);
+  min-width: 0;
+}
+.launcherComponentsApp__a4EwH:global(.__wab_instance) {
+  max-width: 100%;
+}
+.freeBox___8NIaY {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 15px;
+  padding-right: 0px;
+  min-width: 0;
+}
+.apiRequest2:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.svg__rRqBc {
+  object-fit: cover;
+  max-width: 100%;
+  width: 24px;
+  height: 24px;
+}
+.text__n9Wqh {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-weight: 600;
+  font-size: var(--token-0D6VF35kZC-C);
+  color: var(--token-s_XuzePAGmOh);
+  min-width: 0;
+}
+.launcherComponentsApp__l6KBw:global(.__wab_instance) {
+  max-width: 100%;
+}
+.launcherComponentsApp__guxZx:global(.__wab_instance) {
+  max-width: 100%;
+}
+.launcherComponentsApp__sAj3F:global(.__wab_instance) {
+  max-width: 100%;
+}

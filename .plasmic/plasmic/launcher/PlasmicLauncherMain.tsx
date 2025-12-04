@@ -67,6 +67,7 @@ import LauncherBlocksWidgetsSanje from "../../LauncherBlocksWidgetsSanje"; // pl
 import LauncherBlocksWidgetsNelson from "../../LauncherBlocksWidgetsNelson"; // plasmic-import: kPpI69i3raKy/component
 import LauncherBlocksStory from "../../LauncherBlocksStory"; // plasmic-import: 4rd_pgdJHWS1/component
 import LauncherBlocksApps from "../../LauncherBlocksApps"; // plasmic-import: 1JVvWgQsicxr/component
+import LauncherBlocksFeaturedApps from "../../LauncherBlocksFeaturedApps"; // plasmic-import: 8XQkifTvj-Jd/component
 import LauncherBlocksSectionsStore from "../../LauncherBlocksSectionsStore"; // plasmic-import: eAgPCQOGXT3k/component
 import LauncherBlocksPatientServices from "../../LauncherBlocksPatientServices"; // plasmic-import: ofxhzuPg2IHJ/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
@@ -106,6 +107,7 @@ export type PlasmicLauncherMain__OverridesType = {
   launcherBlocksWidgetsNelson?: Flex__<typeof LauncherBlocksWidgetsNelson>;
   launcherBlocksStory?: Flex__<typeof LauncherBlocksStory>;
   launcherBlocksApps?: Flex__<typeof LauncherBlocksApps>;
+  launcherBlocksFeaturedApps?: Flex__<typeof LauncherBlocksFeaturedApps>;
   launcherBlocksSectionsStore?: Flex__<typeof LauncherBlocksSectionsStore>;
   launcherBlocksPatientServices?: Flex__<typeof LauncherBlocksPatientServices>;
   text?: Flex__<"div">;
@@ -423,11 +425,47 @@ function PlasmicLauncherMain__RenderFunc(props: {
             duration={300}
             triggerOnce={true}
           >
-            <LauncherBlocksApps
-              data-plasmic-name={"launcherBlocksApps"}
-              data-plasmic-override={overrides.launcherBlocksApps}
-              className={classNames("__wab_instance", sty.launcherBlocksApps)}
-            />
+            {(() => {
+              try {
+                return $ctx.auth.info?.provider?.job_title !== "doctor";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <LauncherBlocksApps
+                data-plasmic-name={"launcherBlocksApps"}
+                data-plasmic-override={overrides.launcherBlocksApps}
+                className={classNames("__wab_instance", sty.launcherBlocksApps)}
+              />
+            ) : null}
+            {(() => {
+              try {
+                return $ctx.auth.info?.provider?.job_title === "doctor";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <LauncherBlocksFeaturedApps
+                data-plasmic-name={"launcherBlocksFeaturedApps"}
+                data-plasmic-override={overrides.launcherBlocksFeaturedApps}
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherBlocksFeaturedApps
+                )}
+              />
+            ) : null}
           </Reveal>
           {(() => {
             try {
@@ -648,6 +686,7 @@ const PlasmicDescendants = {
     "launcherBlocksWidgetsNelson",
     "launcherBlocksStory",
     "launcherBlocksApps",
+    "launcherBlocksFeaturedApps",
     "launcherBlocksSectionsStore",
     "launcherBlocksPatientServices",
     "text"
@@ -659,6 +698,7 @@ const PlasmicDescendants = {
   launcherBlocksWidgetsNelson: ["launcherBlocksWidgetsNelson"],
   launcherBlocksStory: ["launcherBlocksStory"],
   launcherBlocksApps: ["launcherBlocksApps"],
+  launcherBlocksFeaturedApps: ["launcherBlocksFeaturedApps"],
   launcherBlocksSectionsStore: ["launcherBlocksSectionsStore"],
   launcherBlocksPatientServices: ["launcherBlocksPatientServices"],
   text: ["text"]
@@ -675,6 +715,7 @@ type NodeDefaultElementType = {
   launcherBlocksWidgetsNelson: typeof LauncherBlocksWidgetsNelson;
   launcherBlocksStory: typeof LauncherBlocksStory;
   launcherBlocksApps: typeof LauncherBlocksApps;
+  launcherBlocksFeaturedApps: typeof LauncherBlocksFeaturedApps;
   launcherBlocksSectionsStore: typeof LauncherBlocksSectionsStore;
   launcherBlocksPatientServices: typeof LauncherBlocksPatientServices;
   text: "div";
@@ -749,6 +790,7 @@ export const PlasmicLauncherMain = Object.assign(
     ),
     launcherBlocksStory: makeNodeComponent("launcherBlocksStory"),
     launcherBlocksApps: makeNodeComponent("launcherBlocksApps"),
+    launcherBlocksFeaturedApps: makeNodeComponent("launcherBlocksFeaturedApps"),
     launcherBlocksSectionsStore: makeNodeComponent(
       "launcherBlocksSectionsStore"
     ),
