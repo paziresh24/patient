@@ -3424,6 +3424,19 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksWriteReview.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "8XQkifTvj-Jd",
+          "name": "LauncherBlocksFeaturedApps",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksFeaturedApps.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksFeaturedApps.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksFeaturedApps.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
