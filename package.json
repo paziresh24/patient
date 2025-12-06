@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS='--inspect' node server.js",
-    "build": "next build",
+    "build": "node scripts/remove-google-fonts.js && next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
     "start": "next start",
     "lint": "next lint",
