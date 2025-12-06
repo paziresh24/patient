@@ -26,11 +26,8 @@ export const getOrRegisterServiceWorker = () => {
       }
       return window.navigator.serviceWorker
         .register('/firebase-messaging-sw.js')
-        .then((serviceWorker: any) => {
-          console.log('success registering SW');
-        })
         .catch(err => {
-          console.log('registering failed', err);
+          console.error('Service worker registration failed:', err);
         });
     });
   }
@@ -70,8 +67,6 @@ const firebaseCloudMessaging = {
                 },
               });
               return currentToken;
-            } else {
-              console.log('No registration token available. Request permission to generate one.');
             }
           }
 
