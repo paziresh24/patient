@@ -54,26 +54,26 @@ export const MobileNumber = (props: MobileNumberProps) => {
       setIsFieldError(true);
       return;
     }
-    
+
     try {
       splunkInstance('gozargah').sendEvent({
         group: 'legacy-login-steps',
         type: 'submit-mobile-number',
       });
-      
+
       const { data: registerRes } = await register.mutateAsync({
         cell: +mobileNumberValue,
       });
-      
+
       if (registerRes.status === 0) {
         const errorMessage = registerRes.details?.['تلفن همراه'] || 'خطا در ثبت شماره موبایل';
         return toast.error(errorMessage);
       }
-      
+
       const { data: resetPasswordRes } = await resetPassword.mutateAsync({
         cell: +mobileNumberValue,
       });
-      
+
       if (resetPasswordRes.status === ClinicStatus.SUCCESS || resetPasswordRes.status === 39) {
         if (resetPasswordRes.status === 39) {
           const errorMessage = resetPasswordRes.message || 'خطا در ارسال کد تایید';
@@ -128,7 +128,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
             <Button
               type="button"
               loading={oidcOauthLoading}
-              icon={<img src={ITOLogo.src} className="h-6 w-7" />}
+              icon={<img src={ITOLogo.src} className="h-6 w-7" alt="ITO Logo" />}
               variant="secondary"
               onClick={() => {
                 splunkInstance('gozargah').sendEvent({
@@ -157,7 +157,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
             <Button
               type="button"
               loading={googleOauthLoading}
-              icon={<img src={GoogleLogo.src} className="h-6 w-7" />}
+              icon={<img src={GoogleLogo.src} className="h-6 w-7" alt="Google Logo" />}
               variant="secondary"
               onClick={() => {
                 splunkInstance('gozargah').sendEvent({
