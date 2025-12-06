@@ -27,7 +27,7 @@ export const SecureCallButton = ({ bookId, extraAction }: EstablishingSecureCall
   return (
     <>
       <Button variant="secondary" onClick={handleEstablishingSecureCall} loading={establishingSecureCall.isLoading} block>
-        {!!safeCallModuleInfo.icon && <img src={safeCallModuleInfo.icon} width={25} height={25} className="mb-1" />}
+        {!!safeCallModuleInfo.icon && <img src={safeCallModuleInfo.icon} width={25} height={25} className="mb-1" alt="Secure Call Icon" />}
         {safeCallModuleInfo.text}
       </Button>
     </>

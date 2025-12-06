@@ -291,8 +291,8 @@ export async function getAggregatedProfileData(
 
         // Merge all successful gallery results into a single array
         doctorGallery = galleryResults
-          .filter((result) => result.status === 'fulfilled')
-          .map((result) => (result as PromiseFulfilledResult<any>).value)
+          .filter(result => result.status === 'fulfilled')
+          .map((result: any) => result.value)
           .flat()
           .filter(Boolean);
       } catch (error) {
