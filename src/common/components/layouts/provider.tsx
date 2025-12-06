@@ -1,8 +1,7 @@
 import { AppBridge, useSetupAppBridge } from '@/common/hooks/useSetupAppBridge';
 import { LoginModalProvider } from '@/modules/login/context/loginModal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import TagManager from 'react-gtm-module';
+import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { EntryPoint } from './entryPoint';
 import Splash from './splash';

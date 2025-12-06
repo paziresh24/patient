@@ -28,7 +28,6 @@ export interface DoctorCentersResponse {
 }
 
 export const getDoctorCenters = async (slug: string, university?: string): Promise<DoctorCentersResponse[]> => {
-  console.log('🔍 University:', university);
   const encodedSlug = encodeURIComponent(slug);
   const url = `/api/doctors/${encodedSlug}/centers`;
   const params: Record<string, string> = {
