@@ -17,6 +17,7 @@ import { Popover, popoverMeta } from '@/common/fragment/components/popover';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import DoctorInvoiceNotice from '@/modules/booking/components/factor/doctorInvoiceNotice';
 import { AppFrame } from '@/modules/hamdast/appFrame';
+import { HamdastAppsSelectorModalProvider, hamdastAppsSelectorModalMeta } from '@/modules/hamdast/components/apps-selector-modal';
 
 export default function PlasmicHost() {
   return <PlasmicCanvasHost />;
@@ -153,6 +154,8 @@ registerComponent(AppFrame, {
     },
   },
 });
+
+registerGlobalContext(HamdastAppsSelectorModalProvider, hamdastAppsSelectorModalMeta);
 
 registerComponent(LayoutWithHeaderAndFooter, {
   name: 'LayoutWithHeaderAndFooter',

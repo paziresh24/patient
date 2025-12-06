@@ -100,7 +100,9 @@ export const Dashboard = (props: any) => {
                 ref={iframeRef}
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
-                src={`https://opium-dashboard.paziresh24.com/book-list/?hamdast_embedded=true&user_id=${user.id}`}
+                src={`https://hamdast.paziresh24.com/bridge/?app=suu4wxzcleelp4v&menu=9ctuac0ipcer0l7&user_id=${
+                  user.id
+                }&src=${encodeURIComponent(`https://opium-dashboard.paziresh24.com/book-list/`)}`}
               />
             )}
           </div>
