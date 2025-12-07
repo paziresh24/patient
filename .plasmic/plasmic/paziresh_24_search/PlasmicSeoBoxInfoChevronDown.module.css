@@ -22,5 +22,5 @@
   -webkit-transition-duration: 0.2s;
 }
 .svgisOpen {
-  transform: rotateX(0deg) rotateY(0deg) rotateZ(180deg);
+  transform: rotate3d(0, 0, 1, 180deg);
 }
