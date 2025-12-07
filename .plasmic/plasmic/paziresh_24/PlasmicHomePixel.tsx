@@ -148,7 +148,7 @@ function PlasmicHomePixel__RenderFunc(props: {
         data-plasmic-name={"embedHtml"}
         data-plasmic-override={overrides.embedHtml}
         className={classNames("__wab_instance", sty.embedHtml)}
-        code={'<script>\r\n    console.log("test");\r\n</script>'}
+        code={''}
       />
     </div>
   ) as React.ReactElement | null;

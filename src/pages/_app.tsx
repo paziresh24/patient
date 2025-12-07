@@ -3,12 +3,14 @@ import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useNetworkStatus } from '@/common/hooks/useNetworkStatus';
 import useServerQuery from '@/common/hooks/useServerQuery';
-import { splunkInstance } from '@/common/services/splunk';
 import Provider from '@/components/layouts/provider';
 import '@/firebase/analytics';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { PlasmicRootProvider } from '@plasmicapp/react-web';
 import { Hydrate } from '@tanstack/react-query';
+import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import type { AppProps as NextAppProps, NextWebVitalsMetric } from 'next/app';
 import getConfig from 'next/config';
@@ -16,14 +18,11 @@ import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Head from 'next/head';
 import { NextRouter, useRouter } from 'next/router';
 import NextNProgress from 'nextjs-progressbar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
+import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
 import '../styles/globals.css';
 import '../styles/nprogress.css';
-import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import axios from 'axios';
-import { GoogleTagManager } from '@next/third-parties/google';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -58,6 +57,7 @@ function MyApp(props: AppProps) {
   const { asPath } = useRouter();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const user = useUserInfoStore(state => state.info);
+  const [shouldLoadGTM, setShouldLoadGTM] = useState(false);
 
   useEffect(() => {
     if (isEnabledGrowthbook) {
@@ -98,6 +98,24 @@ function MyApp(props: AppProps) {
     }
   }, [isLogin, isApplication]);
 
+  useEffect(() => {
+    if (publicRuntimeConfig.DESABLED_GTM === 'true') {
+      return;
+    }
+
+    const loadGTM = () => {
+      setShouldLoadGTM(true);
+    };
+
+    if (typeof window !== 'undefined') {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadGTM, { timeout: 5000 });
+      } else {
+        setTimeout(loadGTM, 5000);
+      }
+    }
+  }, []);
+
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? (page => page);
   return (
@@ -116,7 +134,7 @@ function MyApp(props: AppProps) {
                 />
               </Head>
               <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-              {typeof window !== 'undefined' && (
+              {typeof window !== 'undefined' && shouldLoadGTM && publicRuntimeConfig.DESABLED_GTM !== 'true' && (
                 <GoogleTagManager gtmId="GTM-P5RPLDP" />
               )}
             </PlasmicRootProvider>

@@ -81,7 +81,6 @@ const Receipt = () => {
 
   useEffect(() => {
     if (bookId && centerId === '5532' && user?.id && typeof window !== 'undefined') {
-      console.log('sendEvent', user?.id, centerId, bookId);
       setTimeout(() => {
         window.pishani?.sendEvent?.('PAGE_VIEW', {
           user_id: user?.id,
