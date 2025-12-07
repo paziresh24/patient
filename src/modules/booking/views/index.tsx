@@ -57,6 +57,7 @@ import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
+import optimizeLogging from '@/common/utils/optimizeLogging';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import SearchCard from '@/modules/search/components/card/card';
@@ -291,25 +292,29 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       {
         onSuccess(data) {
-          splunkInstance('booking').sendEvent({
-            group: 'booking',
-            type: 'book-date',
-            event: {
-              patient_cell: user.cell,
-              doctor_name: profile?.display_name,
-              date: moment().format('jYYYY/jMM/jDD - HH:mm'),
-              preferred_book_date: moment(selectedTime * 1000).format('jYYYY/jMM/jDD - HH:mm'),
-              confirmed_book_date: data?.details?.from,
-              ...data?.book_info,
-            },
+          optimizeLogging(() => {
+            splunkInstance('booking').sendEvent({
+              group: 'booking',
+              type: 'book-date',
+              event: {
+                patient_cell: user.cell,
+                doctor_name: profile?.display_name,
+                date: moment().format('jYYYY/jMM/jDD - HH:mm'),
+                preferred_book_date: moment(selectedTime * 1000).format('jYYYY/jMM/jDD - HH:mm'),
+                confirmed_book_date: data?.details?.from,
+                ...data?.book_info,
+              },
+            });
           });
           if (user.messengerType)
-            splunkInstance('booking').sendEvent({
-              group: 'patient-visit-online',
-              type: 'app',
-              event: {
-                action: user.messengerType,
-              },
+            optimizeLogging(() => {
+              splunkInstance('booking').sendEvent({
+                group: 'patient-visit-online',
+                type: 'app',
+                event: {
+                  action: user.messengerType,
+                },
+              });
             });
           if (data.payment.reqiure_payment === '1') {
             if (bookEvent?.destination) {

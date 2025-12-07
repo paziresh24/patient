@@ -5,6 +5,7 @@ import TextField from '@/common/components/atom/textField';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
+import optimizeLogging from '@/common/utils/optimizeLogging';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useState } from 'react';
@@ -34,16 +35,18 @@ export const Report = ({ app_key, page_key }: { app_key: string; page_key: strin
       });
       return;
     }
-    splunkInstance('dashboard').sendEvent({
-      group: 'apps-report',
-      type: 'apps-report',
-      event: {
-        report: reportItemSelected ?? 'empty',
-        reason: reason,
-        app_key: app_key,
-        page_key: page_key,
-        user_id: user_id ?? user?.id,
-      },
+    optimizeLogging(() => {
+      splunkInstance('dashboard').sendEvent({
+        group: 'apps-report',
+        type: 'apps-report',
+        event: {
+          report: reportItemSelected ?? 'empty',
+          reason: reason,
+          app_key: app_key,
+          page_key: page_key,
+          user_id: user_id ?? user?.id,
+        },
+      });
     });
     toast.success('گزارش شما با موفقیت ثبت شد.');
     handleClose();
