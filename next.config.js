@@ -33,6 +33,10 @@ const nextConfig = {
     // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
+      // بهینه‌سازی tree-shaking برای Ant Design
+      // اطمینان از اینکه فقط کامپوننت‌های استفاده شده bundle می‌شوند
+      usedExports: true,
+      sideEffects: true,
       moduleIds: 'deterministic',
       splitChunks: {
         chunks: 'all',
@@ -49,7 +53,16 @@ const nextConfig = {
             name: 'lib',
             priority: 10,
             chunks: 'all',
-            exclude: /[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas)/,
+            exclude: /[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas|antd|@ant-design|@plasmicpkgs\/antd5|rc-)/,
+          },
+          // Ant Design و وابستگی‌هایش در chunk جداگانه
+          antd: {
+            test: /[\\/]node_modules[\\/](antd|@ant-design|@plasmicpkgs\/antd5|rc-)/,
+            name: 'antd',
+            priority: 20,
+            chunks: 'all',
+            enforce: true,
+            // Tree-shaking: فقط کامپوننت‌های استفاده شده bundle می‌شوند
           },
           pdfLibraries: {
             test: /[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas)/,
