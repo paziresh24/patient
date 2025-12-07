@@ -9,26 +9,39 @@ import { clinicClient } from '../../client';
 export const setTerminal = async () => {
   if (hasCookie('terminal_id')) return Promise.resolve(getCookie('terminal_id'));
 
-  const data: AxiosResponse<any, any> = await clinicClient.post(
-    `/api/setTerminal`,
-    formData({
-      terminal_id: getCookie('terminal_id') ?? uuidv4(),
-      details: window.navigator.userAgent,
-      ip: '0.0.0.0',
-      type: 'web',
-      version: '1',
-    }),
-  );
+  try {
+    const data: AxiosResponse<any, any> = await clinicClient.post(
+      `/api/setTerminal`,
+      formData({
+        terminal_id: getCookie('terminal_id') ?? uuidv4(),
+        details: window.navigator.userAgent,
+        ip: '0.0.0.0',
+        type: 'web',
+        version: '1',
+      }),
+    );
 
-  if (hasCookie('terminal_id')) return Promise.resolve(getCookie('terminal_id'));
+    if (hasCookie('terminal_id')) return Promise.resolve(getCookie('terminal_id'));
 
-  const id = data?.data?.id;
+    const id = data?.data?.id;
 
-  setCookie('terminal_id', id, {
-    maxAge: dayToSecond(60),
-    path: '/',
-    domain: removeSubdomain(window.location.hostname),
-  });
+    setCookie('terminal_id', id, {
+      maxAge: dayToSecond(60),
+      path: '/',
+      domain: removeSubdomain(window.location.hostname),
+    });
 
-  return Promise.resolve(id);
+    return Promise.resolve(id);
+  } catch (error) {
+    const fallbackId = getCookie('terminal_id') ?? uuidv4();
+    if (!hasCookie('terminal_id')) {
+      setCookie('terminal_id', fallbackId, {
+        maxAge: dayToSecond(60),
+        path: '/',
+        domain: removeSubdomain(window.location.hostname),
+      });
+    }
+    console.warn('Failed to set terminal from server, using fallback:', error);
+    return Promise.resolve(fallbackId);
+  }
 };

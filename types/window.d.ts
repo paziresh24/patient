@@ -16,6 +16,8 @@ interface Window {
   clarity: any;
   gozarLogin: any;
   isMessageListenerAdded: any;
+  requestIdleCallback?: (callback: (deadline: IdleDeadline) => void, options?: { timeout?: number }) => number;
 }
 
 declare const window: Window;
+
