@@ -13,25 +13,26 @@ import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalConte
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: dI_F7URPFmvR/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: 6WQFMgFgcDau/codeComponent
 import { EmbedCss } from "@plasmicpkgs/plasmic-embed-css";
+import { HamdastAppsSelectorModal } from "@/modules/hamdast/components/apps-selector-modal"; // plasmic-import: TfCG-WqDXRJw/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
   embedCssProps?: Partial<
     Omit<React.ComponentProps<typeof EmbedCss>, "children">
+  >;
+  hamdastAppsSelectorModalProps?: Partial<
+    Omit<React.ComponentProps<typeof HamdastAppsSelectorModal>, "children">
   >;
 }
 
@@ -45,7 +46,8 @@ export default function GlobalContextsProvider(
     growthbookGlobalContextProps,
     splunkProps,
     pwaProps,
-    embedCssProps
+    embedCssProps,
+    hamdastAppsSelectorModalProps
   } = props;
 
   return (
@@ -113,7 +115,17 @@ export default function GlobalContextsProvider(
                     : ".pl__z-50{\r\n  z-index: 9999 !important;\r\n}"
                 }
               >
-                {children}
+                <HamdastAppsSelectorModal
+                  {...hamdastAppsSelectorModalProps}
+                  onAppSelect={
+                    hamdastAppsSelectorModalProps &&
+                    "onAppSelect" in hamdastAppsSelectorModalProps
+                      ? hamdastAppsSelectorModalProps.onAppSelect!
+                      : undefined
+                  }
+                >
+                  {children}
+                </HamdastAppsSelectorModal>
               </EmbedCss>
             </PWA>
           </Splunk>
