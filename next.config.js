@@ -46,11 +46,18 @@ const nextConfig = {
             minChunks: 2,
           },
           lib: {
-            test: /[\\/]node_modules[\\/]/,
+            test: module => {
+              if (!module.resource || !/[\\/]node_modules[\\/]/.test(module.resource)) {
+                return false;
+              }
+
+              return !/[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas|antd|@ant-design|@plasmicpkgs\/antd5|rc-|swr)/.test(
+                module.resource,
+              );
+            },
             name: 'lib',
             priority: 10,
             chunks: 'all',
-            exclude: /[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas|antd|@ant-design|@plasmicpkgs\/antd5|rc-|swr)/,
           },
           antd: {
             test: /[\\/]node_modules[\\/](antd|@ant-design|@plasmicpkgs\/antd5|rc-)/,
