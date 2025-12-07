@@ -2525,20 +2525,7 @@ function PlasmicSearchResults__RenderFunc(props: {
           className={classNames("__wab_instance", sty.externalBookSurveyPopup)}
         />
       ) : null}
-      {(() => {
-        try {
-          return !!$props.searchResultResponse.debug_mode_result
-            .search_engine_response.entity;
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return false;
-          }
-          throw e;
-        }
-      })() ? (
+      {false ? (
         <DebugMode
           data-plasmic-name={"debugMode"}
           data-plasmic-override={overrides.debugMode}

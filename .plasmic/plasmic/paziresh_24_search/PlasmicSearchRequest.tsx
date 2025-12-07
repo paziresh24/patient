@@ -762,7 +762,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                     $steps["searchViewEvent"] = await $steps["searchViewEvent"];
                   }
 
-                  $steps["searchCardViewEvent"] = true
+                  $steps["searchCardViewEvent"] = false
                     ? (() => {
                         const actionArgs = {
                           args: [

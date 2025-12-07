@@ -52,7 +52,7 @@
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
-  transform: translateX(0px) translateY(0px) translateZ(0px);
+  transform: skew(0deg, 0deg);
   -webkit-transition-property: all;
   -webkit-transition-timing-function: ease-in-out;
   -webkit-transition-duration: 0.2s;
