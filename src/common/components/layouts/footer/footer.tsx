@@ -64,7 +64,7 @@ const Footer = () => {
                 </div>
                 <div className="md:basis-[49%]">
                   <a
-                    href={`https://www.paziresh24.com/home/intermediate-registration-form/?footer`}
+                    href={`https://providers.paziresh24.com/?footer`}
                     className="block p-4 text-[0.9rem] font-bold	 rounded-lg bg-slate-100"
                   >
                     {t('footer.menu.forDoctors')}
