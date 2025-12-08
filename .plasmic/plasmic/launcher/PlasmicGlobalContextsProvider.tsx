@@ -20,17 +20,21 @@ export interface GlobalContextsProviderProps {
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
+
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
+
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
+
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
   embedCssProps?: Partial<
     Omit<React.ComponentProps<typeof EmbedCss>, "children">
   >;
+
   hamdastAppsSelectorModalProps?: Partial<
     Omit<React.ComponentProps<typeof HamdastAppsSelectorModal>, "children">
   >;

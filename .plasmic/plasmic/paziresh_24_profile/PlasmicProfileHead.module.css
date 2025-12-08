@@ -91,12 +91,23 @@
   color: var(--token-u3OudfMChOo3);
   flex-shrink: 0;
 }
-.more:global(.__wab_instance) {
+.freeBox__m1Kw {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: auto;
   max-width: 100%;
+  min-width: 0;
 }
 .profileActions:global(.__wab_instance) {
   max-width: 100%;
-  display: none;
+  flex-shrink: 1;
+}
+.more:global(.__wab_instance) {
+  max-width: 100%;
 }
 .profileInfo:global(.__wab_instance) {
   max-width: 100%;
