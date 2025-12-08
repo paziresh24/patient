@@ -499,7 +499,8 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
     const getIntervalText = (interval: string) => {
       const intervals: Record<string, string> = {
         monthly: 'ماهانه',
-        quarterly: 'فصلی',
+        quarterly: 'سه ماهه',
+        semiannual: 'شش ماهه',
         yearly: 'سالانه',
         weekly: 'هفتگی',
       };
