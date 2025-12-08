@@ -7,7 +7,6 @@ import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
-import optimizeLogging from '@/common/utils/optimizeLogging';
 import random from 'lodash/random';
 import { useMemo } from 'react';
 import { useSearch as useSearchUtils } from '../../hooks/useSearch';
@@ -41,34 +40,28 @@ export const ConsultBanner = () => {
   };
 
   const handleOpenSubstituteDoctorModal = () => {
-    optimizeLogging(() => {
-      splunkInstance('search').sendEvent({
-        group: 'search_visit_online_doctor_recommendation',
-        type: 'search_visit_online_doctor_recommendation-open-modal',
-      });
+    splunkInstance('search').sendEvent({
+      group: 'search_visit_online_doctor_recommendation',
+      type: 'search_visit_online_doctor_recommendation-open-modal',
     });
     handleOpen();
   };
 
   const handleClickDcotorCardDoctor = ({ url }: { url: string }) => {
-    optimizeLogging(() => {
-      splunkInstance('search').sendEvent({
-        group: 'search_visit_online_doctor_recommendation',
-        type: 'search_visit_online_doctor_recommendation-click-doctor-card',
-        event: {
-          slug: url.replace('/dr/', ''),
-        },
-      });
+    splunkInstance('search').sendEvent({
+      group: 'search_visit_online_doctor_recommendation',
+      type: 'search_visit_online_doctor_recommendation-click-doctor-card',
+      event: {
+        slug: url.replace('/dr/', ''),
+      },
     });
     location.assign(url.replace('/dr/', '/booking/') + '?centerId=5532&skipTimeSelectStep=true');
   };
 
   const handleClickMoreDoctors = () => {
-    optimizeLogging(() => {
-      splunkInstance('search').sendEvent({
-        group: 'search_visit_online_doctor_recommendation',
-        type: 'search_visit_online_doctor_recommendation-click-more-doctors',
-      });
+    splunkInstance('search').sendEvent({
+      group: 'search_visit_online_doctor_recommendation',
+      type: 'search_visit_online_doctor_recommendation-click-more-doctors',
     });
     handleClose();
     handleClick();

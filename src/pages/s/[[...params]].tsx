@@ -10,7 +10,6 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
-import optimizeLogging from '@/common/utils/optimizeLogging';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
@@ -130,50 +129,10 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
         if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
-          optimizeLogging(() => {
-            console.log('Im being runned!');
-            splunkInstance('search').sendEvent({
-              group: 'search_metrics',
-              type: 'search_view',
-              event: {
-                filters: selectedFilters,
-                result_count: result.length,
-                location: city.en_slug,
-                ...(geoLocation ?? null),
-                city_id: city.id,
-                query_id: search.query_id,
-                user_id: userInfo?.id ?? null,
-                user_type: userInfo.provider?.job_title ?? 'normal-user',
-                ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
-                url: {
-                  href: window.location.href,
-                  qurey: { ...queries },
-                  pathname: window.location.pathname,
-                  host: window.location.host,
-                },
-              },
-            });
-          });
-        }
-
-        optimizeLogging(() => {
-          splunkInstance('search').sendBatchEvent({
+          splunkInstance('search').sendEvent({
             group: 'search_metrics',
-            type: 'search_card_view',
-            events: result.map(item => ({
-              card_data: {
-                action: item.actions?.map?.(item =>
-                  JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
-                ),
-                _id: item._id,
-                position: item.position,
-                server_id: item.server_id,
-                title: item.title,
-                type: item.type,
-                url: item.url,
-                rates_count: item.rates_count,
-                satisfaction: item.satisfaction,
-              },
+            type: 'search_view',
+            event: {
               filters: selectedFilters,
               result_count: result.length,
               location: city.en_slug,
@@ -182,14 +141,49 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
               query_id: search.query_id,
               user_id: userInfo?.id ?? null,
               user_type: userInfo.provider?.job_title ?? 'normal-user',
+              ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
               url: {
                 href: window.location.href,
                 qurey: { ...queries },
                 pathname: window.location.pathname,
                 host: window.location.host,
               },
-            })),
+            },
           });
+        }
+
+        splunkInstance('search').sendBatchEvent({
+          group: 'search_metrics',
+          type: 'search_card_view',
+          events: result.map(item => ({
+            card_data: {
+              action: item.actions?.map?.(item =>
+                JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
+              ),
+              _id: item._id,
+              position: item.position,
+              server_id: item.server_id,
+              title: item.title,
+              type: item.type,
+              url: item.url,
+              rates_count: item.rates_count,
+              satisfaction: item.satisfaction,
+            },
+            filters: selectedFilters,
+            result_count: result.length,
+            location: city.en_slug,
+            ...(geoLocation ?? null),
+            city_id: city.id,
+            query_id: search.query_id,
+            user_id: userInfo?.id ?? null,
+            user_type: userInfo.provider?.job_title ?? 'normal-user',
+            url: {
+              href: window.location.href,
+              qurey: { ...queries },
+              pathname: window.location.pathname,
+              host: window.location.host,
+            },
+          })),
         });
 
         return;
