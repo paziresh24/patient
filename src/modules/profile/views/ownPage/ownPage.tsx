@@ -26,7 +26,7 @@ export const OwnPage = ({ fullname }: { fullname: string }) => {
         },
       },
     });
-    location.assign(`https://www.paziresh24.com/home/intermediate-registration-form/`);
+    location.assign(`https://providers.paziresh24.com/`);
   }, [info, isLogin]);
 
   return (

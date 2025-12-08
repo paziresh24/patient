@@ -125,6 +125,9 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
 
   useEffect(() => {
     if (growthbook.ready && !userPending && !isLoading) {
+      // Check if this is a listing page (e.g., /s/city/doctor/)
+      const isListingPage = (params as string[])?.length === 2 && (params as string[])?.[1] === 'doctor';
+
       if (
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
