@@ -3667,9 +3667,9 @@
           "componentImportPath": "@/modules/hamdast/appFrame"
         },
         {
-          "id": "TfCG-WqDXRJw",
-          "name": "HamdastAppsSelectorModal",
-          "displayName": "HamdastAppsSelectorModal",
+          "id": "5xb4SWXtsvF4",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
           "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],

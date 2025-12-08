@@ -238,7 +238,7 @@ export const HamdastAppsSelectorModalProvider = ({ children, onAppSelect }: Hamd
 
   return (
     <HamdastAppsSelectorModalContext.Provider value={modalRef}>
-      <GlobalActionsProvider contextName="HamdastAppsSelectorModal" actions={actions}>
+      <GlobalActionsProvider contextName="HamdastAppsSelectorModalProvider" actions={actions}>
         {children}
         <HamdastAppsSelectorModal ref={modalRef} onAppSelect={onAppSelect} />
       </GlobalActionsProvider>
