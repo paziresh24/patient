@@ -124,6 +124,9 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
 
   useEffect(() => {
     if (growthbook.ready && !userPending && !isLoading) {
+      // Check if this is a listing page (e.g., /s/city/doctor/)
+      const isListingPage = (params as string[])?.length === 2 && (params as string[])?.[1] === 'doctor';
+
       if (
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
@@ -152,39 +155,42 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
           });
         }
 
-        splunkInstance('search').sendBatchEvent({
-          group: 'search_metrics',
-          type: 'search_card_view',
-          events: result.map(item => ({
-            card_data: {
-              action: item.actions?.map?.(item =>
-                JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
-              ),
-              _id: item._id,
-              position: item.position,
-              server_id: item.server_id,
-              title: item.title,
-              type: item.type,
-              url: item.url,
-              rates_count: item.rates_count,
-              satisfaction: item.satisfaction,
-            },
-            filters: selectedFilters,
-            result_count: result.length,
-            location: city.en_slug,
-            ...(geoLocation ?? null),
-            city_id: city.id,
-            query_id: search.query_id,
-            user_id: userInfo?.id ?? null,
-            user_type: userInfo.provider?.job_title ?? 'normal-user',
-            url: {
-              href: window.location.href,
-              qurey: { ...queries },
-              pathname: window.location.pathname,
-              host: window.location.host,
-            },
-          })),
-        });
+        // Only send search_card_view event if it's NOT a listing page
+        if (!isListingPage) {
+          splunkInstance('search').sendBatchEvent({
+            group: 'search_metrics',
+            type: 'search_card_view',
+            events: result.map(item => ({
+              card_data: {
+                action: item.actions?.map?.(item =>
+                  JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
+                ),
+                _id: item._id,
+                position: item.position,
+                server_id: item.server_id,
+                title: item.title,
+                type: item.type,
+                url: item.url,
+                rates_count: item.rates_count,
+                satisfaction: item.satisfaction,
+              },
+              filters: selectedFilters,
+              result_count: result.length,
+              location: city.en_slug,
+              ...(geoLocation ?? null),
+              city_id: city.id,
+              query_id: search.query_id,
+              user_id: userInfo?.id ?? null,
+              user_type: userInfo.provider?.job_title ?? 'normal-user',
+              url: {
+                href: window.location.href,
+                qurey: { ...queries },
+                pathname: window.location.pathname,
+                host: window.location.host,
+              },
+            })),
+          });
+        }
 
         return;
       }
