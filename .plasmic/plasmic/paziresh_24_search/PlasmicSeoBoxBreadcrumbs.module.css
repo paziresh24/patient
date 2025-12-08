@@ -48,5 +48,5 @@
   -webkit-transition-duration: 0.3s;
 }
 .root:hover .svg {
-  transform: rotateX(0deg) rotateY(0deg) rotateZ(180deg);
+  transform: rotate3d(0, 0, 1, 180deg);
 }
