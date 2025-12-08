@@ -8,7 +8,7 @@ import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiogr
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import { getProfile } from './getProfileData';
@@ -429,7 +429,6 @@ export async function getAggregatedProfileData(
         ...feedbacks,
         feedbacks: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
       },
-      dehydratedState: dehydrate(queryClient),
       media,
       symptomes,
       history,
@@ -454,7 +453,6 @@ export async function getAggregatedProfileData(
       hamdastWidgetsData: widgetsData,
       user_id: userData?.user_id ?? null,
       shouldFetchOnClient: !fullProfileData?.id,
-      isFullProfileError: !fullProfileData?.id,
     },
   };
 
