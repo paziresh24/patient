@@ -54,8 +54,7 @@
   align-self: center;
   padding-left: 11px;
   padding-right: 6px;
-  transform: translateX(20px) translateY(0px) translateZ(0px) skewX(43deg)
-    skewY(0deg);
+  transform: translate3d(20px, 0px, 0px) skew(43deg, 0deg);
   z-index: 4;
   border-radius: var(--token-fhaz6q6bl-fW);
 }
@@ -119,7 +118,7 @@
   left: auto;
   top: auto;
   width: auto;
-  transform: translateX(0px) translateY(0px) translateZ(0px);
+  transform: skew(0deg, 0deg);
   z-index: 1;
 }
 .freeBox__uwhEa {
@@ -398,7 +397,7 @@
   top: auto;
   z-index: 1;
   width: auto;
-  transform: translateX(0px) translateY(0px) translateZ(0px);
+  transform: skew(0deg, 0deg);
 }
 .svg__fj8S {
   position: relative;
