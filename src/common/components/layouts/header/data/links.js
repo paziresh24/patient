@@ -365,7 +365,7 @@ export const withUserMenu = [
 export const withDoctorMenu = [
   {
     title: 'ورود / ثبت نام پزشکان ',
-    link: `https://www.paziresh24.com/home/intermediate-registration-form/?header`,
+    link: `https://providers.paziresh24.com/?header`,
   },
 ];
 
