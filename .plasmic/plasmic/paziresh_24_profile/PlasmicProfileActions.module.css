@@ -136,36 +136,3 @@
   width: auto;
   height: 1em;
 }
-.button__rWXt:global(.__wab_instance) {
-  max-width: 100%;
-}
-.freeBox__ccKef {
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  column-gap: var(--token-fhaz6q6bl-fW);
-  min-width: 0;
-}
-.svg__mdGYz {
-  position: relative;
-  object-fit: cover;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-.text__dgMxy {
-  color: var(--token-u3OudfMChOo3);
-  font-weight: 400;
-  font-size: var(--token-6NbVMeD6zQwn);
-}
-.svg__qXd9P {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
