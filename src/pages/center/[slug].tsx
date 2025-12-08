@@ -16,7 +16,9 @@ import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import CentersInfo from '@/modules/profile/views/centersInfo';
 import Head from '@/modules/profile/views/head';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
-import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
+import { useUnifiedSearch } from '@/modules/search/hooks/useUnifiedSearch';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
+
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import flatten from 'lodash/flatten';
@@ -95,32 +97,18 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     isFetchingNextPage,
     isLoading,
     remove,
-  } = useInfiniteQuery({
-    queryKey: [
-      ServerStateKeysEnum.Search,
-      {
-        route: selectedExpertise ?? '',
-        query: {
-          page: 1,
-          ...filters,
-        },
+  } = useUnifiedSearch(
+    {
+      route: selectedExpertise ?? '',
+      query: {
+        page: 1,
+        ...filters,
       },
-    ],
-    queryFn: ({ pageParam }) =>
-      searchApi({
-        route: selectedExpertise ?? '',
-        query: {
-          page: pageParam?.page ?? 1,
-          ...filters,
-        },
-      }),
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.search?.pagination?.limit * lastPage.search?.pagination?.page <= lastPage.search?.total
-        ? { pages: lastPage }
-        : undefined;
     },
-    refetchOnMount: false,
-  });
+    {
+      refetchOnMount: false,
+    },
+  );
 
   const expertises = useSearchSuggestion(
     {

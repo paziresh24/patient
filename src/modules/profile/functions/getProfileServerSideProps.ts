@@ -3,7 +3,6 @@ import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'n
 import { ThemeConfig } from '@/common/hooks/useCustomize';
 import { getAggregatedProfileData } from './getAggregatedProfileData'; // ۱. وارد کردن تابع مشترک
 import axios from 'axios';
-import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { splunkInstance } from '@/common/services/splunk';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import { handleSsrError } from '@/common/utils/handleSsrError';
@@ -21,9 +20,8 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     const university = themeConfing?.partnerKey as string;
 
     try {
-      
       console.log('🔍 Server-side feature flags for slug:', slug);
-      
+
       const finalProps = await getAggregatedProfileData(slug, university, true, {
         useNewDoctorFullNameAPI: true,
         useNewDoctorExpertiseAPI: true,
@@ -83,7 +81,6 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
               hamdastWidgets: [],
               hamdastWidgetsData: {},
               user_id: null,
-              dehydratedState: dehydrate(new QueryClient()),
             }),
           };
         }
