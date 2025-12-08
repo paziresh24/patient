@@ -3,6 +3,7 @@
 const nextTranslate = require('next-translate');
 
 const isProduction = process.env.NODE_ENV === 'production';
+const isSeoDebug = process.env.NEXT_PUBLIC_ENABLE_SEO_SOURCEMAP === 'true';
 
 const plugins = [nextTranslate];
 
@@ -15,6 +16,7 @@ if (process.env.ANALYZE === 'true') {
 }
 
 const nextConfig = {
+  productionBrowserSourceMaps: isSeoDebug,
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
   },

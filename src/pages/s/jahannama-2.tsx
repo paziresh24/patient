@@ -6,7 +6,6 @@ import GlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search
 
 import { PlasmicSearchPage2 } from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicSearchPage2';
 import { useRouter } from 'next/router';
-import Script from 'next/script';
 
 function SearchPage2() {
   // Use PlasmicSearchPage2 to render this component as it was
@@ -30,22 +29,6 @@ function SearchPage2() {
     <GlobalContextsProvider>
       <PageParamsProvider__ route={useRouter()?.pathname} params={useRouter()?.query} query={useRouter()?.query}>
         <PlasmicSearchPage2 />
-        <Script id="yandex-metrika" strategy="lazyOnload">
-          {`
-            (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-            ym(98010713, "init", {
-                clickmap:true,
-                trackLinks:true,
-                accurateTrackBounce:true,
-                webvisor:false
-            });
-          `}
-        </Script>
       </PageParamsProvider__>
     </GlobalContextsProvider>
   );
