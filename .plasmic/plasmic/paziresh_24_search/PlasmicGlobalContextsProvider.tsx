@@ -13,25 +13,29 @@ import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalConte
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: wuGBHXYibkGk/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: -ndasJXDpxzQ/codeComponent
 import { EmbedCss } from "@plasmicpkgs/plasmic-embed-css";
+import { HamdastAppsSelectorModalProvider } from "@/modules/hamdast/components/apps-selector-modal"; // plasmic-import: r65Z6pHlr0Ru/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
-
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
-
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
-
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
   embedCssProps?: Partial<
     Omit<React.ComponentProps<typeof EmbedCss>, "children">
+  >;
+  hamdastAppsSelectorModalProviderProps?: Partial<
+    Omit<
+      React.ComponentProps<typeof HamdastAppsSelectorModalProvider>,
+      "children"
+    >
   >;
 }
 
@@ -45,7 +49,8 @@ export default function GlobalContextsProvider(
     growthbookGlobalContextProps,
     splunkProps,
     pwaProps,
-    embedCssProps
+    embedCssProps,
+    hamdastAppsSelectorModalProviderProps
   } = props;
 
   return (
@@ -113,7 +118,17 @@ export default function GlobalContextsProvider(
                     : "/* CSS snippet */\n\n.suggestion_content em{\n  color:#00acac;\n  font-style: normal;\n}\n.seo_box_content h1, h2, h3{\n  font-weight: 600;\n  font-size: 16px;\n}\n.default-styles span {\n  font-size: 0.875rem !important;\n}\n.locations-container .PlasmicTextInput_root__fvrci:focus{\n  box-shadow: none !important;\n  border-color: #3861FB !important;\n}\n.locations-container .PlasmicTextInput_root__fvrci:focus-within{\n  box-shadow: none !important;\n  border-color: #3861FB !important;\n}\n.pl__z-50{\n  z-index: 99 !important;\n}"
                 }
               >
-                {children}
+                <HamdastAppsSelectorModalProvider
+                  {...hamdastAppsSelectorModalProviderProps}
+                  onAppSelect={
+                    hamdastAppsSelectorModalProviderProps &&
+                    "onAppSelect" in hamdastAppsSelectorModalProviderProps
+                      ? hamdastAppsSelectorModalProviderProps.onAppSelect!
+                      : undefined
+                  }
+                >
+                  {children}
+                </HamdastAppsSelectorModalProvider>
               </EmbedCss>
             </PWA>
           </Splunk>

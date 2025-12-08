@@ -2580,6 +2580,12 @@
           "name": "AppFrame",
           "displayName": "AppFrame",
           "componentImportPath": "@/modules/hamdast/appFrame"
+        },
+        {
+          "id": "r65Z6pHlr0Ru",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
