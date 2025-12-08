@@ -247,8 +247,8 @@ export const HamdastAppsSelectorModalProvider = ({ children, onAppSelect }: Hamd
 };
 
 export const hamdastAppsSelectorModalMeta: any = {
-  name: 'HamdastAppsSelectorModal',
-  displayName: 'Hamdast/AppsSelectorModal',
+  name: 'HamdastAppsSelectorModalProvider',
+  displayName: 'Hamdast/AppsSelector',
   importPath: '@/modules/hamdast/components/apps-selector-modal',
   props: {
     onAppSelect: {

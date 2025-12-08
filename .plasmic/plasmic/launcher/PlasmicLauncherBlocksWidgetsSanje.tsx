@@ -192,34 +192,48 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["goToDashboardAppsSanjeMyPerformance"] = true
+        $steps["appsSelector"] = true
           ? (() => {
               const actionArgs = {
-                destination: "/dashboard/apps/sanje/my-performance/"
+                args: [
+                  ["bimehnama", "cheragh", "khedmat", "hamyar"],
+                  (() => {
+                    try {
+                      return [
+                        {
+                          app_key: "sanje",
+                          title: "سنجه",
+                          subtitle:
+                            "توصیه‌های کاربردی برای افزایش رتبه در سرچ پذیرش۲۴",
+                          icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fsanje.png?versionId=",
+                          link: "/dashboard/apps/sanje/my-performance/"
+                        }
+                      ];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })(),
+                  "\u0631\u0634\u062f \u0631\u062a\u0628\u0647 \u0648 \u0627\u0641\u0632\u0627\u06cc\u0634 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646"
+                ]
               };
-              return (({ destination }) => {
-                if (
-                  typeof destination === "string" &&
-                  destination.startsWith("#")
-                ) {
-                  document
-                    .getElementById(destination.substr(1))
-                    .scrollIntoView({ behavior: "smooth" });
-                } else {
-                  __nextRouter?.push(destination);
-                }
-              })?.apply(null, [actionArgs]);
+              return $globalActions["HamdastAppsSelectorModal.open"]?.apply(
+                null,
+                [...actionArgs.args]
+              );
             })()
           : undefined;
         if (
-          $steps["goToDashboardAppsSanjeMyPerformance"] != null &&
-          typeof $steps["goToDashboardAppsSanjeMyPerformance"] === "object" &&
-          typeof $steps["goToDashboardAppsSanjeMyPerformance"].then ===
-            "function"
+          $steps["appsSelector"] != null &&
+          typeof $steps["appsSelector"] === "object" &&
+          typeof $steps["appsSelector"].then === "function"
         ) {
-          $steps["goToDashboardAppsSanjeMyPerformance"] = await $steps[
-            "goToDashboardAppsSanjeMyPerformance"
-          ];
+          $steps["appsSelector"] = await $steps["appsSelector"];
         }
 
         $steps["sendLog"] = true
