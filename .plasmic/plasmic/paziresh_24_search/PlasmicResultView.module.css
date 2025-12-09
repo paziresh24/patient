@@ -30,7 +30,7 @@
 }
 .sort:global(.__wab_instance) {
   max-width: 100%;
-  transform: translateX(0px) translateY(0px) translateZ(0px);
+  transform: skew(0deg, 0deg);
   margin: 0px;
 }
 .searchResults:global(.__wab_instance) {

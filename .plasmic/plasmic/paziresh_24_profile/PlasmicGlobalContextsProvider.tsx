@@ -13,6 +13,7 @@ import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalConte
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: eWDIZ8d9h9tq/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: YfJ4pfcUGapf/codeComponent
 import { EmbedCss } from "@plasmicpkgs/plasmic-embed-css";
+import { HamdastAppsSelectorModalProvider } from "@/modules/hamdast/components/apps-selector-modal"; // plasmic-import: XMaPwaK5axSl/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
@@ -33,6 +34,13 @@ export interface GlobalContextsProviderProps {
   embedCssProps?: Partial<
     Omit<React.ComponentProps<typeof EmbedCss>, "children">
   >;
+
+  hamdastAppsSelectorModalProviderProps?: Partial<
+    Omit<
+      React.ComponentProps<typeof HamdastAppsSelectorModalProvider>,
+      "children"
+    >
+  >;
 }
 
 export default function GlobalContextsProvider(
@@ -45,7 +53,8 @@ export default function GlobalContextsProvider(
     growthbookGlobalContextProps,
     splunkProps,
     pwaProps,
-    embedCssProps
+    embedCssProps,
+    hamdastAppsSelectorModalProviderProps
   } = props;
 
   return (
@@ -116,7 +125,17 @@ export default function GlobalContextsProvider(
                     : "/* CSS snippet */\n\n.small-text{\n  font-size: 14px !important;\n}"
                 }
               >
-                {children}
+                <HamdastAppsSelectorModalProvider
+                  {...hamdastAppsSelectorModalProviderProps}
+                  onAppSelect={
+                    hamdastAppsSelectorModalProviderProps &&
+                    "onAppSelect" in hamdastAppsSelectorModalProviderProps
+                      ? hamdastAppsSelectorModalProviderProps.onAppSelect!
+                      : undefined
+                  }
+                >
+                  {children}
+                </HamdastAppsSelectorModalProvider>
               </EmbedCss>
             </PWA>
           </Splunk>

@@ -386,11 +386,7 @@ export const developersMenu = [
     link: 'https://join.paziresh24.com',
   },
   {
-    title: 'وب سرویس ها',
-    link: 'https://developers.paziresh24.com/',
-  },
-  {
-    title: 'گیت هاب پذیرش24',
-    link: 'https://github.com/paziresh24',
+    title: 'مستندات API',
+    link: 'https://hamdast.paziresh24.com',
   },
 ];

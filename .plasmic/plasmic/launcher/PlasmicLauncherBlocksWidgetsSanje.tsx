@@ -196,36 +196,23 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
           ? (() => {
               const actionArgs = {
                 args: [
-                  ["bimehnama", "cheragh", "khedmat", "hamyar"],
-                  (() => {
-                    try {
-                      return [
-                        {
-                          app_key: "sanje",
-                          title: "سنجه",
-                          subtitle:
-                            "توصیه‌های کاربردی برای افزایش رتبه در سرچ پذیرش۲۴",
-                          icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fsanje.png?versionId=",
-                          link: "/dashboard/apps/sanje/my-performance/"
-                        }
-                      ];
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                  ["bimehnama", "cheragh", "khedmat", "hamyar", "rahnama"],
+                  [
+                    {
+                      app_key: "sanje",
+                      title: "\u0633\u0646\u062c\u0647",
+                      subtitle:
+                        "\u062a\u0648\u0635\u06cc\u0647\u200c\u0647\u0627\u06cc \u06a9\u0627\u0631\u0628\u0631\u062f\u06cc \u0628\u0631\u0627\u06cc \u0627\u0641\u0632\u0627\u06cc\u0634 \u0631\u062a\u0628\u0647 \u062f\u0631 \u0633\u0631\u0686 \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4",
+                      icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fsanje.png?versionId=",
+                      link: "/dashboard/apps/sanje/my-performance/"
                     }
-                  })(),
+                  ],
                   "\u0631\u0634\u062f \u0631\u062a\u0628\u0647 \u0648 \u0627\u0641\u0632\u0627\u06cc\u0634 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646"
                 ]
               };
-              return $globalActions["HamdastAppsSelectorModal.open"]?.apply(
-                null,
-                [...actionArgs.args]
-              );
+              return $globalActions[
+                "HamdastAppsSelectorModalProvider.open"
+              ]?.apply(null, [...actionArgs.args]);
             })()
           : undefined;
         if (

@@ -60,13 +60,9 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import ProductCard from "../../ProductCard"; // plasmic-import: ZuA2HO8MLBhh/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
-import PeopleAlsoSearchForBox from "../../PeopleAlsoSearchForBox"; // plasmic-import: ThD_BqtT1Qyx/component
-import SearchFooterSecondaryTasks from "../../SearchFooterSecondaryTasks"; // plasmic-import: H6s7UfVqSPjE/component
 import ExternalBookSurveyPopup from "../../ExternalBookSurveyPopup"; // plasmic-import: YHypsyWp2tOf/component
-import DebugMode from "../../DebugMode"; // plasmic-import: t_GYTnthnuf9/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/styleTokensProvider
 
@@ -129,7 +125,6 @@ export type PlasmicSearchResults__OverridesType = {
   root?: Flex__<"div">;
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
   showMySearchPerformance?: Flex__<"a"> & Partial<LinkProps>;
-  apiRequest?: Flex__<typeof ApiRequest>;
   topSuggestedCardVerticalStack?: Flex__<"div">;
   topSuggestedCard?: Flex__<typeof ProductCard>;
   resultCardsVerticalStack2?: Flex__<"div">;
@@ -139,10 +134,7 @@ export type PlasmicSearchResults__OverridesType = {
   paginationMoreButton?: Flex__<typeof Button>;
   noResultsBlockVerticalStack?: Flex__<"div">;
   sideEffect?: Flex__<typeof SideEffect>;
-  peopleAlsoSearchForBox?: Flex__<typeof PeopleAlsoSearchForBox>;
-  searchFooterSecondaryTasks?: Flex__<typeof SearchFooterSecondaryTasks>;
   externalBookSurveyPopup?: Flex__<typeof ExternalBookSurveyPopup>;
-  debugMode?: Flex__<typeof DebugMode>;
 };
 
 export interface DefaultSearchResultsProps {
@@ -224,30 +216,6 @@ function PlasmicSearchResults__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.isHorizental
-      },
-      {
-        path: "apiRequest.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
       }
     ],
     [$props, $ctx, $refs]
@@ -408,84 +376,6 @@ function PlasmicSearchResults__RenderFunc(props: {
               })()}
             </React.Fragment>
           </PlasmicLink__>
-          {false ? (
-            <ApiRequest
-              data-plasmic-name={"apiRequest"}
-              data-plasmic-override={overrides.apiRequest}
-              className={classNames("__wab_instance", sty.apiRequest)}
-              errorDisplay={
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__qSkg
-                  )}
-                >
-                  {"Error fetching data"}
-                </div>
-              }
-              loadingDisplay={
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__mXeqV
-                  )}
-                >
-                  {"Loading..."}
-                </div>
-              }
-              method={"GET"}
-              onError={async (...eventArgs: any) => {
-                generateStateOnChangeProp($state, [
-                  "apiRequest",
-                  "error"
-                ]).apply(null, eventArgs);
-              }}
-              onLoading={async (...eventArgs: any) => {
-                generateStateOnChangeProp($state, [
-                  "apiRequest",
-                  "loading"
-                ]).apply(null, eventArgs);
-              }}
-              onSuccess={async (...eventArgs: any) => {
-                generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
-                  null,
-                  eventArgs
-                );
-              }}
-              ref={ref => {
-                $refs["apiRequest"] = ref;
-              }}
-              url={
-                "https://apigw.paziresh24.com/v1/n8n-search/webhook/growth-opportunities"
-              }
-            >
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__fbeKy
-                )}
-              >
-                <React.Fragment>
-                  {(() => {
-                    try {
-                      return $state.apiRequest.data;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return "";
-                      }
-                      throw e;
-                    }
-                  })()}
-                </React.Fragment>
-              </div>
-            </ApiRequest>
-          ) : null}
         </div>
       ) : null}
       {(() => {
@@ -2305,207 +2195,6 @@ function PlasmicSearchResults__RenderFunc(props: {
         }}
       />
 
-      {false ? (
-        <div className={classNames(projectcss.all, sty.freeBox__pjMfG)}>
-          {(() => {
-            try {
-              return (
-                ($props.searchResultResponse.search.pagination.limit === 0
-                  ? false
-                  : $props.searchResultResponse.search.pagination.limit *
-                      $props.searchResultResponse.search.pagination.page <
-                    $props.searchResultResponse.search.total) &&
-                $props.searchFooterQuerySuggestionResponseObject.hasOwnProperty(
-                  "statusType"
-                ) &&
-                /^https?:\/\/[^\/]+\/s\/(?:([^\/?]+)(?:\/doctor)?\/?)?(\?.*)?$/.test(
-                  window.location.href
-                )
-              );
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return false;
-              }
-              throw e;
-            }
-          })() ? (
-            <PeopleAlsoSearchForBox
-              data-plasmic-name={"peopleAlsoSearchForBox"}
-              data-plasmic-override={overrides.peopleAlsoSearchForBox}
-              className={classNames(
-                "__wab_instance",
-                sty.peopleAlsoSearchForBox
-              )}
-              querySuggestionResponse={(() => {
-                try {
-                  return $props.searchFooterQuerySuggestionResponseObject;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return {
-                      statusType: "SUCCESS",
-                      details: "The process was successful",
-                      entity: {
-                        topQuerySuggestions: [
-                          "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                          "\u0633\u0648\u0646\u0648\u06af\u0631\u0627\u0641\u06cc",
-                          "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                          "\u0627\u0631\u062a\u0648\u067e\u062f",
-                          "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                          "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                          "\u062f\u06a9\u062a\u0631 \u0646\u0627\u062a\u0648\u0627\u0646\u06cc \u062c\u0646\u0633\u06cc \u0645\u0631\u062f\u0627\u0646",
-                          "\u062f\u0627\u062e\u0644\u06cc"
-                        ],
-                        topQuerySuggestionsIncludeDocCount: [
-                          {
-                            query:
-                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u0633\u0648\u0646\u0648\u06af\u0631\u0627\u0641\u06cc",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                            docCount: 0
-                          },
-                          {
-                            query: "\u0627\u0631\u062a\u0648\u067e\u062f",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u062f\u06a9\u062a\u0631 \u0646\u0627\u062a\u0648\u0627\u0646\u06cc \u062c\u0646\u0633\u06cc \u0645\u0631\u062f\u0627\u0646",
-                            docCount: 0
-                          },
-                          {
-                            query: "\u062f\u0627\u062e\u0644\u06cc",
-                            docCount: 0
-                          }
-                        ],
-                        topQuerySuggestionsIncludeCategory: [
-                          {
-                            query:
-                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                            category:
-                              "\u06af\u0648\u0634\u060c \u062d\u0644\u0642 \u0648 \u0628\u06cc\u0646\u06cc",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u062f\u06a9\u062a\u0631 \u06af\u0648\u0634 \u062d\u0644\u0642 \u0628\u06cc\u0646\u06cc \u06a9\u0648\u062f\u06a9\u0627\u0646",
-                            category:
-                              "\u06a9\u0631\u0648\u0646\u0627 \u0648\u06cc\u0631\u0648\u0633",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u0645\u062a\u062e\u0635\u0635 \u0632\u0646\u0627\u0646 \u0648 \u0632\u0627\u06cc\u0645\u0627\u0646",
-                            category:
-                              "\u0632\u0646\u0627\u0646\u060c \u0632\u0627\u06cc\u0645\u0627\u0646 \u0648 \u0646\u0627\u0632\u0627\u06cc\u06cc",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                            category:
-                              "\u0686\u0634\u0645 \u067e\u0632\u0634\u06a9\u06cc",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u062f\u06a9\u062a\u0631 \u0645\u0627\u0645\u0648\u06af\u0631\u0627\u0641\u06cc",
-                            category:
-                              "\u0622\u0632\u0645\u0627\u06cc\u0634\u06af\u0627\u0647 \u0648 \u062a\u0635\u0648\u06cc\u0631\u0628\u0631\u062f\u0627\u0631\u06cc",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc",
-                            category:
-                              "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
-                            docCount: 0
-                          },
-                          {
-                            query: "\u0627\u0631\u062a\u0648\u067e\u062f",
-                            category:
-                              "\u0627\u0633\u062a\u062e\u0648\u0627\u0646 \u0648 \u0645\u0641\u0627\u0635\u0644",
-                            docCount: 0
-                          },
-                          {
-                            query:
-                              "\u062f\u06a9\u062a\u0631 \u0632\u06af\u06cc\u0644 \u062a\u0646\u0627\u0633\u0644\u06cc \u0645\u0631\u062f\u0627\u0646",
-                            category:
-                              "\u06a9\u0644\u06cc\u0647 \u0648 \u0645\u062c\u0627\u0631\u06cc \u0627\u062f\u0631\u0627\u0631\u06cc",
-                            docCount: 0
-                          }
-                        ],
-                        searchTime: 217
-                      },
-                      path: "/api/qs/index/slim_clinic_query_su"
-                    };
-                  }
-                  throw e;
-                }
-              })()}
-            />
-          ) : null}
-          {false ? (
-            <SearchFooterSecondaryTasks
-              data-plasmic-name={"searchFooterSecondaryTasks"}
-              data-plasmic-override={overrides.searchFooterSecondaryTasks}
-              className={classNames(
-                "__wab_instance",
-                sty.searchFooterSecondaryTasks,
-                {
-                  [sty.searchFooterSecondaryTasksisHorizental]: hasVariant(
-                    $state,
-                    "isHorizental",
-                    "isHorizental"
-                  )
-                }
-              )}
-              taskObject={(() => {
-                try {
-                  return $props.searchFooterSecondaryTasksObject;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return {
-                      destination:
-                        "https://support.paziresh24.com/ticketing/?action=new",
-                      title:
-                        "\u06af\u0632\u0627\u0631\u0634 \u0645\u0634\u06a9\u0644 \u062f\u0631 \u062c\u0633\u062a\u062c\u0648",
-                      openInNewTab: false
-                    };
-                  }
-                  throw e;
-                }
-              })()}
-            />
-          ) : null}
-        </div>
-      ) : null}
       {(() => {
         try {
           return $ctx.Growthbook.features["search-external-book-survey-popup"];
@@ -2525,27 +2214,6 @@ function PlasmicSearchResults__RenderFunc(props: {
           className={classNames("__wab_instance", sty.externalBookSurveyPopup)}
         />
       ) : null}
-      {(() => {
-        try {
-          return !!$props.searchResultResponse.debug_mode_result
-            .search_engine_response.entity;
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return false;
-          }
-          throw e;
-        }
-      })() ? (
-        <DebugMode
-          data-plasmic-name={"debugMode"}
-          data-plasmic-override={overrides.debugMode}
-          className={classNames("__wab_instance", sty.debugMode)}
-          searchResultResponse={args.searchResultResponse}
-        />
-      ) : null}
     </div>
   ) as React.ReactElement | null;
 }
@@ -2555,7 +2223,6 @@ const PlasmicDescendants = {
     "root",
     "setGrowthbookAttributes",
     "showMySearchPerformance",
-    "apiRequest",
     "topSuggestedCardVerticalStack",
     "topSuggestedCard",
     "resultCardsVerticalStack2",
@@ -2565,14 +2232,10 @@ const PlasmicDescendants = {
     "paginationMoreButton",
     "noResultsBlockVerticalStack",
     "sideEffect",
-    "peopleAlsoSearchForBox",
-    "searchFooterSecondaryTasks",
-    "externalBookSurveyPopup",
-    "debugMode"
+    "externalBookSurveyPopup"
   ],
   setGrowthbookAttributes: ["setGrowthbookAttributes"],
   showMySearchPerformance: ["showMySearchPerformance"],
-  apiRequest: ["apiRequest"],
   topSuggestedCardVerticalStack: [
     "topSuggestedCardVerticalStack",
     "topSuggestedCard"
@@ -2590,10 +2253,7 @@ const PlasmicDescendants = {
   paginationMoreButton: ["paginationMoreButton"],
   noResultsBlockVerticalStack: ["noResultsBlockVerticalStack"],
   sideEffect: ["sideEffect"],
-  peopleAlsoSearchForBox: ["peopleAlsoSearchForBox"],
-  searchFooterSecondaryTasks: ["searchFooterSecondaryTasks"],
-  externalBookSurveyPopup: ["externalBookSurveyPopup"],
-  debugMode: ["debugMode"]
+  externalBookSurveyPopup: ["externalBookSurveyPopup"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -2602,7 +2262,6 @@ type NodeDefaultElementType = {
   root: "div";
   setGrowthbookAttributes: typeof SideEffect;
   showMySearchPerformance: "a";
-  apiRequest: typeof ApiRequest;
   topSuggestedCardVerticalStack: "div";
   topSuggestedCard: typeof ProductCard;
   resultCardsVerticalStack2: "div";
@@ -2612,10 +2271,7 @@ type NodeDefaultElementType = {
   paginationMoreButton: typeof Button;
   noResultsBlockVerticalStack: "div";
   sideEffect: typeof SideEffect;
-  peopleAlsoSearchForBox: typeof PeopleAlsoSearchForBox;
-  searchFooterSecondaryTasks: typeof SearchFooterSecondaryTasks;
   externalBookSurveyPopup: typeof ExternalBookSurveyPopup;
-  debugMode: typeof DebugMode;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2680,7 +2336,6 @@ export const PlasmicSearchResults = Object.assign(
     // Helper components rendering sub-elements
     setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
     showMySearchPerformance: makeNodeComponent("showMySearchPerformance"),
-    apiRequest: makeNodeComponent("apiRequest"),
     topSuggestedCardVerticalStack: makeNodeComponent(
       "topSuggestedCardVerticalStack"
     ),
@@ -2694,10 +2349,7 @@ export const PlasmicSearchResults = Object.assign(
       "noResultsBlockVerticalStack"
     ),
     sideEffect: makeNodeComponent("sideEffect"),
-    peopleAlsoSearchForBox: makeNodeComponent("peopleAlsoSearchForBox"),
-    searchFooterSecondaryTasks: makeNodeComponent("searchFooterSecondaryTasks"),
     externalBookSurveyPopup: makeNodeComponent("externalBookSurveyPopup"),
-    debugMode: makeNodeComponent("debugMode"),
 
     // Metadata about props expected for PlasmicSearchResults
     internalVariantProps: PlasmicSearchResults__VariantProps,
