@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Button from "../../Button"; // plasmic-import: wRtWBmTexyYF/component
+import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: J-umObTYZwAG/codeComponent
 import Alert from "../../Alert"; // plasmic-import: eDj7YOWE04_a/component
 import Dialog from "../../Dialog"; // plasmic-import: 5NUpgw2K0nJD/component
 import DoctorCard from "../../DoctorCard"; // plasmic-import: NhMGML-3Q4Pu/component
@@ -115,6 +116,7 @@ export const PlasmicReceiptActionButtons__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReceiptActionButtons__OverridesType = {
   root?: Flex__<"div">;
+  apiRequest?: Flex__<typeof ApiRequest>;
   شرحاولیهبیماری?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   doctorCard?: Flex__<typeof DoctorCard>;
@@ -266,6 +268,30 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
         type: "private",
         variableType: "variant",
         initFunc: ({ $props, $state, $queries, $ctx }) => $props.type
+      },
+      {
+        path: "apiRequest.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
+      },
+      {
+        path: "apiRequest.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
+      },
+      {
+        path: "apiRequest.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest"
       }
     ],
     [$props, $ctx, $refs]
@@ -366,102 +392,6 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 )
               })}
             >
-              {(
-                hasVariant($state, "type", "visitOnline")
-                  ? (() => {
-                      try {
-                        return (
-                          $props.bookDetailsData.doctor.id ===
-                          "6eb14e4f-e0dc-4497-b327-c525ae962338"
-                        );
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return false;
-                        }
-                        throw e;
-                      }
-                    })()
-                  : true
-              ) ? (
-                <Button
-                  children2={
-                    <React.Fragment>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__mwEoy
-                        )}
-                      >
-                        {
-                          "\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631"
-                        }
-                      </div>
-                      <div
-                        className={classNames(
-                          projectcss.all,
-                          projectcss.__wab_text,
-                          sty.text__vs10R
-                        )}
-                      >
-                        {"\u062a\u0644\u06af\u0631\u0627\u0645"}
-                      </div>
-                    </React.Fragment>
-                  }
-                  className={classNames("__wab_instance", sty.button__mx2D, {
-                    [sty.buttontype_visitOnline__mx2DlbrEa]: hasVariant(
-                      $state,
-                      "type",
-                      "visitOnline"
-                    )
-                  })}
-                  onClick={async event => {
-                    const $steps = {};
-
-                    $steps["goToPage"] = true
-                      ? (() => {
-                          const actionArgs = {
-                            destination: (() => {
-                              try {
-                                return `/_/drgram/channel/?center_id=5532&book_id=${$props.bookDetailsData.book_id}`;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
-                              }
-                            })()
-                          };
-                          return (({ destination }) => {
-                            if (
-                              typeof destination === "string" &&
-                              destination.startsWith("#")
-                            ) {
-                              document
-                                .getElementById(destination.substr(1))
-                                .scrollIntoView({ behavior: "smooth" });
-                            } else {
-                              __nextRouter?.push(destination);
-                            }
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps["goToPage"] != null &&
-                      typeof $steps["goToPage"] === "object" &&
-                      typeof $steps["goToPage"].then === "function"
-                    ) {
-                      $steps["goToPage"] = await $steps["goToPage"];
-                    }
-                  }}
-                />
-              ) : null}
               <Button
                 children2={
                   <React.Fragment>
@@ -511,36 +441,27 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                   </React.Fragment>
                 }
                 className={classNames("__wab_instance", sty.button___4PRmJ)}
+                loading={(() => {
+                  try {
+                    return $state.apiRequest.loading;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return [];
+                    }
+                    throw e;
+                  }
+                })()}
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps["sendEvent"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return window.paziresh24
-                              ?.logger("booking")
-                              .sendEvent({
-                                group: "link-visit-online",
-                                type: $props.bookDetailsData
-                                  .selected_online_visit_channel.type
-                              });
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["sendEvent"] != null &&
-                    typeof $steps["sendEvent"] === "object" &&
-                    typeof $steps["sendEvent"].then === "function"
-                  ) {
-                    $steps["sendEvent"] = await $steps["sendEvent"];
-                  }
-
-                  $steps["goToPage"] = true
+                  $steps["goToPage"] = !$state.apiRequest?.data?.some?.(item =>
+                    item?.placement?.includes?.(
+                      "booking_flow::ONLINE_VISIT_CHANNEL_BUTTON"
+                    )
+                  )
                     ? (() => {
                         const actionArgs = {
                           destination: (() => {
@@ -579,7 +500,134 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                   ) {
                     $steps["goToPage"] = await $steps["goToPage"];
                   }
+
+                  $steps["goToPage2"] = $state.apiRequest.data?.some?.(item =>
+                    item.placement?.includes?.(
+                      "booking_flow::ONLINE_VISIT_CHANNEL_BUTTON"
+                    )
+                  )
+                    ? (() => {
+                        const actionArgs = {
+                          destination: (() => {
+                            try {
+                              return `/_/${
+                                $state.apiRequest.data?.find(item =>
+                                  item.placement.includes(
+                                    "booking_flow::ONLINE_VISIT_CHANNEL_BUTTON"
+                                  )
+                                ).app
+                              }/flows/ONLINE_VISIT_CHANNEL_BUTTON`;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
+                            }
+                          })()
+                        };
+                        return (({ destination }) => {
+                          if (
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
+                          ) {
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
+                          }
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["goToPage2"] != null &&
+                    typeof $steps["goToPage2"] === "object" &&
+                    typeof $steps["goToPage2"].then === "function"
+                  ) {
+                    $steps["goToPage2"] = await $steps["goToPage2"];
+                  }
+
+                  $steps["sendEvent"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return window.paziresh24
+                              ?.logger("booking")
+                              .sendEvent({
+                                group: "link-visit-online",
+                                type: $props.bookDetailsData
+                                  .selected_online_visit_channel.type
+                              });
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["sendEvent"] != null &&
+                    typeof $steps["sendEvent"] === "object" &&
+                    typeof $steps["sendEvent"].then === "function"
+                  ) {
+                    $steps["sendEvent"] = await $steps["sendEvent"];
+                  }
                 }}
+              />
+
+              <ApiRequest
+                data-plasmic-name={"apiRequest"}
+                data-plasmic-override={overrides.apiRequest}
+                className={classNames("__wab_instance", sty.apiRequest, {
+                  [sty.apiRequesttype_visitOnline]: hasVariant(
+                    $state,
+                    "type",
+                    "visitOnline"
+                  )
+                })}
+                errorDisplay={null}
+                loadingDisplay={null}
+                method={"GET"}
+                onError={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest",
+                    "error"
+                  ]).apply(null, eventArgs);
+                }}
+                onLoading={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest",
+                    "loading"
+                  ]).apply(null, eventArgs);
+                }}
+                onSuccess={async (...eventArgs: any) => {
+                  generateStateOnChangeProp($state, [
+                    "apiRequest",
+                    "data"
+                  ]).apply(null, eventArgs);
+                }}
+                params={(() => {
+                  try {
+                    return {
+                      slug: $props.bookDetailsData?.doctor?.slug
+                    };
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+                ref={ref => {
+                  $refs["apiRequest"] = ref;
+                }}
+                url={"https://hamdast.paziresh24.com/api/v1/widgets/"}
               />
 
               {(
@@ -2710,6 +2758,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 const PlasmicDescendants = {
   root: [
     "root",
+    "apiRequest",
     "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc",
     "dialog",
     "doctorCard",
@@ -2721,6 +2770,7 @@ const PlasmicDescendants = {
     "textInput",
     "sideEffect"
   ],
+  apiRequest: ["apiRequest"],
   شرحاولیهبیماری: [
     "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
   ],
@@ -2739,6 +2789,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  apiRequest: typeof ApiRequest;
   شرحاولیهبیماری: "div";
   dialog: typeof Dialog;
   doctorCard: typeof DoctorCard;
@@ -2811,6 +2862,7 @@ export const PlasmicReceiptActionButtons = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    apiRequest: makeNodeComponent("apiRequest"),
     شرحاولیهبیماری: makeNodeComponent(
       "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
     ),
