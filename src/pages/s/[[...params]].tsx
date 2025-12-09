@@ -10,6 +10,7 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
+import optimizeLogging from '@/common/utils/optimizeLogging';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
@@ -124,45 +125,44 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
 
   useEffect(() => {
     if (growthbook.ready && !userPending && !isLoading) {
-      // Check if this is a listing page (e.g., /s/city/doctor/)
-      const isListingPage = (params as string[])?.length === 2 && (params as string[])?.[1] === 'doctor';
-
       if (
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
         if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
-          splunkInstance('search').sendEvent({
-            group: 'search_metrics',
-            type: 'search_view',
-            event: {
-              filters: selectedFilters,
-              result_count: result.length,
-              location: city.en_slug,
-              ...(geoLocation ?? null),
-              city_id: city.id,
-              query_id: search.query_id,
-              user_id: userInfo?.id ?? null,
-              user_type: userInfo.provider?.job_title ?? 'normal-user',
-              ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
-              url: {
-                href: window.location.href,
-                qurey: { ...queries },
-                pathname: window.location.pathname,
-                host: window.location.host,
+          optimizeLogging(() => {
+            console.log('Im being runned!');
+            splunkInstance('search').sendEvent({
+              group: 'search_metrics',
+              type: 'search_view',
+              event: {
+                filters: selectedFilters,
+                result_count: result.length,
+                location: city.en_slug,
+                ...(geoLocation ?? null),
+                city_id: city.id,
+                query_id: search.query_id,
+                user_id: userInfo?.id ?? null,
+                user_type: userInfo.provider?.job_title ?? 'normal-user',
+                ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
+                url: {
+                  href: window.location.href,
+                  qurey: { ...queries },
+                  pathname: window.location.pathname,
+                  host: window.location.host,
+                },
               },
-            },
+            });
           });
         }
 
-        // Only send search_card_view event if it's NOT a listing page
-        if (!isListingPage) {
+        optimizeLogging(() => {
           splunkInstance('search').sendBatchEvent({
             group: 'search_metrics',
             type: 'search_card_view',
             events: result.map(item => ({
               card_data: {
-                action: item.actions?.map?.(item =>
+                action: item.actions?.map?.((item: any) =>
                   JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
                 ),
                 _id: item._id,
@@ -190,7 +190,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
               },
             })),
           });
-        }
+        });
 
         return;
       }
