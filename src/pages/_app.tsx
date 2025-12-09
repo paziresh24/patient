@@ -27,7 +27,7 @@ import axios from 'axios';
 
 const GoogleTagManager = dynamic(() => import('@next/third-parties/google').then(mod => ({ default: mod.GoogleTagManager })), {
   ssr: false,
-});
+}) as React.ComponentType<{ gtmId: string }>;
 
 const { publicRuntimeConfig } = getConfig();
 
