@@ -1,22 +1,22 @@
+import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
-import { internalLinks } from '@/common/apis/services/profile/internalLinks';
-import { getReviews } from '@/common/apis/services/reviews/getReviews';
-import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
-import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
-import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
+import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
+import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
+import { internalLinks } from '@/common/apis/services/profile/internalLinks';
+import { getReviews } from '@/common/apis/services/reviews/getReviews';
+import { splunkInstance } from '@/common/services/splunk';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
-import { getAverageWaitingTime } from './getAverageWaitingTime';
-import { splunkInstance } from '@/common/services/splunk';
-import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -460,3 +460,4 @@ export async function getAggregatedProfileData(
 
   return finalProps;
 }
+

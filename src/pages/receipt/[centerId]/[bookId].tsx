@@ -109,7 +109,7 @@ const Receipt = () => {
   const handleRetry = () => {
     getReceiptDetails.refetch();
   };
-  const pdfGenerator = usePdfGenerator({
+  const { pdfGenerator, isGenerating: isPdfGenerating } = usePdfGenerator({
     ref: 'receipt',
     fileName: 'Paziresh24-Receipt',
     orientation: 'portrait',
@@ -575,8 +575,8 @@ const Receipt = () => {
                   {getReceiptDetails.isSuccess ? (
                     <div className="flex flex-col space-y-3">
                       <div className="flex space-s-3">
-                        <Button block variant="secondary" onClick={pdfGenerator}>
-                          دانلود رسید نوبت
+                        <Button block variant="secondary" onClick={pdfGenerator} disabled={isPdfGenerating}>
+                          {isPdfGenerating ? 'در حال آماده‌سازی...' : 'دانلود رسید نوبت'}
                         </Button>
                         <Button block variant="secondary" onClick={handleShareAction}>
                           اشتراک گذاری

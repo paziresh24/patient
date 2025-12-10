@@ -30,9 +30,10 @@ const nextConfig = {
       sideEffects: false,
     });
 
-    // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
+      usedExports: true,
+      sideEffects: true,
       moduleIds: 'deterministic',
       splitChunks: {
         chunks: 'all',
@@ -45,10 +46,39 @@ const nextConfig = {
             minChunks: 2,
           },
           lib: {
-            test: /[\\/]node_modules[\\/]/,
+            test: module => {
+              if (!module.resource || !/[\\/]node_modules[\\/]/.test(module.resource)) {
+                return false;
+              }
+
+              return !/[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas|antd|@ant-design|@plasmicpkgs\/antd5|rc-|swr)/.test(
+                module.resource,
+              );
+            },
             name: 'lib',
             priority: 10,
             chunks: 'all',
+          },
+          antd: {
+            test: /[\\/]node_modules[\\/](antd|@ant-design|@plasmicpkgs\/antd5|rc-)/,
+            name: 'antd',
+            priority: 20,
+            chunks: 'all',
+            enforce: true,
+          },
+          swr: {
+            test: /[\\/]node_modules[\\/]swr/,
+            name: 'swr',
+            priority: 20,
+            chunks: 'all',
+            enforce: true,
+          },
+          pdfLibraries: {
+            test: /[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas)/,
+            name: 'pdf-libraries',
+            priority: 20,
+            chunks: 'async',
+            enforce: true,
           },
         },
       },
