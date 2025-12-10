@@ -17,21 +17,21 @@ build_and_push:
   stage: build_and_push
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - if [[ "$CI_COMMIT_REF_SLUG" == "main" ]]; then echo "Main branch, will deploy."; else echo "Not main branch, skipping deploy."; fi
+    - echo "Building image for main branch..."
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH == "main"
   tags:
     - arvan
     - docker
-
+  when: manual
 
 deploy:
   stage: deploy
   image:
-    name: docker.arvancloud.ir/bitnami/kubectl:1.33.4
-    entrypoint: [""] # disable kubectl as default entrypoint
+    name: docker.arvancloud.ir/alpine/kubectl:1.34.1
+    entrypoint: [""]   # disable kubectl as default entrypoint
   script:
     - mkdir -p ~/.kube
     - echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
@@ -44,6 +44,7 @@ deploy:
   tags:
     - arvan
     - docker
+  when: manual
 
 
 webhook:
