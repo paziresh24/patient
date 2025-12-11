@@ -8,6 +8,7 @@ import { ThemeConfig } from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
 import { oneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
+import { HamdastFlow } from '@/modules/hamdast/components/flow';
 import { HamdastPayment } from '@/modules/hamdast/components/payment';
 import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
@@ -199,6 +200,7 @@ const Page = ({ page, app }: any) => {
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} iframeRef={iframeRef} />
+      <HamdastFlow iframeRef={iframeRef} />
       {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}
 
       <div className={classNames('w-full flex-grow flex flex-col', { '!hidden !opacity-0': !showApp })}>
