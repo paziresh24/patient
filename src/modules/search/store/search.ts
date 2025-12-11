@@ -1,9 +1,10 @@
 import { dayToSecond } from '@/common/utils/dayToSecond';
-import { deleteCookie, setCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { create } from 'zustand';
 interface SearchStore {
   city: City;
   setCity: (city: City) => void;
+  refreshCityFromCookie: () => void;
   userSearchValue: string;
   setUserSearchValue: (value: string) => void;
   isOpenSuggestion: boolean;
@@ -105,6 +106,35 @@ export const useSearchStore = create<SearchStore>(set => ({
     }
     deleteCookie('new-city');
   },
+  refreshCityFromCookie: () => {
+    try {
+      // Read directly from document.cookie to handle all cookie sources
+      const getRawCookie = (name: string): string | null => {
+        if (typeof document === 'undefined') return null;
+        const nameEQ = name + '=';
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+      };
+
+      const rawCookie = getRawCookie('new-city');
+      if (rawCookie) {
+        const parsedCity = JSON.parse(decodeURIComponent(rawCookie));
+        if (parsedCity) {
+          set(state => ({
+            ...state,
+            city: parsedCity,
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing city from cookie:', error);
+    }
+  },
   setUserSearchValue: userSearchValue =>
     set(state => ({
       ...state,
@@ -132,4 +162,11 @@ export const useSearchStore = create<SearchStore>(set => ({
   setSeoInfo: seoInfo => set(state => ({ ...state, seoInfo })),
   setGeoLocation: geoLocation => set(state => ({ ...state, geoLocation })),
 }));
+
+// Expose refreshCityFromCookie globally for Tag Manager scripts
+if (typeof window !== 'undefined') {
+  (window as any).p24RefreshCity = () => {
+    useSearchStore.getState().refreshCityFromCookie();
+  };
+}
 
