@@ -16,7 +16,7 @@ if (process.env.ANALYZE === 'true') {
 }
 
 const nextConfig = {
-  productionBrowserSourceMaps: isSeoDebug,
+  productionBrowserSourceMaps: true,
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
   },
