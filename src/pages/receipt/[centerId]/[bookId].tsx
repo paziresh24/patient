@@ -79,24 +79,27 @@ const Receipt = () => {
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
   const [hasHolidays, setHasHolidays] = useState(false);
 
-  useEffect(() => {
-    if (bookId && centerId === '5532' && user?.id && typeof window !== 'undefined') {
-      console.log('sendEvent', user?.id, centerId, bookId);
-      setTimeout(() => {
-        window.pishani?.sendEvent?.('PAGE_VIEW', {
-          user_id: user?.id,
-          center_id: centerId,
-          book_id: bookId,
-        });
-      }, 2000);
-    }
-  }, [centerId, bookId, user?.id]);
-
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
     pincode: pincode as string,
   });
+
+  useEffect(() => {
+    if (action && getReceiptDetails?.data) {
+      if (action === 'open_channel') {
+        window.open(
+          decodeURIComponent(
+            getReceiptDetails?.data?.data?.data?.selected_online_visit_channel?.channel_link.replace(
+              'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+              '',
+            ),
+          ),
+          '_blank',
+        );
+      }
+    }
+  }, [action, getReceiptDetails?.data]);
 
   // Error handling function
   const getErrorStatusCode = () => {
