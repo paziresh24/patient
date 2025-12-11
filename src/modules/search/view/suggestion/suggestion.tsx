@@ -280,3 +280,11 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
+
+// Expose setCity globally for Tag Manager scripts
+if (typeof window !== 'undefined') {
+  (window as any).p24SetCity = (city: { id: string; name: string; en_slug: string; province_id: string; is_aroundme: boolean }) => {
+    useSearchStore.getState().setCity(city);
+  };
+}
+
