@@ -568,17 +568,13 @@ function PlasmicProfileActions__RenderFunc(props: {
                   const actionArgs = {
                     customFunction: async () => {
                       return (() => {
-                        const url = `${window.location.origin}/dr/${props.slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
+                        const url = `${window.location.origin}/dr/${$props.slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
                         if (window.navigator && window.navigator.share) {
                           return navigator.share({
-                            title: props.title,
-                            text: `${props.displayName} در پذیرش۲۴`,
+                            title: $props.title,
+                            text: `${$props.displayName} در پذیرش۲۴`,
                             url
                           });
-                        } else {
-                          return alert(
-                            `برای اشتراک‌گذاری از این لینک استفاده کنید:\n${url}`
-                          );
                         }
                       })();
                     }
