@@ -39,10 +39,10 @@ export const OnlineVisitPromote = () => {
       group: 'home_visit_online_doctor_recommendation',
       type: 'home_visit_online_doctor_recommendation-click-doctor-card',
       event: {
-        slug: url.replace('/dr/', ''),
+        slug: substituteDoctor?.slug || url.split('/').filter(Boolean).pop() || '',
       },
     });
-    location.assign(url.replace('/dr/', '/booking/') + '?centerId=5532&skipTimeSelectStep=true');
+    location.assign(url);
   };
 
   const handleClickMoreDoctors = () => {
@@ -81,17 +81,17 @@ export const OnlineVisitPromote = () => {
       </div>
 
       <Modal bodyClassName="p-3" title="" {...modalProps}>
-        {(searchData.isLoading || !substituteDoctor?.url) && (
+        {(searchData.isLoading || !substituteDoctor?.actions?.[0]?.url) && (
           <div className="flex justify-center w-full">
             <Loading className="w-8 h-8 my-8 " />
           </div>
         )}
-        {searchData.isSuccess && substituteDoctor?.url && (
+        {searchData.isSuccess && substituteDoctor?.actions?.[0]?.url && (
           <div className="flex flex-col space-y-2 mb-2">
             <Alert severity="success" className="p-3 text-green-700 text-sm font-medium">
               بدون خروج از منزل، آنلاین ویزیت شوید.
             </Alert>
-            <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.url })}>
+            <div onClick={() => handleClickDcotorCardDoctor({ url: substituteDoctor.actions[0].url })}>
               <SearchCard
                 avatarSize="lg"
                 baseInfo={{
