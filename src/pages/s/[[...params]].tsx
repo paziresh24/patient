@@ -162,7 +162,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
             type: 'search_card_view',
             events: result.map(item => ({
               card_data: {
-                action: item.actions?.map?.(item =>
+                action: item.actions?.map?.((item: any) =>
                   JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
                 ),
                 _id: item._id,

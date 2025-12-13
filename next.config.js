@@ -47,7 +47,7 @@ const nextConfig = {
             minChunks: 2,
           },
           lib: {
-            test: /[\\/]node_modules[\\/]/,
+            test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet)/,
             name: 'lib',
             priority: 10,
             chunks: 'all',
