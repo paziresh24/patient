@@ -46,11 +46,23 @@ const nextConfig = {
             chunks: 'all',
             minChunks: 2,
           },
-          lib: {
-            test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet)/,
-            name: 'lib',
-            priority: 10,
+          antd: {
+            test: /[\\/]node_modules[\\/](@ant-design|antd|@plasmicpkgs\/antd5)/,
+            name: 'antd',
             chunks: 'all',
+            priority: 30,
+          },
+          plasmic: {
+            test: /[\\/]node_modules[\\/](@plasmicapp|@plasmicpkgs)/,
+            name: 'plasmic',
+            chunks: 'all',
+            priority: 25,
+          },
+          lib: {
+            test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet|recharts|react-hook-form|loadash|jalali-moment|moment)/,
+            name: 'lib',
+            chunks: 'async',
+            priority: 10,
           },
         },
       },
