@@ -77,6 +77,8 @@ import { useGetServices } from '@/common/apis/services/profile/services';
 import { toastActionble } from '@/common/utils/toastActionble';
 import useResponsive from '@/common/hooks/useResponsive';
 import { bookRequestAvailability } from '@/common/apis/services/booking/bookRequestAvailability';
+import { useBookingAddon } from '../hooks/useBookingAddon';
+import { BookingAddonModal } from '../components/bookingAddonModal';
 interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
@@ -239,11 +241,21 @@ const BookingSteps = (props: BookingStepsProps) => {
     };
   }, [slug, center]);
 
-  const handleBookAction = async (user: any) => {
+  const handleBookActionInternal = async (user: any, skipAddonCheck: boolean = false) => {
     if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
     const { insurance_id } = user;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
     if (+center.settings?.booking_enable_insurance && !insurance_id) return toast.error('لطفا بیمه خود را انتخاب کنید.');
+
+    if (!skipAddonCheck) {
+      const addonResult = await bookingAddon.checkAndExecuteAddon(user);
+      if (addonResult === 'completed') {
+        return;
+      }
+      if (addonResult === 'show_form') {
+        return;
+      }
+    }
 
     let reserveId: string | undefined = timeId;
 
@@ -376,6 +388,23 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
     );
   };
+
+  const handleBookAction = async (user: any) => {
+    return handleBookActionInternal(user, false);
+  };
+
+  const bookingAddon = useBookingAddon({
+    slug,
+    center,
+    profile,
+    user,
+    onBook: (user: any) => handleBookActionInternal(user, true),
+    onAddonError: () => {
+      if (user) {
+        handleBookAction(user);
+      }
+    },
+  });
 
   const [bookRequestLoading, setBookRequestLoading] = useState(false);
 
@@ -669,6 +698,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 getFirstFreeTime.loading ||
                 getNationalCodeConfirmation.isLoading ||
                 inquiryIdentityInformation.isLoading ||
+                bookingAddon.bookingAddonCheckLoading ||
                 !profile,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
@@ -778,17 +808,35 @@ const BookingSteps = (props: BookingStepsProps) => {
               }
               setUser(user);
 
-              if (+center?.settings?.booking_enable_insurance) {
-                handleOpenInsuranceModal();
-                return;
-              }
-              handleBookAction({
+              const finalUser = {
                 ...user,
                 ...(center?.id === CENTERS.CONSULT &&
                   doctorMessenger?.length === 1 && {
                     messengerType: messengers[doctorMessenger?.[0]]?.type,
                   }),
-              });
+              };
+
+              const addonResult = await bookingAddon.checkAndExecuteAddon(finalUser);
+              if (addonResult === 'completed') {
+                return;
+              }
+              if (addonResult === 'show_form') {
+                return;
+              }
+              if (addonResult === 'no_addon' || addonResult === 'error') {
+                if (+center?.settings?.booking_enable_insurance) {
+                  handleOpenInsuranceModal();
+                  return;
+                }
+                handleBookAction(finalUser);
+                return;
+              }
+
+              if (+center?.settings?.booking_enable_insurance) {
+                handleOpenInsuranceModal();
+                return;
+              }
+              handleBookAction(finalUser);
             }}
           />
         </>
@@ -924,6 +972,15 @@ const BookingSteps = (props: BookingStepsProps) => {
           تایید
         </Button>
       </Modal>
+      <BookingAddonModal
+        isOpen={bookingAddon.bookingAddonModalProps.isOpen}
+        onClose={bookingAddon.bookingAddonModalProps.onClose}
+        formFields={bookingAddon.bookingAddonFormFields}
+        onSubmit={bookingAddon.handleDynamicFormSubmit}
+        loading={bookingAddon.bookingAddonLoading}
+        title={bookingAddon.bookingAddonTitle}
+        formKey={bookingAddon.bookingAddonFormKey}
+      />
       <Modal
         noHeader
         {...recommendModalProps}
