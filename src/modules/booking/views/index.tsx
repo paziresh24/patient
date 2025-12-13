@@ -398,10 +398,11 @@ const BookingSteps = (props: BookingStepsProps) => {
     center,
     profile,
     user,
+    service,
     onBook: (user: any) => handleBookActionInternal(user, true),
     onAddonError: () => {
       if (user) {
-        handleBookAction(user);
+        handleBookActionInternal(user, true);
       }
     },
   });

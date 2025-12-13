@@ -18,6 +18,21 @@ export interface BookingAddonRequest {
       id: string;
     }>;
   };
+  center_data?: {
+    id: string;
+    name: string;
+    type: number;
+    type_name: string;
+    address: string;
+    server_id: string;
+    user_center_id: string;
+    [key: string]: any;
+  };
+  service_data?: {
+    id: string;
+    name: string;
+    [key: string]: any;
+  };
   form_data?: Record<string, any>;
   meta_data?: Record<string, any>;
 }

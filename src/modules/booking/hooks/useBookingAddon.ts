@@ -13,11 +13,12 @@ interface UseBookingAddonParams {
   center: any;
   profile: any;
   user: any;
+  service?: any;
   onBook: (user: any) => Promise<any>;
   onAddonError?: () => void;
 }
 
-export const useBookingAddon = ({ slug, center, profile, user, onBook, onAddonError }: UseBookingAddonParams) => {
+export const useBookingAddon = ({ slug, center, profile, user, service, onBook, onAddonError }: UseBookingAddonParams) => {
   const {
     handleOpen: handleOpenBookingAddonModal,
     handleClose: handleCloseBookingAddonModal,
@@ -66,6 +67,23 @@ export const useBookingAddon = ({ slug, center, profile, user, onBook, onAddonEr
         slug: slug || '',
         doctor_insurances: doctorInsurances,
       },
+      ...(center && {
+        center_data: {
+          id: center.id || '',
+          name: center.name || '',
+          type: center.center_type || center.type || 0,
+          type_name: center.center_type_name || '',
+          address: center.address || '',
+          server_id: center.server_id || '',
+          user_center_id: center.user_center_id || '',
+        },
+      }),
+      ...(service && {
+        service_data: {
+          id: service.id || '',
+          name: service.alias_title || service.name || '',
+        },
+      }),
       ...(formData && { form_data: formData }),
       ...(metaData && { meta_data: metaData }),
     };
