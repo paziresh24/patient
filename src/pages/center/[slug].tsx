@@ -3,14 +3,12 @@ import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slug
 import { search as searchApi } from '@/common/apis/services/search/search';
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import Text from '@/common/components/atom/text';
-
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { splunkInstance } from '@/common/services/splunk';
-
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import CentersInfo from '@/modules/profile/views/centersInfo';
@@ -18,7 +16,6 @@ import Head from '@/modules/profile/views/head';
 import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
-
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import flatten from 'lodash/flatten';
