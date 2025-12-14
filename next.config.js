@@ -16,28 +16,80 @@ if (process.env.ANALYZE === 'true') {
 }
 
 const nextConfig = {
-  productionBrowserSourceMaps: true,
+  productionBrowserSourceMaps: isSeoDebug,
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+    optimizePackageImports: [
+      '@plasmicpkgs/antd5',
+      '@plasmicpkgs/plasmic-basic-components',
+      '@plasmicpkgs/plasmic-rich-components',
+      '@plasmicapp/react-web',
+      'antd',
+      '@ant-design/icons',
+      '@ant-design/pro-components',
+      'lodash',
+      'lucide-react',
+    ],
   },
+  modularizeImports: {
+    '@ant-design/icons': {
+      transform: '@ant-design/icons/lib/icons/{{member}}',
+    },
+    'antd': {
+      transform: 'antd/lib/{{kebabCase member}}',
+    },
+    '@ant-design/pro-components': {
+      transform: '@ant-design/pro-components/lib/{{member}}',
+      skipDefaultConversion: true,
+    },
+    'lodash': {
+      transform: 'lodash/{{member}}',
+    },
+  },
+  transpilePackages: [
+    '@plasmicpkgs/antd5',
+    '@plasmicpkgs/plasmic-rich-components',
+    'antd',
+    '@ant-design/icons',
+    '@ant-design/pro-components',
+    '@ant-design/cssinjs',
+    '@ant-design/icons-svg',
+    'rc-util',
+    'rc-pagination',
+    'rc-picker',
+    'rc-table',
+    'rc-tree',
+    'rc-input',
+  ],
   compress: true,
   poweredByHeader: false,
-  webpack: (config, { webpack }) => {
-    /**
-     * TODO: Find more possible barrels for this project.
-     *  @see https://github.com/vercel/next.js/issues/12557#issuecomment-1196931845
-     **/
+  webpack: (config, { webpack, isServer }) => {
     config.module.rules.push({
       test: [/lib\/.*.tsx?/i],
       sideEffects: false,
     });
 
+    config.module.rules.push({
+      test: /[\\/]node_modules[\\/](antd|@ant-design|@plasmicpkgs)[\\/].*\.(js|mjs|jsx|ts|tsx)$/,
+      sideEffects: false,
+    });
+
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@ant-design/icons/lib/dist$': '@ant-design/icons/lib/icons',
+      };
+    }
+
     // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
       moduleIds: 'deterministic',
+      usedExports: true,
       splitChunks: {
         chunks: 'all',
+        maxInitialRequests: 25,
+        minSize: 20000,
         cacheGroups: {
           default: false,
           vendors: false,
@@ -45,24 +97,49 @@ const nextConfig = {
             name: 'commons',
             chunks: 'all',
             minChunks: 2,
+            priority: 5,
           },
-          antd: {
-            test: /[\\/]node_modules[\\/](@ant-design|antd|@plasmicpkgs\/antd5)/,
-            name: 'antd',
+          antdIcons: {
+            test: /[\\/]node_modules[\\/]@ant-design[\\/]icons/,
+            name: 'antd-icons',
+            chunks: 'all',
+            priority: 40,
+            reuseExistingChunk: true,
+          },
+          antdCore: {
+            test: /[\\/]node_modules[\\/](antd|@ant-design[\\/]cssinjs|rc-)/,
+            name: 'antd-core',
+            chunks: 'all',
+            priority: 35,
+            reuseExistingChunk: true,
+          },
+          antdPro: {
+            test: /[\\/]node_modules[\\/]@ant-design[\\/]pro-components/,
+            name: 'antd-pro',
+            chunks: 'async',
+            priority: 32,
+            reuseExistingChunk: true,
+          },
+          plasmicAntd: {
+            test: /[\\/]node_modules[\\/]@plasmicpkgs[\\/]antd5/,
+            name: 'plasmic-antd',
             chunks: 'all',
             priority: 30,
+            reuseExistingChunk: true,
           },
           plasmic: {
-            test: /[\\/]node_modules[\\/](@plasmicapp|@plasmicpkgs)/,
+            test: /[\\/]node_modules[\\/](@plasmicapp|@plasmicpkgs)[\\/](?!antd5)/,
             name: 'plasmic',
             chunks: 'all',
             priority: 25,
+            reuseExistingChunk: true,
           },
           lib: {
-            test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet|recharts|react-hook-form|loadash|jalali-moment|moment)/,
+            test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet|recharts|react-hook-form|lodash|jalali-moment|moment)/,
             name: 'lib',
             chunks: 'async',
             priority: 10,
+            reuseExistingChunk: true,
           },
         },
       },
