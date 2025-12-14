@@ -16,7 +16,7 @@ if (process.env.ANALYZE === 'true') {
 }
 
 const nextConfig = {
-  productionBrowserSourceMaps: isSeoDebug,
+  productionBrowserSourceMaps: true,
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
     optimizePackageImports: [
@@ -96,7 +96,7 @@ const nextConfig = {
           commons: {
             name: 'commons',
             chunks: 'all',
-            minChunks: 2,
+            minChunks: 4,
             priority: 5,
           },
           antdIcons: {
@@ -135,11 +135,22 @@ const nextConfig = {
             reuseExistingChunk: true,
           },
           lib: {
-            test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet|recharts|react-hook-form|lodash|jalali-moment|moment)/,
+            test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet|recharts|react-hook-form|jalali-moment)/,
             name: 'lib',
-            chunks: 'async',
+            chunks: 'all',
             priority: 10,
-            reuseExistingChunk: true,
+          },
+          lodash: {
+            test: /[\\/]node_modules[\\/]lodash/,
+            name: 'lodash',
+            chunks: 'async',
+            priority: 50,
+          },
+          moment: {
+            test: /[\\/]node_modules[\\/]moment/,
+            name: 'moment',
+            chunks: 'async',
+            priority: 50,
           },
         },
       },
