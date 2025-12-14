@@ -14,14 +14,10 @@ import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import MobileRowFilter from '@/modules/search/components/filters/rowFilter';
-import UnknownCity from '@/modules/search/components/unknownCity';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useSearchStore } from '@/modules/search/store/search';
-import Filter from '@/modules/search/view/filter';
 import { Result } from '@/modules/search/view/result';
-import SearchSeoBox from '@/modules/search/view/seoBox';
-import Suggestion from '@/modules/search/view/suggestion';
 import { useFeatureValue, useFeatureIsOn, GrowthBook } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
@@ -43,13 +39,17 @@ const ConsultBanner = dynamic(() => import('@/modules/search/components/consultB
   loading: () => <Skeleton w="100%" h="4rem" />,
   ssr: false,
 });
-const { publicRuntimeConfig } = getConfig();
+const SearchSeoBoxDynamic = dynamic(() => import('@/modules/search/view/seoBox'), { ssr: false });
+const UnknownCityDynamic = dynamic(() => import('@/modules/search/components/unknownCity'), { ssr: false });
+const FilterDynamic = dynamic(() => import('@/modules/search/view/filter'), { ssr: false });
+const SuggestionDynamic = dynamic(() => import('@/modules/search/view/suggestion'), { ssr: false });
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+const { publicRuntimeConfig } = getConfig();
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import Loading from '@/common/components/atom/loading';
 import useLockScroll from '@/common/hooks/useLockScroll';
 
-const Search = ({ host, fragmentComponents, isMainSite }: any) => {
+const Search = ({ host, fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
@@ -77,7 +77,6 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   const showPlasmicConsultBanner = useFeatureIsOn('search_plasmic_consult_banner');
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
   const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
-  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
   const { lockScroll, openScroll } = useLockScroll();
 
   const router = useRouter();
@@ -227,12 +226,12 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
       <Fragment name="LocationSelectionScript" />
       <Seo {...seoInfo} canonicalUrl={seoInfo?.canonical_link} jsonlds={[seoInfo?.jsonld]} host={host} />
       <div className={`flex flex-col items-center justify-center bg-white ${isMobile ? 'sticky top-0 z-20' : ''}`}>
-        <Suggestion showPlasmicSuggestion={!customize.partnerKey} key={asPath.toString()} overlay />
+        <SuggestionDynamic showPlasmicSuggestion={!customize.partnerKey} key={asPath.toString()} overlay />
         {showDesktopFiltersRow ? <MobileToolbar /> : <MobileRowFilter />}
       </div>
       <div className="container flex flex-col p-3 md:!pt-5 mx-auto space-y-3 md:p-0">
         <div className={classNames('flex flex-col md:space-y-0 md:flex-row md:space-s-5', { 'space-y-3': !showDesktopSelectedFilters })}>
-          {!isLanding && <Filter isLoading={isLoading} />}
+          {!isLanding && <FilterDynamic isLoading={isLoading} />}
           {fragmentComponents?.showPlasmicResult || showPlasmicResult ? (
             <SearchGlobalContextsProvider>
               <Fragment
@@ -321,10 +320,10 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
           )}
         </div>
         <div>
-          <SearchSeoBox />
+          <SearchSeoBoxDynamic />
         </div>
       </div>
-      <UnknownCity />
+      <UnknownCityDynamic />
       {isPageLoading && (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-50">
           <Loading width={50} />
@@ -468,3 +467,4 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
+
