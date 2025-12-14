@@ -411,7 +411,6 @@ const DoctorProfile = (props: any) => {
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
   const { title, description, slug, expertises, centers = [], information, feedbacks, host } = page.props;
-  console.log(feedbacks);
 
   const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
