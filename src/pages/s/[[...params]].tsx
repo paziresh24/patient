@@ -10,6 +10,7 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
+
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
@@ -162,7 +163,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
             type: 'search_card_view',
             events: result.map(item => ({
               card_data: {
-                action: item.actions?.map?.((item: any) =>
+                action: item.actions?.map?.(item =>
                   JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
                 ),
                 _id: item._id,
