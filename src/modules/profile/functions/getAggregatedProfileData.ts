@@ -429,6 +429,7 @@ export async function getAggregatedProfileData(
         ...feedbacks,
         feedbacks: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
       },
+      dehydratedState: dehydrate(queryClient),
       media,
       symptomes,
       history,
@@ -453,6 +454,7 @@ export async function getAggregatedProfileData(
       hamdastWidgetsData: widgetsData,
       user_id: userData?.user_id ?? null,
       shouldFetchOnClient: !fullProfileData?.id,
+      isFullProfileError: !fullProfileData?.id,
     },
   };
 
