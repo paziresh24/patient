@@ -2957,6 +2957,12 @@
           "name": "AppFrame",
           "displayName": "AppFrame",
           "componentImportPath": "@/modules/hamdast/appFrame"
+        },
+        {
+          "id": "CMDIFfKIRjBF",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
