@@ -208,6 +208,14 @@ export const Suggestion = (props: SuggestionProps) => {
     }
   }, [defaultOpen]);
 
+  // Expose setCity globally for Tag Manager scripts
+  useEffect(() => {
+    (window as any).p24SetCity = setCity;
+    return () => {
+      delete (window as any).p24SetCity;
+    };
+  }, [setCity]);
+
   if (showPlasmicSuggestion) {
     return (
       <div className={classNames('w-full lg:w-[50rem] py-2 px-2 md:px-0', className)}>
@@ -280,3 +288,4 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
+

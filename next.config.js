@@ -83,6 +83,8 @@ const nextConfig = {
     // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
+      usedExports: true,
+      sideEffects: true,
       moduleIds: 'deterministic',
       usedExports: true,
       splitChunks: {
@@ -150,6 +152,27 @@ const nextConfig = {
             name: 'moment',
             chunks: 'async',
             priority: 50,
+          },
+          antd: {
+            test: /[\\/]node_modules[\\/](antd|@ant-design|@plasmicpkgs\/antd5|rc-)/,
+            name: 'antd',
+            priority: 20,
+            chunks: 'all',
+            enforce: true,
+          },
+          swr: {
+            test: /[\\/]node_modules[\\/]swr/,
+            name: 'swr',
+            priority: 20,
+            chunks: 'all',
+            enforce: true,
+          },
+          pdfLibraries: {
+            test: /[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas)/,
+            name: 'pdf-libraries',
+            priority: 20,
+            chunks: 'async',
+            enforce: true,
           },
         },
       },

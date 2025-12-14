@@ -13,26 +13,33 @@ import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalConte
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: dI_F7URPFmvR/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: 6WQFMgFgcDau/codeComponent
 import { EmbedCss } from "@plasmicpkgs/plasmic-embed-css";
-import { HamdastAppsSelectorModalProvider } from "@/modules/hamdast/components/apps-selector-modal"; // plasmic-import: TfCG-WqDXRJw/codeComponent
+import { HamdastAppsSelectorModalProvider } from "@/modules/hamdast/components/apps-selector-modal"; // plasmic-import: 5xb4SWXtsvF4/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
   authGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof AuthGlobalContext>, "children">
   >;
+
   fragmentProps?: Partial<
     Omit<React.ComponentProps<typeof Fragment>, "children">
   >;
+
   growthbookGlobalContextProps?: Partial<
     Omit<React.ComponentProps<typeof GrowthbookGlobalContext>, "children">
   >;
+
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
   embedCssProps?: Partial<
     Omit<React.ComponentProps<typeof EmbedCss>, "children">
   >;
-  hamdastAppsSelectorModalProps?: Partial<
-    Omit<React.ComponentProps<typeof HamdastAppsSelectorModal>, "children">
+
+  hamdastAppsSelectorModalProviderProps?: Partial<
+    Omit<
+      React.ComponentProps<typeof HamdastAppsSelectorModalProvider>,
+      "children"
+    >
   >;
 }
 
@@ -47,7 +54,7 @@ export default function GlobalContextsProvider(
     splunkProps,
     pwaProps,
     embedCssProps,
-    hamdastAppsSelectorModalProps
+    hamdastAppsSelectorModalProviderProps
   } = props;
 
   return (
@@ -116,11 +123,11 @@ export default function GlobalContextsProvider(
                 }
               >
                 <HamdastAppsSelectorModalProvider
-                  {...hamdastAppsSelectorModalProps}
+                  {...hamdastAppsSelectorModalProviderProps}
                   onAppSelect={
-                    hamdastAppsSelectorModalProps &&
-                    "onAppSelect" in hamdastAppsSelectorModalProps
-                      ? hamdastAppsSelectorModalProps.onAppSelect!
+                    hamdastAppsSelectorModalProviderProps &&
+                    "onAppSelect" in hamdastAppsSelectorModalProviderProps
+                      ? hamdastAppsSelectorModalProviderProps.onAppSelect!
                       : undefined
                   }
                 >

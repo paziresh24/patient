@@ -68,6 +68,7 @@
 }
 .button__cz3Yt:global(.__wab_instance) {
   max-width: 100%;
+  display: none;
 }
 .freeBox__nBwVl {
   display: flex;
@@ -111,6 +112,7 @@
   position: relative;
   left: auto;
   top: auto;
+  display: none;
 }
 .freeBox__avNNd {
   display: flex;
