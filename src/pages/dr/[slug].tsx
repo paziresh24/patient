@@ -1,12 +1,9 @@
 import { useIncrementPageView } from '@/common/apis/services/profile/incrementPageView';
 import { usePageView } from '@/common/apis/services/profile/pageView';
-import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Section from '@/common/components/atom/section/section';
 import Text from '@/common/components/atom/text/text';
-import CalenderIcon from '@/common/components/icons/calender';
 import InfoIcon from '@/common/components/icons/info';
-import ReceiptIcon from '@/common/components/icons/receipt';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import useApplication from '@/common/hooks/useApplication';
@@ -17,25 +14,19 @@ import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
-import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { getProfileServerSideProps } from '@/modules/profile/functions/getProfileServerSideProps';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
-import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { Aside } from '@/modules/profile/views/aside';
-import Head from '@/modules/profile/views/head/head';
 import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
-import flatMapDeep from 'lodash/flatMapDeep';
 import config from 'next/config';
 import { ReactElement, useEffect, useState } from 'react';
 import { growthbook } from '../_app';
-import moment from 'jalali-moment';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import { Fragment } from '@/common/fragment';
@@ -56,7 +47,6 @@ const DoctorProfile = (props: any) => {
   const { query, ...router } = useRouter();
 
   const currentSlug = initialSlug ?? query.slug;
-  
 
   useEffect(() => {
     if (growthbook) {
@@ -80,7 +70,6 @@ const DoctorProfile = (props: any) => {
     error,
     refetch,
   } = useProfileClientFetch(currentSlug, !!shouldFetchOnClient || !props?.information);
-  
 
   const { customize } = useCustomize();
   const isApplication = useApplication();
@@ -97,14 +86,12 @@ const DoctorProfile = (props: any) => {
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { openScroll, lockScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
-  const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
 
   const finalProps = (!!shouldFetchOnClient && !props?.information) || (clientData?.props as any)?.information ? clientData?.props : props;
-  
+
   const {
     slug,
-    title,
     breadcrumbs,
     information,
     centers,
@@ -325,7 +312,7 @@ const DoctorProfile = (props: any) => {
                   name="ProfileHead"
                   props={{
                     pageViewCount: profileData.history?.count_of_page_view,
-                    serviceList: flatMapDeep(profileData.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
+                    serviceList: profileData.expertises?.expertises?.flatMap(({ alias_title }: any) => alias_title.split('|')) ?? [],
                     displayName: profileData.information.display_name,
                     title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
                     subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
@@ -485,7 +472,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
                   'worstRating': 0,
                 },
                 'reviewBody': feedback?.description,
-                'datePublished': moment(feedback?.created_at).format('YYYY-MM-DD'),
+                'datePublished': feedback?.created_at?.split(' ')?.[0],
               })) ?? [],
         }),
       },
