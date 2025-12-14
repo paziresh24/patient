@@ -25,6 +25,7 @@ import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFla
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
+import optimizeLogging from '@/common/utils/optimizeLogging';
 import classNames from '@/common/utils/classNames';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import Select from '@/modules/booking/components/select/select';
@@ -312,12 +313,14 @@ export const RateReview = (props: RateReviewProps) => {
 
   const changeFilterSelect = (e: any) => {
     setRateFilter(e);
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'feedback',
-      type: 'selected_filter',
-      event: {
-        filter: e?.value,
-      },
+    optimizeLogging(() => {
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'feedback',
+        type: 'selected_filter',
+        event: {
+          filter: e?.value,
+        },
+      });
     });
     rateFilterType(e?.value);
   };
@@ -419,20 +422,22 @@ export const RateReview = (props: RateReviewProps) => {
         state: true,
       });
     if (text.length < 10) return toast.error('حداقل مقدار مجاز ۱۰ کاراکتر می باشد.');
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'report',
-      type: 'report-group',
-      event: {
-        data: {
-          report: text,
-          url: location.href,
-          current_comment: feedbackDetails.description,
-          comment_id: feedbackDetails.id,
-          terminal_id: getCookie('terminal_id'),
-          phone: userInfo.cell ?? null,
-          is_doctor: feedbackDetails.isDoctor,
+    optimizeLogging(() => {
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'report',
+        type: 'report-group',
+        event: {
+          data: {
+            report: text,
+            url: location.href,
+            current_comment: feedbackDetails.description,
+            comment_id: feedbackDetails.id,
+            terminal_id: getCookie('terminal_id'),
+            phone: userInfo.cell ?? null,
+            is_doctor: feedbackDetails.isDoctor,
+          },
         },
-      },
+      });
     });
 
     await reportFeedback.mutateAsync({

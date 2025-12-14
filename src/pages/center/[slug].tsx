@@ -3,19 +3,22 @@ import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slug
 import { search as searchApi } from '@/common/apis/services/search/search';
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import Text from '@/common/components/atom/text';
+import Skeleton from '@/common/components/atom/skeleton';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { splunkInstance } from '@/common/services/splunk';
+import optimizeLogging from '@/common/utils/optimizeLogging';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import CentersInfo from '@/modules/profile/views/centersInfo';
 import Head from '@/modules/profile/views/head';
-import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
-import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
+import { useUnifiedSearch } from '@/modules/search/hooks/useUnifiedSearch';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
+
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import flatten from 'lodash/flatten';
@@ -30,6 +33,17 @@ import { usePageView } from '@/common/apis/services/profile/pageView';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
+const ListOfDoctors = dynamic(() => import('@/modules/profile/views/listOfDoctors'), {
+  loading: () => (
+    <div className="flex flex-col space-y-2">
+      <Skeleton h="3rem" w="100%" rounded="lg" />
+      <Skeleton h="13rem" w="100%" rounded="lg" />
+      <Skeleton h="13rem" w="100%" rounded="lg" />
+      <Skeleton h="13rem" w="100%" rounded="lg" />
+    </div>
+  ),
+  ssr: false,
+});
 
 const { publicRuntimeConfig } = config();
 
@@ -83,32 +97,18 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     isFetchingNextPage,
     isLoading,
     remove,
-  } = useInfiniteQuery({
-    queryKey: [
-      ServerStateKeysEnum.Search,
-      {
-        route: selectedExpertise ?? '',
-        query: {
-          page: 1,
-          ...filters,
-        },
+  } = useUnifiedSearch(
+    {
+      route: selectedExpertise ?? '',
+      query: {
+        page: 1,
+        ...filters,
       },
-    ],
-    queryFn: ({ pageParam }) =>
-      searchApi({
-        route: selectedExpertise ?? '',
-        query: {
-          page: pageParam?.page ?? 1,
-          ...filters,
-        },
-      }),
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.search?.pagination?.limit * lastPage.search?.pagination?.page <= lastPage.search?.total
-        ? { pages: lastPage }
-        : undefined;
     },
-    refetchOnMount: false,
-  });
+    {
+      refetchOnMount: false,
+    },
+  );
 
   const expertises = useSearchSuggestion(
     {
@@ -152,17 +152,19 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
 
   useEffect(() => {
     if (profileData) {
-      splunkInstance('center-profile').sendEvent({
-        group: 'center_profile',
-        type: 'load_center_profile',
-        event: {
-          data: {
-            id: profileData?.id,
-            server_id: profileData?.server_id,
-            name: profileData.name,
-            terminal_id: getCookie('terminal_id'),
+      optimizeLogging(() => {
+        splunkInstance('center-profile').sendEvent({
+          group: 'center_profile',
+          type: 'load_center_profile',
+          event: {
+            data: {
+              id: profileData?.id,
+              server_id: profileData?.server_id,
+              name: profileData.name,
+              terminal_id: getCookie('terminal_id'),
+            },
           },
-        },
+        });
       });
       addPageView.mutate({
         ownerId: profileData?.id,

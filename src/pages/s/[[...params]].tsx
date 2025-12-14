@@ -37,11 +37,11 @@ import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
-  ssr: false
+  ssr: false,
 });
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'), {
   loading: () => <Skeleton w="100%" h="4rem" />,
-  ssr: false
+  ssr: false,
 });
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
@@ -162,7 +162,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
             type: 'search_card_view',
             events: result.map(item => ({
               card_data: {
-                action: item.actions?.map?.(item =>
+                action: item.actions?.map?.((item: any) =>
                   JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
                 ),
                 _id: item._id,
@@ -215,9 +215,12 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
 
   const memoizedFilters = useMemo(() => filters, [filters.sortBy, filters.freeturn]);
 
-  const handleChangeMemoized = useCallback((key: string, value: any) => {
-    handleChange(key, value);
-  }, [handleChange]);
+  const handleChangeMemoized = useCallback(
+    (key: string, value: any) => {
+      handleChange(key, value);
+    },
+    [handleChange],
+  );
 
   return (
     <>

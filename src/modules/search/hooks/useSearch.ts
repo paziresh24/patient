@@ -1,10 +1,11 @@
 import { useGetBaseInfo } from '@/common/apis/services/config/baseInfo';
-import { useConsultSearch, useSearch as useSearchRequest } from '@/common/apis/services/search/search';
+import { useConsultSearch } from '@/common/apis/services/search/search';
 import { Center } from '@/common/types/doctorParams';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useSearchStore } from '../store/search';
 import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useUnifiedSearch } from './useUnifiedSearch';
 
 type Filter = {
   items: {
@@ -103,7 +104,20 @@ export const useSearch = () => {
   const showSuggestedDoctor = useFeatureValue('fragment::top-suggested-card-feature', { enable: true });
 
   const baseInfo = useGetBaseInfo({ table: ['city', 'province'] });
-  const searchRequest = useSearchRequest({
+
+  const {
+    results: result,
+    responseData: searchData,
+    isLoading: isSearchLoading,
+    isError,
+    isSuccess,
+    refetch,
+    total,
+    pagination,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useUnifiedSearch({
     route: (params as string[])?.join('/') ?? '',
     query: {
       ...query,
@@ -114,12 +128,12 @@ export const useSearch = () => {
   });
 
   const searchConsultEnabled =
-    !!searchRequest?.data &&
-    !searchRequest?.data?.search.result[0]?.actions?.find((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
-    (!searchRequest?.data?.selected_filters?.turn_type || searchRequest?.data?.selected_filters?.turn_type !== 'consult') &&
-    !searchRequest?.data?.selected_filters?.result_type &&
-    (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
-    !searchRequest?.data?.search.is_landing &&
+    !!searchData?.search &&
+    !searchData?.search?.result?.[0]?.actions?.find((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
+    (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
+    !searchData?.selected_filters?.result_type &&
+    (!searchData?.search?.pagination?.page || searchData?.search?.pagination?.page === 1) &&
+    !searchData?.search?.is_landing &&
     (params?.length !== 1 || Object.keys(query).length > 0) &&
     showSuggestedDoctor?.enable;
 
@@ -155,32 +169,14 @@ export const useSearch = () => {
     seo_info: SeoInfo | undefined;
     footers: Footers | undefined;
   } = useMemo(() => {
-    return searchRequest.data ?? {};
-  }, [searchRequest.data]);
+    return searchData ?? {};
+  }, [searchData]);
 
-  const [result, setResult] = useState(search?.result ?? []);
-  const [isLoading, setIsLoading] = useState(searchRequest.isLoading || searchConsultRequest.isLoading);
-
-  useEffect(() => {
-    setIsLoading(true);
-    if (!query.page) {
-      setResult([]);
-    }
-  }, [asPath]);
+  const [isLoading, setIsLoading] = useState(isSearchLoading || searchConsultRequest.isLoading);
 
   useEffect(() => {
-    if (searchRequest.isSuccess) {
-      setIsLoading(false);
-      if (search?.result.length === 0) {
-        return setResult([]);
-      }
-      if (search?.pagination?.page > 1) {
-        setResult(prev => [...prev, ...search.result]);
-      } else {
-        setResult([...search.result]);
-      }
-    }
-  }, [search]);
+    setIsLoading(isSearchLoading || searchConsultRequest.isLoading);
+  }, [isSearchLoading, searchConsultRequest.isLoading]);
 
   const isLanding = useMemo(
     () => (!isLoading ? search.is_landing : params?.length === 1 && query.text === undefined),
@@ -208,11 +204,11 @@ export const useSearch = () => {
     isLanding,
     isLoading,
     result,
-    isSuccess: searchRequest.isSuccess,
-    isError: searchRequest.isError,
-    refetch: searchRequest.refetch,
-    total: search?.total,
-    pagination: search?.pagination,
+    isSuccess,
+    isError,
+    refetch,
+    total,
+    pagination,
     filters,
     categories,
     selectedFilters,
@@ -224,8 +220,11 @@ export const useSearch = () => {
     searchCity,
     isConsult,
     search,
-    responseData: searchRequest?.data ?? {},
+    responseData: searchData ?? {},
     searchConsultResponseData:
       searchConsultEnabled && !searchConsultRequest?.data?.search?.is_landing ? searchConsultRequest?.data ?? {} : {},
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   };
 };
