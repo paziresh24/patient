@@ -16,7 +16,6 @@ import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Head from 'next/head';
 import { NextRouter, useRouter } from 'next/router';
 import NextNProgress from 'nextjs-progressbar';
-import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
@@ -24,10 +23,7 @@ import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
-
-const GoogleTagManager = dynamic(() => import('@next/third-parties/google').then(mod => ({ default: mod.GoogleTagManager })), {
-  ssr: false,
-}) as React.ComponentType<{ gtmId: string }>;
+import { GoogleTagManager } from '@next/third-parties/google';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -120,7 +116,9 @@ function MyApp(props: AppProps) {
                 />
               </Head>
               <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-              {typeof window !== 'undefined' && <GoogleTagManager gtmId="GTM-P5RPLDP" />}
+              {typeof window !== 'undefined' && (
+                <GoogleTagManager gtmId="GTM-P5RPLDP" />
+              )}
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
