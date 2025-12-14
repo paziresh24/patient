@@ -32,7 +32,6 @@ const nextConfig = {
 
     config.optimization = {
       ...config.optimization,
-      usedExports: true,
       sideEffects: true,
       moduleIds: 'deterministic',
       splitChunks: {
