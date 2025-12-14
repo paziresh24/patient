@@ -209,24 +209,6 @@ function PlasmicProfileAbout__RenderFunc(props: {
               slot2={
                 <div className={classNames(projectcss.all, sty.freeBox__gbXzy)}>
                   <div
-                    {...{
-                      "Dynamic value": (() => {
-                        try {
-                          return $props.information?.biography?.replace(
-                            /<a\s+[^>]*>(.*?)<\/a>/gi,
-                            "$1"
-                          );
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()
-                    }}
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
@@ -239,7 +221,10 @@ function PlasmicProfileAbout__RenderFunc(props: {
                       dangerouslySetInnerHTML={{
                         __html: (() => {
                           try {
-                            return $props.information.biography;
+                            return $props.information?.biography?.replace(
+                              /<a\s+[^>]*>(.*?)<\/a>/gi,
+                              "$1"
+                            );
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
