@@ -365,21 +365,24 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                     sty.text__zjhiU
                   )}
                 >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $props.description;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non est felis. Curabitur nibh velit, vehicula quis orci at, scelerisque malesuada sem. Ut tincidunt nisl nunc. Fusce in mollis enim, sodales porta eros. Sed quis pharetra tortor. Donec pulvinar bibendum ligula ultricies rutrum. Morbi ultricies ipsum vel augue venenatis interdum. Sed sodales cursus lectus, eget congue purus facilisis id. Suspendisse nec vestibulum justo, quis tincidunt justo. Morbi a nibh pharetra, vestibulum orci nec, varius magna. Duis blandit eros urna, sed iaculis tortor consequat non. Donec finibus, diam faucibus sodales condimentum, leo arcu egestas mauris, vitae sollicitudin leo nulla ut nisi.\nNam metus eros, sagittis sed rhoncus vitae, eleifend nec augue. Proin vulputate nulla nec leo ullamcorper scelerisque. Duis id massa sem. Proin hendrerit risus vitae tincidunt viverra. Donec augue risus, condimentum in metus eleifend, luctus hendrerit lacus. Quisque congue nibh a turpis tempor sodales. Aenean pretium non libero non pharetra. Nulla gravida odio metus, non accumsan dolor cursus et. Aenean consequat augue quis felis mattis consequat. Phasellus dapibus mauris in tincidunt tristique. In nec dui vitae sem facilisis egestas. Proin sollicitudin nec enim a mollis. Aenean a odio quis ipsum ultrices condimentum at id massa. Vestibulum eu magna enim. Etiam a mauris rutrum leo posuere consectetur.";
+                  <div
+                    className={projectcss.__wab_expr_html_text}
+                    dangerouslySetInnerHTML={{
+                      __html: (() => {
+                        try {
+                          return $props.description;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non est felis. Curabitur nibh velit, vehicula quis orci at, scelerisque malesuada sem. Ut tincidunt nisl nunc. Fusce in mollis enim, sodales porta eros. Sed quis pharetra tortor. Donec pulvinar bibendum ligula ultricies rutrum. Morbi ultricies ipsum vel augue venenatis interdum. Sed sodales cursus lectus, eget congue purus facilisis id. Suspendisse nec vestibulum justo, quis tincidunt justo. Morbi a nibh pharetra, vestibulum orci nec, varius magna. Duis blandit eros urna, sed iaculis tortor consequat non. Donec finibus, diam faucibus sodales condimentum, leo arcu egestas mauris, vitae sollicitudin leo nulla ut nisi.\nNam metus eros, sagittis sed rhoncus vitae, eleifend nec augue. Proin vulputate nulla nec leo ullamcorper scelerisque. Duis id massa sem. Proin hendrerit risus vitae tincidunt viverra. Donec augue risus, condimentum in metus eleifend, luctus hendrerit lacus. Quisque congue nibh a turpis tempor sodales. Aenean pretium non libero non pharetra. Nulla gravida odio metus, non accumsan dolor cursus et. Aenean consequat augue quis felis mattis consequat. Phasellus dapibus mauris in tincidunt tristique. In nec dui vitae sem facilisis egestas. Proin sollicitudin nec enim a mollis. Aenean a odio quis ipsum ultrices condimentum at id massa. Vestibulum eu magna enim. Etiam a mauris rutrum leo posuere consectetur.";
+                          }
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()}
-                  </React.Fragment>
+                      })()
+                    }}
+                  />
                 </div>
               </div>
             </div>
