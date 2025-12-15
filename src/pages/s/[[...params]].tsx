@@ -9,7 +9,6 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
-import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
@@ -31,6 +30,10 @@ import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
+import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
+import Loading from '@/common/components/atom/loading';
+import useLockScroll from '@/common/hooks/useLockScroll';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
   ssr: false,
@@ -43,16 +46,21 @@ const SearchSeoBoxDynamic = dynamic(() => import('@/modules/search/view/seoBox')
 const UnknownCityDynamic = dynamic(() => import('@/modules/search/components/unknownCity'), { ssr: false });
 const FilterDynamic = dynamic(() => import('@/modules/search/view/filter'), { ssr: false });
 const SuggestionDynamic = dynamic(() => import('@/modules/search/view/suggestion'), { ssr: false });
-import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 const { publicRuntimeConfig } = getConfig();
-import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
-import Loading from '@/common/components/atom/loading';
-import useLockScroll from '@/common/hooks/useLockScroll';
+const sendSplunkEvent = async (payload: any) => {
+  const { splunkInstance } = await import('@/common/services/splunk');
+  splunkInstance('search').sendEvent(payload);
+};
+const sendSplunkBatchEvent = async (payload: any) => {
+  const { splunkInstance } = await import('@/common/services/splunk');
+  splunkInstance('search').sendBatchEvent(payload);
+};
 
 const Search = ({ host, fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
+  const growthbookReady = growthbook?.ready;
   const shouldUseSearchViewEventRoutesList = useFeatureValue<{ routes: Array<string | null> }>('search:use-front-end-search-view-event', {
     routes: [],
   });
@@ -60,6 +68,7 @@ const Search = ({ host, fragmentComponents }: any) => {
   const {
     asPath,
     query: { params, lat, lon, ...queries },
+    pathname,
   } = useRouter();
 
   const { handleChange, filters } = useFilterChange();
@@ -78,11 +87,12 @@ const Search = ({ host, fragmentComponents }: any) => {
   const showDesktopSelectedFilters = useFeatureIsOn('search::desktop-selected-filters');
   const showPlasmicResult = useFeatureIsOn('search_plasmic_result');
   const { lockScroll, openScroll } = useLockScroll();
-
   const router = useRouter();
   const [isPageLoading, setIsPageLoading] = useState(false);
 
   useEffect(() => {
+    if (!pathname.startsWith('/s')) return;
+
     const handleRouteChangeStart = (url: string) => {
       if (url.startsWith('/dr') || url.startsWith('/center')) {
         setIsPageLoading(true);
@@ -104,7 +114,7 @@ const Search = ({ host, fragmentComponents }: any) => {
       router.events.off('routeChangeComplete', handleRouteChangeComplete);
       router.events.off('routeChangeError', handleRouteChangeComplete);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
@@ -122,85 +132,83 @@ const Search = ({ host, fragmentComponents }: any) => {
   }, [params, city, isLoading]);
 
   useEffect(() => {
-    if (growthbook.ready && !userPending && !isLoading) {
-      // Check if this is a listing page (e.g., /s/city/doctor/)
-      const isListingPage = (params as string[])?.length === 2 && (params as string[])?.[1] === 'doctor';
+    if (!growthbookReady || userPending || isLoading) return;
 
-      if (
-        shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
-        shouldUseSearchViewEventRoutesList.routes?.includes('*')
-      ) {
-        if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
-          splunkInstance('search').sendEvent({
-            group: 'search_metrics',
-            type: 'search_view',
-            event: {
-              filters: selectedFilters,
-              result_count: result.length,
-              location: city.en_slug,
-              ...(geoLocation ?? null),
-              city_id: city.id,
-              query_id: search.query_id,
-              user_id: userInfo?.id ?? null,
-              user_type: userInfo.provider?.job_title ?? 'normal-user',
-              ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
-              url: {
-                href: window.location.href,
-                qurey: { ...queries },
-                pathname: window.location.pathname,
-                host: window.location.host,
-              },
+    const isListingPage = (params as string[])?.length === 2 && (params as string[])?.[1] === 'doctor';
+
+    if (
+      shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
+      shouldUseSearchViewEventRoutesList.routes?.includes('*')
+    ) {
+      if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
+        sendSplunkEvent({
+          group: 'search_metrics',
+          type: 'search_view',
+          event: {
+            filters: selectedFilters,
+            result_count: result.length,
+            location: city.en_slug,
+            ...(geoLocation ?? null),
+            city_id: city.id,
+            query_id: search.query_id,
+            user_id: userInfo?.id ?? null,
+            user_type: userInfo.provider?.job_title ?? 'normal-user',
+            ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
+            url: {
+              href: window.location.href,
+              qurey: { ...queries },
+              pathname: window.location.pathname,
+              host: window.location.host,
             },
-          });
-        }
-
-        // Only send search_card_view event if it's NOT a listing page
-        if (!isListingPage) {
-          splunkInstance('search').sendBatchEvent({
-            group: 'search_metrics',
-            type: 'search_card_view',
-            events: result.map(item => ({
-              card_data: {
-                action: item.actions?.map?.((item: any) =>
-                  JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
-                ),
-                _id: item._id,
-                position: item.position,
-                server_id: item.server_id,
-                title: item.title,
-                type: item.type,
-                url: item.url,
-                rates_count: item.rates_count,
-                satisfaction: item.satisfaction,
-              },
-              filters: selectedFilters,
-              result_count: result.length,
-              location: city.en_slug,
-              ...(geoLocation ?? null),
-              city_id: city.id,
-              query_id: search.query_id,
-              user_id: userInfo?.id ?? null,
-              user_type: userInfo.provider?.job_title ?? 'normal-user',
-              url: {
-                href: window.location.href,
-                qurey: { ...queries },
-                pathname: window.location.pathname,
-                host: window.location.host,
-              },
-            })),
-          });
-        }
-
-        return;
+          },
+        });
       }
-      stat.mutate({
-        route: asPath,
-        filters: selectedFilters,
-        result: result,
-        ...(!isLanding && { centerTypeFilterPresence: 1 }),
-      });
+
+      if (!isListingPage) {
+        sendSplunkBatchEvent({
+          group: 'search_metrics',
+          type: 'search_card_view',
+          events: result.map(item => ({
+            card_data: {
+              action: item.actions?.map?.((item: any) =>
+                JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
+              ),
+              _id: item._id,
+              position: item.position,
+              server_id: item.server_id,
+              title: item.title,
+              type: item.type,
+              url: item.url,
+              rates_count: item.rates_count,
+              satisfaction: item.satisfaction,
+            },
+            filters: selectedFilters,
+            result_count: result.length,
+            location: city.en_slug,
+            ...(geoLocation ?? null),
+            city_id: city.id,
+            query_id: search.query_id,
+            user_id: userInfo?.id ?? null,
+            user_type: userInfo.provider?.job_title ?? 'normal-user',
+            url: {
+              href: window.location.href,
+              qurey: { ...queries },
+              pathname: window.location.pathname,
+              host: window.location.host,
+            },
+          })),
+        });
+      }
+
+      return;
     }
-  }, [result, userPending, isLoading, growthbook.ready]);
+    stat.mutate({
+      route: asPath,
+      filters: selectedFilters,
+      result,
+      ...(!isLanding && { centerTypeFilterPresence: 1 }),
+    });
+  }, [result, userPending, isLoading, growthbookReady]);
 
   const handleNextPage = useCallback(() => {
     const currentPage = (queries?.page as string) ? (queries?.page as string) : 1;
@@ -213,13 +221,6 @@ const Search = ({ host, fragmentComponents }: any) => {
   }, [queries?.page, changeRoute]);
 
   const memoizedFilters = useMemo(() => filters, [filters.sortBy, filters.freeturn]);
-
-  const handleChangeMemoized = useCallback(
-    (key: string, value: any) => {
-      handleChange(key, value);
-    },
-    [handleChange],
-  );
 
   return (
     <>
@@ -237,34 +238,21 @@ const Search = ({ host, fragmentComponents }: any) => {
               <Fragment
                 name="ResultView"
                 props={{
-                  isLanding: isLanding,
-                  //banner
+                  isLanding,
                   categoryValue: selectedCategory?.value,
                   categoryTitle: selectedCategory?.title,
                   isHideConsultBanner: isConsult,
-                  // sort
-                  orderItems: orderItems,
-                  selectedSort: memoizedFilters['sortBy'],
-                  selectedTurn: memoizedFilters['freeturn'],
+                  orderItems,
+                  selectedSort: memoizedFilters.sortBy,
+                  selectedTurn: memoizedFilters.freeturn,
                   isLoadingResult: isLoading,
                   onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
                   onChangeSort: (value: any) => handleChange('sortBy', value),
                   totalResult2: addCommas(total),
-                  // result
-                  searchResultResponse: {
-                    ...responseData,
-                    search: {
-                      ...search,
-                      result,
-                    },
-                  },
+                  searchResultResponse: { ...responseData, search: { ...search, result } },
                   nextPageTrigger: handleNextPage,
                   imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
-                  location: {
-                    city_name: city?.en_slug,
-                    city_id: city?.id,
-                    ...geoLocation,
-                  },
+                  location: { city_name: city?.en_slug, city_id: city?.id, ...geoLocation },
                   paginationLoadingStatus: isLoading,
                 }}
               />
@@ -272,16 +260,16 @@ const Search = ({ host, fragmentComponents }: any) => {
           ) : (
             <div className="flex flex-col w-full">
               {!isLanding && !isMobile && (
-                <div className="items-center justify-between hidden mb-3 md:flex">
+                <div className="hidden md:flex items-center justify-between mb-3">
                   {fragmentComponents?.showPlasmicSort || showPlasmicSort ? (
                     <Fragment
                       name="Sort"
                       props={{
-                        orderItems: orderItems,
-                        selectedSort: memoizedFilters['sortBy'],
-                        selectedTurn: memoizedFilters['freeturn'],
+                        orderItems,
+                        selectedSort: memoizedFilters.sortBy,
+                        selectedTurn: memoizedFilters.freeturn,
                         total: addCommas(total),
-                        isLoading: isLoading,
+                        isLoading,
                         onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
                         onChangeSort: (value: any) => handleChange('sortBy', value),
                       }}
@@ -353,22 +341,20 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         },
       };
     }
-    let showPlasmicSuggestion: boolean = false;
-    let showPlasmicResult: boolean = false;
-    let showPlasmicSort: boolean = false;
-    let showPlasmicConsultBanner: boolean = false;
+    let showPlasmicSuggestion = false;
+    let showPlasmicResult = false;
+    let showPlasmicSort = false;
+    let showPlasmicConsultBanner = false;
     let showSuggestedDoctor: any = {};
 
     const host = context.req.headers.host;
-    const path = context.resolvedUrl;
-    const url = `https://${host}${path}`;
+    const url = `https://${host}${context.resolvedUrl}`;
     const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
     try {
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
       growthbook.setAttributes({ url });
       await growthbook.loadFeatures({ timeout: 500 });
-      // Plasmic
       showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
       showPlasmicResult = growthbook.isOn('search_plasmic_result');
       showPlasmicSort = growthbook.isOn('search_plasmic_sort');
@@ -380,7 +366,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 
     try {
       const queryClient = new QueryClient();
-
       const university = themeConfing?.partnerKey;
 
       const searchData = await queryClient.fetchQuery(
@@ -454,7 +439,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         },
       };
     } catch (error) {
-      console.dir(error);
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 404)
           return {
@@ -467,4 +451,3 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
-

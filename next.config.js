@@ -47,7 +47,6 @@ const nextConfig = {
   },
   transpilePackages: [
     '@plasmicpkgs/antd5',
-    '@plasmicpkgs/plasmic-rich-components',
     'antd',
     '@ant-design/icons',
     '@ant-design/pro-components',
@@ -83,13 +82,11 @@ const nextConfig = {
     // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
-      usedExports: true,
       sideEffects: true,
       moduleIds: 'deterministic',
-      usedExports: true,
       splitChunks: {
         chunks: 'all',
-        maxInitialRequests: 25,
+        maxInitialRequests: 10,
         minSize: 20000,
         cacheGroups: {
           default: false,
