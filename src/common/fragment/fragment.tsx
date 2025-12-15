@@ -1,9 +1,7 @@
 import { growthbook } from 'src/pages/_app';
 import ErrorBoundary from '../components/layouts/errorBoundary';
-import { Components } from './components';
+import { getComponentLoader } from './components';
 import { getFeatures } from './features';
-import pick from 'lodash/pick';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 interface FragmentProps {
   name: string;
@@ -12,23 +10,25 @@ interface FragmentProps {
 }
 
 export const Fragment = ({ name, variants, props }: FragmentProps) => {
-  const user_id = useUserInfoStore(state => state.info.id);
-
   if (!name) return null;
+
   const features = getFeatures({ provider: growthbook });
 
-  const { Component, id, projectId, propsAllowed } = (Components as any)?.[name] ?? {
-    Component: () => <p>Error</p>,
-    id: '',
-    propsAllowed: [],
-  };
+  const loader = getComponentLoader(name);
+  if (!loader) return null;
+
+  const { Component, id, projectId } = loader();
+
+  const mergedProps = { ...props, ...features };
+
   return (
     <ErrorBoundary>
       <Component
         data-fragment-component-id={id}
         data-fragment-project-id={projectId}
         data-fragment-component={name}
-        {...{ ...pick({ ...props, ...features }, propsAllowed ?? []), ...variants }}
+        {...mergedProps}
+        {...variants}
       />
     </ErrorBoundary>
   );
