@@ -88,14 +88,13 @@ const Receipt = () => {
   useEffect(() => {
     if (action && getReceiptDetails?.data) {
       if (action === 'open_channel') {
-        window.open(
+        window.location.replace(
           decodeURIComponent(
             getReceiptDetails?.data?.data?.data?.selected_online_visit_channel?.channel_link.replace(
               'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
               '',
             ),
           ),
-          '_blank',
         );
       }
     }
