@@ -5,14 +5,18 @@ import WarningIcon from '@/common/components/icons/warning';
 import { CENTERS } from '@/common/types/centers';
 import clsx from 'clsx';
 import isEmpty from 'lodash/isEmpty';
+import { useState, useEffect } from 'react';
 import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useGetBalance } from '@/common/apis/services/wallet/getBalance';
+import { useGetPaymentMethods } from '@/common/apis/services/factor/paymentMethods';
+import { useCheckBalance } from '@/common/apis/services/wallet/checkBalance';
 import { growthbook } from 'src/pages/_app';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useModal from '@/common/hooks/useModal';
 import Modal from '@/common/components/atom/modal';
+import PaymentMethods from '../../components/factor/paymentMethods';
 interface FactorProps {
   bookId: string;
   centerId: string;
@@ -35,6 +39,7 @@ interface FactorProps {
 }
 export const Factor = (props: FactorProps) => {
   const {
+    bookId,
     centerId,
     price,
     totalPrice,
@@ -53,10 +58,45 @@ export const Factor = (props: FactorProps) => {
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
   const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
+  const useKatibePaymentMethods = useFeatureIsOn('katibe-paymentmethods');
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
+
+  const timezone =
+    typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone === 'string'
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : undefined;
+
   const { data: balance, isLoading: balanceLoading } = useGetBalance({
     enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor) && isLogin,
   });
+
+  const { data: paymentMethodsData, isLoading: paymentMethodsLoading } = useGetPaymentMethods(
+    {
+      amount: totalPrice,
+      timezone,
+      countryCode: userInfo?.country_code_id,
+    },
+    {
+      enabled: useKatibePaymentMethods && !!totalPrice && !loading,
+    },
+  );
+
+  const paymentMethods = paymentMethodsData?.data?.payment_methods || [];
+  const additionalContent = paymentMethodsData?.data?.additional_content || '';
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
+
+  const handlePaymentMethodSelection = (paymentMethod: string) => {
+    setSelectedPaymentMethod(paymentMethod);
+  };
+
+  // Set default selected payment method when payment methods are loaded
+  useEffect(() => {
+    if (paymentMethods.length > 0 && !selectedPaymentMethod) {
+      setSelectedPaymentMethod(paymentMethods[0].payment_method);
+    }
+  }, [paymentMethods, selectedPaymentMethod]);
 
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
@@ -110,6 +150,11 @@ export const Factor = (props: FactorProps) => {
           </Chips>
         )}
       </div>
+      <PaymentMethods
+        paymentMethods={paymentMethods}
+        additionalContent={additionalContent}
+        onSelectionChange={handlePaymentMethodSelection}
+      />
       {isShowDiscountInput && (
         <Discount
           loading={discountLoading}
