@@ -248,7 +248,7 @@ const Search = ({ host, fragmentComponents }: any) => {
                   isLoadingResult: isLoading,
                   onChangeFreeTurn: (value: any) => handleChange('freeturn', value),
                   onChangeSort: (value: any) => handleChange('sortBy', value),
-                  totalResult2: addCommas(total),
+                  totalResult: addCommas(total),
                   searchResultResponse: { ...responseData, search: { ...search, result } },
                   nextPageTrigger: handleNextPage,
                   imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
