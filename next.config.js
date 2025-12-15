@@ -47,7 +47,6 @@ const nextConfig = {
   },
   transpilePackages: [
     '@plasmicpkgs/antd5',
-    '@plasmicpkgs/plasmic-rich-components',
     'antd',
     '@ant-design/icons',
     '@ant-design/pro-components',
@@ -83,13 +82,11 @@ const nextConfig = {
     // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
-      usedExports: true,
       sideEffects: true,
       moduleIds: 'deterministic',
-      usedExports: true,
       splitChunks: {
         chunks: 'all',
-        maxInitialRequests: 25,
+        maxInitialRequests: 10,
         minSize: 20000,
         cacheGroups: {
           default: false,
@@ -124,14 +121,14 @@ const nextConfig = {
           plasmicAntd: {
             test: /[\\/]node_modules[\\/]@plasmicpkgs[\\/]antd5/,
             name: 'plasmic-antd',
-            chunks: 'all',
+            chunks: 'async',
             priority: 30,
             reuseExistingChunk: true,
           },
           plasmic: {
             test: /[\\/]node_modules[\\/](@plasmicapp|@plasmicpkgs)[\\/](?!antd5)/,
             name: 'plasmic',
-            chunks: 'all',
+            chunks: 'async',
             priority: 25,
             reuseExistingChunk: true,
           },
@@ -273,3 +270,4 @@ const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig)
 
 // Sentry should be the last thing to export to catch everything right
 module.exports = moduleExports;
+
