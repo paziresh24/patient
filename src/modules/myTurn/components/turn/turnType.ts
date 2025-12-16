@@ -52,6 +52,7 @@ export interface TurnProps {
   prescription?: {
     pdf?: string;
   };
+  isFromDashboard?: boolean;
 }
 
 export type OnlineVisitChannel = {
