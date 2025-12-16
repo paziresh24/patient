@@ -1,6 +1,7 @@
 import PrinterIcon from '@/common/components/icons/printer';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
+import { splunkInstance } from '@/common/services/splunk';
 import Button from '@/components/atom/button';
 import DropDown from '@/components/atom/dropDown';
 import Modal from '@/components/atom/modal';
@@ -35,10 +36,11 @@ interface TurnHeaderProps {
   paymentStatus: PaymentStatus;
   centerType: CenterType;
   isDelete: boolean;
+  isFromDashboard?: boolean;
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
-  const { id, isDelete, doctorInfo, centerId, centerType, trackingCode, nationalCode, status, paymentStatus } = props;
+  const { id, isDelete, doctorInfo, centerId, centerType, trackingCode, nationalCode, status, paymentStatus, isFromDashboard } = props;
   const router = useRouter();
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
 
@@ -90,6 +92,28 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     });
   };
 
+  const handleProfileClick = () => {
+    if (isFromDashboard) {
+      // Send click event to Splunk for dashboard appointments
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'dashboard_appointments_profile_click',
+        type: 'profile_click',
+        event: {
+          slug: doctorInfo.slug ?? null,
+          doctor_name: `${doctorInfo.firstName} ${doctorInfo.lastName}`,
+          doctor_url: `/dr/${doctorInfo.slug}`,
+          expertise: doctorInfo.expertise ?? null,
+          book_id: id,
+          center_id: centerId,
+          tracking_code: trackingCode,
+          referrer: 'dashboard/appointments',
+          current_url: typeof window !== 'undefined' ? window.location.href : null,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
+  };
+
   const menuItems = [
     {
       id: 0,
@@ -116,7 +140,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
 
   return (
     <div className="relative flex flex-col items-end">
-      <Link href={`/dr/${doctorInfo.slug}`} className="self-start w-9/12">
+      <Link href={`/dr/${doctorInfo.slug}`} className="self-start w-9/12" onClick={handleProfileClick}>
         <DoctorInfo
           avatar={doctorInfo.avatar}
           firstName={doctorInfo.firstName}

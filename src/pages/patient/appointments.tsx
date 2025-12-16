@@ -47,6 +47,7 @@ export const Appointments = () => {
   const currentTime = serverTime?.data?.data?.data.timestamp ?? Date.now();
   const user = useUserInfoStore(state => state.info);
   const sendEventForLocalTypeBookCenterList = useFeatureValue('appointments.remove-sync|center-list', { centers: [''] });
+  const isFromDashboard = router.asPath?.startsWith('/dashboard/appointments') ?? false;
 
   const getBooks = useGetBooks(
     {
@@ -225,6 +226,7 @@ export const Appointments = () => {
               prescription={{
                 ...turn.prescription,
               }}
+              isFromDashboard={isFromDashboard}
             />
           ))}
         {!isLoading && getBooks.data?.status !== 204 && (
