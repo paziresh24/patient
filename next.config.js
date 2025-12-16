@@ -83,10 +83,7 @@ const nextConfig = {
     // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
-      usedExports: true,
-      sideEffects: true,
       moduleIds: 'deterministic',
-      usedExports: true,
       splitChunks: {
         chunks: 'all',
         maxInitialRequests: 25,

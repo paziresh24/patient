@@ -7,15 +7,20 @@ import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import TrashIcon from '@/common/components/icons/trash';
 import { DoctorParams } from '@/common/types/doctorParams';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { splunkInstance } from '@/common/services/splunk';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import getConfig from 'next/config';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 const { publicRuntimeConfig } = getConfig();
 
 export const BookmarksList = () => {
   const { data, mutate, isSuccess, isLoading } = useGetBookMarksList();
   const deleteBookmark = useDeleteBookmark();
+  const router = useRouter();
+  const isFromDashboard = router.asPath?.startsWith('/dashboard/bookmarks') ?? false;
+
   useEffect(() => {
     mutate();
   }, []);
@@ -27,6 +32,31 @@ export const BookmarksList = () => {
     mutate();
   };
 
+  const handleProfileClick = (item: DoctorParams) => {
+    if (isFromDashboard) {
+      // Send click event to Splunk for dashboard bookmarks
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'dashboard_bookmarks_profile_click',
+        type: 'profile_click',
+        event: {
+          slug: item.slug ?? null,
+          doctor_id: item.id ?? null,
+          doctor_name: `${item.name} ${item.family}`,
+          doctor_url: item.doctor_url ?? null,
+          server_id: item.server_id ?? null,
+          expertise: getDisplayDoctorExpertise({
+            aliasTitle: item.expertises?.[0]?.alias_title ?? '',
+            degree: item.expertises?.[0]?.degree?.name ?? '',
+            expertise: item.expertises?.[0]?.expertise?.name ?? '',
+          }),
+          referrer: 'dashboard/bookmarks',
+          current_url: typeof window !== 'undefined' ? window.location.href : null,
+          timestamp: new Date().toISOString(),
+        },
+      });
+    }
+  };
+
   return (
     <div className="grid w-full gap-3 md:grid-cols-2 gap-y-4">
       {isLoading && <BookmarkListLoading />}
@@ -34,7 +64,7 @@ export const BookmarksList = () => {
       {isSuccess &&
         data?.data?.result?.map((item: DoctorParams) => (
           <div key={item.id} className="relative flex flex-col items-end justify-between px-2 pb-4 border-b border-slate-100 space-s-1">
-            <Link href={item.doctor_url ?? '#'} className="w-full">
+            <Link href={item.doctor_url ?? '#'} className="w-full" onClick={() => handleProfileClick(item)}>
               <DoctorInfo
                 firstName={item.name}
                 lastName={item.family}
