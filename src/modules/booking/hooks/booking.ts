@@ -14,6 +14,7 @@ export const useBooking = () => {
       center,
       timeId,
       selectedSymptoms = [],
+      paymentMethod,
     }: {
       user: any;
       center: {
@@ -23,6 +24,7 @@ export const useBooking = () => {
       };
       timeId: string;
       selectedSymptoms?: string[];
+      paymentMethod?: string;
     },
     {
       onSuccess,
@@ -51,6 +53,7 @@ export const useBooking = () => {
       ...(user.messengerType && { online_channel: user.messengerType }),
       ...(user.national_code && { national_code: user.national_code }),
       ...(selectedSymptoms.length && { symptomes: selectedSymptoms.toString() }),
+      ...(paymentMethod && { payment_method: paymentMethod }),
       ...(!user.cell && { cell_country_prefix: 1 }),
     };
 
@@ -71,6 +74,7 @@ export const useBooking = () => {
       'online_channel',
       'national_code',
       'symptomes',
+      'payment_method',
       'cell_country_prefix',
     ];
     const excludedUserKeys = ['name', 'family', 'id', 'messengerType', 'is_doctor', 'country_code_id', 'username', 'provider', 'image'];

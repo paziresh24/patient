@@ -18,8 +18,10 @@ interface Params {
 }
 
 type Response = {
-  payment_methods: PaymentMethod[];
-  additional_content?: string;
+  data: {
+    payment_methods: PaymentMethod[];
+    additional_content?: string;
+  };
 };
 
 export const getPaymentMethods = async (params: Params) => {

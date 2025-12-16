@@ -1,17 +1,27 @@
 import Accordion from '@/common/components/atom/accordion/accordion';
 import Text from '@/common/components/atom/text';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface PaymentMethodsProps {
   paymentMethods: any[];
   additionalContent: string;
+  isOpen?: boolean;
+  selectedPaymentMethod?: string;
   onSelectionChange?: (paymentMethod: string) => void;
 }
 
 export const PaymentMethods = (props: PaymentMethodsProps) => {
-  const { paymentMethods, additionalContent, onSelectionChange } = props;
-  const [selectedMethod, setSelectedMethod] = useState(paymentMethods?.[0]?.payment_method);
+  const { paymentMethods, additionalContent, isOpen = false, selectedPaymentMethod, onSelectionChange } = props;
+  const [selectedMethod, setSelectedMethod] = useState(selectedPaymentMethod || paymentMethods?.[0]?.payment_method);
+
+  useEffect(() => {
+    if (selectedPaymentMethod) {
+      setSelectedMethod(selectedPaymentMethod);
+    } else if (paymentMethods?.[0]?.payment_method && !selectedMethod) {
+      setSelectedMethod(paymentMethods[0].payment_method);
+    }
+  }, [selectedPaymentMethod, paymentMethods, selectedMethod]);
 
   const handleSelect = (method: string) => {
     setSelectedMethod(method);
@@ -19,7 +29,7 @@ export const PaymentMethods = (props: PaymentMethodsProps) => {
   };
 
   return (
-    <Accordion title="روش پرداخت" className="px-1 !bg-white rounded-none md:rounded-lg shadow-card">
+    <Accordion title="روش پرداخت" isOpen={isOpen} className="px-1 !bg-white rounded-none md:rounded-lg shadow-card">
       <div className="flex flex-col space-y-3">
         {paymentMethods?.map(item => (
           <div
@@ -41,7 +51,7 @@ export const PaymentMethods = (props: PaymentMethodsProps) => {
                   <Text fontWeight="bold" fontSize="sm" className="truncate text-slate-900">
                     {item.title}
                   </Text>
-                  {item.html_content && (
+                  {item.html_content && selectedMethod === item.payment_method && (
                     <div className="text-xs text-slate-500 truncate [&>p]:m-0" dangerouslySetInnerHTML={{ __html: item.html_content }} />
                   )}
                 </div>

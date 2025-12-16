@@ -11,8 +11,6 @@ import Invoice from '../../components/factor/invoice';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useGetBalance } from '@/common/apis/services/wallet/getBalance';
 import { useGetPaymentMethods } from '@/common/apis/services/factor/paymentMethods';
-import { useCheckBalance } from '@/common/apis/services/wallet/checkBalance';
-import { growthbook } from 'src/pages/_app';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useModal from '@/common/hooks/useModal';
 import Modal from '@/common/components/atom/modal';
@@ -35,7 +33,9 @@ interface FactorProps {
   rules?: string[];
   loading: boolean;
   onSubmitDiscount: (code: string) => void;
-  onPayment: ({ discountToken, bookId }: { discountToken?: string; bookId: string }) => void;
+  onPayment: ({ discountToken, bookId, paymentMethod }: { discountToken?: string; bookId: string; paymentMethod?: string }) => void;
+  selectedPaymentMethod?: string;
+  onSelectionChange?: (paymentMethod: string) => void;
 }
 export const Factor = (props: FactorProps) => {
   const {
@@ -51,8 +51,11 @@ export const Factor = (props: FactorProps) => {
     isShowDiscountInput = false,
     discountLoading,
     loading,
+    selectedPaymentMethod: propSelectedPaymentMethod,
+    onSelectionChange,
   } = props;
 
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(propSelectedPaymentMethod || '');
   const { handleOpen, modalProps } = useModal();
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
@@ -80,21 +83,21 @@ export const Factor = (props: FactorProps) => {
       enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
     },
   );
-
-  const paymentMethods = paymentMethodsData?.data?.payment_methods || [];
-  const additionalContent = paymentMethodsData?.data?.additional_content || '';
-
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
+  const paymentMethods = paymentMethodsData?.data?.data?.payment_methods || [];
+  const additionalContent = paymentMethodsData?.data?.data?.additional_content || '';
 
   const handlePaymentMethodSelection = (paymentMethod: string) => {
     setSelectedPaymentMethod(paymentMethod);
+    onSelectionChange?.(paymentMethod);
   };
 
   useEffect(() => {
     if (paymentMethods.length > 0 && !selectedPaymentMethod) {
-      setSelectedPaymentMethod(paymentMethods[0].payment_method);
+      const firstPaymentMethod = paymentMethods[0].payment_method;
+      setSelectedPaymentMethod(firstPaymentMethod);
+      onSelectionChange?.(firstPaymentMethod);
     }
-  }, [paymentMethods, selectedPaymentMethod]);
+  }, [paymentMethods, selectedPaymentMethod, onSelectionChange]);
 
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
@@ -152,6 +155,8 @@ export const Factor = (props: FactorProps) => {
         <PaymentMethods
           paymentMethods={paymentMethods}
           additionalContent={additionalContent}
+          isOpen={paymentMethods.length > 1}
+          selectedPaymentMethod={selectedPaymentMethod}
           onSelectionChange={handlePaymentMethodSelection}
         />
       )}
