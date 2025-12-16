@@ -39,7 +39,6 @@ interface FactorProps {
 }
 export const Factor = (props: FactorProps) => {
   const {
-    bookId,
     centerId,
     price,
     totalPrice,
@@ -58,7 +57,7 @@ export const Factor = (props: FactorProps) => {
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
   const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
-  const useKatibePaymentMethods = useFeatureIsOn('katibe-paymentmethods');
+  const isKatibePaymentMethodsEnabled = useFeatureIsOn('katibe-paymentmethods');
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userInfo = useUserInfoStore(state => state.info);
 
@@ -71,14 +70,14 @@ export const Factor = (props: FactorProps) => {
     enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor) && isLogin,
   });
 
-  const { data: paymentMethodsData, isLoading: paymentMethodsLoading } = useGetPaymentMethods(
+  const { data: paymentMethodsData } = useGetPaymentMethods(
     {
       amount: totalPrice,
       timezone,
       countryCode: userInfo?.country_code_id,
     },
     {
-      enabled: useKatibePaymentMethods && !!totalPrice && !loading,
+      enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
     },
   );
 
@@ -91,7 +90,6 @@ export const Factor = (props: FactorProps) => {
     setSelectedPaymentMethod(paymentMethod);
   };
 
-  // Set default selected payment method when payment methods are loaded
   useEffect(() => {
     if (paymentMethods.length > 0 && !selectedPaymentMethod) {
       setSelectedPaymentMethod(paymentMethods[0].payment_method);
@@ -150,11 +148,13 @@ export const Factor = (props: FactorProps) => {
           </Chips>
         )}
       </div>
-      <PaymentMethods
-        paymentMethods={paymentMethods}
-        additionalContent={additionalContent}
-        onSelectionChange={handlePaymentMethodSelection}
-      />
+      {isKatibePaymentMethodsEnabled && (
+        <PaymentMethods
+          paymentMethods={paymentMethods}
+          additionalContent={additionalContent}
+          onSelectionChange={handlePaymentMethodSelection}
+        />
+      )}
       {isShowDiscountInput && (
         <Discount
           loading={discountLoading}
