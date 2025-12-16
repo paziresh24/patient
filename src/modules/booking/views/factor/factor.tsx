@@ -5,14 +5,16 @@ import WarningIcon from '@/common/components/icons/warning';
 import { CENTERS } from '@/common/types/centers';
 import clsx from 'clsx';
 import isEmpty from 'lodash/isEmpty';
+import { useState, useEffect } from 'react';
 import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useGetBalance } from '@/common/apis/services/wallet/getBalance';
-import { growthbook } from 'src/pages/_app';
+import { useGetPaymentMethods } from '@/common/apis/services/factor/paymentMethods';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useModal from '@/common/hooks/useModal';
 import Modal from '@/common/components/atom/modal';
+import PaymentMethods from '../../components/factor/paymentMethods';
 interface FactorProps {
   bookId: string;
   centerId: string;
@@ -31,7 +33,9 @@ interface FactorProps {
   rules?: string[];
   loading: boolean;
   onSubmitDiscount: (code: string) => void;
-  onPayment: ({ discountToken, bookId }: { discountToken?: string; bookId: string }) => void;
+  onPayment: ({ discountToken, bookId, paymentMethod }: { discountToken?: string; bookId: string; paymentMethod?: string }) => void;
+  selectedPaymentMethod?: string;
+  onSelectionChange?: (paymentMethod: string) => void;
 }
 export const Factor = (props: FactorProps) => {
   const {
@@ -47,16 +51,53 @@ export const Factor = (props: FactorProps) => {
     isShowDiscountInput = false,
     discountLoading,
     loading,
+    selectedPaymentMethod: propSelectedPaymentMethod,
+    onSelectionChange,
   } = props;
 
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(propSelectedPaymentMethod || '');
   const { handleOpen, modalProps } = useModal();
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
   const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
+  const isKatibePaymentMethodsEnabled = useFeatureIsOn('katibe-paymentmethods');
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
+
+  const timezone =
+    typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone === 'string'
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : undefined;
+
   const { data: balance, isLoading: balanceLoading } = useGetBalance({
     enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor) && isLogin,
   });
+
+  const { data: paymentMethodsData } = useGetPaymentMethods(
+    {
+      amount: totalPrice,
+      timezone,
+      countryCode: userInfo?.country_code_id,
+    },
+    {
+      enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
+    },
+  );
+  const paymentMethods = paymentMethodsData?.data?.data?.payment_methods || [];
+  const additionalContent = paymentMethodsData?.data?.data?.additional_content || '';
+
+  const handlePaymentMethodSelection = (paymentMethod: string) => {
+    setSelectedPaymentMethod(paymentMethod);
+    onSelectionChange?.(paymentMethod);
+  };
+
+  useEffect(() => {
+    if (paymentMethods.length > 0 && !selectedPaymentMethod) {
+      const firstPaymentMethod = paymentMethods[0].payment_method;
+      setSelectedPaymentMethod(firstPaymentMethod);
+      onSelectionChange?.(firstPaymentMethod);
+    }
+  }, [paymentMethods, selectedPaymentMethod, onSelectionChange]);
 
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
@@ -110,6 +151,15 @@ export const Factor = (props: FactorProps) => {
           </Chips>
         )}
       </div>
+      {isKatibePaymentMethodsEnabled && (
+        <PaymentMethods
+          paymentMethods={paymentMethods}
+          additionalContent={additionalContent}
+          isOpen={paymentMethods.length > 1}
+          selectedPaymentMethod={selectedPaymentMethod}
+          onSelectionChange={handlePaymentMethodSelection}
+        />
+      )}
       {isShowDiscountInput && (
         <Discount
           loading={discountLoading}
