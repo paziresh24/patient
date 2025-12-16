@@ -221,7 +221,10 @@ function PlasmicProfileAbout__RenderFunc(props: {
                       dangerouslySetInnerHTML={{
                         __html: (() => {
                           try {
-                            return $props.information.biography;
+                            return $props.information?.biography?.replace(
+                              /<a\s+[^>]*>(.*?)<\/a>/gi,
+                              "$1"
+                            );
                           } catch (e) {
                             if (
                               e instanceof TypeError ||

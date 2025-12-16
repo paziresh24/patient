@@ -213,3 +213,4 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
 };
 
 export default ListOfDoctors;
+

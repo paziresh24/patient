@@ -34,7 +34,7 @@ export const useBooking = () => {
       onError?: (data: any) => void;
     },
   ) => {
-    const { data } = await book.mutateAsync({
+    const baseParams = {
       request_code: timeId,
       center_id: center.id,
       server_id: center.server_id,
@@ -50,10 +50,40 @@ export const useBooking = () => {
       ...(user.is_foreigner && { is_foreigner: user.is_foreigner }),
       ...(user.messengerType && { online_channel: user.messengerType }),
       ...(user.national_code && { national_code: user.national_code }),
-      ...(user.insurance_id && { insurance_id: user.insurance_id }),
-      ...(user.insurance_number && { insurance_number: user.insurance_number }),
       ...(selectedSymptoms.length && { symptomes: selectedSymptoms.toString() }),
       ...(!user.cell && { cell_country_prefix: 1 }),
+    };
+
+    const baseParamsKeys = [
+      'request_code',
+      'center_id',
+      'server_id',
+      'user_center_id',
+      'is_webview',
+      'first_name',
+      'last_name',
+      'father_name',
+      'birth_date',
+      'gender',
+      'cell',
+      'selected_user_id',
+      'is_foreigner',
+      'online_channel',
+      'national_code',
+      'symptomes',
+      'cell_country_prefix',
+    ];
+    const excludedUserKeys = ['name', 'family', 'id', 'messengerType', 'is_doctor', 'country_code_id', 'username', 'provider', 'image'];
+    const metaDataParams = Object.keys(user).reduce((acc, key) => {
+      if (!baseParamsKeys.includes(key) && !excludedUserKeys.includes(key) && user[key] !== undefined && user[key] !== null) {
+        acc[key] = user[key];
+      }
+      return acc;
+    }, {} as Record<string, any>);
+
+    const { data } = await book.mutateAsync({
+      ...baseParams,
+      ...metaDataParams,
     });
 
     if (data.status === ClinicStatus.SUCCESS && onSuccess) return onSuccess(data);
