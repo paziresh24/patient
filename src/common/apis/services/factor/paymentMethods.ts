@@ -21,7 +21,7 @@ interface Params {
 type Response = {
   data: {
     payment_methods: PaymentMethod[];
-    additional_content?: string;
+    additional_html?: string;
     payment_description_html?: string;
   };
 };
@@ -40,3 +40,4 @@ export const getPaymentMethods = async (params: Params) => {
 export const useGetPaymentMethods = (params: Params, options?: any) => {
   return useQuery([ServerStateKeysEnum.PaymentMethods, params], () => getPaymentMethods(params), options);
 };
+
