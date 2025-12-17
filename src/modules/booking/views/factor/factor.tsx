@@ -62,7 +62,7 @@ export const Factor = (props: FactorProps) => {
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
   const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
-  const isKatibePaymentMethodsEnabled = true;
+  const isKatibePaymentMethodsEnabled = useFeatureIsOn('katibe-paymentmethods');
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userInfo = useUserInfoStore(state => state.info);
 
