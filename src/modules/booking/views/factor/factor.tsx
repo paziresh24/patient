@@ -80,6 +80,7 @@ export const Factor = (props: FactorProps) => {
       amount: totalPrice,
       timezone,
       countryCode: userInfo?.country_code_id,
+      center_id: centerId,
     },
     {
       enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
@@ -87,6 +88,7 @@ export const Factor = (props: FactorProps) => {
   );
   const paymentMethods = paymentMethodsData?.data?.data?.payment_methods || [];
   const additionalContent = paymentMethodsData?.data?.data?.additional_content || '';
+  const payment_description_html = paymentMethodsData?.data?.data?.payment_description_html || '';
 
   const handlePaymentMethodSelection = (paymentMethod: string) => {
     setSelectedPaymentMethod(paymentMethod);
@@ -136,6 +138,7 @@ export const Factor = (props: FactorProps) => {
           walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor ? balance?.data?.data?.balance : null}
           tax={tax}
           discount={discount}
+          payment_description_html={payment_description_html || ''}
           loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor ? balanceLoading : false)}
         />
         {centerId === CENTERS.CONSULT && !refundTermsBadge && (
