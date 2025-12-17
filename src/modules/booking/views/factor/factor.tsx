@@ -2,6 +2,7 @@ import Alert from '@/common/components/atom/alert/alert';
 import Chips from '@/common/components/atom/chips';
 import Text from '@/common/components/atom/text';
 import WarningIcon from '@/common/components/icons/warning';
+import Skeleton from '@/common/components/atom/skeleton';
 import { CENTERS } from '@/common/types/centers';
 import clsx from 'clsx';
 import isEmpty from 'lodash/isEmpty';
@@ -56,6 +57,7 @@ export const Factor = (props: FactorProps) => {
   } = props;
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(propSelectedPaymentMethod || '');
+  const [isPaymentMethodsLoading, setIsPaymentMethodsLoading] = useState(false);
   const { handleOpen, modalProps } = useModal();
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
@@ -90,6 +92,29 @@ export const Factor = (props: FactorProps) => {
     setSelectedPaymentMethod(paymentMethod);
     onSelectionChange?.(paymentMethod);
   };
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    if (isKatibePaymentMethodsEnabled) {
+      setIsPaymentMethodsLoading(true);
+      timeoutId = setTimeout(() => {
+        setIsPaymentMethodsLoading(false);
+      }, 5000);
+    } else {
+      setIsPaymentMethodsLoading(false);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isKatibePaymentMethodsEnabled]);
+
+  useEffect(() => {
+    if (paymentMethodsData && isPaymentMethodsLoading) {
+      setIsPaymentMethodsLoading(false);
+    }
+  }, [paymentMethodsData, isPaymentMethodsLoading]);
 
   useEffect(() => {
     if (paymentMethods.length > 0 && !selectedPaymentMethod) {
@@ -151,15 +176,25 @@ export const Factor = (props: FactorProps) => {
           </Chips>
         )}
       </div>
-      {isKatibePaymentMethodsEnabled && (
-        <PaymentMethods
-          paymentMethods={paymentMethods}
-          additionalContent={additionalContent}
-          isOpen={paymentMethods.length > 1}
-          selectedPaymentMethod={selectedPaymentMethod}
-          onSelectionChange={handlePaymentMethodSelection}
-        />
-      )}
+      {isKatibePaymentMethodsEnabled &&
+        (isPaymentMethodsLoading ? (
+          <div className="px-1 !bg-white rounded-none md:rounded-lg shadow-card">
+            <div className="flex items-center justify-between select-none cursor-pointer p-4">
+              <Skeleton w="120px" h="20px" rounded="sm" />
+              <Skeleton w="16px" h="16px" rounded="sm" />
+            </div>
+          </div>
+        ) : (
+          paymentMethods.length > 0 && (
+            <PaymentMethods
+              paymentMethods={paymentMethods}
+              additionalContent={additionalContent}
+              isOpen={paymentMethods.length > 1}
+              selectedPaymentMethod={selectedPaymentMethod}
+              onSelectionChange={handlePaymentMethodSelection}
+            />
+          )
+        ))}
       {isShowDiscountInput && (
         <Discount
           loading={discountLoading}
