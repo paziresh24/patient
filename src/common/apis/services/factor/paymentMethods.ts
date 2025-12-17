@@ -15,12 +15,14 @@ interface Params {
   amount?: string;
   timezone?: string;
   countryCode?: string;
+  center_id?: string;
 }
 
 type Response = {
   data: {
     payment_methods: PaymentMethod[];
     additional_content?: string;
+    payment_description_html?: string;
   };
 };
 
@@ -30,6 +32,7 @@ export const getPaymentMethods = async (params: Params) => {
       'amount': params.amount,
       'timezone': params.timezone,
       'country-code': params.countryCode,
+      'center_id': params.center_id,
     },
   });
 };
