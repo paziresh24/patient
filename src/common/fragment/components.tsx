@@ -13,15 +13,14 @@ type LoaderConfig = {
   projectId?: string;
 };
 
-const createComponentLoader =
-  ({ dynamicImport, id, projectId }: LoaderConfig) =>
-  () => {
-    return {
-      Component: dynamic(dynamicImport),
-      id,
-      projectId,
-    };
-  };
+const createComponentLoader = ({ dynamicImport, id, projectId }: LoaderConfig) => {
+  const Component = dynamic(dynamicImport);
+  return () => ({
+    Component,
+    id,
+    projectId,
+  });
+};
 
 const componentLoaders: Record<string, () => FragmentEntry> = {
   Claim: createComponentLoader({
@@ -221,3 +220,4 @@ const Components: Record<string, FragmentEntry> = {};
 export const getComponentLoader = (name: string) => componentLoaders[name];
 
 export { Components };
+
