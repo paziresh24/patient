@@ -87,7 +87,7 @@ export const Factor = (props: FactorProps) => {
     },
   );
   const paymentMethods = paymentMethodsData?.data?.data?.payment_methods || [];
-  const additionalContent = paymentMethodsData?.data?.data?.additional_content || '';
+  const additionalContent = paymentMethodsData?.data?.data?.additional_html || '';
   const payment_description_html = paymentMethodsData?.data?.data?.payment_description_html || '';
 
   const handlePaymentMethodSelection = (paymentMethod: string) => {
@@ -228,3 +228,4 @@ export const Factor = (props: FactorProps) => {
   );
 };
 export default Factor;
+
