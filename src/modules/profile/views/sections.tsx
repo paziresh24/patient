@@ -11,6 +11,11 @@ import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import classNames from '@/common/utils/classNames';
 import Hamdast from '@/modules/hamdast/render';
+import { Fragment2 } from '@/common/fragment/fragment2';
+import PlasmicProfileAbout from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout';
+import PlasmicProfileSeo from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo';
+import PlasmicProfileGallery from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery';
+import PlasmicClaim from '.plasmic/plasmic/paziresh_24/PlasmicClaim';
 
 const { publicRuntimeConfig } = config();
 
@@ -81,7 +86,7 @@ export const sections = (data: any) => {
       children: (props: any) => (
         <ProfileGlobalContextsProvider>
           <div className="[&_*]:text-sm [&_*]:tracking-normal [&_*]:leading-normal [&_h1]:font-bold [&_h2]:font-bold [&_p]:font-normal ">
-            <Fragment name="ProfileAbout" props={{ ...profileData }} />
+            <Fragment2 name="ProfileAbout" Component={PlasmicProfileAbout} args={{ ...profileData }} />
           </div>
         </ProfileGlobalContextsProvider>
       ),
@@ -137,9 +142,10 @@ export const sections = (data: any) => {
         const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
 
         return (
-          <Fragment
+          <Fragment2
             name="ProfileGallery"
-            props={{
+            Component={PlasmicProfileGallery}
+            args={{
               gallery: reformattedItems,
             }}
           />
@@ -173,7 +179,7 @@ export const sections = (data: any) => {
     {
       isShow: !customize?.partnerKey && centers?.length > 0,
       noWrapper: true,
-      children: () => <Fragment name="Claim" props={{ ...profileData }} />,
+      children: () => <Fragment2 name="Claim" Component={PlasmicClaim} args={{ ...profileData }} />,
     },
     {
       isShow: !customize?.partnerKey,
@@ -293,9 +299,10 @@ export const sections = (data: any) => {
         const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
 
         return (
-          <Fragment
+          <Fragment2
             name="ProfileSeo"
-            props={{
+            Component={PlasmicProfileSeo}
+            args={{
               information,
               feedbacks,
               center,
@@ -312,3 +319,4 @@ export const sections = (data: any) => {
     },
   ] as const;
 };
+

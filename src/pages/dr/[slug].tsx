@@ -29,7 +29,7 @@ import { ReactElement, useEffect, useState } from 'react';
 import { growthbook } from '../_app';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
-import { Fragment } from '@/common/fragment';
+import { Fragment2 } from '@/common/fragment/fragment2';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -39,6 +39,8 @@ import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientF
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
+import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
+import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
 
 const { publicRuntimeConfig } = config();
 
@@ -308,9 +310,10 @@ const DoctorProfile = (props: any) => {
 
             <div className="lg:float-right lg:w-[670px] mb-3">
               <ProfileGlobalContextsProvider>
-                <Fragment
+                <Fragment2
+                  Component={PlasmicProfileHead}
                   name="ProfileHead"
-                  props={{
+                  args={{
                     pageViewCount: profileData.history?.count_of_page_view,
                     serviceList: profileData.expertises?.expertises?.flatMap(({ alias_title }: any) => alias_title.split('|')) ?? [],
                     displayName: profileData.information.display_name,
@@ -339,9 +342,10 @@ const DoctorProfile = (props: any) => {
                           ))}
                         <RaviGlobalContextsProvider>
                           <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-                            <Fragment
+                            <Fragment2
                               name="RateAndCommentCount2"
-                              props={{
+                              Component={PlasmicRateAndCommentCount}
+                              args={{
                                 ...profileData,
                                 rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
                                 rate:
@@ -543,3 +547,4 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = getProfileServerSideProps;
 
 export default DoctorProfile;
+

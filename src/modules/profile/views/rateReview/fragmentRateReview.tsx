@@ -1,11 +1,13 @@
 import { ReviewParams, useGetReview } from '@/common/apis/services/reviews/getReviews';
-import { Fragment } from '@/common/fragment';
+import { Fragment2 } from '@/common/fragment/fragment2';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useCallback, useEffect, useState } from 'react';
 import DoctorTags from './doctorTags';
 import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
+import PlasmicReviewRateAndReviews from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews';
+import PlasmicReviewList from '.plasmic/plasmic/ravi_r_r/PlasmicReviewList';
 
 export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const [sort, setSort] = useState<'created_at' | 'count_like' | 'default_order'>('default_order');
@@ -99,9 +101,10 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   return (
     <div className="flex flex-col space-y-1">
       {!dontShowRateDetails && (
-        <Fragment
+        <Fragment2
           name="RateAndReviews"
-          props={{
+          Component={PlasmicReviewRateAndReviews}
+          args={{
             ...profileData,
             displayName: profileData?.information?.display_name,
             items,
@@ -126,9 +129,10 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
         />
       )}
       {newProgressList ? (
-        <Fragment
+        <Fragment2
           name="ReviewList2"
-          props={{
+          Component={PlasmicReviewList}
+          args={{
             ...profileData,
             dontShow: false,
             reviewResponse: response,
@@ -144,9 +148,10 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
           }}
         />
       ) : (
-        <Fragment
+        <Fragment2
           name="ReviewList"
-          props={{
+          Component={PlasmicReviewList}
+          args={{
             ...profileData,
             dontShow: false,
             reviewResponse: response,
@@ -165,3 +170,4 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
     </div>
   );
 };
+
