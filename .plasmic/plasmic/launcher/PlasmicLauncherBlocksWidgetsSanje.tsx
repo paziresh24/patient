@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
 
@@ -90,6 +91,7 @@ export type PlasmicLauncherBlocksWidgetsSanje__OverridesType = {
   span?: Flex__<"span">;
   img?: Flex__<typeof PlasmicImg__>;
   svg?: Flex__<"svg">;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultLauncherBlocksWidgetsSanjeProps {
@@ -460,16 +462,72 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
           role={"img"}
         />
       ) : null}
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        deps={(() => {
+          try {
+            return [$state.apiRequest?.data?.final_score];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["setAttrSanje"] = !!$state.apiRequest?.data?.final_score
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          sanje_score: +$state.apiRequest?.data?.final_score
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["setAttrSanje"] != null &&
+            typeof $steps["setAttrSanje"] === "object" &&
+            typeof $steps["setAttrSanje"].then === "function"
+          ) {
+            $steps["setAttrSanje"] = await $steps["setAttrSanje"];
+          }
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest", "span", "img", "svg"],
+  root: ["root", "apiRequest", "span", "img", "svg", "sideEffect"],
   apiRequest: ["apiRequest"],
   span: ["span"],
   img: ["img"],
-  svg: ["svg"]
+  svg: ["svg"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -480,6 +538,7 @@ type NodeDefaultElementType = {
   span: "span";
   img: typeof PlasmicImg__;
   svg: "svg";
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -547,6 +606,7 @@ export const PlasmicLauncherBlocksWidgetsSanje = Object.assign(
     span: makeNodeComponent("span"),
     img: makeNodeComponent("img"),
     svg: makeNodeComponent("svg"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicLauncherBlocksWidgetsSanje
     internalVariantProps: PlasmicLauncherBlocksWidgetsSanje__VariantProps,
