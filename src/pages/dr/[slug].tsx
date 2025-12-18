@@ -47,7 +47,6 @@ const DoctorProfile = (props: any) => {
   const { query, ...router } = useRouter();
 
   const currentSlug = initialSlug ?? query.slug;
-
   useEffect(() => {
     if (growthbook) {
       growthbook.setAttributes({
@@ -70,7 +69,6 @@ const DoctorProfile = (props: any) => {
     error,
     refetch,
   } = useProfileClientFetch(currentSlug, !!shouldFetchOnClient || !props?.information);
-
   const { customize } = useCustomize();
   const isApplication = useApplication();
   const isWebView = useWebView();
@@ -190,14 +188,14 @@ const DoctorProfile = (props: any) => {
   }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
 
   useEffect(() => {
-    if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
+    if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug && information) {
       setEditable(true);
       splunkInstance('doctor-profile').sendEvent({
         group: 'profile',
         type: 'view-as',
         event: {
           action: 'page-view',
-          doctor: information.display_name,
+          doctor: information?.display_name ?? '',
           slug,
           terminal_id: getCookie('terminal_id'),
         },
@@ -231,16 +229,18 @@ const DoctorProfile = (props: any) => {
     setViewAsData({
       ...views[key],
     });
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'profile',
-      type: 'view-as',
-      event: {
-        action: `click-${key}`,
-        doctor: information.display_name,
-        slug,
-        terminal_id: getCookie('terminal_id'),
-      },
-    });
+    if (information) {
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'profile',
+        type: 'view-as',
+        event: {
+          action: `click-${key}`,
+          doctor: information?.display_name,
+          slug,
+          terminal_id: getCookie('terminal_id'),
+        },
+      });
+    }
     handleOpenViewAsModal();
   };
 
@@ -311,13 +311,13 @@ const DoctorProfile = (props: any) => {
                 <Fragment
                   name="ProfileHead"
                   props={{
-                    pageViewCount: profileData.history?.count_of_page_view,
-                    serviceList: profileData.expertises?.expertises?.flatMap(({ alias_title }: any) => alias_title.split('|')) ?? [],
-                    displayName: profileData.information.display_name,
-                    title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
-                    subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                    imageUrl: profileData.information?.image
-                      ? publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
+                    pageViewCount: profileData?.history?.count_of_page_view,
+                    serviceList: flatMapDeep(profileData?.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
+                    displayName: profileData?.information?.display_name,
+                    title: information?.experience ? `${profileData?.information?.experience} سال تجربه` : undefined,
+                    subTitle: `شماره نظام پزشکی: ${profileData?.information?.employee_id}`,
+                    imageUrl: profileData?.information?.image
+                      ? publicRuntimeConfig.CDN_BASE_URL + profileData?.information?.image
                       : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`,
                     slug: slug,
                     children: (
