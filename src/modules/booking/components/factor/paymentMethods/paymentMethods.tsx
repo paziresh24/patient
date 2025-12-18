@@ -47,7 +47,7 @@ export const PaymentMethods = (props: PaymentMethodsProps) => {
                     <img src={item.logo} alt={item.title} className="w-full h-full object-contain" />
                   </div>
                 )}
-                <div className="flex flex-col gap-1 min-w-0">
+                <div className="w-full flex flex-col gap-1 min-w-0">
                   <Text fontWeight="bold" fontSize="sm" className="truncate text-slate-900">
                     {item.title}
                   </Text>
@@ -85,19 +85,11 @@ export const PaymentMethods = (props: PaymentMethodsProps) => {
               </div>
             </div>
             {item.additional_html && (
-              <div
-                className="border-t border-dashed border-slate-200 p-2 bg-slate-50 text-xs text-center text-slate-600 [&>p]:m-0"
-                dangerouslySetInnerHTML={{ __html: item.additional_html }}
-              />
+              <div className="w-full text-slate-600 [&>p]:m-0" dangerouslySetInnerHTML={{ __html: item.additional_html }} />
             )}
           </div>
         ))}
-        {additionalContent && (
-          <div
-            className="border-t border-dashed border-slate-200 p-2 bg-slate-50 text-xs text-center text-slate-600 [&>p]:m-0"
-            dangerouslySetInnerHTML={{ __html: additionalContent }}
-          />
-        )}
+        {additionalContent && <div className="w-full text-slate-600 [&>p]:m-0" dangerouslySetInnerHTML={{ __html: additionalContent }} />}
       </div>
     </Accordion>
   );
