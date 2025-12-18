@@ -52,7 +52,7 @@ export const PaymentMethods = (props: PaymentMethodsProps) => {
                     {item.title}
                   </Text>
                   {item.html_content && selectedMethod === item.payment_method && (
-                    <div className="text-xs text-slate-500 truncate [&>p]:m-0" dangerouslySetInnerHTML={{ __html: item.html_content }} />
+                    <div className="w-full text-xs text-slate-500 [&>p]:m-0" dangerouslySetInnerHTML={{ __html: item.html_content }} />
                   )}
                 </div>
               </div>
@@ -103,3 +103,4 @@ export const PaymentMethods = (props: PaymentMethodsProps) => {
   );
 };
 export default PaymentMethods;
+
