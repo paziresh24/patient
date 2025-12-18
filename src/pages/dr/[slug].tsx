@@ -39,6 +39,7 @@ import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientF
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
+import { flatMapDeep } from 'lodash';
 
 const { publicRuntimeConfig } = config();
 
@@ -543,3 +544,4 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = getProfileServerSideProps;
 
 export default DoctorProfile;
+
