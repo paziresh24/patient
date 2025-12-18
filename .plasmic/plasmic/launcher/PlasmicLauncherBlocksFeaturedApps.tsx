@@ -517,7 +517,8 @@ function PlasmicLauncherBlocksFeaturedApps__RenderFunc(props: {
                                             name: currentItem.title,
                                             key: currentItem.app_key,
                                             link: currentItem.link
-                                          }
+                                          },
+                                          ref: "recommend"
                                         };
                                       } catch (e) {
                                         if (
