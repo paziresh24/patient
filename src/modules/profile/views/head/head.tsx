@@ -17,6 +17,9 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { Fragment2 } from '@/common/fragment/fragment2';
+import PlasmicReviewRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount';
+import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
 
 interface HeadProps {
   image: string;
@@ -131,9 +134,10 @@ export const Head = (props: HeadProps) => {
           )}
           {shouldUseFragmentReviewCard &&
             (newRateAndCommentCount ? (
-              <Fragment
+              <Fragment2
                 name="RateAndCommentCount2"
-                props={{
+                Component={PlasmicReviewRateAndCommentCount}
+                args={{
                   ...profileData,
                   rateCount: rateCount,
                   rate: satisfaction,
@@ -141,9 +145,10 @@ export const Head = (props: HeadProps) => {
                 }}
               />
             ) : (
-              <Fragment
+              <Fragment2
                 name="RateAndCommentCount"
-                props={{
+                Component={PlasmicRateAndCommentCount}
+                args={{
                   ...profileData,
                   rateCount: rateCount,
                   rate: satisfaction,
@@ -159,4 +164,3 @@ export const Head = (props: HeadProps) => {
 };
 
 export default Head;
-

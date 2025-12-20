@@ -19,6 +19,8 @@ import { Fragment } from '@/common/fragment';
 import { useSearch } from '../../hooks/useSearch';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import { Fragment2 } from '@/common/fragment/fragment2';
+import PlasmicSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
 
 interface SuggestionProps {
   overlay?: boolean;
@@ -220,9 +222,10 @@ export const Suggestion = (props: SuggestionProps) => {
     return (
       <div className={classNames('w-full lg:w-[50rem] py-2 px-2 md:px-0', className)}>
         <SearchGlobalContextsProvider>
-          <Fragment
+          <Fragment2
             name="SearchInput"
-            props={{
+            Component={PlasmicSearch}
+            args={{
               onClickCity: (val: any) => {
                 onChangeCity({ ...val });
               },
