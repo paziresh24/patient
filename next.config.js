@@ -270,3 +270,4 @@ const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig)
 
 // Sentry should be the last thing to export to catch everything right
 module.exports = moduleExports;
+

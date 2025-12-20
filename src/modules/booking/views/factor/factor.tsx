@@ -2,17 +2,20 @@ import Alert from '@/common/components/atom/alert/alert';
 import Chips from '@/common/components/atom/chips';
 import Text from '@/common/components/atom/text';
 import WarningIcon from '@/common/components/icons/warning';
+import Skeleton from '@/common/components/atom/skeleton';
 import { CENTERS } from '@/common/types/centers';
 import clsx from 'clsx';
 import isEmpty from 'lodash/isEmpty';
+import { useState, useEffect } from 'react';
 import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useGetBalance } from '@/common/apis/services/wallet/getBalance';
-import { growthbook } from 'src/pages/_app';
+import { useGetPaymentMethods } from '@/common/apis/services/factor/paymentMethods';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useModal from '@/common/hooks/useModal';
 import Modal from '@/common/components/atom/modal';
+import PaymentMethods from '../../components/factor/paymentMethods';
 interface FactorProps {
   bookId: string;
   centerId: string;
@@ -31,7 +34,9 @@ interface FactorProps {
   rules?: string[];
   loading: boolean;
   onSubmitDiscount: (code: string) => void;
-  onPayment: ({ discountToken, bookId }: { discountToken?: string; bookId: string }) => void;
+  onPayment: ({ discountToken, bookId, paymentMethod }: { discountToken?: string; bookId: string; paymentMethod?: string }) => void;
+  selectedPaymentMethod?: string;
+  onSelectionChange?: (paymentMethod: string) => void;
 }
 export const Factor = (props: FactorProps) => {
   const {
@@ -47,16 +52,79 @@ export const Factor = (props: FactorProps) => {
     isShowDiscountInput = false,
     discountLoading,
     loading,
+    selectedPaymentMethod: propSelectedPaymentMethod,
+    onSelectionChange,
   } = props;
 
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(propSelectedPaymentMethod || '');
+  const [isPaymentMethodsLoading, setIsPaymentMethodsLoading] = useState(false);
   const { handleOpen, modalProps } = useModal();
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
   const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
+  const isKatibePaymentMethodsEnabled = useFeatureIsOn('katibe-paymentmethods');
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const userInfo = useUserInfoStore(state => state.info);
+
+  const timezone =
+    typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone === 'string'
+      ? Intl.DateTimeFormat().resolvedOptions().timeZone
+      : undefined;
+
   const { data: balance, isLoading: balanceLoading } = useGetBalance({
     enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor) && isLogin,
   });
+
+  const { data: paymentMethodsData } = useGetPaymentMethods(
+    {
+      amount: totalPrice,
+      timezone,
+      countryCode: userInfo?.country_code_id,
+      center_id: centerId,
+    },
+    {
+      enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
+    },
+  );
+  const paymentMethods = paymentMethodsData?.data?.data?.payment_methods || [];
+  const additionalContent = paymentMethodsData?.data?.data?.additional_html || '';
+  const payment_description_html = paymentMethodsData?.data?.data?.payment_description_html || '';
+
+  const handlePaymentMethodSelection = (paymentMethod: string) => {
+    setSelectedPaymentMethod(paymentMethod);
+    onSelectionChange?.(paymentMethod);
+  };
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    if (isKatibePaymentMethodsEnabled) {
+      setIsPaymentMethodsLoading(true);
+      timeoutId = setTimeout(() => {
+        setIsPaymentMethodsLoading(false);
+      }, 5000);
+    } else {
+      setIsPaymentMethodsLoading(false);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isKatibePaymentMethodsEnabled]);
+
+  useEffect(() => {
+    if (paymentMethodsData && isPaymentMethodsLoading) {
+      setIsPaymentMethodsLoading(false);
+    }
+  }, [paymentMethodsData, isPaymentMethodsLoading]);
+
+  useEffect(() => {
+    if (paymentMethods.length > 0 && !selectedPaymentMethod) {
+      const firstPaymentMethod = paymentMethods[0].payment_method;
+      setSelectedPaymentMethod(firstPaymentMethod);
+      onSelectionChange?.(firstPaymentMethod);
+    }
+  }, [paymentMethods, selectedPaymentMethod, onSelectionChange]);
 
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
@@ -70,6 +138,7 @@ export const Factor = (props: FactorProps) => {
           walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor ? balance?.data?.data?.balance : null}
           tax={tax}
           discount={discount}
+          payment_description_html={payment_description_html || ''}
           loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor ? balanceLoading : false)}
         />
         {centerId === CENTERS.CONSULT && !refundTermsBadge && (
@@ -110,6 +179,25 @@ export const Factor = (props: FactorProps) => {
           </Chips>
         )}
       </div>
+      {isKatibePaymentMethodsEnabled &&
+        (isPaymentMethodsLoading ? (
+          <div className="px-1 !bg-white rounded-none md:rounded-lg shadow-card">
+            <div className="flex items-center justify-between select-none cursor-pointer p-4">
+              <Skeleton w="120px" h="20px" rounded="sm" />
+              <Skeleton w="16px" h="16px" rounded="sm" />
+            </div>
+          </div>
+        ) : (
+          paymentMethods.length > 0 && (
+            <PaymentMethods
+              paymentMethods={paymentMethods}
+              additionalContent={additionalContent}
+              isOpen={paymentMethods.length > 1}
+              selectedPaymentMethod={selectedPaymentMethod}
+              onSelectionChange={handlePaymentMethodSelection}
+            />
+          )
+        ))}
       {isShowDiscountInput && (
         <Discount
           loading={discountLoading}
@@ -140,3 +228,4 @@ export const Factor = (props: FactorProps) => {
   );
 };
 export default Factor;
+

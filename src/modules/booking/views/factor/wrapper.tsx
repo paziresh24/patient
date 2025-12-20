@@ -4,12 +4,11 @@ import Alert from '@/common/components/atom/alert/alert';
 import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
-import useApplication from '@/common/hooks/useApplication';
 import { CENTERS } from '@/common/types/centers';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import useDiscount from '../../hooks/factor/useDiscount';
 import useInvoice from '../../hooks/factor/useInvoice';
@@ -60,6 +59,11 @@ const FactorWrapper = (props: FactorWrapperProps) => {
     userCenterId: userCenterId,
   });
   const discountInquiry = useDiscountInquiry();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
+
+  const handlePaymentMethodSelection = (paymentMethod: string) => {
+    setSelectedPaymentMethod(paymentMethod);
+  };
 
   useEffect(() => {
     growthbook.setAttributes({
@@ -88,10 +92,12 @@ const FactorWrapper = (props: FactorWrapperProps) => {
   const handlePaymentAction = async ({
     discountToken,
     bookId,
+    paymentMethod,
     userDataFromLogin = null,
   }: {
     discountToken?: string;
     bookId?: string;
+    paymentMethod?: string;
     userDataFromLogin?: any;
   }) => {
     if (serviceId || bookId) {
@@ -116,6 +122,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
               cell: userDataFromLogin?.cell ?? userInfo?.cell,
               messengerType: 'skip_select_user',
             },
+            paymentMethod: paymentMethod,
           },
           {
             async onSuccess(data) {
@@ -134,6 +141,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
                 const { data: paymentData } = await [centerId === CENTERS.CONSULT ? consultPayment : centerPayment][0].mutateAsync({
                   book_id: data?.book_info?.id as string,
                   ...(discountToken && { discount_token: discountToken }),
+                  ...(paymentMethod && { payment_method: paymentMethod }),
                 });
                 if (paymentData.status) {
                   splunkInstance('booking').sendEvent({
@@ -224,6 +232,8 @@ const FactorWrapper = (props: FactorWrapperProps) => {
           handleDiscountSubmit(code);
         }}
         onPayment={handlePaymentAction}
+        selectedPaymentMethod={selectedPaymentMethod}
+        onSelectionChange={handlePaymentMethodSelection}
         isShowDiscountInput={
           centerId === CENTERS.CONSULT &&
           (checkPremiumUser(userInfo.vip) ? !premiumOnlineVisitDiscountPercentage && !premiumOnlineVistDiscountCode : true)
@@ -258,6 +268,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
                   handlePaymentAction({
                     discountToken: discount.discountToken,
                     bookId: bookId ?? '',
+                    paymentMethod: selectedPaymentMethod,
                     userDataFromLogin: userInfo,
                   }),
               });
@@ -265,6 +276,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
             handlePaymentAction({
               discountToken: discount.discountToken,
               bookId: bookId ?? '',
+              paymentMethod: selectedPaymentMethod,
             });
           }}
           className="self-end w-full md:w-auto"

@@ -6,6 +6,7 @@ import { growthbook } from 'src/pages/_app';
 
 interface Params {
   book_id: string;
+  payment_method?: string;
 }
 
 export const consultPayment = (params: Params) => {
