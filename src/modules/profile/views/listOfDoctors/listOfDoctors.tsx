@@ -14,6 +14,8 @@ import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/pazire
 import config from 'next/config';
 import { flatten } from 'lodash';
 import { InfiniteData } from '@tanstack/react-query';
+import { PlasmicSearchResults } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults';
+import { Fragment2 } from '@/common/fragment/fragment2';
 
 const { publicRuntimeConfig } = config();
 
@@ -184,9 +186,10 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
           )}
           {(result.length === 0 ? !loading : true) && (
             <SearchGlobalContextsProvider>
-              <Fragment
+              <Fragment2
                 name="SearchResults"
-                props={{
+                Component={PlasmicSearchResults}
+                args={{
                   searchResultResponse: {
                     ...doctors?.pages?.[0],
                     search: {

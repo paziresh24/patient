@@ -25,6 +25,8 @@ import { isEmpty, sortBy } from 'lodash';
 import { splunkInstance } from '@/common/services/splunk';
 import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
+import PlasmicServices from '.plasmic/plasmic/paziresh_24/PlasmicServices';
+import { Fragment2 } from '@/common/fragment/fragment2';
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -204,10 +206,11 @@ export const Services = ({
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any, index: number) => (
-              <Fragment
+              <Fragment2
                 key={index}
                 name="Services"
-                props={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
+                Component={PlasmicServices}
+                args={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
                 variants={{ type: 'onlineVisit' }}
               />
             ))}
@@ -277,3 +280,4 @@ export const Services = ({
 };
 
 export default Services;
+
