@@ -424,104 +424,131 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
     const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
     const currentUrl = `/dr/${slug}`;
 
-    return [
-      {
-        '@context': 'http://www.schema.org',
-        '@type': 'Physician',
-        'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
-        'name': `${information?.display_name}`,
-        'telephone': center?.display_number,
-        'description': information?.biography ? removeHtmlTagInString(information?.biography) : '',
-        'image': publicRuntimeConfig.CDN_BASE_URL + information?.image,
-        'isAcceptingNewPatients': true,
-        'medicalSpecialty': !expertises?.group_expertises ? expertises?.group_expertises?.[0]?.name : doctorExpertise,
-        'duns': information?.employee_id,
-        'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-        'address': {
-          '@type': 'PostalAddress',
-          'addressCountry': {
-            '@type': 'Country',
-            'name': 'IR',
-          },
-          'addressLocality': center?.city,
-          'addressRegion': center?.province,
-          'streetAddress': center?.address,
-        },
-        ...(!feedbacks?.details?.hide_rates && {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            'bestRating': 5,
-            'worstRating': 0,
-            'ratingCount': feedbacks?.details?.count_of_feedbacks ?? 0,
-            'ratingValue': +(
-              (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-              3
-            ).toFixed(1),
-          },
-          review:
-            feedbacks?.feedbacks?.list
-              ?.filter((item: any) => !!item?.avg_rate_value)
-              ?.map?.((feedback: any) => ({
-                '@type': 'Review',
-                'author': {
-                  '@type': 'Person',
-                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
-                },
-                'reviewRating': {
-                  '@type': 'Rating',
-                  'ratingValue': feedback?.avg_rate_value ?? 0,
-                  'bestRating': 5,
-                  'worstRating': 0,
-                },
-                'reviewBody': feedback?.description,
-                'datePublished': feedback?.created_at?.split(' ')?.[0],
-              })) ?? [],
-        }),
+    const physicianSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Physician',
+      'name': information?.display_name,
+      'alternateName': [
+        information?.display_name,
+        expertises?.expertises?.[0]?.alias_title ? `${information?.display_name} ${expertises.expertises[0].alias_title}` : null,
+        expertises?.group_expertises?.[0]?.name ? `${information?.display_name} ${expertises.group_expertises[0].name}` : null,
+      ].filter(Boolean),
+      'gender': information?.gender === '1' ? 'Male' : information?.gender === '2' ? 'Female' : undefined,
+      'image': publicRuntimeConfig.CDN_BASE_URL + information?.image,
+      'medicalSpecialty': {
+        '@type': 'MedicalSpecialty',
+        'name': expertises?.expertises?.[0]?.alias_title || expertises?.group_expertises?.[0]?.name || doctorExpertise,
       },
-      {
-        '@context': 'http://www.schema.org',
-        '@type': 'Person',
-        'jobTitle': 'physician',
-        'name': `${information?.display_name}`,
-        'telephone': center?.display_number,
-        'image': publicRuntimeConfig.CDN_BASE_URL + information?.image,
-        'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-        'address': {
-          '@type': 'PostalAddress',
-          'addressCountry': {
-            '@type': 'Country',
-            'name': 'IR',
-          },
-          'addressLocality': center?.city,
-          'addressRegion': center?.province,
-          'streetAddress': center?.address,
-        },
-      },
-      {
-        '@context': 'http://schema.org',
-        '@type': 'BreadcrumbList',
-        'itemListElement': [
-          {
-            '@type': 'ListItem',
-            'position': 1,
-            'item': {
-              '@id': `${publicRuntimeConfig?.CLINIC_BASE_URL}/`,
-              'name': 'پذیرش۲۴',
+      'affiliation': center
+        ? {
+            '@type': 'MedicalClinic',
+            'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
+            'address': {
+              '@type': 'PostalAddress',
+              'streetAddress': center.address,
+              'addressLocality': center.city,
+              'addressRegion': center.province,
+              'addressCountry': 'IR',
             },
-          },
-          {
-            '@type': 'ListItem',
-            'position': 2,
-            'item': {
-              '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-              'name': `${information?.display_name}`,
+            'contactPoint': {
+              '@type': 'ContactPoint',
+              'telephone': center.display_number?.[0] || center.display_number,
+              'contactType': 'appointment',
             },
-          },
-        ],
+            'geo': center.map
+              ? {
+                  '@type': 'GeoCoordinates',
+                  'latitude': center.map.lat,
+                  'longitude': center.map.lon,
+                }
+              : undefined,
+          }
+        : undefined,
+      'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
+      'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
+      'telephone': center?.display_number?.[0] || center?.display_number,
+      'isAcceptingNewPatients': true,
+      'description': information?.biography ? removeHtmlTagInString(information?.biography) : '',
+      'hasOfferCatalog': {
+        '@type': 'OfferCatalog',
+        'name': `خدمات درمانی ${information?.display_name}`,
+        'itemListElement':
+          centers
+            ?.filter((center: any) => center.services?.length > 0)
+            ?.flatMap(
+              (center: any) =>
+                center.services?.map((service: any) => ({
+                  '@type': 'Offer',
+                  'itemOffered': {
+                    '@type': 'MedicalProcedure',
+                    'name': service.title || service.alias_title,
+                    'description': service.description || `خدمات ${service.title || service.alias_title}`,
+                    'price': service.free_price ? addCommas(service.free_price) : undefined,
+                    'priceCurrency': 'IRR',
+                    'availability': 'https://schema.org/InStock',
+                  },
+                })) ?? [],
+            ) ?? [],
       },
-    ];
+      ...(!feedbacks?.details?.hide_rates && {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          'ratingValue': +(
+            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+            3
+          ).toFixed(1),
+          'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
+          'bestRating': 5,
+          'worstRating': 0,
+        },
+        review:
+          feedbacks?.feedbacks?.list
+            ?.filter((item: any) => !!item?.avg_rate_value)
+            ?.slice(0, 5) // Limit to 5 reviews for schema
+            ?.map?.((feedback: any) => ({
+              '@type': 'Review',
+              'author': {
+                '@type': 'Person',
+                'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
+              },
+              'reviewRating': {
+                '@type': 'Rating',
+                'ratingValue': feedback?.avg_rate_value ?? 0,
+                'bestRating': 5,
+                'worstRating': 0,
+              },
+              'reviewBody': feedback?.description,
+              'datePublished': feedback?.created_at?.split(' ')?.[0],
+            })) ?? [],
+      }),
+    };
+
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'item': {
+            '@id': `${publicRuntimeConfig?.CLINIC_BASE_URL}/`,
+            'name': 'پذیرش۲۴',
+          },
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'item': {
+            '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
+            'name': information?.display_name,
+          },
+        },
+      ],
+    };
+
+    return [physicianSchema, breadcrumbSchema].filter(Boolean);
   };
 
   return (
