@@ -424,6 +424,50 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
     const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
     const currentUrl = `/dr/${slug}`;
 
+    // Helper function to map day numbers to schema.org day names
+    const getDayOfWeek = (day: number): string => {
+      const dayMap: { [key: number]: string } = {
+        1: 'Sunday', // یکشنبه
+        2: 'Monday', // دوشنبه
+        3: 'Tuesday', // سه‌شنبه
+        4: 'Wednesday', // چهارشنبه
+        5: 'Thursday', // پنج‌شنبه
+        6: 'Friday', // جمعه
+        7: 'Saturday', // شنبه
+      };
+      return dayMap[day] || 'Monday';
+    };
+
+    // Extract opening hours from center services
+    const getOpeningHours = () => {
+      if (!center?.services?.[0]?.hours_of_work) return undefined;
+
+      const hoursByDay: { [key: string]: { opens: string; closes: string }[] } = {};
+
+      center.services[0].hours_of_work.forEach((hour: any) => {
+        const dayName = getDayOfWeek(hour.day);
+        const opens = hour.from?.substring(0, 5) || '09:00'; // Extract HH:MM format
+        const closes = hour.to?.substring(0, 5) || '18:00';
+
+        if (!hoursByDay[dayName]) {
+          hoursByDay[dayName] = [];
+        }
+        hoursByDay[dayName].push({ opens, closes });
+      });
+
+      // Convert to schema.org format
+      return Object.entries(hoursByDay).map(([dayOfWeek, hours]) => {
+        // If multiple time slots exist for same day, use the first one
+        const { opens, closes } = hours[0];
+        return {
+          '@type': 'OpeningHoursSpecification',
+          'dayOfWeek': dayOfWeek,
+          'opens': opens,
+          'closes': closes,
+        };
+      });
+    };
+
     const physicianSchema = {
       '@context': 'https://schema.org',
       '@type': 'Physician',
@@ -454,7 +498,9 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
               '@type': 'ContactPoint',
               'telephone': center.display_number?.[0] || center.display_number,
               'contactType': 'appointment',
+              'availableLanguage': ['fa'],
             },
+            'openingHoursSpecification': getOpeningHours(),
             'geo': center.map
               ? {
                   '@type': 'GeoCoordinates',
