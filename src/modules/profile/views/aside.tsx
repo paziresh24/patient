@@ -18,11 +18,11 @@ import { isEmpty } from 'lodash';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { SamanBooking } from '@/modules/samanBooking';
 import { Fragment2 } from '@/common/fragment/fragment2';
-import { PlasmicRisman } from '.plasmic/plasmic/risman/PlasmicRisman';
-import PlasmicBookingAddressesWrapper from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper';
-import PlasmicBookingAddressesCard from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
+const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
+const PlasmicBookingAddressesCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard'));
+const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
 
 export const Aside = (data: any) => {
   const {

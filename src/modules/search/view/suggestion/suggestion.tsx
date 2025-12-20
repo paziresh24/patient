@@ -20,7 +20,7 @@ import { useSearch } from '../../hooks/useSearch';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { Fragment2 } from '@/common/fragment/fragment2';
-import PlasmicSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
+const PlasmicSearch = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearch'));
 
 interface SuggestionProps {
   overlay?: boolean;
