@@ -35,21 +35,14 @@ export const useLogin = () => {
           });
 
         const userData = await getMe.mutateAsync();
-        const doctorProfileData = getDoctorProfile.mutateAsync().then(data => {
-          setUserInfo({
-            provider: data,
-            ...userData,
-          });
-        });
 
         if (window?.Android) window.Android.login(data.certificate);
 
         setUserInfo({
-          provider: doctorProfileData,
           ...userData,
         });
 
-        return Promise.resolve({ provider: doctorProfileData, ...userData });
+        return Promise.resolve({ ...userData });
       }
       return Promise.reject(data);
     } catch (error) {

@@ -74,13 +74,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       });
       window.user = infoCopy;
 
-      localStorage.setItem(
-        'user-store',
-        JSON.stringify({
-          ...infoCopy,
-        }),
-      );
-
       return {
         info: {
           ...infoCopy,
@@ -90,7 +83,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     });
   },
   removeInfo: () => {
-    localStorage.removeItem('user-store');
     set(() => ({
       info: {},
       isLogin: false,
@@ -136,6 +128,5 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     }
     removeCookies('certificate');
     removeCookies('token');
-    localStorage.removeItem('user-store');
   },
 }));
