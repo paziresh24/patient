@@ -4,9 +4,10 @@ import { useGetCentersByUserId } from '@/common/apis/services/doctor/centersByUs
 import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { growthbook } from 'src/pages/_app';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useMemo, useRef } from 'react';
 
 export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
@@ -15,95 +16,121 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const removeInfo = useUserInfoStore(state => state.removeInfo);
   const info = useUserInfoStore(state => state.info);
   const autoLoginToGozargah = useFeatureIsOn('auto-login-to-gozargah');
-  const getCentersByUserId = useGetCentersByUserId(info?.id?.toString()!, { enabled: !!info?.id });
 
   const getMe = useGetMe();
   const getDoctorProfile = useGetDoctorProfile();
+  const getCentersByUserId = useGetCentersByUserId(info?.id?.toString() || '', { enabled: !!info?.id });
+  const hasCalledLogin = useRef(false);
+  const lastUserId = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    handleUserLogin();
-    if (typeof window != 'undefined' && !!localStorage?.getItem?.('user-store')) {
-      setUserInfo(JSON.parse(localStorage.getItem('user-store') ?? '{}'));
-      setPending(false);
-    }
+    if (typeof window === 'undefined' || hasCalledLogin.current) return;
+
+    hasCalledLogin.current = true;
+
+    const fetchUserData = async () => {
+      setPending(true);
+
+      try {
+        const userData = await getMe.mutateAsync();
+
+        const currentInfo = useUserInfoStore.getState().info;
+        setUserInfo({
+          ...currentInfo,
+          ...userData,
+        });
+
+        setPending(false);
+      } catch (error) {
+        if (typeof window !== 'undefined' && window.user) {
+          window.user = {};
+        }
+
+        growthbook.setAttributes({
+          ...growthbook.getAttributes(),
+          user_id: undefined,
+          is_doctor: false,
+        });
+
+        lastUserId.current = undefined;
+        hasCalledLogin.current = false;
+
+        useUserInfoStore.setState({
+          info: {},
+          isLogin: false,
+          pending: false,
+          turnsCount: {
+            presence: 0,
+          },
+        });
+      }
+    };
+
+    fetchUserData();
   }, []);
 
-  const handleUserLogin = async () => {
-    try {
-      if (typeof window != 'undefined' && !!localStorage?.getItem?.('user-store') ? false : true) {
-        setPending(true);
-      }
-      const userData = await getMe.mutateAsync();
-      let doctorProfileData = {};
-      try {
-        doctorProfileData = await getDoctorProfile.mutateAsync();
-      } catch (error) {
-        console.error(error);
-      }
-
-      setUserInfo({
-        ...info,
-        ...userData,
-        provider: {
-          ...info?.provider,
-          ...doctorProfileData,
-        },
-      });
-
-      setPending(false);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 401 || error.response?.status === 400) {
-          setPending(false);
-          removeInfo();
-        }
-      }
-    }
-  };
-
   useEffect(() => {
-    if (isLogin && info?.id) {
+    if (!info?.id || info.id === lastUserId.current) return;
+
+    lastUserId.current = info.id;
+
+    const fetchProfileAndCenters = async () => {
       try {
-        apiGatewayClient.get('https://apigw.paziresh24.com/v1/users/image', { params: { user_id: info?.id } })?.then(image => {
-          setUserInfo({
-            ...info,
-            image: image?.data?.data?.image_url,
-          });
+        const doctorProfileData = await getDoctorProfile.mutateAsync();
+        const currentInfo = useUserInfoStore.getState().info;
+
+        setUserInfo({
+          ...currentInfo,
+          provider: {
+            ...currentInfo?.provider,
+            ...doctorProfileData,
+          },
         });
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching doctor profile:', error);
       }
-    }
-  }, [isLogin, info?.id]);
+    };
+
+    fetchProfileAndCenters();
+  }, [info?.id, getDoctorProfile, setUserInfo]);
 
   useEffect(() => {
-    if (getCentersByUserId?.data) {
-      setUserInfo({
-        ...info,
-        is_doctor: getCentersByUserId?.data?.length > 0 ? true : false,
-        provider: {
-          ...info?.provider,
-          job_title: getCentersByUserId?.data?.length > 0 ? 'doctor' : null,
-          centers: getCentersByUserId?.data,
-        },
-      });
-    }
-  }, [getCentersByUserId?.data]);
+    if (!isLogin || !info?.id) return;
 
-  return (
-    <>
-      {children}
-      {isLogin &&
-        info?.id &&
-        autoLoginToGozargah &&
-        window.location.pathname != '/login/oauthEmbed/' &&
-        info?.id != getCookie('gozargah_logged_in_user_id') && (
-          <iframe
-            src={`https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://www.paziresh24.com/login/oauthEmbed/&response_type=code&scope=openid&kc_idp_hint=gozar&skip_prompt=true`}
-            hidden
-            className="absolute top-0 w-0 h-0 hidden"
-          ></iframe>
-        )}
-    </>
-  );
+    apiGatewayClient
+      .get('https://apigw.paziresh24.com/v1/users/image', { params: { user_id: info.id } })
+      .then(response => {
+        const imageUrl = response?.data?.data?.image_url;
+        if (imageUrl) {
+          const currentInfo = useUserInfoStore.getState().info;
+          setUserInfo({
+            ...currentInfo,
+            image: imageUrl,
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching user image:', error);
+      });
+  }, [isLogin, info?.id, setUserInfo]);
+
+  useEffect(() => {
+    const centersData = getCentersByUserId?.data;
+    if (!centersData || !info?.id) return;
+
+    const isDoctor = Array.isArray(centersData) && centersData.length > 0;
+    const currentInfo = useUserInfoStore.getState().info;
+
+    setUserInfo({
+      ...currentInfo,
+      is_doctor: isDoctor,
+      provider: {
+        ...currentInfo?.provider,
+        job_title: isDoctor ? 'doctor' : null,
+        centers: centersData,
+      },
+    });
+  }, [getCentersByUserId?.data, info?.id, setUserInfo]);
+
+  return <>{children}</>;
 };

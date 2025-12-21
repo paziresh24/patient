@@ -192,14 +192,14 @@ const DoctorProfile = (props: any) => {
   }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
 
   useEffect(() => {
-    if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug) {
+    if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug && information) {
       setEditable(true);
       splunkInstance('doctor-profile').sendEvent({
         group: 'profile',
         type: 'view-as',
         event: {
           action: 'page-view',
-          doctor: information.display_name,
+          doctor: information?.display_name ?? '',
           slug,
           terminal_id: getCookie('terminal_id'),
         },

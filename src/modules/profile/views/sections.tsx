@@ -12,10 +12,6 @@ import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh
 import classNames from '@/common/utils/classNames';
 import Hamdast from '@/modules/hamdast/render';
 import { Fragment2 } from '@/common/fragment/fragment2';
-import PlasmicProfileAbout from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout';
-import PlasmicProfileSeo from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo';
-import PlasmicProfileGallery from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery';
-import PlasmicClaim from '.plasmic/plasmic/paziresh_24/PlasmicClaim';
 
 const { publicRuntimeConfig } = config();
 
@@ -25,6 +21,10 @@ const Biography = dynamic(() => import('./biography'), {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
   },
 });
+const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
+const PlasmicProfileSeo = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo'));
+const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
+const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="8rem" rounded="lg" />;

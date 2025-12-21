@@ -20,7 +20,7 @@ import { useSearch } from '../../hooks/useSearch';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { Fragment2 } from '@/common/fragment/fragment2';
-import PlasmicSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
+const PlasmicSearch = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearch'));
 
 interface SuggestionProps {
   overlay?: boolean;
@@ -98,6 +98,12 @@ export const Suggestion = (props: SuggestionProps) => {
     handleClose();
     setUserSearchValue('');
   };
+
+  useEffect(() => {
+    if (!router.pathname.startsWith('/s')) return;
+    const text = typeof router.query.text === 'string' ? router.query.text : '';
+    if (text !== userSearchValue) setUserSearchValue(text);
+  }, [router.pathname, router.query.text]);
 
   useEffect(() => {
     if (city.is_aroundme) {
@@ -219,6 +225,7 @@ export const Suggestion = (props: SuggestionProps) => {
   }, [setCity]);
 
   if (showPlasmicSuggestion) {
+    const textFromQuery = typeof router.query.text === 'string' ? router.query.text : '';
     return (
       <div className={classNames('w-full lg:w-[50rem] py-2 px-2 md:px-0', className)}>
         <SearchGlobalContextsProvider>
@@ -230,7 +237,7 @@ export const Suggestion = (props: SuggestionProps) => {
                 onChangeCity({ ...val });
               },
               selectedCity: city,
-              defaultValue: userSearchValue || defaultInputValue || selectedFilters?.text || '',
+              defaultValue: textFromQuery || userSearchValue || defaultInputValue || selectedFilters?.text || '',
               onClickOverlay: handleClickOverlay,
               onFocusChange: (val: any) => {
                 setIsOpenSuggestion(val);
