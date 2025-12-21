@@ -8,7 +8,6 @@ import Link from 'next/link';
 import CentersInfo from './centersInfo';
 import Services from './services';
 import pick from 'lodash/pick';
-import { Fragment } from '@/common/fragment';
 import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import { ActionButton } from './centersInfo/actionButton';
