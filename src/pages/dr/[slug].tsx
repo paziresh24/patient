@@ -41,7 +41,6 @@ import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
-import { flatMapDeep } from 'lodash';
 
 const { publicRuntimeConfig } = config();
 
@@ -50,6 +49,7 @@ const DoctorProfile = (props: any) => {
   const { query, ...router } = useRouter();
 
   const currentSlug = initialSlug ?? query.slug;
+
   useEffect(() => {
     if (growthbook) {
       growthbook.setAttributes({
@@ -72,6 +72,7 @@ const DoctorProfile = (props: any) => {
     error,
     refetch,
   } = useProfileClientFetch(currentSlug, !!shouldFetchOnClient || !props?.information);
+
   const { customize } = useCustomize();
   const isApplication = useApplication();
   const isWebView = useWebView();
@@ -232,18 +233,16 @@ const DoctorProfile = (props: any) => {
     setViewAsData({
       ...views[key],
     });
-    if (information) {
-      splunkInstance('doctor-profile').sendEvent({
-        group: 'profile',
-        type: 'view-as',
-        event: {
-          action: `click-${key}`,
-          doctor: information?.display_name,
-          slug,
-          terminal_id: getCookie('terminal_id'),
-        },
-      });
-    }
+    splunkInstance('doctor-profile').sendEvent({
+      group: 'profile',
+      type: 'view-as',
+      event: {
+        action: `click-${key}`,
+        doctor: information.display_name,
+        slug,
+        terminal_id: getCookie('terminal_id'),
+      },
+    });
     handleOpenViewAsModal();
   };
 
@@ -322,14 +321,6 @@ const DoctorProfile = (props: any) => {
                     subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
                     imageUrl: profileData.information?.image
                       ? publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
-                  props={{
-                    pageViewCount: profileData?.history?.count_of_page_view,
-                    serviceList: flatMapDeep(profileData?.expertises?.expertises?.map(({ alias_title }: any) => alias_title.split('|'))),
-                    displayName: profileData?.information?.display_name,
-                    title: information?.experience ? `${profileData?.information?.experience} سال تجربه` : undefined,
-                    subTitle: `شماره نظام پزشکی: ${profileData?.information?.employee_id}`,
-                    imageUrl: profileData?.information?.image
-                      ? publicRuntimeConfig.CDN_BASE_URL + profileData?.information?.image
                       : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`,
                     slug: slug,
                     children: (
@@ -433,6 +424,47 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
     const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
     const currentUrl = `/dr/${slug}`;
 
+    // Helper function to map day numbers to schema.org day names
+    const getDayOfWeek = (day: number): string => {
+      const dayMap: { [key: number]: string } = {
+        1: 'Sunday', // یکشنبه
+        2: 'Monday', // دوشنبه
+        3: 'Tuesday', // سه‌شنبه
+        4: 'Wednesday', // چهارشنبه
+        5: 'Thursday', // پنج‌شنبه
+        6: 'Friday', // جمعه
+        7: 'Saturday', // شنبه
+      };
+      return dayMap[day] || 'Monday';
+    };
+
+    const getOpeningHours = () => {
+      if (!center?.services?.[0]?.hours_of_work) return undefined;
+
+      const hoursByDay: { [key: string]: { opens: string; closes: string }[] } = {};
+
+      center.services[0].hours_of_work.forEach((hour: any) => {
+        const dayName = getDayOfWeek(hour.day);
+        const opens = hour.from?.substring(0, 5) || '09:00'; // Extract HH:MM format
+        const closes = hour.to?.substring(0, 5) || '18:00';
+
+        if (!hoursByDay[dayName]) {
+          hoursByDay[dayName] = [];
+        }
+        hoursByDay[dayName].push({ opens, closes });
+      });
+
+      return Object.entries(hoursByDay).map(([dayOfWeek, hours]) => {
+        const { opens, closes } = hours[0];
+        return {
+          '@type': 'OpeningHoursSpecification',
+          'dayOfWeek': dayOfWeek,
+          'opens': opens,
+          'closes': closes,
+        };
+      });
+    };
+
     const physicianSchema = {
       '@context': 'https://schema.org',
       '@type': 'Physician',
@@ -463,7 +495,9 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
               '@type': 'ContactPoint',
               'telephone': center.display_number?.[0] || center.display_number,
               'contactType': 'appointment',
+              'availableLanguage': ['fa'],
             },
+            'openingHoursSpecification': getOpeningHours(),
             'geo': center.map
               ? {
                   '@type': 'GeoCoordinates',
