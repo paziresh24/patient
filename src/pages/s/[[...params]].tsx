@@ -109,9 +109,10 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   }, []);
 
   useEffect(() => {
-    if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
+    if (typeof queries?.text === 'string') setUserSearchValue(queries.text);
+    else setUserSearchValue('');
     if (lat && lon) setGeoLocation({ lat: +lat, lon: +lon });
-  }, []);
+  }, [queries?.text, lat, lon]);
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -469,3 +470,4 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
+
