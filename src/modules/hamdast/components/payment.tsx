@@ -138,6 +138,8 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
         openAndCreateReceipt();
       }
 
+      if (!modalProps.isOpen) return;
+
       if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_CANCEL') {
         clearInterval(intervalCloseRef.current);
         deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
@@ -350,7 +352,7 @@ export const HamdastPayment = ({ app_key, iframeRef }: { app_key: string; iframe
     return () => {
       window.removeEventListener('message', handleEventFunction);
     };
-  }, [isLogin]);
+  }, [isLogin, modalProps.isOpen]);
 
   return (
     <div>

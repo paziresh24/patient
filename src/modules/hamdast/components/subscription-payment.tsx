@@ -452,6 +452,8 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           }
         }
 
+        if (!modalProps.isOpen) return;
+
         if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_CANCEL') {
           handleCancelPayment();
         }
@@ -494,7 +496,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
 
       window.addEventListener('message', handleEventFunction);
       return () => window.removeEventListener('message', handleEventFunction);
-    }, [isLogin, handleOpen, handleClose, handleOpenLoginModal, sendCancelEvent, sendSuccessEvent, sendEvent]);
+    }, [isLogin, handleOpen, handleClose, handleOpenLoginModal, sendCancelEvent, sendSuccessEvent, sendEvent, modalProps.isOpen]);
 
     const getIntervalText = (interval: string) => {
       const intervals: Record<string, string> = {
