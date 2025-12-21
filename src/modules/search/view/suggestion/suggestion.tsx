@@ -100,6 +100,12 @@ export const Suggestion = (props: SuggestionProps) => {
   };
 
   useEffect(() => {
+    if (!router.pathname.startsWith('/s')) return;
+    const text = typeof router.query.text === 'string' ? router.query.text : '';
+    if (text !== userSearchValue) setUserSearchValue(text);
+  }, [router.pathname, router.query.text]);
+
+  useEffect(() => {
     if (city.is_aroundme) {
       navigator.geolocation.getCurrentPosition(position => {
         let lat = position.coords.latitude;
@@ -219,6 +225,7 @@ export const Suggestion = (props: SuggestionProps) => {
   }, [setCity]);
 
   if (showPlasmicSuggestion) {
+    const textFromQuery = typeof router.query.text === 'string' ? router.query.text : '';
     return (
       <div className={classNames('w-full lg:w-[50rem] py-2 px-2 md:px-0', className)}>
         <SearchGlobalContextsProvider>
@@ -230,7 +237,7 @@ export const Suggestion = (props: SuggestionProps) => {
                 onChangeCity({ ...val });
               },
               selectedCity: city,
-              defaultValue: userSearchValue || defaultInputValue || selectedFilters?.text || '',
+              defaultValue: textFromQuery || userSearchValue || defaultInputValue || selectedFilters?.text || '',
               onClickOverlay: handleClickOverlay,
               onFocusChange: (val: any) => {
                 setIsOpenSuggestion(val);
