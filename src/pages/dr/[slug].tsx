@@ -438,6 +438,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
       return dayMap[day] || 'Monday';
     };
 
+    // Extract opening hours from center services
     const getOpeningHours = () => {
       if (!center?.services?.[0]?.hours_of_work) return undefined;
 
@@ -454,7 +455,9 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         hoursByDay[dayName].push({ opens, closes });
       });
 
+      // Convert to schema.org format
       return Object.entries(hoursByDay).map(([dayOfWeek, hours]) => {
+        // If multiple time slots exist for same day, use the first one
         const { opens, closes } = hours[0];
         return {
           '@type': 'OpeningHoursSpecification',
