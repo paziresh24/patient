@@ -17,8 +17,12 @@ import IframeHamdast from '@/modules/hamdast/iframe-render';
 import { isEmpty } from 'lodash';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { SamanBooking } from '@/modules/samanBooking';
+import { Fragment2 } from '@/common/fragment/fragment2';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
+const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
+const PlasmicBookingAddressesCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard'));
+const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
 
 export const Aside = (data: any) => {
   const {
@@ -94,9 +98,10 @@ export const Aside = (data: any) => {
       id: 'risman',
       isShow: !customize.partnerKey && !!fragmentComponents?.risman && isBulk,
       children: (props: any) => (
-        <Fragment
+        <Fragment2
           name="Risman"
-          props={{
+          Component={PlasmicRisman}
+          args={{
             data: fragmentComponents?.risman,
           }}
         />
@@ -246,18 +251,20 @@ export const Aside = (data: any) => {
       },
       children: (props: any) => (
         <BookingGlobalContextsProvider>
-          <Fragment
+          <Fragment2
             name="AddressesWrapper"
-            props={{
+            Component={PlasmicBookingAddressesWrapper}
+            args={{
               ...profileData,
               slug: seo.slug,
               children: centers
                 .filter((center: any) => center.id !== CENTERS.CONSULT)
                 .map((center: any) => (
-                  <Fragment
+                  <Fragment2
                     key={center.id}
                     name="AddressesCard"
-                    props={{
+                    Component={PlasmicBookingAddressesCard}
+                    args={{
                       ...profileData,
                       title: center.name,
                       map: center.map,
@@ -328,3 +335,4 @@ export const Aside = (data: any) => {
     },
   ];
 };
+

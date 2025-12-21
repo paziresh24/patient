@@ -1,9 +1,10 @@
+import PlasmicBookingSchedules from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingSchedules';
 import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import LocationIcon from '@/common/components/icons/location';
 import PhoneIcon from '@/common/components/icons/phone';
 import QuotesIcon from '@/common/components/icons/quotes';
-import { Fragment } from '@/common/fragment';
+import { Fragment2 } from '@/common/fragment/fragment2';
 import classNames from '@/common/utils/classNames';
 import { openGoogleMap } from '@/common/utils/openGoogleMap';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -85,9 +86,10 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
           )}
           <div className="flex flex-col space-y-2">
             {showSchedules && center?.userCenterId && (
-              <Fragment
+              <Fragment2
                 name="Schedules"
-                props={{
+                Component={PlasmicBookingSchedules}
+                args={{
                   centerId: center.id,
                   userCenterId: center.userCenterId,
                   centerName: center.name,
