@@ -11,16 +11,20 @@ interface GalleryProps {
   imageClassName?: string;
   imageWidth?: number;
   imageHeight?: number;
+  eagerFirst?: boolean;
 }
 
 export const Gallery = (props: GalleryProps) => {
-  const { items = [], className, imageClassName, imageWidth = 120, imageHeight = 120 } = props;
+  const { items = [], className, imageClassName, imageWidth = 120, imageHeight = 120, eagerFirst } = props;
 
   return (
     <PhotoProvider>
       <div className={classNames('flex pb-1 overflow-auto gap-3', className)}>
         {items.map((item, index) => (
           <PhotoView key={index} src={item ? (item?.includes('?') ? item : item + '?size=100') : ''}>
+            {(() => {
+              const isEager = !!eagerFirst && index === 0;
+              return (
             <Image
               key={item}
               src={item}
@@ -28,7 +32,11 @@ export const Gallery = (props: GalleryProps) => {
               height={imageHeight}
               alt=""
               className={classNames('rounded-md cursor-pointer', imageClassName)}
+              priority={isEager}
+              loading={isEager ? 'eager' : 'lazy'}
             />
+              );
+            })()}
           </PhotoView>
         ))}
       </div>
@@ -55,6 +63,10 @@ export const galleryMeta: CodeComponentMeta<GalleryProps> = {
     imageHeight: {
       type: 'number',
       defaultValue: 120,
+    },
+    eagerFirst: {
+      type: 'boolean',
+      defaultValue: false,
     },
   },
   classNameProp: 'className',
