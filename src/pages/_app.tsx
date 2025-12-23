@@ -16,7 +16,6 @@ import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Head from 'next/head';
 import { NextRouter, useRouter } from 'next/router';
 import Script from 'next/script';
-import NextNProgress from 'nextjs-progressbar';
 import { useEffect, useRef, useState } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
@@ -24,6 +23,7 @@ import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
+import RouteProgress from '@/common/components/layouts/RouteProgress';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -137,7 +137,6 @@ function MyApp(props: AppProps) {
     return cleanup;
   }, [router.pathname, router.asPath, isGtmDisabled]);
 
-  // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout ?? (page => page);
   return (
     <ErrorBoundary>
@@ -145,7 +144,7 @@ function MyApp(props: AppProps) {
         <Provider pageProps={pageProps}>
           <GlobalContextsProvider>
             <PlasmicRootProvider disableLoadingBoundary>
-              <NextNProgress height={2} color="#3861fb" options={{ showSpinner: false, minimum: 0.3 }} />
+              <RouteProgress height={2} color="#3861fb" showSpinner={false} minimum={0.3} />
               <Head>
                 <meta
                   name="viewport"
@@ -177,4 +176,3 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
 }
 
 export default MyApp;
-
