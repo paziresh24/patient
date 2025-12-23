@@ -468,11 +468,25 @@ function PlasmicLauncherMain__RenderFunc(props: {
                 )}
               />
             ) : null}
-            <AppsChannelNotice
-              data-plasmic-name={"appsChannelNotice"}
-              data-plasmic-override={overrides.appsChannelNotice}
-              className={classNames("__wab_instance", sty.appsChannelNotice)}
-            />
+            {(() => {
+              try {
+                return $ctx.auth.info?.provider?.job_title === "doctor";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <AppsChannelNotice
+                data-plasmic-name={"appsChannelNotice"}
+                data-plasmic-override={overrides.appsChannelNotice}
+                className={classNames("__wab_instance", sty.appsChannelNotice)}
+              />
+            ) : null}
           </Reveal>
           {(() => {
             try {
