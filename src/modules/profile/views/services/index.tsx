@@ -19,7 +19,7 @@ import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { bookRequestAvailability } from '@/common/apis/services/booking/bookRequestAvailability';
 import moment from 'jalali-moment';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { splunkInstance } from '@/common/services/splunk';
 import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
@@ -278,4 +278,3 @@ export const Services = ({
 };
 
 export default Services;
-
