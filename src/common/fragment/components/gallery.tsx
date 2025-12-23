@@ -15,7 +15,7 @@ interface GalleryProps {
 }
 
 export const Gallery = (props: GalleryProps) => {
-  const { items = [], className, imageClassName, imageWidth = 120, imageHeight = 120, eagerFirst } = props;
+  const { items = [], className, imageClassName, imageWidth = 120, imageHeight = 120, eagerFirst = true } = props;
 
   return (
     <PhotoProvider>
@@ -23,18 +23,19 @@ export const Gallery = (props: GalleryProps) => {
         {items.map((item, index) => (
           <PhotoView key={index} src={item ? (item?.includes('?') ? item : item + '?size=100') : ''}>
             {(() => {
-              const isEager = !!eagerFirst && index === 0;
+              const isEager = eagerFirst && index === 0;
               return (
-            <Image
-              key={item}
-              src={item}
-              width={imageWidth}
-              height={imageHeight}
-              alt=""
-              className={classNames('rounded-md cursor-pointer', imageClassName)}
-              priority={isEager}
-              loading={isEager ? 'eager' : 'lazy'}
-            />
+                <Image
+                  key={item}
+                  src={item}
+                  fetchPriority={isEager ? 'high' : 'auto'}
+                  width={imageWidth}
+                  height={imageHeight}
+                  alt=""
+                  className={classNames('rounded-md cursor-pointer', imageClassName)}
+                  priority={isEager}
+                  loading={isEager ? 'eager' : 'lazy'}
+                />
               );
             })()}
           </PhotoView>
