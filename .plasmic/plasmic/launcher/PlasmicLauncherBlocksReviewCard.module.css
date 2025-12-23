@@ -118,6 +118,7 @@
   color: var(--token-s_XuzePAGmOh);
   width: 13px;
   height: 13px;
+  margin-right: 0px;
   flex-shrink: 0;
 }
 .svg__bpfWc {
@@ -128,8 +129,59 @@
   height: 13px;
   flex-shrink: 0;
 }
-.text__tAt6 {
+.freeBox__vp1Ur {
+  display: flex;
+  flex-direction: row;
   position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  column-gap: 10px;
+}
+.modal:global(.__wab_instance):global(.__wab_instance) {
+  max-width: 100%;
+}
+.freeBox__vmew {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  column-gap: 5px;
+}
+.svg__eVs08 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+  color: var(--token-IFYe29KCwQQV);
+}
+.text__ul8KU {
+  font-size: var(--token-P2saABvfDCPH);
+  font-weight: 500;
+  color: var(--token-s_XuzePAGmOh);
+}
+.launcherBlocksWriteReply:global(.__wab_instance) {
+  max-width: 100%;
+}
+.freeBox__q5Kll {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 1px;
+  height: 17px;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  background: var(--token-4iQ-8GWBqX6X);
+  flex-shrink: 0;
+}
+.text__tAt6 {
   width: auto;
   height: auto;
   max-width: 100%;
@@ -157,4 +209,34 @@
   font-size: var(--token-0D6VF35kZC-C);
   padding-right: 0px;
   opacity: 0.8;
+}
+.freeBox___5L8CX {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: flex-end;
+  min-width: 0;
+}
+.apiRequest3:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.freeBox__q4MC5 {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  padding-right: 40px;
+  min-width: 0;
+}
+.launcherBlocksReplyCard:global(.__wab_instance) {
+  max-width: 100%;
 }
