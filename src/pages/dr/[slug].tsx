@@ -565,39 +565,40 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
                 })) ?? [],
             ) ?? [],
       },
-      ...(!feedbacks?.details?.hide_rates && {
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          'ratingValue': +(
-            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-            3
-          ).toFixed(1),
-          'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
-          'bestRating': 5,
-          'worstRating': 0,
-        },
-        review:
-          feedbacks?.feedbacks?.list
-            ?.filter((item: any) => !!item?.avg_rate_value)
-            ?.slice(0, 5) // Limit to 5 reviews for schema
-            ?.map?.((feedback: any) => ({
-              '@type': 'Review',
-              'author': {
-                '@type': 'Person',
-                'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
-              },
-              'reviewRating': {
-                '@type': 'Rating',
-                'ratingValue': feedback?.avg_rate_value ?? 0,
-                'bestRating': 5,
-                'worstRating': 0,
-              },
-              'reviewBody': feedback?.description,
-              'datePublished': feedback?.created_at?.split(' ')?.[0],
-            })) ?? [],
-      }),
+      ...(!feedbacks?.details?.hide_rates &&
+        (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 && {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            'ratingValue': +(
+              (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+              3
+            ).toFixed(1),
+            'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
+            'bestRating': 5,
+            'worstRating': 0,
+          },
+          review:
+            feedbacks?.feedbacks?.list
+              ?.filter((item: any) => !!item?.avg_rate_value)
+              ?.slice(0, 5) // Limit to 5 reviews for schema
+              ?.map?.((feedback: any) => ({
+                '@type': 'Review',
+                'author': {
+                  '@type': 'Person',
+                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
+                },
+                'reviewRating': {
+                  '@type': 'Rating',
+                  'ratingValue': feedback?.avg_rate_value ?? 0,
+                  'bestRating': 5,
+                  'worstRating': 0,
+                },
+                'reviewBody': feedback?.description,
+                'datePublished': feedback?.created_at?.split(' ')?.[0],
+              })) ?? [],
+        }),
     };
 
     const breadcrumbSchema = {
@@ -649,4 +650,3 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = getProfileServerSideProps;
 
 export default DoctorProfile;
-
