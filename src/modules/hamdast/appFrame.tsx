@@ -1,9 +1,4 @@
-import Loading from '@/common/components/atom/loading';
 import AppBar from '@/common/components/layouts/appBar';
-import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
-import Seo from '@/common/components/layouts/seo';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
-import { ThemeConfig } from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
 import { useOneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
@@ -12,8 +7,6 @@ import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { isEmpty } from 'lodash';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';

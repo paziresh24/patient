@@ -25,7 +25,7 @@ import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { growthbook } from '../_app';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
@@ -47,8 +47,36 @@ const { publicRuntimeConfig } = config();
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
   const { query, ...router } = useRouter();
+  const [isProfileScriptsReady, setIsProfileScriptsReady] = useState(false);
+  const profileScriptsReadyRef = useRef(false);
 
   const currentSlug = initialSlug ?? query.slug;
+
+  useEffect(() => {
+    if (profileScriptsReadyRef.current) return;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const enable = () => {
+      if (profileScriptsReadyRef.current) return;
+      profileScriptsReadyRef.current = true;
+      setIsProfileScriptsReady(true);
+    };
+    const onInteract = () => enable();
+    const cleanup = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      window.removeEventListener('pointerdown', onInteract);
+      window.removeEventListener('keydown', onInteract);
+      window.removeEventListener('touchstart', onInteract);
+      window.removeEventListener('scroll', onInteract);
+      window.removeEventListener('mousemove', onInteract);
+    };
+    window.addEventListener('pointerdown', onInteract, { passive: true, once: true });
+    window.addEventListener('keydown', onInteract, { passive: true, once: true });
+    window.addEventListener('touchstart', onInteract, { passive: true, once: true });
+    window.addEventListener('scroll', onInteract, { passive: true, once: true });
+    window.addEventListener('mousemove', onInteract, { passive: true, once: true });
+    timeoutId = setTimeout(enable, 10000);
+    return cleanup;
+  }, []);
 
   useEffect(() => {
     if (growthbook) {
@@ -291,13 +319,14 @@ const DoctorProfile = (props: any) => {
     <>
       <RaviGlobalContextsProvider>
         <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
-          {hamdastWidgets
-            ?.filter?.((item: any) => item?.placement?.includes?.('profile_scripts_tag') && item?.script)
-            ?.map((item: any) => (
-              <Script key={item?.id} id={item?.id}>
-                {item?.script}
-              </Script>
-            ))}
+          {isProfileScriptsReady &&
+            hamdastWidgets
+              ?.filter?.((item: any) => item?.placement?.includes?.('profile_scripts_tag') && item?.script)
+              ?.map((item: any) => (
+                <Script key={item?.id} id={item?.id} strategy="lazyOnload">
+                  {item?.script}
+                </Script>
+              ))}
           <main key={information?.id} className="lg:py-10 pwa:pb-24">
             {editable && (
               <div className="flex items-center p-2 !mb-4 bg-slate-200 lg:mb-0 lg:rounded-md text-slate-600 space-s-1">
@@ -536,39 +565,40 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
                 })) ?? [],
             ) ?? [],
       },
-      ...(!feedbacks?.details?.hide_rates && {
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          'ratingValue': +(
-            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-            3
-          ).toFixed(1),
-          'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
-          'bestRating': 5,
-          'worstRating': 0,
-        },
-        review:
-          feedbacks?.feedbacks?.list
-            ?.filter((item: any) => !!item?.avg_rate_value)
-            ?.slice(0, 5) // Limit to 5 reviews for schema
-            ?.map?.((feedback: any) => ({
-              '@type': 'Review',
-              'author': {
-                '@type': 'Person',
-                'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
-              },
-              'reviewRating': {
-                '@type': 'Rating',
-                'ratingValue': feedback?.avg_rate_value ?? 0,
-                'bestRating': 5,
-                'worstRating': 0,
-              },
-              'reviewBody': feedback?.description,
-              'datePublished': feedback?.created_at?.split(' ')?.[0],
-            })) ?? [],
-      }),
+      ...(!feedbacks?.details?.hide_rates &&
+        (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 && {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            'ratingValue': +(
+              (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+              3
+            ).toFixed(1),
+            'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
+            'bestRating': 5,
+            'worstRating': 0,
+          },
+          review:
+            feedbacks?.feedbacks?.list
+              ?.filter((item: any) => !!item?.avg_rate_value)
+              ?.slice(0, 5) // Limit to 5 reviews for schema
+              ?.map?.((feedback: any) => ({
+                '@type': 'Review',
+                'author': {
+                  '@type': 'Person',
+                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
+                },
+                'reviewRating': {
+                  '@type': 'Rating',
+                  'ratingValue': feedback?.avg_rate_value ?? 0,
+                  'bestRating': 5,
+                  'worstRating': 0,
+                },
+                'reviewBody': feedback?.description,
+                'datePublished': feedback?.created_at?.split(' ')?.[0],
+              })) ?? [],
+        }),
     };
 
     const breadcrumbSchema = {
@@ -620,4 +650,3 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
 export const getServerSideProps = getProfileServerSideProps;
 
 export default DoctorProfile;
-
