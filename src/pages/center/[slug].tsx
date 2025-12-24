@@ -18,6 +18,7 @@ import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
+import flatten from 'lodash/flatten';
 import { GetServerSidePropsContext } from 'next';
 import config from 'next/config';
 import dynamic from 'next/dynamic';

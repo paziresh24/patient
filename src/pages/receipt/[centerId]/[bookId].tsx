@@ -34,6 +34,8 @@ import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import MessengerButton from '@/modules/myTurn/components/messengerButton';
+import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
@@ -41,7 +43,7 @@ import ReceiptError from '@/modules/receipt/components/ReceiptError';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import moment from 'jalali-moment';
-import shuffle from 'lodash/shuffle';
+import { shuffle } from 'lodash';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -49,6 +51,7 @@ import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
+import Script from 'next/script';
 import axios from 'axios';
 import WarningIcon from '@/common/components/icons/warning';
 import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
@@ -871,4 +874,3 @@ export const getServerSideProps = withCSR(
 );
 
 export default Receipt;
-

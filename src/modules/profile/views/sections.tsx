@@ -1,6 +1,7 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
+import { Fragment } from '@/common/fragment';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import pick from 'lodash/pick';

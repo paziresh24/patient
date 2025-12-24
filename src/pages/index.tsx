@@ -2,6 +2,7 @@ import Logo from '@/common/components/atom/logo';
 import Text from '@/common/components/atom/text';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { Fragment } from '@/common/fragment';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
@@ -28,11 +29,6 @@ import { toastActionble } from '@/common/utils/toastActionble';
 import Button from '@/common/components/atom/button';
 import ChevronIcon from '@/common/components/icons/chevron';
 import { splunkInstance } from '@/common/services/splunk';
-import { Fragment2 } from '@/common/fragment/fragment2';
-import PlasmicLocationSelectionScript from '.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript';
-import PlasmicRecentSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
-import PlasmicOnlineVisit from '.plasmic/plasmic/paziresh_24_search/PlasmicOnlineVisit';
-import PlasmicHomePageShortcuts from '.plasmic/plasmic/paziresh_24_search/PlasmicHomePageShortcuts';
 
 const Home = ({ fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
@@ -60,7 +56,7 @@ const Home = ({ fragmentComponents }: any) => {
 
   return (
     <>
-      <Fragment2 Component={PlasmicLocationSelectionScript} name="LocationSelectionScript" />
+      <Fragment name="LocationSelectionScript" />
       {customize.backgroundImage && (
         <div
           className="h-screen fixed top-0 w-full -z-10"
@@ -107,10 +103,9 @@ const Home = ({ fragmentComponents }: any) => {
           />
           {!customize.partnerKey && (
             <div className="lg:w-[50rem] w-full">
-              <Fragment2
-                Component={PlasmicRecentSearch}
+              <Fragment
                 name="RecentSearch"
-                args={{
+                props={{
                   onClick: (value: any) => {
                     setDefaultInputValue(value?.name || value || '');
                     setIsOpenSuggestion(true);
@@ -150,13 +145,13 @@ const Home = ({ fragmentComponents }: any) => {
         {customize.showConsultServices &&
           (fragmentComponents?.showPlasmicOnlineVisit || showPlasmicOnlineVisit ? (
             <div>
-              <Fragment2 Component={PlasmicOnlineVisit} name="OnlineVisit" />
+              <Fragment name="OnlineVisit" />
             </div>
           ) : (
             <OnlineVisitPromote />
           ))}
         <SearchGlobalContextsProvider>
-          <Fragment2 Component={PlasmicHomePageShortcuts} name="HomePageShortcuts" />
+          <Fragment name="HomePageShortcuts" />
         </SearchGlobalContextsProvider>
         {customize?.partnerKey && <CentersList />}
       </main>
