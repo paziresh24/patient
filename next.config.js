@@ -136,13 +136,6 @@ const nextConfig = {
             chunks: 'async',
             priority: 50,
           },
-          antd: {
-            test: /[\\/]node_modules[\\/](antd|@ant-design|@plasmicpkgs\/antd5|rc-)/,
-            name: 'antd',
-            priority: 20,
-            chunks: 'all',
-            enforce: true,
-          },
           swr: {
             test: /[\\/]node_modules[\\/]swr/,
             name: 'swr',
