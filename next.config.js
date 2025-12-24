@@ -97,25 +97,11 @@ const nextConfig = {
             minChunks: 4,
             priority: 5,
           },
-          antdIcons: {
-            test: /[\\/]node_modules[\\/]@ant-design[\\/]icons/,
-            name: 'antd-icons',
+          antd: {
+            test: /[\\/]node_modules[\\/](antd|@ant-design|rc-)/,
+            name: 'antd',
             chunks: 'all',
             priority: 40,
-            reuseExistingChunk: true,
-          },
-          antdCore: {
-            test: /[\\/]node_modules[\\/](antd|@ant-design[\\/]cssinjs|rc-)/,
-            name: 'antd-core',
-            chunks: 'all',
-            priority: 35,
-            reuseExistingChunk: true,
-          },
-          antdPro: {
-            test: /[\\/]node_modules[\\/]@ant-design[\\/]pro-components/,
-            name: 'antd-pro',
-            chunks: 'async',
-            priority: 32,
             reuseExistingChunk: true,
           },
           plasmicAntd: {
