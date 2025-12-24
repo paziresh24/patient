@@ -2,7 +2,6 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
-import { Fragment } from '@/common/fragment';
 import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import useModal from '@/common/hooks/useModal';
@@ -19,9 +18,8 @@ import { useState } from 'react';
 import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { bookRequestAvailability } from '@/common/apis/services/booking/bookRequestAvailability';
-import { growthbook } from 'src/pages/_app';
 import moment from 'jalali-moment';
-import { isEmpty, sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { splunkInstance } from '@/common/services/splunk';
 import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
@@ -280,4 +278,3 @@ export const Services = ({
 };
 
 export default Services;
-

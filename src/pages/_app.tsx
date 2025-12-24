@@ -15,19 +15,15 @@ import getConfig from 'next/config';
 import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import Head from 'next/head';
 import { NextRouter, useRouter } from 'next/router';
-import NextNProgress from 'nextjs-progressbar';
-import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
+import Script from 'next/script';
+import { useEffect, useRef, useState } from 'react';
 import 'react-photo-view/dist/react-photo-view.css';
 import '../styles/globals.css';
 import '../styles/nprogress.css';
 import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
-
-const GoogleTagManager = dynamic(() => import('@next/third-parties/google').then(mod => ({ default: mod.GoogleTagManager })), {
-  ssr: false,
-}) as React.ComponentType<{ gtmId: string }>;
+import RouteProgress from '@/common/components/layouts/RouteProgress';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -62,6 +58,10 @@ function MyApp(props: AppProps) {
   const { asPath } = useRouter();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const user = useUserInfoStore(state => state.info);
+  const [isGtmReady, setIsGtmReady] = useState(false);
+  const gtmEnabledRef = useRef(false);
+  const gtmId = 'GTM-P5RPLDP';
+  const isGtmDisabled = String(publicRuntimeConfig.DESABLED_GTM).toLowerCase() === 'true';
 
   useEffect(() => {
     if (isEnabledGrowthbook) {
@@ -102,7 +102,41 @@ function MyApp(props: AppProps) {
     }
   }, [isLogin, isApplication]);
 
-  // Use the layout defined at the page level, if available
+  useEffect(() => {
+    if (isGtmDisabled || gtmEnabledRef.current) return;
+    const isDoctorPage = router.pathname === '/dr/[slug]' || router.asPath.startsWith('/dr/');
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    let idleId: any;
+    const enable = () => {
+      if (gtmEnabledRef.current) return;
+      gtmEnabledRef.current = true;
+      setIsGtmReady(true);
+    };
+    const onInteract = () => enable();
+    const cleanup = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      if (idleId && typeof (window as any).cancelIdleCallback === 'function') (window as any).cancelIdleCallback(idleId);
+      window.removeEventListener('pointerdown', onInteract);
+      window.removeEventListener('keydown', onInteract);
+      window.removeEventListener('touchstart', onInteract);
+      window.removeEventListener('scroll', onInteract);
+      window.removeEventListener('mousemove', onInteract);
+    };
+    if (isDoctorPage) {
+      window.addEventListener('pointerdown', onInteract, { passive: true, once: true });
+      window.addEventListener('keydown', onInteract, { passive: true, once: true });
+      window.addEventListener('touchstart', onInteract, { passive: true, once: true });
+      window.addEventListener('scroll', onInteract, { passive: true, once: true });
+      window.addEventListener('mousemove', onInteract, { passive: true, once: true });
+      timeoutId = setTimeout(enable, 10000);
+    } else {
+      const ric = (window as any).requestIdleCallback as undefined | ((cb: () => void, opts?: { timeout: number }) => any);
+      if (typeof ric === 'function') idleId = ric(enable, { timeout: 2000 });
+      else timeoutId = setTimeout(enable, 1500);
+    }
+    return cleanup;
+  }, [router.pathname, router.asPath, isGtmDisabled]);
+
   const getLayout = Component.getLayout ?? (page => page);
   return (
     <ErrorBoundary>
@@ -110,7 +144,7 @@ function MyApp(props: AppProps) {
         <Provider pageProps={pageProps}>
           <GlobalContextsProvider>
             <PlasmicRootProvider disableLoadingBoundary>
-              <NextNProgress height={2} color="#3861fb" options={{ showSpinner: false, minimum: 0.3 }} />
+              <RouteProgress height={2} color="#3861fb" showSpinner={false} minimum={0.3} />
               <Head>
                 <meta
                   name="viewport"
@@ -120,7 +154,15 @@ function MyApp(props: AppProps) {
                 />
               </Head>
               <Hydrate state={pageProps.dehydratedState}>{getLayout(<Component {...pageProps} />, router)}</Hydrate>
-              {typeof window !== 'undefined' && <GoogleTagManager gtmId="GTM-P5RPLDP" />}
+              {!isGtmDisabled && isGtmReady && (
+                <Script
+                  id="gtm-script"
+                  strategy="afterInteractive"
+                  dangerouslySetInnerHTML={{
+                    __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`,
+                  }}
+                />
+              )}
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
