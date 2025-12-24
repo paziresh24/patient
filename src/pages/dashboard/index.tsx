@@ -6,6 +6,7 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useResponsive from '@/common/hooks/useResponsive';
 import { useApps } from '@/modules/dashboard/apis/apps';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
+import flatten from 'lodash/flatten';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect } from 'react';

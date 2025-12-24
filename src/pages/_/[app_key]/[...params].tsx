@@ -14,7 +14,7 @@ import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty } from 'lodash';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -245,4 +245,3 @@ export const getServerSideProps: GetServerSideProps = withServerUtils(
 );
 
 export default Page;
-

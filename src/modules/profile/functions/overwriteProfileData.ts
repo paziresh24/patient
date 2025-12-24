@@ -1,5 +1,6 @@
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import flatMap from 'lodash/flatMap';
+import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
@@ -59,61 +60,54 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     (item: any) => item.tag,
   );
 
-  const centers =
-    overwriteData?.centers?.map((newCenter: any) => {
-      // Find corresponding center in full profile
-      const sourceCenter = source?.centers?.find((sourceCenter: any) => sourceCenter.id === newCenter.id);
-
-      if (sourceCenter) {
-        // Merge new center data with full profile data
-        return {
-          ...sourceCenter, // Start with full profile data
-          // Override with new API data where available
-          id: newCenter.id,
-          name: newCenter.name,
-          display_number: newCenter.display_number,
-          display_number_array: newCenter.display_number, // Map display_number to display_number_array
-          tell: newCenter.tell,
-          tell_array: newCenter.tell, // Map tell to tell_array
-          address: newCenter.address,
-          center_type: newCenter.type_id, // Map type_id to center_type
-          status: newCenter.status,
-          server_id: newCenter.server_id,
-          city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null) || sourceCenter.city,
-          city_en_slug: newCenter.city?.slug,
-          province: newCenter.city?.province?.name || (typeof newCenter.city?.province === 'string' ? newCenter.city.province : null),
-          map: newCenter.location
-            ? {
-                lat: newCenter.location.lat,
-                lon: newCenter.location.lon,
-              }
-            : sourceCenter.map,
-          // Keep services from full profile
-          services: sourceCenter.services,
-          // Keep other full profile fields like freeturn, settings, etc.
-        };
-      } else {
-        // If no matching center in full profile, use new center data with empty services
-        return {
-          ...newCenter,
-          display_number_array: newCenter.display_number, // Map display_number to display_number_array
-          tell_array: newCenter.tell, // Map tell to tell_array
-          center_type: newCenter.type_id, // Map type_id to center_type
-          city: newCenter.city?.name || newCenter.city, // Ensure city is string, not object
-          city_en_slug: newCenter.city?.slug,
-          province: newCenter.city?.province?.name,
-          map: newCenter.location
-            ? {
-                lat: newCenter.location.lat,
-                lon: newCenter.location.lon,
-              }
-            : null,
-          services: [],
-        };
-      }
-    }) ??
-    source?.centers ??
-    [];
+  const centers = overwriteData?.centers?.map((newCenter: any) => {
+    // Find corresponding center in full profile
+    const sourceCenter = source?.centers?.find((sourceCenter: any) => sourceCenter.id === newCenter.id);
+    
+    if (sourceCenter) {
+      // Merge new center data with full profile data
+      return {
+        ...sourceCenter, // Start with full profile data
+        // Override with new API data where available
+        id: newCenter.id,
+        name: newCenter.name,
+        display_number: newCenter.display_number,
+        display_number_array: newCenter.display_number, // Map display_number to display_number_array
+        tell: newCenter.tell,
+        tell_array: newCenter.tell, // Map tell to tell_array
+        address: newCenter.address,
+        center_type: newCenter.type_id, // Map type_id to center_type
+        status: newCenter.status,
+        server_id: newCenter.server_id,
+        city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null) || sourceCenter.city,
+        city_en_slug: newCenter.city?.slug,
+        province: newCenter.city?.province?.name || (typeof newCenter.city?.province === 'string' ? newCenter.city.province : null),
+        map: newCenter.location ? {
+          lat: newCenter.location.lat,
+          lon: newCenter.location.lon
+        } : sourceCenter.map,
+        // Keep services from full profile
+        services: sourceCenter.services,
+        // Keep other full profile fields like freeturn, settings, etc.
+      };
+    } else {
+      // If no matching center in full profile, use new center data with empty services
+      return {
+        ...newCenter,
+        display_number_array: newCenter.display_number, // Map display_number to display_number_array
+        tell_array: newCenter.tell, // Map tell to tell_array
+        center_type: newCenter.type_id, // Map type_id to center_type
+        city: newCenter.city?.name || newCenter.city, // Ensure city is string, not object
+        city_en_slug: newCenter.city?.slug,
+        province: newCenter.city?.province?.name,
+        map: newCenter.location ? {
+          lat: newCenter.location.lat,
+          lon: newCenter.location.lon
+        } : null,
+        services: []
+      };
+    }
+  }) ?? source?.centers ?? [];
 
   const expertises = {
     group_expertises: isEmpty(group_expertises)
@@ -154,11 +148,10 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   };
 
   // Merge galleries from all centers with center_type = 1 (fallback logic)
-  const fallbackGallery =
-    centers
-      ?.filter((center: any) => center?.center_type === 1)
-      ?.flatMap((center: any) => center?.gallery ?? [])
-      ?.filter(Boolean) ?? [];
+  const fallbackGallery = centers
+    ?.filter((center: any) => center?.center_type === 1)
+    ?.flatMap((center: any) => center?.gallery ?? [])
+    ?.filter(Boolean) ?? [];
 
   const media = {
     aparat: source?.aparat_video_code ?? null,
@@ -185,4 +178,3 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
 
   return { information, centers, expertises, feedbacks, history, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo };
 };
-

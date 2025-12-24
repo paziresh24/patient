@@ -1,3 +1,5 @@
+import { splunkInstance } from '@/common/services/splunk';
+import throttle from 'lodash/throttle';
 import React from 'react';
 
 interface Props {

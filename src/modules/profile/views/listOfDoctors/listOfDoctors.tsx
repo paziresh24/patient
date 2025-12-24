@@ -3,6 +3,7 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
+import { Fragment } from '@/common/fragment';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
