@@ -7311,6 +7311,12 @@
           "name": "PWA",
           "displayName": "PWA",
           "componentImportPath": "@/common/fragment/pwa"
+        },
+        {
+          "id": "8z3-umIrpnZ1",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
