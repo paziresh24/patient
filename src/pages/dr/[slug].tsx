@@ -39,6 +39,7 @@ import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientF
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
+import Head from 'next/head';
 import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
 
@@ -60,7 +61,10 @@ const DoctorProfile = (props: any) => {
       profileScriptsReadyRef.current = true;
       setIsProfileScriptsReady(true);
     };
-    const onInteract = () => enable();
+    const onInteract = () => {
+      enable();
+      cleanup();
+    };
     const cleanup = () => {
       if (timeoutId) clearTimeout(timeoutId);
       window.removeEventListener('pointerdown', onInteract);
@@ -69,11 +73,11 @@ const DoctorProfile = (props: any) => {
       window.removeEventListener('scroll', onInteract);
       window.removeEventListener('mousemove', onInteract);
     };
-    window.addEventListener('pointerdown', onInteract, { passive: true, once: true });
-    window.addEventListener('keydown', onInteract, { passive: true, once: true });
-    window.addEventListener('touchstart', onInteract, { passive: true, once: true });
-    window.addEventListener('scroll', onInteract, { passive: true, once: true });
-    window.addEventListener('mousemove', onInteract, { passive: true, once: true });
+    window.addEventListener('pointerdown', onInteract, { passive: true });
+    window.addEventListener('keydown', onInteract, { passive: true });
+    window.addEventListener('touchstart', onInteract, { passive: true });
+    window.addEventListener('scroll', onInteract, { passive: true });
+    window.addEventListener('mousemove', onInteract, { passive: true });
     timeoutId = setTimeout(enable, 10000);
     return cleanup;
   }, []);
@@ -142,7 +146,9 @@ const DoctorProfile = (props: any) => {
     dontShowRateAndReviewMessage,
   } = finalProps ?? {};
 
-  useFeedbackDataStore.getState().data = feedbacks?.feedbacks ?? [];
+  useEffect(() => {
+    useFeedbackDataStore.setState({ data: feedbacks?.feedbacks ?? [] });
+  }, [feedbacks]);
 
   const [isPageLoading, setIsPageLoading] = useState(false);
 
@@ -317,6 +323,10 @@ const DoctorProfile = (props: any) => {
 
   return (
     <>
+      <Head>
+        <link rel="dns-prefetch" href="//cdn.paziresh24.com" />
+        <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
+      </Head>
       <RaviGlobalContextsProvider>
         <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
           {isProfileScriptsReady &&
