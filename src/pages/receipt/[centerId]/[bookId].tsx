@@ -34,8 +34,6 @@ import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
-import MessengerButton from '@/modules/myTurn/components/messengerButton';
-import { SecureCallButton } from '@/modules/myTurn/components/secureCallButton/secureCallButton';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
@@ -43,7 +41,7 @@ import ReceiptError from '@/modules/receipt/components/ReceiptError';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import moment from 'jalali-moment';
-import { shuffle } from 'lodash';
+import shuffle from 'lodash/shuffle';
 import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
@@ -51,7 +49,6 @@ import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
-import Script from 'next/script';
 import axios from 'axios';
 import WarningIcon from '@/common/components/icons/warning';
 import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
@@ -79,24 +76,26 @@ const Receipt = () => {
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
   const [hasHolidays, setHasHolidays] = useState(false);
 
-  useEffect(() => {
-    if (bookId && centerId === '5532' && user?.id && typeof window !== 'undefined') {
-      console.log('sendEvent', user?.id, centerId, bookId);
-      setTimeout(() => {
-        window.pishani?.sendEvent?.('PAGE_VIEW', {
-          user_id: user?.id,
-          center_id: centerId,
-          book_id: bookId,
-        });
-      }, 2000);
-    }
-  }, [centerId, bookId, user?.id]);
-
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
     pincode: pincode as string,
   });
+
+  useEffect(() => {
+    if (action && getReceiptDetails?.data) {
+      if (action === 'open_channel') {
+        window.location.replace(
+          decodeURIComponent(
+            getReceiptDetails?.data?.data?.data?.selected_online_visit_channel?.channel_link.replace(
+              'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+              '',
+            ),
+          ),
+        );
+      }
+    }
+  }, [action, getReceiptDetails?.data]);
 
   // Error handling function
   const getErrorStatusCode = () => {
@@ -109,7 +108,7 @@ const Receipt = () => {
   const handleRetry = () => {
     getReceiptDetails.refetch();
   };
-  const pdfGenerator = usePdfGenerator({
+  const { pdfGenerator, isGenerating: isPdfGenerating } = usePdfGenerator({
     ref: 'receipt',
     fileName: 'Paziresh24-Receipt',
     orientation: 'portrait',
@@ -575,8 +574,8 @@ const Receipt = () => {
                   {getReceiptDetails.isSuccess ? (
                     <div className="flex flex-col space-y-3">
                       <div className="flex space-s-3">
-                        <Button block variant="secondary" onClick={pdfGenerator}>
-                          دانلود رسید نوبت
+                        <Button block variant="secondary" onClick={pdfGenerator} disabled={isPdfGenerating}>
+                          {isPdfGenerating ? 'در حال آماده‌سازی...' : 'دانلود رسید نوبت'}
                         </Button>
                         <Button block variant="secondary" onClick={handleShareAction}>
                           اشتراک گذاری
@@ -872,3 +871,4 @@ export const getServerSideProps = withCSR(
 );
 
 export default Receipt;
+

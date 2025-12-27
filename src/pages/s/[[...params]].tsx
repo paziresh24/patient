@@ -10,6 +10,7 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize, { ThemeConfig } from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
+
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
@@ -108,9 +109,10 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   }, []);
 
   useEffect(() => {
-    if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
+    if (typeof queries?.text === 'string') setUserSearchValue(queries.text);
+    else setUserSearchValue('');
     if (lat && lon) setGeoLocation({ lat: +lat, lon: +lon });
-  }, []);
+  }, [queries?.text, lat, lon]);
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -162,7 +164,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
             type: 'search_card_view',
             events: result.map(item => ({
               card_data: {
-                action: item.actions?.map?.(item =>
+                action: item.actions?.map?.((item: any) =>
                   JSON.stringify({ outline: item.outline, title: item.title, top_title: removeHtmlTagInString(item.top_title) }),
                 ),
                 _id: item._id,
@@ -468,3 +470,4 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
+

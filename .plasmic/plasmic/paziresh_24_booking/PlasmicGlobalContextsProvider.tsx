@@ -12,6 +12,7 @@ import { Fragment } from "@/common/fragment/designSystemGlobalContext"; // plasm
 import { GrowthbookGlobalContext } from "@/common/fragment/growthbookGlobalContext"; // plasmic-import: c3ZkUFU_sp6u/codeComponent
 import { Splunk } from "@/common/fragment/splunk"; // plasmic-import: pl8QLmlPxW_d/codeComponent
 import { PWA } from "@/common/fragment/pwa"; // plasmic-import: OC-wfWxHiBNw/codeComponent
+import { HamdastAppsSelectorModalProvider } from "@/modules/hamdast/components/apps-selector-modal"; // plasmic-import: CMDIFfKIRjBF/codeComponent
 
 export interface GlobalContextsProviderProps {
   children?: React.ReactElement;
@@ -29,6 +30,12 @@ export interface GlobalContextsProviderProps {
 
   splunkProps?: Partial<Omit<React.ComponentProps<typeof Splunk>, "children">>;
   pwaProps?: Partial<Omit<React.ComponentProps<typeof PWA>, "children">>;
+  hamdastAppsSelectorModalProviderProps?: Partial<
+    Omit<
+      React.ComponentProps<typeof HamdastAppsSelectorModalProvider>,
+      "children"
+    >
+  >;
 }
 
 export default function GlobalContextsProvider(
@@ -40,7 +47,8 @@ export default function GlobalContextsProvider(
     fragmentProps,
     growthbookGlobalContextProps,
     splunkProps,
-    pwaProps
+    pwaProps,
+    hamdastAppsSelectorModalProviderProps
   } = props;
 
   return (
@@ -99,7 +107,19 @@ export default function GlobalContextsProvider(
                 : undefined
             }
           >
-            <PWA {...pwaProps}>{children}</PWA>
+            <PWA {...pwaProps}>
+              <HamdastAppsSelectorModalProvider
+                {...hamdastAppsSelectorModalProviderProps}
+                onAppSelect={
+                  hamdastAppsSelectorModalProviderProps &&
+                  "onAppSelect" in hamdastAppsSelectorModalProviderProps
+                    ? hamdastAppsSelectorModalProviderProps.onAppSelect!
+                    : undefined
+                }
+              >
+                {children}
+              </HamdastAppsSelectorModalProvider>
+            </PWA>
           </Splunk>
         </GrowthbookGlobalContext>
       </Fragment>

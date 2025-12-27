@@ -48,8 +48,8 @@ export const footerPaziresh24 = {
       link: '/home/contact-us/',
     },
     {
-      title: 'مستندات API',
-      link: 'https://developers.paziresh24.com/',
+      title: 'توسعه دهندگان',
+      link: 'https://hamdast.paziresh24.com',
     },
     {
       title: 'فرصت‌های شغلی',

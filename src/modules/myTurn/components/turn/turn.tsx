@@ -23,6 +23,7 @@ export const Turn: React.FC<TurnProps> = props => {
     centerInfo,
     id,
     serverId,
+    isFromDashboard,
   } = props;
   const { t } = useTranslation();
 
@@ -55,6 +56,7 @@ export const Turn: React.FC<TurnProps> = props => {
         status={status}
         isDelete={isDelete}
         paymentStatus={paymentStatus}
+        isFromDashboard={isFromDashboard}
       />
 
       <TurnBody

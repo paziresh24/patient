@@ -700,6 +700,19 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
               const currentIndex = __plasmic_idx_0;
               return (
                 <LauncherBlocksReviewCard
+                  appKey={(() => {
+                    try {
+                      return $props.appKey;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   className={classNames(
                     "__wab_instance",
                     sty.launcherBlocksReviewCard__sx0Of
@@ -720,6 +733,19 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                   createdAt={(() => {
                     try {
                       return currentItem.created_at;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  id={(() => {
+                    try {
+                      return currentItem.id;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -984,6 +1010,19 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                     const currentIndex = __plasmic_idx_0;
                     return (
                       <LauncherBlocksReviewCard
+                        appKey={(() => {
+                          try {
+                            return $props.appKey;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
                         className={classNames(
                           "__wab_instance",
                           sty.launcherBlocksReviewCard__lvQ5F
@@ -1004,6 +1043,19 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                         createdAt={(() => {
                           try {
                             return currentItem.created_at;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()}
+                        id={(() => {
+                          try {
+                            return currentItem.id;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||

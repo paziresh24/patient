@@ -3,29 +3,18 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
-import { Fragment } from '@/common/fragment';
 import { splunkInstance } from '@/common/services/splunk';
-import optimizeLogging from '@/common/utils/optimizeLogging';
+import SearchCard from '@/modules/search/components/card/card';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
+import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import config from 'next/config';
-import dynamic from 'next/dynamic';
 import { flatten } from 'lodash';
 import { InfiniteData } from '@tanstack/react-query';
-
-const SearchCard = dynamic(() => import('@/modules/search/components/card/card'), {
-  loading: () => <Skeleton h="13rem" w="100%" rounded="lg" />,
-  ssr: false,
-});
-
-const SearchGlobalContextsProvider = dynamic(
-  () => import('../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider'),
-  {
-    ssr: false,
-  },
-);
+import { PlasmicSearchResults } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults';
+import { Fragment2 } from '@/common/fragment/fragment2';
 
 const { publicRuntimeConfig } = config();
 
@@ -76,17 +65,15 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
   const usePlasmicSearchResult = useFeatureIsOn('center-profile::use-plasmic-search-result');
 
   const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
-    optimizeLogging(() => {
-      splunkInstance('center-profile').sendEvent({
-        group: 'center_profile',
-        type: 'doctor_card_click',
-        event: {
-          element_name: elementName,
-          element_content: elementContent,
-          title: item?.title,
-          terminal_id: getCookie('terminal_id'),
-        },
-      });
+    splunkInstance('center-profile').sendEvent({
+      group: 'center_profile',
+      type: 'doctor_card_click',
+      event: {
+        element_name: elementName,
+        element_content: elementContent,
+        title: item?.title,
+        terminal_id: getCookie('terminal_id'),
+      },
     });
   };
   const result = flatten(doctors?.pages?.map((page: any) => page?.search?.result as any[]) ?? []) ?? [];
@@ -198,9 +185,10 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
           )}
           {(result.length === 0 ? !loading : true) && (
             <SearchGlobalContextsProvider>
-              <Fragment
+              <Fragment2
                 name="SearchResults"
-                props={{
+                Component={PlasmicSearchResults}
+                args={{
                   searchResultResponse: {
                     ...doctors?.pages?.[0],
                     search: {
@@ -227,3 +215,4 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
 };
 
 export default ListOfDoctors;
+

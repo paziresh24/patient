@@ -23,6 +23,7 @@ interface Params {
   center_id: string;
   user_center_id: string;
   cell_country_prefix?: string;
+  payment_method?: string;
 }
 
 export const book = ({ user_center_id, ...params }: Params) => {

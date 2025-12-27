@@ -1,7 +1,6 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
-import { Fragment } from '@/common/fragment';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import pick from 'lodash/pick';
@@ -11,6 +10,7 @@ import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import classNames from '@/common/utils/classNames';
 import Hamdast from '@/modules/hamdast/render';
+import { Fragment2 } from '@/common/fragment/fragment2';
 
 const { publicRuntimeConfig } = config();
 
@@ -20,6 +20,10 @@ const Biography = dynamic(() => import('./biography'), {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
   },
 });
+const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
+const PlasmicProfileSeo = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo'));
+const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
+const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="8rem" rounded="lg" />;
@@ -81,7 +85,7 @@ export const sections = (data: any) => {
       children: (props: any) => (
         <ProfileGlobalContextsProvider>
           <div className="[&_*]:text-sm [&_*]:tracking-normal [&_*]:leading-normal [&_h1]:font-bold [&_h2]:font-bold [&_p]:font-normal ">
-            <Fragment name="ProfileAbout" props={{ ...profileData }} />
+            <Fragment2 name="ProfileAbout" Component={PlasmicProfileAbout} args={{ ...profileData }} />
           </div>
         </ProfileGlobalContextsProvider>
       ),
@@ -137,9 +141,10 @@ export const sections = (data: any) => {
         const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
 
         return (
-          <Fragment
+          <Fragment2
             name="ProfileGallery"
-            props={{
+            Component={PlasmicProfileGallery}
+            args={{
               gallery: reformattedItems,
             }}
           />
@@ -173,7 +178,7 @@ export const sections = (data: any) => {
     {
       isShow: !customize?.partnerKey && centers?.length > 0,
       noWrapper: true,
-      children: () => <Fragment name="Claim" props={{ ...profileData }} />,
+      children: () => <Fragment2 name="Claim" Component={PlasmicClaim} args={{ ...profileData }} />,
     },
     {
       isShow: !customize?.partnerKey,
@@ -293,9 +298,10 @@ export const sections = (data: any) => {
         const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
 
         return (
-          <Fragment
+          <Fragment2
             name="ProfileSeo"
-            props={{
+            Component={PlasmicProfileSeo}
+            args={{
               information,
               feedbacks,
               center,
@@ -312,3 +318,4 @@ export const sections = (data: any) => {
     },
   ] as const;
 };
+

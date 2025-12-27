@@ -61,6 +61,9 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import Paziresh24Avatar from "../../Paziresh24Avatar"; // plasmic-import: zljt-TXjec48/component
+import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
+import LauncherBlocksWriteReply from "../../LauncherBlocksWriteReply"; // plasmic-import: cy-CLI21vlSG/component
+import LauncherBlocksReplyCard from "../../LauncherBlocksReplyCard"; // plasmic-import: ITNsvfxE2UwF/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
 
@@ -71,6 +74,7 @@ import sty from "./PlasmicLauncherBlocksReviewCard.module.css"; // plasmic-impor
 
 import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: tltd2ahuz9sI/icon
 import Icon5Icon from "./icons/PlasmicIcon__Icon5"; // plasmic-import: 5F-ErxOAtGpo/icon
+import Icon7Icon from "./icons/PlasmicIcon__Icon7"; // plasmic-import: kd7rFjLlQQAS/icon
 
 createPlasmicElementProxy;
 
@@ -85,13 +89,17 @@ export type PlasmicLauncherBlocksReviewCard__ArgsType = {
   rate?: number;
   content?: string;
   createdAt?: string;
+  id?: string;
+  appKey?: string;
 };
 type ArgPropType = keyof PlasmicLauncherBlocksReviewCard__ArgsType;
 export const PlasmicLauncherBlocksReviewCard__ArgProps = new Array<ArgPropType>(
   "userId",
   "rate",
   "content",
-  "createdAt"
+  "createdAt",
+  "id",
+  "appKey"
 );
 
 export type PlasmicLauncherBlocksReviewCard__OverridesType = {
@@ -99,6 +107,11 @@ export type PlasmicLauncherBlocksReviewCard__OverridesType = {
   apiRequest2?: Flex__<typeof ApiRequest>;
   paziresh24Avatar?: Flex__<typeof Paziresh24Avatar>;
   apiRequest?: Flex__<typeof ApiRequest>;
+  modal?: Flex__<typeof Paziresh24Modal>;
+  span?: Flex__<"span">;
+  launcherBlocksWriteReply?: Flex__<typeof LauncherBlocksWriteReply>;
+  apiRequest3?: Flex__<typeof ApiRequest>;
+  launcherBlocksReplyCard?: Flex__<typeof LauncherBlocksReplyCard>;
 };
 
 export interface DefaultLauncherBlocksReviewCardProps {
@@ -106,6 +119,8 @@ export interface DefaultLauncherBlocksReviewCardProps {
   rate?: number;
   content?: string;
   createdAt?: string;
+  id?: string;
+  appKey?: string;
   className?: string;
 }
 
@@ -197,6 +212,36 @@ function PlasmicLauncherBlocksReviewCard__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiRequest2"
+      },
+      {
+        path: "modal.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+      },
+      {
+        path: "apiRequest3.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest3"
+      },
+      {
+        path: "apiRequest3.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest3"
+      },
+      {
+        path: "apiRequest3.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest3"
       }
     ],
     [$props, $ctx, $refs]
@@ -492,31 +537,200 @@ function PlasmicLauncherBlocksReviewCard__RenderFunc(props: {
             </div>
           </div>
         </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__tAt6
-          )}
-        >
-          <div
-            className={projectcss.__wab_expr_html_text}
-            dangerouslySetInnerHTML={{
-              __html: (() => {
-                try {
-                  return new Date($props.createdAt).toLocaleDateString("fa-IR");
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return "\u062a\u0648\u0636\u06cc\u062d\u0627\u062a";
+        <div className={classNames(projectcss.all, sty.freeBox__vp1Ur)}>
+          <Paziresh24Modal
+            data-plasmic-name={"modal"}
+            data-plasmic-override={overrides.modal}
+            body={
+              <LauncherBlocksWriteReply
+                data-plasmic-name={"launcherBlocksWriteReply"}
+                data-plasmic-override={overrides.launcherBlocksWriteReply}
+                appKey={(() => {
+                  try {
+                    return $props.appKey;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
                   }
-                  throw e;
-                }
-              })()
+                })()}
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherBlocksWriteReply
+                )}
+                onSubmit={async () => {
+                  const $steps = {};
+
+                  $steps["updateModalOpen"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["modal", "open"]
+                          },
+                          operation: 0,
+                          value: false
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
+
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["updateModalOpen"] != null &&
+                    typeof $steps["updateModalOpen"] === "object" &&
+                    typeof $steps["updateModalOpen"].then === "function"
+                  ) {
+                    $steps["updateModalOpen"] = await $steps["updateModalOpen"];
+                  }
+                }}
+                reviewId={(() => {
+                  try {
+                    return $props.id;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
+                    }
+                    throw e;
+                  }
+                })()}
+              />
+            }
+            className={classNames("__wab_instance", sty.modal)}
+            onOpenChange={async (...eventArgs: any) => {
+              generateStateOnChangeProp($state, ["modal", "open"]).apply(
+                null,
+                eventArgs
+              );
+
+              if (
+                eventArgs.length > 1 &&
+                eventArgs[1] &&
+                eventArgs[1]._plasmic_state_init_
+              ) {
+                return;
+              }
             }}
+            open={generateStateValueProp($state, ["modal", "open"])}
+            title={
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__wDgbc
+                )}
+              >
+                <React.Fragment>
+                  <React.Fragment>
+                    {
+                      "\u067e\u0627\u0633\u062e \u0628\u0647 \u0646\u0638\u0631 "
+                    }
+                  </React.Fragment>
+                  {
+                    <span
+                      data-plasmic-name={"span"}
+                      data-plasmic-override={overrides.span}
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.span,
+                        projectcss.__wab_text,
+                        projectcss.plasmic_default__inline,
+                        sty.span
+                      )}
+                    >
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return (
+                              $state.apiRequest.data.users[0].name +
+                              " " +
+                              $state.apiRequest.data.users[0].family
+                            );
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "-";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    </span>
+                  }
+                  <React.Fragment>{""}</React.Fragment>
+                </React.Fragment>
+              </div>
+            }
+            trigger={
+              <div className={classNames(projectcss.all, sty.freeBox__vmew)}>
+                <Icon7Icon
+                  className={classNames(projectcss.all, sty.svg__eVs08)}
+                  role={"img"}
+                />
+
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__ul8KU
+                  )}
+                >
+                  {"\u0627\u0631\u0633\u0627\u0644 \u067e\u0627\u0633\u062e"}
+                </div>
+              </div>
+            }
           />
+
+          <div className={classNames(projectcss.all, sty.freeBox__q5Kll)} />
+
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__tAt6
+            )}
+          >
+            <div
+              className={projectcss.__wab_expr_html_text}
+              dangerouslySetInnerHTML={{
+                __html: (() => {
+                  try {
+                    return new Date($props.createdAt).toLocaleDateString(
+                      "fa-IR"
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "\u062a\u0648\u0636\u06cc\u062d\u0627\u062a";
+                    }
+                    throw e;
+                  }
+                })()
+              }}
+            />
+          </div>
         </div>
       </div>
       <div className={classNames(projectcss.all, sty.freeBox__vZyq)}>
@@ -558,15 +772,171 @@ function PlasmicLauncherBlocksReviewCard__RenderFunc(props: {
           </div>
         ) : null}
       </div>
+      <div className={classNames(projectcss.all, sty.freeBox___5L8CX)}>
+        <ApiRequest
+          data-plasmic-name={"apiRequest3"}
+          data-plasmic-override={overrides.apiRequest3}
+          className={classNames("__wab_instance", sty.apiRequest3)}
+          errorDisplay={null}
+          loadingDisplay={null}
+          method={"GET"}
+          onError={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest3", "error"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onLoading={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest3", "loading"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onSuccess={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest3", "data"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          ref={ref => {
+            $refs["apiRequest3"] = ref;
+          }}
+          url={(() => {
+            try {
+              return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews/${$props.id}/replies`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
+          <div className={classNames(projectcss.all, sty.freeBox__q4MC5)}>
+            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+              (() => {
+                try {
+                  return $state.apiRequest3.data;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return [];
+                  }
+                  throw e;
+                }
+              })()
+            ).map((__plasmic_item_0, __plasmic_idx_0) => {
+              const currentItem = __plasmic_item_0;
+              const currentIndex = __plasmic_idx_0;
+              return (
+                <LauncherBlocksReplyCard
+                  data-plasmic-name={"launcherBlocksReplyCard"}
+                  data-plasmic-override={overrides.launcherBlocksReplyCard}
+                  appKey={(() => {
+                    try {
+                      return $props.appKey;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.launcherBlocksReplyCard
+                  )}
+                  content={(() => {
+                    try {
+                      return currentItem.content;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  createdAt={(() => {
+                    try {
+                      return currentItem.created_at;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  id={(() => {
+                    try {
+                      return currentItem.id;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  key={currentIndex}
+                  userId={(() => {
+                    try {
+                      return currentItem.user_id;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
+              );
+            })}
+          </div>
+        </ApiRequest>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest2", "paziresh24Avatar", "apiRequest"],
+  root: [
+    "root",
+    "apiRequest2",
+    "paziresh24Avatar",
+    "apiRequest",
+    "modal",
+    "span",
+    "launcherBlocksWriteReply",
+    "apiRequest3",
+    "launcherBlocksReplyCard"
+  ],
   apiRequest2: ["apiRequest2"],
   paziresh24Avatar: ["paziresh24Avatar"],
-  apiRequest: ["apiRequest"]
+  apiRequest: ["apiRequest"],
+  modal: ["modal", "span", "launcherBlocksWriteReply"],
+  span: ["span"],
+  launcherBlocksWriteReply: ["launcherBlocksWriteReply"],
+  apiRequest3: ["apiRequest3", "launcherBlocksReplyCard"],
+  launcherBlocksReplyCard: ["launcherBlocksReplyCard"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -576,6 +946,11 @@ type NodeDefaultElementType = {
   apiRequest2: typeof ApiRequest;
   paziresh24Avatar: typeof Paziresh24Avatar;
   apiRequest: typeof ApiRequest;
+  modal: typeof Paziresh24Modal;
+  span: "span";
+  launcherBlocksWriteReply: typeof LauncherBlocksWriteReply;
+  apiRequest3: typeof ApiRequest;
+  launcherBlocksReplyCard: typeof LauncherBlocksReplyCard;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -642,6 +1017,11 @@ export const PlasmicLauncherBlocksReviewCard = Object.assign(
     apiRequest2: makeNodeComponent("apiRequest2"),
     paziresh24Avatar: makeNodeComponent("paziresh24Avatar"),
     apiRequest: makeNodeComponent("apiRequest"),
+    modal: makeNodeComponent("modal"),
+    span: makeNodeComponent("span"),
+    launcherBlocksWriteReply: makeNodeComponent("launcherBlocksWriteReply"),
+    apiRequest3: makeNodeComponent("apiRequest3"),
+    launcherBlocksReplyCard: makeNodeComponent("launcherBlocksReplyCard"),
 
     // Metadata about props expected for PlasmicLauncherBlocksReviewCard
     internalVariantProps: PlasmicLauncherBlocksReviewCard__VariantProps,

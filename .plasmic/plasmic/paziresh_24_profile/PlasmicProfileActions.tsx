@@ -73,7 +73,6 @@ import IconIcon from "./icons/PlasmicIcon__Icon"; // plasmic-import: SeX7ttg98yl
 import Icon8Icon from "./icons/PlasmicIcon__Icon8"; // plasmic-import: W5EXYp30CPhG/icon
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 import Icon2Icon from "./icons/PlasmicIcon__Icon2"; // plasmic-import: MoYSGvL5CZhO/icon
-import Icon18Icon from "./icons/PlasmicIcon__Icon18"; // plasmic-import: jjh8AKTP6EWp/icon
 
 createPlasmicElementProxy;
 
@@ -569,17 +568,13 @@ function PlasmicProfileActions__RenderFunc(props: {
                   const actionArgs = {
                     customFunction: async () => {
                       return (() => {
-                        const url = `${window.location.origin}/dr/${props.slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
+                        const url = `${window.location.origin}/dr/${$props.slug}?utm_source=doctorprofile-share-button&utm_medium=doctorprofile&utm_campaign=doctorprofile`;
                         if (window.navigator && window.navigator.share) {
                           return navigator.share({
-                            title: props.title,
-                            text: `${props.displayName} در پذیرش۲۴`,
+                            title: $props.title,
+                            text: `${$props.displayName} در پذیرش۲۴`,
                             url
                           });
-                        } else {
-                          return alert(
-                            `برای اشتراک‌گذاری از این لینک استفاده کنید:\n${url}`
-                          );
                         }
                       })();
                     }
@@ -595,74 +590,6 @@ function PlasmicProfileActions__RenderFunc(props: {
               typeof $steps["runCode"].then === "function"
             ) {
               $steps["runCode"] = await $steps["runCode"];
-            }
-          }}
-          startIcon={null}
-        />
-
-        <Button
-          children2={
-            <div className={classNames(projectcss.all, sty.freeBox__ccKef)}>
-              <Icon18Icon
-                className={classNames(projectcss.all, sty.svg__mdGYz)}
-                role={"img"}
-              />
-
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__dgMxy
-                )}
-              >
-                {
-                  "\u06af\u0632\u0627\u0631\u0634 \u0627\u0634\u062a\u0628\u0627\u0647"
-                }
-              </div>
-            </div>
-          }
-          className={classNames("__wab_instance", sty.button__rWXt)}
-          color={"clear"}
-          onClick={async event => {
-            const $steps = {};
-
-            $steps["goToPage"] = true
-              ? (() => {
-                  const actionArgs = {
-                    destination: (() => {
-                      try {
-                        return `https://apigw.paziresh24.com/v1/crowd-source?slug=${$props.slug}&origin=profile`;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()
-                  };
-                  return (({ destination }) => {
-                    if (
-                      typeof destination === "string" &&
-                      destination.startsWith("#")
-                    ) {
-                      document
-                        .getElementById(destination.substr(1))
-                        .scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      __nextRouter?.push(destination);
-                    }
-                  })?.apply(null, [actionArgs]);
-                })()
-              : undefined;
-            if (
-              $steps["goToPage"] != null &&
-              typeof $steps["goToPage"] === "object" &&
-              typeof $steps["goToPage"].then === "function"
-            ) {
-              $steps["goToPage"] = await $steps["goToPage"];
             }
           }}
           startIcon={null}

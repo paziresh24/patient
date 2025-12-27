@@ -5,7 +5,6 @@ import useWebView from '@/common/hooks/useWebView';
 import axios from 'axios';
 import pick from 'lodash/pick';
 import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 
 interface UseFirstFreeTime {
   centerId: string;
@@ -86,3 +85,4 @@ export const useFirstFreeTime = ({ centerId, serviceId, userCenterId, enabled = 
 };
 
 export default useFirstFreeTime;
+

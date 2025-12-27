@@ -2,7 +2,6 @@ import Accordion from '@/common/components/atom/accordion';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import { addCommas } from '@persian-tools/persian-tools';
-import { isEmpty } from 'lodash';
 
 interface InvoiceProps {
   serviceFeeText?: string;
@@ -14,9 +13,21 @@ interface InvoiceProps {
   walletAmount?: number;
   totalPrice?: string;
   loading: boolean;
+  payment_description_html?: string;
 }
 export const Invoice = (props: InvoiceProps) => {
-  const { serviceFeeText, serviceFee, price, priceText, walletAmount, tax, discount, totalPrice, loading = false } = props;
+  const {
+    serviceFeeText,
+    serviceFee,
+    price,
+    priceText,
+    walletAmount,
+    tax,
+    discount,
+    totalPrice,
+    loading = false,
+    payment_description_html,
+  } = props;
   const formattedPrice = price ? addCommas(Math.round(+price / 10)) : null;
   const formattedTax = tax ? addCommas(Math.round(+tax / 10)) : null;
   const formattedTotalPrice = totalPrice ? addCommas(Math.max(0, Math.round((+totalPrice - +(walletAmount ?? 0)) / 10))) : null;
@@ -101,10 +112,15 @@ export const Invoice = (props: InvoiceProps) => {
         {loading && <Skeleton w="8rem" h="1.5rem" rounded="full" />}
         {!loading && (
           <>
-            <Text fontWeight="bold">مبلغ قابل پرداخت:</Text>
-            <Text fontWeight="bold" className="text-green-600">
-              {formattedTotalPrice} تومان
-            </Text>
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="flex items-center gap-2">
+                <Text fontWeight="bold">مبلغ قابل پرداخت:</Text>
+                <Text fontWeight="bold" className="text-green-600">
+                  {formattedTotalPrice} تومان
+                </Text>
+              </div>
+              <div dangerouslySetInnerHTML={{ __html: payment_description_html || '' }} />
+            </div>
           </>
         )}
       </div>
@@ -112,3 +128,4 @@ export const Invoice = (props: InvoiceProps) => {
   );
 };
 export default Invoice;
+

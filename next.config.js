@@ -3,7 +3,6 @@
 const nextTranslate = require('next-translate');
 
 const isProduction = process.env.NODE_ENV === 'production';
-const isSeoDebug = !!process.env.ENABLE_SEO_SOURCEMAP;
 
 const plugins = [nextTranslate];
 
@@ -19,18 +18,67 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+    optimizePackageImports: [
+      '@plasmicpkgs/antd5',
+      '@plasmicpkgs/plasmic-basic-components',
+      '@plasmicpkgs/plasmic-rich-components',
+      '@plasmicapp/react-web',
+      'antd',
+      '@ant-design/icons',
+      '@ant-design/pro-components',
+      'lodash',
+      'lucide-react',
+    ],
   },
+  modularizeImports: {
+    '@ant-design/icons': {
+      transform: '@ant-design/icons/lib/icons/{{member}}',
+    },
+    'antd': {
+      transform: 'antd/lib/{{kebabCase member}}',
+    },
+    '@ant-design/pro-components': {
+      transform: '@ant-design/pro-components/lib/{{member}}',
+      skipDefaultConversion: true,
+    },
+    'lodash': {
+      transform: 'lodash/{{member}}',
+    },
+  },
+  transpilePackages: [
+    '@plasmicpkgs/antd5',
+    '@plasmicpkgs/plasmic-rich-components',
+    'antd',
+    '@ant-design/icons',
+    '@ant-design/pro-components',
+    '@ant-design/cssinjs',
+    '@ant-design/icons-svg',
+    'rc-util',
+    'rc-pagination',
+    'rc-picker',
+    'rc-table',
+    'rc-tree',
+    'rc-input',
+  ],
   compress: true,
   poweredByHeader: false,
-  webpack: (config, { webpack }) => {
-    /**
-     * TODO: Find more possible barrels for this project.
-     *  @see https://github.com/vercel/next.js/issues/12557#issuecomment-1196931845
-     **/
+  webpack: (config, { webpack, isServer }) => {
     config.module.rules.push({
       test: [/lib\/.*.tsx?/i],
       sideEffects: false,
     });
+
+    config.module.rules.push({
+      test: /[\\/]node_modules[\\/](antd|@ant-design|@plasmicpkgs)[\\/].*\.(js|mjs|jsx|ts|tsx)$/,
+      sideEffects: false,
+    });
+
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@ant-design/icons/lib/dist$': '@ant-design/icons/lib/icons',
+      };
+    }
 
     // بهینه‌سازی webpack splitChunks
     config.optimization = {
@@ -38,19 +86,90 @@ const nextConfig = {
       moduleIds: 'deterministic',
       splitChunks: {
         chunks: 'all',
+        maxInitialRequests: 25,
+        minSize: 20000,
         cacheGroups: {
           default: false,
           vendors: false,
           commons: {
             name: 'commons',
             chunks: 'all',
-            minChunks: 2,
+            minChunks: 4,
+            priority: 5,
+          },
+          antdIcons: {
+            test: /[\\/]node_modules[\\/]@ant-design[\\/]icons/,
+            name: 'antd-icons',
+            chunks: 'all',
+            priority: 40,
+            reuseExistingChunk: true,
+          },
+          antdCore: {
+            test: /[\\/]node_modules[\\/](antd|@ant-design[\\/]cssinjs|rc-)/,
+            name: 'antd-core',
+            chunks: 'all',
+            priority: 35,
+            reuseExistingChunk: true,
+          },
+          antdPro: {
+            test: /[\\/]node_modules[\\/]@ant-design[\\/]pro-components/,
+            name: 'antd-pro',
+            chunks: 'async',
+            priority: 32,
+            reuseExistingChunk: true,
+          },
+          plasmicAntd: {
+            test: /[\\/]node_modules[\\/]@plasmicpkgs[\\/]antd5/,
+            name: 'plasmic-antd',
+            chunks: 'all',
+            priority: 30,
+            reuseExistingChunk: true,
+          },
+          plasmic: {
+            test: /[\\/]node_modules[\\/](@plasmicapp|@plasmicpkgs)[\\/](?!antd5)/,
+            name: 'plasmic',
+            chunks: 'all',
+            priority: 25,
+            reuseExistingChunk: true,
           },
           lib: {
-            test: /[\\/]node_modules[\\/]/,
+            test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet|recharts|react-hook-form|jalali-moment)/,
             name: 'lib',
-            priority: 10,
             chunks: 'all',
+            priority: 10,
+          },
+          lodash: {
+            test: /[\\/]node_modules[\\/]lodash/,
+            name: 'lodash',
+            chunks: 'async',
+            priority: 50,
+          },
+          moment: {
+            test: /[\\/]node_modules[\\/]moment/,
+            name: 'moment',
+            chunks: 'async',
+            priority: 50,
+          },
+          antd: {
+            test: /[\\/]node_modules[\\/](antd|@ant-design|@plasmicpkgs\/antd5|rc-)/,
+            name: 'antd',
+            priority: 20,
+            chunks: 'all',
+            enforce: true,
+          },
+          swr: {
+            test: /[\\/]node_modules[\\/]swr/,
+            name: 'swr',
+            priority: 20,
+            chunks: 'all',
+            enforce: true,
+          },
+          pdfLibraries: {
+            test: /[\\/]node_modules[\\/](html2pdf\.js|jspdf|html2canvas)/,
+            name: 'pdf-libraries',
+            priority: 20,
+            chunks: 'async',
+            enforce: true,
           },
         },
       },
@@ -151,3 +270,4 @@ const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig)
 
 // Sentry should be the last thing to export to catch everything right
 module.exports = moduleExports;
+

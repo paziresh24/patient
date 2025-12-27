@@ -2957,6 +2957,12 @@
           "name": "AppFrame",
           "displayName": "AppFrame",
           "componentImportPath": "@/modules/hamdast/appFrame"
+        },
+        {
+          "id": "CMDIFfKIRjBF",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
@@ -3443,6 +3449,45 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksFeaturedApps.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "cy-CLI21vlSG",
+          "name": "LauncherBlocksWriteReply",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksWriteReply.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksWriteReply.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksWriteReply.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "ODAlrNeZhK6S",
+          "name": "AppsChannelNotice",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicAppsChannelNotice.tsx",
+          "importSpec": {
+            "modulePath": "AppsChannelNotice.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicAppsChannelNotice.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "ITNsvfxE2UwF",
+          "name": "LauncherBlocksReplyCard",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksReplyCard.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksReplyCard.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksReplyCard.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -3535,6 +3580,16 @@
           "id": "yX3QBDwLir0A",
           "name": "ChevronDownIcon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__ChevronDown.tsx"
+        },
+        {
+          "id": "kd7rFjLlQQAS",
+          "name": "Icon7Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon7.tsx"
+        },
+        {
+          "id": "5q7-uZGU1w7D",
+          "name": "Icon8Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon8.tsx"
         }
       ],
       "images": [
@@ -3667,9 +3722,9 @@
           "componentImportPath": "@/modules/hamdast/appFrame"
         },
         {
-          "id": "TfCG-WqDXRJw",
-          "name": "HamdastAppsSelectorModal",
-          "displayName": "HamdastAppsSelectorModal",
+          "id": "5xb4SWXtsvF4",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
           "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
@@ -4268,6 +4323,12 @@
           "name": "AppFrame",
           "displayName": "AppFrame",
           "componentImportPath": "@/modules/hamdast/appFrame"
+        },
+        {
+          "id": "XMaPwaK5axSl",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
@@ -6537,6 +6598,12 @@
           "name": "AppFrame",
           "displayName": "AppFrame",
           "componentImportPath": "@/modules/hamdast/appFrame"
+        },
+        {
+          "id": "r6d65fDzyF5h",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
@@ -7244,6 +7311,12 @@
           "name": "PWA",
           "displayName": "PWA",
           "componentImportPath": "@/common/fragment/pwa"
+        },
+        {
+          "id": "8z3-umIrpnZ1",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [

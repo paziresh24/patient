@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
 
@@ -90,6 +91,7 @@ export type PlasmicLauncherBlocksWidgetsSanje__OverridesType = {
   span?: Flex__<"span">;
   img?: Flex__<typeof PlasmicImg__>;
   svg?: Flex__<"svg">;
+  sideEffect?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultLauncherBlocksWidgetsSanjeProps {
@@ -192,48 +194,34 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
       onClick={async event => {
         const $steps = {};
 
-        $steps["appsSelector"] = true
+        $steps["goToDashboardAppsSanjeMyPerformance"] = true
           ? (() => {
               const actionArgs = {
-                args: [
-                  ["bimehnama", "cheragh", "khedmat", "hamyar"],
-                  (() => {
-                    try {
-                      return [
-                        {
-                          app_key: "sanje",
-                          title: "سنجه",
-                          subtitle:
-                            "توصیه‌های کاربردی برای افزایش رتبه در سرچ پذیرش۲۴",
-                          icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/apps%2Fsanje.png?versionId=",
-                          link: "/dashboard/apps/sanje/my-performance/"
-                        }
-                      ];
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })(),
-                  "\u0631\u0634\u062f \u0631\u062a\u0628\u0647 \u0648 \u0627\u0641\u0632\u0627\u06cc\u0634 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646"
-                ]
+                destination: "/dashboard/apps/sanje/my-performance/"
               };
-              return $globalActions["HamdastAppsSelectorModal.open"]?.apply(
-                null,
-                [...actionArgs.args]
-              );
+              return (({ destination }) => {
+                if (
+                  typeof destination === "string" &&
+                  destination.startsWith("#")
+                ) {
+                  document
+                    .getElementById(destination.substr(1))
+                    .scrollIntoView({ behavior: "smooth" });
+                } else {
+                  __nextRouter?.push(destination);
+                }
+              })?.apply(null, [actionArgs]);
             })()
           : undefined;
         if (
-          $steps["appsSelector"] != null &&
-          typeof $steps["appsSelector"] === "object" &&
-          typeof $steps["appsSelector"].then === "function"
+          $steps["goToDashboardAppsSanjeMyPerformance"] != null &&
+          typeof $steps["goToDashboardAppsSanjeMyPerformance"] === "object" &&
+          typeof $steps["goToDashboardAppsSanjeMyPerformance"].then ===
+            "function"
         ) {
-          $steps["appsSelector"] = await $steps["appsSelector"];
+          $steps["goToDashboardAppsSanjeMyPerformance"] = await $steps[
+            "goToDashboardAppsSanjeMyPerformance"
+          ];
         }
 
         $steps["sendLog"] = true
@@ -473,16 +461,72 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
           role={"img"}
         />
       ) : null}
+      <SideEffect
+        data-plasmic-name={"sideEffect"}
+        data-plasmic-override={overrides.sideEffect}
+        className={classNames("__wab_instance", sty.sideEffect)}
+        deps={(() => {
+          try {
+            return [$state.apiRequest?.data?.final_score];
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return undefined;
+            }
+            throw e;
+          }
+        })()}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["setAttrSanje"] = !!$state.apiRequest?.data?.final_score
+            ? (() => {
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          sanje_score: +$state.apiRequest?.data?.final_score
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
+                        }
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions[
+                  "GrowthbookGlobalContext.setAttributes"
+                ]?.apply(null, [...actionArgs.args]);
+              })()
+            : undefined;
+          if (
+            $steps["setAttrSanje"] != null &&
+            typeof $steps["setAttrSanje"] === "object" &&
+            typeof $steps["setAttrSanje"].then === "function"
+          ) {
+            $steps["setAttrSanje"] = await $steps["setAttrSanje"];
+          }
+        }}
+      />
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "apiRequest", "span", "img", "svg"],
+  root: ["root", "apiRequest", "span", "img", "svg", "sideEffect"],
   apiRequest: ["apiRequest"],
   span: ["span"],
   img: ["img"],
-  svg: ["svg"]
+  svg: ["svg"],
+  sideEffect: ["sideEffect"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -493,6 +537,7 @@ type NodeDefaultElementType = {
   span: "span";
   img: typeof PlasmicImg__;
   svg: "svg";
+  sideEffect: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -560,6 +605,7 @@ export const PlasmicLauncherBlocksWidgetsSanje = Object.assign(
     span: makeNodeComponent("span"),
     img: makeNodeComponent("img"),
     svg: makeNodeComponent("svg"),
+    sideEffect: makeNodeComponent("sideEffect"),
 
     // Metadata about props expected for PlasmicLauncherBlocksWidgetsSanje
     internalVariantProps: PlasmicLauncherBlocksWidgetsSanje__VariantProps,
