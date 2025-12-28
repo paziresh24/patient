@@ -147,6 +147,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
               user_id: userInfo?.id ?? null,
               user_type: userInfo.provider?.job_title ?? 'normal-user',
               ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
+              ...(responseData?.query_attributes && { query_attributes: responseData.query_attributes }),
               url: {
                 href: window.location.href,
                 qurey: { ...queries },
