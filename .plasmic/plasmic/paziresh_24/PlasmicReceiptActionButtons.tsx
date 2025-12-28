@@ -116,6 +116,7 @@ export const PlasmicReceiptActionButtons__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReceiptActionButtons__OverridesType = {
   root?: Flex__<"div">;
+  apiRequest2?: Flex__<typeof ApiRequest>;
   apiRequest?: Flex__<typeof ApiRequest>;
   شرحاولیهبیماری?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
@@ -292,6 +293,30 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
         initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
 
         refName: "apiRequest"
+      },
+      {
+        path: "apiRequest2.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
+      },
+      {
+        path: "apiRequest2.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
+      },
+      {
+        path: "apiRequest2.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
       }
     ],
     [$props, $ctx, $refs]
@@ -443,7 +468,9 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 className={classNames("__wab_instance", sty.button___4PRmJ)}
                 loading={(() => {
                   try {
-                    return $state.apiRequest.loading;
+                    return (
+                      $state.apiRequest.loading || $state?.apiRequest2?.loading
+                    );
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -583,57 +610,113 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
               />
 
               <ApiRequest
-                data-plasmic-name={"apiRequest"}
-                data-plasmic-override={overrides.apiRequest}
-                className={classNames("__wab_instance", sty.apiRequest, {
-                  [sty.apiRequesttype_visitOnline]: hasVariant(
+                data-plasmic-name={"apiRequest2"}
+                data-plasmic-override={overrides.apiRequest2}
+                className={classNames("__wab_instance", sty.apiRequest2, {
+                  [sty.apiRequest2type_visitOnline]: hasVariant(
                     $state,
                     "type",
                     "visitOnline"
                   )
                 })}
-                errorDisplay={null}
-                loadingDisplay={null}
+                errorDisplay={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__yl3Xr
+                    )}
+                  >
+                    {"Error fetching data"}
+                  </div>
+                }
+                loadingDisplay={
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___3I1Wn
+                    )}
+                  >
+                    {"Loading..."}
+                  </div>
+                }
                 method={"GET"}
                 onError={async (...eventArgs: any) => {
                   generateStateOnChangeProp($state, [
-                    "apiRequest",
+                    "apiRequest2",
                     "error"
                   ]).apply(null, eventArgs);
                 }}
                 onLoading={async (...eventArgs: any) => {
                   generateStateOnChangeProp($state, [
-                    "apiRequest",
+                    "apiRequest2",
                     "loading"
                   ]).apply(null, eventArgs);
                 }}
                 onSuccess={async (...eventArgs: any) => {
                   generateStateOnChangeProp($state, [
-                    "apiRequest",
+                    "apiRequest2",
                     "data"
                   ]).apply(null, eventArgs);
                 }}
-                params={(() => {
-                  try {
-                    return {
-                      slug: $props.bookDetailsData?.doctor?.slug
-                    };
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
                 ref={ref => {
-                  $refs["apiRequest"] = ref;
+                  $refs["apiRequest2"] = ref;
                 }}
-                url={"https://hamdast.paziresh24.com/api/v1/widgets/"}
-              />
-
+                url={`https://drprofile.paziresh24.com/api/doctors/${$props.bookDetailsData.doctor.id}/${$props.bookDetailsData.doctor.server_id}`}
+              >
+                <ApiRequest
+                  data-plasmic-name={"apiRequest"}
+                  data-plasmic-override={overrides.apiRequest}
+                  className={classNames("__wab_instance", sty.apiRequest, {
+                    [sty.apiRequesttype_visitOnline]: hasVariant(
+                      $state,
+                      "type",
+                      "visitOnline"
+                    )
+                  })}
+                  errorDisplay={null}
+                  loadingDisplay={null}
+                  method={"GET"}
+                  onError={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "apiRequest",
+                      "error"
+                    ]).apply(null, eventArgs);
+                  }}
+                  onLoading={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "apiRequest",
+                      "loading"
+                    ]).apply(null, eventArgs);
+                  }}
+                  onSuccess={async (...eventArgs: any) => {
+                    generateStateOnChangeProp($state, [
+                      "apiRequest",
+                      "data"
+                    ]).apply(null, eventArgs);
+                  }}
+                  params={(() => {
+                    try {
+                      return {
+                        user_id: $state?.apiRequest2?.data?.user_id
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  ref={ref => {
+                    $refs["apiRequest"] = ref;
+                  }}
+                  url={"https://hamdast.paziresh24.com/api/v1/widgets/"}
+                />
+              </ApiRequest>
               {(
                 hasVariant($state, "type", "visitOnline")
                   ? (() => {
@@ -2762,6 +2845,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 const PlasmicDescendants = {
   root: [
     "root",
+    "apiRequest2",
     "apiRequest",
     "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc",
     "dialog",
@@ -2774,6 +2858,7 @@ const PlasmicDescendants = {
     "textInput",
     "sideEffect"
   ],
+  apiRequest2: ["apiRequest2", "apiRequest"],
   apiRequest: ["apiRequest"],
   شرحاولیهبیماری: [
     "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
@@ -2793,6 +2878,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  apiRequest2: typeof ApiRequest;
   apiRequest: typeof ApiRequest;
   شرحاولیهبیماری: "div";
   dialog: typeof Dialog;
@@ -2866,6 +2952,7 @@ export const PlasmicReceiptActionButtons = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    apiRequest2: makeNodeComponent("apiRequest2"),
     apiRequest: makeNodeComponent("apiRequest"),
     شرحاولیهبیماری: makeNodeComponent(
       "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"

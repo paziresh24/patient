@@ -231,13 +231,10 @@ function PlasmicClaim__RenderFunc(props: {
               $steps["sendEvent"] = await $steps["sendEvent"];
             }
 
-            $steps[
-              "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
-            ] = true
+            $steps["goToHttpsProvidersPaziresh24Com"] = true
               ? (() => {
                   const actionArgs = {
-                    destination:
-                      "https://providers.paziresh24.com/"
+                    destination: "https://providers.paziresh24.com/"
                   };
                   return (({ destination }) => {
                     if (
@@ -254,20 +251,13 @@ function PlasmicClaim__RenderFunc(props: {
                 })()
               : undefined;
             if (
-              $steps[
-                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
-              ] != null &&
-              typeof $steps[
-                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
-              ] === "object" &&
-              typeof $steps[
-                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
-              ].then === "function"
+              $steps["goToHttpsProvidersPaziresh24Com"] != null &&
+              typeof $steps["goToHttpsProvidersPaziresh24Com"] === "object" &&
+              typeof $steps["goToHttpsProvidersPaziresh24Com"].then ===
+                "function"
             ) {
-              $steps[
-                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
-              ] = await $steps[
-                "goToHttpsWwwPaziresh24ComHomeIntermediateRegistrationForm"
+              $steps["goToHttpsProvidersPaziresh24Com"] = await $steps[
+                "goToHttpsProvidersPaziresh24Com"
               ];
             }
           }}
