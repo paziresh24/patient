@@ -237,7 +237,7 @@ function PlasmicClaim__RenderFunc(props: {
               ? (() => {
                   const actionArgs = {
                     destination:
-                      "https://providers.paziresh24.com/"
+                      "https://www.paziresh24.com/home/intermediate-registration-form/"
                   };
                   return (({ destination }) => {
                     if (
