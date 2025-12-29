@@ -9,7 +9,6 @@ interface Params {
 }
 
 export const register = async (params: Params) => {
-  await setTerminal();
   return await apiGatewayClient.post(`/gozargah/register`, formData({ ...params, terminal_id: getCookie('terminal_id') }));
 };
 
