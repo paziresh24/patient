@@ -10,7 +10,6 @@ interface Params {
 }
 
 export const resetPassword = async (params: Params) => {
-  await setTerminal();
   return await apiGatewayClient.post(`/gozargah/resetpassword`, formData({ ...params, terminal_id: getCookie('terminal_id') }));
 };
 
