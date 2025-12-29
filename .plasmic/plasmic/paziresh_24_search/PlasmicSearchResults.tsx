@@ -1405,7 +1405,12 @@ function PlasmicSearchResults__RenderFunc(props: {
                                       } catch (e) {
                                         return null;
                                       }
-                                    })()
+                                    })(),
+                                    query_attributes: $props
+                                      .searchResultResponse.query_attributes
+                                      ? $props.searchResultResponse
+                                          .query_attributes
+                                      : undefined
                                   };
                                 } catch (e) {
                                   if (
