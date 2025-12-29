@@ -1059,7 +1059,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
               >
                 {(() => {
                   try {
-                    return $props.appKey != "Monshi";
+                    return !$state?.apiRequest?.data?.direct_payment;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1105,7 +1105,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   loadingDisplay={
                     (() => {
                       try {
-                        return $props.appKey == "Monshi";
+                        return $state?.apiRequest?.data?.direct_payment;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -1155,7 +1155,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   {(() => {
                     try {
                       return (
-                        $props.appKey == "Monshi" &&
+                        $state?.apiRequest?.data?.direct_payment &&
                         !$state.apiRequest7.data?.has_active_subscription
                       );
                     } catch (e) {
@@ -1217,7 +1217,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   {(() => {
                     try {
                       return (
-                        $props.appKey == "Monshi" &&
+                        $state?.apiRequest?.data?.direct_payment &&
                         $state.apiRequest7.data?.has_active_subscription
                       );
                     } catch (e) {
