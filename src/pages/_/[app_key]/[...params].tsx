@@ -18,23 +18,22 @@ import { isEmpty } from 'lodash';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import axios from 'axios';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import LauncherProfile from '.plasmic/LauncherProfile';
 import Logo from '@/common/components/atom/logo';
 import { splunkInstance } from '@/common/services/splunk';
 import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from '@/modules/hamdast/components/subscription-payment';
+import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
+import Button from '@/common/components/atom/button';
 
 export function replaceKeysInString(template: string, keys: string[], values: string[]) {
-  // Create a regular expression to find placeholders like {{key}}
   const regex = /{{(.*?)}}/g;
 
-  // Replace placeholders with corresponding values from the values array
   return template.replace(regex, (match, key) => {
-    // Find the index of the key in the keys array
     const index = keys.indexOf(key);
 
-    // Return the value from values array if index is found, else return the original match
     return index !== -1 ? values[index] : match;
   });
 }
@@ -70,6 +69,8 @@ const Page = ({ page, app }: any) => {
   const [showApp, setShowApp] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
+  const supportRef = useRef<HamdastSupportRef>(null);
+  const [showSupportButton, setShowSupportButton] = useState(false);
 
   const embedSrc = useMemo(() => {
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
@@ -129,6 +130,28 @@ const Page = ({ page, app }: any) => {
     }
   }, [params?.[0]]);
 
+  useEffect(() => {
+    const checkSupportLink = async () => {
+      if (params?.[0] !== 'launcher' || !app_key || !isLogin) return;
+
+      try {
+        const response = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/support`, {
+          withCredentials: true,
+        });
+
+        if (response.data?.id) {
+          setShowSupportButton(true);
+        }
+      } catch (error) {
+        setShowSupportButton(false);
+      }
+    };
+
+    if (!userPending) {
+      checkSupportLink();
+    }
+  }, [app_key, isLogin, userPending, params?.[0]]);
+
   return (
     <LayoutWithHeaderAndFooter
       showSearchSuggestionButton={false}
@@ -139,7 +162,24 @@ const Page = ({ page, app }: any) => {
       className="!h-svh !min-h-svh !max-h-svh:"
     >
       {page?.layout?.show_appbar && (
-        <AppBar title={page.name?.fa} backButton={true} actionButton={<Report app_key={app_key as string} page_key={page?.key} />} />
+        <AppBar
+          title={page.name?.fa}
+          backButton={true}
+          actionButton={
+            showSupportButton ? (
+              <Button
+                size="sm"
+                variant="secondary"
+                className="rounded-full h-8 font-semibold text-xs"
+                onClick={() => supportRef.current?.open()}
+              >
+                پشتیبانی ابزارک
+              </Button>
+            ) : (
+              <Report app_key={app_key as string} page_key={page?.key} />
+            )
+          }
+        />
       )}
       <Seo title={page.name?.fa} noIndex />
       {showTranslation && (
@@ -198,8 +238,9 @@ const Page = ({ page, app }: any) => {
       )}
       <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
-      <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+      <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} iframeRef={iframeRef} />
+      <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={app?.key} iframeRef={iframeRef} />
       <HamdastFlow iframeRef={iframeRef} />
       {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}
 

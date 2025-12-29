@@ -19,14 +19,11 @@ export const AppBar = ({ title, backButton, titleLoading = false, className, act
   const isLogin = useUserInfoStore(state => state.isLogin);
   return (
     <div
-      className={classNames(
-        'flex sticky top-0 justify-center items-center min-h-14 h-14 px-6 bg-white border-b border-[#EBECEE] z-40',
-        className,
-      )}
+      className={classNames('flex sticky top-0  items-center min-h-14 h-14 px-6 bg-white border-b border-[#EBECEE] z-40', className)}
       {...rest}
     >
       {backButton && (
-        <div onClick={router.back} className="ml-2 -mr-3 cursor-pointer right-7 absolute">
+        <div onClick={router.back} className="ml-2 -mr-3 cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
