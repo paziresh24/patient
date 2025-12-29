@@ -172,7 +172,6 @@ export async function getAggregatedProfileData(
       },
     });
   } else {
-    // Log slug validation error
     console.error('Error validating doctor slug:', slugValidationResult.reason);
     splunkInstance('doctor-profile').sendEvent({
       group: 'profile_slug_validation_error',
@@ -185,7 +184,8 @@ export async function getAggregatedProfileData(
         timestamp: new Date().toISOString(),
       },
     });
-    throw slugValidationResult.reason;
+    slugInfo = null;
+    validatedSlug = slug;
   }
 
   // Handle full profile result (no redirect handling - just get data)
@@ -280,16 +280,13 @@ export async function getAggregatedProfileData(
   // Handle gallery API call after all other requests (depends on centers)
   let doctorGallery = null;
   if (options?.useNewDoctorGalleryAPI) {
-    // Find all centers with type_id = 1
-    const clinicCenters = doctorCenters.filter((center: any) => center.type_id === 1);
+    const clinicCenters = Array.isArray(doctorCenters) ? doctorCenters.filter((center: any) => center.type_id === 1) : [];
 
     if (clinicCenters.length > 0) {
       try {
-        // Fetch galleries for all clinic centers in parallel
         const galleryPromises = clinicCenters.map((center: any) => getDoctorGallery(center.id));
         const galleryResults = await Promise.allSettled(galleryPromises);
 
-        // Merge all successful gallery results into a single array
         doctorGallery = galleryResults
           .filter(result => result.status === 'fulfilled')
           .map((result: any) => result.value)
@@ -458,4 +455,3 @@ export async function getAggregatedProfileData(
 
   return finalProps;
 }
-
