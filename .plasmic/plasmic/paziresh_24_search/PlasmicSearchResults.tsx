@@ -2214,6 +2214,7 @@ function PlasmicSearchResults__RenderFunc(props: {
           className={classNames("__wab_instance", sty.externalBookSurveyPopup)}
         />
       ) : null}
+      <div className={classNames(projectcss.all, sty.freeBox__knrNp)} />
     </div>
   ) as React.ReactElement | null;
 }

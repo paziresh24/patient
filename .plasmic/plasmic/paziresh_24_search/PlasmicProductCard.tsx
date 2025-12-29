@@ -2390,6 +2390,7 @@ function PlasmicProductCard__RenderFunc(props: {
                           ];
                         }
                       }}
+                      outline={true}
                       startIcon={
                         <ChevronRightIcon
                           className={classNames(projectcss.all, sty.svg__aOe53)}
