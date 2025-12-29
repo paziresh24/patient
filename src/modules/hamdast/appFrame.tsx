@@ -5,10 +5,13 @@ import { HamdastAuth } from '@/modules/hamdast/components/auth';
 import { HamdastPayment } from '@/modules/hamdast/components/payment';
 import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
+import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import axios from 'axios';
+import Button from '@/common/components/atom/button';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import LauncherProfile from '.plasmic/LauncherProfile';
 import Logo from '@/common/components/atom/logo';
@@ -46,6 +49,7 @@ export const AppFrame = ({
 
   const iframeRef = useRef<any>(null);
   const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
+  const supportRef = useRef<HamdastSupportRef>(null);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -53,6 +57,7 @@ export const AppFrame = ({
   const { handleOpenLoginModal } = useLoginModalContext();
   const [showApp, setShowApp] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
+  const [showSupportButton, setShowSupportButton] = useState(false);
 
   const embedSrc = useMemo(() => {
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
@@ -93,20 +98,56 @@ export const AppFrame = ({
     }
   }, [showTranslation]);
 
+  useEffect(() => {
+    const checkSupportLink = async () => {
+      if (params?.[0] !== 'launcher' || !appKey || !isLogin) return;
+
+      try {
+        const response = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${appKey}/support`, {
+          withCredentials: true,
+        });
+
+        if (response.data?.id) {
+          setShowSupportButton(true);
+        }
+      } catch (error) {
+        setShowSupportButton(false);
+      }
+    };
+
+    if (!userPending) {
+      checkSupportLink();
+    }
+  }, [appKey, isLogin, userPending, params?.[0]]);
+
   return (
     <div className="flex flex-col h-full w-full">
       <AppBar
         title={page?.name?.fa}
         backButton={showBackButton}
         titleLoading={!page?.name}
-        actionButton={<Report app_key={appKey as string} page_key={page?.key} />}
+        actionButton={
+          showSupportButton ? (
+            <Button
+              size="sm"
+              variant="secondary"
+              className="rounded-full h-8 font-semibold text-xs"
+              onClick={() => supportRef.current?.open()}
+            >
+              پشتیبانی ابزارک
+            </Button>
+          ) : (
+            <Report app_key={appKey as string} page_key={page?.key} />
+          )
+        }
       />
       {app?.id && (
         <>
           <HamdastPayment app_key={appKey} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
-          <HamdastWidget app_name={app.name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+          <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+          <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />
           <Permissions onClose={() => router.push('/dashboard')} />
           {showTranslation && (
             <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center">
