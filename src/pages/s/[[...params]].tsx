@@ -24,7 +24,7 @@ import { Result } from '@/modules/search/view/result';
 import SearchSeoBox from '@/modules/search/view/seoBox';
 import Suggestion from '@/modules/search/view/suggestion';
 import { useFeatureValue, useFeatureIsOn, GrowthBook } from '@growthbook/growthbook-react';
-import { addCommas } from '@persian-tools/persian-tools';
+import { addCommas } from '@/common/utils/persianTools';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
@@ -470,4 +470,3 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
-
