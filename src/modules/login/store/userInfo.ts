@@ -73,12 +73,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         is_doctor: infoCopy.provider?.job_title === 'doctor',
       });
       window.user = infoCopy;
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).dataLayer.push({
-        event: 'user_ready',
-        user_id: infoCopy.id,
-        is_doctor: infoCopy.provider?.job_title === 'doctor',
-      });
 
       return {
         info: {
@@ -93,9 +87,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       info: {},
       isLogin: false,
     }));
-    window.user = {};
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push({ event: 'user_cleared' });
   },
   setPending: pending => {
     set(state => ({
@@ -119,9 +110,6 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       info: {},
       isLogin: false,
     }));
-    window.user = {};
-    (window as any).dataLayer = (window as any).dataLayer || [];
-    (window as any).dataLayer.push({ event: 'user_logout' });
     try {
       axios
         .get('https://users.paziresh24.com/webhook/logout', {

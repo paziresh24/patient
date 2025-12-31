@@ -17,8 +17,6 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
       new QueryClient({
         defaultOptions: {
           queries: {
-            cacheTime: 30 * 60 * 1000,
-            staleTime: 5 * 60 * 1000,
             refetchOnWindowFocus: false,
             refetchOnReconnect: true,
           },

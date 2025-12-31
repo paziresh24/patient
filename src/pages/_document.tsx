@@ -23,7 +23,6 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="format-detection" content="telephone=no" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <meta name="google" content="notranslate" />
-        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];window.user=window.user||{};` }} />
         <script
           dangerouslySetInnerHTML={{
             __html: `
