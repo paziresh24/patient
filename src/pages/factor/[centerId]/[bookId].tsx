@@ -15,7 +15,7 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import { digitsFaToEn } from '@persian-tools/persian-tools';
+import { digitsFaToEn } from '@/common/utils/persianTools';
 import moment from 'jalali-moment';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
