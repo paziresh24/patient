@@ -6,7 +6,7 @@ import TextField from '@/common/components/atom/textField';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { getErrorMessage } from '@/common/utils/errorHandler';
-import { digitsFaToEn } from '@persian-tools/persian-tools';
+import { digitsFaToEn } from '@/common/utils/persianTools';
 import Trans from 'next-translate/Trans';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';

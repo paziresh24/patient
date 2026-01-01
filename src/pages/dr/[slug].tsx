@@ -22,7 +22,7 @@ import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { Aside } from '@/modules/profile/views/aside';
 import { sections } from '@/modules/profile/views/sections';
-import { addCommas } from '@persian-tools/persian-tools';
+import { addCommas } from '@/common/utils/persianTools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
 import { ReactElement, useEffect, useRef, useState } from 'react';

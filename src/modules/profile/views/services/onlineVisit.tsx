@@ -3,7 +3,7 @@ import DiamondIcon from '@/common/components/icons/diamond';
 import StatusIcon from '@/common/components/icons/status';
 import OnlineVisitDiscountFallback from '@/modules/bamdad/components/onlineVisitDiscountFallback';
 import { useFeatureValue } from '@growthbook/growthbook-react';
-import { addCommas } from '@persian-tools/persian-tools';
+import { addCommas } from '@/common/utils/persianTools';
 import isEmpty from 'lodash/isEmpty';
 import { useRouter } from 'next/router';
 import { renderToString } from 'react-dom/server';
