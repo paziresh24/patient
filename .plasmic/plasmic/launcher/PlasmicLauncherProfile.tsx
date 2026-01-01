@@ -1609,25 +1609,25 @@ function PlasmicLauncherProfile__RenderFunc(props: {
               )}
             />
 
-            <div className={classNames(projectcss.all, sty.freeBox___0MbC)}>
-              <div className={classNames(projectcss.all, sty.freeBox__r2Evf)}>
+            <div className={classNames(projectcss.all, sty.freeBox__kheMs)}>
+              <div className={classNames(projectcss.all, sty.freeBox__kpGrl)}>
                 <div
                   className={classNames(
                     projectcss.all,
                     projectcss.__wab_text,
-                    sty.text__klpB4
+                    sty.text__gYl9F
                   )}
                 >
                   {
                     "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0627\u0628\u0632\u0627\u0631\u06a9"
                   }
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__h6ALu)}>
+                <div className={classNames(projectcss.all, sty.freeBox__sovTg)}>
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__sukt1
+                      sty.text__xybZy
                     )}
                   >
                     {
@@ -1638,7 +1638,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__ae2Io
+                      sty.text__qnVu1
                     )}
                   >
                     <div
@@ -1663,12 +1663,12 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     />
                   </div>
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__pnYx4)}>
+                <div className={classNames(projectcss.all, sty.freeBox__sMj3I)}>
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__g82Zl
+                      sty.text__v2YEh
                     )}
                   >
                     {"\u062f\u0633\u062a\u0647 \u0628\u0646\u062f\u06cc:"}
@@ -1677,7 +1677,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__eWzXz
+                      sty.text__btpX
                     )}
                   >
                     <div

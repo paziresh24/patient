@@ -101,7 +101,7 @@
   object-fit: cover;
   width: 15px;
   height: 15px;
-  color: #ffffff;
+  color: var(--token-IFYe29KCwQQV);
   min-width: 15px;
 }
 .text__a5F0I {
