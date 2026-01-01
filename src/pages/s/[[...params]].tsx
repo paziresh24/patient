@@ -408,10 +408,16 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           }),
       );
 
+      const resultType = searchData?.selected_filters?.result_type;
+      const resultTypeValue = Array.isArray(resultType) ? resultType[0] : resultType;
+      const isResultTypeExcluded =
+        !resultTypeValue ||
+        (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
+
       if (
         !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
         (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
-        !searchData?.selected_filters?.result_type &&
+        isResultTypeExcluded &&
         (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
         !searchData?.search?.is_landing &&
         showSuggestedDoctor?.enable

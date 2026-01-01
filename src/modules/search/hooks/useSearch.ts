@@ -113,11 +113,17 @@ export const useSearch = () => {
     },
   });
 
+  const resultType = searchRequest?.data?.selected_filters?.result_type;
+  const resultTypeValue = Array.isArray(resultType) ? resultType[0] : resultType;
+  const isResultTypeExcluded =
+    !resultTypeValue ||
+    (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
+
   const searchConsultEnabled =
     !!searchRequest?.data &&
     !searchRequest?.data?.search.result[0]?.actions?.find((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
     (!searchRequest?.data?.selected_filters?.turn_type || searchRequest?.data?.selected_filters?.turn_type !== 'consult') &&
-    !searchRequest?.data?.selected_filters?.result_type &&
+    isResultTypeExcluded &&
     (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
     !searchRequest?.data?.search.is_landing &&
     (params?.length !== 1 || Object.keys(query).length > 0) &&
