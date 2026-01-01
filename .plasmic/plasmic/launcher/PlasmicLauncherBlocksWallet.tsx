@@ -298,20 +298,25 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                           return (async () => {
                             try {
                               const katibeWalletRequests =
-                                $ctx.auth?.info?.provider?.centers?.map(
-                                  async item =>
-                                    await $$.axios(
-                                      `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24${
-                                        item.id == "5532"
-                                          ? ``
-                                          : `?centerid=${item.id}&account=organization`
-                                      }`,
-                                      {
-                                        ...$ctx.Fragment.previewApiConfig,
-                                        ...$ctx.Fragment.apiConfig
-                                      }
-                                    )
-                                );
+                                $ctx.auth?.info?.provider?.centers
+                                  ?.filter(
+                                    center =>
+                                      center.id == "5532" || center.type_id == 1
+                                  )
+                                  ?.map(
+                                    async item =>
+                                      await $$.axios(
+                                        `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24${
+                                          item.id == "5532"
+                                            ? ``
+                                            : `?centerid=${item.id}&account=organization`
+                                        }`,
+                                        {
+                                          ...$ctx.Fragment.previewApiConfig,
+                                          ...$ctx.Fragment.apiConfig
+                                        }
+                                      )
+                                  );
                               const responses = await Promise.all(
                                 katibeWalletRequests
                               );
