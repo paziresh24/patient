@@ -515,6 +515,7 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                   "__wab_instance",
                   sty.paziresh24Button___9ByF
                 )}
+                outline={true}
                 showStartIcon={true}
                 size={"compact"}
                 startIcon={

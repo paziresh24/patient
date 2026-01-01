@@ -77,6 +77,7 @@ import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; 
 import Icon4Icon from "./icons/PlasmicIcon__Icon4"; // plasmic-import: tltd2ahuz9sI/icon
 import ChevronRightIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
 import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
+import Icon9Icon from "./icons/PlasmicIcon__Icon9"; // plasmic-import: 0e0QAWAqcpvF/icon
 
 createPlasmicElementProxy;
 
@@ -103,7 +104,6 @@ export type PlasmicLauncherProfile__OverridesType = {
   apiRequest?: Flex__<typeof ApiRequest>;
   apiRequest2?: Flex__<typeof ApiRequest>;
   apiRequest3?: Flex__<typeof ApiRequest>;
-  span?: Flex__<"span">;
   modal?: Flex__<typeof Paziresh24Modal>;
   apiRequest5?: Flex__<typeof ApiRequest>;
   apiRequest7?: Flex__<typeof ApiRequest>;
@@ -797,14 +797,12 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                           <React.Fragment>{"\u0627\u0632 "}</React.Fragment>
                           {
                             <span
-                              data-plasmic-name={"span"}
-                              data-plasmic-override={overrides.span}
                               className={classNames(
                                 projectcss.all,
                                 projectcss.span,
                                 projectcss.__wab_text,
                                 projectcss.plasmic_default__inline,
-                                sty.span
+                                sty.span__g9M2N
                               )}
                             >
                               <React.Fragment>
@@ -1619,15 +1617,89 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   )}
                 >
                   {
+                    "\u062a\u0648\u0633\u0639\u0647\u200c\u062f\u0647\u0646\u062f\u0647"
+                  }
+                </div>
+                <div className={classNames(projectcss.all, sty.freeBox__bXezq)}>
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__rpXk4)}
+                  >
+                    <Icon9Icon
+                      className={classNames(projectcss.all, sty.svg__rNhMp)}
+                      role={"img"}
+                    />
+
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        projectcss.__wab_text,
+                        sty.text__dAaC4
+                      )}
+                    >
+                      <React.Fragment>
+                        <React.Fragment>
+                          {
+                            "\u0627\u0631\u062a\u0628\u0627\u0637 \u0628\u0627 \u067e\u0634\u062a\u06cc\u0628\u0627\u0646\u06cc "
+                          }
+                        </React.Fragment>
+                        {
+                          <span
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.span,
+                              projectcss.__wab_text,
+                              projectcss.plasmic_default__inline,
+                              sty.span__pdH9
+                            )}
+                          >
+                            <React.Fragment>
+                              {(() => {
+                                try {
+                                  return $state.apiRequest.data.name;
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return "-";
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                            </React.Fragment>
+                          </span>
+                        }
+                        <React.Fragment>{""}</React.Fragment>
+                      </React.Fragment>
+                    </div>
+                  </div>
+                  <ChevronLeftIcon
+                    className={classNames(projectcss.all, sty.svg__mv13O)}
+                    role={"img"}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={classNames(projectcss.all, sty.freeBox__kheMs)}>
+              <div className={classNames(projectcss.all, sty.freeBox__kpGrl)}>
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__gYl9F
+                  )}
+                >
+                  {
                     "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0627\u0628\u0632\u0627\u0631\u06a9"
                   }
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__h6ALu)}>
+                <div className={classNames(projectcss.all, sty.freeBox__sovTg)}>
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__sukt1
+                      sty.text__xybZy
                     )}
                   >
                     {
@@ -1638,7 +1710,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__ae2Io
+                      sty.text__qnVu1
                     )}
                   >
                     <div
@@ -1663,12 +1735,12 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     />
                   </div>
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__pnYx4)}>
+                <div className={classNames(projectcss.all, sty.freeBox__sMj3I)}>
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__g82Zl
+                      sty.text__v2YEh
                     )}
                   >
                     {"\u062f\u0633\u062a\u0647 \u0628\u0646\u062f\u06cc:"}
@@ -1677,7 +1749,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__eWzXz
+                      sty.text__btpX
                     )}
                   >
                     <div
@@ -1765,7 +1837,6 @@ const PlasmicDescendants = {
     "apiRequest",
     "apiRequest2",
     "apiRequest3",
-    "span",
     "modal",
     "apiRequest5",
     "apiRequest7",
@@ -1779,7 +1850,6 @@ const PlasmicDescendants = {
     "apiRequest",
     "apiRequest2",
     "apiRequest3",
-    "span",
     "modal",
     "apiRequest5",
     "apiRequest7",
@@ -1790,8 +1860,7 @@ const PlasmicDescendants = {
     "apiRequest6"
   ],
   apiRequest2: ["apiRequest2"],
-  apiRequest3: ["apiRequest3", "span"],
-  span: ["span"],
+  apiRequest3: ["apiRequest3"],
   modal: ["modal"],
   apiRequest5: ["apiRequest5", "apiRequest7"],
   apiRequest7: ["apiRequest7"],
@@ -1809,7 +1878,6 @@ type NodeDefaultElementType = {
   apiRequest: typeof ApiRequest;
   apiRequest2: typeof ApiRequest;
   apiRequest3: typeof ApiRequest;
-  span: "span";
   modal: typeof Paziresh24Modal;
   apiRequest5: typeof ApiRequest;
   apiRequest7: typeof ApiRequest;
@@ -1883,7 +1951,6 @@ export const PlasmicLauncherProfile = Object.assign(
     apiRequest: makeNodeComponent("apiRequest"),
     apiRequest2: makeNodeComponent("apiRequest2"),
     apiRequest3: makeNodeComponent("apiRequest3"),
-    span: makeNodeComponent("span"),
     modal: makeNodeComponent("modal"),
     apiRequest5: makeNodeComponent("apiRequest5"),
     apiRequest7: makeNodeComponent("apiRequest7"),
