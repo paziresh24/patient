@@ -9,23 +9,16 @@ export const HamdastFlow = ({ iframeRef }: { iframeRef: any }) => {
   useEffect(() => {
     const handleEventFunction = (messageEvent: MessageEvent) => {
       if (messageEvent.data?.hamdast?.event === 'HAMDAST_FLOW') {
-        console.log('HAMDAST_FLOW', messageEvent.data?.hamdast);
-
         const flowKey = messageEvent.data?.hamdast?.data?.flow_key;
-        const { medical_center_id, appointment_id } = router.query;
-
-        // بررسی وجود پارامترهای لازم در URL
-        if (!medical_center_id || !appointment_id) {
-          return;
-        }
+        const { medical_center_id, appointment_id, bookId, centerId } = router.query;
 
         // بررسی flowKey و هدایت کاربر
         if (flowKey === 'BOOKING.RECEIPT') {
           setIsRedirecting(true);
-          router.replace(`/receipt/${medical_center_id}/${appointment_id}/`);
+          location.replace(`/receipt/${medical_center_id ?? centerId}/${appointment_id ?? bookId}/`);
         } else if (flowKey === 'BOOKING.ONLINE_VISIT_CHANNEL') {
           setIsRedirecting(true);
-          router.replace(`/receipt/${medical_center_id}/${appointment_id}/?action=open_channel`);
+          location.replace(`/receipt/${medical_center_id ?? centerId}/${appointment_id ?? bookId}/?action=open_channel`);
         }
       }
     };
