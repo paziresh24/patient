@@ -115,6 +115,7 @@ export const PlasmicReceiptActionButtons__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReceiptActionButtons__OverridesType = {
   root?: Flex__<"div">;
+  hami?: Flex__<typeof Button>;
   شرحاولیهبیماری?: Flex__<"div">;
   dialog?: Flex__<typeof Dialog>;
   doctorCard?: Flex__<typeof DoctorCard>;
@@ -736,6 +737,149 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 />
               ) : null}
             </div>
+          ) : null}
+          {(
+            hasVariant($state, "type", "visitOnline")
+              ? (() => {
+                  try {
+                    return (
+                      $props.bookDetailsData.doctor.id ===
+                      "330782db-15c6-11eb-9a32-005056b09c11"
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return false;
+                    }
+                    throw e;
+                  }
+                })()
+              : true
+          ) ? (
+            <Button
+              data-plasmic-name={"hami"}
+              data-plasmic-override={overrides.hami}
+              children2={
+                <React.Fragment>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__zr1Oo
+                    )}
+                  >
+                    {
+                      "\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631 \u067e\u06cc\u0627\u0645 \u0631\u0633\u0627\u0646 \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4"
+                    }
+                  </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__pbyvb,
+                      {
+                        [sty.texttype_visitOnline__pbyvblbrEa]: hasVariant(
+                          $state,
+                          "type",
+                          "visitOnline"
+                        )
+                      }
+                    )}
+                  >
+                    {hasVariant($state, "type", "visitOnline") ? (
+                      ""
+                    ) : (
+                      <React.Fragment>
+                        {(() => {
+                          try {
+                            return (() => {
+                              function channelName(channel) {
+                                if (channel === "eitaa") return "ایتا";
+                                if (channel === "whatsapp") return "واتساپ";
+                              }
+                              return channelName(
+                                $props.bookDetailsData
+                                  .selected_online_visit_channel.type
+                              );
+                            })();
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return "";
+                            }
+                            throw e;
+                          }
+                        })()}
+                      </React.Fragment>
+                    )}
+                  </div>
+                </React.Fragment>
+              }
+              className={classNames("__wab_instance", sty.hami, {
+                [sty.hamitype_visitOnline]: hasVariant(
+                  $state,
+                  "type",
+                  "visitOnline"
+                )
+              })}
+              loading={undefined}
+              onClick={async event => {
+                const $steps = {};
+
+                $steps["runCode"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return globalThis.open(
+                            `https://messaging-back.paziresh24.com/api/external/conversations/${$props.bookDetailsData.book_id}`
+                          );
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runCode"] != null &&
+                  typeof $steps["runCode"] === "object" &&
+                  typeof $steps["runCode"].then === "function"
+                ) {
+                  $steps["runCode"] = await $steps["runCode"];
+                }
+
+                $steps["sendEvent"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return window.paziresh24
+                            ?.logger("booking")
+                            .sendEvent({
+                              group: "link-visit-online",
+                              type: $props.bookDetailsData
+                                .selected_online_visit_channel.type,
+                              data: { online_visit_channel: "hami" }
+                            });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["sendEvent"] != null &&
+                  typeof $steps["sendEvent"] === "object" &&
+                  typeof $steps["sendEvent"].then === "function"
+                ) {
+                  $steps["sendEvent"] = await $steps["sendEvent"];
+                }
+              }}
+            />
           ) : null}
           {(
             hasVariant($state, "type", "visitOnline")
@@ -2615,6 +2759,7 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 const PlasmicDescendants = {
   root: [
     "root",
+    "hami",
     "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc",
     "dialog",
     "doctorCard",
@@ -2626,6 +2771,7 @@ const PlasmicDescendants = {
     "textInput",
     "sideEffect"
   ],
+  hami: ["hami"],
   شرحاولیهبیماری: [
     "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
   ],
@@ -2644,6 +2790,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  hami: typeof Button;
   شرحاولیهبیماری: "div";
   dialog: typeof Dialog;
   doctorCard: typeof DoctorCard;
@@ -2716,6 +2863,7 @@ export const PlasmicReceiptActionButtons = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    hami: makeNodeComponent("hami"),
     شرحاولیهبیماری: makeNodeComponent(
       "\u0634\u0631\u062d\u0627\u0648\u0644\u06cc\u0647\u0628\u06cc\u0645\u0627\u0631\u06cc"
     ),
