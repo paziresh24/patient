@@ -1137,9 +1137,44 @@ function PlasmicSearchRequest__RenderFunc(props: {
           dataName={"fetchedData"}
           errorDisplay={
             <DataCtxReader__>
-              {$ctx =>
-                "\u0628\u0631\u0648\u0632 \u062e\u0637\u0627 \u062f\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648 "
-              }
+              {$ctx => (
+                <React.Fragment>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__avueY
+                    )}
+                  >
+                    {
+                      "\u0628\u0631\u0648\u0632 \u062e\u0637\u0627 \u062f\u0631 \u0647\u0646\u06af\u0627\u0645 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648 "
+                    }
+                  </div>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__cvayZ
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $ctx.fetchError;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0628\u0631\u0648\u0632 \u062e\u0637\u0627 \u062f\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648 ";
+                          }
+                          throw e;
+                        }
+                      })()}
+                    </React.Fragment>
+                  </div>
+                </React.Fragment>
+              )}
             </DataCtxReader__>
           }
           errorName={"fetchError"}
