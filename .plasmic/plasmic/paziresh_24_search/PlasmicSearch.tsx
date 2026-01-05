@@ -2336,6 +2336,35 @@ function PlasmicSearch__RenderFunc(props: {
                       : true
                   ) ? (
                     <SearchResultSimple
+                      cityEnSlug={
+                        hasVariant(globalVariants, "screen", "mobileOnly")
+                          ? (() => {
+                              try {
+                                return $props.selectedCity.en_slug;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                          : (() => {
+                              try {
+                                return $props.selectedCity.en_slug;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
+                              }
+                            })()
+                      }
                       cityId={
                         hasVariant(globalVariants, "screen", "mobileOnly")
                           ? (() => {
