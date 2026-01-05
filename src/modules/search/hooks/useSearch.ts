@@ -216,6 +216,7 @@ export const useSearch = () => {
     result,
     isSuccess: searchRequest.isSuccess,
     isError: searchRequest.isError,
+    error: searchRequest.error,
     refetch: searchRequest.refetch,
     total: search?.total,
     pagination: search?.pagination,

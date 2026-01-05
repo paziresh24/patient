@@ -10,13 +10,15 @@ import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/pazire
 import Button from '@/common/components/atom/button';
 import LoadingAtom from '@/common/components/atom/loading';
 import Text from '@/common/components/atom/text';
+import axios from 'axios';
+import { getErrorMessage } from '@/common/utils/errorHandler';
 
 export const Result = () => {
   const {
     query: { params, ...query },
   } = useRouter();
 
-  const { result, isLanding, isLoading, search, responseData, searchConsultResponseData, isError, refetch } = useSearch();
+  const { result, isLanding, isLoading, search, responseData, searchConsultResponseData, isError, error, refetch } = useSearch();
   const { changeRoute } = useSearchRouting();
   const city = useSearchStore(state => state.city);
   const geoLocation = useSearchStore(state => state.geoLocation);
@@ -34,8 +36,12 @@ export const Result = () => {
   return (
     <>
       {isError && (
-        <div className="flex flex-col justify-center items-center w-full space-y-3">
-          <span className="font-semibold">خطا در دریافت نتایج جستجو</span>
+        <div className="flex flex-col justify-center items-center w-full space-y-3 p-5">
+          <span className="font-semibold text-center">
+            {axios.isAxiosError(error) && error.response?.status === 429
+              ? 'تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً کمی صبر کنید و دوباره تلاش کنید.'
+              : getErrorMessage(error) || 'خطا در دریافت نتایج جستجو'}
+          </span>
           <Button onClick={() => refetch()}>تلاش مجدد</Button>
         </div>
       )}
