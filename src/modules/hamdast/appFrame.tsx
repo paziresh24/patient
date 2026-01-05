@@ -52,8 +52,7 @@ export const AppFrame = ({
   const iframeRef = useRef<any>(null);
   const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
   const supportRef = useRef<HamdastSupportRef>(null);
-  const [isApp
-         , setIsAppLoading] = useState(true);
+  const [isAppLoading, setIsAppLoading] = useState(true);
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPending = useUserInfoStore(state => state.pending);
