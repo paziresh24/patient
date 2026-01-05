@@ -652,7 +652,19 @@ const Receipt = () => {
                 <Fragment
                   name="ReceiptActionButtons"
                   props={{
-                    bookDetailsData: { ...bookDetailsData, doctor: { ...bookDetailsData.doctor, display_name: doctorName } },
+                    bookDetailsData: {
+                      ...bookDetailsData,
+                      doctor: { ...bookDetailsData.doctor, display_name: doctorName },
+                      selected_online_visit_channel: {
+                        ...bookDetailsData?.selected_online_visit_channel,
+                        channel_link: decodeURIComponent(
+                          bookDetailsData?.selected_online_visit_channel?.channel_link.replace(
+                            'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+                            '',
+                          ),
+                        ),
+                      },
+                    },
                     specialities: [],
                     currentUserId: user.id,
                   }}
@@ -972,4 +984,3 @@ export const getServerSideProps = withCSR(
 );
 
 export default Receipt;
-
