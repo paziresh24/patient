@@ -49,8 +49,9 @@ import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import Loading from '@/common/components/atom/loading';
 import useLockScroll from '@/common/hooks/useLockScroll';
+import Button from '@/common/components/atom/button';
 
-const Search = ({ host, fragmentComponents, isMainSite }: any) => {
+const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
   const { isMobile } = useResponsive();
   const userInfo = useUserInfoStore(state => state.info);
   const userPending = useUserInfoStore(state => state.pending);
@@ -224,6 +225,17 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
     },
     [handleChange],
   );
+
+  if (error) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4 p-5">
+        <Text fontSize="lg" fontWeight="bold" className="text-center">
+          {error.message || 'خطا در دریافت نتایج جستجو'}
+        </Text>
+        <Button onClick={() => window.location.reload()}>تلاش مجدد</Button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -470,6 +482,16 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           return {
             notFound: true,
           };
+        if (error.response?.status === 429) {
+          return {
+            props: {
+              error: {
+                statusCode: 429,
+                message: 'تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً کمی صبر کنید و دوباره تلاش کنید.',
+              },
+            },
+          };
+        }
       }
       throw new TypeError(JSON.stringify(error));
     }
