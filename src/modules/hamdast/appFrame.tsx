@@ -20,6 +20,7 @@ import Logo from '@/common/components/atom/logo';
 import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key]/[...params]';
 import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './components/subscription-payment';
+import { HamdastFlow } from './components/flow';
 
 export const AppFrame = ({
   appKey,
@@ -157,6 +158,7 @@ export const AppFrame = ({
           <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />
           <Permissions onClose={() => router.push('/dashboard')} />
+          <HamdastFlow iframeRef={iframeRef} />
           {showTranslation && (
             <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center">
               <div className="flex items-center gap-5">
