@@ -83,28 +83,29 @@ export type PlasmicSearchRequest__ArgsType = {
   searchQuery?: string;
   searchOptionalFilters?: any;
   suggestionExecutionSource?: boolean;
+  apiMode?: string;
 };
 type ArgPropType = keyof PlasmicSearchRequest__ArgsType;
 export const PlasmicSearchRequest__ArgProps = new Array<ArgPropType>(
   "searchQuery",
   "searchOptionalFilters",
-  "suggestionExecutionSource"
+  "suggestionExecutionSource",
+  "apiMode"
 );
 
 export type PlasmicSearchRequest__OverridesType = {
   root?: Flex__<"div">;
-  httpRestApiFetcher?: Flex__<typeof DataFetcher>;
-  freeBox?: Flex__<"div">;
-  svg?: Flex__<"svg">;
-  searchResults?: Flex__<typeof SearchResults>;
   sendSplunkEvent?: Flex__<typeof SideEffect>;
   sendClarityEvents?: Flex__<typeof SideEffect>;
+  sendSplunkEvent2?: Flex__<typeof SideEffect>;
+  sendClarityEvents2?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchRequestProps {
   searchQuery?: string;
   searchOptionalFilters?: any;
   suggestionExecutionSource?: boolean;
+  apiMode?: string;
   className?: string;
 }
 
@@ -129,7 +130,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
     () =>
       Object.assign(
         {
-          suggestionExecutionSource: false
+          suggestionExecutionSource: false,
+          apiMode: "jahannama"
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -168,902 +170,1525 @@ function PlasmicSearchRequest__RenderFunc(props: {
         sty.root
       )}
     >
-      <DataFetcher
-        data-plasmic-name={"httpRestApiFetcher"}
-        data-plasmic-override={overrides.httpRestApiFetcher}
-        className={classNames("__wab_instance", sty.httpRestApiFetcher)}
-        dataName={"fetchedData"}
-        errorDisplay={
-          <DataCtxReader__>
-            {$ctx =>
-              "\u0628\u0631\u0648\u0632 \u062e\u0637\u0627 \u062f\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648 "
-            }
-          </DataCtxReader__>
+      {(() => {
+        try {
+          return !($props.apiMode && $props.apiMode === "seapi");
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return true;
+          }
+          throw e;
         }
-        errorName={"fetchError"}
-        loadingDisplay={
+      })() ? (
+        <DataFetcher
+          className={classNames(
+            "__wab_instance",
+            sty.httpRestApiFetcher__kxEGd
+          )}
+          dataName={"fetchedData"}
+          errorDisplay={
+            <DataCtxReader__>
+              {$ctx =>
+                "\u0628\u0631\u0648\u0632 \u062e\u0637\u0627 \u062f\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648 "
+              }
+            </DataCtxReader__>
+          }
+          errorName={"fetchError"}
+          loadingDisplay={
+            <DataCtxReader__>
+              {$ctx => (
+                <div className={classNames(projectcss.all, sty.freeBox__jkOEb)}>
+                  <Icon14Icon
+                    className={classNames(projectcss.all, sty.svg___7Iq1B)}
+                    role={"img"}
+                  />
+                </div>
+              )}
+            </DataCtxReader__>
+          }
+          method={"GET"}
+          noLayout={false}
+          previewErrorDisplay={false}
+          previewSpinner={false}
+          url={(() => {
+            try {
+              return (() => {
+                const queries = {
+                  from: 0,
+                  size: 5,
+                  query: $props.searchQuery,
+                  semantic_search:
+                    $ctx.Growthbook &&
+                    $ctx.Growthbook.isReady &&
+                    $ctx.Growthbook.features["search-semantic-search"]
+                      ? "true"
+                      : "false",
+                  ...(Object.values(
+                    $props.searchOptionalFilters
+                      ? $props.searchOptionalFilters
+                      : {}
+                  ).length > 0 && {
+                    optionalFilters: Object.entries(
+                      $props.searchOptionalFilters
+                    ).reduce((acc, item) => {
+                      return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
+                        .map(i => `${item[0]}:${i}`)
+                        .join(",")}`;
+                    }, "")
+                  })
+                };
+                return `https://apigw.paziresh24.com/v1/jahannama?${Object.entries(
+                  queries
+                )
+                  .map(([key, value]) => `${key}=${value}`)
+                  .join("&")}`;
+              })();
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
           <DataCtxReader__>
             {$ctx => (
-              <div
-                data-plasmic-name={"freeBox"}
-                data-plasmic-override={overrides.freeBox}
-                className={classNames(projectcss.all, sty.freeBox)}
-              >
-                <Icon14Icon
-                  data-plasmic-name={"svg"}
-                  data-plasmic-override={overrides.svg}
-                  className={classNames(projectcss.all, sty.svg)}
-                  role={"img"}
-                />
-              </div>
-            )}
-          </DataCtxReader__>
-        }
-        method={"GET"}
-        noLayout={false}
-        previewErrorDisplay={false}
-        previewSpinner={false}
-        url={(() => {
-          try {
-            return (() => {
-              const queries = {
-                from: 0,
-                size: 5,
-                query: $props.searchQuery,
-                semantic_search:
-                  $ctx.Growthbook &&
-                  $ctx.Growthbook.isReady &&
-                  $ctx.Growthbook.features["search-semantic-search"]
-                    ? "true"
-                    : "false",
-                ...(Object.values(
-                  $props.searchOptionalFilters
-                    ? $props.searchOptionalFilters
-                    : {}
-                ).length > 0 && {
-                  optionalFilters: Object.entries(
-                    $props.searchOptionalFilters
-                  ).reduce((acc, item) => {
-                    return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
-                      .map(i => `${item[0]}:${i}`)
-                      .join(",")}`;
-                  }, "")
-                })
-              };
-              return `https://apigw.paziresh24.com/v1/jahannama?${Object.entries(
-                queries
-              )
-                .map(([key, value]) => `${key}=${value}`)
-                .join("&")}`;
-            })();
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-      >
-        <DataCtxReader__>
-          {$ctx => (
-            <React.Fragment>
-              <SearchResults
-                data-plasmic-name={"searchResults"}
-                data-plasmic-override={overrides.searchResults}
-                className={classNames("__wab_instance", sty.searchResults)}
-                paginationLoadingStatus={false}
-                searchResultResponse={(() => {
-                  try {
-                    return {
-                      search: {
-                        query_id: "",
-                        suggestion_source: (function () {
-                          if (
-                            $props &&
-                            typeof $props.suggestionExecutionSource !==
-                              "undefined"
-                          ) {
-                            return $props.suggestionExecutionSource;
-                          }
-                          return false;
-                        })(),
-                        semantic_search:
-                          $ctx.Growthbook &&
-                          $ctx.Growthbook.isReady &&
-                          $ctx.Growthbook.features["search-semantic-search"]
-                            ? "true"
-                            : "false",
-                        total: $ctx.fetchedData?.entity?.totalHits ?? 0,
-                        is_landing: false,
-                        pagination: {
-                          limit: $props.suggestionExecutionSource ? 0 : 10,
-                          page: 1
-                        },
-                        result: $ctx.fetchedData?.entity?.results?.map(item => {
-                          if (item.source?.record_type === "doctor") {
-                            return {
-                              _id: item.documentId,
-                              id: item.source?.doctor_id ?? "",
-                              server_id: item.source?.server_id ?? "",
-                              type: "doctor",
-                              title: item.source?.display_name ?? "نامشخص",
-                              prefix: item.source?.prefix ?? "",
-                              image: `/getImage/p24/search-${
-                                item.source?.gender ? "men" : "women"
-                              }/${
-                                item?.source?.image ?? "noimage.png"
-                              }?size=150`,
-                              view: item.source?.number_of_visits ?? 0,
-                              display_expertise:
-                                Array.from(
-                                  new Set(
-                                    (item.source?.expertises ?? [])
-                                      .map(
-                                        expertise =>
-                                          expertise?.degree?.name +
-                                          " " +
-                                          expertise?.expertise?.name
-                                      )
-                                      .filter(
-                                        exp => exp.trim() !== "نامشخص نامشخص"
-                                      )
-                                  )
-                                ).join(", ") ?? "",
-                              satisfaction: item.source?.satisfaction ?? 0,
-                              rates_count: item.source?.rates_count ?? 0,
-                              price: (() => {
-                                const consultServices =
-                                  item.source?.consult_services;
-                                if (
-                                  consultServices &&
-                                  consultServices.length > 0
-                                ) {
-                                  const freePrice =
-                                    consultServices[0]?.free_price;
-                                  if (freePrice && freePrice > 1000) {
-                                    const priceValue = Math.floor(
-                                      freePrice / 10
-                                    );
-                                    const formattedPrice = priceValue
-                                      .toString()
-                                      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                                    return `${formattedPrice} تومان`;
-                                  }
-                                }
-                                return null;
-                              })(),
-                              centers:
-                                item.source?.centers?.map(center => ({
-                                  id: center?.id ?? "",
-                                  status: center?.status ?? "",
-                                  user_center_id: center?.user_center_id ?? "",
-                                  server_id: center?.server_id ?? "",
-                                  name: center?.name ?? "",
-                                  display_number: center?.display_number ?? "",
-                                  address: center?.address ?? "",
-                                  province_name: center?.province_name ?? "",
-                                  city_name: center?.city_name ?? "",
-                                  center_type: center?.center_type ?? "",
-                                  map: {
-                                    lat: center?.map?.lat ?? null,
-                                    lon: center?.map?.lon ?? null
-                                  },
-                                  active_booking:
-                                    center?.active_booking ?? false
-                                })) ?? [],
-                              display_address_full: `${
-                                item.source?.city_name ?? ""
-                              }, ${item.source?.centers?.[0]?.address ?? ""}`,
-                              display_address: (() => {
-                                const validCenters =
-                                  item.source?.centers?.filter(
-                                    center =>
-                                      center?.id !== "5532" && center?.city_name
-                                  );
-                                const cityNames = [
-                                  ...new Set(
-                                    validCenters?.map(
-                                      center => center?.city_name
-                                    )
-                                  )
-                                ].join(" و ");
-                                if (!cityNames) {
-                                  return null;
-                                }
-                                const centerNamesArray = validCenters
-                                  ?.filter(center => center?.center_type !== 1)
-                                  .map(center => center?.name);
-                                if (
-                                  validCenters?.some(
-                                    center => center?.center_type === 1
-                                  )
-                                ) {
-                                  centerNamesArray.push("مطب");
-                                }
-                                const centerNames =
-                                  centerNamesArray?.join(" و ");
-                                return centerNames
-                                  ? `${cityNames} 🏥 ${centerNames}`
-                                  : cityNames;
-                              })(),
-                              waiting_time: null,
-                              badges: [],
-                              is_bulk: !item.source?.centers?.some(
-                                center => Number(center?.status) === 1
-                              ),
-                              consult_active_booking:
-                                item.source?.consult_active_booking ?? false,
-                              presence_active_booking:
-                                item.source?.presence_active_booking ?? false,
-                              url: `/dr/${item.source?.slug ?? ""}`,
-                              actions: (() => {
-                                const actions = [];
-                                const now = Math.floor(Date.now() / 1000);
-                                const formatTimeToFarsi = timestamp => {
-                                  const timeDifference = timestamp - now;
-                                  if (timeDifference <= 0) {
-                                    return "هم‌اکنون";
-                                  } else if (timeDifference < 3600) {
-                                    return "کمتر از 1 ساعت دیگر";
-                                  } else if (timeDifference < 86400) {
-                                    const hours = Math.floor(
-                                      timeDifference / 3600
-                                    );
-                                    return `حدود ${hours} ساعت دیگر`;
-                                  } else {
-                                    const days = Math.floor(
-                                      timeDifference / 86400
-                                    );
-                                    return `حدود ${days} روز دیگر`;
-                                  }
-                                };
-                                const hasOnlineCenter =
-                                  item.source?.centers?.some(
-                                    center => center?.id === "5532"
-                                  );
-                                const consult_freeturn =
-                                  item.source?.consult_freeturn;
-                                const consultTimeValid =
-                                  consult_freeturn &&
-                                  consult_freeturn >= now - 24 * 3600;
-                                if (hasOnlineCenter && consultTimeValid) {
-                                  const isImmediateConsult =
-                                    consult_freeturn >= now - 90 * 60 &&
-                                    consult_freeturn <= now + 60 * 60;
-                                  let top_title = "";
-                                  if (isImmediateConsult) {
-                                    top_title = `<span>پاسخ: <b>آنلاین و آماده مشاوره</b></span>`;
-                                  } else {
-                                    const timeText =
-                                      formatTimeToFarsi(consult_freeturn);
-                                    top_title = `<span>زمان مشاوره: <b>${timeText}</b></span>`;
-                                  }
-                                  const consultServiceId =
-                                    item.source?.consult_services?.[0]?.id ??
-                                    "";
-                                  const url = `/booking/${item.source?.slug}?centerId=5532&serviceId=${consultServiceId}&skipTimeSelectStep=true`;
-                                  actions.push({
-                                    title: "ویزیت آنلاین",
-                                    outline: false,
-                                    top_title: top_title,
-                                    url: url
-                                  });
-                                }
-                                const presence_freeturn =
-                                  item.source?.presence_freeturn;
-                                const presenceTimeValid =
-                                  presence_freeturn &&
-                                  presence_freeturn >= now - 24 * 3600;
-                                const hasActiveBookingCenter =
-                                  item.source?.centers?.some(
-                                    center =>
-                                      center?.id !== "5532" &&
-                                      center?.active_booking
-                                  );
-                                let inPersonTitle = "";
-                                if (
-                                  presenceTimeValid ||
-                                  hasActiveBookingCenter
-                                ) {
-                                  inPersonTitle = "نوبت دهی اینترنتی";
-                                } else {
-                                  inPersonTitle = "آدرس و اطلاعات بیشتر";
-                                }
-                                const inPersonOutline = !presenceTimeValid;
-                                let inPersonTopTitle = "";
-                                if (presenceTimeValid) {
-                                  const timeText =
-                                    formatTimeToFarsi(presence_freeturn);
-                                  inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
-                                }
-                                const inPersonUrl = `/dr/${
-                                  item.source?.slug ?? ""
-                                }`;
-                                actions.push({
-                                  title: inPersonTitle,
-                                  outline: inPersonOutline,
-                                  top_title: inPersonTopTitle,
-                                  url: inPersonUrl
-                                });
-                                return actions;
-                              })(),
-                              experience: item.source?.experience ?? "",
-                              position:
-                                item.beforePersonalizationPosition + 1 ?? 0,
-                              has_presciption: false,
-                              insurances: item.source?.insurances ?? [],
-                              experiment_details: {
-                                search_index: "slim_clinic",
-                                consult_search_index: "slim_clinic_online_visit"
-                              },
-                              expertises: item.source?.expertises ?? [],
-                              keyword_tags_user_priority_1:
-                                item.source?.keyword_tags_user_priority_1 ?? [],
-                              gender: item.source?.gender ?? null,
-                              expertise: item.source?.expertise ?? [],
-                              rate_info: item.source?.rate_info ?? {},
-                              consult_services:
-                                item.source?.consult_services ?? [],
-                              doctor_id: item.source?.doctor_id ?? "",
-                              number_of_visits:
-                                item.source?.number_of_visits ?? 0,
-                              waiting_time_info:
-                                item.source?.waiting_time_info ?? null,
-                              slug: item.source?.slug ?? "",
-                              graduation_date:
-                                item.source?.graduation_date ?? null,
-                              star: item.source?.star ?? 0,
-                              services:
-                                item.source?.services?.map(service => ({
-                                  workhours: service?.workhours ?? null,
-                                  center_id: service?.center_id ?? "",
-                                  id: service?.id ?? ""
-                                })) ?? [],
-                              university_name:
-                                item.source?.university_name ?? "",
-                              display_name: item.source?.display_name ?? "",
-                              record_type: item.source?.record_type ?? "",
-                              center_id: item.source?.center_id ?? [],
-                              name: item.source?.name ?? "",
-                              medical_code: item.source?.medical_code ?? "",
-                              calculated_rate: item.source?.calculated_rate ?? 0
-                            };
-                          } else if (item.source?.record_type === "center") {
-                            return {
-                              _id: item.documentId,
-                              id: item.source?.center_id ?? "",
-                              server_id: item.source?.server_id ?? "",
-                              type: "center",
-                              title: item.source?.display_name ?? "نامشخص",
-                              image: `/getImage/p24/search-hospitalclinic/${
-                                item.source?.image ?? "noimage.png"
-                              }?size=150`,
-                              view: item.source?.number_of_visits ?? 0,
-                              address: item.source?.address ?? "",
-                              city_id: item.source?.city_id ?? "",
-                              slug: item.source?.slug ?? "",
-                              url: `/center/${item.source?.slug ?? ""}`,
-                              university_name:
-                                item.source?.university_name ?? "",
-                              name: item.source?.name ?? "",
-                              record_type: item.source?.record_type ?? "",
-                              status: item.source?.status ?? ""
-                            };
-                          } else {
-                            return {
-                              _id: item.documentId,
-                              ...item.source
-                            };
-                          }
-                        })
-                      },
-                      selected_filters: (function () {
-                        const filters = {};
-                        if (
-                          $props &&
-                          $props.searchOptionalFilters &&
-                          typeof $props.searchOptionalFilters === "object"
-                        ) {
-                          for (const key in $props.searchOptionalFilters) {
+              <React.Fragment>
+                <SearchResults
+                  className={classNames(
+                    "__wab_instance",
+                    sty.searchResults__q1Or3
+                  )}
+                  paginationLoadingStatus={false}
+                  searchResultResponse={(() => {
+                    try {
+                      return {
+                        search: {
+                          query_id: "",
+                          suggestion_source: (function () {
                             if (
-                              $props.searchOptionalFilters.hasOwnProperty(key)
+                              $props &&
+                              typeof $props.suggestionExecutionSource !==
+                                "undefined"
                             ) {
-                              filters[key] = $props.searchOptionalFilters[key];
+                              return $props.suggestionExecutionSource;
                             }
-                          }
-                        }
-                        if ($props && $props.searchQuery) {
-                          filters.text = $props.searchQuery;
-                        }
-                        return filters;
-                      })()
-                    };
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-                topSuggestedCardFeature={(() => {
-                  try {
-                    return $ctx.Growthbook.features[
-                      "fragment::top-suggested-card-feature"
-                    ];
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return undefined;
-                    }
-                    throw e;
-                  }
-                })()}
-              />
-
-              <SideEffect
-                data-plasmic-name={"sendSplunkEvent"}
-                data-plasmic-override={overrides.sendSplunkEvent}
-                className={classNames("__wab_instance", sty.sendSplunkEvent)}
-                onMount={async () => {
-                  const $steps = {};
-
-                  $steps["searchViewEvent"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
+                            return false;
+                          })(),
+                          semantic_search:
+                            $ctx.Growthbook &&
+                            $ctx.Growthbook.isReady &&
+                            $ctx.Growthbook.features["search-semantic-search"]
+                              ? "true"
+                              : "false",
+                          total: $ctx.fetchedData?.entity?.totalHits ?? 0,
+                          is_landing: false,
+                          pagination: {
+                            limit: $props.suggestionExecutionSource ? 0 : 10,
+                            page: 1
+                          },
+                          result: $ctx.fetchedData?.entity?.results?.map(
+                            item => {
+                              if (item.source?.record_type === "doctor") {
                                 return {
-                                  event_group: "search_metrics",
-                                  event_type: "search_view",
-                                  current_url: window.location.href,
-                                  terminal_id: (function () {
-                                    try {
-                                      return document.cookie.replace(
-                                        /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
-                                        "$1"
-                                      );
-                                    } catch (e) {
-                                      return null;
-                                    }
-                                  })(),
-                                  filters: (function () {
-                                    const filters = {};
-                                    if (
-                                      $props &&
-                                      $props.searchOptionalFilters &&
-                                      typeof $props.searchOptionalFilters ===
-                                        "object"
-                                    ) {
-                                      for (const key in $props.searchOptionalFilters) {
-                                        if (
-                                          $props.searchOptionalFilters.hasOwnProperty(
-                                            key
+                                  _id: item.documentId,
+                                  id: item.source?.doctor_id ?? "",
+                                  server_id: item.source?.server_id ?? "",
+                                  type: "doctor",
+                                  title: item.source?.display_name ?? "نامشخص",
+                                  prefix: item.source?.prefix ?? "",
+                                  image: `/getImage/p24/search-${
+                                    item.source?.gender ? "men" : "women"
+                                  }/${
+                                    item?.source?.image ?? "noimage.png"
+                                  }?size=150`,
+                                  view: item.source?.number_of_visits ?? 0,
+                                  display_expertise:
+                                    Array.from(
+                                      new Set(
+                                        (item.source?.expertises ?? [])
+                                          .map(
+                                            expertise =>
+                                              expertise?.degree?.name +
+                                              " " +
+                                              expertise?.expertise?.name
                                           )
-                                        ) {
-                                          filters[key] =
-                                            $props.searchOptionalFilters[key];
-                                        }
-                                      }
-                                    }
-                                    if ($props && $props.searchQuery) {
-                                      filters.text = $props.searchQuery;
-                                    }
-                                    return filters;
-                                  })(),
-                                  result_count: (function () {
-                                    try {
-                                      return $ctx &&
-                                        $ctx.fetchedData &&
-                                        $ctx.fetchedData.entity &&
-                                        $ctx.fetchedData.entity.results
-                                        ? $ctx.fetchedData.entity.results.length
-                                        : 0;
-                                    } catch (e) {
-                                      return 0;
-                                    }
-                                  })(),
-                                  city_id: (function () {
+                                          .filter(
+                                            exp =>
+                                              exp.trim() !== "نامشخص نامشخص"
+                                          )
+                                      )
+                                    ).join(", ") ?? "",
+                                  satisfaction: item.source?.satisfaction ?? 0,
+                                  rates_count: item.source?.rates_count ?? 0,
+                                  price: (() => {
+                                    const consultServices =
+                                      item.source?.consult_services;
                                     if (
-                                      $props &&
-                                      $props.searchOptionalFilters &&
-                                      typeof $props.searchOptionalFilters ===
-                                        "object" &&
-                                      $props.searchOptionalFilters.city_id
+                                      consultServices &&
+                                      consultServices.length > 0
                                     ) {
-                                      return $props.searchOptionalFilters
-                                        .city_id[0];
+                                      const freePrice =
+                                        consultServices[0]?.free_price;
+                                      if (freePrice && freePrice > 1000) {
+                                        const priceValue = Math.floor(
+                                          freePrice / 10
+                                        );
+                                        const formattedPrice = priceValue
+                                          .toString()
+                                          .replace(
+                                            /\B(?=(\d{3})+(?!\d))/g,
+                                            ","
+                                          );
+                                        return `${formattedPrice} تومان`;
+                                      }
                                     }
                                     return null;
                                   })(),
-                                  query_id: (function () {
-                                    try {
-                                      return $ctx &&
-                                        $ctx.fetchedData &&
-                                        $ctx.fetchedData.entity
-                                        ? $ctx.fetchedData.entity.queryId
-                                        : null;
-                                    } catch (e) {
+                                  centers:
+                                    item.source?.centers?.map(center => ({
+                                      id: center?.id ?? "",
+                                      status: center?.status ?? "",
+                                      user_center_id:
+                                        center?.user_center_id ?? "",
+                                      server_id: center?.server_id ?? "",
+                                      name: center?.name ?? "",
+                                      display_number:
+                                        center?.display_number ?? "",
+                                      address: center?.address ?? "",
+                                      province_name:
+                                        center?.province_name ?? "",
+                                      city_name: center?.city_name ?? "",
+                                      center_type: center?.center_type ?? "",
+                                      map: {
+                                        lat: center?.map?.lat ?? null,
+                                        lon: center?.map?.lon ?? null
+                                      },
+                                      active_booking:
+                                        center?.active_booking ?? false
+                                    })) ?? [],
+                                  display_address_full: `${
+                                    item.source?.city_name ?? ""
+                                  }, ${
+                                    item.source?.centers?.[0]?.address ?? ""
+                                  }`,
+                                  display_address: (() => {
+                                    const validCenters =
+                                      item.source?.centers?.filter(
+                                        center =>
+                                          center?.id !== "5532" &&
+                                          center?.city_name
+                                      );
+                                    const cityNames = [
+                                      ...new Set(
+                                        validCenters?.map(
+                                          center => center?.city_name
+                                        )
+                                      )
+                                    ].join(" و ");
+                                    if (!cityNames) {
                                       return null;
                                     }
-                                  })(),
-                                  suggestion_source: (function () {
+                                    const centerNamesArray = validCenters
+                                      ?.filter(
+                                        center => center?.center_type !== 1
+                                      )
+                                      .map(center => center?.name);
                                     if (
-                                      $props &&
-                                      typeof $props.suggestionExecutionSource !==
-                                        "undefined"
+                                      validCenters?.some(
+                                        center => center?.center_type === 1
+                                      )
                                     ) {
-                                      return $props.suggestionExecutionSource;
+                                      centerNamesArray.push("مطب");
                                     }
-                                    return false;
+                                    const centerNames =
+                                      centerNamesArray?.join(" و ");
+                                    return centerNames
+                                      ? `${cityNames} 🏥 ${centerNames}`
+                                      : cityNames;
                                   })(),
-                                  userAgent: globalThis.navigator.userAgent
-                                    ? globalThis.navigator.userAgent
-                                    : "",
-                                  url: (function () {
-                                    const url = {
-                                      href: window.location.href,
-                                      query: {},
-                                      pathname: window.location.pathname,
-                                      host: window.location.host
+                                  waiting_time: null,
+                                  badges: [],
+                                  is_bulk: !item.source?.centers?.some(
+                                    center => Number(center?.status) === 1
+                                  ),
+                                  consult_active_booking:
+                                    item.source?.consult_active_booking ??
+                                    false,
+                                  presence_active_booking:
+                                    item.source?.presence_active_booking ??
+                                    false,
+                                  url: `/dr/${item.source?.slug ?? ""}`,
+                                  actions: (() => {
+                                    const actions = [];
+                                    const now = Math.floor(Date.now() / 1000);
+                                    const formatTimeToFarsi = timestamp => {
+                                      const timeDifference = timestamp - now;
+                                      if (timeDifference <= 0) {
+                                        return "هم‌اکنون";
+                                      } else if (timeDifference < 3600) {
+                                        return "کمتر از 1 ساعت دیگر";
+                                      } else if (timeDifference < 86400) {
+                                        const hours = Math.floor(
+                                          timeDifference / 3600
+                                        );
+                                        return `حدود ${hours} ساعت دیگر`;
+                                      } else {
+                                        const days = Math.floor(
+                                          timeDifference / 86400
+                                        );
+                                        return `حدود ${days} روز دیگر`;
+                                      }
                                     };
-                                    try {
-                                      const urlParams = new URLSearchParams(
-                                        window.location.search
+                                    const hasOnlineCenter =
+                                      item.source?.centers?.some(
+                                        center => center?.id === "5532"
                                       );
-                                      for (const [
-                                        key,
-                                        value
-                                      ] of urlParams.entries()) {
-                                        url.query[key] = value;
+                                    const consult_freeturn =
+                                      item.source?.consult_freeturn;
+                                    const consultTimeValid =
+                                      consult_freeturn &&
+                                      consult_freeturn >= now - 24 * 3600;
+                                    if (hasOnlineCenter && consultTimeValid) {
+                                      const isImmediateConsult =
+                                        consult_freeturn >= now - 90 * 60 &&
+                                        consult_freeturn <= now + 60 * 60;
+                                      let top_title = "";
+                                      if (isImmediateConsult) {
+                                        top_title = `<span>پاسخ: <b>آنلاین و آماده مشاوره</b></span>`;
+                                      } else {
+                                        const timeText =
+                                          formatTimeToFarsi(consult_freeturn);
+                                        top_title = `<span>زمان مشاوره: <b>${timeText}</b></span>`;
                                       }
-                                    } catch (e) {}
-                                    return url;
-                                  })()
+                                      const consultServiceId =
+                                        item.source?.consult_services?.[0]
+                                          ?.id ?? "";
+                                      const url = `/booking/${item.source?.slug}?centerId=5532&serviceId=${consultServiceId}&skipTimeSelectStep=true`;
+                                      actions.push({
+                                        title: "ویزیت آنلاین",
+                                        outline: false,
+                                        top_title: top_title,
+                                        url: url
+                                      });
+                                    }
+                                    const presence_freeturn =
+                                      item.source?.presence_freeturn;
+                                    const presenceTimeValid =
+                                      presence_freeturn &&
+                                      presence_freeturn >= now - 24 * 3600;
+                                    const hasActiveBookingCenter =
+                                      item.source?.centers?.some(
+                                        center =>
+                                          center?.id !== "5532" &&
+                                          center?.active_booking
+                                      );
+                                    let inPersonTitle = "";
+                                    if (
+                                      presenceTimeValid ||
+                                      hasActiveBookingCenter
+                                    ) {
+                                      inPersonTitle = "نوبت دهی اینترنتی";
+                                    } else {
+                                      inPersonTitle = "آدرس و اطلاعات بیشتر";
+                                    }
+                                    const inPersonOutline = !presenceTimeValid;
+                                    let inPersonTopTitle = "";
+                                    if (presenceTimeValid) {
+                                      const timeText =
+                                        formatTimeToFarsi(presence_freeturn);
+                                      inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
+                                    }
+                                    const inPersonUrl = `/dr/${
+                                      item.source?.slug ?? ""
+                                    }`;
+                                    actions.push({
+                                      title: inPersonTitle,
+                                      outline: inPersonOutline,
+                                      top_title: inPersonTopTitle,
+                                      url: inPersonUrl
+                                    });
+                                    return actions;
+                                  })(),
+                                  experience: item.source?.experience ?? "",
+                                  position:
+                                    item.beforePersonalizationPosition + 1 ?? 0,
+                                  has_presciption: false,
+                                  insurances: item.source?.insurances ?? [],
+                                  experiment_details: {
+                                    search_index: "slim_clinic",
+                                    consult_search_index:
+                                      "slim_clinic_online_visit"
+                                  },
+                                  expertises: item.source?.expertises ?? [],
+                                  keyword_tags_user_priority_1:
+                                    item.source?.keyword_tags_user_priority_1 ??
+                                    [],
+                                  gender: item.source?.gender ?? null,
+                                  expertise: item.source?.expertise ?? [],
+                                  rate_info: item.source?.rate_info ?? {},
+                                  consult_services:
+                                    item.source?.consult_services ?? [],
+                                  doctor_id: item.source?.doctor_id ?? "",
+                                  number_of_visits:
+                                    item.source?.number_of_visits ?? 0,
+                                  waiting_time_info:
+                                    item.source?.waiting_time_info ?? null,
+                                  slug: item.source?.slug ?? "",
+                                  graduation_date:
+                                    item.source?.graduation_date ?? null,
+                                  star: item.source?.star ?? 0,
+                                  services:
+                                    item.source?.services?.map(service => ({
+                                      workhours: service?.workhours ?? null,
+                                      center_id: service?.center_id ?? "",
+                                      id: service?.id ?? ""
+                                    })) ?? [],
+                                  university_name:
+                                    item.source?.university_name ?? "",
+                                  display_name: item.source?.display_name ?? "",
+                                  record_type: item.source?.record_type ?? "",
+                                  center_id: item.source?.center_id ?? [],
+                                  name: item.source?.name ?? "",
+                                  medical_code: item.source?.medical_code ?? "",
+                                  calculated_rate:
+                                    item.source?.calculated_rate ?? 0
                                 };
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
+                              } else if (
+                                item.source?.record_type === "center"
+                              ) {
+                                return {
+                                  _id: item.documentId,
+                                  id: item.source?.center_id ?? "",
+                                  server_id: item.source?.server_id ?? "",
+                                  type: "center",
+                                  title: item.source?.display_name ?? "نامشخص",
+                                  image: `/getImage/p24/search-hospitalclinic/${
+                                    item.source?.image ?? "noimage.png"
+                                  }?size=150`,
+                                  view: item.source?.number_of_visits ?? 0,
+                                  address: item.source?.address ?? "",
+                                  city_id: item.source?.city_id ?? "",
+                                  slug: item.source?.slug ?? "",
+                                  url: `/center/${item.source?.slug ?? ""}`,
+                                  university_name:
+                                    item.source?.university_name ?? "",
+                                  name: item.source?.name ?? "",
+                                  record_type: item.source?.record_type ?? "",
+                                  status: item.source?.status ?? ""
+                                };
+                              } else {
+                                return {
+                                  _id: item.documentId,
+                                  ...item.source
+                                };
                               }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Splunk.sendLog"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["searchViewEvent"] != null &&
-                    typeof $steps["searchViewEvent"] === "object" &&
-                    typeof $steps["searchViewEvent"].then === "function"
-                  ) {
-                    $steps["searchViewEvent"] = await $steps["searchViewEvent"];
-                  }
+                            }
+                          )
+                        },
+                        selected_filters: (function () {
+                          const filters = {};
+                          if (
+                            $props &&
+                            $props.searchOptionalFilters &&
+                            typeof $props.searchOptionalFilters === "object"
+                          ) {
+                            for (const key in $props.searchOptionalFilters) {
+                              if (
+                                $props.searchOptionalFilters.hasOwnProperty(key)
+                              ) {
+                                filters[key] =
+                                  $props.searchOptionalFilters[key];
+                              }
+                            }
+                          }
+                          if ($props && $props.searchQuery) {
+                            filters.text = $props.searchQuery;
+                          }
+                          return filters;
+                        })()
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  topSuggestedCardFeature={(() => {
+                    try {
+                      return $ctx.Growthbook.features[
+                        "fragment::top-suggested-card-feature"
+                      ];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
 
-                  $steps["searchCardViewEvent"] = false
-                    ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
-                                return (function () {
-                                  try {
-                                    const results =
-                                      ($ctx &&
-                                        $ctx.fetchedData &&
-                                        $ctx.fetchedData.entity &&
-                                        $ctx.fetchedData.entity.results) ||
-                                      [];
-                                    const output = results.map(
-                                      (result, index) => {
-                                        const event = {
-                                          event_group: "search_metrics",
-                                          event_type: "search_card_view",
-                                          current_url: window.location.href,
-                                          terminal_id: (function () {
-                                            try {
-                                              return document.cookie.replace(
-                                                /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
-                                                "$1"
-                                              );
-                                            } catch (e) {
-                                              return null;
-                                            }
-                                          })(),
-                                          card_data: (function () {
-                                            const card = {};
-                                            try {
-                                              card["action"] = (function () {
-                                                const actions = [];
-                                                if (
-                                                  result.source &&
-                                                  result.source
-                                                    .consult_active_booking
-                                                ) {
-                                                  actions.push(
-                                                    JSON.stringify({
-                                                      outline: false,
-                                                      title: "ویزیت آنلاین",
-                                                      top_title: result.source
-                                                        .consult_freeturn
-                                                        ? `پاسخ: آنلاین و آماده مشاوره`
-                                                        : ""
-                                                    })
-                                                  );
-                                                }
-                                                if (
-                                                  result.source &&
-                                                  result.source
-                                                    .presence_active_booking
-                                                ) {
-                                                  actions.push(
-                                                    JSON.stringify({
-                                                      outline: false,
-                                                      title:
-                                                        "نوبت دهی اینترنتی",
-                                                      top_title:
-                                                        result.source
-                                                          .freeturns_info &&
-                                                        result.source
-                                                          .freeturns_info[0] &&
-                                                        result.source
-                                                          .freeturns_info[0]
-                                                          .available_time
-                                                          ? `اولین نوبت: ${result.source.freeturns_info[0].available_time}`
-                                                          : ""
-                                                    })
-                                                  );
-                                                }
-                                                return actions;
-                                              })();
-                                              card["_id"] =
-                                                result.documentId || null;
-                                              card["position"] = index + 1;
-                                              card["server_id"] =
-                                                (result.source &&
-                                                  result.source.server_id) ||
-                                                null;
-                                              card["title"] =
-                                                (result.source &&
-                                                  result.source.display_name) ||
-                                                "";
-                                              card["type"] =
-                                                (result.source &&
-                                                  result.source.record_type) ||
-                                                "";
-                                              card["url"] =
-                                                result.source &&
-                                                result.source.slug
-                                                  ? `/${result.source.slug}/`
-                                                  : "";
-                                              card["rates_count"] =
-                                                (result.source &&
-                                                  result.source.rates_count) ||
-                                                null;
-                                              card["satisfaction"] =
-                                                (result.source &&
-                                                  result.source.satisfaction) ||
-                                                null;
-                                            } catch (e) {}
-                                            return card;
-                                          })(),
-                                          filters: (function () {
-                                            const filters = {};
-                                            if (
-                                              $props &&
-                                              $props.searchOptionalFilters &&
-                                              typeof $props.searchOptionalFilters ===
-                                                "object"
-                                            ) {
-                                              for (const key in $props.searchOptionalFilters) {
-                                                if (
-                                                  $props.searchOptionalFilters.hasOwnProperty(
-                                                    key
-                                                  )
-                                                ) {
-                                                  filters[key] =
-                                                    $props.searchOptionalFilters[
-                                                      key
-                                                    ];
-                                                }
-                                              }
-                                            }
-                                            if ($props && $props.searchQuery) {
-                                              filters.text = $props.searchQuery;
-                                            }
-                                            return filters;
-                                          })(),
-                                          result_count: (function () {
-                                            try {
-                                              return $ctx &&
-                                                $ctx.fetchedData &&
-                                                $ctx.fetchedData.entity &&
-                                                $ctx.fetchedData.entity.results
-                                                ? $ctx.fetchedData.entity
-                                                    .results.length
-                                                : 0;
-                                            } catch (e) {
-                                              return 0;
-                                            }
-                                          })(),
-                                          city_id: (function () {
-                                            if (
-                                              $props &&
-                                              $props.searchOptionalFilters &&
-                                              typeof $props.searchOptionalFilters ===
-                                                "object" &&
-                                              $props.searchOptionalFilters
-                                                .city_id
-                                            ) {
-                                              return $props
-                                                .searchOptionalFilters
-                                                .city_id[0];
-                                            }
-                                            return "-1";
-                                          })(),
-                                          query_id: (function () {
-                                            try {
-                                              return $ctx &&
-                                                $ctx.fetchedData &&
-                                                $ctx.fetchedData.entity
-                                                ? $ctx.fetchedData.entity
-                                                    .queryId
-                                                : null;
-                                            } catch (e) {
-                                              return null;
-                                            }
-                                          })(),
-                                          url: (function () {
-                                            const url = {
-                                              href: window.location.href,
-                                              query: {},
-                                              pathname:
-                                                window.location.pathname,
-                                              host: window.location.host
-                                            };
-                                            try {
-                                              const urlParams =
-                                                new URLSearchParams(
-                                                  window.location.search
-                                                );
-                                              for (const [
-                                                key,
-                                                value
-                                              ] of urlParams.entries()) {
-                                                url.query[key] = value;
-                                              }
-                                            } catch (e) {}
-                                            return url;
-                                          })()
-                                        };
-                                        return event;
+                <SideEffect
+                  data-plasmic-name={"sendSplunkEvent"}
+                  data-plasmic-override={overrides.sendSplunkEvent}
+                  className={classNames("__wab_instance", sty.sendSplunkEvent)}
+                  onMount={async () => {
+                    const $steps = {};
+
+                    $steps["searchViewEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return {
+                                    event_group: "search_metrics",
+                                    event_type: "search_view",
+                                    current_url: window.location.href,
+                                    terminal_id: (function () {
+                                      try {
+                                        return document.cookie.replace(
+                                          /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                          "$1"
+                                        );
+                                      } catch (e) {
+                                        return null;
                                       }
-                                    );
-                                    return output;
-                                  } catch (e) {
-                                    return [];
+                                    })(),
+                                    filters: (function () {
+                                      const filters = {};
+                                      if (
+                                        $props &&
+                                        $props.searchOptionalFilters &&
+                                        typeof $props.searchOptionalFilters ===
+                                          "object"
+                                      ) {
+                                        for (const key in $props.searchOptionalFilters) {
+                                          if (
+                                            $props.searchOptionalFilters.hasOwnProperty(
+                                              key
+                                            )
+                                          ) {
+                                            filters[key] =
+                                              $props.searchOptionalFilters[key];
+                                          }
+                                        }
+                                      }
+                                      if ($props && $props.searchQuery) {
+                                        filters.text = $props.searchQuery;
+                                      }
+                                      return filters;
+                                    })(),
+                                    result_count: (function () {
+                                      try {
+                                        return $ctx &&
+                                          $ctx.fetchedData &&
+                                          $ctx.fetchedData.entity &&
+                                          $ctx.fetchedData.entity.results
+                                          ? $ctx.fetchedData.entity.results
+                                              .length
+                                          : 0;
+                                      } catch (e) {
+                                        return 0;
+                                      }
+                                    })(),
+                                    city_id: (function () {
+                                      if (
+                                        $props &&
+                                        $props.searchOptionalFilters &&
+                                        typeof $props.searchOptionalFilters ===
+                                          "object" &&
+                                        $props.searchOptionalFilters.city_id
+                                      ) {
+                                        return $props.searchOptionalFilters
+                                          .city_id[0];
+                                      }
+                                      return null;
+                                    })(),
+                                    query_id: (function () {
+                                      try {
+                                        return $ctx &&
+                                          $ctx.fetchedData &&
+                                          $ctx.fetchedData.entity
+                                          ? $ctx.fetchedData.entity.queryId
+                                          : null;
+                                      } catch (e) {
+                                        return null;
+                                      }
+                                    })(),
+                                    suggestion_source: (function () {
+                                      if (
+                                        $props &&
+                                        typeof $props.suggestionExecutionSource !==
+                                          "undefined"
+                                      ) {
+                                        return $props.suggestionExecutionSource;
+                                      }
+                                      return false;
+                                    })(),
+                                    userAgent: globalThis.navigator.userAgent
+                                      ? globalThis.navigator.userAgent
+                                      : "",
+                                    url: (function () {
+                                      const url = {
+                                        href: window.location.href,
+                                        query: {},
+                                        pathname: window.location.pathname,
+                                        host: window.location.host
+                                      };
+                                      try {
+                                        const urlParams = new URLSearchParams(
+                                          window.location.search
+                                        );
+                                        for (const [
+                                          key,
+                                          value
+                                        ] of urlParams.entries()) {
+                                          url.query[key] = value;
+                                        }
+                                      } catch (e) {}
+                                      return url;
+                                    })()
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
                                   }
-                                })();
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
+                                  throw e;
                                 }
-                                throw e;
-                              }
-                            })(),
-                            undefined,
-                            "035dab23-6c75-4563-b46d-f52a7fa71d7c"
-                          ]
-                        };
-                        return $globalActions["Splunk.sendBatchLog"]?.apply(
-                          null,
-                          [...actionArgs.args]
-                        );
-                      })()
-                    : undefined;
-                  if (
-                    $steps["searchCardViewEvent"] != null &&
-                    typeof $steps["searchCardViewEvent"] === "object" &&
-                    typeof $steps["searchCardViewEvent"].then === "function"
-                  ) {
-                    $steps["searchCardViewEvent"] = await $steps[
-                      "searchCardViewEvent"
-                    ];
-                  }
-                }}
-              />
+                              })()
+                            ]
+                          };
+                          return $globalActions["Splunk.sendLog"]?.apply(null, [
+                            ...actionArgs.args
+                          ]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["searchViewEvent"] != null &&
+                      typeof $steps["searchViewEvent"] === "object" &&
+                      typeof $steps["searchViewEvent"].then === "function"
+                    ) {
+                      $steps["searchViewEvent"] = await $steps[
+                        "searchViewEvent"
+                      ];
+                    }
 
-              <SideEffect
-                data-plasmic-name={"sendClarityEvents"}
-                data-plasmic-override={overrides.sendClarityEvents}
-                className={classNames("__wab_instance", sty.sendClarityEvents)}
-                onMount={async () => {
-                  const $steps = {};
+                    $steps["searchCardViewEvent"] = false
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return (function () {
+                                    try {
+                                      const results =
+                                        ($ctx &&
+                                          $ctx.fetchedData &&
+                                          $ctx.fetchedData.entity &&
+                                          $ctx.fetchedData.entity.results) ||
+                                        [];
+                                      const output = results.map(
+                                        (result, index) => {
+                                          const event = {
+                                            event_group: "search_metrics",
+                                            event_type: "search_card_view",
+                                            current_url: window.location.href,
+                                            terminal_id: (function () {
+                                              try {
+                                                return document.cookie.replace(
+                                                  /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                                  "$1"
+                                                );
+                                              } catch (e) {
+                                                return null;
+                                              }
+                                            })(),
+                                            card_data: (function () {
+                                              const card = {};
+                                              try {
+                                                card["action"] = (function () {
+                                                  const actions = [];
+                                                  if (
+                                                    result.source &&
+                                                    result.source
+                                                      .consult_active_booking
+                                                  ) {
+                                                    actions.push(
+                                                      JSON.stringify({
+                                                        outline: false,
+                                                        title: "ویزیت آنلاین",
+                                                        top_title: result.source
+                                                          .consult_freeturn
+                                                          ? `پاسخ: آنلاین و آماده مشاوره`
+                                                          : ""
+                                                      })
+                                                    );
+                                                  }
+                                                  if (
+                                                    result.source &&
+                                                    result.source
+                                                      .presence_active_booking
+                                                  ) {
+                                                    actions.push(
+                                                      JSON.stringify({
+                                                        outline: false,
+                                                        title:
+                                                          "نوبت دهی اینترنتی",
+                                                        top_title:
+                                                          result.source
+                                                            .freeturns_info &&
+                                                          result.source
+                                                            .freeturns_info[0] &&
+                                                          result.source
+                                                            .freeturns_info[0]
+                                                            .available_time
+                                                            ? `اولین نوبت: ${result.source.freeturns_info[0].available_time}`
+                                                            : ""
+                                                      })
+                                                    );
+                                                  }
+                                                  return actions;
+                                                })();
+                                                card["_id"] =
+                                                  result.documentId || null;
+                                                card["position"] = index + 1;
+                                                card["server_id"] =
+                                                  (result.source &&
+                                                    result.source.server_id) ||
+                                                  null;
+                                                card["title"] =
+                                                  (result.source &&
+                                                    result.source
+                                                      .display_name) ||
+                                                  "";
+                                                card["type"] =
+                                                  (result.source &&
+                                                    result.source
+                                                      .record_type) ||
+                                                  "";
+                                                card["url"] =
+                                                  result.source &&
+                                                  result.source.slug
+                                                    ? `/${result.source.slug}/`
+                                                    : "";
+                                                card["rates_count"] =
+                                                  (result.source &&
+                                                    result.source
+                                                      .rates_count) ||
+                                                  null;
+                                                card["satisfaction"] =
+                                                  (result.source &&
+                                                    result.source
+                                                      .satisfaction) ||
+                                                  null;
+                                              } catch (e) {}
+                                              return card;
+                                            })(),
+                                            filters: (function () {
+                                              const filters = {};
+                                              if (
+                                                $props &&
+                                                $props.searchOptionalFilters &&
+                                                typeof $props.searchOptionalFilters ===
+                                                  "object"
+                                              ) {
+                                                for (const key in $props.searchOptionalFilters) {
+                                                  if (
+                                                    $props.searchOptionalFilters.hasOwnProperty(
+                                                      key
+                                                    )
+                                                  ) {
+                                                    filters[key] =
+                                                      $props.searchOptionalFilters[
+                                                        key
+                                                      ];
+                                                  }
+                                                }
+                                              }
+                                              if (
+                                                $props &&
+                                                $props.searchQuery
+                                              ) {
+                                                filters.text =
+                                                  $props.searchQuery;
+                                              }
+                                              return filters;
+                                            })(),
+                                            result_count: (function () {
+                                              try {
+                                                return $ctx &&
+                                                  $ctx.fetchedData &&
+                                                  $ctx.fetchedData.entity &&
+                                                  $ctx.fetchedData.entity
+                                                    .results
+                                                  ? $ctx.fetchedData.entity
+                                                      .results.length
+                                                  : 0;
+                                              } catch (e) {
+                                                return 0;
+                                              }
+                                            })(),
+                                            city_id: (function () {
+                                              if (
+                                                $props &&
+                                                $props.searchOptionalFilters &&
+                                                typeof $props.searchOptionalFilters ===
+                                                  "object" &&
+                                                $props.searchOptionalFilters
+                                                  .city_id
+                                              ) {
+                                                return $props
+                                                  .searchOptionalFilters
+                                                  .city_id[0];
+                                              }
+                                              return "-1";
+                                            })(),
+                                            query_id: (function () {
+                                              try {
+                                                return $ctx &&
+                                                  $ctx.fetchedData &&
+                                                  $ctx.fetchedData.entity
+                                                  ? $ctx.fetchedData.entity
+                                                      .queryId
+                                                  : null;
+                                              } catch (e) {
+                                                return null;
+                                              }
+                                            })(),
+                                            url: (function () {
+                                              const url = {
+                                                href: window.location.href,
+                                                query: {},
+                                                pathname:
+                                                  window.location.pathname,
+                                                host: window.location.host
+                                              };
+                                              try {
+                                                const urlParams =
+                                                  new URLSearchParams(
+                                                    window.location.search
+                                                  );
+                                                for (const [
+                                                  key,
+                                                  value
+                                                ] of urlParams.entries()) {
+                                                  url.query[key] = value;
+                                                }
+                                              } catch (e) {}
+                                              return url;
+                                            })()
+                                          };
+                                          return event;
+                                        }
+                                      );
+                                      return output;
+                                    } catch (e) {
+                                      return [];
+                                    }
+                                  })();
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })(),
+                              undefined,
+                              "035dab23-6c75-4563-b46d-f52a7fa71d7c"
+                            ]
+                          };
+                          return $globalActions["Splunk.sendBatchLog"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                    if (
+                      $steps["searchCardViewEvent"] != null &&
+                      typeof $steps["searchCardViewEvent"] === "object" &&
+                      typeof $steps["searchCardViewEvent"].then === "function"
+                    ) {
+                      $steps["searchCardViewEvent"] = await $steps[
+                        "searchCardViewEvent"
+                      ];
+                    }
+                  }}
+                />
 
-                  $steps["clarityEvent"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return (() => {
-                              try {
-                                clarity(
-                                  "set",
-                                  "fragment_component_load",
-                                  "search request component results loaded"
-                                );
-                                return console.log(
-                                  "try to set clarity tag fragment_component_load to request component"
-                                );
-                              } catch (error) {
-                                return console.error(error);
-                              }
-                            })();
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["clarityEvent"] != null &&
-                    typeof $steps["clarityEvent"] === "object" &&
-                    typeof $steps["clarityEvent"].then === "function"
-                  ) {
-                    $steps["clarityEvent"] = await $steps["clarityEvent"];
-                  }
+                <SideEffect
+                  data-plasmic-name={"sendClarityEvents"}
+                  data-plasmic-override={overrides.sendClarityEvents}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.sendClarityEvents
+                  )}
+                  onMount={async () => {
+                    const $steps = {};
 
-                  $steps["openreplyEvent"] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return (() => {
-                              try {
-                                return __OPENREPLAY__.event(
-                                  "search",
-                                  "search request component results loaded"
-                                );
-                              } catch (error) {
-                                return console.error(error);
-                              }
-                            })();
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps["openreplyEvent"] != null &&
-                    typeof $steps["openreplyEvent"] === "object" &&
-                    typeof $steps["openreplyEvent"].then === "function"
-                  ) {
-                    $steps["openreplyEvent"] = await $steps["openreplyEvent"];
-                  }
-                }}
-              />
-            </React.Fragment>
-          )}
-        </DataCtxReader__>
-      </DataFetcher>
+                    $steps["clarityEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                try {
+                                  clarity(
+                                    "set",
+                                    "fragment_component_load",
+                                    "search request component results loaded"
+                                  );
+                                  return console.log(
+                                    "try to set clarity tag fragment_component_load to request component"
+                                  );
+                                } catch (error) {
+                                  return console.error(error);
+                                }
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["clarityEvent"] != null &&
+                      typeof $steps["clarityEvent"] === "object" &&
+                      typeof $steps["clarityEvent"].then === "function"
+                    ) {
+                      $steps["clarityEvent"] = await $steps["clarityEvent"];
+                    }
+
+                    $steps["openreplyEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                try {
+                                  return __OPENREPLAY__.event(
+                                    "search",
+                                    "search request component results loaded"
+                                  );
+                                } catch (error) {
+                                  return console.error(error);
+                                }
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["openreplyEvent"] != null &&
+                      typeof $steps["openreplyEvent"] === "object" &&
+                      typeof $steps["openreplyEvent"].then === "function"
+                    ) {
+                      $steps["openreplyEvent"] = await $steps["openreplyEvent"];
+                    }
+                  }}
+                />
+              </React.Fragment>
+            )}
+          </DataCtxReader__>
+        </DataFetcher>
+      ) : null}
+      {(() => {
+        try {
+          return $props.apiMode && $props.apiMode === "seapi";
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <DataFetcher
+          className={classNames("__wab_instance", sty.httpRestApiFetcher__qxid)}
+          dataName={"fetchedData"}
+          errorDisplay={
+            <DataCtxReader__>
+              {$ctx =>
+                "\u0628\u0631\u0648\u0632 \u062e\u0637\u0627 \u062f\u0631 \u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u062a\u0627\u06cc\u062c \u062c\u0633\u062a\u062c\u0648 "
+              }
+            </DataCtxReader__>
+          }
+          errorName={"fetchError"}
+          loadingDisplay={
+            <DataCtxReader__>
+              {$ctx => (
+                <div className={classNames(projectcss.all, sty.freeBox__mr5Oi)}>
+                  <Icon14Icon
+                    className={classNames(projectcss.all, sty.svg___281N1)}
+                    role={"img"}
+                  />
+                </div>
+              )}
+            </DataCtxReader__>
+          }
+          method={"GET"}
+          noLayout={false}
+          previewErrorDisplay={false}
+          previewSpinner={false}
+          url={(() => {
+            try {
+              return (
+                "https://apigw.paziresh24.com/seapi/v1/search/ir/?text=" +
+                $props.searchQuery +
+                "&forceAiQueryCodingCacheOnly=true&ref=search_suggestion_box&semantic_search=true&limit=5" +
+                ($props.suggestionExecutionSource
+                  ? "&suggestionExecutionSource=true"
+                  : "")
+              );
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
+          <DataCtxReader__>
+            {$ctx => (
+              <React.Fragment>
+                <SearchResults
+                  className={classNames(
+                    "__wab_instance",
+                    sty.searchResults__u8TRq
+                  )}
+                  paginationLoadingStatus={false}
+                  searchResultResponse={(() => {
+                    try {
+                      return $ctx.fetchedData;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                  topSuggestedCardFeature={(() => {
+                    try {
+                      return $ctx.Growthbook.features[
+                        "fragment::top-suggested-card-feature"
+                      ];
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
+                />
+
+                <SideEffect
+                  data-plasmic-name={"sendSplunkEvent2"}
+                  data-plasmic-override={overrides.sendSplunkEvent2}
+                  className={classNames("__wab_instance", sty.sendSplunkEvent2)}
+                  onMount={async () => {
+                    const $steps = {};
+
+                    $steps["searchViewEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return {
+                                    event_group: "search_metrics",
+                                    event_type: "search_view",
+                                    current_url: window.location.href,
+                                    terminal_id: (function () {
+                                      try {
+                                        return document.cookie.replace(
+                                          /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                          "$1"
+                                        );
+                                      } catch (e) {
+                                        return null;
+                                      }
+                                    })(),
+                                    filters: (function () {
+                                      const filters = {};
+                                      if (
+                                        $props &&
+                                        $props.searchOptionalFilters &&
+                                        typeof $props.searchOptionalFilters ===
+                                          "object"
+                                      ) {
+                                        for (const key in $props.searchOptionalFilters) {
+                                          if (
+                                            $props.searchOptionalFilters.hasOwnProperty(
+                                              key
+                                            )
+                                          ) {
+                                            filters[key] =
+                                              $props.searchOptionalFilters[key];
+                                          }
+                                        }
+                                      }
+                                      if ($props && $props.searchQuery) {
+                                        filters.text = $props.searchQuery;
+                                      }
+                                      return filters;
+                                    })(),
+                                    result_count: (function () {
+                                      try {
+                                        return $ctx &&
+                                          $ctx.fetchedData &&
+                                          $ctx.fetchedData.search &&
+                                          $ctx.fetchedData.search.result
+                                          ? $ctx.fetchedData.search.result
+                                              .length
+                                          : 0;
+                                      } catch (e) {
+                                        return 0;
+                                      }
+                                    })(),
+                                    city_id: (function () {
+                                      if (
+                                        $props &&
+                                        $props.searchOptionalFilters &&
+                                        typeof $props.searchOptionalFilters ===
+                                          "object" &&
+                                        $props.searchOptionalFilters.city_id
+                                      ) {
+                                        return $props.searchOptionalFilters
+                                          .city_id[0];
+                                      }
+                                      return null;
+                                    })(),
+                                    query_id: (function () {
+                                      try {
+                                        return $ctx &&
+                                          $ctx.fetchedData &&
+                                          $ctx.fetchedData.search
+                                          ? $ctx.fetchedData.search.query_id
+                                          : null;
+                                      } catch (e) {
+                                        return null;
+                                      }
+                                    })(),
+                                    suggestion_source: (function () {
+                                      if (
+                                        $props &&
+                                        typeof $props.suggestionExecutionSource !==
+                                          "undefined"
+                                      ) {
+                                        return $props.suggestionExecutionSource;
+                                      }
+                                      return false;
+                                    })(),
+                                    userAgent: globalThis.navigator.userAgent
+                                      ? globalThis.navigator.userAgent
+                                      : "",
+                                    url: (function () {
+                                      const url = {
+                                        href: window.location.href,
+                                        query: {},
+                                        pathname: window.location.pathname,
+                                        host: window.location.host
+                                      };
+                                      try {
+                                        const urlParams = new URLSearchParams(
+                                          window.location.search
+                                        );
+                                        for (const [
+                                          key,
+                                          value
+                                        ] of urlParams.entries()) {
+                                          url.query[key] = value;
+                                        }
+                                      } catch (e) {}
+                                      return url;
+                                    })()
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Splunk.sendLog"]?.apply(null, [
+                            ...actionArgs.args
+                          ]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["searchViewEvent"] != null &&
+                      typeof $steps["searchViewEvent"] === "object" &&
+                      typeof $steps["searchViewEvent"].then === "function"
+                    ) {
+                      $steps["searchViewEvent"] = await $steps[
+                        "searchViewEvent"
+                      ];
+                    }
+
+                    $steps["searchCardViewEvent"] = false
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return (function () {
+                                    try {
+                                      const results =
+                                        ($ctx &&
+                                          $ctx.fetchedData &&
+                                          $ctx.fetchedData.entity &&
+                                          $ctx.fetchedData.entity.results) ||
+                                        [];
+                                      const output = results.map(
+                                        (result, index) => {
+                                          const event = {
+                                            event_group: "search_metrics",
+                                            event_type: "search_card_view",
+                                            current_url: window.location.href,
+                                            terminal_id: (function () {
+                                              try {
+                                                return document.cookie.replace(
+                                                  /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                                                  "$1"
+                                                );
+                                              } catch (e) {
+                                                return null;
+                                              }
+                                            })(),
+                                            card_data: (function () {
+                                              const card = {};
+                                              try {
+                                                card["action"] = (function () {
+                                                  const actions = [];
+                                                  if (
+                                                    result.source &&
+                                                    result.source
+                                                      .consult_active_booking
+                                                  ) {
+                                                    actions.push(
+                                                      JSON.stringify({
+                                                        outline: false,
+                                                        title: "ویزیت آنلاین",
+                                                        top_title: result.source
+                                                          .consult_freeturn
+                                                          ? `پاسخ: آنلاین و آماده مشاوره`
+                                                          : ""
+                                                      })
+                                                    );
+                                                  }
+                                                  if (
+                                                    result.source &&
+                                                    result.source
+                                                      .presence_active_booking
+                                                  ) {
+                                                    actions.push(
+                                                      JSON.stringify({
+                                                        outline: false,
+                                                        title:
+                                                          "نوبت دهی اینترنتی",
+                                                        top_title:
+                                                          result.source
+                                                            .freeturns_info &&
+                                                          result.source
+                                                            .freeturns_info[0] &&
+                                                          result.source
+                                                            .freeturns_info[0]
+                                                            .available_time
+                                                            ? `اولین نوبت: ${result.source.freeturns_info[0].available_time}`
+                                                            : ""
+                                                      })
+                                                    );
+                                                  }
+                                                  return actions;
+                                                })();
+                                                card["_id"] =
+                                                  result.documentId || null;
+                                                card["position"] = index + 1;
+                                                card["server_id"] =
+                                                  (result.source &&
+                                                    result.source.server_id) ||
+                                                  null;
+                                                card["title"] =
+                                                  (result.source &&
+                                                    result.source
+                                                      .display_name) ||
+                                                  "";
+                                                card["type"] =
+                                                  (result.source &&
+                                                    result.source
+                                                      .record_type) ||
+                                                  "";
+                                                card["url"] =
+                                                  result.source &&
+                                                  result.source.slug
+                                                    ? `/${result.source.slug}/`
+                                                    : "";
+                                                card["rates_count"] =
+                                                  (result.source &&
+                                                    result.source
+                                                      .rates_count) ||
+                                                  null;
+                                                card["satisfaction"] =
+                                                  (result.source &&
+                                                    result.source
+                                                      .satisfaction) ||
+                                                  null;
+                                              } catch (e) {}
+                                              return card;
+                                            })(),
+                                            filters: (function () {
+                                              const filters = {};
+                                              if (
+                                                $props &&
+                                                $props.searchOptionalFilters &&
+                                                typeof $props.searchOptionalFilters ===
+                                                  "object"
+                                              ) {
+                                                for (const key in $props.searchOptionalFilters) {
+                                                  if (
+                                                    $props.searchOptionalFilters.hasOwnProperty(
+                                                      key
+                                                    )
+                                                  ) {
+                                                    filters[key] =
+                                                      $props.searchOptionalFilters[
+                                                        key
+                                                      ];
+                                                  }
+                                                }
+                                              }
+                                              if (
+                                                $props &&
+                                                $props.searchQuery
+                                              ) {
+                                                filters.text =
+                                                  $props.searchQuery;
+                                              }
+                                              return filters;
+                                            })(),
+                                            result_count: (function () {
+                                              try {
+                                                return $ctx &&
+                                                  $ctx.fetchedData &&
+                                                  $ctx.fetchedData.entity &&
+                                                  $ctx.fetchedData.entity
+                                                    .results
+                                                  ? $ctx.fetchedData.entity
+                                                      .results.length
+                                                  : 0;
+                                              } catch (e) {
+                                                return 0;
+                                              }
+                                            })(),
+                                            city_id: (function () {
+                                              if (
+                                                $props &&
+                                                $props.searchOptionalFilters &&
+                                                typeof $props.searchOptionalFilters ===
+                                                  "object" &&
+                                                $props.searchOptionalFilters
+                                                  .city_id
+                                              ) {
+                                                return $props
+                                                  .searchOptionalFilters
+                                                  .city_id[0];
+                                              }
+                                              return "-1";
+                                            })(),
+                                            query_id: (function () {
+                                              try {
+                                                return $ctx &&
+                                                  $ctx.fetchedData &&
+                                                  $ctx.fetchedData.entity
+                                                  ? $ctx.fetchedData.entity
+                                                      .queryId
+                                                  : null;
+                                              } catch (e) {
+                                                return null;
+                                              }
+                                            })(),
+                                            url: (function () {
+                                              const url = {
+                                                href: window.location.href,
+                                                query: {},
+                                                pathname:
+                                                  window.location.pathname,
+                                                host: window.location.host
+                                              };
+                                              try {
+                                                const urlParams =
+                                                  new URLSearchParams(
+                                                    window.location.search
+                                                  );
+                                                for (const [
+                                                  key,
+                                                  value
+                                                ] of urlParams.entries()) {
+                                                  url.query[key] = value;
+                                                }
+                                              } catch (e) {}
+                                              return url;
+                                            })()
+                                          };
+                                          return event;
+                                        }
+                                      );
+                                      return output;
+                                    } catch (e) {
+                                      return [];
+                                    }
+                                  })();
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })(),
+                              undefined,
+                              "035dab23-6c75-4563-b46d-f52a7fa71d7c"
+                            ]
+                          };
+                          return $globalActions["Splunk.sendBatchLog"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
+                      : undefined;
+                    if (
+                      $steps["searchCardViewEvent"] != null &&
+                      typeof $steps["searchCardViewEvent"] === "object" &&
+                      typeof $steps["searchCardViewEvent"].then === "function"
+                    ) {
+                      $steps["searchCardViewEvent"] = await $steps[
+                        "searchCardViewEvent"
+                      ];
+                    }
+                  }}
+                />
+
+                <SideEffect
+                  data-plasmic-name={"sendClarityEvents2"}
+                  data-plasmic-override={overrides.sendClarityEvents2}
+                  className={classNames(
+                    "__wab_instance",
+                    sty.sendClarityEvents2
+                  )}
+                  onMount={async () => {
+                    const $steps = {};
+
+                    $steps["clarityEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                try {
+                                  clarity(
+                                    "set",
+                                    "fragment_component_load",
+                                    "search request component results loaded"
+                                  );
+                                  return console.log(
+                                    "try to set clarity tag fragment_component_load to request component"
+                                  );
+                                } catch (error) {
+                                  return console.error(error);
+                                }
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["clarityEvent"] != null &&
+                      typeof $steps["clarityEvent"] === "object" &&
+                      typeof $steps["clarityEvent"].then === "function"
+                    ) {
+                      $steps["clarityEvent"] = await $steps["clarityEvent"];
+                    }
+
+                    $steps["openreplyEvent"] = true
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                try {
+                                  return __OPENREPLAY__.event(
+                                    "search",
+                                    "search request component results loaded"
+                                  );
+                                } catch (error) {
+                                  return console.error(error);
+                                }
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["openreplyEvent"] != null &&
+                      typeof $steps["openreplyEvent"] === "object" &&
+                      typeof $steps["openreplyEvent"].then === "function"
+                    ) {
+                      $steps["openreplyEvent"] = await $steps["openreplyEvent"];
+                    }
+                  }}
+                />
+              </React.Fragment>
+            )}
+          </DataCtxReader__>
+        </DataFetcher>
+      ) : null}
     </div>
   ) as React.ReactElement | null;
 }
@@ -1071,38 +1696,25 @@ function PlasmicSearchRequest__RenderFunc(props: {
 const PlasmicDescendants = {
   root: [
     "root",
-    "httpRestApiFetcher",
-    "freeBox",
-    "svg",
-    "searchResults",
     "sendSplunkEvent",
-    "sendClarityEvents"
+    "sendClarityEvents",
+    "sendSplunkEvent2",
+    "sendClarityEvents2"
   ],
-  httpRestApiFetcher: [
-    "httpRestApiFetcher",
-    "freeBox",
-    "svg",
-    "searchResults",
-    "sendSplunkEvent",
-    "sendClarityEvents"
-  ],
-  freeBox: ["freeBox", "svg"],
-  svg: ["svg"],
-  searchResults: ["searchResults"],
   sendSplunkEvent: ["sendSplunkEvent"],
-  sendClarityEvents: ["sendClarityEvents"]
+  sendClarityEvents: ["sendClarityEvents"],
+  sendSplunkEvent2: ["sendSplunkEvent2"],
+  sendClarityEvents2: ["sendClarityEvents2"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  httpRestApiFetcher: typeof DataFetcher;
-  freeBox: "div";
-  svg: "svg";
-  searchResults: typeof SearchResults;
   sendSplunkEvent: typeof SideEffect;
   sendClarityEvents: typeof SideEffect;
+  sendSplunkEvent2: typeof SideEffect;
+  sendClarityEvents2: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1165,12 +1777,10 @@ export const PlasmicSearchRequest = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    httpRestApiFetcher: makeNodeComponent("httpRestApiFetcher"),
-    freeBox: makeNodeComponent("freeBox"),
-    svg: makeNodeComponent("svg"),
-    searchResults: makeNodeComponent("searchResults"),
     sendSplunkEvent: makeNodeComponent("sendSplunkEvent"),
     sendClarityEvents: makeNodeComponent("sendClarityEvents"),
+    sendSplunkEvent2: makeNodeComponent("sendSplunkEvent2"),
+    sendClarityEvents2: makeNodeComponent("sendClarityEvents2"),
 
     // Metadata about props expected for PlasmicSearchRequest
     internalVariantProps: PlasmicSearchRequest__VariantProps,

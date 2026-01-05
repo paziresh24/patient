@@ -172,6 +172,23 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
         <SearchRequest
           data-plasmic-name={"searchRequest"}
           data-plasmic-override={overrides.searchRequest}
+          apiMode={(() => {
+            try {
+              return $ctx.Growthbook &&
+                $ctx.Growthbook.isReady &&
+                $ctx.Growthbook.features["use_seapi_in_instant_search"]
+                ? "seapi"
+                : "jahannama";
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
           className={classNames("__wab_instance", sty.searchRequest)}
           searchOptionalFilters={(() => {
             try {
