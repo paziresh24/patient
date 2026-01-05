@@ -625,14 +625,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                   event_group: "search_metrics",
                                   event_type: "search_view",
                                   current_url: window.location.href,
-                                  semantic_search:
-                                    $ctx.Growthbook &&
-                                    $ctx.Growthbook.isReady &&
-                                    $ctx.Growthbook.features[
-                                      "search-semantic-search"
-                                    ]
-                                      ? "true"
-                                      : "false",
                                   terminal_id: (function () {
                                     try {
                                       return document.cookie.replace(

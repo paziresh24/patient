@@ -1405,7 +1405,12 @@ function PlasmicSearchResults__RenderFunc(props: {
                                       } catch (e) {
                                         return null;
                                       }
-                                    })()
+                                    })(),
+                                    query_attributes: $props
+                                      .searchResultResponse.query_attributes
+                                      ? $props.searchResultResponse
+                                          .query_attributes
+                                      : undefined
                                   };
                                 } catch (e) {
                                   if (
@@ -2214,6 +2219,7 @@ function PlasmicSearchResults__RenderFunc(props: {
           className={classNames("__wab_instance", sty.externalBookSurveyPopup)}
         />
       ) : null}
+      <div className={classNames(projectcss.all, sty.freeBox__knrNp)} />
     </div>
   ) as React.ReactElement | null;
 }

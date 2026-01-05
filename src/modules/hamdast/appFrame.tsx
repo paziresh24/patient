@@ -1,10 +1,6 @@
 import Loading from '@/common/components/atom/loading';
 import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
-import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
-import Seo from '@/common/components/layouts/seo';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
-import { ThemeConfig } from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
 import { useOneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
@@ -14,8 +10,6 @@ import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { isEmpty } from 'lodash';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
@@ -58,7 +52,8 @@ export const AppFrame = ({
   const iframeRef = useRef<any>(null);
   const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
   const supportRef = useRef<HamdastSupportRef>(null);
-  const [isAppLoading, setIsAppLoading] = useState(true);
+  const [isApp
+         , setIsAppLoading] = useState(true);
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPending = useUserInfoStore(state => state.pending);

@@ -439,23 +439,6 @@
   width: auto;
   height: 1em;
 }
-.paziresh24Button__qbsI:global(.__wab_instance) {
-  max-width: 100%;
-  width: 100%;
-  min-width: 0;
-}
-.svg__xYk6E {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
-.svg__jodLd {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
 .apiRequest7:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
@@ -506,23 +489,6 @@
   height: 1em;
 }
 .svg___3GzqU {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
-.paziresh24Button__kls46:global(.__wab_instance) {
-  max-width: 100%;
-  width: 100%;
-  min-width: 0;
-}
-.svg__gaBno {
-  position: relative;
-  object-fit: cover;
-  width: auto;
-  height: 1em;
-}
-.svg___4Isv4 {
   position: relative;
   object-fit: cover;
   width: auto;
@@ -666,7 +632,7 @@
 .launcherBlocksRateReview:global(.__wab_instance) {
   position: relative;
 }
-.freeBox___0MbC {
+.freeBox__kheMs {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -680,7 +646,7 @@
   min-width: 0;
   padding: 20px;
 }
-.freeBox__r2Evf {
+.freeBox__kpGrl {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -692,7 +658,7 @@
   row-gap: 10px;
   min-width: 0;
 }
-.text__klpB4 {
+.text__gYl9F {
   position: relative;
   width: 100%;
   height: auto;
@@ -702,7 +668,7 @@
   color: var(--token-s_XuzePAGmOh);
   min-width: 0;
 }
-.freeBox__h6ALu {
+.freeBox__sovTg {
   display: flex;
   flex-direction: row;
   position: relative;
@@ -713,7 +679,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.text__sukt1 {
+.text__xybZy {
   position: relative;
   width: auto;
   height: auto;
@@ -723,7 +689,7 @@
   padding-top: 0px;
   opacity: 0.8;
 }
-.text__ae2Io {
+.text__qnVu1 {
   position: relative;
   width: auto;
   height: auto;
@@ -731,7 +697,7 @@
   font-weight: 500;
   font-size: var(--token-0D6VF35kZC-C);
 }
-.freeBox__pnYx4 {
+.freeBox__sMj3I {
   display: flex;
   flex-direction: row;
   position: relative;
@@ -742,7 +708,7 @@
   max-width: 100%;
   min-width: 0;
 }
-.text__g82Zl {
+.text__v2YEh {
   position: relative;
   width: auto;
   height: auto;
@@ -752,7 +718,7 @@
   padding-right: 0px;
   opacity: 0.8;
 }
-.text__eWzXz {
+.text__btpX {
   position: relative;
   width: auto;
   height: auto;

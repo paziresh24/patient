@@ -10,7 +10,6 @@ interface Params {
 }
 
 export const login = async (params: Params) => {
-  await setTerminal();
   return await apiGatewayClient.post(`/gozargah/v1/login`, formData({ ...params, terminal_id: getCookie('terminal_id') }));
 };
 

@@ -2106,7 +2106,8 @@ function PlasmicProductCard__RenderFunc(props: {
         >
           {(() => {
             try {
-              return $props.actionButtons.every(item => item.outline) &&
+              return $props.actionButtons?.[0]?.outline &&
+                !$props.actionButtons?.[0]?.top_title &&
                 $ctx.Growthbook.features?.["theme-config"]?.[
                   "search_result:show_risman_action_btn"
                 ]
@@ -2306,7 +2307,7 @@ function PlasmicProductCard__RenderFunc(props: {
                                   e instanceof TypeError ||
                                   e?.plasmicType === "PlasmicUndefinedDataError"
                                 ) {
-                                  return "Button";
+                                  return "\u0633\u0627\u06cc\u062a \u062f\u06cc\u06af\u0631";
                                 }
                                 throw e;
                               }
@@ -2389,6 +2390,7 @@ function PlasmicProductCard__RenderFunc(props: {
                           ];
                         }
                       }}
+                      outline={true}
                       startIcon={
                         <ChevronRightIcon
                           className={classNames(projectcss.all, sty.svg__aOe53)}
@@ -2406,7 +2408,9 @@ function PlasmicProductCard__RenderFunc(props: {
             try {
               return $state.rismanActionBtn?.loading
                 ? true
-                : $props.actionButtons?.some?.(item => !item.outline) ||
+                : $props.actionButtons?.length > 1 ||
+                    $props.actionButtons?.some?.(item => !item.outline) ||
+                    !!$props.actionButtons?.some?.(item => item.top_title) ||
                     !!$state?.rismanActionBtn?.error ||
                     !$state.rismanActionBtn.data?.data?.doctorId;
             } catch (e) {

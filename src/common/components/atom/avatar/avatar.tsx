@@ -33,6 +33,9 @@ export const Avatar: React.FC<AvatarProps> = props => {
     <Component
       width={width}
       height={height}
+      fetchPriority="high"
+      loading="eager"
+      decoding="sync"
       alt={alt}
       style={{ minWidth: width, height }}
       className={classNames('rounded-full bg-gray', className)}

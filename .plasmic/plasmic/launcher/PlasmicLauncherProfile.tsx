@@ -1059,9 +1059,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
               >
                 {(() => {
                   try {
-                    return (
-                      $props.appKey != "bimecheck" && $props.appKey != "Monshi"
-                    );
+                    return !$state?.apiRequest?.data?.direct_payment;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1099,250 +1097,6 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     }}
                   />
                 ) : null}
-                {(() => {
-                  try {
-                    return (
-                      $props.appKey == "bimecheck" &&
-                      !$state.apiRequest5?.data?.some(
-                        item => item.app == $props.appKey
-                      )
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <Paziresh24Button
-                    children2={
-                      "\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc"
-                    }
-                    className={classNames(
-                      "__wab_instance",
-                      sty.paziresh24Button__qbsI
-                    )}
-                    loading={(() => {
-                      try {
-                        return $state.isLoadingButton;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()}
-                    onClick={async event => {
-                      const $steps = {};
-
-                      $steps["updateIsLoadingButton"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["isLoadingButton"]
-                              },
-                              operation: 0,
-                              value: true
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
-
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton"] != null &&
-                        typeof $steps["updateIsLoadingButton"] === "object" &&
-                        typeof $steps["updateIsLoadingButton"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton"] = await $steps[
-                          "updateIsLoadingButton"
-                        ];
-                      }
-
-                      $steps["invokeGlobalAction"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              args: [
-                                "POST",
-                                "https://hamdast.paziresh24.com/api/v1/widgets/",
-                                undefined,
-                                (() => {
-                                  try {
-                                    return {
-                                      app_id: $state?.apiRequest?.data?.id
-                                    };
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return undefined;
-                                    }
-                                    throw e;
-                                  }
-                                })()
-                              ]
-                            };
-                            return $globalActions["Fragment.apiRequest"]?.apply(
-                              null,
-                              [...actionArgs.args]
-                            );
-                          })()
-                        : undefined;
-                      if (
-                        $steps["invokeGlobalAction"] != null &&
-                        typeof $steps["invokeGlobalAction"] === "object" &&
-                        typeof $steps["invokeGlobalAction"].then === "function"
-                      ) {
-                        $steps["invokeGlobalAction"] = await $steps[
-                          "invokeGlobalAction"
-                        ];
-                      }
-
-                      $steps["updateIsLoadingButton2"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["modal", "open"]
-                              },
-                              operation: 0,
-                              value: true
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
-
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton2"] != null &&
-                        typeof $steps["updateIsLoadingButton2"] === "object" &&
-                        typeof $steps["updateIsLoadingButton2"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton2"] = await $steps[
-                          "updateIsLoadingButton2"
-                        ];
-                      }
-
-                      $steps["updateIsLoadingButton3"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["isLoadingButton"]
-                              },
-                              operation: 0,
-                              value: false
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
-
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton3"] != null &&
-                        typeof $steps["updateIsLoadingButton3"] === "object" &&
-                        typeof $steps["updateIsLoadingButton3"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton3"] = await $steps[
-                          "updateIsLoadingButton3"
-                        ];
-                      }
-
-                      $steps["updateIsLoadingButton4"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              tplRef: "apiRequest5",
-                              action: "refresh"
-                            };
-                            return (({ tplRef, action, args }) => {
-                              return $refs?.[tplRef]?.[action]?.(
-                                ...(args ?? [])
-                              );
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton4"] != null &&
-                        typeof $steps["updateIsLoadingButton4"] === "object" &&
-                        typeof $steps["updateIsLoadingButton4"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton4"] = await $steps[
-                          "updateIsLoadingButton4"
-                        ];
-                      }
-
-                      $steps["updateIsLoadingButton5"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              tplRef: "apiRequest2",
-                              action: "refresh"
-                            };
-                            return (({ tplRef, action, args }) => {
-                              return $refs?.[tplRef]?.[action]?.(
-                                ...(args ?? [])
-                              );
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton5"] != null &&
-                        typeof $steps["updateIsLoadingButton5"] === "object" &&
-                        typeof $steps["updateIsLoadingButton5"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton5"] = await $steps[
-                          "updateIsLoadingButton5"
-                        ];
-                      }
-                    }}
-                  />
-                ) : null}
                 <ApiRequest
                   data-plasmic-name={"apiRequest7"}
                   data-plasmic-override={overrides.apiRequest7}
@@ -1351,7 +1105,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   loadingDisplay={
                     (() => {
                       try {
-                        return $props.appKey == "Monshi";
+                        return $state?.apiRequest?.data?.direct_payment;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -1401,7 +1155,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   {(() => {
                     try {
                       return (
-                        $props.appKey == "Monshi" &&
+                        $state?.apiRequest?.data?.direct_payment &&
                         !$state.apiRequest7.data?.has_active_subscription
                       );
                     } catch (e) {
@@ -1463,7 +1217,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   {(() => {
                     try {
                       return (
-                        $props.appKey == "Monshi" &&
+                        $state?.apiRequest?.data?.direct_payment &&
                         $state.apiRequest7.data?.has_active_subscription
                       );
                     } catch (e) {
@@ -1519,214 +1273,6 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     />
                   ) : null}
                 </ApiRequest>
-                {(() => {
-                  try {
-                    return (
-                      $props.appKey == "bimecheck" &&
-                      $state.apiRequest5?.data?.some(
-                        item => item.app == $props.appKey
-                      )
-                    );
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <Paziresh24Button
-                    children2={
-                      "\u063a\u06cc\u0631\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc"
-                    }
-                    className={classNames(
-                      "__wab_instance",
-                      sty.paziresh24Button__kls46
-                    )}
-                    loading={(() => {
-                      try {
-                        return $state.isLoadingButton;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()}
-                    onClick={async event => {
-                      const $steps = {};
-
-                      $steps["updateIsLoadingButton"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["isLoadingButton"]
-                              },
-                              operation: 0,
-                              value: true
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
-
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton"] != null &&
-                        typeof $steps["updateIsLoadingButton"] === "object" &&
-                        typeof $steps["updateIsLoadingButton"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton"] = await $steps[
-                          "updateIsLoadingButton"
-                        ];
-                      }
-
-                      $steps["invokeGlobalAction"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              args: [
-                                "DELETE",
-                                "https://hamdast.paziresh24.com/api/v1/widgets/",
-                                undefined,
-                                (() => {
-                                  try {
-                                    return {
-                                      app_id: $state?.apiRequest?.data?.id
-                                    };
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return undefined;
-                                    }
-                                    throw e;
-                                  }
-                                })()
-                              ]
-                            };
-                            return $globalActions["Fragment.apiRequest"]?.apply(
-                              null,
-                              [...actionArgs.args]
-                            );
-                          })()
-                        : undefined;
-                      if (
-                        $steps["invokeGlobalAction"] != null &&
-                        typeof $steps["invokeGlobalAction"] === "object" &&
-                        typeof $steps["invokeGlobalAction"].then === "function"
-                      ) {
-                        $steps["invokeGlobalAction"] = await $steps[
-                          "invokeGlobalAction"
-                        ];
-                      }
-
-                      $steps["updateIsLoadingButton3"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              tplRef: "apiRequest5",
-                              action: "refresh"
-                            };
-                            return (({ tplRef, action, args }) => {
-                              return $refs?.[tplRef]?.[action]?.(
-                                ...(args ?? [])
-                              );
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton3"] != null &&
-                        typeof $steps["updateIsLoadingButton3"] === "object" &&
-                        typeof $steps["updateIsLoadingButton3"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton3"] = await $steps[
-                          "updateIsLoadingButton3"
-                        ];
-                      }
-
-                      $steps["updateIsLoadingButton2"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["isLoadingButton"]
-                              },
-                              operation: 0,
-                              value: false
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
-
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton2"] != null &&
-                        typeof $steps["updateIsLoadingButton2"] === "object" &&
-                        typeof $steps["updateIsLoadingButton2"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton2"] = await $steps[
-                          "updateIsLoadingButton2"
-                        ];
-                      }
-
-                      $steps["updateIsLoadingButton4"] = true
-                        ? (() => {
-                            const actionArgs = {
-                              tplRef: "apiRequest2",
-                              action: "refresh"
-                            };
-                            return (({ tplRef, action, args }) => {
-                              return $refs?.[tplRef]?.[action]?.(
-                                ...(args ?? [])
-                              );
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
-                      if (
-                        $steps["updateIsLoadingButton4"] != null &&
-                        typeof $steps["updateIsLoadingButton4"] === "object" &&
-                        typeof $steps["updateIsLoadingButton4"].then ===
-                          "function"
-                      ) {
-                        $steps["updateIsLoadingButton4"] = await $steps[
-                          "updateIsLoadingButton4"
-                        ];
-                      }
-                    }}
-                    outline={true}
-                  />
-                ) : null}
               </ApiRequest>
               {(() => {
                 try {
@@ -1749,6 +1295,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                       "__wab_instance",
                       sty.paizresh24Gallery
                     )}
+                    eagerFirst={false}
                     imageHeight={90}
                     imageWidth={90}
                     items={(() => {
@@ -2062,25 +1609,25 @@ function PlasmicLauncherProfile__RenderFunc(props: {
               )}
             />
 
-            <div className={classNames(projectcss.all, sty.freeBox___0MbC)}>
-              <div className={classNames(projectcss.all, sty.freeBox__r2Evf)}>
+            <div className={classNames(projectcss.all, sty.freeBox__kheMs)}>
+              <div className={classNames(projectcss.all, sty.freeBox__kpGrl)}>
                 <div
                   className={classNames(
                     projectcss.all,
                     projectcss.__wab_text,
-                    sty.text__klpB4
+                    sty.text__gYl9F
                   )}
                 >
                   {
                     "\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0627\u0628\u0632\u0627\u0631\u06a9"
                   }
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__h6ALu)}>
+                <div className={classNames(projectcss.all, sty.freeBox__sovTg)}>
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__sukt1
+                      sty.text__xybZy
                     )}
                   >
                     {
@@ -2091,7 +1638,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__ae2Io
+                      sty.text__qnVu1
                     )}
                   >
                     <div
@@ -2116,12 +1663,12 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     />
                   </div>
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__pnYx4)}>
+                <div className={classNames(projectcss.all, sty.freeBox__sMj3I)}>
                   <div
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__g82Zl
+                      sty.text__v2YEh
                     )}
                   >
                     {"\u062f\u0633\u062a\u0647 \u0628\u0646\u062f\u06cc:"}
@@ -2130,7 +1677,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     className={classNames(
                       projectcss.all,
                       projectcss.__wab_text,
-                      sty.text__eWzXz
+                      sty.text__btpX
                     )}
                   >
                     <div

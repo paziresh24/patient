@@ -68,6 +68,7 @@ import LauncherBlocksWidgetsNelson from "../../LauncherBlocksWidgetsNelson"; // 
 import LauncherBlocksStory from "../../LauncherBlocksStory"; // plasmic-import: 4rd_pgdJHWS1/component
 import LauncherBlocksApps from "../../LauncherBlocksApps"; // plasmic-import: 1JVvWgQsicxr/component
 import LauncherBlocksFeaturedApps from "../../LauncherBlocksFeaturedApps"; // plasmic-import: 8XQkifTvj-Jd/component
+import AppsChannelNotice from "../../AppsChannelNotice"; // plasmic-import: ODAlrNeZhK6S/component
 import LauncherBlocksSectionsStore from "../../LauncherBlocksSectionsStore"; // plasmic-import: eAgPCQOGXT3k/component
 import LauncherBlocksPatientServices from "../../LauncherBlocksPatientServices"; // plasmic-import: ofxhzuPg2IHJ/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
@@ -108,6 +109,7 @@ export type PlasmicLauncherMain__OverridesType = {
   launcherBlocksStory?: Flex__<typeof LauncherBlocksStory>;
   launcherBlocksApps?: Flex__<typeof LauncherBlocksApps>;
   launcherBlocksFeaturedApps?: Flex__<typeof LauncherBlocksFeaturedApps>;
+  appsChannelNotice?: Flex__<typeof AppsChannelNotice>;
   launcherBlocksSectionsStore?: Flex__<typeof LauncherBlocksSectionsStore>;
   launcherBlocksPatientServices?: Flex__<typeof LauncherBlocksPatientServices>;
   text?: Flex__<"div">;
@@ -466,6 +468,25 @@ function PlasmicLauncherMain__RenderFunc(props: {
                 )}
               />
             ) : null}
+            {(() => {
+              try {
+                return $ctx.auth.info?.provider?.job_title === "doctor";
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return false;
+                }
+                throw e;
+              }
+            })() ? (
+              <AppsChannelNotice
+                data-plasmic-name={"appsChannelNotice"}
+                data-plasmic-override={overrides.appsChannelNotice}
+                className={classNames("__wab_instance", sty.appsChannelNotice)}
+              />
+            ) : null}
           </Reveal>
           {(() => {
             try {
@@ -687,6 +708,7 @@ const PlasmicDescendants = {
     "launcherBlocksStory",
     "launcherBlocksApps",
     "launcherBlocksFeaturedApps",
+    "appsChannelNotice",
     "launcherBlocksSectionsStore",
     "launcherBlocksPatientServices",
     "text"
@@ -699,6 +721,7 @@ const PlasmicDescendants = {
   launcherBlocksStory: ["launcherBlocksStory"],
   launcherBlocksApps: ["launcherBlocksApps"],
   launcherBlocksFeaturedApps: ["launcherBlocksFeaturedApps"],
+  appsChannelNotice: ["appsChannelNotice"],
   launcherBlocksSectionsStore: ["launcherBlocksSectionsStore"],
   launcherBlocksPatientServices: ["launcherBlocksPatientServices"],
   text: ["text"]
@@ -716,6 +739,7 @@ type NodeDefaultElementType = {
   launcherBlocksStory: typeof LauncherBlocksStory;
   launcherBlocksApps: typeof LauncherBlocksApps;
   launcherBlocksFeaturedApps: typeof LauncherBlocksFeaturedApps;
+  appsChannelNotice: typeof AppsChannelNotice;
   launcherBlocksSectionsStore: typeof LauncherBlocksSectionsStore;
   launcherBlocksPatientServices: typeof LauncherBlocksPatientServices;
   text: "div";
@@ -791,6 +815,7 @@ export const PlasmicLauncherMain = Object.assign(
     launcherBlocksStory: makeNodeComponent("launcherBlocksStory"),
     launcherBlocksApps: makeNodeComponent("launcherBlocksApps"),
     launcherBlocksFeaturedApps: makeNodeComponent("launcherBlocksFeaturedApps"),
+    appsChannelNotice: makeNodeComponent("appsChannelNotice"),
     launcherBlocksSectionsStore: makeNodeComponent(
       "launcherBlocksSectionsStore"
     ),

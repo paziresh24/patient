@@ -164,7 +164,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
                   group: 'legacy-login-steps',
                   type: 'login-with-google',
                 });
-                window.clarity('upgrade', 'google login');
+                window?.clarity?.('upgrade', 'google login');
                 setGoogleOauthLoading(true);
                 location.assign(
                   `https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/shahrah${

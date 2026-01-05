@@ -109,9 +109,10 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
   }, []);
 
   useEffect(() => {
-    if (selectedFilters.text) setUserSearchValue(selectedFilters.text as string);
+    if (typeof queries?.text === 'string') setUserSearchValue(queries.text);
+    else setUserSearchValue('');
     if (lat && lon) setGeoLocation({ lat: +lat, lon: +lon });
-  }, []);
+  }, [queries?.text, lat, lon]);
 
   useEffect(() => {
     if ((params as string[])?.length === 1 && (params as string[])?.[0] === 'ir') {
@@ -146,6 +147,7 @@ const Search = ({ host, fragmentComponents, isMainSite }: any) => {
               user_id: userInfo?.id ?? null,
               user_type: userInfo.provider?.job_title ?? 'normal-user',
               ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
+              ...(responseData?.query_attributes && { query_attributes: responseData.query_attributes }),
               url: {
                 href: window.location.href,
                 qurey: { ...queries },
@@ -406,10 +408,16 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           }),
       );
 
+      const resultType = searchData?.selected_filters?.result_type;
+      const resultTypeValue = Array.isArray(resultType) ? resultType[0] : resultType;
+      const isResultTypeExcluded =
+        !resultTypeValue ||
+        (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
+
       if (
         !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
         (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
-        !searchData?.selected_filters?.result_type &&
+        isResultTypeExcluded &&
         (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
         !searchData?.search?.is_landing &&
         showSuggestedDoctor?.enable
@@ -469,3 +477,4 @@ export const getServerSideProps: GetServerSideProps = withCSR(
 );
 
 export default Search;
+
