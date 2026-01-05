@@ -84,13 +84,15 @@ export type PlasmicSearchRequest__ArgsType = {
   searchOptionalFilters?: any;
   suggestionExecutionSource?: boolean;
   apiMode?: string;
+  cityEnSlug?: string;
 };
 type ArgPropType = keyof PlasmicSearchRequest__ArgsType;
 export const PlasmicSearchRequest__ArgProps = new Array<ArgPropType>(
   "searchQuery",
   "searchOptionalFilters",
   "suggestionExecutionSource",
-  "apiMode"
+  "apiMode",
+  "cityEnSlug"
 );
 
 export type PlasmicSearchRequest__OverridesType = {
@@ -106,6 +108,7 @@ export interface DefaultSearchRequestProps {
   searchOptionalFilters?: any;
   suggestionExecutionSource?: boolean;
   apiMode?: string;
+  cityEnSlug?: string;
   className?: string;
 }
 
@@ -131,7 +134,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
       Object.assign(
         {
           suggestionExecutionSource: false,
-          apiMode: "jahannama"
+          apiMode: "jahannama",
+          cityEnSlug: "ir"
         },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
@@ -1158,7 +1162,9 @@ function PlasmicSearchRequest__RenderFunc(props: {
           url={(() => {
             try {
               return (
-                "https://apigw.paziresh24.com/seapi/v1/search/ir/?text=" +
+                "https://apigw.paziresh24.com/seapi/v1/search/" +
+                $props.cityEnSlug +
+                "/?text=" +
                 $props.searchQuery +
                 "&forceAiQueryCodingCacheOnly=true&ref=search_suggestion_box&semantic_search=true&limit=5" +
                 ($props.suggestionExecutionSource
@@ -1187,7 +1193,11 @@ function PlasmicSearchRequest__RenderFunc(props: {
                   paginationLoadingStatus={false}
                   searchResultResponse={(() => {
                     try {
-                      return $ctx.fetchedData;
+                      return (() => {
+                        $ctx.fetchedData.search.total =
+                          $ctx.fetchedData.search.pagination.limit;
+                        return $ctx.fetchedData;
+                      })();
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -1263,6 +1273,15 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                       }
                                       if ($props && $props.searchQuery) {
                                         filters.text = $props.searchQuery;
+                                      }
+                                      if (
+                                        $props &&
+                                        $props.cityEnSlug &&
+                                        typeof $props.cityEnSlug === "string"
+                                      ) {
+                                        filters.city = $props.cityEnSlug;
+                                      } else {
+                                        filters.city = "ir";
                                       }
                                       return filters;
                                     })(),

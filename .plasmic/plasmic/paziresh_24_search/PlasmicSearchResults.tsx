@@ -1968,6 +1968,30 @@ function PlasmicSearchResults__RenderFunc(props: {
                               sty.li__tpsj
                             )}
                           >
+                            {
+                              "\u0639\u0628\u0627\u0631\u0627\u062a \u06a9\u0627\u0645\u0644 \u062a\u0631\u06cc \u0631\u0627 \u0628\u0631\u0627\u06cc \u0646\u062a\u06cc\u062c\u0647 \u0645\u0648\u0631\u062f \u0646\u0638\u0631\u062a\u0627\u0646 \u0648\u0627\u0631\u062f \u06a9\u0646\u06cc\u062f."
+                            }
+                          </li>
+                          <li
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.li,
+                              projectcss.__wab_text,
+                              sty.li___23Bw6
+                            )}
+                          >
+                            {
+                              "\u0627\u06af\u0631 \u0628\u0647 \u062f\u0646\u0628\u0627\u0644 \u067e\u0632\u0634\u06a9 \u06cc\u0627 \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u062e\u0627\u0635\u06cc \u0647\u0633\u062a\u06cc\u062f \u0646\u0627\u0645 \u0631\u0633\u0645\u06cc \u0648 \u0635\u062d\u06cc\u062d \u0622\u0646 \u0631\u0627 \u0628\u0646\u0648\u06cc\u0633\u06cc\u062f."
+                            }
+                          </li>
+                          <li
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.li,
+                              projectcss.__wab_text,
+                              sty.li__m1Gqu
+                            )}
+                          >
                             <React.Fragment>
                               <React.Fragment>{"\u0628\u0627 "}</React.Fragment>
                               {
@@ -1977,12 +2001,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                                     projectcss.a,
                                     projectcss.__wab_text,
                                     projectcss.plasmic_default__inline,
-                                    sty.link__mRzso
+                                    sty.link__fJLrZ
                                   )}
                                   component={Link}
-                                  href={
-                                    "https://www.paziresh24.com/consult?refafname=from-search-notfound-page"
-                                  }
                                   platform={"nextjs"}
                                 >
                                   {
@@ -2002,12 +2023,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                                     projectcss.a,
                                     projectcss.__wab_text,
                                     projectcss.plasmic_default__inline,
-                                    sty.link__nWaWv
+                                    sty.link__g6E8A
                                   )}
                                   component={Link}
-                                  href={
-                                    "https://www.paziresh24.com/consult?refafname=from-search-notfound-page"
-                                  }
                                   platform={"nextjs"}
                                 >
                                   {
@@ -2017,42 +2035,6 @@ function PlasmicSearchResults__RenderFunc(props: {
                               }
                               <React.Fragment>{")"}</React.Fragment>
                             </React.Fragment>
-                          </li>
-                          <li
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.li,
-                              projectcss.__wab_text,
-                              sty.li___2SIgg
-                            )}
-                          >
-                            {
-                              "\u0627\u0632 \u062c\u0633\u062a\u062c\u0648\u06cc \u067e\u06cc\u0634\u0631\u0641\u062a\u0647 \u0628\u0631\u0627\u06cc \u062f\u0633\u062a\u0647 \u0628\u0646\u062f\u06cc \u0648 \u0641\u06cc\u0644\u062a\u0631 \u0628\u0647\u062a\u0631\u06cc\u0646 \u062f\u0631\u0645\u0627\u0646\u06af\u0631 \u0627\u0633\u062a\u0641\u0627\u062f\u0647 \u06a9\u0646\u06cc\u062f."
-                            }
-                          </li>
-                          <li
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.li,
-                              projectcss.__wab_text,
-                              sty.li__vuykb
-                            )}
-                          >
-                            {
-                              "\u0627\u0632 \u0635\u062d\u062a \u0646\u0627\u0645 \u062a\u062e\u0635\u0635\u060c \u0628\u06cc\u0645\u0627\u0631\u06cc\u060c \u067e\u0632\u0634\u06a9 \u06cc\u0627 \u0645\u0631\u06a9\u0632 \u062f\u0631\u0645\u0627\u0646\u06cc \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u062e\u0648\u062f \u0645\u0637\u0645\u0626\u0646 \u0634\u0648\u06cc\u062f."
-                            }
-                          </li>
-                          <li
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.li,
-                              projectcss.__wab_text,
-                              sty.li__cRrw4
-                            )}
-                          >
-                            {
-                              "\u06a9\u0644\u0645\u0627\u062a \u0645\u062a\u0641\u0627\u0648\u062a\u06cc \u0631\u0627 \u0628\u0631\u0627\u06cc \u062c\u0633\u062a\u062c\u0648 \u0627\u0645\u062a\u062d\u0627\u0646 \u06a9\u0646\u06cc\u062f."
-                            }
                           </li>
                         </ul>
                       }

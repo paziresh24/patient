@@ -85,11 +85,13 @@ export const PlasmicSearchResultSimple__VariantProps =
 export type PlasmicSearchResultSimple__ArgsType = {
   inputValue?: string;
   cityId?: string;
+  cityEnSlug?: string;
 };
 type ArgPropType = keyof PlasmicSearchResultSimple__ArgsType;
 export const PlasmicSearchResultSimple__ArgProps = new Array<ArgPropType>(
   "inputValue",
-  "cityId"
+  "cityId",
+  "cityEnSlug"
 );
 
 export type PlasmicSearchResultSimple__OverridesType = {
@@ -102,6 +104,7 @@ export type PlasmicSearchResultSimple__OverridesType = {
 export interface DefaultSearchResultSimpleProps {
   inputValue?: string;
   cityId?: string;
+  cityEnSlug?: string;
   className?: string;
 }
 
@@ -129,7 +132,9 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          cityEnSlug: "ir"
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -179,6 +184,19 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
                 $ctx.Growthbook.features["use_seapi_in_instant_search"]
                 ? "seapi"
                 : "jahannama";
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+          cityEnSlug={(() => {
+            try {
+              return $props.cityEnSlug;
             } catch (e) {
               if (
                 e instanceof TypeError ||

@@ -922,6 +922,19 @@ function PlasmicSearch__RenderFunc(props: {
                 }
               })() ? (
                 <SearchResultSimple
+                  cityEnSlug={(() => {
+                    try {
+                      return $props.selectedCity.en_slug;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })()}
                   cityId={(() => {
                     try {
                       return $props.selectedCity.id;
