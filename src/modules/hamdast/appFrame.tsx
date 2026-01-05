@@ -1,4 +1,5 @@
 import Loading from '@/common/components/atom/loading';
+import Text from '@/common/components/atom/text';
 import AppBar from '@/common/components/layouts/appBar';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
@@ -127,6 +128,12 @@ export const AppFrame = ({
     }
   }, [appKey, isLogin, userPending, params?.[0]]);
 
+  useEffect(() => {
+    if (params?.[0] != 'launcher') {
+      setShowApp(true);
+    }
+  }, [params?.[0]]);
+
   return (
     <div className="flex flex-col h-full w-full">
       <AppBar
@@ -215,14 +222,24 @@ export const AppFrame = ({
 
       <div className={classNames('w-full flex-grow flex flex-col', { hidden: !showApp })}>
         {showIframe && embedSrc && (
-          <iframe
-            ref={iframeRef}
-            onLoad={() => setIsAppLoading(false)}
-            className={classNames('w-full flex-grow h-full', { hidden: isAppLoading })}
-            src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
-              embedSrc!,
-            )}`}
-          />
+          <>
+            {isAppLoading && params?.[0] !== 'launcher' && (
+              <div className="w-full flex-grow flex flex-col items-center justify-center bg-white gap-3">
+                <Loading />
+                <Text fontSize="sm" className="text-slate-600">
+                  لطفا کمی صبر کنید...
+                </Text>
+              </div>
+            )}
+            <iframe
+              ref={iframeRef}
+              onLoad={() => setIsAppLoading(false)}
+              className={classNames('w-full flex-grow h-full', { hidden: isAppLoading })}
+              src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
+                embedSrc!,
+              )}`}
+            />
+          </>
         )}
       </div>
     </div>

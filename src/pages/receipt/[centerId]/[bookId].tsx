@@ -48,13 +48,16 @@ import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
 import Script from 'next/script';
 import axios from 'axios';
 import WarningIcon from '@/common/components/icons/warning';
 import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
+import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
+import { AppFrame } from '@/modules/hamdast/appFrame';
+import useResponsive from '@/common/hooks/useResponsive';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
@@ -78,7 +81,12 @@ const Receipt = () => {
   const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
   const [hasHolidays, setHasHolidays] = useState(false);
-
+  const { handleOpen: handleOpenWidgetModal, modalProps: widgetModalProps } = useModal();
+  const [widgetApp, setWidgetApp] = useState<string | null>(null);
+  const hasFetchedWidgetRef = useRef(false);
+  const isFetchingRef = useRef(false);
+  const lastFetchedKeyRef = useRef<string>('');
+  const { isMobile } = useResponsive();
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
@@ -88,17 +96,19 @@ const Receipt = () => {
   useEffect(() => {
     if (action && getReceiptDetails?.data) {
       if (action === 'open_channel') {
-        window.location.replace(
-          decodeURIComponent(
-            getReceiptDetails?.data?.data?.data?.selected_online_visit_channel?.channel_link.replace(
-              'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
-              '',
+        if (!widgetApp) {
+          window.location.replace(
+            decodeURIComponent(
+              getReceiptDetails?.data?.data?.data?.selected_online_visit_channel?.channel_link.replace(
+                'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+                '',
+              ),
             ),
-          ),
-        );
+          );
+        }
       }
     }
-  }, [action, getReceiptDetails?.data]);
+  }, [action, getReceiptDetails?.data, widgetApp]);
 
   // Error handling function
   const getErrorStatusCode = () => {
@@ -133,11 +143,13 @@ const Receipt = () => {
     () => getReceiptDetails.isSuccess && getReceiptDetails.data?.data?.data,
     [getReceiptDetails.status, getReceiptDetails?.data],
   );
-  const possibilityBeingVisited = !isAfterPastDaysFromTimestamp({
-    numberDay: 3,
-    currentTime: serverTime?.data?.data?.data.timestamp,
-    timestamp: bookDetailsData.book_time,
-  });
+  const possibilityBeingVisited = bookDetailsData?.book_time
+    ? !isAfterPastDaysFromTimestamp({
+        numberDay: 3,
+        currentTime: serverTime?.data?.data?.data.timestamp,
+        timestamp: bookDetailsData.book_time,
+      })
+    : false;
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
   const showDoctorAvailabilityWarning = useFeatureValue('show-doctor-availability-warning', '');
   const doctorName = bookDetailsData?.doctor?.display_name;
@@ -147,6 +159,68 @@ const Receipt = () => {
       router.replace(`/login?redirect_url=${router.asPath}`);
     }
   }, [isLogin, userPednding, pincode]);
+
+  const fetchWidgetAndCheckAddons = useCallback(async () => {
+    if (
+      !centerId ||
+      !bookId ||
+      !bookDetailsData?.doctor?.id ||
+      !bookDetailsData?.doctor?.server_id ||
+      hasFetchedWidgetRef.current ||
+      isFetchingRef.current ||
+      widgetModalProps.isOpen
+    ) {
+      return;
+    }
+
+    isFetchingRef.current = true;
+
+    try {
+      const doctorProfileResponse = await drProfileClient.get(
+        `/api/doctors/${bookDetailsData.doctor.id}/${bookDetailsData.doctor.server_id}`,
+      );
+      const user_id = doctorProfileResponse.data?.user_id;
+
+      if (!user_id) {
+        isFetchingRef.current = false;
+        hasFetchedWidgetRef.current = true;
+        return;
+      }
+
+      const widgetsResponse = await hamdastClient.get(`/api/v1/widgets/`, {
+        params: { user_id },
+      });
+
+      const widgets = widgetsResponse.data || [];
+      const targetWidget = widgets.find((widget: any) => widget.placement?.includes('booking_flow::ONLINE_VISIT_CHANNEL_BUTTON'));
+
+      if (!targetWidget?.app) {
+        isFetchingRef.current = false;
+        hasFetchedWidgetRef.current = true;
+        return;
+      }
+
+      const addonsResponse = await apiGatewayClient.get('/v1/hamdast/addons/receipt', {
+        params: {
+          medical_center_id: centerId,
+          appointment_id: bookId,
+        },
+      });
+
+      const apps = addonsResponse.data?.apps || [];
+
+      if (apps.includes(targetWidget.app)) {
+        setWidgetApp(targetWidget.app);
+        handleOpenWidgetModal();
+      }
+
+      hasFetchedWidgetRef.current = true;
+    } catch (error) {
+      hasFetchedWidgetRef.current = true;
+    } finally {
+      isFetchingRef.current = false;
+    }
+  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, handleOpenWidgetModal, widgetModalProps.isOpen]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
@@ -210,13 +284,31 @@ const Receipt = () => {
   }, []);
 
   const turnStatus = {
-    deletedTurn: bookDetailsData.is_deleted,
-    expiredTurn: bookDetailsData.book_status === 'expired',
-    requestedTurn: bookDetailsData.is_book_request,
-    notVisitedTurn: bookDetailsData.book_status === 'not_visited',
-    visitedTurn: bookDetailsData.book_status === 'visited',
+    deletedTurn: bookDetailsData?.is_deleted ?? false,
+    expiredTurn: bookDetailsData?.book_status === 'expired',
+    requestedTurn: bookDetailsData?.is_book_request ?? false,
+    notVisitedTurn: bookDetailsData?.book_status === 'not_visited',
+    visitedTurn: bookDetailsData?.book_status === 'visited',
   };
-  const isActiveTurn = !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
+  const isActiveTurn =
+    !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
+
+  useEffect(() => {
+    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id) {
+      const fetchKey = `${centerId}-${bookId}-${bookDetailsData.doctor.id}-${bookDetailsData.doctor.server_id}`;
+
+      if (lastFetchedKeyRef.current !== fetchKey) {
+        hasFetchedWidgetRef.current = false;
+        isFetchingRef.current = false;
+        lastFetchedKeyRef.current = fetchKey;
+      }
+
+      if (!hasFetchedWidgetRef.current && !isFetchingRef.current) {
+        fetchWidgetAndCheckAddons();
+      }
+    }
+  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, fetchWidgetAndCheckAddons]);
+
   const isShowRemoveButtonForOnlineVisit =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
@@ -832,6 +924,15 @@ const Receipt = () => {
             </Button>
           </div>
         </Modal>
+        {widgetApp && (
+          <Modal {...widgetModalProps} fullScreen={!isMobile} noHeader noLine bodyClassName="p-0 h-[45rem]">
+            <AppFrame
+              appKey={widgetApp}
+              params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
+              queries={{ medical_center_id: centerId, appointment_id: bookId }}
+            />
+          </Modal>
+        )}
       </div>
     </>
   );
