@@ -78,6 +78,7 @@ import XIcon from "./icons/PlasmicIcon__X"; // plasmic-import: vvmOP9mnVRyD/icon
 import ChevronRightIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronRight"; // plasmic-import: 0359howWu0cr/icon
 import ChevronLeftIcon from "../paziresh_24_design_system/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: jS0YlkKPLO7U/icon
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
+import Icon10Icon from "./icons/PlasmicIcon__Icon10"; // plasmic-import: 1jPTG-TWN6hw/icon
 
 createPlasmicElementProxy;
 
@@ -127,9 +128,10 @@ export type PlasmicLauncherComponentsApp__OverridesType = {
   hamdastAppFrame?: Flex__<typeof AppFrame>;
   apiRequest?: Flex__<typeof ApiRequest>;
   modal?: Flex__<typeof Paziresh24Modal>;
-  span?: Flex__<"span">;
   sideEffect?: Flex__<typeof SideEffect>;
   paziresh24Button?: Flex__<typeof Paziresh24Button>;
+  apiRequest2?: Flex__<typeof ApiRequest>;
+  modal2?: Flex__<typeof Paziresh24Modal>;
 };
 
 export interface DefaultLauncherComponentsAppProps {
@@ -275,6 +277,36 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "apiRequest2.data",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
+      },
+      {
+        path: "apiRequest2.error",
+        type: "private",
+        variableType: "object",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
+      },
+      {
+        path: "apiRequest2.loading",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "apiRequest2"
+      },
+      {
+        path: "modal2.open",
+        type: "private",
+        variableType: "boolean",
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -1621,14 +1653,12 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                             </React.Fragment>
                             {
                               <span
-                                data-plasmic-name={"span"}
-                                data-plasmic-override={overrides.span}
                                 className={classNames(
                                   projectcss.all,
                                   projectcss.span,
                                   projectcss.__wab_text,
                                   projectcss.plasmic_default__inline,
-                                  sty.span
+                                  sty.span__sYcG
                                 )}
                               >
                                 <React.Fragment>
@@ -1870,6 +1900,322 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
             ) : null}
           </div>
         </div>
+        <ApiRequest
+          data-plasmic-name={"apiRequest2"}
+          data-plasmic-override={overrides.apiRequest2}
+          className={classNames("__wab_instance", sty.apiRequest2)}
+          errorDisplay={null}
+          loadingDisplay={null}
+          method={"GET"}
+          onError={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest2", "error"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onLoading={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest2", "loading"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          onSuccess={async (...eventArgs: any) => {
+            generateStateOnChangeProp($state, ["apiRequest2", "data"]).apply(
+              null,
+              eventArgs
+            );
+          }}
+          ref={ref => {
+            $refs["apiRequest2"] = ref;
+          }}
+          url={(() => {
+            try {
+              return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appkey}/performance`;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
+            }
+          })()}
+        >
+          <div
+            className={classNames(projectcss.all, sty.freeBox___7S8MY)}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["runCode"] = true
+                ? (() => {
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return event?.stopPropagation();
+                      }
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["runCode"] != null &&
+                typeof $steps["runCode"] === "object" &&
+                typeof $steps["runCode"].then === "function"
+              ) {
+                $steps["runCode"] = await $steps["runCode"];
+              }
+
+              $steps["invokeGlobalAction"] = true
+                ? (() => {
+                    const actionArgs = {
+                      args: [
+                        (() => {
+                          try {
+                            return {
+                              evant_group: "launcher_statistics",
+                              event_type: "apps-performance",
+                              is_doctor: $ctx.auth.info?.is_doctor,
+                              user_id: $ctx?.auth?.info?.id,
+                              meta_data: {
+                                name: $props.name,
+                                key: $props.appkey
+                              }
+                            };
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
+                            }
+                            throw e;
+                          }
+                        })()
+                      ]
+                    };
+                    return $globalActions["Splunk.sendLog"]?.apply(null, [
+                      ...actionArgs.args
+                    ]);
+                  })()
+                : undefined;
+              if (
+                $steps["invokeGlobalAction"] != null &&
+                typeof $steps["invokeGlobalAction"] === "object" &&
+                typeof $steps["invokeGlobalAction"].then === "function"
+              ) {
+                $steps["invokeGlobalAction"] = await $steps[
+                  "invokeGlobalAction"
+                ];
+              }
+            }}
+          >
+            <Paziresh24Modal
+              data-plasmic-name={"modal2"}
+              data-plasmic-override={overrides.modal2}
+              body={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__veL4
+                  )}
+                >
+                  <React.Fragment>
+                    <React.Fragment>
+                      {
+                        "\u0627\u0632 \u0647\u0631 \u06f1\u06f0\u06f0 \u0646\u0641\u0631\u06cc \u06a9\u0647 \u0627\u0628\u0632\u0627\u0631\u06a9 "
+                      }
+                    </React.Fragment>
+                    {
+                      <span
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.span,
+                          projectcss.__wab_text,
+                          projectcss.plasmic_default__inline,
+                          sty.span__nec5N
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return $props.name;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "-";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </span>
+                    }
+                    <React.Fragment>
+                      {
+                        " \u0631\u0648 \u062f\u0631 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0634\u0645\u0627 \u062f\u06cc\u062f\u0646\u060c "
+                      }
+                    </React.Fragment>
+                    {
+                      <span
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.span,
+                          projectcss.__wab_text,
+                          projectcss.plasmic_default__inline,
+                          sty.span__r004B
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return $state.apiRequest2.data?.metrics?.ctr?.toFixed();
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "-";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </span>
+                    }
+                    <React.Fragment>
+                      {
+                        " \u0646\u0641\u0631 \u0631\u0648\u0634 \u06a9\u0644\u06cc\u06a9 \u06a9\u0631\u062f\u0646!"
+                      }
+                    </React.Fragment>
+                  </React.Fragment>
+                </div>
+              }
+              className={classNames("__wab_instance", sty.modal2)}
+              onOpenChange={async (...eventArgs: any) => {
+                generateStateOnChangeProp($state, ["modal2", "open"]).apply(
+                  null,
+                  eventArgs
+                );
+
+                if (
+                  eventArgs.length > 1 &&
+                  eventArgs[1] &&
+                  eventArgs[1]._plasmic_state_init_
+                ) {
+                  return;
+                }
+              }}
+              open={generateStateValueProp($state, ["modal2", "open"])}
+              title={
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__wAUj9
+                  )}
+                >
+                  <React.Fragment>
+                    <React.Fragment>
+                      {
+                        "\u062a\u0627\u062b\u06cc\u0631 \u0627\u0628\u0632\u0627\u0631\u06a9 "
+                      }
+                    </React.Fragment>
+                    {
+                      <span
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.span,
+                          projectcss.__wab_text,
+                          projectcss.plasmic_default__inline,
+                          sty.span__s7Tkc
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return $props.name;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "-";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </span>
+                    }
+                    <React.Fragment>{""}</React.Fragment>
+                  </React.Fragment>
+                </div>
+              }
+              trigger={
+                (() => {
+                  try {
+                    return (
+                      !!$state?.apiRequest2?.data?.metrics?.total_clicks > 0
+                    );
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return true;
+                    }
+                    throw e;
+                  }
+                })() ? (
+                  <div
+                    className={classNames(projectcss.all, sty.freeBox__mamZf)}
+                    onClick={async event => {
+                      const $steps = {};
+                    }}
+                  >
+                    <Icon10Icon
+                      className={classNames(projectcss.all, sty.svg__rykr)}
+                      role={"img"}
+                    />
+
+                    <div
+                      className={classNames(
+                        projectcss.all,
+                        sty.freeBox___8Jki9
+                      )}
+                    >
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__q1ZrL
+                        )}
+                      >
+                        <React.Fragment>
+                          {$state.apiRequest2.data.metrics.total_clicks}
+                        </React.Fragment>
+                      </div>
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__fKHqS
+                        )}
+                      >
+                        {"\u06a9\u0644\u06cc\u06a9"}
+                      </div>
+                    </div>
+                  </div>
+                ) : null
+              }
+            />
+          </div>
+        </ApiRequest>
       </div>
     </div>
   ) as React.ReactElement | null;
@@ -1882,17 +2228,19 @@ const PlasmicDescendants = {
     "hamdastAppFrame",
     "apiRequest",
     "modal",
-    "span",
     "sideEffect",
-    "paziresh24Button"
+    "paziresh24Button",
+    "apiRequest2",
+    "modal2"
   ],
   fragmentPortal: ["fragmentPortal", "hamdastAppFrame"],
   hamdastAppFrame: ["hamdastAppFrame"],
-  apiRequest: ["apiRequest", "modal", "span", "sideEffect", "paziresh24Button"],
-  modal: ["modal", "span", "sideEffect", "paziresh24Button"],
-  span: ["span"],
+  apiRequest: ["apiRequest", "modal", "sideEffect", "paziresh24Button"],
+  modal: ["modal", "sideEffect", "paziresh24Button"],
   sideEffect: ["sideEffect"],
-  paziresh24Button: ["paziresh24Button"]
+  paziresh24Button: ["paziresh24Button"],
+  apiRequest2: ["apiRequest2", "modal2"],
+  modal2: ["modal2"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -1903,9 +2251,10 @@ type NodeDefaultElementType = {
   hamdastAppFrame: typeof AppFrame;
   apiRequest: typeof ApiRequest;
   modal: typeof Paziresh24Modal;
-  span: "span";
   sideEffect: typeof SideEffect;
   paziresh24Button: typeof Paziresh24Button;
+  apiRequest2: typeof ApiRequest;
+  modal2: typeof Paziresh24Modal;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -1972,9 +2321,10 @@ export const PlasmicLauncherComponentsApp = Object.assign(
     hamdastAppFrame: makeNodeComponent("hamdastAppFrame"),
     apiRequest: makeNodeComponent("apiRequest"),
     modal: makeNodeComponent("modal"),
-    span: makeNodeComponent("span"),
     sideEffect: makeNodeComponent("sideEffect"),
     paziresh24Button: makeNodeComponent("paziresh24Button"),
+    apiRequest2: makeNodeComponent("apiRequest2"),
+    modal2: makeNodeComponent("modal2"),
 
     // Metadata about props expected for PlasmicLauncherComponentsApp
     internalVariantProps: PlasmicLauncherComponentsApp__VariantProps,

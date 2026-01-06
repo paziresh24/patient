@@ -3595,6 +3595,11 @@
           "id": "0e0QAWAqcpvF",
           "name": "Icon9Icon",
           "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon9.tsx"
+        },
+        {
+          "id": "1jPTG-TWN6hw",
+          "name": "Icon10Icon",
+          "moduleFilePath": "plasmic/launcher/icons/PlasmicIcon__Icon10.tsx"
         }
       ],
       "images": [

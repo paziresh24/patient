@@ -1316,6 +1316,7 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                                 data-plasmic-override={overrides.strong}
                                 className={classNames(
                                   projectcss.all,
+                                  projectcss.strong,
                                   projectcss.__wab_text,
                                   projectcss.plasmic_default__inline,
                                   sty.strong
