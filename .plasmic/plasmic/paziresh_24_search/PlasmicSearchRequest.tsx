@@ -1370,6 +1370,15 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                     userAgent: globalThis.navigator.userAgent
                                       ? globalThis.navigator.userAgent
                                       : "",
+                                    semantic_search:
+                                      $ctx &&
+                                      $ctx.fetchedData &&
+                                      $ctx.fetchedData.search &&
+                                      $ctx.fetchedData.search.semantic_search &&
+                                      $ctx.fetchedData.search
+                                        .semantic_search === "true"
+                                        ? "true"
+                                        : "false",
                                     url: (function () {
                                       const url = {
                                         href: window.location.href,
@@ -1389,7 +1398,13 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                         }
                                       } catch (e) {}
                                       return url;
-                                    })()
+                                    })(),
+                                    query_attributes:
+                                      $ctx &&
+                                      $ctx.fetchedData &&
+                                      $ctx.fetchedData.query_attributes
+                                        ? $ctx.fetchedData.query_attributes
+                                        : null
                                   };
                                 } catch (e) {
                                   if (
