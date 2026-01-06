@@ -350,6 +350,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
                   />
                 ) : null}
               </div>
+              <div className={classNames(projectcss.all, sty.freeBox__yfzd)} />
             </Reveal>
           ) : null}
           {(() => {
