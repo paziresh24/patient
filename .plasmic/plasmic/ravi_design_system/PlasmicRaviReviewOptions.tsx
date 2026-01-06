@@ -60,13 +60,14 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { Popover } from "@plasmicpkgs/radix-ui";
-import Paziresh24Dialog from "../../Paziresh24Dialog"; // plasmic-import: ZGdhyEBPJSmH/component
+import Paziresh24Dialog from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import RaviOption from "../../RaviOption"; // plasmic-import: 7P-1fooJZx0C/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviReviewOptions.module.css"; // plasmic-import: WPpw5PhLSljG/css
 
@@ -165,6 +166,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -296,6 +298,8 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
     $refs
   });
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -307,8 +311,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
       dir={"rtl"}
@@ -342,9 +345,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
+              <div
                 className={classNames(projectcss.all, sty.freeBox__rnAqM)}
                 onClick={async event => {
                   const $steps = {};
@@ -400,7 +401,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                 >
                   {"\u0648\u06cc\u0631\u0627\u06cc\u0634"}
                 </div>
-              </Stack__>
+              </div>
             ) : null}
             {(() => {
               try {
@@ -415,9 +416,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
+              <div
                 className={classNames(projectcss.all, sty.freeBox__i4Lgq)}
                 onClick={async event => {
                   const $steps = {};
@@ -473,11 +472,9 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                 >
                   {"\u062d\u0630\u0641"}
                 </div>
-              </Stack__>
+              </div>
             ) : null}
-            <Stack__
-              as={"div"}
-              hasGap={true}
+            <div
               className={classNames(projectcss.all, sty.freeBox__gwNoZ)}
               onClick={async event => {
                 const $steps = {};
@@ -533,15 +530,14 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
               >
                 {"\u06af\u0632\u0627\u0631\u0634"}
               </div>
-            </Stack__>
+            </div>
           </div>
         }
         themeResetClass={classNames(
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_paziresh_24_design_system_css.plasmic_tokens
+          styleTokensClassNames
         )}
       >
         <div className={classNames(projectcss.all, sty.freeBox__jp5SJ)}>
@@ -570,11 +566,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                   throw e;
                 }
               })() ? (
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox__sFqba)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox__sFqba)}>
                   {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
                     (() => {
                       try {
@@ -681,7 +673,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                       />
                     );
                   })}
-                </Stack__>
+                </div>
               ) : null}
               {(() => {
                 try {
@@ -1113,11 +1105,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         data-plasmic-name={"deleteDialog"}
         data-plasmic-override={overrides.deleteDialog}
         body={
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__kondS)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__kondS)}>
             <Paziresh24Button
               children2={"\u062d\u0630\u0641"}
               className={classNames(
@@ -1315,7 +1303,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
               }}
               outline={true}
             />
-          </Stack__>
+          </div>
         }
         className={classNames("__wab_instance", sty.deleteDialog)}
         noTrigger={true}
@@ -1344,11 +1332,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
         data-plasmic-name={"editDialog"}
         data-plasmic-override={overrides.editDialog}
         body={
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox___0HOhi)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox___0HOhi)}>
             <textarea
               data-plasmic-name={"editComment"}
               data-plasmic-override={overrides.editComment}
@@ -1554,7 +1538,7 @@ function PlasmicRaviReviewOptions__RenderFunc(props: {
                 }
               }}
             />
-          </Stack__>
+          </div>
         }
         className={classNames("__wab_instance", sty.editDialog)}
         noTrigger={true}
@@ -1625,15 +1609,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicRaviReviewOptions__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicRaviReviewOptions__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicRaviReviewOptions__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicRaviReviewOptions__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

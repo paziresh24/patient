@@ -64,12 +64,11 @@ import RaviReviewCard from "../../RaviReviewCard"; // plasmic-import: mdyuGePDb8
 import ReviewOptions from "../../ReviewOptions"; // plasmic-import: NKhK0RyiR4qB/component
 import ReviewReply from "../../ReviewReply"; // plasmic-import: lIT823qV81pb/component
 import RaviShare from "../../RaviShare"; // plasmic-import: TkOtksyueyFt/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: qQzsBf58SqzNJX45iggq96/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewCard2.module.css"; // plasmic-import: fh6BVdoIxXpv/css
 
@@ -79,13 +78,16 @@ createPlasmicElementProxy;
 
 export type PlasmicReviewCard2__VariantMembers = {
   raviExpFroDrakam: "raviExpFroDrakam";
+  compact: "compact";
 };
 export type PlasmicReviewCard2__VariantsArgs = {
   raviExpFroDrakam?: SingleBooleanChoiceArg<"raviExpFroDrakam">;
+  compact?: SingleBooleanChoiceArg<"compact">;
 };
 type VariantPropType = keyof PlasmicReviewCard2__VariantsArgs;
 export const PlasmicReviewCard2__VariantProps = new Array<VariantPropType>(
-  "raviExpFroDrakam"
+  "raviExpFroDrakam",
+  "compact"
 );
 
 export type PlasmicReviewCard2__ArgsType = {
@@ -147,6 +149,7 @@ export interface DefaultReviewCard2Props {
   searchTerm?: string;
   isDoctor?: boolean;
   raviExpFroDrakam?: SingleBooleanChoiceArg<"raviExpFroDrakam">;
+  compact?: SingleBooleanChoiceArg<"compact">;
   className?: string;
 }
 
@@ -255,37 +258,49 @@ function PlasmicReviewCard2__RenderFunc(props: {
         path: "userApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "userApi"
       },
       {
         path: "userApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "userApi"
       },
       {
         path: "userApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "userApi"
       },
       {
         path: "repliesApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "repliesApi"
       },
       {
         path: "repliesApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "repliesApi"
       },
       {
         path: "repliesApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "repliesApi"
       },
       {
         path: "isLoadingSendReport",
@@ -297,19 +312,25 @@ function PlasmicReviewCard2__RenderFunc(props: {
         path: "shareApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "shareApi"
       },
       {
         path: "shareApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "shareApi"
       },
       {
         path: "shareApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "shareApi"
       },
       {
         path: "card.rate",
@@ -345,19 +366,31 @@ function PlasmicReviewCard2__RenderFunc(props: {
         path: "avatarApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "avatarApi"
       },
       {
         path: "avatarApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "avatarApi"
       },
       {
         path: "avatarApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "avatarApi"
+      },
+      {
+        path: "compact",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.compact
       }
     ],
     [$props, $ctx, $refs]
@@ -368,6 +401,8 @@ function PlasmicReviewCard2__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -380,10 +415,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_design_system_css.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.verticalStack,
         {
           [sty.verticalStackraviExpFroDrakam]: hasVariant(
@@ -432,6 +464,9 @@ function PlasmicReviewCard2__RenderFunc(props: {
             eventArgs
           );
         }}
+        ref={ref => {
+          $refs["userApi"] = ref;
+        }}
         url={(() => {
           try {
             return `https://apigw.paziresh24.com/v1/users/${$props.userId}`;
@@ -471,6 +506,9 @@ function PlasmicReviewCard2__RenderFunc(props: {
               eventArgs
             );
           }}
+          ref={ref => {
+            $refs["repliesApi"] = ref;
+          }}
           url={(() => {
             try {
               return `https://apigw.paziresh24.com/ravi/v1/ravi_get_reply?where=(doctor_slug,eq,${$props.doctorSlug})~and(reply_to_feedback_id,eq,${$props.feedbackId})~and(show,eq,1)~and(delete,eq,0)~and(description,isnot,null)&limit=1&offset=0&sort=-created_at`;
@@ -509,6 +547,9 @@ function PlasmicReviewCard2__RenderFunc(props: {
                 null,
                 eventArgs
               );
+            }}
+            ref={ref => {
+              $refs["avatarApi"] = ref;
             }}
             url={(() => {
               try {
@@ -553,7 +594,9 @@ function PlasmicReviewCard2__RenderFunc(props: {
                       throw e;
                     }
                   })(),
-                  className: classNames("__wab_instance", sty.card),
+                  className: classNames("__wab_instance", sty.card, {
+                    [sty.cardcompact]: hasVariant($state, "compact", "compact")
+                  }),
                   commentText: (() => {
                     try {
                       return (() => {
@@ -609,6 +652,9 @@ function PlasmicReviewCard2__RenderFunc(props: {
                       throw e;
                     }
                   })(),
+                  hideActions: hasVariant($state, "compact", "compact")
+                    ? false
+                    : undefined,
                   isDoctor: (() => {
                     try {
                       return $props.isDoctor;
@@ -1079,7 +1125,14 @@ function PlasmicReviewCard2__RenderFunc(props: {
                       data-plasmic-override={overrides.reviewOptions}
                       className={classNames(
                         "__wab_instance",
-                        sty.reviewOptions
+                        sty.reviewOptions,
+                        {
+                          [sty.reviewOptionscompact]: hasVariant(
+                            $state,
+                            "compact",
+                            "compact"
+                          )
+                        }
                       )}
                       commentText={(() => {
                         try {
@@ -1254,7 +1307,13 @@ function PlasmicReviewCard2__RenderFunc(props: {
                   ),
                   replyCard: (
                     <div
-                      className={classNames(projectcss.all, sty.freeBox__jOxz)}
+                      className={classNames(projectcss.all, sty.freeBox__jOxz, {
+                        [sty.freeBoxcompact__jOxzOnQUr]: hasVariant(
+                          $state,
+                          "compact",
+                          "compact"
+                        )
+                      })}
                     >
                       {(() => {
                         try {
@@ -1400,6 +1459,9 @@ function PlasmicReviewCard2__RenderFunc(props: {
                             "shareApi",
                             "data"
                           ]).apply(null, eventArgs);
+                        }}
+                        ref={ref => {
+                          $refs["shareApi"] = ref;
                         }}
                         url={(() => {
                           try {

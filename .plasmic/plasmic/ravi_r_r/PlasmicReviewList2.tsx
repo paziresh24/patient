@@ -67,12 +67,11 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import RaviAlert from "../../RaviAlert"; // plasmic-import: 22UkaHSSFOEU/component
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: qQzsBf58SqzNJX45iggq96/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewList2.module.css"; // plasmic-import: Kz2u6VAJ02yE/css
 
@@ -81,10 +80,16 @@ import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; 
 
 createPlasmicElementProxy;
 
-export type PlasmicReviewList2__VariantMembers = {};
-export type PlasmicReviewList2__VariantsArgs = {};
+export type PlasmicReviewList2__VariantMembers = {
+  horizontal: "horizontal";
+};
+export type PlasmicReviewList2__VariantsArgs = {
+  horizontal?: SingleBooleanChoiceArg<"horizontal">;
+};
 type VariantPropType = keyof PlasmicReviewList2__VariantsArgs;
-export const PlasmicReviewList2__VariantProps = new Array<VariantPropType>();
+export const PlasmicReviewList2__VariantProps = new Array<VariantPropType>(
+  "horizontal"
+);
 
 export type PlasmicReviewList2__ArgsType = {
   reviewResponse?: any;
@@ -138,6 +143,7 @@ export interface DefaultReviewList2Props {
   information?: any;
   centers?: any;
   seo?: any;
+  horizontal?: SingleBooleanChoiceArg<"horizontal">;
   className?: string;
 }
 
@@ -192,6 +198,12 @@ function PlasmicReviewList2__RenderFunc(props: {
         type: "private",
         variableType: "text",
         initFunc: ({ $props, $state, $queries, $ctx }) => ""
+      },
+      {
+        path: "horizontal",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.horizontal
       }
     ],
     [$props, $ctx, $refs]
@@ -202,6 +214,8 @@ function PlasmicReviewList2__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -214,10 +228,7 @@ function PlasmicReviewList2__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_design_system_css.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
@@ -851,7 +862,13 @@ function PlasmicReviewList2__RenderFunc(props: {
           <div className={classNames(projectcss.all, sty.freeBox__crgXx)} />
 
           <div
-            className={classNames(projectcss.all, sty.freeBox__ohpgk)}
+            className={classNames(projectcss.all, sty.freeBox__ohpgk, {
+              [sty.freeBoxhorizontal__ohpgk1Im1A]: hasVariant(
+                $state,
+                "horizontal",
+                "horizontal"
+              )
+            })}
             id={"comments"}
           >
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -873,7 +890,13 @@ function PlasmicReviewList2__RenderFunc(props: {
               const currentIndex = __plasmic_idx_0;
               return (
                 <div
-                  className={classNames(projectcss.all, sty.freeBox__n1Ldu)}
+                  className={classNames(projectcss.all, sty.freeBox__n1Ldu, {
+                    [sty.freeBoxhorizontal__n1Ldu1Im1A]: hasVariant(
+                      $state,
+                      "horizontal",
+                      "horizontal"
+                    )
+                  })}
                   key={currentIndex}
                 >
                   <ReviewCard2
@@ -892,7 +915,13 @@ function PlasmicReviewList2__RenderFunc(props: {
                         throw e;
                       }
                     })()}
-                    className={classNames("__wab_instance", sty.reviewCard2)}
+                    className={classNames("__wab_instance", sty.reviewCard2, {
+                      [sty.reviewCard2horizontal]: hasVariant(
+                        $state,
+                        "horizontal",
+                        "horizontal"
+                      )
+                    })}
                     commentText={(() => {
                       try {
                         return currentItem.description;
@@ -906,6 +935,11 @@ function PlasmicReviewList2__RenderFunc(props: {
                         throw e;
                       }
                     })()}
+                    compact={
+                      hasVariant($state, "horizontal", "horizontal")
+                        ? true
+                        : undefined
+                    }
                     docCenter={(() => {
                       try {
                         return currentItem.center_name;
@@ -1167,7 +1201,15 @@ function PlasmicReviewList2__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <div className={classNames(projectcss.all, sty.freeBox__dt6P7)}>
+              <div
+                className={classNames(projectcss.all, sty.freeBox__dt6P7, {
+                  [sty.freeBoxhorizontal__dt6P71Im1A]: hasVariant(
+                    $state,
+                    "horizontal",
+                    "horizontal"
+                  )
+                })}
+              >
                 <div
                   data-plasmic-name={"text"}
                   data-plasmic-override={overrides.text}

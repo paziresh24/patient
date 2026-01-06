@@ -70,12 +70,11 @@ import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import Dialog from "../../Dialog"; // plasmic-import: FJiI2-N1is_F/component
 import { DataFetcher } from "@plasmicpkgs/plasmic-query";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: qQzsBf58SqzNJX45iggq96/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewList.module.css"; // plasmic-import: Bx6gxTOoja9k/css
 
@@ -90,10 +89,16 @@ import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-
 
 createPlasmicElementProxy;
 
-export type PlasmicReviewList__VariantMembers = {};
-export type PlasmicReviewList__VariantsArgs = {};
+export type PlasmicReviewList__VariantMembers = {
+  horizontal: "horizontal";
+};
+export type PlasmicReviewList__VariantsArgs = {
+  horizontal?: SingleBooleanChoiceArg<"horizontal">;
+};
 type VariantPropType = keyof PlasmicReviewList__VariantsArgs;
-export const PlasmicReviewList__VariantProps = new Array<VariantPropType>();
+export const PlasmicReviewList__VariantProps = new Array<VariantPropType>(
+  "horizontal"
+);
 
 export type PlasmicReviewList__ArgsType = {
   reviewResponse?: any;
@@ -154,6 +159,7 @@ export interface DefaultReviewListProps {
   expertises?: any;
   pageInfo?: any;
   hideRates?: boolean;
+  horizontal?: SingleBooleanChoiceArg<"horizontal">;
   className?: string;
 }
 
@@ -228,6 +234,12 @@ function PlasmicReviewList__RenderFunc(props: {
         type: "private",
         variableType: "boolean",
         initFunc: ({ $props, $state, $queries, $ctx }) => false
+      },
+      {
+        path: "horizontal",
+        type: "private",
+        variableType: "variant",
+        initFunc: ({ $props, $state, $queries, $ctx }) => $props.horizontal
       }
     ],
     [$props, $ctx, $refs]
@@ -238,6 +250,8 @@ function PlasmicReviewList__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -250,11 +264,9 @@ function PlasmicReviewList__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_design_system_css.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
-        sty.root
+        styleTokensClassNames,
+        sty.root,
+        { [sty.roothorizontal]: hasVariant($state, "horizontal", "horizontal") }
       )}
     >
       {(() => {
@@ -892,7 +904,13 @@ function PlasmicReviewList__RenderFunc(props: {
           <div
             data-plasmic-name={"commentsContainer"}
             data-plasmic-override={overrides.commentsContainer}
-            className={classNames(projectcss.all, sty.commentsContainer)}
+            className={classNames(projectcss.all, sty.commentsContainer, {
+              [sty.commentsContainerhorizontal]: hasVariant(
+                $state,
+                "horizontal",
+                "horizontal"
+              )
+            })}
             id={"comments"}
           >
             {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
@@ -916,7 +934,13 @@ function PlasmicReviewList__RenderFunc(props: {
                 <div
                   data-plasmic-name={"cardLine"}
                   data-plasmic-override={overrides.cardLine}
-                  className={classNames(projectcss.all, sty.cardLine)}
+                  className={classNames(projectcss.all, sty.cardLine, {
+                    [sty.cardLinehorizontal]: hasVariant(
+                      $state,
+                      "horizontal",
+                      "horizontal"
+                    )
+                  })}
                   key={currentIndex}
                 >
                   <ReviewCard
@@ -935,7 +959,14 @@ function PlasmicReviewList__RenderFunc(props: {
                     })()}
                     className={classNames(
                       "__wab_instance",
-                      sty.reviewCard___1LxxJ
+                      sty.reviewCard___1LxxJ,
+                      {
+                        [sty.reviewCardhorizontal___1LxxJn6Qrj]: hasVariant(
+                          $state,
+                          "horizontal",
+                          "horizontal"
+                        )
+                      }
                     )}
                     commentText={(() => {
                       try {
