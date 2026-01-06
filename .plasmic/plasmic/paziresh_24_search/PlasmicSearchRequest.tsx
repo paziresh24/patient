@@ -1231,6 +1231,15 @@ function PlasmicSearchRequest__RenderFunc(props: {
                       return (() => {
                         $ctx.fetchedData.search.total =
                           $ctx.fetchedData.search.pagination.limit;
+                        if (
+                          $props &&
+                          typeof $props.suggestionExecutionSource !==
+                            "undefined" &&
+                          $props.suggestionExecutionSource == true
+                        ) {
+                          $ctx.fetchedData.search.suggestion_source =
+                            $props.suggestionExecutionSource;
+                        }
                         return $ctx.fetchedData;
                       })();
                     } catch (e) {
@@ -1267,7 +1276,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                   onMount={async () => {
                     const $steps = {};
 
-                    $steps["searchViewEvent"] = true
+                    $steps["searchViewEvent"] = !!$ctx.fetchedData.search
                       ? (() => {
                           const actionArgs = {
                             args: [
