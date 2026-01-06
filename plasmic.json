@@ -5010,9 +5010,8 @@
         }
       ],
       "customFunctions": [],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/ravi_design_system/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/ravi_design_system/plasmic.tsx"
     },
     {
       "projectId": "qQzsBf58SqzNJX45iggq96",
@@ -5766,6 +5765,12 @@
           "name": "AppFrame",
           "displayName": "AppFrame",
           "componentImportPath": "@/modules/hamdast/appFrame"
+        },
+        {
+          "id": "MvR-2oL6W481",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
@@ -5777,9 +5782,8 @@
           "namespace": null
         }
       ],
-      "jsBundleThemes": [],
-      "styleTokensProviderFilePath": "",
-      "projectModuleFilePath": ""
+      "styleTokensProviderFilePath": "plasmic/ravi_r_r/PlasmicStyleTokensProvider.tsx",
+      "projectModuleFilePath": "plasmic/ravi_r_r/plasmic.tsx"
     },
     {
       "projectId": "k6ZwKcaHfkxemp7yqC1vbY",

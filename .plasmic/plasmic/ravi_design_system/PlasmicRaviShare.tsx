@@ -60,10 +60,11 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviShare.module.css"; // plasmic-import: TkOtksyueyFt/css
 
@@ -153,9 +154,12 @@ function PlasmicRaviShare__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -168,14 +172,11 @@ function PlasmicRaviShare__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
-      <Stack__
-        as={"div"}
-        hasGap={true}
+      <div
         className={classNames(projectcss.all, sty.freeBox__hJpfd)}
         dir={"rtl"}
       >
@@ -190,20 +191,12 @@ function PlasmicRaviShare__RenderFunc(props: {
             "\u0627\u06cc\u0646 \u0646\u0638\u0631 \u0631\u0627 \u0628\u0627 \u062f\u06cc\u06af\u0631\u0627\u0646 \u0628\u0647 \u0627\u0634\u062a\u0631\u0627\u06a9 \u0628\u06af\u0630\u0627\u0631\u06cc\u062f."
           }
         </div>
-        <Stack__
-          as={"div"}
-          hasGap={true}
-          className={classNames(projectcss.all, sty.freeBox__fJyfo)}
-        >
+        <div className={classNames(projectcss.all, sty.freeBox__fJyfo)}>
           <Paziresh24Button
             data-plasmic-name={"eitaa"}
             data-plasmic-override={overrides.eitaa}
             children2={
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__iBb9C)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__iBb9C)}>
                 <Icon17Icon
                   className={classNames(projectcss.all, sty.svg___23Crn)}
                   role={"img"}
@@ -218,7 +211,7 @@ function PlasmicRaviShare__RenderFunc(props: {
                 >
                   {"\u062a\u0648\u06cc\u06cc\u062a\u0631"}
                 </div>
-              </Stack__>
+              </div>
             }
             className={classNames("__wab_instance", sty.eitaa)}
             color={"blue"}
@@ -247,11 +240,7 @@ function PlasmicRaviShare__RenderFunc(props: {
             data-plasmic-name={"eitaa2"}
             data-plasmic-override={overrides.eitaa2}
             children2={
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__blmIp)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__blmIp)}>
                 <EitaaIcon
                   className={classNames(projectcss.all, sty.svg___9OgqJ)}
                   role={"img"}
@@ -266,7 +255,7 @@ function PlasmicRaviShare__RenderFunc(props: {
                 >
                   {"\u0627\u06cc\u062a\u0627"}
                 </div>
-              </Stack__>
+              </div>
             }
             className={classNames("__wab_instance", sty.eitaa2)}
             color={"orange"}
@@ -295,11 +284,7 @@ function PlasmicRaviShare__RenderFunc(props: {
             data-plasmic-name={"telegram2"}
             data-plasmic-override={overrides.telegram2}
             children2={
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__gK4J)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__gK4J)}>
                 <Icon13Icon
                   className={classNames(projectcss.all, sty.svg___4IAk)}
                   role={"img"}
@@ -314,7 +299,7 @@ function PlasmicRaviShare__RenderFunc(props: {
                 >
                   {"\u062a\u0644\u06af\u0631\u0627\u0645"}
                 </div>
-              </Stack__>
+              </div>
             }
             className={classNames("__wab_instance", sty.telegram2)}
             onClick={async event => {
@@ -383,7 +368,7 @@ function PlasmicRaviShare__RenderFunc(props: {
               }
             }}
           />
-        </Stack__>
+        </div>
         <div className={classNames(projectcss.all, sty.freeBox___2Nok)} />
 
         <div className={classNames(projectcss.all, sty.freeBox__xiL3S)}>
@@ -427,11 +412,7 @@ function PlasmicRaviShare__RenderFunc(props: {
               data-plasmic-name={"paziresh24Button"}
               data-plasmic-override={overrides.paziresh24Button}
               children2={
-                <Stack__
-                  as={"div"}
-                  hasGap={true}
-                  className={classNames(projectcss.all, sty.freeBox___48A)}
-                >
+                <div className={classNames(projectcss.all, sty.freeBox___48A)}>
                   <Icon15Icon
                     className={classNames(projectcss.all, sty.svg__uKugV)}
                     role={"img"}
@@ -446,7 +427,7 @@ function PlasmicRaviShare__RenderFunc(props: {
                   >
                     {"\u06a9\u067e\u06cc \u0644\u06cc\u0646\u06a9"}
                   </div>
-                </Stack__>
+                </div>
               }
               className={classNames("__wab_instance", sty.paziresh24Button)}
               color={"softBlue"}
@@ -473,7 +454,7 @@ function PlasmicRaviShare__RenderFunc(props: {
             />
           ) : null}
         </div>
-      </Stack__>
+      </div>
     </div>
   ) as React.ReactElement | null;
 }
@@ -510,15 +491,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicRaviShare__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicRaviShare__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicRaviShare__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicRaviShare__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;

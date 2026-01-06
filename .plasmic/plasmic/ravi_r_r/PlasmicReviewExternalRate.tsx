@@ -63,12 +63,11 @@ import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmi
 import RaviExternalRate from "../../RaviExternalRate"; // plasmic-import: 1RWEAe1WAk7-/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import RateProgressBar from "../../RateProgressBar"; // plasmic-import: YorKPsj5-KCA/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: qQzsBf58SqzNJX45iggq96/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewExternalRate.module.css"; // plasmic-import: iUNfhq3ES5BC/css
 
@@ -157,37 +156,49 @@ function PlasmicReviewExternalRate__RenderFunc(props: {
         path: "externalApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "externalApi"
       },
       {
         path: "externalApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "externalApi"
       },
       {
         path: "externalApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "externalApi"
       },
       {
         path: "paziresh24Api.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "paziresh24Api"
       },
       {
         path: "paziresh24Api.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "paziresh24Api"
       },
       {
         path: "paziresh24Api.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "paziresh24Api"
       }
     ],
     [$props, $ctx, $refs]
@@ -198,6 +209,8 @@ function PlasmicReviewExternalRate__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -210,10 +223,7 @@ function PlasmicReviewExternalRate__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_design_system_css.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
@@ -265,6 +275,9 @@ function PlasmicReviewExternalRate__RenderFunc(props: {
               null,
               eventArgs
             );
+          }}
+          ref={ref => {
+            $refs["externalApi"] = ref;
           }}
           url={(() => {
             try {
@@ -403,6 +416,9 @@ function PlasmicReviewExternalRate__RenderFunc(props: {
                 "paziresh24Api",
                 "data"
               ]).apply(null, eventArgs);
+            }}
+            ref={ref => {
+              $refs["paziresh24Api"] = ref;
             }}
             url={(() => {
               try {

@@ -60,6 +60,9 @@
   background: none;
   min-width: 0;
 }
+.freeBoxcompact__jOxzOnQUr {
+  display: none;
+}
 .reviewReply__ploLv:global(.__wab_instance) {
   max-width: 100%;
   margin-top: var(--token-_c276Gs_1FIE);

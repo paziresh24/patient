@@ -62,12 +62,11 @@ import {
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: rQxw_Usvf1CS/codeComponent
 import RaviReviewReply from "../../RaviReviewReply"; // plasmic-import: ztZnhXmFcIt0/component
 import ReviewOptions from "../../ReviewOptions"; // plasmic-import: NKhK0RyiR4qB/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: qQzsBf58SqzNJX45iggq96/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import sty from "./PlasmicReviewReply.module.css"; // plasmic-import: lIT823qV81pb/css
 
@@ -156,37 +155,49 @@ function PlasmicReviewReply__RenderFunc(props: {
         path: "userApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "userApi"
       },
       {
         path: "userApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "userApi"
       },
       {
         path: "userApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "userApi"
       },
       {
         path: "avatarApi.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "avatarApi"
       },
       {
         path: "avatarApi.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "avatarApi"
       },
       {
         path: "avatarApi.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+
+        refName: "avatarApi"
       }
     ],
     [$props, $ctx, $refs]
@@ -197,6 +208,8 @@ function PlasmicReviewReply__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     <div
@@ -209,10 +222,7 @@ function PlasmicReviewReply__RenderFunc(props: {
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
-        plasmic_ravi_design_system_css.plasmic_tokens,
-        plasmic_paziresh_24_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
@@ -240,6 +250,9 @@ function PlasmicReviewReply__RenderFunc(props: {
             null,
             eventArgs
           );
+        }}
+        ref={ref => {
+          $refs["userApi"] = ref;
         }}
         url={(() => {
           try {
@@ -279,6 +292,9 @@ function PlasmicReviewReply__RenderFunc(props: {
               null,
               eventArgs
             );
+          }}
+          ref={ref => {
+            $refs["avatarApi"] = ref;
           }}
           url={(() => {
             try {

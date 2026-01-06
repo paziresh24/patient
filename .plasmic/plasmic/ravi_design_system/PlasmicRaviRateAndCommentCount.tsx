@@ -61,10 +61,11 @@ import {
 
 import RaviAlert from "../../RaviAlert"; // plasmic-import: 22UkaHSSFOEU/component
 import { Popover } from "@plasmicpkgs/radix-ui";
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
 import sty from "./PlasmicRaviRateAndCommentCount.module.css"; // plasmic-import: sq-hoyjtWZlg/css
 
@@ -140,6 +141,7 @@ function PlasmicRaviRateAndCommentCount__RenderFunc(props: {
   };
 
   const __nextRouter = useNextRouter();
+
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
@@ -161,6 +163,8 @@ function PlasmicRaviRateAndCommentCount__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const styleTokensClassNames = _useStyleTokens();
 
   return (
     (() => {
@@ -186,8 +190,7 @@ function PlasmicRaviRateAndCommentCount__RenderFunc(props: {
           projectcss.root_reset,
           projectcss.plasmic_default_styles,
           projectcss.plasmic_mixins,
-          projectcss.plasmic_tokens,
-          plasmic_paziresh_24_design_system_css.plasmic_tokens,
+          styleTokensClassNames,
           sty.root
         )}
       >
@@ -227,17 +230,11 @@ function PlasmicRaviRateAndCommentCount__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
+          <div
             className={classNames(projectcss.all, sty.freeBox__lhPr)}
             dir={"rtl"}
           >
-            <Stack__
-              as={"div"}
-              hasGap={true}
-              className={classNames(projectcss.all, sty.freeBox__fcVvV)}
-            >
+            <div className={classNames(projectcss.all, sty.freeBox__fcVvV)}>
               <Icon2Icon
                 className={classNames(projectcss.all, sty.svg__xtczf)}
                 role={"img"}
@@ -275,7 +272,7 @@ function PlasmicRaviRateAndCommentCount__RenderFunc(props: {
               >
                 {"\u0627\u0632 \u06f5"}
               </div>
-            </Stack__>
+            </div>
             {(() => {
               try {
                 return !!$props.rateCount;
@@ -374,8 +371,7 @@ function PlasmicRaviRateAndCommentCount__RenderFunc(props: {
                 projectcss.root_reset,
                 projectcss.plasmic_default_styles,
                 projectcss.plasmic_mixins,
-                projectcss.plasmic_tokens,
-                plasmic_paziresh_24_design_system_css.plasmic_tokens
+                styleTokensClassNames
               )}
             >
               <div
@@ -410,7 +406,7 @@ function PlasmicRaviRateAndCommentCount__RenderFunc(props: {
                 />
               </div>
             </Popover>
-          </Stack__>
+          </div>
         ) : null}
       </div>
     ) : null
@@ -443,15 +439,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicRaviRateAndCommentCount__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicRaviRateAndCommentCount__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicRaviRateAndCommentCount__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicRaviRateAndCommentCount__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
