@@ -228,7 +228,7 @@ function PlasmicSearchPage2__RenderFunc(props: {
         />
         <meta
           key="twitter:title"
-          name="twitter:title"
+          property="twitter:title"
           content={PlasmicSearchPage2.pageMetadata.title}
         />
       </Head>

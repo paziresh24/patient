@@ -123,6 +123,7 @@ export type PlasmicSearch__OverridesType = {
   locationView?: Flex__<typeof LocationView>;
   fragmentPortal?: Flex__<typeof Portal>;
   sideEffect?: Flex__<typeof SideEffect>;
+  _222?: Flex__<typeof SideEffect>;
   text?: Flex__<"div">;
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
 };
@@ -338,6 +339,11 @@ function PlasmicSearch__RenderFunc(props: {
                   "__wab_instance",
                   sty.searchInput__cXqko,
                   {
+                    [sty.searchInputhasOverlay__cXqkoyy9Si]: hasVariant(
+                      $state,
+                      "hasOverlay",
+                      "hasOverlay"
+                    ),
                     [sty.searchInputisFocus__cXqkoMexBq]: hasVariant(
                       $state,
                       "isFocus",
@@ -2495,6 +2501,93 @@ function PlasmicSearch__RenderFunc(props: {
         }}
       />
 
+      <SideEffect
+        data-plasmic-name={"_222"}
+        data-plasmic-override={overrides._222}
+        className={classNames("__wab_instance", sty._222, {
+          [sty._222isFocus]: hasVariant($state, "isFocus", "isFocus")
+        })}
+        onMount={async () => {
+          const $steps = {};
+
+          $steps["updateIsFocus"] = !!globalThis.sessionStorage.getItem(
+            "p24_search_recovery_text"
+          )
+            ? (() => {
+                const actionArgs = { vgroup: "isFocus", operation: 4 };
+                return (({ vgroup, value }) => {
+                  if (typeof value === "string") {
+                    value = [value];
+                  }
+
+                  $stateSet($state, vgroup, true);
+                  return true;
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["updateIsFocus"] != null &&
+            typeof $steps["updateIsFocus"] === "object" &&
+            typeof $steps["updateIsFocus"].then === "function"
+          ) {
+            $steps["updateIsFocus"] = await $steps["updateIsFocus"];
+          }
+
+          $steps["runCode2"] = !!globalThis.sessionStorage.getItem(
+            "p24_search_recovery_text"
+          )
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      savedSearch = globalThis.sessionStorage.getItem(
+                        "p24_search_recovery_text"
+                      );
+                      const data = JSON.parse(savedSearch);
+                      $state.inputValue = data.text;
+                      return ($state.terms = data.text);
+                    })();
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runCode2"] != null &&
+            typeof $steps["runCode2"] === "object" &&
+            typeof $steps["runCode2"].then === "function"
+          ) {
+            $steps["runCode2"] = await $steps["runCode2"];
+          }
+
+          $steps["runCode"] = !!globalThis.sessionStorage.getItem(
+            "p24_search_recovery_text"
+          )
+            ? (() => {
+                const actionArgs = {
+                  customFunction: async () => {
+                    return sessionStorage.removeItem(
+                      "p24_search_recovery_text"
+                    );
+                  }
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
+            : undefined;
+          if (
+            $steps["runCode"] != null &&
+            typeof $steps["runCode"] === "object" &&
+            typeof $steps["runCode"].then === "function"
+          ) {
+            $steps["runCode"] = await $steps["runCode"];
+          }
+        }}
+      />
+
       <div
         data-plasmic-name={"text"}
         data-plasmic-override={overrides.text}
@@ -2604,6 +2697,7 @@ const PlasmicDescendants = {
     "locationView",
     "fragmentPortal",
     "sideEffect",
+    "_222",
     "text",
     "setGrowthbookAttributes"
   ],
@@ -2619,6 +2713,7 @@ const PlasmicDescendants = {
   locationView: ["locationView"],
   fragmentPortal: ["fragmentPortal"],
   sideEffect: ["sideEffect"],
+  _222: ["_222"],
   text: ["text"],
   setGrowthbookAttributes: ["setGrowthbookAttributes"]
 } as const;
@@ -2634,6 +2729,7 @@ type NodeDefaultElementType = {
   locationView: typeof LocationView;
   fragmentPortal: typeof Portal;
   sideEffect: typeof SideEffect;
+  _222: typeof SideEffect;
   text: "div";
   setGrowthbookAttributes: typeof SideEffect;
 };
@@ -2705,6 +2801,7 @@ export const PlasmicSearch = Object.assign(
     locationView: makeNodeComponent("locationView"),
     fragmentPortal: makeNodeComponent("fragmentPortal"),
     sideEffect: makeNodeComponent("sideEffect"),
+    _222: makeNodeComponent("_222"),
     text: makeNodeComponent("text"),
     setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
 

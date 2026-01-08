@@ -1225,6 +1225,37 @@ function PlasmicSearchRequest__RenderFunc(props: {
                     "__wab_instance",
                     sty.searchResults__u8TRq
                   )}
+                  onClick={async () => {
+                    const $steps = {};
+
+                    $steps["runCode"] = $props.suggestionExecutionSource
+                      ? (() => {
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return (() => {
+                                const searchState = {
+                                  text: $props.searchQuery
+                                };
+                                return sessionStorage.setItem(
+                                  "p24_search_recovery_text",
+                                  JSON.stringify(searchState)
+                                );
+                              })();
+                            }
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runCode"] != null &&
+                      typeof $steps["runCode"] === "object" &&
+                      typeof $steps["runCode"].then === "function"
+                    ) {
+                      $steps["runCode"] = await $steps["runCode"];
+                    }
+                  }}
                   paginationLoadingStatus={false}
                   searchResultResponse={(() => {
                     try {

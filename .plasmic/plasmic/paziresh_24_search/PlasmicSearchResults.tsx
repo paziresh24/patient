@@ -104,6 +104,7 @@ export type PlasmicSearchResults__ArgsType = {
   onlineVisitButtonsCustomDestination?: any;
   searchConsultResponse?: any;
   centerId?: string;
+  onClick?: () => void;
 };
 type ArgPropType = keyof PlasmicSearchResults__ArgsType;
 export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
@@ -118,7 +119,8 @@ export const PlasmicSearchResults__ArgProps = new Array<ArgPropType>(
   "topSuggestedCardFeature",
   "onlineVisitButtonsCustomDestination",
   "searchConsultResponse",
-  "centerId"
+  "centerId",
+  "onClick"
 );
 
 export type PlasmicSearchResults__OverridesType = {
@@ -150,6 +152,7 @@ export interface DefaultSearchResultsProps {
   onlineVisitButtonsCustomDestination?: any;
   searchConsultResponse?: any;
   centerId?: string;
+  onClick?: () => void;
   isHorizental?: SingleBooleanChoiceArg<"isHorizental">;
   className?: string;
 }
@@ -1534,6 +1537,22 @@ function PlasmicSearchResults__RenderFunc(props: {
                       $steps["setHistoryKeyword"] = await $steps[
                         "setHistoryKeyword"
                       ];
+                    }
+
+                    $steps["runOnClick"] = true
+                      ? (() => {
+                          const actionArgs = { eventRef: $props["onClick"] };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["runOnClick"] != null &&
+                      typeof $steps["runOnClick"] === "object" &&
+                      typeof $steps["runOnClick"].then === "function"
+                    ) {
+                      $steps["runOnClick"] = await $steps["runOnClick"];
                     }
                   }}
                   externalBookDesign={(() => {
