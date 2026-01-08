@@ -2550,7 +2550,7 @@ function PlasmicSearch__RenderFunc(props: {
                 const actionArgs = {
                   customFunction: async () => {
                     return (() => {
-                      savedSearch = globalThis.sessionStorage.getItem(
+                      const savedSearch = globalThis.sessionStorage.getItem(
                         "p24_search_recovery_text"
                       );
                       const data = JSON.parse(savedSearch);
