@@ -123,7 +123,7 @@ export type PlasmicSearch__OverridesType = {
   locationView?: Flex__<typeof LocationView>;
   fragmentPortal?: Flex__<typeof Portal>;
   sideEffect?: Flex__<typeof SideEffect>;
-  _222?: Flex__<typeof SideEffect>;
+  searchStatePersistenceViaSessionStorage?: Flex__<typeof SideEffect>;
   text?: Flex__<"div">;
   setGrowthbookAttributes?: Flex__<typeof SideEffect>;
 };
@@ -2502,11 +2502,21 @@ function PlasmicSearch__RenderFunc(props: {
       />
 
       <SideEffect
-        data-plasmic-name={"_222"}
-        data-plasmic-override={overrides._222}
-        className={classNames("__wab_instance", sty._222, {
-          [sty._222isFocus]: hasVariant($state, "isFocus", "isFocus")
-        })}
+        data-plasmic-name={"searchStatePersistenceViaSessionStorage"}
+        data-plasmic-override={
+          overrides.searchStatePersistenceViaSessionStorage
+        }
+        className={classNames(
+          "__wab_instance",
+          sty.searchStatePersistenceViaSessionStorage,
+          {
+            [sty.searchStatePersistenceViaSessionStorageisFocus]: hasVariant(
+              $state,
+              "isFocus",
+              "isFocus"
+            )
+          }
+        )}
         onMount={async () => {
           const $steps = {};
 
@@ -2697,7 +2707,7 @@ const PlasmicDescendants = {
     "locationView",
     "fragmentPortal",
     "sideEffect",
-    "_222",
+    "searchStatePersistenceViaSessionStorage",
     "text",
     "setGrowthbookAttributes"
   ],
@@ -2713,7 +2723,9 @@ const PlasmicDescendants = {
   locationView: ["locationView"],
   fragmentPortal: ["fragmentPortal"],
   sideEffect: ["sideEffect"],
-  _222: ["_222"],
+  searchStatePersistenceViaSessionStorage: [
+    "searchStatePersistenceViaSessionStorage"
+  ],
   text: ["text"],
   setGrowthbookAttributes: ["setGrowthbookAttributes"]
 } as const;
@@ -2729,7 +2741,7 @@ type NodeDefaultElementType = {
   locationView: typeof LocationView;
   fragmentPortal: typeof Portal;
   sideEffect: typeof SideEffect;
-  _222: typeof SideEffect;
+  searchStatePersistenceViaSessionStorage: typeof SideEffect;
   text: "div";
   setGrowthbookAttributes: typeof SideEffect;
 };
@@ -2801,7 +2813,9 @@ export const PlasmicSearch = Object.assign(
     locationView: makeNodeComponent("locationView"),
     fragmentPortal: makeNodeComponent("fragmentPortal"),
     sideEffect: makeNodeComponent("sideEffect"),
-    _222: makeNodeComponent("_222"),
+    searchStatePersistenceViaSessionStorage: makeNodeComponent(
+      "searchStatePersistenceViaSessionStorage"
+    ),
     text: makeNodeComponent("text"),
     setGrowthbookAttributes: makeNodeComponent("setGrowthbookAttributes"),
 
