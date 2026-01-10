@@ -47,6 +47,8 @@ export const Dashboard = (props: any) => {
               ref={iframeRef}
               onLoad={() => setIsAppLoading(false)}
               className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
+              allow="microphone; camera; fullscreen; clipboard-write;"
+              sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               src={`https://hami.paziresh24.com/`}
             />
           </div>
