@@ -22,6 +22,8 @@ import LauncherDesktopApps from '.plasmic/LauncherDesktopApps';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import LauncherBlockNotifications from '.plasmic/LauncherBlockNotifications';
+import { useRouter } from 'next/router';
+import HamiBanner from './hamiBanner';
 
 enum MegaMenuItem {
   CONSULT = 'consult',
@@ -46,6 +48,7 @@ const Header = (props: HeaderProps) => {
   const customize = useCustomize(state => state.customize);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const user = useUserInfoStore(state => state.info);
+  const router = useRouter();
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -61,11 +64,7 @@ const Header = (props: HeaderProps) => {
   return (
     <>
       {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
-      <div className="w-full bg-primary py-2 px-2 flex justify-center items-center">
-        <span className="text-white font-medium text-sm text-center">
-          در ویزیت آنلاین، امکان برقراری ارتباط با پزشک در پیام‌رسان داخلی پذیرش۲۴ و تماس وجود دارد و محدودیتی در ارسال پیام نیست.
-        </span>
-      </div>
+      {customize.showPromoteApp && !router.pathname.includes('chats') && <HamiBanner />}
       <header className="z-50 flex items-center min-h-14 h-14 px-3 text-lg bg-white border-b border-solid shadow-sm print:hidden text-slate-700 md:px-4 md:min-h-20 md:h-20 border-slate-100">
         <div className="max-w-screen-xl relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (

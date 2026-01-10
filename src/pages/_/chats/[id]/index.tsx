@@ -9,6 +9,7 @@ import classNames from '@/common/utils/classNames';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useRef, useState } from 'react';
 
@@ -17,11 +18,15 @@ export const Dashboard = (props: any) => {
   const [isAppLoading, setIsAppLoading] = useState(true);
   const iframeRef = useRef<any>(null);
   const { isMobile } = useResponsive();
+  const {
+    asPath,
+    query: { id },
+  } = useRouter();
 
   useEffect(() => {
     setTimeout(() => {
       setIsAppLoading(false);
-    }, 6000);
+    }, 3000);
   }, []);
 
   return (
@@ -29,17 +34,24 @@ export const Dashboard = (props: any) => {
       {...props.config}
       shouldShowPromoteApp={false}
       showFooter={false}
-      showHeader={!isMobile}
+      showHeader={false}
+      showBottomNavigation={false}
       className="!h-svh !min-h-svh !max-h-svh:"
     >
-      <AppBar title={'چت'} className="md:hidden" backButton={true} actionButton={<Report app_key={'drapp'} page_key={'appointments'} />} />
+      <AppBar
+        title={'گفت‌وگو‌ها'}
+        className="md:hidden"
+        backButton={true}
+        actionButton={<Report app_key={'drapp'} page_key={'appointments'} />}
+      />
       <SideBar className="hidden md:flex">
         <div className="flex flex-grow flex-col w-full">
-          <Seo title={'چت'} noIndex />
+          <Seo title={'گفت‌وگو‌ها'} noIndex />
           <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto h-full flex-col flex-grow w-full relative">
             {isAppLoading && (
-              <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
+              <div className="w-full bg-white justify-center flex flex-col items-center h-full flex-grow">
                 <Loading />
+                <span className="text-xs font-medium">لطفا کمی صبر کنید...</span>
               </div>
             )}
 
@@ -49,7 +61,7 @@ export const Dashboard = (props: any) => {
               className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
               allow="microphone; camera; fullscreen; clipboard-write;"
               sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
-              src={`https://hami.paziresh24.com/`}
+              src={`https://messaging-back.paziresh24.com/api/external/conversations/${id}/`}
             />
           </div>
         </div>

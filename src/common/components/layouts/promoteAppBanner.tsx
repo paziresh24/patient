@@ -24,12 +24,13 @@ export const PromoteAppBanner = () => {
     setIShow(false);
   };
 
+  if (router.pathname == '/') return null;
   if (!isShow) return null;
   return (
     <div
       className={classNames(
         'fixed right-0 z-50 flex pwa:hidden items-center justify-between w-full p-3 px-5 bg-white border-t border-b border-solid md:hidden bottom-16 border-slate-200',
-        { 'top-14 !absolute bottom-auto': router.pathname == '/' },
+        { 'top-28 !absolute bottom-auto': router.pathname == '/' },
       )}
     >
       <div className="flex items-center space-s-2">

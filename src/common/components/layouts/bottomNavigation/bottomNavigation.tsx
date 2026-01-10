@@ -120,6 +120,7 @@ export const BottomNavigation = () => {
       link: isApplication ? '/_' : '/_',
       pattern: isApplication ? '/_' : '/_',
       privateRoute: true,
+      exact: false,
     },
     {
       name: 'مراجعین من',
@@ -137,14 +138,16 @@ export const BottomNavigation = () => {
       link: `/s${city.en_slug !== 'ir' ? `/${city.en_slug}` : ''}`,
       pattern: '/s/[[...params]]',
       privateRoute: false,
+      exact: false,
     },
     {
-      name: 'چت',
+      name: 'گفت‌وگو‌ها',
       icon: <ChatIcon />,
       fillIcon: <ChatIcon />,
-      link: `/chat`,
-      pattern: '/chat',
+      link: `/_/chats`,
+      pattern: ['/_/chats', '/_/chats/[id]'],
       privateRoute: true,
+      exact: false,
     },
   ];
 
@@ -156,6 +159,7 @@ export const BottomNavigation = () => {
       link: isApplication ? '/apphome' : '/',
       pattern: isApplication ? '/apphome' : '/',
       privateRoute: false,
+      exact: false,
     },
     {
       name: 'جستجو',
@@ -164,14 +168,16 @@ export const BottomNavigation = () => {
       link: `/s${city.en_slug !== 'ir' ? `/${city.en_slug}` : ''}`,
       pattern: '/s/[[...params]]',
       privateRoute: false,
+      exact: false,
     },
     {
-      name: 'چت',
+      name: 'گفت‌وگو‌ها',
       icon: <ChatIcon />,
       fillIcon: <ChatIcon />,
-      link: `/chat`,
-      pattern: '/chat',
+      link: `/_/chats`,
+      pattern: ['/_/chats', '/_/chats/[id]'],
       privateRoute: true,
+      exact: false,
     },
     user.provider?.job_title === 'doctor' && isShowDashboard
       ? {
@@ -200,6 +206,7 @@ export const BottomNavigation = () => {
           ...(isShowDashboard && { exact: true }),
           pattern: '/patient/appointments',
           privateRoute: true,
+          exact: false,
         },
     servicesMenu,
   ];
@@ -225,11 +232,16 @@ export const BottomNavigation = () => {
             className={classNames(
               'flex cursor-pointer flex-col items-center space-y-1 w-[70px] font-medium text-slate-700 transition-all scale-95',
               {
-                '!text-primary font-bold scale-100': exact ? router.asPath === link : router.pathname === pattern,
+                '!text-primary font-bold scale-100': exact
+                  ? router.asPath === link
+                  : router.pathname === pattern || (Array.isArray(pattern) && pattern.includes(router.pathname)),
               },
             )}
           >
-            {fillIcon && (exact ? router.asPath === link : router.pathname === pattern) ? fillIcon : icon}
+            {fillIcon &&
+            (exact ? router.asPath === link : router.pathname === pattern || (Array.isArray(pattern) && pattern.includes(router.pathname)))
+              ? fillIcon
+              : icon}
 
             <Text fontSize="xs">{name}</Text>
           </div>
