@@ -1,4 +1,4 @@
-FROM registry.hamdocker.ir/paziresh24-cloud/patient:37e31dfc
+FROM registry.hamdocker.ir/paziresh24-cloud/patient:37e31dfc-532f80
 
 WORKDIR /app
 
