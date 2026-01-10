@@ -126,16 +126,16 @@ const Booking = () => {
                 <SelectUserWrapper
                   loading={updateBookDetailsLoading || isLoading}
                   onSubmit={(userInfo: any) => {
-                    if (!userInfo?.messengerType && onlineChannels?.filter((item: any) => item !== 'secure_call')?.length > 1) {
-                      toast.error('لطفا پیام رسان را انتخاب کنید.');
-                      return;
-                    }
+                    // if (!userInfo?.messengerType && onlineChannels?.filter((item: any) => item !== 'secure_call')?.length > 1) {
+                    //   toast.error('لطفا پیام رسان را انتخاب کنید.');
+                    //   return;
+                    // }
                     handleUpdateBookDetails({
                       ...userInfo,
                       messengerType: userInfo?.messengerType ?? onlineChannels?.filter((item: any) => item !== 'secure_call')[0],
                     });
                   }}
-                  shouldShowMessengers={onlineChannels?.filter((item: any) => item !== 'secure_call')?.length > 1}
+                  shouldShowMessengers={false}
                   submitButtonText="نهایی سازی و آغاز گفتگو"
                   showTermsAndConditions={false}
                 />

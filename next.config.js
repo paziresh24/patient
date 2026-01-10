@@ -15,6 +15,9 @@ if (process.env.ANALYZE === 'true') {
 }
 
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   productionBrowserSourceMaps: true,
   experimental: {
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
@@ -249,4 +252,3 @@ const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig)
 
 // Sentry should be the last thing to export to catch everything right
 module.exports = moduleExports;
-

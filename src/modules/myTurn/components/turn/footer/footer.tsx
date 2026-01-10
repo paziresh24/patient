@@ -335,10 +335,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     <>
       {shouldShowMessengerButton && (
         <div className="flex flex-col gap-2 lg:flex-row lg:justify-between lg:gap-4">
-          <MessengerButton channel={selectedOnlineVisitChannel} />
+          {/* <MessengerButton channel={selectedOnlineVisitChannel} />
           {onlineVisitChannels?.some((channel: { type: string }) => channel.type === 'secure_call') && (
             <SecureCallButton bookId={id} extraAction={() => handleSafeCallAction()} />
-          )}
+          )} */}
+          <Button className="w-full" onClick={() => location.assign(`/receipt/${centerId}/${id}`)}>
+            مشاهده قبض نوبت و گفتگو با پزشک
+          </Button>
         </div>
       )}
       <div className="flex items-center space-s-3">

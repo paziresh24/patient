@@ -155,7 +155,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const shouldShowOnlineVistRecommendModal = onlineVisitDoctorList?.slugs?.includes?.(profile?.slug);
 
   const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
-  const shouldShowMessengers = doctorMessenger.length > 1 && center?.id === CENTERS.CONSULT;
+  const shouldShowMessengers = false;
 
   const {
     handleOpen: handleOpenTurnTimeOutModal,
@@ -242,7 +242,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [slug, center]);
 
   const handleBookActionInternal = async (user: any, skipAddonCheck: boolean = false) => {
-    if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
+    // if (center.id === CENTERS.CONSULT && !user.messengerType && shouldShowMessengers) return toast.error('لطفا پیام رسان را انتخاب کنید.');
     const { insurance_id } = user;
     sendGaEvent({ action: 'P24DrsPage', category: 'book request button', label: 'book request button' });
 
@@ -702,7 +702,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 !profile,
               submitButtonText: service?.free_price !== 0 ? 'ادامه' : 'ثبت نوبت',
               showTermsAndConditions: customize.showTermsAndConditions,
-              shouldShowMessengers,
+              shouldShowMessengers: false,
             }}
             nextStep={async (intialUser: UserInfo) => {
               let user = { ...intialUser };
