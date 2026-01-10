@@ -50,7 +50,7 @@ export const useBooking = () => {
       cell: user.cell ? `0${user.cell}` : user.cell,
       ...(user.id && { selected_user_id: user.id }),
       ...(user.is_foreigner && { is_foreigner: user.is_foreigner }),
-      ...(user.messengerType && { online_channel: user.messengerType }),
+      ...(user.messengerType && { online_channel: 'hami' }),
       ...(user.national_code && { national_code: user.national_code }),
       ...(selectedSymptoms.length && { symptomes: selectedSymptoms.toString() }),
       ...(paymentMethod && { payment_method: paymentMethod }),

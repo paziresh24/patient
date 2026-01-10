@@ -679,7 +679,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               <Text fontSize="sm">{center?.user_center_desk}</Text>
             </div>
           )}
-          {center?.id === CENTERS.CONSULT && !shouldShowMessengers && (
+          {/* {center?.id === CENTERS.CONSULT && !shouldShowMessengers && (
             <div className="p-2 mb-3 rounded-md bg-slate-100">
               <Text
                 fontSize="sm"
@@ -688,7 +688,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 }}
               />
             </div>
-          )}
+          )} */}
           <Wrapper
             title="لطفا بیمار را انتخاب کنید"
             Component={SelectUserWrapper}
@@ -1081,3 +1081,4 @@ const BookingSteps = (props: BookingStepsProps) => {
 };
 
 export default BookingSteps;
+

@@ -274,7 +274,7 @@ function PlasmicServices__RenderFunc(props: {
               })}
             >
               {hasVariant($state, 'type', 'onlineVisit')
-                ? '\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u062f\u0631 \u067e\u06cc\u0627\u0645 \u0631\u0633\u0627\u0646:'
+                ? '\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 \u062f\u0631:'
                 : '\u0627\u0645\u06a9\u0627\u0646 \u062f\u0631\u06cc\u0627\u0641\u062a \u0632\u0648\u062f\u062a\u0631\u06cc\u0646 \u0646\u0648\u0628\u062a'}
             </div>
             <div
@@ -287,7 +287,7 @@ function PlasmicServices__RenderFunc(props: {
                   [sty.freeBoxtype_onlineVisit__lnM17QAlK]: hasVariant($state, 'type', 'onlineVisit'),
                 })}
               >
-                <img src="https://p24supvoicemail.storage.iran.liara.space/logo/hami-logo.svg" className="w-7 h-7" />
+                <img src="https://p24supvoicemail.storage.iran.liara.space/logo/hami-logo.svg" className="w-6 h-6" />
 
                 <div
                   className={classNames(projectcss.all, projectcss.__wab_text, sty.text__jNh3G, {
@@ -336,7 +336,7 @@ function PlasmicServices__RenderFunc(props: {
             }
           })() ? (
             <div
-              className={classNames(projectcss.all, projectcss.__wab_text, sty.text___595KF, {
+              className={classNames(projectcss.all, projectcss.__wab_text, sty.text___595KF, 'text-primary font-bold', {
                 [sty.texttype_onlineVisit___595KF7QAlK]: hasVariant($state, 'type', 'onlineVisit'),
               })}
             >

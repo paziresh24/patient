@@ -132,7 +132,7 @@ const Booking = () => {
                     // }
                     handleUpdateBookDetails({
                       ...userInfo,
-                      messengerType: userInfo?.messengerType ?? onlineChannels?.filter((item: any) => item !== 'secure_call')[0],
+                      messengerType: 'hami',
                     });
                   }}
                   shouldShowMessengers={false}

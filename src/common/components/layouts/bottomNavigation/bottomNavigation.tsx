@@ -15,6 +15,7 @@ import HomeIcon from '../../icons/home';
 import SearchIcon from '../../icons/search';
 import UserCircle from '../../icons/userCircle';
 import useResponsive from '@/common/hooks/useResponsive';
+import ChatIcon from '../../icons/chat';
 
 export const BottomNavigation = () => {
   const router = useRouter();
@@ -137,6 +138,14 @@ export const BottomNavigation = () => {
       pattern: '/s/[[...params]]',
       privateRoute: false,
     },
+    {
+      name: 'چت',
+      icon: <ChatIcon />,
+      fillIcon: <ChatIcon />,
+      link: `/chat`,
+      pattern: '/chat',
+      privateRoute: true,
+    },
   ];
 
   const menus = [
@@ -155,6 +164,14 @@ export const BottomNavigation = () => {
       link: `/s${city.en_slug !== 'ir' ? `/${city.en_slug}` : ''}`,
       pattern: '/s/[[...params]]',
       privateRoute: false,
+    },
+    {
+      name: 'چت',
+      icon: <ChatIcon />,
+      fillIcon: <ChatIcon />,
+      link: `/chat`,
+      pattern: '/chat',
+      privateRoute: true,
     },
     user.provider?.job_title === 'doctor' && isShowDashboard
       ? {
