@@ -298,6 +298,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         user: {
           ...user,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
+          messengerType: 'hami',
         },
       },
       {
@@ -1081,4 +1082,3 @@ const BookingSteps = (props: BookingStepsProps) => {
 };
 
 export default BookingSteps;
-
