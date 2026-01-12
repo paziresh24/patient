@@ -8,12 +8,12 @@ export default function HamiBanner() {
 
   if (!isShow) return null;
   return (
-    <div className="w-full bg-primary py-3 px-3 flex justify-between items-center" onClick={() => router.push('/s/?turn_type=consult')}>
-      <span className="text-white font-medium text-xs text-right leading-5">
+    <div className="w-full bg-primary py-3 px-3 flex justify-between items-center">
+      <span className="text-white font-medium text-xs text-right leading-5" onClick={() => router.push('/s/?turn_type=consult')}>
         در ویزیت آنلاین، امکان برقراری ارتباط با پزشک در پیام‌رسان داخلی پذیرش۲۴ و تماس وجود دارد و محدودیتی در ارسال پیام نیست.
       </span>
       <div
-        className="min-w-6 h-6 bg-white/15 rounded-full flex items-center justify-center"
+        className="min-w-6 h-6 cursor-pointer bg-white/15 rounded-full flex items-center justify-center"
         onClick={() => {
           setIsShow(false);
           localStorage.setItem('dont-show-hami-banner', 'true');

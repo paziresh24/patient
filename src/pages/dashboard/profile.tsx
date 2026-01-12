@@ -27,7 +27,7 @@ export const AppointmentsPage = () => {
           <iframe
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full h-full', { hidden: isAppLoading })}
-            src="https://dr.paziresh24.com/profile"
+            src={`https://opium-dashboard.paziresh24.com/profile-page/?user_id=${user.id}`}
           />
         </>
       ) : (
