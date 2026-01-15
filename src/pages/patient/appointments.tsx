@@ -222,7 +222,7 @@ export const Appointments = () => {
                 address: turn.center?.address,
               }}
               serverId={turn.server_id}
-              feedbackUrl={`https://formafzar.com/form/qh0ym?user_id=${user.id}&book_id=${turn.book_id}&doctor_id=${turn.doctor_info?.id}&server_id=${turn.server_id}&center_id=${turn.center_id}`}
+              feedbackUrl={`https://formafzar.com/form/vqi0z?user_id=${user.id}&book_id=${turn.book_id}&doctor_id=${turn.doctor_info?.id}&server_id=${turn.server_id}&center_id=${turn.center_id}`}
               prescription={{
                 ...turn.prescription,
               }}
@@ -263,3 +263,4 @@ export const getServerSideProps = withCSR(
 );
 
 export default Appointments;
+

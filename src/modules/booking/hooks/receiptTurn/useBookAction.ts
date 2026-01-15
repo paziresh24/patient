@@ -18,7 +18,7 @@ export const useBookAction = () => {
   };
 
   const centerMap = ({ lat, lon }: { lat: string; lon: string }) => {
-    window.open(`https://maps.google.com/maps?daddr=${lat},${lon}&amp;ll=${isWebView ? '&openInBrowser=1' : ''}`);
+    window.open(`https://neshan.org/maps/routing/car/destination/${lat},${lon}`);
   };
 
   return { shareTurn, removeBookApi, centerMap };
