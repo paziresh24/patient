@@ -455,7 +455,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         component={Link}
         href={(() => {
           try {
-            return `https://neshan.org/maps/routing/car/destination/${$props.map.lat},${$props.map.lon}`;
+            return `https://nshn.ir/?lat=${$props.map.lat}&lng=${$props.map.lon}`;
           } catch (e) {
             if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
               return undefined;
@@ -568,4 +568,3 @@ export const PlasmicBookingAddressesCard = Object.assign(
 
 export default PlasmicBookingAddressesCard;
 /* prettier-ignore-end */
-

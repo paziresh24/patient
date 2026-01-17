@@ -18,7 +18,7 @@ export const useBookAction = () => {
   };
 
   const centerMap = ({ lat, lon }: { lat: string; lon: string }) => {
-    window.open(`https://neshan.org/maps/routing/car/destination/${lat},${lon}`);
+    window.open(`https://nshn.ir/?lat=${lat}&lng=${lon}`);
   };
 
   return { shareTurn, removeBookApi, centerMap };
