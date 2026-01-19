@@ -34,6 +34,7 @@ export const BottomNavigation = () => {
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
   const isEnabledLauncher = useFeatureIsOn('launcher-flag');
   const launcherAsMainHome = useFeatureIsOn('launcher-as-main-home');
+  const showMyappsMenu = useFeatureIsOn('hamdast:show_myapps_menu');
 
   const isShowDashboard =
     !customize.partnerKey &&
@@ -132,6 +133,16 @@ export const BottomNavigation = () => {
       privateRoute: true,
     },
     {
+      name: 'ابزارک‌های من',
+      icon: <ElementIcon />,
+      fillIcon: <ElementIcon isSolid />,
+      link: '/_/myapps/',
+      exact: true,
+      pattern: '',
+      privateRoute: true,
+      hide: !showMyappsMenu,
+    },
+    {
       name: 'جستجو',
       icon: <SearchIcon />,
       fillIcon: <SearchIcon />,
@@ -224,7 +235,7 @@ export const BottomNavigation = () => {
 
   return (
     <div className="fixed bottom-0 left-0 z-40 flex items-center justify-between w-full min-h-16 h-16 px-4 bg-[#F9F9F9] border-t print:hidden md:hidden border-[#d5d8db]">
-      {(user.provider?.job_title === 'doctor' && launcherAsMainHome ? doctorMenu : menus).map(
+      {(user.provider?.job_title === 'doctor' && launcherAsMainHome ? doctorMenu.filter(item => !item?.hide) : menus).map(
         ({ icon, fillIcon, name, link, privateRoute, pattern, exact }, index) => (
           <div
             key={index}

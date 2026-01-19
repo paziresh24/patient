@@ -56,7 +56,7 @@ export function constructUrlWithQuery(template: string, queryParams: any) {
 const Page = ({ page, app }: any) => {
   const {
     asPath,
-    query: { app_key, params, ...queries },
+    query: { app_key, params, direct, ...queries },
     ...router
   } = useRouter();
 
@@ -66,7 +66,7 @@ const Page = ({ page, app }: any) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPending = useUserInfoStore(state => state.pending);
   const { handleOpenLoginModal } = useLoginModalContext();
-  const [showApp, setShowApp] = useState(false);
+  const [showApp, setShowApp] = useState(direct ? true : false);
   const [showTranslation, setShowTranslation] = useState(false);
   const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
   const supportRef = useRef<HamdastSupportRef>(null);
@@ -286,4 +286,3 @@ export const getServerSideProps: GetServerSideProps = withServerUtils(
 );
 
 export default Page;
-
