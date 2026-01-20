@@ -132,7 +132,7 @@ const Booking = () => {
                     // }
                     handleUpdateBookDetails({
                       ...userInfo,
-                      messengerType: 'hami',
+                      messengerType: onlineChannels?.includes('whatsapp') ? 'hami' : 'eitaa',
                     });
                   }}
                   shouldShowMessengers={false}

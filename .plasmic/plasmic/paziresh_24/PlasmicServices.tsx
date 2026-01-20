@@ -282,21 +282,59 @@ function PlasmicServices__RenderFunc(props: {
                 [sty.freeBoxtype_onlineVisit__vlbHa7QAlK]: hasVariant($state, 'type', 'onlineVisit'),
               })}
             >
-              <div
-                className={classNames(projectcss.all, sty.freeBox__lnM1, {
-                  [sty.freeBoxtype_onlineVisit__lnM17QAlK]: hasVariant($state, 'type', 'onlineVisit'),
-                })}
-              >
-                <img src="https://p24supvoicemail.storage.iran.liara.space/logo/hami-logo.svg" className="w-6 h-6" />
-
+              {$props.onlineVisit.channels.includes('whatsapp') && (
                 <div
-                  className={classNames(projectcss.all, projectcss.__wab_text, sty.text__jNh3G, {
-                    [sty.texttype_onlineVisit__jNh3G7QAlK]: hasVariant($state, 'type', 'onlineVisit'),
+                  className={classNames(projectcss.all, sty.freeBox__lnM1, {
+                    [sty.freeBoxtype_onlineVisit__lnM17QAlK]: hasVariant($state, 'type', 'onlineVisit'),
                   })}
                 >
-                  پیام‌رسان پذیرش۲۴
+                  <img src="https://p24supvoicemail.storage.iran.liara.space/logo/hami-logo.svg" className="w-6 h-6" />
+
+                  <div
+                    className={classNames(projectcss.all, projectcss.__wab_text, sty.text__jNh3G, {
+                      [sty.texttype_onlineVisit__jNh3G7QAlK]: hasVariant($state, 'type', 'onlineVisit'),
+                    })}
+                  >
+                    پیام‌رسان پذیرش۲۴
+                  </div>
                 </div>
-              </div>
+              )}
+              {(
+                hasVariant($state, 'type', 'onlineVisit')
+                  ? (() => {
+                      console.log($props.onlineVisit.channels);
+                      try {
+                        return !$props.onlineVisit.channels.includes('whatsapp');
+                      } catch (e) {
+                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                          return true;
+                        }
+                        throw e;
+                      }
+                    })()
+                  : true
+              ) ? (
+                <div
+                  className={classNames(projectcss.all, sty.freeBox__lnM1, {
+                    [sty.freeBoxtype_onlineVisit__lnM17QAlK]: hasVariant($state, 'type', 'onlineVisit'),
+                  })}
+                >
+                  <EitaaSvgIcon
+                    className={classNames(projectcss.all, sty.svg__lpwaK, {
+                      [sty.svgtype_onlineVisit__lpwaK7QAlK]: hasVariant($state, 'type', 'onlineVisit'),
+                    })}
+                    role={'img'}
+                  />
+
+                  <div
+                    className={classNames(projectcss.all, projectcss.__wab_text, sty.text__jNh3G, {
+                      [sty.texttype_onlineVisit__jNh3G7QAlK]: hasVariant($state, 'type', 'onlineVisit'),
+                    })}
+                  >
+                    {'\u0627\u06cc\u062a\u0627'}
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
           {(

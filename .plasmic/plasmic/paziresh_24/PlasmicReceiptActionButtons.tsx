@@ -312,113 +312,6 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
             hasVariant($state, 'type', 'visitOnline')
               ? (() => {
                   try {
-                    return true;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })()
-              : true
-          ) ? (
-            <Button
-              data-plasmic-name={'hami'}
-              data-plasmic-override={overrides.hami}
-              children2={
-                <React.Fragment>
-                  <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__zr1Oo)}>
-                    {
-                      '\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631 \u067e\u06cc\u0627\u0645 \u0631\u0633\u0627\u0646 \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4'
-                    }
-                  </div>
-                  <div
-                    className={classNames(projectcss.all, projectcss.__wab_text, sty.text__pbyvb, {
-                      [sty.texttype_visitOnline__pbyvblbrEa]: hasVariant($state, 'type', 'visitOnline'),
-                    })}
-                  >
-                    {hasVariant($state, 'type', 'visitOnline') ? (
-                      ''
-                    ) : (
-                      <React.Fragment>
-                        {(() => {
-                          try {
-                            return (() => {
-                              function channelName(channel) {
-                                if (channel === 'eitaa') return 'ایتا';
-                                if (channel === 'whatsapp') return 'واتساپ';
-                              }
-                              return channelName($props.bookDetailsData.selected_online_visit_channel.type);
-                            })();
-                          } catch (e) {
-                            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                              return '';
-                            }
-                            throw e;
-                          }
-                        })()}
-                      </React.Fragment>
-                    )}
-                  </div>
-                </React.Fragment>
-              }
-              className={classNames('__wab_instance', sty.hami, {
-                [sty.hamitype_unnamedVariant]: hasVariant($state, 'type', 'unnamedVariant'),
-                [sty.hamitype_visitOnline]: hasVariant($state, 'type', 'visitOnline'),
-              })}
-              loading={undefined}
-              onClick={async event => {
-                const $steps = {};
-
-                $steps['runCode'] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return globalThis.open(
-                            `https://messaging-back.paziresh24.com/api/external/conversations/${$props.bookDetailsData.book_id}`,
-                          );
-                        },
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if ($steps['runCode'] != null && typeof $steps['runCode'] === 'object' && typeof $steps['runCode'].then === 'function') {
-                  $steps['runCode'] = await $steps['runCode'];
-                }
-
-                $steps['sendEvent'] = true
-                  ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return window.paziresh24?.logger('booking').sendEvent({
-                            group: 'link-visit-online',
-                            type: $props.bookDetailsData.selected_online_visit_channel.type,
-                            data: { online_visit_channel: 'hami' },
-                          });
-                        },
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
-                  : undefined;
-                if (
-                  $steps['sendEvent'] != null &&
-                  typeof $steps['sendEvent'] === 'object' &&
-                  typeof $steps['sendEvent'].then === 'function'
-                ) {
-                  $steps['sendEvent'] = await $steps['sendEvent'];
-                }
-              }}
-            />
-          ) : null}
-
-          {(
-            hasVariant($state, 'type', 'visitOnline')
-              ? (() => {
-                  try {
                     return Date.now() <= ($props.bookDetailsData.book_time + 3 * 24 * 60 * 60) * 1000 && !$props.bookDetailsData.is_deleted;
                   } catch (e) {
                     if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
@@ -438,295 +331,414 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                   }
                 })()
           ) ? (
-            <div
-              className={classNames(projectcss.all, sty.freeBox__gVl5, {
-                [sty.freeBoxtype_visitOnline__gVl5LbrEa]: hasVariant($state, 'type', 'visitOnline'),
-              })}
-            >
-              {/* <Button
-                children2={
-                  <React.Fragment>
-                    <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__cZKzi)}>
-                      {'\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631'}
-                    </div>
-                    <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text___3T58C)}>
+            <>
+              <div
+                className={classNames(projectcss.all, sty.freeBox__gVl5, {
+                  [sty.freeBoxtype_visitOnline__gVl5LbrEa]: hasVariant($state, 'type', 'visitOnline'),
+                })}
+              >
+                {(
+                  hasVariant($state, 'type', 'visitOnline')
+                    ? (() => {
+                        try {
+                          return $props.bookDetailsData?.selected_online_visit_channel?.type != 'eitaa';
+                        } catch (e) {
+                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()
+                    : true
+                ) ? (
+                  <Button
+                    data-plasmic-name={'hami'}
+                    data-plasmic-override={overrides.hami}
+                    children2={
                       <React.Fragment>
-                        {(() => {
-                          try {
-                            return (() => {
-                              function channelName(channel) {
-                                if (channel === 'eitaa') return 'ایتا';
-                                if (channel === 'whatsapp') return 'واتساپ';
-                              }
-                              return channelName($props.bookDetailsData.selected_online_visit_channel.type);
-                            })();
-                          } catch (e) {
-                            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                              return '';
-                            }
-                            throw e;
+                        <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__zr1Oo)}>
+                          {
+                            '\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631 \u067e\u06cc\u0627\u0645 \u0631\u0633\u0627\u0646 \u067e\u0630\u06cc\u0631\u0634\u06f2\u06f4'
                           }
-                        })()}
+                        </div>
+                        <div
+                          className={classNames(projectcss.all, projectcss.__wab_text, sty.text__pbyvb, {
+                            [sty.texttype_visitOnline__pbyvblbrEa]: hasVariant($state, 'type', 'visitOnline'),
+                          })}
+                        >
+                          {hasVariant($state, 'type', 'visitOnline') ? (
+                            ''
+                          ) : (
+                            <React.Fragment>
+                              {(() => {
+                                try {
+                                  return (() => {
+                                    function channelName(channel) {
+                                      if (channel === 'eitaa') return 'ایتا';
+                                      if (channel === 'whatsapp') return 'واتساپ';
+                                    }
+                                    return channelName($props.bookDetailsData.selected_online_visit_channel.type);
+                                  })();
+                                } catch (e) {
+                                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                                    return '';
+                                  }
+                                  throw e;
+                                }
+                              })()}
+                            </React.Fragment>
+                          )}
+                        </div>
                       </React.Fragment>
-                    </div>
-                  </React.Fragment>
-                }
-                className={classNames('__wab_instance', sty.button___4PRmJ)}
-                loading={undefined}
-                onClick={async event => {
-                  const $steps = {};
-
-                  $steps['goToPage'] = true
-                    ? (() => {
-                        const actionArgs = {
-                          destination: (() => {
-                            try {
-                              return $props.bookDetailsData.selected_online_visit_channel.channel_link;
-                            } catch (e) {
-                              if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                                return undefined;
-                              }
-                              throw e;
-                            }
-                          })(),
-                        };
-                        return (({ destination }) => {
-                          if (typeof destination === 'string' && destination.startsWith('#')) {
-                            document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
-                          } else {
-                            __nextRouter?.push(destination);
-                          }
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps['goToPage'] != null &&
-                    typeof $steps['goToPage'] === 'object' &&
-                    typeof $steps['goToPage'].then === 'function'
-                  ) {
-                    $steps['goToPage'] = await $steps['goToPage'];
-                  }
-
-                  $steps['sendEvent'] = true
-                    ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return window.paziresh24?.logger('booking').sendEvent({
-                              group: 'link-visit-online',
-                              type: $props.bookDetailsData.selected_online_visit_channel.type,
-                            });
-                          },
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
-                    : undefined;
-                  if (
-                    $steps['sendEvent'] != null &&
-                    typeof $steps['sendEvent'] === 'object' &&
-                    typeof $steps['sendEvent'].then === 'function'
-                  ) {
-                    $steps['sendEvent'] = await $steps['sendEvent'];
-                  }
-                }}
-              /> */}
-
-              {(
-                hasVariant($state, 'type', 'visitOnline')
-                  ? (() => {
-                      try {
-                        return $props.bookDetailsData.doctor.online_visit_channels.some(item => item.type === 'secure_call');
-                      } catch (e) {
-                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                          return false;
-                        }
-                        throw e;
-                      }
-                    })()
-                  : (() => {
-                      try {
-                        return $props.bookDetailsData.doctor.online_visit_channels.some(item => item.type === 'secure_call');
-                      } catch (e) {
-                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                          return false;
-                        }
-                        throw e;
-                      }
-                    })()
-              ) ? (
-                <Button
-                  children2={
-                    <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__p3Q8E)}>
-                      {'\u062a\u0645\u0627\u0633 \u0628\u0627 \u067e\u0632\u0634\u06a9'}
-                    </div>
-                  }
-                  className={classNames('__wab_instance', sty.button__zsQjd, {
-                    [sty.buttontype_visitOnline__zsQjdlbrEa]: hasVariant($state, 'type', 'visitOnline'),
-                  })}
-                  loading={(() => {
-                    try {
-                      return $state.secureCallLoading;
-                    } catch (e) {
-                      if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                        return [];
-                      }
-                      throw e;
                     }
-                  })()}
-                  onClick={async event => {
-                    const $steps = {};
+                    className={classNames('__wab_instance', sty.hami, {
+                      [sty.hamitype_unnamedVariant]: hasVariant($state, 'type', 'unnamedVariant'),
+                      [sty.hamitype_visitOnline]: hasVariant($state, 'type', 'visitOnline'),
+                    })}
+                    loading={undefined}
+                    onClick={async event => {
+                      const $steps = {};
 
-                    $steps['startLoading'] = true
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ['secureCallLoading'],
-                            },
-                            operation: 0,
-                            value: true,
-                          };
-                          return (({ variable, value, startIndex, deleteCount }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                      $steps['runCode'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return globalThis.open(
+                                  `https://messaging-back.paziresh24.com/api/external/conversations/${$props.bookDetailsData.book_id}`,
+                                );
+                              },
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['runCode'] != null &&
+                        typeof $steps['runCode'] === 'object' &&
+                        typeof $steps['runCode'].then === 'function'
+                      ) {
+                        $steps['runCode'] = await $steps['runCode'];
+                      }
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps['startLoading'] != null &&
-                      typeof $steps['startLoading'] === 'object' &&
-                      typeof $steps['startLoading'].then === 'function'
-                    ) {
-                      $steps['startLoading'] = await $steps['startLoading'];
-                    }
-
-                    $steps['_function'] = true
-                      ? (() => {
-                          const actionArgs = {
-                            customFunction: async () => {
-                              return $$.axios
-                                .post(`https://apigw.paziresh24.com/v1/book-safe-call/${$props.bookDetailsData.book_id}`, null, {
-                                  withCredentials: true,
-                                })
-                                .catch(error => {
-                                  window.paziresh24?.toast?.error(error.response?.data?.message ?? 'مشکلی پیش آمده است.');
-                                  $state.secureCallLoading = false;
-                                  throw new Error(error);
+                      $steps['sendEvent'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return window.paziresh24?.logger('booking').sendEvent({
+                                  group: 'link-visit-online',
+                                  type: $props.bookDetailsData.selected_online_visit_channel.type,
+                                  data: { online_visit_channel: 'hami' },
                                 });
-                            },
-                          };
-                          return (({ customFunction }) => {
-                            return customFunction();
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps['_function'] != null &&
-                      typeof $steps['_function'] === 'object' &&
-                      typeof $steps['_function'].then === 'function'
-                    ) {
-                      $steps['_function'] = await $steps['_function'];
+                              },
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['sendEvent'] != null &&
+                        typeof $steps['sendEvent'] === 'object' &&
+                        typeof $steps['sendEvent'].then === 'function'
+                      ) {
+                        $steps['sendEvent'] = await $steps['sendEvent'];
+                      }
+                    }}
+                  />
+                ) : null}
+                {$props.bookDetailsData?.selected_online_visit_channel?.type == 'eitaa' && (
+                  <Button
+                    children2={
+                      <React.Fragment>
+                        <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__cZKzi)}>
+                          {'\u0634\u0631\u0648\u0639 \u06af\u0641\u062a\u06af\u0648 \u0628\u0627 \u067e\u0632\u0634\u06a9 \u062f\u0631'}
+                        </div>
+                        <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text___3T58C)}>
+                          <React.Fragment>
+                            {(() => {
+                              try {
+                                return (() => {
+                                  function channelName(channel) {
+                                    if (channel === 'eitaa') return 'ایتا';
+                                    if (channel === 'whatsapp') return 'واتساپ';
+                                  }
+                                  return channelName($props.bookDetailsData.selected_online_visit_channel.type);
+                                })();
+                              } catch (e) {
+                                if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                                  return '';
+                                }
+                                throw e;
+                              }
+                            })()}
+                          </React.Fragment>
+                        </div>
+                      </React.Fragment>
                     }
+                    className={classNames('__wab_instance', sty.button___4PRmJ)}
+                    loading={undefined}
+                    onClick={async event => {
+                      const $steps = {};
 
-                    $steps['showToast'] = true
-                      ? (() => {
-                          const actionArgs = {
-                            customFunction: async () => {
-                              return window.paziresh24?.toast?.success('درخواست شما با موفقیت ثبت شد.');
-                            },
-                          };
-                          return (({ customFunction }) => {
-                            return customFunction();
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps['showToast'] != null &&
-                      typeof $steps['showToast'] === 'object' &&
-                      typeof $steps['showToast'].then === 'function'
-                    ) {
-                      $steps['showToast'] = await $steps['showToast'];
+                      $steps['goToPage'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              destination: (() => {
+                                try {
+                                  return $props.bookDetailsData.selected_online_visit_channel.channel_link;
+                                } catch (e) {
+                                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })(),
+                            };
+                            return (({ destination }) => {
+                              if (typeof destination === 'string' && destination.startsWith('#')) {
+                                document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
+                              } else {
+                                __nextRouter?.push(destination);
+                              }
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['goToPage'] != null &&
+                        typeof $steps['goToPage'] === 'object' &&
+                        typeof $steps['goToPage'].then === 'function'
+                      ) {
+                        $steps['goToPage'] = await $steps['goToPage'];
+                      }
+
+                      $steps['sendEvent'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return window.paziresh24?.logger('booking').sendEvent({
+                                  group: 'link-visit-online',
+                                  type: $props.bookDetailsData.selected_online_visit_channel.type,
+                                });
+                              },
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['sendEvent'] != null &&
+                        typeof $steps['sendEvent'] === 'object' &&
+                        typeof $steps['sendEvent'].then === 'function'
+                      ) {
+                        $steps['sendEvent'] = await $steps['sendEvent'];
+                      }
+                    }}
+                  />
+                )}
+              </div>
+              <div
+                className={classNames(projectcss.all, sty.freeBox__gVl5, {
+                  [sty.freeBoxtype_visitOnline__gVl5LbrEa]: hasVariant($state, 'type', 'visitOnline'),
+                })}
+              >
+                {(
+                  hasVariant($state, 'type', 'visitOnline')
+                    ? (() => {
+                        try {
+                          return $props.bookDetailsData.doctor.online_visit_channels.some(item => item.type === 'secure_call');
+                        } catch (e) {
+                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()
+                    : (() => {
+                        try {
+                          return $props.bookDetailsData.doctor.online_visit_channels.some(item => item.type === 'secure_call');
+                        } catch (e) {
+                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()
+                ) ? (
+                  <Button
+                    children2={
+                      <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__p3Q8E)}>
+                        {'\u062a\u0645\u0627\u0633 \u0628\u0627 \u067e\u0632\u0634\u06a9'}
+                      </div>
                     }
+                    className={classNames('__wab_instance', sty.button__zsQjd, {
+                      [sty.buttontype_visitOnline__zsQjdlbrEa]: hasVariant($state, 'type', 'visitOnline'),
+                    })}
+                    loading={(() => {
+                      try {
+                        return $state.secureCallLoading;
+                      } catch (e) {
+                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                          return [];
+                        }
+                        throw e;
+                      }
+                    })()}
+                    onClick={async event => {
+                      const $steps = {};
 
-                    $steps['sendEvent'] = true
-                      ? (() => {
-                          const actionArgs = {
-                            customFunction: async () => {
-                              return window.paziresh24?.logger('booking').sendEvent({
-                                group: 'safe-call',
-                                type: 'patient',
-                                event: {
-                                  action: 'receipt',
-                                  data: {
-                                    referenceCode: $props.bookDetailsData.reference_code,
-                                    doctor: {
-                                      centerId: $props.bookDetailsData.center_id,
-                                      name: $props.bookDetailsData?.doctor?.doctor_name,
-                                    },
-                                    patient: {
-                                      cell: $props.bookDetailsData.patient.cell,
-                                      name: `${$props.bookDetailsData.patient.name} ${$props.bookDetailsData.patient.family}`,
-                                      nationalCode: $props.bookDetailsData.national_code,
+                      $steps['startLoading'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ['secureCallLoading'],
+                              },
+                              operation: 0,
+                              value: true,
+                            };
+                            return (({ variable, value, startIndex, deleteCount }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
+
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['startLoading'] != null &&
+                        typeof $steps['startLoading'] === 'object' &&
+                        typeof $steps['startLoading'].then === 'function'
+                      ) {
+                        $steps['startLoading'] = await $steps['startLoading'];
+                      }
+
+                      $steps['_function'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return $$.axios
+                                  .post(`https://apigw.paziresh24.com/v1/book-safe-call/${$props.bookDetailsData.book_id}`, null, {
+                                    withCredentials: true,
+                                  })
+                                  .catch(error => {
+                                    window.paziresh24?.toast?.error(error.response?.data?.message ?? 'مشکلی پیش آمده است.');
+                                    $state.secureCallLoading = false;
+                                    throw new Error(error);
+                                  });
+                              },
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['_function'] != null &&
+                        typeof $steps['_function'] === 'object' &&
+                        typeof $steps['_function'].then === 'function'
+                      ) {
+                        $steps['_function'] = await $steps['_function'];
+                      }
+
+                      $steps['showToast'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return window.paziresh24?.toast?.success('درخواست شما با موفقیت ثبت شد.');
+                              },
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['showToast'] != null &&
+                        typeof $steps['showToast'] === 'object' &&
+                        typeof $steps['showToast'].then === 'function'
+                      ) {
+                        $steps['showToast'] = await $steps['showToast'];
+                      }
+
+                      $steps['sendEvent'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return window.paziresh24?.logger('booking').sendEvent({
+                                  group: 'safe-call',
+                                  type: 'patient',
+                                  event: {
+                                    action: 'receipt',
+                                    data: {
+                                      referenceCode: $props.bookDetailsData.reference_code,
+                                      doctor: {
+                                        centerId: $props.bookDetailsData.center_id,
+                                        name: $props.bookDetailsData?.doctor?.doctor_name,
+                                      },
+                                      patient: {
+                                        cell: $props.bookDetailsData.patient.cell,
+                                        name: `${$props.bookDetailsData.patient.name} ${$props.bookDetailsData.patient.family}`,
+                                        nationalCode: $props.bookDetailsData.national_code,
+                                      },
                                     },
                                   },
-                                },
-                              });
-                            },
-                          };
-                          return (({ customFunction }) => {
-                            return customFunction();
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps['sendEvent'] != null &&
-                      typeof $steps['sendEvent'] === 'object' &&
-                      typeof $steps['sendEvent'].then === 'function'
-                    ) {
-                      $steps['sendEvent'] = await $steps['sendEvent'];
-                    }
+                                });
+                              },
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['sendEvent'] != null &&
+                        typeof $steps['sendEvent'] === 'object' &&
+                        typeof $steps['sendEvent'].then === 'function'
+                      ) {
+                        $steps['sendEvent'] = await $steps['sendEvent'];
+                      }
 
-                    $steps['endLoading'] = true
-                      ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ['secureCallLoading'],
-                            },
-                            operation: 0,
-                            value: false,
-                          };
-                          return (({ variable, value, startIndex, deleteCount }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                      $steps['endLoading'] = true
+                        ? (() => {
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ['secureCallLoading'],
+                              },
+                              operation: 0,
+                              value: false,
+                            };
+                            return (({ variable, value, startIndex, deleteCount }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
-                      : undefined;
-                    if (
-                      $steps['endLoading'] != null &&
-                      typeof $steps['endLoading'] === 'object' &&
-                      typeof $steps['endLoading'].then === 'function'
-                    ) {
-                      $steps['endLoading'] = await $steps['endLoading'];
-                    }
-                  }}
-                  outline={true}
-                  showStartIcon={true}
-                  startIcon={<Icon13Icon className={classNames(projectcss.all, sty.svg__pnuor)} role={'img'} />}
-                />
-              ) : null}
-            </div>
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps['endLoading'] != null &&
+                        typeof $steps['endLoading'] === 'object' &&
+                        typeof $steps['endLoading'].then === 'function'
+                      ) {
+                        $steps['endLoading'] = await $steps['endLoading'];
+                      }
+                    }}
+                    outline={true}
+                    showStartIcon={true}
+                    startIcon={<Icon13Icon className={classNames(projectcss.all, sty.svg__pnuor)} role={'img'} />}
+                  />
+                ) : null}
+              </div>
+            </>
           ) : null}
 
           {(

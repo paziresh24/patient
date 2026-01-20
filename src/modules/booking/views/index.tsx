@@ -298,7 +298,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         user: {
           ...user,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
-          messengerType: 'hami',
+          messengerType: profile?.online_visit_channel_types?.includes('whatsapp') ? 'hami' : 'eitaa',
         },
       },
       {
