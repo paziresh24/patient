@@ -1305,7 +1305,7 @@
   width: auto;
   height: 1em;
 }
-.embedHtml:global(.__wab_instance) {
+.embedHtml___9R6:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
 }
@@ -1314,6 +1314,10 @@
   object-fit: cover;
 }
 .getDoctorInfo:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+}
+.embedHtml__nwnwn:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
 }
