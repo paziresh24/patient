@@ -13,7 +13,7 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useShare from '@/common/hooks/useShare';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
-import { addCommas } from '@persian-tools/persian-tools';
+import { addCommas } from '@/common/utils/persianTools';
 import md5 from 'md5';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';

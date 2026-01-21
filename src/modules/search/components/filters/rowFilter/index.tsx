@@ -8,7 +8,7 @@ import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import { useSearchStore } from '@/modules/search/store/search';
-import { addCommas } from '@persian-tools/persian-tools';
+import { addCommas } from '@/common/utils/persianTools';
 import { MouseEvent, MouseEventHandler, ReactNode, useMemo, useState } from 'react';
 import AdvancedSearch from '../advancedSearch';
 import RadioFilter from '../advancedSearch/sections/radio';
