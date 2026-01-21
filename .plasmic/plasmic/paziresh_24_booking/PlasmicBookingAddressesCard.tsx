@@ -229,9 +229,15 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return $props.centerType == "office"
-                    ? `مطب ${$props.information.name} ${$props.information.family}`
-                    : $props.title;
+                  if ($props.centerType == "office") {
+                    const name = $props.information.name?.trim() || '';
+                    const family = $props.information.family?.trim() || '';
+                    if (!name && !family) return 'مطب';
+                    if (!name) return `مطب ${family}`;
+                    if (!family) return `مطب ${name}`;
+                    return `مطب ${name} ${family}`;
+                  }
+                  return $props.title;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||

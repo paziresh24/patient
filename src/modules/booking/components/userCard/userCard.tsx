@@ -143,7 +143,14 @@ export const UserCard = (props: UserCardProps) => {
 
   const selectUser = (
     <Select
-      title={`${name} ${family}`}
+      title={(() => {
+        const trimmedName = name?.trim() || '';
+        const trimmedFamily = family?.trim() || '';
+        if (!trimmedName && !trimmedFamily) return '';
+        if (!trimmedName) return trimmedFamily;
+        if (!trimmedFamily) return trimmedName;
+        return `${trimmedName} ${trimmedFamily}`;
+      })()}
       subTitle={cell ? cell : email}
       selected={select}
       onSelect={() => !loading && handleSelect()}

@@ -43,7 +43,14 @@ const Invoice = () => {
     },
     {
       name: 'نام',
-      value: `${bookDetailsData?.patient?.name ?? ''} ${bookDetailsData?.patient?.family ?? ''}`,
+      value: (() => {
+        const name = bookDetailsData?.patient?.name?.trim() || '';
+        const family = bookDetailsData?.patient?.family?.trim() || '';
+        if (!name && !family) return '';
+        if (!name) return family;
+        if (!family) return name;
+        return `${name} ${family}`;
+      })(),
     },
     {
       name: 'کدملی',

@@ -176,7 +176,14 @@ export const UserProfile = () => {
             <div className="flex items-center py-3 text-sm font-medium text-center cursor-pointer space-s-2 md:py-6 md:pl-4">
               <div className="relative">
                 {userInfo?.image ? (
-                  <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={30} height={30} />
+                  <Avatar name={(() => {
+                    const name = userInfo.name?.trim() || '';
+                    const family = userInfo.family?.trim() || '';
+                    if (!name && !family) return '';
+                    if (!name) return family;
+                    if (!family) return name;
+                    return `${name} ${family}`;
+                  })()} src={userInfo?.image ?? ''} width={30} height={30} />
                 ) : (
                   <UserCircle width="30" height="30" />
                 )}
@@ -187,11 +194,15 @@ export const UserProfile = () => {
                 )}
               </div>
               <Text className="hidden lg:block" fontWeight="bold">
-                {userInfo?.name || userInfo?.family
-                  ? `${userInfo?.name ?? ''} ${userInfo?.family ?? ''}`
-                  : userInfo.cell
-                  ? `0${userInfo.cell}`
-                  : userInfo.email}
+                {(() => {
+                  const name = userInfo?.name?.trim() || '';
+                  const family = userInfo?.family?.trim() || '';
+                  const fullName = !name && !family ? '' : !name ? family : !family ? name : `${name} ${family}`;
+                  
+                  if (fullName) return fullName;
+                  if (userInfo.cell) return `0${userInfo.cell}`;
+                  return userInfo.email;
+                })()}
               </Text>
               <ChevronIcon dir={`${open ? 'top' : 'bottom'}`} className="hidden md:block" />
             </div>
@@ -202,7 +213,14 @@ export const UserProfile = () => {
             >
               <Link href="/patient/profile" prefetch={false}>
                 <div className="flex items-center w-64 px-2 py-3 space-s-3">
-                  <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo?.image ?? ''} width={50} height={50} />
+                  <Avatar name={(() => {
+                    const name = userInfo.name?.trim() || '';
+                    const family = userInfo.family?.trim() || '';
+                    if (!name && !family) return '';
+                    if (!name) return family;
+                    if (!family) return name;
+                    return `${name} ${family}`;
+                  })()} src={userInfo?.image ?? ''} width={50} height={50} />
                   <div className="flex flex-col space-y-2">
                     {pending ? (
                       <>
@@ -213,7 +231,14 @@ export const UserProfile = () => {
                       <>
                         <div className="flex items-center">
                           <Text fontSize="sm" fontWeight="bold" className="line-clamp-1">
-                            {userInfo?.name ?? ''} {userInfo?.family ?? ''}
+                            {(() => {
+                              const name = userInfo?.name?.trim() || '';
+                              const family = userInfo?.family?.trim() || '';
+                              if (!name && !family) return '';
+                              if (!name) return family;
+                              if (!family) return name;
+                              return `${name} ${family}`;
+                            })()}
                           </Text>
                           <EditIcon className="w-5 h-5" />
                         </div>

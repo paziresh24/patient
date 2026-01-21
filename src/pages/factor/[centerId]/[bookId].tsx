@@ -58,7 +58,16 @@ const Factor = () => {
   }, [getBookDetails.isSuccess, getBookDetails.data?.data?.result?.[0]]);
 
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
-  const doctorName = `${bookDetailsData?.doctor_name} ${bookDetailsData?.doctor_family}`;
+  const doctorName = (() => {
+    const name = bookDetailsData?.doctor_name?.trim() || '';
+    const family = bookDetailsData?.doctor_family?.trim() || '';
+    
+    if (!name && !family) return '';
+    if (!name) return family;
+    if (!family) return name;
+    
+    return `${name} ${family}`;
+  })();
 
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const convertTime = (time: string) => {
@@ -106,7 +115,7 @@ const Factor = () => {
           {!!bookDetailsData && centerId === CENTERS.CONSULT && isOnlineVisitTurn && (
             <div className="flex flex-col p-2 space-y-1  border-r-2 border-slate-200">
               <Text fontSize="sm" as="p">
-                سلام. من {bookDetailsData?.doctor_name + ' ' + bookDetailsData?.doctor_family} هستم.
+                سلام. من {doctorName} هستم.
               </Text>
               <Text as="p" fontSize="sm" align="justify" className="leading-6">
                 پس از نهایی شدن نوبت،{' '}
