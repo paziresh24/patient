@@ -236,7 +236,7 @@ const Page = ({ page, app }: any) => {
           </GlobalContextsProvider>
         </div>
       )}
-      <HamdastPayment app_key={app?.key} iframeRef={iframeRef} />
+      <HamdastPayment app_key={app?.key} app_name={app?.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} iframeRef={iframeRef} />
