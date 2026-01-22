@@ -3887,32 +3887,32 @@
       "dependencies": {
         "h9Dbk9ygddw7UVEq1NNhKi": "8.0.0",
         "oBJtsp5RgVpcN6KCrDTuQT": "1.4.0",
-        "sqPBLwEBBKHA2WDuGb17eV": "2.6.0",
-        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.42.0",
-        "8PtdGodUbexNYgkuyBUcWu": "3.29.0",
-        "9UibdRruyX43DxnB8Q1QXF": "0.4.0"
+        "sqPBLwEBBKHA2WDuGb17eV": "2.9.0",
+        "caTPwKxj5ZrD9LQ7DMdK4Z": "3.45.0",
+        "8PtdGodUbexNYgkuyBUcWu": "3.32.0",
+        "9UibdRruyX43DxnB8Q1QXF": "0.6.0"
       },
       "lang": "ts",
       "fileLocks": [
         {
           "type": "globalVariant",
           "assetId": "26V_wbvcdVyW",
-          "checksum": "76700c180bca36e9853b6f3397e442e1"
+          "checksum": "9cf4ff8f7551c517c2f40d485a3d8e38"
         },
         {
           "assetId": "k6ZwKcaHfkxemp7yqC1vbY",
-          "checksum": "37f2404648518c2618dd4f734864e8cf",
+          "checksum": "9cb21188cb50615152d860b55bcbe99b",
           "type": "globalContexts"
         },
         {
           "type": "renderModule",
           "assetId": "6-Wp84uf7hB4",
-          "checksum": "0caa6ecb239a60ad59ba378eec3ac37f"
+          "checksum": "3fb88736e437fe0641b6f385fd68fe1f"
         },
         {
           "type": "cssRules",
           "assetId": "6-Wp84uf7hB4",
-          "checksum": "0caa6ecb239a60ad59ba378eec3ac37f"
+          "checksum": "3fb88736e437fe0641b6f385fd68fe1f"
         },
         {
           "type": "icon",
@@ -3922,10 +3922,20 @@
         {
           "assetId": "k6ZwKcaHfkxemp7yqC1vbY",
           "type": "projectCss",
-          "checksum": "2e243a87f67582f701cbfb7abe22193e"
+          "checksum": "9c54deb1e47ab73f58e3d894ee0ba74f"
+        },
+        {
+          "assetId": "k6ZwKcaHfkxemp7yqC1vbY",
+          "checksum": "d2809d7322417be8c2f5b48cc019431f",
+          "type": "projectModule"
+        },
+        {
+          "assetId": "k6ZwKcaHfkxemp7yqC1vbY",
+          "checksum": "8e0bcedc3cd191d45a19ff3d2a2919b6",
+          "type": "styleTokensProvider"
         }
       ],
-      "codegenVersion": "0.0.1"
+      "codegenVersion": "0.0.2"
     },
     {
       "projectId": "9Vr5YWkf3w7jj6SsTcCEta",
