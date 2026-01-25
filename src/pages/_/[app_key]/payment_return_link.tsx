@@ -24,7 +24,13 @@ export default function PaymentReturnLink() {
       {showButton && <div className='flex flex-col gap-3 w-60'>
         <Divider />
         <Text fontSize='xs' className='text-center'>اگر هنوز منتقل نشدید، روی دکمه‌ زیر بزنید.</Text>
-        <Button size="sm" block onClick={() => window?.close()}>پرداخت را انجام دادم</Button>
+        {
+          query?.status == 'success' ? (
+            <Button size="sm" block onClick={() => window?.close()}>پرداخت را انجام دادم</Button>
+          ) : (
+            <Button size="sm" block onClick={() => window?.close()}>پرداخت را لغو کردم</Button>
+          )
+        }
       </div>}
     </div>
   )

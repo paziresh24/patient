@@ -15,6 +15,7 @@ import toast from 'react-hot-toast';
 import { useEffectOnce } from 'react-use';
 import { v4 as uuidV4 } from 'uuid';
 import { usePayRequest } from '../apis/pay';
+import sortBy from 'lodash/sortBy'
 
 export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key: string; app_name: string; icon?: string; iframeRef: any }) => {
   const { handleClose, handleOpen, modalProps } = useModal({
@@ -25,7 +26,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
   const { isLogin, info } = useUserInfoStore();
   const { handleOpenLoginModal } = useLoginModalContext();
   const [balances, setBalances] = useState<any>([]);
-  const [selectedCenter, setSelectedCenter] = useState(balances?.[0]?.center_id)
+  const [selectedCenter, setSelectedCenter] = useState(balances?.[balances?.length - 1]?.center_id)
   const [isLoadingBalances, setIsLoadingBalances] = useState(true);
   const [isLoadingPayment, setIsLoadingPayment] = useState(false);
   const payRequest = usePayRequest();
@@ -36,11 +37,12 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
   const paymentData = useRef<any>({});
   const gatewayWindow = useRef<any>();
 
+
   useEffect(() => {
     // Ensure info?.provider?.centers is an array before proceeding
     const centers = info?.provider?.centers?.filter?.(
       center =>
-        center.id == "5532"
+        center.id == "5532" || center.type_id == 1
     ) ?? [];
     if (!centers.length) {
       setBalances([]);
@@ -63,13 +65,14 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
       )
     )
       .then((data) => {
+        const sortedBalances = sortBy(data.map((item: any) => ({
+          center_id: item.center_id,
+          balance: +item.balance,
+        })), 'balance')
         setBalances(
-          data.map((item: any) => ({
-            center_id: item.center_id,
-            balance: item.balance,
-          }))
+          sortedBalances
         );
-        setSelectedCenter(data?.[0]?.center_id)
+        setSelectedCenter(sortedBalances?.[sortedBalances?.length - 1]?.center_id)
         setIsLoadingBalances(false);
       })
       .catch((error) => {
@@ -79,12 +82,12 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
       .finally(() => {
         setIsLoadingBalances(false);
       });
-  }, [info?.provider?.centers]);
+  }, [info?.provider?.centers, modalProps?.isOpen]);
 
 
 
   const openAndCreateReceipt = () => {
-    deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+    deleteCookie('payment_state');
     handleOpen();
     if (paymentData.current?.receipt_id) {
       splunkInstance('dashboard').sendEvent({
@@ -97,6 +100,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
             app_key: app_key,
             product_key: paymentData.current?.product_key,
             receipt_id: paymentData.current?.receipt_id,
+            center_id: selectedCenter
           },
         },
       });
@@ -130,12 +134,14 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
               app_key: app_key,
               product_key: paymentData.current?.product_key,
               receipt_id: paymentData.current?.receipt_id,
+              center_id: selectedCenter
             },
           },
         });
         setIsLoading(false);
       });
   };
+
 
   useEffect(() => {
     const handleEventFunction = (messageEvent: MessageEvent) => {
@@ -178,13 +184,6 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
 
         openAndCreateReceipt();
       }
-
-
-
-
-
-
-
     };
     window.addEventListener('message', handleEventFunction);
 
@@ -234,7 +233,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
     setIsLoadingPayment(false);
     gatewayWindow.current?.close();
     deleteCookie('payment_state');
-    gatewayWindow.current = window.open(`https://apigw.paziresh24.com/katibe/v1/topups?amount=${receiptData?.price}&returnlink=${encodeURIComponent("https://www.paziresh24.com/_/bimehnama/payment_return_link/?status=success")}&uuid=${uuidV4()}&cancel_returnlink=${encodeURIComponent("https://www.paziresh24.com/_/bimehnama/payment_return_link/?status=cancel")}&receipt_id=${receiptData?.receipt_id}&center_id=${selectedCenter}`, '_blank');
+    gatewayWindow.current = window.open(`https://apigw.paziresh24.com/katibe/v1/topups?amount=${receiptData?.price}&returnlink=${encodeURIComponent(`https://www.paziresh24.com/_/${app_key}/payment_return_link/?status=success`)}&uuid=${uuidV4()}&cancel_returnlink=${encodeURIComponent(`https://www.paziresh24.com/_/${app_key}/payment_return_link/?status=cancel`)}&receipt_id=${receiptData?.receipt_id}&center_id=${selectedCenter}${selectedCenter != '5532' ? '&account=organization' : ''}`, '_blank');
     splunkInstance('dashboard').sendEvent({
       group: 'hamdast_payment',
       type: 'open_gateway',
@@ -245,6 +244,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
           app_key: app_key,
           product_key: paymentData.current?.product_key,
           receipt_id: paymentData.current?.receipt_id,
+          center_id: selectedCenter
         },
       },
     });
@@ -257,6 +257,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
     try {
       await payRequest.mutateAsync({
         id: receiptData?.receipt_id,
+        centerid: selectedCenter != '5532' ? selectedCenter : undefined,
       });
 
       iframeRef.current?.contentWindow?.postMessage(
@@ -285,6 +286,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
             app_key: app_key,
             product_key: paymentData.current?.product_key,
             receipt_id: paymentData.current?.receipt_id,
+            center_id: selectedCenter
           },
         },
       });
@@ -304,6 +306,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
               product_key: paymentData.current?.product_key,
               receipt_id: paymentData.current?.receipt_id,
               message: error?.response?.data?.message,
+              center_id: selectedCenter
             },
           },
         });
@@ -327,6 +330,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
           app_key: app_key,
           product_key: paymentData.current?.product_key,
           receipt_id: paymentData.current?.receipt_id,
+          center_id: selectedCenter
         },
       },
     });
@@ -361,7 +365,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
         noLine={fullScreen}
       >
         {isLoading && !fullScreen && <Loading />}
-        {isLoading && fullScreen && <div className='flex flex-col gap-4 justify-center items-center'>
+        {isLoading && fullScreen && !isLoadingPayment && <div className='flex flex-col gap-4 justify-center items-center'>
           <div className='flex flex-col justify-center items-center gap-2'>
             <Loading />
             <span className='text-sm font-medium'>درحال انتظار برای پرداخت</span>
@@ -373,6 +377,13 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
             <Button size="sm" block onClick={handlePayment} loading={isLoadingPayment}>پرداخت را انجام دادم</Button>
             <Button size="sm" block variant='text' onClick={handleCancelPayment}>از پرداخت منصرف شدم</Button>
 
+          </div>
+        </div>}
+        {isLoading && fullScreen && isLoadingPayment && <div className='flex flex-col gap-4 justify-center items-center'>
+          <div className='flex flex-col justify-center items-center gap-2'>
+            <Loading />
+            <span className='text-sm font-medium'>لطفا کمی صبر کنید</span>
+            <Text fontSize='xs' className='text-center'>به زودی به طور خودکار به ابزارک {app_name} منتقل خواهید شد.</Text>
           </div>
         </div>}
         {
@@ -404,26 +415,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
                 </Text>
                 <div className='flex flex-col gap-2'>
                   {
-                    !info?.provider?.centers?.some?.(center => center.id == "5532") && (
-                      <div className={classNames('flex cursor-pointer flex-col border border-slate-300 rounded-md p-3', { "border-primary border-2": true })}>
-                        <div className='flex items-center gap-1'>
-                          <Text fontSize='xs' fontWeight='medium' className="min-w-fit max-w-fit w-full">
-                            کیف پول
-                          </Text>
-                        </div>
-                        <div>
-                          <Text fontSize='sm' fontWeight='medium' className='text-primary'>
-                            موجودی:
-                          </Text>
-                          <Text fontSize='sm' fontWeight='medium' className='text-primary'>
-                            {0}{' '}تومان
-                          </Text>
-                        </div>
-                      </div>
-                    )
-                  }
-                  {
-                    info?.provider?.centers?.filter?.(center => center.id == "5532")?.map?.((item, index) => (
+                    sortBy(info?.provider?.centers?.filter?.(center => center.id == "5532" || center.type_id == 1).map(item => ({ ...item, ...balances?.find((b: any) => b.center_id == item.id) })), 'balance')?.map?.((item, index) => (
                       <div key={item?.id} onClick={() => setSelectedCenter(item?.id)} className={classNames('flex cursor-pointer flex-col border border-slate-300 rounded-md p-3', { "border-primary border-2": selectedCenter == item.id })}>
                         <div className='flex items-center gap-1'>
                           <Text fontSize='xs' fontWeight='medium' className="min-w-fit max-w-fit w-full">
@@ -439,7 +431,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
                           <Text fontSize='sm' fontWeight='medium' className='text-primary'>
                             موجودی:                        </Text>
                           <Text fontSize='sm' fontWeight='medium' className='text-primary'>
-                            {new Intl.NumberFormat('fa-IR').format((balances.find((balance: any) => balance.center_id == item.id)?.balance ?? 0) / 10)}{' '}تومان
+                            {new Intl.NumberFormat('fa-IR').format((item?.balance ?? 0) / 10)}{' '}تومان
                           </Text>
                         </div>
                       </div>
@@ -448,7 +440,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
                 </div>
               </div>
               <Divider />
-              <Button variant="primary" size="sm" block loading={isLoadingPayment} onClick={handleCheckPayment}>
+              <Button variant="primary" size="sm" block loading={isLoadingPayment} onClick={handleCheckPayment} disabled={isLoadingBalances}>
                 {
                   balances.find((balance: any) => balance.center_id == selectedCenter)?.balance >= receiptData?.price
                     ? 'پرداخت'

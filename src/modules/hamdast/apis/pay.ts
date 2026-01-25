@@ -3,10 +3,13 @@ import axios from 'axios';
 
 export interface Params {
   id: string;
+  centerid?: string;
 }
 
 export const payRequest = (params: Params) => {
-  return axios.post(`https://apigw.paziresh24.com/katibe/v1/payments/${params.id}/pay`, undefined, {
+  return axios.post(`https://apigw.paziresh24.com/katibe/v1/payments/${params.id}/pay`, {
+    centerid: params?.centerid,
+  }, {
     withCredentials: true,
   });
 };
