@@ -36,6 +36,7 @@ interface TurnDetailsDataParam {
     selectedChannel?: any;
     isDeleted?: boolean;
     doctorName?: string;
+    channels?: Record<string, any>[]
   };
   centerType: CenterType;
   metaData?: {
@@ -64,6 +65,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     selectedChannel,
     isDeleted,
     doctorName,
+    channels
   } = data;
 
   const lists = [
@@ -79,7 +81,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
       id: 17,
       name: 'نام پیام رسان',
       value: onlineChannel && messengerList?.[onlineChannel]?.text,
-      shouldShow: onlineChannel == 'eitaa',
+      shouldShow: channels?.some?.(item => item.type != 'whatsapp'),
       type: 'Text',
       isBoldValue: true,
     },
@@ -87,7 +89,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
       id: 13,
       name: `شماره ${messengerList?.[onlineChannel ?? '']?.text} پزشک`,
       value: doctorPhone,
-      shouldShow: onlineChannel == 'eitaa',
+      shouldShow: channels?.some?.(item => item.type != 'whatsapp'),
       type: 'Text',
       isBoldValue: false,
     },

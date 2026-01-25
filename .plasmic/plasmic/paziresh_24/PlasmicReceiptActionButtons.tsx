@@ -143,7 +143,7 @@ const $$ = {
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -292,15 +292,15 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
       {(
         hasVariant($state, 'type', 'visitOnline')
           ? (() => {
-              try {
-                return !!$props.bookDetailsData.book_id;
-              } catch (e) {
-                if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                  return true;
-                }
-                throw e;
+            try {
+              return !!$props.bookDetailsData.book_id;
+            } catch (e) {
+              if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                return true;
               }
-            })()
+              throw e;
+            }
+          })()
           : false
       ) ? (
         <div
@@ -311,25 +311,25 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
           {(
             hasVariant($state, 'type', 'visitOnline')
               ? (() => {
-                  try {
-                    return Date.now() <= ($props.bookDetailsData.book_time + 3 * 24 * 60 * 60) * 1000 && !$props.bookDetailsData.is_deleted;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return Date.now() <= ($props.bookDetailsData.book_time + 3 * 24 * 60 * 60) * 1000 && !$props.bookDetailsData.is_deleted;
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
               : (() => {
-                  try {
-                    return !$props.bookDetailsData.is_deleted;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return !$props.bookDetailsData.is_deleted;
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
           ) ? (
             <>
               <div
@@ -340,15 +340,15 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 {(
                   hasVariant($state, 'type', 'visitOnline')
                     ? (() => {
-                        try {
-                          return $props.bookDetailsData?.selected_online_visit_channel?.type != 'eitaa';
-                        } catch (e) {
-                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                            return false;
-                          }
-                          throw e;
+                      try {
+                        return $props.bookDetailsData?.doctor.online_visit_channels?.some?.(item => item.type == 'whatsapp');
+                      } catch (e) {
+                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                          return false;
                         }
-                      })()
+                        throw e;
+                      }
+                    })()
                     : true
                 ) ? (
                   <Button
@@ -401,17 +401,17 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['runCode'] = true
                         ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return globalThis.open(
-                                  `https://messaging-back.paziresh24.com/api/external/conversations/${$props.bookDetailsData.book_id}`,
-                                );
-                              },
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return globalThis.open(
+                                `https://messaging-back.paziresh24.com/api/external/conversations/${$props.bookDetailsData.book_id}`,
+                              );
+                            },
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['runCode'] != null &&
@@ -423,19 +423,19 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['sendEvent'] = true
                         ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return window.paziresh24?.logger('booking').sendEvent({
-                                  group: 'link-visit-online',
-                                  type: $props.bookDetailsData.selected_online_visit_channel.type,
-                                  data: { online_visit_channel: 'hami' },
-                                });
-                              },
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return window.paziresh24?.logger('booking').sendEvent({
+                                group: 'link-visit-online',
+                                type: $props.bookDetailsData.selected_online_visit_channel.type,
+                                data: { online_visit_channel: 'hami' },
+                              });
+                            },
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['sendEvent'] != null &&
@@ -447,7 +447,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                     }}
                   />
                 ) : null}
-                {$props.bookDetailsData?.selected_online_visit_channel?.type == 'eitaa' && (
+                {!$props.bookDetailsData?.doctor.online_visit_channels?.some?.(item => item.type == 'whatsapp') && (
                   <Button
                     children2={
                       <React.Fragment>
@@ -483,26 +483,26 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['goToPage'] = true
                         ? (() => {
-                            const actionArgs = {
-                              destination: (() => {
-                                try {
-                                  return $props.bookDetailsData.selected_online_visit_channel.channel_link;
-                                } catch (e) {
-                                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                                    return undefined;
-                                  }
-                                  throw e;
+                          const actionArgs = {
+                            destination: (() => {
+                              try {
+                                return $props.bookDetailsData.selected_online_visit_channel.channel_link;
+                              } catch (e) {
+                                if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                                  return undefined;
                                 }
-                              })(),
-                            };
-                            return (({ destination }) => {
-                              if (typeof destination === 'string' && destination.startsWith('#')) {
-                                document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
-                              } else {
-                                __nextRouter?.push(destination);
+                                throw e;
                               }
-                            })?.apply(null, [actionArgs]);
-                          })()
+                            })(),
+                          };
+                          return (({ destination }) => {
+                            if (typeof destination === 'string' && destination.startsWith('#')) {
+                              document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
+                            } else {
+                              __nextRouter?.push(destination);
+                            }
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['goToPage'] != null &&
@@ -514,18 +514,18 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['sendEvent'] = true
                         ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return window.paziresh24?.logger('booking').sendEvent({
-                                  group: 'link-visit-online',
-                                  type: $props.bookDetailsData.selected_online_visit_channel.type,
-                                });
-                              },
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return window.paziresh24?.logger('booking').sendEvent({
+                                group: 'link-visit-online',
+                                type: $props.bookDetailsData.selected_online_visit_channel.type,
+                              });
+                            },
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['sendEvent'] != null &&
@@ -546,25 +546,25 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                 {(
                   hasVariant($state, 'type', 'visitOnline')
                     ? (() => {
-                        try {
-                          return $props.bookDetailsData.doctor.online_visit_channels.some(item => item.type === 'secure_call');
-                        } catch (e) {
-                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                            return false;
-                          }
-                          throw e;
+                      try {
+                        return $props.bookDetailsData.doctor.online_visit_channels.some(item => item.type === 'secure_call');
+                      } catch (e) {
+                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                          return false;
                         }
-                      })()
+                        throw e;
+                      }
+                    })()
                     : (() => {
-                        try {
-                          return $props.bookDetailsData.doctor.online_visit_channels.some(item => item.type === 'secure_call');
-                        } catch (e) {
-                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                            return false;
-                          }
-                          throw e;
+                      try {
+                        return $props.bookDetailsData.doctor.online_visit_channels.some(item => item.type === 'secure_call');
+                      } catch (e) {
+                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                          return false;
                         }
-                      })()
+                        throw e;
+                      }
+                    })()
                 ) ? (
                   <Button
                     children2={
@@ -590,24 +590,24 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['startLoading'] = true
                         ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ['secureCallLoading'],
-                              },
-                              operation: 0,
-                              value: true,
-                            };
-                            return (({ variable, value, startIndex, deleteCount }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ['secureCallLoading'],
+                            },
+                            operation: 0,
+                            value: true,
+                          };
+                          return (({ variable, value, startIndex, deleteCount }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
 
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['startLoading'] != null &&
@@ -619,23 +619,23 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['_function'] = true
                         ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return $$.axios
-                                  .post(`https://apigw.paziresh24.com/v1/book-safe-call/${$props.bookDetailsData.book_id}`, null, {
-                                    withCredentials: true,
-                                  })
-                                  .catch(error => {
-                                    window.paziresh24?.toast?.error(error.response?.data?.message ?? 'مشکلی پیش آمده است.');
-                                    $state.secureCallLoading = false;
-                                    throw new Error(error);
-                                  });
-                              },
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return $$.axios
+                                .post(`https://apigw.paziresh24.com/v1/book-safe-call/${$props.bookDetailsData.book_id}`, null, {
+                                  withCredentials: true,
+                                })
+                                .catch(error => {
+                                  window.paziresh24?.toast?.error(error.response?.data?.message ?? 'مشکلی پیش آمده است.');
+                                  $state.secureCallLoading = false;
+                                  throw new Error(error);
+                                });
+                            },
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['_function'] != null &&
@@ -647,15 +647,15 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['showToast'] = true
                         ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return window.paziresh24?.toast?.success('درخواست شما با موفقیت ثبت شد.');
-                              },
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return window.paziresh24?.toast?.success('درخواست شما با موفقیت ثبت شد.');
+                            },
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['showToast'] != null &&
@@ -667,33 +667,33 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['sendEvent'] = true
                         ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return window.paziresh24?.logger('booking').sendEvent({
-                                  group: 'safe-call',
-                                  type: 'patient',
-                                  event: {
-                                    action: 'receipt',
-                                    data: {
-                                      referenceCode: $props.bookDetailsData.reference_code,
-                                      doctor: {
-                                        centerId: $props.bookDetailsData.center_id,
-                                        name: $props.bookDetailsData?.doctor?.doctor_name,
-                                      },
-                                      patient: {
-                                        cell: $props.bookDetailsData.patient.cell,
-                                        name: `${$props.bookDetailsData.patient.name} ${$props.bookDetailsData.patient.family}`,
-                                        nationalCode: $props.bookDetailsData.national_code,
-                                      },
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return window.paziresh24?.logger('booking').sendEvent({
+                                group: 'safe-call',
+                                type: 'patient',
+                                event: {
+                                  action: 'receipt',
+                                  data: {
+                                    referenceCode: $props.bookDetailsData.reference_code,
+                                    doctor: {
+                                      centerId: $props.bookDetailsData.center_id,
+                                      name: $props.bookDetailsData?.doctor?.doctor_name,
+                                    },
+                                    patient: {
+                                      cell: $props.bookDetailsData.patient.cell,
+                                      name: `${$props.bookDetailsData.patient.name} ${$props.bookDetailsData.patient.family}`,
+                                      nationalCode: $props.bookDetailsData.national_code,
                                     },
                                   },
-                                });
-                              },
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
+                                },
+                              });
+                            },
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['sendEvent'] != null &&
@@ -705,24 +705,24 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                       $steps['endLoading'] = true
                         ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ['secureCallLoading'],
-                              },
-                              operation: 0,
-                              value: false,
-                            };
-                            return (({ variable, value, startIndex, deleteCount }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ['secureCallLoading'],
+                            },
+                            operation: 0,
+                            value: false,
+                          };
+                          return (({ variable, value, startIndex, deleteCount }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
 
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['endLoading'] != null &&
@@ -744,20 +744,20 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
           {(
             hasVariant($state, 'type', 'visitOnline')
               ? (() => {
-                  try {
-                    return (() => {
-                      const bookTime = new Date($props.bookDetailsData.book_time * 1000);
-                      const currentTime = new Date();
-                      bookTime.setMinutes(bookTime.getMinutes() + 15);
-                      return currentTime > bookTime && $props.bookDetailsData.book_status !== 'visited' && $props.illDescription;
-                    })();
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return (() => {
+                    const bookTime = new Date($props.bookDetailsData.book_time * 1000);
+                    const currentTime = new Date();
+                    bookTime.setMinutes(bookTime.getMinutes() + 15);
+                    return currentTime > bookTime && $props.bookDetailsData.book_status !== 'visited' && $props.illDescription;
+                  })();
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
               : true
           ) ? (
             <Button
@@ -780,15 +780,15 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                 $steps['runCode'] = true
                   ? (() => {
-                      const actionArgs = {
-                        customFunction: async () => {
-                          return window.Goftino.open();
-                        },
-                      };
-                      return (({ customFunction }) => {
-                        return customFunction();
-                      })?.apply(null, [actionArgs]);
-                    })()
+                    const actionArgs = {
+                      customFunction: async () => {
+                        return window.Goftino.open();
+                      },
+                    };
+                    return (({ customFunction }) => {
+                      return customFunction();
+                    })?.apply(null, [actionArgs]);
+                  })()
                   : undefined;
                 if ($steps['runCode'] != null && typeof $steps['runCode'] === 'object' && typeof $steps['runCode'].then === 'function') {
                   $steps['runCode'] = await $steps['runCode'];
@@ -799,44 +799,44 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
           {(
             hasVariant($state, 'type', 'visitOnline')
               ? (() => {
-                  try {
-                    return (() => {
-                      const currentTime = Math.floor(Date.now() / 1000);
-                      const bookTime = $props.bookDetailsData.book_time;
-                      const oneHourInSeconds = 60 * 60;
-                      return (
-                        currentTime - bookTime > oneHourInSeconds &&
-                        $props.bookDetailsData.book_status != 'visited' &&
-                        !$props.bookDetailsData.is_deleted &&
-                        $props.showSubstituteDoctorAlert
-                      );
-                    })();
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return (() => {
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    const bookTime = $props.bookDetailsData.book_time;
+                    const oneHourInSeconds = 60 * 60;
+                    return (
+                      currentTime - bookTime > oneHourInSeconds &&
+                      $props.bookDetailsData.book_status != 'visited' &&
+                      !$props.bookDetailsData.is_deleted &&
+                      $props.showSubstituteDoctorAlert
+                    );
+                  })();
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
               : (() => {
-                  try {
-                    return (() => {
-                      const currentTime = Math.floor(Date.now() / 1000);
-                      const bookTime = $props.bookDetailsData.book_time;
-                      const oneHourInSeconds = 60 * 60;
-                      return (
-                        currentTime - bookTime > oneHourInSeconds &&
-                        $props.bookDetailsData.book_status != 'visited' &&
-                        !$props.bookDetailsData.is_deleted
-                      );
-                    })();
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return (() => {
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    const bookTime = $props.bookDetailsData.book_time;
+                    const oneHourInSeconds = 60 * 60;
+                    return (
+                      currentTime - bookTime > oneHourInSeconds &&
+                      $props.bookDetailsData.book_status != 'visited' &&
+                      !$props.bookDetailsData.is_deleted
+                    );
+                  })();
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
           ) ? (
             <Alert
               body={
@@ -924,24 +924,24 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                                 $steps['startLoading'] = true
                                   ? (() => {
-                                      const actionArgs = {
-                                        variable: {
-                                          objRoot: $state,
-                                          variablePath: ['deleteLoading'],
-                                        },
-                                        operation: 0,
-                                        value: true,
-                                      };
-                                      return (({ variable, value, startIndex, deleteCount }) => {
-                                        if (!variable) {
-                                          return;
-                                        }
-                                        const { objRoot, variablePath } = variable;
+                                    const actionArgs = {
+                                      variable: {
+                                        objRoot: $state,
+                                        variablePath: ['deleteLoading'],
+                                      },
+                                      operation: 0,
+                                      value: true,
+                                    };
+                                    return (({ variable, value, startIndex, deleteCount }) => {
+                                      if (!variable) {
+                                        return;
+                                      }
+                                      const { objRoot, variablePath } = variable;
 
-                                        $stateSet(objRoot, variablePath, value);
-                                        return value;
-                                      })?.apply(null, [actionArgs]);
-                                    })()
+                                      $stateSet(objRoot, variablePath, value);
+                                      return value;
+                                    })?.apply(null, [actionArgs]);
+                                  })()
                                   : undefined;
                                 if (
                                   $steps['startLoading'] != null &&
@@ -953,23 +953,23 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                                 $steps['removeBook'] = true
                                   ? (() => {
-                                      const actionArgs = {
-                                        customFunction: async () => {
-                                          return (() => {
-                                            const bodyFormData = new FormData();
-                                            bodyFormData.append('center_id', $props.bookDetailsData.center_id);
-                                            bodyFormData.append('reference_code', $props.bookDetailsData.reference_code);
-                                            bodyFormData.append('national_code', $props.bookDetailsData.patient.national_code);
-                                            return $$.axios.post('https://www.paziresh24.com/api/deleteBook', bodyFormData, {
-                                              withCredentials: true,
-                                            });
-                                          })();
-                                        },
-                                      };
-                                      return (({ customFunction }) => {
-                                        return customFunction();
-                                      })?.apply(null, [actionArgs]);
-                                    })()
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return (() => {
+                                          const bodyFormData = new FormData();
+                                          bodyFormData.append('center_id', $props.bookDetailsData.center_id);
+                                          bodyFormData.append('reference_code', $props.bookDetailsData.reference_code);
+                                          bodyFormData.append('national_code', $props.bookDetailsData.patient.national_code);
+                                          return $$.axios.post('https://www.paziresh24.com/api/deleteBook', bodyFormData, {
+                                            withCredentials: true,
+                                          });
+                                        })();
+                                      },
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
                                   : undefined;
                                 if (
                                   $steps['removeBook'] != null &&
@@ -981,28 +981,28 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                                 $steps['sendEvent'] = true
                                   ? (() => {
-                                      const actionArgs = {
-                                        customFunction: async () => {
-                                          return window.paziresh24?.logger('booking').sendEvent({
-                                            group: 'substitute',
-                                            type: 'remove-book-and-view-booking',
-                                            event: {
-                                              doctor_id: $props.bookDetailsData?.doctor?.id,
-                                              slug: $props.bookDetailsData?.doctor?.slug,
-                                              server_id: $props.bookDetailsData?.doctor?.server_id,
-                                              doctor_name: $props.bookDetailsData?.doctor?.display_name,
-                                              book_id: $props.bookDetailsData.book_id,
-                                              reference_code: $props.bookDetailsData.reference_code,
-                                              book_date: $props.bookDetailsData.book_time_strings,
-                                              substitute_doctor_name: $state.substituteDoctor?.title,
-                                            },
-                                          });
-                                        },
-                                      };
-                                      return (({ customFunction }) => {
-                                        return customFunction();
-                                      })?.apply(null, [actionArgs]);
-                                    })()
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return window.paziresh24?.logger('booking').sendEvent({
+                                          group: 'substitute',
+                                          type: 'remove-book-and-view-booking',
+                                          event: {
+                                            doctor_id: $props.bookDetailsData?.doctor?.id,
+                                            slug: $props.bookDetailsData?.doctor?.slug,
+                                            server_id: $props.bookDetailsData?.doctor?.server_id,
+                                            doctor_name: $props.bookDetailsData?.doctor?.display_name,
+                                            book_id: $props.bookDetailsData.book_id,
+                                            reference_code: $props.bookDetailsData.reference_code,
+                                            book_date: $props.bookDetailsData.book_time_strings,
+                                            substitute_doctor_name: $state.substituteDoctor?.title,
+                                          },
+                                        });
+                                      },
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
                                   : undefined;
                                 if (
                                   $steps['sendEvent'] != null &&
@@ -1014,31 +1014,31 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                                 $steps['goToPage'] = true
                                   ? (() => {
-                                      const actionArgs = {
-                                        destination: (() => {
-                                          try {
-                                            return (
-                                              $state.substituteDoctor.url.replace('/dr/', '/booking/') +
-                                              '?centerId=5532&skipTimeSelectStep=true'
-                                            );
-                                          } catch (e) {
-                                            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                                              return undefined;
-                                            }
-                                            throw e;
+                                    const actionArgs = {
+                                      destination: (() => {
+                                        try {
+                                          return (
+                                            $state.substituteDoctor.url.replace('/dr/', '/booking/') +
+                                            '?centerId=5532&skipTimeSelectStep=true'
+                                          );
+                                        } catch (e) {
+                                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                                            return undefined;
                                           }
-                                        })(),
-                                      };
-                                      return (({ destination }) => {
-                                        if (typeof destination === 'string' && destination.startsWith('#')) {
-                                          document.getElementById(destination.substr(1)).scrollIntoView({
-                                            behavior: 'smooth',
-                                          });
-                                        } else {
-                                          __nextRouter?.push(destination);
+                                          throw e;
                                         }
-                                      })?.apply(null, [actionArgs]);
-                                    })()
+                                      })(),
+                                    };
+                                    return (({ destination }) => {
+                                      if (typeof destination === 'string' && destination.startsWith('#')) {
+                                        document.getElementById(destination.substr(1)).scrollIntoView({
+                                          behavior: 'smooth',
+                                        });
+                                      } else {
+                                        __nextRouter?.push(destination);
+                                      }
+                                    })?.apply(null, [actionArgs]);
+                                  })()
                                   : undefined;
                                 if (
                                   $steps['goToPage'] != null &&
@@ -1095,24 +1095,24 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                                 $steps['startLoading'] = true
                                   ? (() => {
-                                      const actionArgs = {
-                                        variable: {
-                                          objRoot: $state,
-                                          variablePath: ['deleteLoading'],
-                                        },
-                                        operation: 0,
-                                        value: true,
-                                      };
-                                      return (({ variable, value, startIndex, deleteCount }) => {
-                                        if (!variable) {
-                                          return;
-                                        }
-                                        const { objRoot, variablePath } = variable;
+                                    const actionArgs = {
+                                      variable: {
+                                        objRoot: $state,
+                                        variablePath: ['deleteLoading'],
+                                      },
+                                      operation: 0,
+                                      value: true,
+                                    };
+                                    return (({ variable, value, startIndex, deleteCount }) => {
+                                      if (!variable) {
+                                        return;
+                                      }
+                                      const { objRoot, variablePath } = variable;
 
-                                        $stateSet(objRoot, variablePath, value);
-                                        return value;
-                                      })?.apply(null, [actionArgs]);
-                                    })()
+                                      $stateSet(objRoot, variablePath, value);
+                                      return value;
+                                    })?.apply(null, [actionArgs]);
+                                  })()
                                   : undefined;
                                 if (
                                   $steps['startLoading'] != null &&
@@ -1124,23 +1124,23 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                                 $steps['removeBook'] = true
                                   ? (() => {
-                                      const actionArgs = {
-                                        customFunction: async () => {
-                                          return (() => {
-                                            const bodyFormData = new FormData();
-                                            bodyFormData.append('center_id', $props.bookDetailsData.center_id);
-                                            bodyFormData.append('reference_code', $props.bookDetailsData.reference_code);
-                                            bodyFormData.append('national_code', $props.bookDetailsData.patient.national_code);
-                                            return $$.axios.post('https://www.paziresh24.com/api/deleteBook', bodyFormData, {
-                                              withCredentials: true,
-                                            });
-                                          })();
-                                        },
-                                      };
-                                      return (({ customFunction }) => {
-                                        return customFunction();
-                                      })?.apply(null, [actionArgs]);
-                                    })()
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return (() => {
+                                          const bodyFormData = new FormData();
+                                          bodyFormData.append('center_id', $props.bookDetailsData.center_id);
+                                          bodyFormData.append('reference_code', $props.bookDetailsData.reference_code);
+                                          bodyFormData.append('national_code', $props.bookDetailsData.patient.national_code);
+                                          return $$.axios.post('https://www.paziresh24.com/api/deleteBook', bodyFormData, {
+                                            withCredentials: true,
+                                          });
+                                        })();
+                                      },
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
                                   : undefined;
                                 if (
                                   $steps['removeBook'] != null &&
@@ -1152,27 +1152,27 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                                 $steps['sendEvent'] = true
                                   ? (() => {
-                                      const actionArgs = {
-                                        customFunction: async () => {
-                                          return window.paziresh24?.logger('booking').sendEvent({
-                                            group: 'substitute',
-                                            type: 'remove-book-and-view-search',
-                                            event: {
-                                              doctor_id: $props.bookDetailsData?.doctor?.id,
-                                              slug: $props.bookDetailsData?.doctor?.slug,
-                                              server_id: $props.bookDetailsData?.doctor?.server_id,
-                                              doctor_name: $props.bookDetailsData?.doctor?.display_name,
-                                              book_id: $props.bookDetailsData.book_id,
-                                              reference_code: $props.bookDetailsData.reference_code,
-                                              book_date: $props.bookDetailsData.book_time_strings,
-                                            },
-                                          });
-                                        },
-                                      };
-                                      return (({ customFunction }) => {
-                                        return customFunction();
-                                      })?.apply(null, [actionArgs]);
-                                    })()
+                                    const actionArgs = {
+                                      customFunction: async () => {
+                                        return window.paziresh24?.logger('booking').sendEvent({
+                                          group: 'substitute',
+                                          type: 'remove-book-and-view-search',
+                                          event: {
+                                            doctor_id: $props.bookDetailsData?.doctor?.id,
+                                            slug: $props.bookDetailsData?.doctor?.slug,
+                                            server_id: $props.bookDetailsData?.doctor?.server_id,
+                                            doctor_name: $props.bookDetailsData?.doctor?.display_name,
+                                            book_id: $props.bookDetailsData.book_id,
+                                            reference_code: $props.bookDetailsData.reference_code,
+                                            book_date: $props.bookDetailsData.book_time_strings,
+                                          },
+                                        });
+                                      },
+                                    };
+                                    return (({ customFunction }) => {
+                                      return customFunction();
+                                    })?.apply(null, [actionArgs]);
+                                  })()
                                   : undefined;
                                 if (
                                   $steps['sendEvent'] != null &&
@@ -1184,28 +1184,28 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                                 $steps['goToPage'] = true
                                   ? (() => {
-                                      const actionArgs = {
-                                        destination: (() => {
-                                          try {
-                                            return `https://www.paziresh24.com/s/ir/${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}/?turn_type=consult`;
-                                          } catch (e) {
-                                            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                                              return undefined;
-                                            }
-                                            throw e;
+                                    const actionArgs = {
+                                      destination: (() => {
+                                        try {
+                                          return `https://www.paziresh24.com/s/ir/${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}/?turn_type=consult`;
+                                        } catch (e) {
+                                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                                            return undefined;
                                           }
-                                        })(),
-                                      };
-                                      return (({ destination }) => {
-                                        if (typeof destination === 'string' && destination.startsWith('#')) {
-                                          document.getElementById(destination.substr(1)).scrollIntoView({
-                                            behavior: 'smooth',
-                                          });
-                                        } else {
-                                          __nextRouter?.push(destination);
+                                          throw e;
                                         }
-                                      })?.apply(null, [actionArgs]);
-                                    })()
+                                      })(),
+                                    };
+                                    return (({ destination }) => {
+                                      if (typeof destination === 'string' && destination.startsWith('#')) {
+                                        document.getElementById(destination.substr(1)).scrollIntoView({
+                                          behavior: 'smooth',
+                                        });
+                                      } else {
+                                        __nextRouter?.push(destination);
+                                      }
+                                    })?.apply(null, [actionArgs]);
+                                  })()
                                   : undefined;
                                 if (
                                   $steps['goToPage'] != null &&
@@ -1263,24 +1263,24 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                           $steps['startLoading'] = true
                             ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ['substitueDoctorLoading'],
-                                  },
-                                  operation: 0,
-                                  value: true,
-                                };
-                                return (({ variable, value, startIndex, deleteCount }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ['substitueDoctorLoading'],
+                                },
+                                operation: 0,
+                                value: true,
+                              };
+                              return (({ variable, value, startIndex, deleteCount }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
 
-                                  $stateSet(objRoot, variablePath, value);
-                                  return value;
-                                })?.apply(null, [actionArgs]);
-                              })()
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
                             : undefined;
                           if (
                             $steps['startLoading'] != null &&
@@ -1292,27 +1292,27 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                           $steps['sendEvent'] = true
                             ? (() => {
-                                const actionArgs = {
-                                  customFunction: async () => {
-                                    return window.paziresh24?.logger('booking').sendEvent({
-                                      group: 'substitute',
-                                      type: 'click-substitute-button',
-                                      event: {
-                                        doctor_id: $props.bookDetailsData?.doctor?.id,
-                                        slug: $props.bookDetailsData?.doctor?.slug,
-                                        server_id: $props.bookDetailsData?.doctor?.server_id,
-                                        doctor_name: $props.bookDetailsData?.doctor?.display_name,
-                                        book_id: $props.bookDetailsData.book_id,
-                                        reference_code: $props.bookDetailsData.reference_code,
-                                        book_date: $props.bookDetailsData.book_time_strings,
-                                      },
-                                    });
-                                  },
-                                };
-                                return (({ customFunction }) => {
-                                  return customFunction();
-                                })?.apply(null, [actionArgs]);
-                              })()
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return window.paziresh24?.logger('booking').sendEvent({
+                                    group: 'substitute',
+                                    type: 'click-substitute-button',
+                                    event: {
+                                      doctor_id: $props.bookDetailsData?.doctor?.id,
+                                      slug: $props.bookDetailsData?.doctor?.slug,
+                                      server_id: $props.bookDetailsData?.doctor?.server_id,
+                                      doctor_name: $props.bookDetailsData?.doctor?.display_name,
+                                      book_id: $props.bookDetailsData.book_id,
+                                      reference_code: $props.bookDetailsData.reference_code,
+                                      book_date: $props.bookDetailsData.book_time_strings,
+                                    },
+                                  });
+                                },
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
                             : undefined;
                           if (
                             $steps['sendEvent'] != null &&
@@ -1324,16 +1324,16 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
 
                           $steps['request'] = true
                             ? (() => {
-                                const actionArgs = {
-                                  customFunction: async () => {
-                                    return $$.axios.get(`https://search.paziresh24.com/seapi/v1/search/ir/
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return $$.axios.get(`https://search.paziresh24.com/seapi/v1/search/ir/
 ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=consult`);
-                                  },
-                                };
-                                return (({ customFunction }) => {
-                                  return customFunction();
-                                })?.apply(null, [actionArgs]);
-                              })()
+                                },
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
                             : undefined;
                           if (
                             $steps['request'] != null &&
@@ -1345,26 +1345,26 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                           $steps['_function'] = true
                             ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ['substituteDoctor'],
-                                  },
-                                  operation: 0,
-                                  value: $steps.request?.data?.search?.result?.filter(
-                                    item => item.id !== $props.bookDetailsData?.doctor?.id,
-                                  )?.[$$.lodash.random(0, 2)],
-                                };
-                                return (({ variable, value, startIndex, deleteCount }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ['substituteDoctor'],
+                                },
+                                operation: 0,
+                                value: $steps.request?.data?.search?.result?.filter(
+                                  item => item.id !== $props.bookDetailsData?.doctor?.id,
+                                )?.[$$.lodash.random(0, 2)],
+                              };
+                              return (({ variable, value, startIndex, deleteCount }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
 
-                                  $stateSet(objRoot, variablePath, value);
-                                  return value;
-                                })?.apply(null, [actionArgs]);
-                              })()
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
                             : undefined;
                           if (
                             $steps['_function'] != null &&
@@ -1376,24 +1376,24 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                           $steps['endLoading'] = true
                             ? (() => {
-                                const actionArgs = {
-                                  variable: {
-                                    objRoot: $state,
-                                    variablePath: ['substitueDoctorLoading'],
-                                  },
-                                  operation: 0,
-                                  value: false,
-                                };
-                                return (({ variable, value, startIndex, deleteCount }) => {
-                                  if (!variable) {
-                                    return;
-                                  }
-                                  const { objRoot, variablePath } = variable;
+                              const actionArgs = {
+                                variable: {
+                                  objRoot: $state,
+                                  variablePath: ['substitueDoctorLoading'],
+                                },
+                                operation: 0,
+                                value: false,
+                              };
+                              return (({ variable, value, startIndex, deleteCount }) => {
+                                if (!variable) {
+                                  return;
+                                }
+                                const { objRoot, variablePath } = variable;
 
-                                  $stateSet(objRoot, variablePath, value);
-                                  return value;
-                                })?.apply(null, [actionArgs]);
-                              })()
+                                $stateSet(objRoot, variablePath, value);
+                                return value;
+                              })?.apply(null, [actionArgs]);
+                            })()
                             : undefined;
                           if (
                             $steps['endLoading'] != null &&
@@ -1420,25 +1420,25 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
             {(
               hasVariant($state, 'type', 'visitOnline')
                 ? (() => {
-                    try {
-                      return !$props.bookDetailsData.is_deleted && $props.bookDetailsData.book_status !== 'visited';
-                    } catch (e) {
-                      if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                        return true;
-                      }
-                      throw e;
+                  try {
+                    return !$props.bookDetailsData.is_deleted && $props.bookDetailsData.book_status !== 'visited';
+                  } catch (e) {
+                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                      return true;
                     }
-                  })()
+                    throw e;
+                  }
+                })()
                 : (() => {
-                    try {
-                      return !$props.bookDetailsData.is_deleted;
-                    } catch (e) {
-                      if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                        return true;
-                      }
-                      throw e;
+                  try {
+                    return !$props.bookDetailsData.is_deleted;
+                  } catch (e) {
+                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                      return true;
                     }
-                  })()
+                    throw e;
+                  }
+                })()
             ) ? (
               <Dialog
                 data-plasmic-name={'dialog3'}
@@ -1464,24 +1464,24 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                         $steps['updateDeleteLoading'] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ['deleteLoading'],
-                                },
-                                operation: 0,
-                                value: true,
-                              };
-                              return (({ variable, value, startIndex, deleteCount }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ['deleteLoading'],
+                              },
+                              operation: 0,
+                              value: true,
+                            };
+                            return (({ variable, value, startIndex, deleteCount }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps['updateDeleteLoading'] != null &&
@@ -1493,23 +1493,23 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                         $steps['runCode'] = true
                           ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return (() => {
-                                    const bodyFormData = new FormData();
-                                    bodyFormData.append('center_id', $props.bookDetailsData.center_id);
-                                    bodyFormData.append('reference_code', $props.bookDetailsData.reference_code);
-                                    bodyFormData.append('national_code', $props.bookDetailsData.patient.national_code);
-                                    return $$.axios.post('https://www.paziresh24.com/api/deleteBook', bodyFormData, {
-                                      withCredentials: true,
-                                    });
-                                  })();
-                                },
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return (() => {
+                                  const bodyFormData = new FormData();
+                                  bodyFormData.append('center_id', $props.bookDetailsData.center_id);
+                                  bodyFormData.append('reference_code', $props.bookDetailsData.reference_code);
+                                  bodyFormData.append('national_code', $props.bookDetailsData.patient.national_code);
+                                  return $$.axios.post('https://www.paziresh24.com/api/deleteBook', bodyFormData, {
+                                    withCredentials: true,
+                                  });
+                                })();
+                              },
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps['runCode'] != null &&
@@ -1521,17 +1521,17 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                         $steps['goToDashboardAppointments'] = true
                           ? (() => {
-                              const actionArgs = {
-                                destination: '/dashboard/appointments/',
-                              };
-                              return (({ destination }) => {
-                                if (typeof destination === 'string' && destination.startsWith('#')) {
-                                  document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
-                                } else {
-                                  __nextRouter?.push(destination);
-                                }
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              destination: '/dashboard/appointments/',
+                            };
+                            return (({ destination }) => {
+                              if (typeof destination === 'string' && destination.startsWith('#')) {
+                                document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
+                              } else {
+                                __nextRouter?.push(destination);
+                              }
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps['goToDashboardAppointments'] != null &&
@@ -1553,24 +1553,24 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                         $steps['updateDialog3Open'] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ['dialog3', 'open'],
-                                },
-                                operation: 4,
-                              };
-                              return (({ variable, value, startIndex, deleteCount }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ['dialog3', 'open'],
+                              },
+                              operation: 4,
+                            };
+                            return (({ variable, value, startIndex, deleteCount }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                const oldValue = $stateGet(objRoot, variablePath);
-                                $stateSet(objRoot, variablePath, !oldValue);
-                                return !oldValue;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              const oldValue = $stateGet(objRoot, variablePath);
+                              $stateSet(objRoot, variablePath, !oldValue);
+                              return !oldValue;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps['updateDialog3Open'] != null &&
@@ -1623,29 +1623,29 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
           {(
             hasVariant($state, 'type', 'visitOnline')
               ? (() => {
-                  try {
-                    return (
-                      !$props.bookDetailsData.is_deleted &&
-                      Date.now() >= $props.bookDetailsData.book_time * 1000 &&
-                      Date.now() <= ($props.bookDetailsData.book_time + 3 * 24 * 60 * 60) * 1000
-                    );
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return (
+                    !$props.bookDetailsData.is_deleted &&
+                    Date.now() >= $props.bookDetailsData.book_time * 1000 &&
+                    Date.now() <= ($props.bookDetailsData.book_time + 3 * 24 * 60 * 60) * 1000
+                  );
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
               : (() => {
-                  try {
-                    return !$props.bookDetailsData.is_deleted && Date.now() >= $props.bookDetailsData.book_time * 1000;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return !$props.bookDetailsData.is_deleted && Date.now() >= $props.bookDetailsData.book_time * 1000;
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
           ) ? (
             <div
               className={classNames(projectcss.all, sty.freeBox___4AFlz, {
@@ -1676,27 +1676,27 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                       $steps['sendEvent'] = true
                         ? (() => {
-                            const actionArgs = {
-                              customFunction: async () => {
-                                return window.paziresh24?.logger('booking').sendEvent({
-                                  group: 'support-receipt',
-                                  type: 'follow-doctor-delay',
-                                  event: {
-                                    doctor_id: $props.bookDetailsData?.doctor?.id,
-                                    slug: $props.bookDetailsData?.doctor?.slug,
-                                    server_id: $props.bookDetailsData?.doctor?.server_id,
-                                    doctor_name: $props.bookDetailsData?.doctor?.display_name,
-                                    book_id: $props.bookDetailsData.book_id,
-                                    reference_code: $props.bookDetailsData.reference_code,
-                                    book_date: $props.bookDetailsData.book_time_strings,
-                                  },
-                                });
-                              },
-                            };
-                            return (({ customFunction }) => {
-                              return customFunction();
-                            })?.apply(null, [actionArgs]);
-                          })()
+                          const actionArgs = {
+                            customFunction: async () => {
+                              return window.paziresh24?.logger('booking').sendEvent({
+                                group: 'support-receipt',
+                                type: 'follow-doctor-delay',
+                                event: {
+                                  doctor_id: $props.bookDetailsData?.doctor?.id,
+                                  slug: $props.bookDetailsData?.doctor?.slug,
+                                  server_id: $props.bookDetailsData?.doctor?.server_id,
+                                  doctor_name: $props.bookDetailsData?.doctor?.display_name,
+                                  book_id: $props.bookDetailsData.book_id,
+                                  reference_code: $props.bookDetailsData.reference_code,
+                                  book_date: $props.bookDetailsData.book_time_strings,
+                                },
+                              });
+                            },
+                          };
+                          return (({ customFunction }) => {
+                            return customFunction();
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps['sendEvent'] != null &&
@@ -1856,24 +1856,24 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                             $steps['updateDelayDoctorButtonTimer'] = true
                               ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ['delayDoctorButtonTimer'],
-                                    },
-                                    operation: 2,
-                                  };
-                                  return (({ variable, value, startIndex, deleteCount }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ['delayDoctorButtonTimer'],
+                                  },
+                                  operation: 2,
+                                };
+                                return (({ variable, value, startIndex, deleteCount }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
 
-                                    const oldValue = $stateGet(objRoot, variablePath);
-                                    $stateSet(objRoot, variablePath, oldValue + 1);
-                                    return oldValue + 1;
-                                  })?.apply(null, [actionArgs]);
-                                })()
+                                  const oldValue = $stateGet(objRoot, variablePath);
+                                  $stateSet(objRoot, variablePath, oldValue + 1);
+                                  return oldValue + 1;
+                                })?.apply(null, [actionArgs]);
+                              })()
                               : undefined;
                             if (
                               $steps['updateDelayDoctorButtonTimer'] != null &&
@@ -1926,27 +1926,27 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                   $steps['sendEvent'] = true
                     ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return window.paziresh24?.logger('booking').sendEvent({
-                              group: 'support-receipt',
-                              type: 'request-support-book',
-                              event: {
-                                doctor_id: $props.bookDetailsData?.doctor?.id,
-                                slug: $props.bookDetailsData?.doctor?.slug,
-                                server_id: $props.bookDetailsData?.doctor?.server_id,
-                                doctor_name: $props.bookDetailsData?.doctor?.display_name,
-                                book_id: $props.bookDetailsData.book_id,
-                                reference_code: $props.bookDetailsData.reference_code,
-                                book_date: $props.bookDetailsData.book_time_strings,
-                              },
-                            });
-                          },
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return window.paziresh24?.logger('booking').sendEvent({
+                            group: 'support-receipt',
+                            type: 'request-support-book',
+                            event: {
+                              doctor_id: $props.bookDetailsData?.doctor?.id,
+                              slug: $props.bookDetailsData?.doctor?.slug,
+                              server_id: $props.bookDetailsData?.doctor?.server_id,
+                              doctor_name: $props.bookDetailsData?.doctor?.display_name,
+                              book_id: $props.bookDetailsData.book_id,
+                              reference_code: $props.bookDetailsData.reference_code,
+                              book_date: $props.bookDetailsData.book_time_strings,
+                            },
+                          });
+                        },
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps['sendEvent'] != null &&
@@ -1958,26 +1958,26 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
 
                   $steps['goToPage'] = true
                     ? (() => {
-                        const actionArgs = {
-                          destination: (() => {
-                            try {
-                              return `https://support.paziresh24.com/ticketbyturn/?book-id=${$props.bookDetailsData.book_id}`;
-                            } catch (e) {
-                              if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                                return undefined;
-                              }
-                              throw e;
+                      const actionArgs = {
+                        destination: (() => {
+                          try {
+                            return `https://support.paziresh24.com/ticketbyturn/?book-id=${$props.bookDetailsData.book_id}`;
+                          } catch (e) {
+                            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                              return undefined;
                             }
-                          })(),
-                        };
-                        return (({ destination }) => {
-                          if (typeof destination === 'string' && destination.startsWith('#')) {
-                            document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
-                          } else {
-                            __nextRouter?.push(destination);
+                            throw e;
                           }
-                        })?.apply(null, [actionArgs]);
-                      })()
+                        })(),
+                      };
+                      return (({ destination }) => {
+                        if (typeof destination === 'string' && destination.startsWith('#')) {
+                          document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps['goToPage'] != null &&
@@ -2016,39 +2016,14 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
           $steps['sendEvent'] =
             $props.bookDetailsData.center_id === '5532' && $props.bookDetailsData.doctor.id === '4b2dd0d3-6c2a-4750-9ce1-65a43de6e233'
               ? (() => {
-                  const actionArgs = {
-                    args: [
-                      (() => {
-                        try {
-                          return {
-                            group: 'book-receipt',
-                            type: 'online-visit-channel',
-                            event: { bookDetailsData: $props.bookDetailsData },
-                          };
-                        } catch (e) {
-                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })(),
-                    ],
-                  };
-                  return $globalActions['Splunk.sendLog']?.apply(null, [...actionArgs.args]);
-                })()
-              : undefined;
-          if ($steps['sendEvent'] != null && typeof $steps['sendEvent'] === 'object' && typeof $steps['sendEvent'].then === 'function') {
-            $steps['sendEvent'] = await $steps['sendEvent'];
-          }
-
-          $steps['setAttribute'] = true
-            ? (() => {
                 const actionArgs = {
                   args: [
                     (() => {
                       try {
                         return {
-                          user_info_id: $props?.bookDetailsData?.doctor?.id,
+                          group: 'book-receipt',
+                          type: 'online-visit-channel',
+                          event: { bookDetailsData: $props.bookDetailsData },
                         };
                       } catch (e) {
                         if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
@@ -2059,8 +2034,33 @@ ${$props?.specialities?.[0]?.speciality?.taggables?.[0]?.tag?.slug}?turn_type=co
                     })(),
                   ],
                 };
-                return $globalActions['GrowthbookGlobalContext.setAttributes']?.apply(null, [...actionArgs.args]);
+                return $globalActions['Splunk.sendLog']?.apply(null, [...actionArgs.args]);
               })()
+              : undefined;
+          if ($steps['sendEvent'] != null && typeof $steps['sendEvent'] === 'object' && typeof $steps['sendEvent'].then === 'function') {
+            $steps['sendEvent'] = await $steps['sendEvent'];
+          }
+
+          $steps['setAttribute'] = true
+            ? (() => {
+              const actionArgs = {
+                args: [
+                  (() => {
+                    try {
+                      return {
+                        user_info_id: $props?.bookDetailsData?.doctor?.id,
+                      };
+                    } catch (e) {
+                      if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                        return undefined;
+                      }
+                      throw e;
+                    }
+                  })(),
+                ],
+              };
+              return $globalActions['GrowthbookGlobalContext.setAttributes']?.apply(null, [...actionArgs.args]);
+            })()
             : undefined;
           if (
             $steps['setAttribute'] != null &&
@@ -2128,12 +2128,12 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReceiptActionButtons__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReceiptActionButtons__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicReceiptActionButtons__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<NodeOverridesType<T>, ReservedPropsType | VariantPropType | ArgPropType> &
-    // Specify props for the root element
-    Omit<Partial<React.ComponentProps<NodeDefaultElementType[T]>>, ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>>;
+  // Specify args directly as props
+  Omit<PlasmicReceiptActionButtons__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<NodeOverridesType<T>, ReservedPropsType | VariantPropType | ArgPropType> &
+  // Specify props for the root element
+  Omit<Partial<React.ComponentProps<NodeDefaultElementType[T]>>, ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>>;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };
