@@ -73,26 +73,26 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                 nationalCode: turnData?.patient?.national_code,
                 selectServeis: turnData?.services?.[0]?.title,
               },
+              channels: turnData?.doctor?.online_visit_channels,
               selectedChannel: turnData.selected_online_visit_channel,
               ...(customize.showTermsAndConditions && {
                 rules: isConsultReceipt
                   ? specialServiceInfo?.messenger
                     ? specialServiceInfo?.rules
                     : turnData.selected_online_visit_channel?.type
-                    ? [
-                        `لطفا <b>قبض نوبت</b> خود را در <b>${
-                          messengers[turnData.selected_online_visit_channel?.type]?.text
+                      ? [
+                        `لطفا <b>قبض نوبت</b> خود را در <b>${messengers[turnData.selected_online_visit_channel?.type]?.text
                         }</b> برای پزشک ارسال کنید و وارد گفتگو شوید.`,
                       ]
-                    : turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap
-                    ? [
-                        ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
-                        '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
-                      ]
-                    : [
-                        'در زمان نوبت با شما<b> تماس تلفنی</b> برقرار خواهد شد.',
-                        ' در صورت نیاز، مستندات (آزمایش، نسخه، سونوگرافی) خود را در <b>پیام رسان مورد نظر پزشک</b> ارسال نمایید.',
-                      ]
+                      : turnData?.doctor?.online_visit_channels?.[0]?.type === VisitChannels.igap
+                        ? [
+                          ' در <b>زمان نوبت</b> با شما <b>تماس تلفنی</b> گرفته خواهد شد.',
+                          '  در صورت نیاز به ارسال مستندات درمانی (آزمایش،سونوگرافی و...) لطفا در<b>آی گپ</b> عضو شوید و با <b>ارسال قبض نوبتتان</b> به پزشک، با او وارد گفتگو شوید.',
+                        ]
+                        : [
+                          'در زمان نوبت با شما<b> تماس تلفنی</b> برقرار خواهد شد.',
+                          ' در صورت نیاز، مستندات (آزمایش، نسخه، سونوگرافی) خود را در <b>پیام رسان مورد نظر پزشک</b> ارسال نمایید.',
+                        ]
                   : turnData.book_notices,
               }),
             },
