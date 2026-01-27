@@ -306,11 +306,11 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       });
     };
 
-    const subscribeToPlan = async (receipt_id: string, is_auto_renew?: boolean) => {
+    const subscribeToPlan = async (receipt_id: string, center_id: string, is_auto_renew?: boolean) => {
       try {
         await axios.post(
           `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
-          { receipt_id, auto_renew: is_auto_renew },
+          { receipt_id, auto_renew: is_auto_renew, wallet_id: center_id },
           { withCredentials: true },
         );
         sendSuccessEvent();
@@ -349,7 +349,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
 
     const handlePaymentSuccess = ({ receipt_id, center_id, is_auto_renew }: any) => {
       logSplunkEvent('success_receipt', { receipt_id, center_id });
-      subscribeToPlan(receipt_id, is_auto_renew);
+      subscribeToPlan(receipt_id, center_id, is_auto_renew);
     };
 
     const handleCancelPayment = ({ receipt_id, center_id }: any) => {
