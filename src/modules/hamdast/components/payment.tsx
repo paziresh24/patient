@@ -331,8 +331,8 @@ export default forwardRef(({ app_key, app_name, icon, onSuccess, onCancel, onErr
                 (
                   <>
                     <div className='flex gap-2 items-center border border-slate-200 p-2 rounded-lg'>
-                      <Switch />
-                      <div className='flex flex-col'>
+                      <Switch onChange={(e) => setIsAutoRenew(prev => !prev)} checked={isAutoRenew} />
+                      <div className='flex flex-col cursor-pointer' onClick={() => setIsAutoRenew(prev => !prev)}>
                         <Text fontSize='sm' fontWeight='semiBold'>
                           تمدید خودکار
                         </Text>
