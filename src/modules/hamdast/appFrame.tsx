@@ -4,7 +4,7 @@ import AppBar from '@/common/components/layouts/appBar';
 import classNames from '@/common/utils/classNames';
 import { useOneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
-import { HamdastPayment } from '@/modules/hamdast/components/payment';
+import { HamdastPayment } from '@/modules/hamdast/components/paymentModal';
 import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
@@ -153,7 +153,7 @@ export const AppFrame = ({
       {app?.id && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
-          <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} iframeRef={iframeRef} />
+          <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />

@@ -9,7 +9,7 @@ import classNames from '@/common/utils/classNames';
 import { oneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
 import { HamdastFlow } from '@/modules/hamdast/components/flow';
-import { HamdastPayment } from '@/modules/hamdast/components/payment';
+import { HamdastPayment } from '@/modules/hamdast/components/paymentModal';
 import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -239,7 +239,7 @@ const Page = ({ page, app }: any) => {
       <HamdastPayment app_key={app?.key} app_name={app?.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
-      <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} iframeRef={iframeRef} />
+      <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
       <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={app?.key} iframeRef={iframeRef} />
       <HamdastFlow iframeRef={iframeRef} />
       {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}

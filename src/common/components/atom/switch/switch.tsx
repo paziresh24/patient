@@ -29,7 +29,7 @@ export const Switch = forwardRef((props: SwitchProps, ref: ForwardedRef<any>) =>
         htmlFor={uniqueId}
         onClick={() => setIsChecked(prev => !prev)}
         className={classNames(
-          'w-[54px] h-[30px] flex items-center bg-slate-200 rounded-full p-[4px] duration-300 ease-in-out cursor-pointer',
+          'w-[54px] h-[30px] flex items-center justify-end bg-slate-200 rounded-full p-[4px] duration-300 ease-in-out cursor-pointer',
           {
             '!bg-primary': isChecked,
           },
@@ -38,7 +38,7 @@ export const Switch = forwardRef((props: SwitchProps, ref: ForwardedRef<any>) =>
       >
         <div
           className={classNames('bg-white w-[22px] h-[22px] rounded-full shadow-md duration-300 ease-in-out', {
-            '-translate-x-6': isChecked,
+            'translate-x-6': isChecked,
           })}
         ></div>
       </label>

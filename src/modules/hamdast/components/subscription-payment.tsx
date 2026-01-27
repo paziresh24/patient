@@ -10,6 +10,7 @@ import { deleteCookie, getCookie } from 'cookies-next';
 import { forwardRef, useImperativeHandle, useEffect, useRef, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import classNames from 'classnames';
+import Payment from './payment';
 
 interface PlanData {
   id: string;
@@ -47,28 +48,43 @@ interface HamdastSubscriptionPaymentProps {
   app_key: string;
   app_name: string;
   iframeRef: any;
+  icon: string
 }
 
 export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentRef, HamdastSubscriptionPaymentProps>(
-  ({ app_key, app_name, iframeRef }, ref) => {
+  ({ app_key, app_name, icon, iframeRef }, ref) => {
     const { isLogin, info } = useUserInfoStore();
     const { handleOpenLoginModal } = useLoginModalContext();
-
     const [isLoading, setIsLoading] = useState(true);
-    const [id, setId] = useState<string | null>(null);
-    const [fullScreen, setFullScreen] = useState(false);
     const [planData, setPlanData] = useState<PlanData | null>(null);
     const [showPlanSelection, setShowPlanSelection] = useState(false);
     const [showPlansList, setShowPlansList] = useState(false);
     const [plansList, setPlansList] = useState<PlanListItem[]>([]);
     const [isSubscribing, setIsSubscribing] = useState(false);
-
-    const intervalCloseRef = useRef<any>();
+    const payment = useRef<any>(null)
+    const { handleClose, handleOpen, modalProps } = useModal({
+      onClose: () => {
+        const currentData = { ...subscriptionData.current };
+        sendCancelEvent();
+        subscriptionPromiseRef.current?.resolve({ success: false, plan_key: currentData?.plan_key });
+        subscriptionPromiseRef.current = null;
+        resetStates();
+      },
+    });
     const subscriptionPromiseRef = useRef<{
       resolve: (value: { success: boolean; plan_key?: string }) => void;
       reject: (reason?: any) => void;
     } | null>(null);
     const subscriptionData = useRef<any>({});
+
+    const resetStates = useCallback(() => {
+      setIsLoading(true);
+      setPlanData(null);
+      setShowPlanSelection(false);
+      setShowPlansList(false);
+      setPlansList([]);
+      subscriptionData.current = {};
+    }, []);
 
     const sendEvent = useCallback(
       (event: 'HAMDAST_PAYMENT_SUBSCRIBE_CANCEL' | 'HAMDAST_PAYMENT_SUBSCRIBE_SUCCESS' | 'HAMDAST_PAYMENT_SUBSCRIBE_ERROR', data?: any) => {
@@ -107,26 +123,47 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       [sendEvent],
     );
 
-    const resetStates = useCallback(() => {
-      setIsLoading(true);
-      setId(null);
-      setFullScreen(false);
-      setPlanData(null);
-      setShowPlanSelection(false);
-      setShowPlansList(false);
-      setPlansList([]);
-      subscriptionData.current = {};
-    }, []);
 
-    const { handleClose, handleOpen, modalProps } = useModal({
-      onClose: () => {
-        const currentData = { ...subscriptionData.current };
-        sendCancelEvent();
-        subscriptionPromiseRef.current?.resolve({ success: false, plan_key: currentData?.plan_key });
-        subscriptionPromiseRef.current = null;
-        resetStates();
-      },
-    });
+    useImperativeHandle(
+      ref,
+      () => ({
+        open: (
+          plan_key?: string,
+        ): Promise<{ success: boolean; plan_key?: string }> => {
+          return new Promise((resolve, reject) => {
+            subscriptionPromiseRef.current = { resolve, reject };
+            resetStates();
+            subscriptionData.current = { plan_key };
+
+            const handleOpenWithLogin = (callback: () => void) => {
+              if (!isLogin) {
+                handleOpenLoginModal({
+                  state: true,
+                  postLogin: callback,
+                  onClose: () => {
+                    sendCancelEvent();
+                    subscriptionPromiseRef.current?.resolve({ success: false, plan_key });
+                    subscriptionPromiseRef.current = null;
+                  },
+                });
+                return;
+              }
+              handleOpen();
+              callback();
+            };
+
+            if (plan_key) {
+              handleOpenWithLogin(() => fetchPlanData(plan_key));
+            } else {
+              handleOpenWithLogin(() => fetchPlansList());
+            }
+          });
+        },
+        close: handleClose,
+      }),
+      [isLogin, handleOpen, handleClose, handleOpenLoginModal, resetStates, sendCancelEvent],
+    );
+
 
     const checkActiveSubscription = async (): Promise<{
       hasActive: boolean;
@@ -195,7 +232,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
         setPlansList(plans);
         setShowPlansList(true);
         setShowPlanSelection(false);
-        setId(null);
         setIsLoading(false);
       } catch (error: any) {
         console.error('Error fetching plans:', error);
@@ -206,8 +242,12 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       }
     };
 
+
+
     const fetchPlanData = async (plan_key: string) => {
       try {
+        setIsLoading(true);
+
         const subscriptionInfo = await checkActiveSubscription();
 
         if (subscriptionInfo.hasActive) {
@@ -223,20 +263,16 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
         const hasTrial = subscriptionInfo.history.some((sub: any) => sub.is_trial_period === true);
         const hasTrialPeriod = planResponse.data.trial_period > 0;
         const hasNoSubscription = subscriptionInfo.history.length === 0;
-
         if (hasTrial) {
           setShowPlanSelection(false);
           setShowPlansList(false);
-          setId(null);
           openAndCreateReceipt();
         } else if (hasNoSubscription && hasTrialPeriod) {
           setShowPlanSelection(true);
           setShowPlansList(false);
-          setId(null);
         } else {
           setShowPlanSelection(false);
           setShowPlansList(false);
-          setId(null);
           openAndCreateReceipt();
         }
       } catch (error: any) {
@@ -248,43 +284,10 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
     };
 
     const openAndCreateReceipt = () => {
-      deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
+      payment.current?.open({ plan_key: subscriptionData.current?.plan_key })
+      handleClose();
       setShowPlanSelection(false);
       setShowPlansList(false);
-      setId(null);
-      setIsLoading(true);
-
-      if (subscriptionData.current?.receipt_id) {
-        setId(subscriptionData.current.receipt_id);
-        logSplunkEvent('show_receipt');
-        setIsLoading(false);
-        return;
-      }
-
-      axios
-        .post(
-          `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/payment/`,
-          {
-            plan_key: subscriptionData.current?.plan_key,
-            ...(subscriptionData.current?.payload && { payload: subscriptionData.current.payload }),
-          },
-          { withCredentials: true },
-        )
-        .then(data => {
-          setId(data.data?.receipt_id);
-          subscriptionData.current = {
-            ...subscriptionData.current,
-            receipt_id: data.data?.receipt_id,
-          };
-          logSplunkEvent('show_receipt');
-          setIsLoading(false);
-        })
-        .catch(error => {
-          toast.error(error?.response?.data?.message || 'خطا در ایجاد فاکتور');
-          setIsLoading(false);
-          sendCancelEvent();
-          handleClose();
-        });
     };
 
     const logSplunkEvent = (type: string, extraData?: any) => {
@@ -297,18 +300,17 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           meta_data: {
             app_key,
             plan_key: subscriptionData.current?.plan_key,
-            receipt_id: subscriptionData.current?.receipt_id,
             ...extraData,
           },
         },
       });
     };
 
-    const subscribeToPlan = async (receipt_id: string) => {
+    const subscribeToPlan = async (receipt_id: string, is_auto_renew?: boolean) => {
       try {
         await axios.post(
           `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
-          { receipt_id },
+          { receipt_id, auto_renew: is_auto_renew },
           { withCredentials: true },
         );
         sendSuccessEvent();
@@ -345,91 +347,35 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       }
     };
 
-    const handleCancelPayment = () => {
-      clearInterval(intervalCloseRef.current);
-      deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-      logSplunkEvent('cancel_receipt');
+    const handlePaymentSuccess = ({ receipt_id, center_id, is_auto_renew }: any) => {
+      logSplunkEvent('success_receipt', { receipt_id, center_id });
+      subscribeToPlan(receipt_id, is_auto_renew);
+    };
+
+    const handleCancelPayment = ({ receipt_id, center_id }: any) => {
+      logSplunkEvent('cancel_receipt', { receipt_id, center_id });
       sendCancelEvent();
       subscriptionPromiseRef.current?.resolve({ success: false, plan_key: subscriptionData.current?.plan_key });
       subscriptionPromiseRef.current = null;
       handleClose();
     };
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        open: (
-          plan_key?: string,
-          payload?: any,
-          hash_id?: string,
-          receipt_id?: string,
-        ): Promise<{ success: boolean; plan_key?: string }> => {
-          return new Promise((resolve, reject) => {
-            subscriptionPromiseRef.current = { resolve, reject };
-            resetStates();
-            subscriptionData.current = { plan_key, payload, hash_id, receipt_id };
+    const handlePaymentError = ({ message, receipt_id, center_id }: any) => {
+      logSplunkEvent('error_receipt', { message, center_id, receipt_id });
+      sendEvent('HAMDAST_PAYMENT_SUBSCRIBE_ERROR', { message });
+      handleClose();
+    };
 
-            const handleOpenWithLogin = (callback: () => void) => {
-              if (!isLogin) {
-                handleOpenLoginModal({
-                  state: true,
-                  postLogin: callback,
-                  onClose: () => {
-                    sendCancelEvent();
-                    subscriptionPromiseRef.current?.resolve({ success: false, plan_key });
-                    subscriptionPromiseRef.current = null;
-                  },
-                });
-                return;
-              }
-              handleOpen();
-              callback();
-            };
-
-            if (plan_key) {
-              handleOpenWithLogin(() => fetchPlanData(plan_key));
-            } else {
-              handleOpenWithLogin(() => fetchPlansList());
-            }
-          });
-        },
-        close: handleClose,
-      }),
-      [isLogin, handleOpen, handleClose, handleOpenLoginModal, resetStates, sendCancelEvent],
-    );
 
     useEffect(() => {
-      let gatewayWindow: any;
-
-      const handlePaymentSuccess = () => {
-        clearInterval(intervalCloseRef.current);
-        deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-        if (gatewayWindow) gatewayWindow.close();
-        logSplunkEvent('success_receipt');
-        subscribeToPlan(subscriptionData.current?.receipt_id);
-      };
-
-      const handlePaymentError = (message?: string) => {
-        clearInterval(intervalCloseRef.current);
-        deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-        if (gatewayWindow) gatewayWindow.close();
-        if (message) toast.error(message);
-        logSplunkEvent('error_receipt', { message });
-        sendEvent('HAMDAST_PAYMENT_SUBSCRIBE_ERROR', { message });
-        handleClose();
-      };
-
       const handleEventFunction = (messageEvent: MessageEvent) => {
         if (messageEvent.data?.hamdast?.event === 'HAMDAST_PAYMENT_SUBSCRIBE') {
-          setFullScreen(false);
           setIsLoading(true);
           setShowPlanSelection(false);
           setShowPlansList(false);
           subscriptionData.current = {
             hash_id: messageEvent.data?.hamdast?.hash_id,
             plan_key: messageEvent.data?.hamdast?.data?.plan_key,
-            payload: messageEvent.data?.hamdast?.data?.payload,
-            receipt_id: messageEvent.data?.hamdast?.data?.receipt_id,
           };
 
           const plan_key = subscriptionData.current?.plan_key;
@@ -452,51 +398,13 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           }
         }
 
-        if (!modalProps.isOpen) return;
 
-        if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_CANCEL') {
-          handleCancelPayment();
-        }
 
-        if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_SUCCESS') {
-          handlePaymentSuccess();
-          return;
-        }
-
-        if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_ERROR') {
-          handlePaymentError(messageEvent.data?.payman?.data?.message);
-          return;
-        }
-
-        if (messageEvent.data?.payman?.event === 'PAYMAN_PAYMENT_OPEN_GATEWAY') {
-          const gatewayLink = messageEvent.data?.payman?.data?.gateway_link || '';
-          if (gatewayLink) {
-            gatewayWindow = window.open(gatewayLink, '_blank');
-            setFullScreen(true);
-            logSplunkEvent('open_gateway');
-
-            intervalCloseRef.current = setInterval(() => {
-              if (!getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })) return;
-              const status = getCookie('payment_state', { domain: '.paziresh24.com', path: '/' })?.toString().includes('SUCCESS');
-
-              if (status) {
-                logSplunkEvent('success_receipt');
-                subscribeToPlan(subscriptionData.current?.receipt_id);
-              } else {
-                handlePaymentError(messageEvent.data?.payman?.data?.message);
-              }
-
-              handleClose();
-              deleteCookie('payment_state', { domain: '.paziresh24.com', path: '/' });
-              clearInterval(intervalCloseRef.current);
-            }, 1000);
-          }
-        }
       };
 
       window.addEventListener('message', handleEventFunction);
       return () => window.removeEventListener('message', handleEventFunction);
-    }, [isLogin, handleOpen, handleClose, handleOpenLoginModal, sendCancelEvent, sendSuccessEvent, sendEvent, modalProps.isOpen]);
+    }, [isLogin, handleOpen, handleClose, handleOpenLoginModal, sendCancelEvent, sendSuccessEvent, sendEvent, modalProps.isOpen, payment]);
 
     const getIntervalText = (interval: string) => {
       const intervals: Record<string, string> = {
@@ -517,7 +425,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
     const handleSelectPlan = (planKeyOrId: string) => {
       setShowPlansList(false);
       setShowPlanSelection(false);
-      setId(null);
       subscriptionData.current = { ...subscriptionData.current, plan_key: planKeyOrId };
       fetchPlanData(planKeyOrId);
     };
@@ -526,15 +433,12 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       <div>
         <Modal
           noHeader
-          bodyClassName={classNames('justify-center flex items-center', {
-            'h-[22.5rem] px-3': !showPlanSelection && !showPlansList,
-          })}
+          bodyClassName={classNames('justify-center flex items-center')}
           {...modalProps}
-          fullScreen={fullScreen}
-          onClose={fullScreen && id ? handleCancelPayment : modalProps.onClose}
+          onClose={modalProps.onClose}
         >
           {isLoading && <Loading />}
-          {!isLoading && showPlansList && plansList.length > 0 && !showPlanSelection && !id && (
+          {!isLoading && showPlansList && plansList.length > 0 && !showPlanSelection && (
             <div className="flex-grow flex flex-col overflow-y-auto">
               <div className="border-b border-slate-200 pb-4 mb-4">
                 <span className="font-bold text-lg">{app_name}</span>
@@ -567,7 +471,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
               </Button>
             </div>
           )}
-          {!isLoading && showPlanSelection && planData && !showPlansList && !id && (
+          {!isLoading && showPlanSelection && planData && !showPlansList && (
             <div className="flex-grow flex flex-col px-4">
               <div className="border-b border-slate-200 pb-4">
                 <span className="font-bold">{app_name}</span>
@@ -595,10 +499,8 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
               </div>
             </div>
           )}
-          {!isLoading && !showPlanSelection && !showPlansList && id && (
-            <iframe className="w-full h-[22.5rem]" src={`https://pay.paziresh24.com/${id}?embeded=true`} />
-          )}
         </Modal>
+        <Payment showAutoRenew={true} icon={icon} app_key={app_key} app_name={app_name} onSuccess={handlePaymentSuccess} onCancel={handleCancelPayment} onError={handlePaymentError} ref={payment} />
       </div>
     );
   },

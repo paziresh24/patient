@@ -10,21 +10,21 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios, { isAxiosError } from 'axios';
 import { deleteCookie, getCookie } from 'cookies-next';
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useEffectOnce } from 'react-use';
 import { v4 as uuidV4 } from 'uuid';
 import { usePayRequest } from '../apis/pay';
 import sortBy from 'lodash/sortBy'
+import Switch from '@/common/components/atom/switch';
 
-export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key: string; app_name: string; icon?: string; iframeRef: any }) => {
+export default forwardRef(({ app_key, app_name, icon, onSuccess, onCancel, onError, showAutoRenew }: { app_key: string; app_name: string; icon?: string; onSuccess: (data: any) => void; onCancel: (data: any) => void, onError: (data: any) => void, showAutoRenew?: Boolean }, ref) => {
   const { handleClose, handleOpen, modalProps } = useModal({
     onClose: () => {
       handleCancelPayment()
     },
   });
-  const { isLogin, info } = useUserInfoStore();
-  const { handleOpenLoginModal } = useLoginModalContext();
+  const { info } = useUserInfoStore();
   const [balances, setBalances] = useState<any>([]);
   const [selectedCenter, setSelectedCenter] = useState(balances?.[balances?.length - 1]?.center_id)
   const [isLoadingBalances, setIsLoadingBalances] = useState(true);
@@ -34,8 +34,17 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
   const [fullScreen, setFullScreen] = useState(false);
   const intervalCloseRef = useRef<any>();
   const [receiptData, setReceiptData] = useState<any>(null);
-  const paymentData = useRef<any>({});
   const gatewayWindow = useRef<any>();
+  const [isAutoRenew, setIsAutoRenew] = useState(false)
+
+  useImperativeHandle(ref, () => ({
+    open: (data: any) => {
+      handleOpen();
+      openAndCreateReceipt({
+        ...data
+      })
+    },
+  }));
 
 
   useEffect(() => {
@@ -85,11 +94,29 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
   }, [info?.provider?.centers, modalProps?.isOpen]);
 
 
+  const sendEventLog = (type: "show_receipt" | "success" | "cancel" | "open_gateway") => {
+    splunkInstance('dashboard').sendEvent({
+      group: 'hamdast_payment',
+      type: type,
+      event: {
+        is_doctor: info?.is_doctor,
+        user_id: info?.id,
+        meta_data: {
+          app_key: app_key,
+          product_key: receiptData?.product_key,
+          plan_key: receiptData?.plan_key,
+          receipt_id: receiptData?.receipt_id,
+          center_id: selectedCenter
+        },
+      },
+    });
+  }
 
-  const openAndCreateReceipt = () => {
+
+
+  const openAndCreateReceipt = ({ receipt_id, plan_key, product_key, payload }: { receipt_id?: string; plan_key?: string; product_key?: string, payload?: any }) => {
     deleteCookie('payment_state');
-    handleOpen();
-    if (paymentData.current?.receipt_id) {
+    if (receipt_id) {
       splunkInstance('dashboard').sendEvent({
         group: 'hamdast_payment',
         type: 'show_receipt',
@@ -98,8 +125,8 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
           user_id: info?.id,
           meta_data: {
             app_key: app_key,
-            product_key: paymentData.current?.product_key,
-            receipt_id: paymentData.current?.receipt_id,
+            product_key: product_key,
+            receipt_id: receipt_id,
             center_id: selectedCenter
           },
         },
@@ -111,8 +138,9 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
       .post(
         `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/payment/`,
         {
-          product_key: paymentData.current?.product_key,
-          ...(paymentData.current?.payload && { payload: paymentData.current?.payload }),
+          product_key: product_key,
+          plan_key: plan_key,
+          ...(payload && { payload }),
         },
         {
           withCredentials: true,
@@ -120,77 +148,12 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
       )
       .then(data => {
         setReceiptData(data.data);
-        paymentData.current = {
-          ...paymentData.current,
-          receipt_id: data.data?.receipt_id,
-        };
-        splunkInstance('dashboard').sendEvent({
-          group: 'hamdast_payment',
-          type: 'show_receipt',
-          event: {
-            is_doctor: info?.is_doctor,
-            user_id: info?.id,
-            meta_data: {
-              app_key: app_key,
-              product_key: paymentData.current?.product_key,
-              receipt_id: paymentData.current?.receipt_id,
-              center_id: selectedCenter
-            },
-          },
-        });
+        sendEventLog("show_receipt")
         setIsLoading(false);
       });
   };
 
 
-  useEffect(() => {
-    const handleEventFunction = (messageEvent: MessageEvent) => {
-      if (messageEvent.data?.hamdast?.event === 'HAMDAST_PAYMENT_PAY') {
-        setFullScreen(false);
-        setIsLoading(true);
-        paymentData.current = {
-          hash_id: messageEvent.data?.hamdast?.hash_id,
-          product_key: messageEvent.data?.hamdast?.data?.product_key,
-          payload: messageEvent.data?.hamdast?.data?.payload,
-          receipt_id: messageEvent.data?.hamdast?.data?.receipt_id,
-        };
-
-        if (!isLogin) {
-          return handleOpenLoginModal({
-            state: true,
-            postLogin(userInfo) {
-              return openAndCreateReceipt();
-            },
-            onClose: () => {
-              iframeRef.current?.contentWindow?.postMessage(
-                {
-                  hamdast: {
-                    event: 'HAMDAST_PAYMENT_CANCEL',
-                    action: 'forwardToApp',
-                    data: {
-                      event: 'HAMDAST_PAYMENT_CANCEL',
-                      payload: paymentData.current?.payload,
-                      product_key: paymentData.current?.product_key,
-                      receipt_id: paymentData.current?.receipt_id,
-                    },
-                    hash_id: paymentData.current?.hash_id,
-                  },
-                },
-                '*',
-              );
-            },
-          });
-        }
-
-        openAndCreateReceipt();
-      }
-    };
-    window.addEventListener('message', handleEventFunction);
-
-    return () => {
-      window.removeEventListener('message', handleEventFunction);
-    };
-  }, [isLogin, modalProps.isOpen]);
 
   const handleCheckPayment = () => {
     setIsLoadingPayment(true);
@@ -234,20 +197,6 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
     gatewayWindow.current?.close();
     deleteCookie('payment_state');
     gatewayWindow.current = window.open(`https://apigw.paziresh24.com/katibe/v1/topups?amount=${receiptData?.price}&returnlink=${encodeURIComponent(`https://www.paziresh24.com/_/${app_key}/payment_return_link/?status=success`)}&uuid=${uuidV4()}&cancel_returnlink=${encodeURIComponent(`https://www.paziresh24.com/_/${app_key}/payment_return_link/?status=cancel`)}&receipt_id=${receiptData?.receipt_id}&center_id=${selectedCenter}${selectedCenter != '5532' ? '&account=organization' : ''}`, '_blank');
-    splunkInstance('dashboard').sendEvent({
-      group: 'hamdast_payment',
-      type: 'open_gateway',
-      event: {
-        is_doctor: info?.is_doctor,
-        user_id: info?.id,
-        meta_data: {
-          app_key: app_key,
-          product_key: paymentData.current?.product_key,
-          receipt_id: paymentData.current?.receipt_id,
-          center_id: selectedCenter
-        },
-      },
-    });
   };
 
 
@@ -259,57 +208,20 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
         id: receiptData?.receipt_id,
         centerid: selectedCenter != '5532' ? selectedCenter : undefined,
       });
-
-      iframeRef.current?.contentWindow?.postMessage(
-        {
-          hamdast: {
-            event: 'HAMDAST_PAYMENT_SUCCESS',
-            action: 'forwardToApp',
-            data: {
-              event: 'HAMDAST_PAYMENT_SUCCESS',
-              payload: paymentData.current?.payload,
-              product_key: paymentData.current?.product_key,
-              receipt_id: paymentData.current?.receipt_id,
-            },
-            hash_id: paymentData.current?.hash_id,
-          },
-        },
-        '*',
-      );
-      splunkInstance('dashboard').sendEvent({
-        group: 'hamdast_payment',
-        type: 'success_receipt',
-        event: {
-          is_doctor: info?.is_doctor,
-          user_id: info?.id,
-          meta_data: {
-            app_key: app_key,
-            product_key: paymentData.current?.product_key,
-            receipt_id: paymentData.current?.receipt_id,
-            center_id: selectedCenter
-          },
-        },
-      });
+      onSuccess({
+        receipt_id: receiptData?.receipt_id, center_id: selectedCenter, product_key: receiptData?.product_key,
+        plan_key: receiptData?.plan_key,
+        is_auto_renew: isAutoRenew
+      })
     } catch (error) {
       handleCancelPayment();
       if (isAxiosError(error)) {
 
         toast.error(error?.response?.data?.message || 'خطا در پرداخت');
-        splunkInstance('dashboard').sendEvent({
-          group: 'hamdast_payment',
-          type: 'error_receipt',
-          event: {
-            is_doctor: info?.is_doctor,
-            user_id: info?.id,
-            meta_data: {
-              app_key: app_key,
-              product_key: paymentData.current?.product_key,
-              receipt_id: paymentData.current?.receipt_id,
-              message: error?.response?.data?.message,
-              center_id: selectedCenter
-            },
-          },
-        });
+        onError({
+          receipt_id: receiptData?.receipt_id, center_id: selectedCenter, message: error?.response?.data?.message, product_key: receiptData?.product_key,
+          plan_key: receiptData?.plan_key,
+        })
       }
     } finally {
       handleClose();
@@ -319,36 +231,10 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
 
   const handleCancelPayment = () => {
     gatewayWindow.current?.close();
-
-    splunkInstance('dashboard').sendEvent({
-      group: 'hamdast_payment',
-      type: 'cancel_receipt',
-      event: {
-        is_doctor: info?.is_doctor,
-        user_id: info?.id,
-        meta_data: {
-          app_key: app_key,
-          product_key: paymentData.current?.product_key,
-          receipt_id: paymentData.current?.receipt_id,
-          center_id: selectedCenter
-        },
-      },
-    });
-    iframeRef.current?.contentWindow?.postMessage(
-      {
-        hamdast: {
-          event: 'HAMDAST_PAYMENT_CANCEL',
-          action: 'forwardToApp',
-          data: {
-            event: 'HAMDAST_PAYMENT_CANCEL',
-            payload: paymentData.current?.payload,
-            product_key: paymentData.current?.product_key,
-          },
-          hash_id: paymentData.current?.hash_id,
-        },
-      },
-      '*',
-    );
+    onCancel({
+      receipt_id: receiptData?.receipt_id, center_id: selectedCenter, product_key: receiptData?.product_key,
+      plan_key: receiptData?.plan_key,
+    })
     handleClose();
 
   }
@@ -361,7 +247,7 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
         fullScreen={fullScreen}
         onClose={fullScreen ? () => { } : modalProps.onClose}
         title='پرداخت'
-        noHeader={fullScreen}
+        noHeader={true}
         noLine={fullScreen}
       >
         {isLoading && !fullScreen && <Loading />}
@@ -440,6 +326,25 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
                 </div>
               </div>
               <Divider />
+              {
+                showAutoRenew &&
+                (
+                  <>
+                    <div className='flex gap-2 items-center border border-slate-200 p-2 rounded-lg'>
+                      <Switch />
+                      <div className='flex flex-col'>
+                        <Text fontSize='sm' fontWeight='semiBold'>
+                          تمدید خودکار
+                        </Text>
+                        <Text fontSize='xs' className='opacity-80'>
+                          با فعال‌سازی، اشتراک شما در پایان دوره به‌صورت خودکار تمدید می‌شود.
+                        </Text>
+                      </div>
+                    </div>
+                    <Divider />
+                  </>
+                )
+              }
               <Button variant="primary" size="sm" block loading={isLoadingPayment} onClick={handleCheckPayment} disabled={isLoadingBalances}>
                 {
                   balances.find((balance: any) => balance.center_id == selectedCenter)?.balance >= receiptData?.price
@@ -452,4 +357,4 @@ export const HamdastPayment = ({ app_key, app_name, icon, iframeRef }: { app_key
       </Modal>
     </div>
   );
-};
+});
