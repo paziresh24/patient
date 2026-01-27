@@ -649,7 +649,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                         ? (() => {
                           const actionArgs = {
                             customFunction: async () => {
-                              return window.paziresh24?.toast?.success('درخواست شما با موفقیت ثبت شد.');
+                              return window.paziresh24?.toast?.success($steps?.['_function']?.data?.message ?? $steps?.['_function']?.data?.data?.message ?? 'درخواست شما با موفقیت ثبت شد.');
                             },
                           };
                           return (({ customFunction }) => {
