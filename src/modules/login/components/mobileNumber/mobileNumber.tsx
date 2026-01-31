@@ -44,13 +44,19 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const university = useCustomize(state => state.customize?.partnerKey);
   const router = useRouter();
 
+  const toNationalNumber = (value: string) => {
+    const trimmed = value.trim();
+    return trimmed.startsWith('+98') ? `0${trimmed.slice(3)}` : trimmed;
+  };
+
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-    if (!mobileNumberValue) {
+    const normalized = toNationalNumber(digitsFaToEn(mobileNumberValue));
+    if (!normalized) {
       toast.error('لطفا شماره موبایل را وارد کنید.');
       return;
     }
-    if (!phoneNumberValidator(mobileNumberValue)) {
+    if (!phoneNumberValidator(normalized)) {
       setIsFieldError(true);
       return;
     }
@@ -62,7 +68,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
       });
 
       const { data: registerRes } = await register.mutateAsync({
-        cell: +mobileNumberValue,
+        cell: +normalized,
       });
 
       if (registerRes.status === 0) {
@@ -71,7 +77,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
       }
 
       const { data: resetPasswordRes } = await resetPassword.mutateAsync({
-        cell: +mobileNumberValue,
+        cell: +normalized,
       });
 
       if (resetPasswordRes.status === ClinicStatus.SUCCESS || resetPasswordRes.status === 39) {
@@ -96,11 +102,12 @@ export const MobileNumber = (props: MobileNumberProps) => {
       <LoginTitleBar title={title ?? t('steps.mobileNumber.title')} description={description ?? t('steps.mobileNumber.description')} />
       <TextField
         label={t('steps.mobileNumber.phoneNumberFieldLable')}
-        onChange={e =>
-          e.target.value.startsWith('9') && e.target.value.length >= 3
-            ? setMobileNumberValue(digitsFaToEn(`0${e.target.value.trim()}`))
-            : setMobileNumberValue(digitsFaToEn(e.target.value.trim()))
-        }
+        onChange={e => {
+          const raw = digitsFaToEn(e.target.value.trim());
+          const withZero =
+            raw.startsWith('+98') ? `0${raw.slice(3)}` : raw.startsWith('9') && raw.length >= 3 ? `0${raw}` : raw;
+          setMobileNumberValue(withZero);
+        }}
         value={mobileNumberValue}
         style={{ direction: 'ltr' }}
         placeholder="09"
