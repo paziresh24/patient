@@ -28,7 +28,7 @@
     "@next/third-parties": "15.3.4",
     "@paziresh24/splunk-event": "2.1.1",
     "@persian-tools/persian-tools": "3.6.0",
-    "@plasmicapp/cli": "0.1.342",
+    "@plasmicapp/cli": "0.1.352",
     "@plasmicapp/host": "1.0.224",
     "@plasmicapp/react-web": "0.2.399",
     "@plasmicapp/react-web-runtime": "0.0.119",
