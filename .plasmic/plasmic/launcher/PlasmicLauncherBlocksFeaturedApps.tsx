@@ -90,7 +90,6 @@ export const PlasmicLauncherBlocksFeaturedApps__ArgProps =
 export type PlasmicLauncherBlocksFeaturedApps__OverridesType = {
   root?: Flex__<"div">;
   launcherComponentsTitle?: Flex__<typeof LauncherComponentsTitle>;
-  apiRequest?: Flex__<typeof ApiRequest>;
   apiRequest3?: Flex__<typeof ApiRequest>;
   apiRequest2?: Flex__<typeof ApiRequest>;
 };
@@ -143,30 +142,6 @@ function PlasmicLauncherBlocksFeaturedApps__RenderFunc(props: {
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
-      {
-        path: "apiRequest.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
       {
         path: "apiRequest2.data",
         type: "private",
@@ -258,329 +233,6 @@ function PlasmicLauncherBlocksFeaturedApps__RenderFunc(props: {
       />
 
       <div className={classNames(projectcss.all, sty.freeBox__kUujr)}>
-        {(() => {
-          try {
-            return (
-              $ctx.auth.info.is_doctor &&
-              !!$ctx?.Growthbook?.features?.["hamdast::show-recommend-list"]
-            );
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
-          }
-        })() ? (
-          <div className={classNames(projectcss.all, sty.freeBox__iMBva)}>
-            <ApiRequest
-              data-plasmic-name={"apiRequest"}
-              data-plasmic-override={overrides.apiRequest}
-              className={classNames("__wab_instance", sty.apiRequest)}
-              errorDisplay={null}
-              loadingDisplay={
-                <LauncherIconsLoaderIcon
-                  className={classNames(projectcss.all, sty.svg__a76XG)}
-                  role={"img"}
-                />
-              }
-              method={"GET"}
-              onError={async (...eventArgs: any) => {
-                generateStateOnChangeProp($state, [
-                  "apiRequest",
-                  "error"
-                ]).apply(null, eventArgs);
-              }}
-              onLoading={async (...eventArgs: any) => {
-                generateStateOnChangeProp($state, [
-                  "apiRequest",
-                  "loading"
-                ]).apply(null, eventArgs);
-              }}
-              onSuccess={async (...eventArgs: any) => {
-                generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
-                  null,
-                  eventArgs
-                );
-              }}
-              params={(() => {
-                try {
-                  return Object.entries($ctx?.Growthbook?.features ?? {})
-                    ?.filter?.(
-                      ([key, value]) =>
-                        key.startsWith("hamdast::apps::") && !!value
-                    )
-                    .reduce((prev, curr) => {
-                      return {
-                        ...prev,
-                        [curr[0]?.replace("hamdast::apps::", "")]: curr[1]
-                      };
-                    }, {});
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return undefined;
-                  }
-                  throw e;
-                }
-              })()}
-              ref={ref => {
-                $refs["apiRequest"] = ref;
-              }}
-              url={"https://apigw.paziresh24.com/v1/hamdast/list/recommend"}
-            >
-              <div className={classNames(projectcss.all, sty.freeBox__oRi3V)}>
-                <div
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.__wab_text,
-                    sty.text__utctf
-                  )}
-                >
-                  {
-                    "\u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u062e\u0648\u062f\u062a\u0648 \u06a9\u0627\u0645\u0644 \u06a9\u0646 \u0648 \u0631\u0634\u062f \u06a9\u0646!"
-                  }
-                </div>
-              </div>
-              {(() => {
-                try {
-                  return $ctx.auth.info?.provider?.job_title === "doctor";
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return false;
-                  }
-                  throw e;
-                }
-              })()
-                ? (_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                    (() => {
-                      try {
-                        return $state.apiRequest.data;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return [];
-                        }
-                        throw e;
-                      }
-                    })()
-                  ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                    const currentItem = __plasmic_item_0;
-                    const currentIndex = __plasmic_idx_0;
-                    return (
-                      <LauncherComponentsApp
-                        _new={(() => {
-                          try {
-                            return currentItem.badges?.includes("NEW");
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return [];
-                            }
-                            throw e;
-                          }
-                        })()}
-                        appkey={(() => {
-                          try {
-                            return currentItem.app_key;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        avatar={(() => {
-                          try {
-                            return currentItem.icon;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        className={classNames(
-                          "__wab_instance",
-                          sty.launcherComponentsApp__a4EwH
-                        )}
-                        description={(() => {
-                          try {
-                            return currentItem.subtitle;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        key={currentIndex}
-                        link={(() => {
-                          try {
-                            return !!$props?.openAppFrame
-                              ? undefined
-                              : currentItem?.link;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        name={(() => {
-                          try {
-                            return currentItem.title;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        onEvent={async () => {
-                          const $steps = {};
-
-                          $steps["runOpenAppFrame"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  eventRef: $props["openAppFrame"],
-                                  args: [
-                                    (() => {
-                                      try {
-                                        return currentItem.app_key;
-                                      } catch (e) {
-                                        if (
-                                          e instanceof TypeError ||
-                                          e?.plasmicType ===
-                                            "PlasmicUndefinedDataError"
-                                        ) {
-                                          return undefined;
-                                        }
-                                        throw e;
-                                      }
-                                    })()
-                                  ]
-                                };
-                                return (({ eventRef, args }) => {
-                                  return eventRef?.(...(args ?? []));
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["runOpenAppFrame"] != null &&
-                            typeof $steps["runOpenAppFrame"] === "object" &&
-                            typeof $steps["runOpenAppFrame"].then === "function"
-                          ) {
-                            $steps["runOpenAppFrame"] = await $steps[
-                              "runOpenAppFrame"
-                            ];
-                          }
-
-                          $steps["sendLog"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  args: [
-                                    (() => {
-                                      try {
-                                        return {
-                                          evant_group: "launcher_statistics",
-                                          event_type: "apps",
-                                          user_id: $ctx.auth.info?.id,
-                                          is_doctor: $ctx.auth.info?.is_doctor,
-                                          meta_data: {
-                                            name: currentItem.title,
-                                            key: currentItem.app_key,
-                                            link: currentItem.link
-                                          },
-                                          ref: "recommend"
-                                        };
-                                      } catch (e) {
-                                        if (
-                                          e instanceof TypeError ||
-                                          e?.plasmicType ===
-                                            "PlasmicUndefinedDataError"
-                                        ) {
-                                          return undefined;
-                                        }
-                                        throw e;
-                                      }
-                                    })()
-                                  ]
-                                };
-                                return $globalActions["Splunk.sendLog"]?.apply(
-                                  null,
-                                  [...actionArgs.args]
-                                );
-                              })()
-                            : undefined;
-                          if (
-                            $steps["sendLog"] != null &&
-                            typeof $steps["sendLog"] === "object" &&
-                            typeof $steps["sendLog"].then === "function"
-                          ) {
-                            $steps["sendLog"] = await $steps["sendLog"];
-                          }
-                        }}
-                        pagekey={"launcher"}
-                        showUsers={(() => {
-                          try {
-                            return currentItem.functions?.includes?.("widget");
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return false;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        soon={(() => {
-                          try {
-                            return currentItem.badges?.includes("SOON");
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return [];
-                            }
-                            throw e;
-                          }
-                        })()}
-                      />
-                    );
-                  })
-                : null}
-            </ApiRequest>
-          </div>
-        ) : null}
         {(() => {
           try {
             return $ctx.auth.info.is_doctor;
@@ -828,9 +480,8 @@ function PlasmicLauncherBlocksFeaturedApps__RenderFunc(props: {
                             typeof $steps["runOpenAppFrame"] === "object" &&
                             typeof $steps["runOpenAppFrame"].then === "function"
                           ) {
-                            $steps["runOpenAppFrame"] = await $steps[
-                              "runOpenAppFrame"
-                            ];
+                            $steps["runOpenAppFrame"] =
+                              await $steps["runOpenAppFrame"];
                           }
 
                           $steps["sendLog"] = true
@@ -1145,9 +796,8 @@ function PlasmicLauncherBlocksFeaturedApps__RenderFunc(props: {
                             typeof $steps["runOpenAppFrame"] === "object" &&
                             typeof $steps["runOpenAppFrame"].then === "function"
                           ) {
-                            $steps["runOpenAppFrame"] = await $steps[
-                              "runOpenAppFrame"
-                            ];
+                            $steps["runOpenAppFrame"] =
+                              await $steps["runOpenAppFrame"];
                           }
 
                           $steps["sendLog"] = true
@@ -1270,15 +920,8 @@ function PlasmicLauncherBlocksFeaturedApps__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "launcherComponentsTitle",
-    "apiRequest",
-    "apiRequest3",
-    "apiRequest2"
-  ],
+  root: ["root", "launcherComponentsTitle", "apiRequest3", "apiRequest2"],
   launcherComponentsTitle: ["launcherComponentsTitle"],
-  apiRequest: ["apiRequest"],
   apiRequest3: ["apiRequest3"],
   apiRequest2: ["apiRequest2"]
 } as const;
@@ -1288,7 +931,6 @@ type DescendantsType<T extends NodeNameType> =
 type NodeDefaultElementType = {
   root: "div";
   launcherComponentsTitle: typeof LauncherComponentsTitle;
-  apiRequest: typeof ApiRequest;
   apiRequest3: typeof ApiRequest;
   apiRequest2: typeof ApiRequest;
 };
@@ -1304,7 +946,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLauncherBlocksFeaturedApps__VariantsArgs;
     args?: PlasmicLauncherBlocksFeaturedApps__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLauncherBlocksFeaturedApps__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLauncherBlocksFeaturedApps__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLauncherBlocksFeaturedApps__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -1355,7 +999,6 @@ export const PlasmicLauncherBlocksFeaturedApps = Object.assign(
   {
     // Helper components rendering sub-elements
     launcherComponentsTitle: makeNodeComponent("launcherComponentsTitle"),
-    apiRequest: makeNodeComponent("apiRequest"),
     apiRequest3: makeNodeComponent("apiRequest3"),
     apiRequest2: makeNodeComponent("apiRequest2"),
 
