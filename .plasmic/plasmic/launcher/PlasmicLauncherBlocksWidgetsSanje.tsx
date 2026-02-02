@@ -219,9 +219,8 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
           typeof $steps["goToDashboardAppsSanjeMyPerformance"].then ===
             "function"
         ) {
-          $steps["goToDashboardAppsSanjeMyPerformance"] = await $steps[
-            "goToDashboardAppsSanjeMyPerformance"
-          ];
+          $steps["goToDashboardAppsSanjeMyPerformance"] =
+            await $steps["goToDashboardAppsSanjeMyPerformance"];
         }
 
         $steps["sendLog"] = true
@@ -406,17 +405,6 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
               }
             </div>
           </div>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__vy3Zp
-            )}
-          >
-            {
-              "\u0628\u0631\u0627\u06cc \u0631\u0634\u062f \u0631\u062a\u0628\u0647 \u0648 \u0627\u0641\u0632\u0627\u06cc\u0634 \u0645\u0631\u0627\u062c\u0639\u06cc\u0646 \u06a9\u0644\u06cc\u06a9 \u06a9\u0646\u06cc\u062f."
-            }
-          </div>
           <PlasmicImg__
             data-plasmic-name={"img"}
             data-plasmic-override={overrides.img}
@@ -427,7 +415,7 @@ function PlasmicLauncherBlocksWidgetsSanje__RenderFunc(props: {
             displayMaxWidth={"100%"}
             displayMinHeight={"0"}
             displayMinWidth={"0"}
-            displayWidth={"46px"}
+            displayWidth={"33px"}
             loading={"lazy"}
             src={{
               src: launcherImagePerformanceOkCsAiGiEdj,
@@ -551,7 +539,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLauncherBlocksWidgetsSanje__VariantsArgs;
     args?: PlasmicLauncherBlocksWidgetsSanje__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLauncherBlocksWidgetsSanje__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLauncherBlocksWidgetsSanje__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLauncherBlocksWidgetsSanje__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

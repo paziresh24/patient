@@ -615,10 +615,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLauncherBlocksWidgetsNelson__VariantsArgs;
     args?: PlasmicLauncherBlocksWidgetsNelson__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit< // Specify variants directly as props
-    PlasmicLauncherBlocksWidgetsNelson__VariantsArgs,
-    ReservedPropsType
-  > &
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLauncherBlocksWidgetsNelson__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLauncherBlocksWidgetsNelson__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

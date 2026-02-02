@@ -62,6 +62,7 @@ import {
 import LauncherWrapper from "../../LauncherWrapper"; // plasmic-import: 3TTnoIEhqXMk/component
 import LauncherBlocksProfile from "../../LauncherBlocksProfile"; // plasmic-import: AdXQLu7KAuFc/component
 import { Reveal } from "@plasmicpkgs/react-awesome-reveal";
+import LauncherBlocksAdaptive from "../../LauncherBlocksAdaptive"; // plasmic-import: yAGjt_5kjv4v/component
 import LauncherBlocksShortcuts from "../../LauncherBlocksShortcuts"; // plasmic-import: SALc6_vQPXlG/component
 import LauncherBlocksWidgetsSanje from "../../LauncherBlocksWidgetsSanje"; // plasmic-import: p_ncR6UWroPY/component
 import LauncherBlocksWidgetsNelson from "../../LauncherBlocksWidgetsNelson"; // plasmic-import: kPpI69i3raKy/component
@@ -103,6 +104,7 @@ export type PlasmicLauncherMain__OverridesType = {
   root?: Flex__<"div">;
   launcherWrapper?: Flex__<typeof LauncherWrapper>;
   launcherBlocksProfile?: Flex__<typeof LauncherBlocksProfile>;
+  launcherBlocksAdaptive?: Flex__<typeof LauncherBlocksAdaptive>;
   launcherBlocksShortcuts?: Flex__<typeof LauncherBlocksShortcuts>;
   launcherBlocksWidgetsSanje?: Flex__<typeof LauncherBlocksWidgetsSanje>;
   launcherBlocksWidgetsNelson?: Flex__<typeof LauncherBlocksWidgetsNelson>;
@@ -265,6 +267,42 @@ function PlasmicLauncherMain__RenderFunc(props: {
             duration={300}
             triggerOnce={true}
           >
+            <LauncherBlocksAdaptive
+              data-plasmic-name={"launcherBlocksAdaptive"}
+              data-plasmic-override={overrides.launcherBlocksAdaptive}
+              className={classNames(
+                "__wab_instance",
+                sty.launcherBlocksAdaptive
+              )}
+              onOpenApp={async appKey => {
+                const $steps = {};
+
+                $steps["runOnAction"] = true
+                  ? (() => {
+                      const actionArgs = {
+                        eventRef: $props["onAction"],
+                        args: [
+                          {
+                            action: "OPEN_APP",
+                            appKey: appKey
+                          }
+                        ]
+                      };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
+                  : undefined;
+                if (
+                  $steps["runOnAction"] != null &&
+                  typeof $steps["runOnAction"] === "object" &&
+                  typeof $steps["runOnAction"].then === "function"
+                ) {
+                  $steps["runOnAction"] = await $steps["runOnAction"];
+                }
+              }}
+            />
+
             <LauncherBlocksShortcuts
               data-plasmic-name={"launcherBlocksShortcuts"}
               data-plasmic-override={overrides.launcherBlocksShortcuts}
@@ -350,7 +388,6 @@ function PlasmicLauncherMain__RenderFunc(props: {
                   />
                 ) : null}
               </div>
-              <div className={classNames(projectcss.all, sty.freeBox__yfzd)} />
             </Reveal>
           ) : null}
           {(() => {
@@ -449,7 +486,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
             ) : null}
             {(() => {
               try {
-                return $ctx.auth.info?.provider?.job_title === "doctor";
+                return $ctx.auth.info?.provider?.job_title == "doctor";
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -469,19 +506,7 @@ function PlasmicLauncherMain__RenderFunc(props: {
                 )}
               />
             ) : null}
-            {(() => {
-              try {
-                return $ctx.auth.info?.provider?.job_title === "doctor";
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return false;
-                }
-                throw e;
-              }
-            })() ? (
+            {false ? (
               <AppsChannelNotice
                 data-plasmic-name={"appsChannelNotice"}
                 data-plasmic-override={overrides.appsChannelNotice}
@@ -648,9 +673,8 @@ function PlasmicLauncherMain__RenderFunc(props: {
                   typeof $steps["goToHttpsSupportPaziresh24Com"].then ===
                     "function"
                 ) {
-                  $steps["goToHttpsSupportPaziresh24Com"] = await $steps[
-                    "goToHttpsSupportPaziresh24Com"
-                  ];
+                  $steps["goToHttpsSupportPaziresh24Com"] =
+                    await $steps["goToHttpsSupportPaziresh24Com"];
                 }
               }}
             >
@@ -703,6 +727,7 @@ const PlasmicDescendants = {
     "root",
     "launcherWrapper",
     "launcherBlocksProfile",
+    "launcherBlocksAdaptive",
     "launcherBlocksShortcuts",
     "launcherBlocksWidgetsSanje",
     "launcherBlocksWidgetsNelson",
@@ -716,6 +741,7 @@ const PlasmicDescendants = {
   ],
   launcherWrapper: ["launcherWrapper"],
   launcherBlocksProfile: ["launcherBlocksProfile"],
+  launcherBlocksAdaptive: ["launcherBlocksAdaptive"],
   launcherBlocksShortcuts: ["launcherBlocksShortcuts"],
   launcherBlocksWidgetsSanje: ["launcherBlocksWidgetsSanje"],
   launcherBlocksWidgetsNelson: ["launcherBlocksWidgetsNelson"],
@@ -734,6 +760,7 @@ type NodeDefaultElementType = {
   root: "div";
   launcherWrapper: typeof LauncherWrapper;
   launcherBlocksProfile: typeof LauncherBlocksProfile;
+  launcherBlocksAdaptive: typeof LauncherBlocksAdaptive;
   launcherBlocksShortcuts: typeof LauncherBlocksShortcuts;
   launcherBlocksWidgetsSanje: typeof LauncherBlocksWidgetsSanje;
   launcherBlocksWidgetsNelson: typeof LauncherBlocksWidgetsNelson;
@@ -757,7 +784,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLauncherMain__VariantsArgs;
     args?: PlasmicLauncherMain__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLauncherMain__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLauncherMain__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLauncherMain__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -808,6 +837,7 @@ export const PlasmicLauncherMain = Object.assign(
     // Helper components rendering sub-elements
     launcherWrapper: makeNodeComponent("launcherWrapper"),
     launcherBlocksProfile: makeNodeComponent("launcherBlocksProfile"),
+    launcherBlocksAdaptive: makeNodeComponent("launcherBlocksAdaptive"),
     launcherBlocksShortcuts: makeNodeComponent("launcherBlocksShortcuts"),
     launcherBlocksWidgetsSanje: makeNodeComponent("launcherBlocksWidgetsSanje"),
     launcherBlocksWidgetsNelson: makeNodeComponent(

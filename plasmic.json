@@ -3488,6 +3488,32 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksReplyCard.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "JpBy0NTPa4ip",
+          "name": "LauncherMyApps",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherMyApps.tsx",
+          "importSpec": {
+            "modulePath": "LauncherMyApps.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherMyApps.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "yAGjt_5kjv4v",
+          "name": "LauncherBlocksAdaptive",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksAdaptive.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksAdaptive.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksAdaptive.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -7788,10 +7814,11 @@
     ]
   },
   "wrapPagesWithGlobalContexts": true,
+  "preserveJsImportExtensions": false,
   "nextjsConfig": {
     "pagesDir": "../src/pages"
   },
-  "cliVersion": "0.1.342",
+  "cliVersion": "0.1.352",
   "packageManager": "npm",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.342/dist/plasmic.schema.json"
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.352/dist/plasmic.schema.json"
 }
