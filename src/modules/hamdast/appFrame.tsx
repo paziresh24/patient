@@ -27,11 +27,13 @@ export const AppFrame = ({
   params,
   queries,
   showBackButton,
+  dontShowProfile
 }: {
   appKey: string;
   params: string[];
   queries?: any;
   showBackButton?: boolean;
+  dontShowProfile?: boolean;
 }) => {
   const router = useRouter();
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
@@ -58,7 +60,7 @@ export const AppFrame = ({
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPending = useUserInfoStore(state => state.pending);
   const { handleOpenLoginModal } = useLoginModalContext();
-  const [showApp, setShowApp] = useState(false);
+  const [showApp, setShowApp] = useState(dontShowProfile);
   const [showTranslation, setShowTranslation] = useState(false);
   const [showSupportButton, setShowSupportButton] = useState(false);
 
