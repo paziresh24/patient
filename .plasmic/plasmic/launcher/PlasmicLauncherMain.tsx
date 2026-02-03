@@ -812,6 +812,34 @@ function PlasmicLauncherMain__RenderFunc(props: {
                       "__wab_instance",
                       sty.paziresh24Button
                     )}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["goToApps"] = true
+                        ? (() => {
+                            const actionArgs = { destination: "/_/apps" };
+                            return (({ destination }) => {
+                              if (
+                                typeof destination === "string" &&
+                                destination.startsWith("#")
+                              ) {
+                                document
+                                  .getElementById(destination.substr(1))
+                                  .scrollIntoView({ behavior: "smooth" });
+                              } else {
+                                __nextRouter?.push(destination);
+                              }
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["goToApps"] != null &&
+                        typeof $steps["goToApps"] === "object" &&
+                        typeof $steps["goToApps"].then === "function"
+                      ) {
+                        $steps["goToApps"] = await $steps["goToApps"];
+                      }
+                    }}
                     outline={true}
                     size={"compact"}
                     startIcon={null}

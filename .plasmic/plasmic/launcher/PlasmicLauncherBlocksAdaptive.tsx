@@ -241,6 +241,28 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
               <div
                 className={classNames(projectcss.all, sty.freeBox__fsa9L)}
                 key={currentIndex}
+                onClick={async event => {
+                  const $steps = {};
+
+                  $steps["runOnOpenApp"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          eventRef: $props["onOpenApp"],
+                          args: [currentItem.app_key]
+                        };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["runOnOpenApp"] != null &&
+                    typeof $steps["runOnOpenApp"] === "object" &&
+                    typeof $steps["runOnOpenApp"].then === "function"
+                  ) {
+                    $steps["runOnOpenApp"] = await $steps["runOnOpenApp"];
+                  }
+                }}
               >
                 <PlasmicImg__
                   data-plasmic-name={"img"}
@@ -311,6 +333,7 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
                       "__wab_instance",
                       sty.paziresh24Button
                     )}
+                    color={"softBlue"}
                     onClick={async event => {
                       const $steps = {};
 
