@@ -147,6 +147,8 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const styleTokensClassNames = _useStyleTokens();
 
   return (
@@ -261,6 +263,34 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
                     typeof $steps["runOnOpenApp"].then === "function"
                   ) {
                     $steps["runOnOpenApp"] = await $steps["runOnOpenApp"];
+                  }
+
+                  $steps["invokeGlobalAction"] = true
+                    ? (() => {
+                        const actionArgs = {
+                          args: [
+                            {
+                              evant_group: "launcher_statistics",
+                              event_type: "app_card",
+                              feature: "sanje",
+                              user_id: $ctx.auth.info?.id,
+                              is_doctor: $ctx.auth.info?.is_doctor,
+                              meta_data: { app_key: currentItem.app_key }
+                            }
+                          ]
+                        };
+                        return $globalActions["Splunk.sendLog"]?.apply(null, [
+                          ...actionArgs.args
+                        ]);
+                      })()
+                    : undefined;
+                  if (
+                    $steps["invokeGlobalAction"] != null &&
+                    typeof $steps["invokeGlobalAction"] === "object" &&
+                    typeof $steps["invokeGlobalAction"].then === "function"
+                  ) {
+                    $steps["invokeGlobalAction"] =
+                      await $steps["invokeGlobalAction"];
                   }
                 }}
               >

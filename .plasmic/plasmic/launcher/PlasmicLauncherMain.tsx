@@ -317,7 +317,10 @@ function PlasmicLauncherMain__RenderFunc(props: {
 
           {(() => {
             try {
-              return $ctx.auth.info?.provider?.job_title === "doctor";
+              return (
+                $ctx.auth.info?.provider?.job_title === "doctor" &&
+                $state.apiRequest.data.items?.length > 0
+              );
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -688,163 +691,170 @@ function PlasmicLauncherMain__RenderFunc(props: {
                   "https://apigw.paziresh24.com/v1/hamdast/list/capabilities"
                 }
               >
-                {(() => {
-                  try {
-                    return $state.apiRequest2.data?.length > 0;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })()
-                  ? (_par =>
-                      !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                      (() => {
-                        try {
-                          return $state.apiRequest2.data;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
-                          }
-                          throw e;
-                        }
-                      })()
-                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                      const currentItem = __plasmic_item_0;
-                      const currentIndex = __plasmic_idx_0;
-                      return (
-                        <LauncherBlocksAdaptive
-                          className={classNames(
-                            "__wab_instance",
-                            sty.launcherBlocksAdaptive___6XoP8
-                          )}
-                          items={(() => {
-                            try {
-                              return currentItem.items;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return [];
-                              }
-                              throw e;
-                            }
-                          })()}
-                          key={currentIndex}
-                          onOpenApp={async appKey => {
-                            const $steps = {};
-
-                            $steps["runOnAction"] = true
-                              ? (() => {
-                                  const actionArgs = {
-                                    eventRef: $props["onAction"],
-                                    args: [
-                                      {
-                                        action: "OPEN_APP",
-                                        appKey: appKey
-                                      }
-                                    ]
-                                  };
-                                  return (({ eventRef, args }) => {
-                                    return eventRef?.(...(args ?? []));
-                                  })?.apply(null, [actionArgs]);
-                                })()
-                              : undefined;
-                            if (
-                              $steps["runOnAction"] != null &&
-                              typeof $steps["runOnAction"] === "object" &&
-                              typeof $steps["runOnAction"].then === "function"
-                            ) {
-                              $steps["runOnAction"] =
-                                await $steps["runOnAction"];
-                            }
-                          }}
-                          title={currentItem.title}
-                        />
-                      );
-                    })
-                  : null}
-                {(() => {
-                  try {
-                    return $state.apiRequest2.data?.length > 0;
-                  } catch (e) {
-                    if (
-                      e instanceof TypeError ||
-                      e?.plasmicType === "PlasmicUndefinedDataError"
-                    ) {
-                      return false;
-                    }
-                    throw e;
-                  }
-                })() ? (
-                  <Paziresh24Button
-                    data-plasmic-name={"paziresh24Button"}
-                    data-plasmic-override={overrides.paziresh24Button}
-                    children2={
-                      <React.Fragment>
-                        <Icon11Icon
-                          className={classNames(projectcss.all, sty.svg___0POC)}
-                          role={"img"}
-                        />
-
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__qeI4L
-                          )}
-                        >
-                          {
-                            "\u0645\u0634\u0627\u0647\u062f\u0647 \u062c\u0639\u0628\u0647 \u0627\u0628\u0632\u0627\u0631"
-                          }
-                        </div>
-                      </React.Fragment>
-                    }
-                    className={classNames(
-                      "__wab_instance",
-                      sty.paziresh24Button
-                    )}
-                    onClick={async event => {
-                      const $steps = {};
-
-                      $steps["goToApps"] = true
-                        ? (() => {
-                            const actionArgs = { destination: "/_/apps" };
-                            return (({ destination }) => {
-                              if (
-                                typeof destination === "string" &&
-                                destination.startsWith("#")
-                              ) {
-                                document
-                                  .getElementById(destination.substr(1))
-                                  .scrollIntoView({ behavior: "smooth" });
-                              } else {
-                                __nextRouter?.push(destination);
-                              }
-                            })?.apply(null, [actionArgs]);
-                          })()
-                        : undefined;
+                <div
+                  className={classNames(projectcss.all, sty.freeBox___35XCx)}
+                >
+                  {(() => {
+                    try {
+                      return $state.apiRequest2.data?.length > 0;
+                    } catch (e) {
                       if (
-                        $steps["goToApps"] != null &&
-                        typeof $steps["goToApps"] === "object" &&
-                        typeof $steps["goToApps"].then === "function"
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
                       ) {
-                        $steps["goToApps"] = await $steps["goToApps"];
+                        return false;
                       }
-                    }}
-                    outline={true}
-                    size={"compact"}
-                    startIcon={null}
-                  />
-                ) : null}
+                      throw e;
+                    }
+                  })()
+                    ? (_par =>
+                        !_par ? [] : Array.isArray(_par) ? _par : [_par])(
+                        (() => {
+                          try {
+                            return $state.apiRequest2.data;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
+                          }
+                        })()
+                      ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                        const currentItem = __plasmic_item_0;
+                        const currentIndex = __plasmic_idx_0;
+                        return (
+                          <LauncherBlocksAdaptive
+                            className={classNames(
+                              "__wab_instance",
+                              sty.launcherBlocksAdaptive___6XoP8
+                            )}
+                            items={(() => {
+                              try {
+                                return currentItem.items;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return [];
+                                }
+                                throw e;
+                              }
+                            })()}
+                            key={currentIndex}
+                            onOpenApp={async appKey => {
+                              const $steps = {};
+
+                              $steps["runOnAction"] = true
+                                ? (() => {
+                                    const actionArgs = {
+                                      eventRef: $props["onAction"],
+                                      args: [
+                                        {
+                                          action: "OPEN_APP",
+                                          appKey: appKey
+                                        }
+                                      ]
+                                    };
+                                    return (({ eventRef, args }) => {
+                                      return eventRef?.(...(args ?? []));
+                                    })?.apply(null, [actionArgs]);
+                                  })()
+                                : undefined;
+                              if (
+                                $steps["runOnAction"] != null &&
+                                typeof $steps["runOnAction"] === "object" &&
+                                typeof $steps["runOnAction"].then === "function"
+                              ) {
+                                $steps["runOnAction"] =
+                                  await $steps["runOnAction"];
+                              }
+                            }}
+                            title={currentItem.title}
+                          />
+                        );
+                      })
+                    : null}
+                  {(() => {
+                    try {
+                      return $state.apiRequest2.data?.length > 0;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <Paziresh24Button
+                      data-plasmic-name={"paziresh24Button"}
+                      data-plasmic-override={overrides.paziresh24Button}
+                      children2={
+                        <React.Fragment>
+                          <Icon11Icon
+                            className={classNames(
+                              projectcss.all,
+                              sty.svg___0POC
+                            )}
+                            role={"img"}
+                          />
+
+                          <div
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__qeI4L
+                            )}
+                          >
+                            {
+                              "\u0645\u0634\u0627\u0647\u062f\u0647 \u062c\u0639\u0628\u0647 \u0627\u0628\u0632\u0627\u0631"
+                            }
+                          </div>
+                        </React.Fragment>
+                      }
+                      className={classNames(
+                        "__wab_instance",
+                        sty.paziresh24Button
+                      )}
+                      onClick={async event => {
+                        const $steps = {};
+
+                        $steps["goToApps"] = true
+                          ? (() => {
+                              const actionArgs = { destination: "/_/apps" };
+                              return (({ destination }) => {
+                                if (
+                                  typeof destination === "string" &&
+                                  destination.startsWith("#")
+                                ) {
+                                  document
+                                    .getElementById(destination.substr(1))
+                                    .scrollIntoView({ behavior: "smooth" });
+                                } else {
+                                  __nextRouter?.push(destination);
+                                }
+                              })?.apply(null, [actionArgs]);
+                            })()
+                          : undefined;
+                        if (
+                          $steps["goToApps"] != null &&
+                          typeof $steps["goToApps"] === "object" &&
+                          typeof $steps["goToApps"].then === "function"
+                        ) {
+                          $steps["goToApps"] = await $steps["goToApps"];
+                        }
+                      }}
+                      outline={true}
+                      size={"compact"}
+                      startIcon={null}
+                    />
+                  ) : null}
+                </div>
               </ApiRequest>
             </Reveal>
           ) : null}
