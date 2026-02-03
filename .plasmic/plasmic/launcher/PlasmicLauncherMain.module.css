@@ -107,13 +107,24 @@
   max-width: 100%;
   object-fit: cover;
 }
+.freeBox___35XCx {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 15px;
+  min-width: 0;
+}
 .launcherBlocksAdaptive___6XoP8:global(.__wab_instance) {
   max-width: 100%;
 }
 .paziresh24Button:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
-  margin-top: 15px;
   min-width: 0;
 }
 .svg___0POC {
