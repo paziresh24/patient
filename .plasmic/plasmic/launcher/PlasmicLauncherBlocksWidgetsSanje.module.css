@@ -2,14 +2,13 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 100%;
+  width: 155px;
   height: auto;
   justify-content: center;
   align-items: center;
   background: #ffffff;
   cursor: pointer;
   row-gap: 10px;
-  min-width: 0;
   border-radius: 341px;
   padding: 10px 15px 10px 10px;
 }

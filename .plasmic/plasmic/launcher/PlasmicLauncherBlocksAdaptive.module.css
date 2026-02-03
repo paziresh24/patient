@@ -9,10 +9,6 @@
   row-gap: 10px;
   min-width: 0;
 }
-.apiRequest:global(.__wab_instance) {
-  max-width: 100%;
-  object-fit: cover;
-}
 .launcherComponentsTitle:global(.__wab_instance) {
   max-width: 100%;
 }
@@ -35,11 +31,11 @@
   position: relative;
   align-items: stretch;
   justify-content: flex-start;
-  width: 450px;
+  width: 55px;
   height: auto;
   max-width: 100%;
   background: #ffffff;
-  min-width: 272px;
+  min-width: 255px;
   column-gap: 7px;
   flex-shrink: 0;
   border-radius: 12px;
