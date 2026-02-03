@@ -42,8 +42,19 @@
   width: 100%;
   min-width: 0;
 }
-.launcherBlocksAdaptive:global(.__wab_instance) {
+.apiRequest:global(.__wab_instance) {
+  animation: none;
   max-width: 100%;
+  object-fit: cover;
+}
+.launcherBlocksAdaptive__vSkT0:global(.__wab_instance) {
+  max-width: 100%;
+}
+.reveal__hjiWw:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
 }
 .launcherBlocksShortcuts:global(.__wab_instance) {
   max-width: 100%;
@@ -69,6 +80,7 @@
 .launcherBlocksWidgetsSanje:global(.__wab_instance) {
   max-width: 100%;
   height: auto;
+  flex-shrink: 0;
 }
 .launcherBlocksWidgetsNelson:global(.__wab_instance) {
   max-width: 100%;
@@ -83,6 +95,44 @@
 }
 .launcherBlocksStory:global(.__wab_instance) {
   max-width: 100%;
+}
+.reveal___6Ikjw:global(.__wab_instance) {
+  max-width: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: 0;
+}
+.apiRequest2:global(.__wab_instance) {
+  animation: none;
+  max-width: 100%;
+  object-fit: cover;
+}
+.launcherBlocksAdaptive___6XoP8:global(.__wab_instance) {
+  max-width: 100%;
+}
+.paziresh24Button:global(.__wab_instance) {
+  max-width: 100%;
+  width: 100%;
+  margin-top: 15px;
+  min-width: 0;
+}
+.svg___0POC {
+  position: relative;
+  object-fit: cover;
+  width: 17px;
+  height: 17px;
+  color: var(--token-IFYe29KCwQQV);
+  margin-left: 5px;
+}
+.text__qeI4L {
+  font-weight: 600;
+  font-size: var(--token-P2saABvfDCPH);
+}
+.svg__xT1Pw {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
 }
 .reveal__vvBKi:global(.__wab_instance) {
   max-width: 100%;
@@ -144,7 +194,7 @@
   height: 24px;
   flex-shrink: 0;
 }
-.text {
+.text__tD5Mh {
   position: relative;
   height: auto;
   max-width: 100%;

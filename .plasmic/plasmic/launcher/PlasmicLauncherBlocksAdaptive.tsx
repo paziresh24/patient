@@ -59,7 +59,6 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
-import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import LauncherComponentsTitle from "../../LauncherComponentsTitle"; // plasmic-import: hyfYYMUJ_ZCV/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
@@ -83,15 +82,18 @@ export const PlasmicLauncherBlocksAdaptive__VariantProps =
 
 export type PlasmicLauncherBlocksAdaptive__ArgsType = {
   onOpenApp?: (appKey: string) => void;
+  items?: any;
+  title?: string;
 };
 type ArgPropType = keyof PlasmicLauncherBlocksAdaptive__ArgsType;
 export const PlasmicLauncherBlocksAdaptive__ArgProps = new Array<ArgPropType>(
-  "onOpenApp"
+  "onOpenApp",
+  "items",
+  "title"
 );
 
 export type PlasmicLauncherBlocksAdaptive__OverridesType = {
   root?: Flex__<"div">;
-  apiRequest?: Flex__<typeof ApiRequest>;
   launcherComponentsTitle?: Flex__<typeof LauncherComponentsTitle>;
   img?: Flex__<typeof PlasmicImg__>;
   paziresh24Button?: Flex__<typeof Paziresh24Button>;
@@ -99,6 +101,8 @@ export type PlasmicLauncherBlocksAdaptive__OverridesType = {
 
 export interface DefaultLauncherBlocksAdaptiveProps {
   onOpenApp?: (appKey: string) => void;
+  items?: any;
+  title?: string;
   className?: string;
 }
 
@@ -122,7 +126,9 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
   const args = React.useMemo(
     () =>
       Object.assign(
-        {},
+        {
+          items: []
+        },
         Object.fromEntries(
           Object.entries(props.args).filter(([_, v]) => v !== undefined)
         )
@@ -141,42 +147,6 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
-  const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
-    () => [
-      {
-        path: "apiRequest.data",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.error",
-        type: "private",
-        variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      },
-      {
-        path: "apiRequest.loading",
-        type: "private",
-        variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
-
-        refName: "apiRequest"
-      }
-    ],
-    [$props, $ctx, $refs]
-  );
-  const $state = useDollarState(stateSpecs, {
-    $props,
-    $ctx,
-    $queries: {},
-    $refs
-  });
-
   const styleTokensClassNames = _useStyleTokens();
 
   return (
@@ -194,259 +164,189 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
         sty.root
       )}
     >
-      <ApiRequest
-        data-plasmic-name={"apiRequest"}
-        data-plasmic-override={overrides.apiRequest}
-        className={classNames("__wab_instance", sty.apiRequest)}
-        errorDisplay={null}
-        loadingDisplay={null}
-        method={"GET"}
-        onError={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onLoading={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        params={(() => {
-          try {
-            return Object.entries($ctx?.Growthbook?.features ?? {})
-              ?.filter?.(
-                ([key, value]) => key.startsWith("hamdast::apps::") && !!value
-              )
-              .reduce((prev, curr) => {
-                return {
-                  ...prev,
-                  [curr[0]?.replace("hamdast::apps::", "")]: curr[1]
-                };
-              }, {});
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
+      {(() => {
+        try {
+          return $props.items?.length > 0;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
           }
-        })()}
-        ref={ref => {
-          $refs["apiRequest"] = ref;
-        }}
-        url={"https://apigw.paziresh24.com/v1/hamdast/list/capabilities"}
-      >
-        {(() => {
-          try {
-            return $state.apiRequest.data.items?.length > 0;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
+          throw e;
+        }
+      })() ? (
+        <LauncherComponentsTitle
+          data-plasmic-name={"launcherComponentsTitle"}
+          data-plasmic-override={overrides.launcherComponentsTitle}
+          className={classNames("__wab_instance", sty.launcherComponentsTitle)}
+          isNew={true}
+          moreLink={"/_/apps"}
+          moreTitle={``}
+          subTitle={``}
+          title={(() => {
+            try {
+              return $props.title;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return undefined;
+              }
+              throw e;
             }
-            throw e;
+          })()}
+        />
+      ) : null}
+      {(() => {
+        try {
+          return $props.items?.length > 0;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
           }
-        })() ? (
-          <LauncherComponentsTitle
-            data-plasmic-name={"launcherComponentsTitle"}
-            data-plasmic-override={overrides.launcherComponentsTitle}
-            className={classNames(
-              "__wab_instance",
-              sty.launcherComponentsTitle
-            )}
-            isNew={true}
-            moreLink={"/_/apps"}
-            moreTitle={``}
-            subTitle={``}
-            title={(() => {
+          throw e;
+        }
+      })() ? (
+        <div
+          className={classNames(
+            projectcss.all,
+            sty.freeBox__orbIy,
+            "no-scroll"
+          )}
+        >
+          {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
+            (() => {
               try {
-                return $state.apiRequest.data.title;
+                return $props.items;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
                   e?.plasmicType === "PlasmicUndefinedDataError"
                 ) {
-                  return undefined;
+                  return [];
                 }
                 throw e;
               }
-            })()}
-          />
-        ) : null}
-        {(() => {
-          try {
-            return $state.apiRequest.data.items?.length > 0;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
-          }
-        })() ? (
-          <div
-            className={classNames(
-              projectcss.all,
-              sty.freeBox__orbIy,
-              "no-scroll"
-            )}
-          >
-            {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-              (() => {
-                try {
-                  return $state.apiRequest.data.items;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return [];
-                  }
-                  throw e;
-                }
-              })()
-            ).map((__plasmic_item_0, __plasmic_idx_0) => {
-              const currentItem = __plasmic_item_0;
-              const currentIndex = __plasmic_idx_0;
-              return (
-                <div
-                  className={classNames(projectcss.all, sty.freeBox__fsa9L)}
-                  key={currentIndex}
-                >
-                  <PlasmicImg__
-                    data-plasmic-name={"img"}
-                    data-plasmic-override={overrides.img}
-                    alt={""}
-                    className={classNames(sty.img)}
-                    displayHeight={"25px"}
-                    displayMaxHeight={"none"}
-                    displayMaxWidth={"100%"}
-                    displayMinHeight={"0"}
-                    displayMinWidth={"0"}
-                    displayWidth={"25px"}
-                    loading={"lazy"}
-                    src={(() => {
-                      try {
-                        return currentItem.icon;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+            })()
+          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+            const currentItem = __plasmic_item_0;
+            const currentIndex = __plasmic_idx_0;
+            return (
+              <div
+                className={classNames(projectcss.all, sty.freeBox__fsa9L)}
+                key={currentIndex}
+              >
+                <PlasmicImg__
+                  data-plasmic-name={"img"}
+                  data-plasmic-override={overrides.img}
+                  alt={""}
+                  className={classNames(sty.img)}
+                  displayHeight={"25px"}
+                  displayMaxHeight={"none"}
+                  displayMaxWidth={"100%"}
+                  displayMinHeight={"0"}
+                  displayMinWidth={"0"}
+                  displayWidth={"25px"}
+                  loading={"lazy"}
+                  src={(() => {
+                    try {
+                      return currentItem.icon;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()}
-                  />
+                      throw e;
+                    }
+                  })()}
+                />
 
+                <div className={classNames(projectcss.all, sty.freeBox__esRdo)}>
                   <div
-                    className={classNames(projectcss.all, sty.freeBox__esRdo)}
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text__kZuO5
+                    )}
                   >
-                    <div
-                      className={classNames(
-                        projectcss.all,
-                        projectcss.__wab_text,
-                        sty.text__kZuO5
-                      )}
-                    >
-                      <React.Fragment>{currentItem.title}</React.Fragment>
-                    </div>
-                    <Paziresh24Button
-                      data-plasmic-name={"paziresh24Button"}
-                      data-plasmic-override={overrides.paziresh24Button}
-                      children2={
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__rr47D
-                          )}
-                        >
-                          <React.Fragment>
-                            {(() => {
-                              try {
-                                return currentItem.action_label;
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return "\u0627\u0641\u0632\u0648\u062f\u0646 \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644";
-                                }
-                                throw e;
-                              }
-                            })()}
-                          </React.Fragment>
-                        </div>
-                      }
-                      className={classNames(
-                        "__wab_instance",
-                        sty.paziresh24Button
-                      )}
-                      onClick={async event => {
-                        const $steps = {};
-
-                        $steps["runOnOpenApp"] = true
-                          ? (() => {
-                              const actionArgs = {
-                                eventRef: $props["onOpenApp"],
-                                args: [currentItem.app_key]
-                              };
-                              return (({ eventRef, args }) => {
-                                return eventRef?.(...(args ?? []));
-                              })?.apply(null, [actionArgs]);
-                            })()
-                          : undefined;
-                        if (
-                          $steps["runOnOpenApp"] != null &&
-                          typeof $steps["runOnOpenApp"] === "object" &&
-                          typeof $steps["runOnOpenApp"].then === "function"
-                        ) {
-                          $steps["runOnOpenApp"] = await $steps["runOnOpenApp"];
-                        }
-                      }}
-                      size={"compact"}
-                    />
+                    <React.Fragment>{currentItem.title}</React.Fragment>
                   </div>
+                  <Paziresh24Button
+                    data-plasmic-name={"paziresh24Button"}
+                    data-plasmic-override={overrides.paziresh24Button}
+                    children2={
+                      <div
+                        className={classNames(
+                          projectcss.all,
+                          projectcss.__wab_text,
+                          sty.text__rr47D
+                        )}
+                      >
+                        <React.Fragment>
+                          {(() => {
+                            try {
+                              return currentItem.action_label;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return "\u0627\u0641\u0632\u0648\u062f\u0646 \u0628\u0647 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644";
+                              }
+                              throw e;
+                            }
+                          })()}
+                        </React.Fragment>
+                      </div>
+                    }
+                    className={classNames(
+                      "__wab_instance",
+                      sty.paziresh24Button
+                    )}
+                    onClick={async event => {
+                      const $steps = {};
+
+                      $steps["runOnOpenApp"] = true
+                        ? (() => {
+                            const actionArgs = {
+                              eventRef: $props["onOpenApp"],
+                              args: [currentItem.app_key]
+                            };
+                            return (({ eventRef, args }) => {
+                              return eventRef?.(...(args ?? []));
+                            })?.apply(null, [actionArgs]);
+                          })()
+                        : undefined;
+                      if (
+                        $steps["runOnOpenApp"] != null &&
+                        typeof $steps["runOnOpenApp"] === "object" &&
+                        typeof $steps["runOnOpenApp"].then === "function"
+                      ) {
+                        $steps["runOnOpenApp"] = await $steps["runOnOpenApp"];
+                      }
+                    }}
+                    size={"compact"}
+                  />
                 </div>
-              );
-            })}
-          </div>
-        ) : null}
-      </ApiRequest>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: [
-    "root",
-    "apiRequest",
-    "launcherComponentsTitle",
-    "img",
-    "paziresh24Button"
-  ],
-  apiRequest: [
-    "apiRequest",
-    "launcherComponentsTitle",
-    "img",
-    "paziresh24Button"
-  ],
+  root: ["root", "launcherComponentsTitle", "img", "paziresh24Button"],
   launcherComponentsTitle: ["launcherComponentsTitle"],
   img: ["img"],
   paziresh24Button: ["paziresh24Button"]
@@ -456,7 +356,6 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
-  apiRequest: typeof ApiRequest;
   launcherComponentsTitle: typeof LauncherComponentsTitle;
   img: typeof PlasmicImg__;
   paziresh24Button: typeof Paziresh24Button;
@@ -524,7 +423,6 @@ export const PlasmicLauncherBlocksAdaptive = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    apiRequest: makeNodeComponent("apiRequest"),
     launcherComponentsTitle: makeNodeComponent("launcherComponentsTitle"),
     img: makeNodeComponent("img"),
     paziresh24Button: makeNodeComponent("paziresh24Button"),
