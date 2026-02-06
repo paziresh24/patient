@@ -25,6 +25,11 @@
   column-gap: 10px;
   min-width: 0;
 }
+@media (min-width: 0px) and (max-width: 768px) {
+  .freeBox__orbIy {
+    border-radius: 12px;
+  }
+}
 .freeBox__fsa9L {
   display: flex;
   flex-direction: row;

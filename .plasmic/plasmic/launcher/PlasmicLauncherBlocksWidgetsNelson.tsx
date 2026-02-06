@@ -70,7 +70,6 @@ import projectcss from "./plasmic.module.css"; // plasmic-import: grxNYctbMek6PL
 import sty from "./PlasmicLauncherBlocksWidgetsNelson.module.css"; // plasmic-import: kPpI69i3raKy/css
 
 import LauncherIconsLoaderIcon from "./icons/PlasmicIcon__LauncherIconsLoader"; // plasmic-import: 4lP5I8e4Rz71/icon
-import LauncherIconsChevronLeftIcon from "./icons/PlasmicIcon__LauncherIconsChevronLeft"; // plasmic-import: bpf8GR68xA_B/icon
 
 createPlasmicElementProxy;
 
@@ -134,6 +133,8 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const globalVariants = _useGlobalVariants();
 
   const $globalActions = useGlobalActions?.();
 
@@ -319,21 +320,6 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                     "\u0628\u0647 \u0635\u0648\u0631\u062a \u063a\u06cc\u0631\u062d\u0636\u0648\u0631\u06cc \u0648\u06cc\u0632\u06cc\u062a \u06a9\u0646\u06cc\u062f."
                   }
                 </div>
-                <div className={classNames(projectcss.all, sty.freeBox__wM0Lm)}>
-                  <div
-                    className={classNames(
-                      projectcss.all,
-                      projectcss.__wab_text,
-                      sty.text__jTlDl
-                    )}
-                  >
-                    {"\u0641\u0639\u0627\u0644\u200c\u0633\u0627\u0632\u06cc"}
-                  </div>
-                  <LauncherIconsChevronLeftIcon
-                    className={classNames(projectcss.all, sty.svg__gmwpb)}
-                    role={"img"}
-                  />
-                </div>
               </div>
             ) : null}
           </React.Fragment>
@@ -448,43 +434,47 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
               sty.text__ru0Jt
             )}
           >
-            <React.Fragment>
+            {hasVariant(globalVariants, "screen", "mobileOnly") ? (
+              "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646"
+            ) : (
               <React.Fragment>
+                <React.Fragment>
+                  {
+                    "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 "
+                  }
+                </React.Fragment>
                 {
-                  "\u0648\u06cc\u0632\u06cc\u062a \u0622\u0646\u0644\u0627\u06cc\u0646 "
-                }
-              </React.Fragment>
-              {
-                <span
-                  data-plasmic-name={"span"}
-                  data-plasmic-override={overrides.span}
-                  className={classNames(
-                    projectcss.all,
-                    projectcss.span,
-                    projectcss.__wab_text,
-                    projectcss.plasmic_default__inline,
-                    sty.span
-                  )}
-                >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return $state._switch.checked ? "فعال" : "غیرفعال";
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "\u0641\u0639\u0627\u0644";
+                  <span
+                    data-plasmic-name={"span"}
+                    data-plasmic-override={overrides.span}
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.span,
+                      projectcss.__wab_text,
+                      projectcss.plasmic_default__inline,
+                      sty.span
+                    )}
+                  >
+                    <React.Fragment>
+                      {(() => {
+                        try {
+                          return $state._switch.checked ? "فعال" : "غیرفعال";
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "\u0641\u0639\u0627\u0644";
+                          }
+                          throw e;
                         }
-                        throw e;
-                      }
-                    })()}
-                  </React.Fragment>
-                </span>
-              }
-              <React.Fragment>{" \u0627\u0633\u062a"}</React.Fragment>
-            </React.Fragment>
+                      })()}
+                    </React.Fragment>
+                  </span>
+                }
+                <React.Fragment>{" \u0627\u0633\u062a"}</React.Fragment>
+              </React.Fragment>
+            )}
           </div>
         </div>
         <Switch
