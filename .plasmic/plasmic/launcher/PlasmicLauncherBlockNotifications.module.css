@@ -24,26 +24,38 @@
 .svg__yg0YQ {
   object-fit: cover;
   max-width: 100%;
-  width: 15px;
-  height: 15px;
+  width: 17px;
+  height: 17px;
   flex-shrink: 0;
 }
 .freeBox__y7Dp2 {
   display: flex;
   flex-direction: column;
   position: absolute;
-  width: 9px;
-  height: 9px;
+  width: 18px;
+  height: 18px;
   max-width: 100%;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   background: var(--token-lBXxoq0q4VUt);
   left: auto;
-  top: 7px;
-  right: 7px;
+  top: 0px;
+  right: 0px;
   flex-shrink: 0;
   border-radius: 60px;
   border: 2px solid #ffffff;
+}
+.text__l7N1S {
+  position: relative;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  font-size: 11px;
+  font-weight: 500;
+  color: #ffffff;
+  text-align: center;
+  margin-top: 3px;
+  letter-spacing: -1px;
 }
 .modal:global(.__wab_instance):global(.__wab_instance) {
   max-width: 100%;

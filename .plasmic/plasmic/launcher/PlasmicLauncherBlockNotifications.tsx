@@ -304,7 +304,21 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <div className={classNames(projectcss.all, sty.freeBox__y7Dp2)} />
+          <div className={classNames(projectcss.all, sty.freeBox__y7Dp2)}>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__l7N1S
+              )}
+            >
+              <React.Fragment>
+                {$state.apiRequest.data?.items?.length > 99
+                  ? "+99"
+                  : $state.apiRequest.data?.items?.length}
+              </React.Fragment>
+            </div>
+          </div>
         ) : null}
       </div>
       <Paziresh24Modal
@@ -410,9 +424,8 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                           typeof $steps["invokeGlobalAction"].then ===
                             "function"
                         ) {
-                          $steps["invokeGlobalAction"] = await $steps[
-                            "invokeGlobalAction"
-                          ];
+                          $steps["invokeGlobalAction"] =
+                            await $steps["invokeGlobalAction"];
                         }
 
                         $steps["updateModalOpen3"] =
@@ -450,9 +463,8 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                           typeof $steps["updateModalOpen3"] === "object" &&
                           typeof $steps["updateModalOpen3"].then === "function"
                         ) {
-                          $steps["updateModalOpen3"] = await $steps[
-                            "updateModalOpen3"
-                          ];
+                          $steps["updateModalOpen3"] =
+                            await $steps["updateModalOpen3"];
                         }
 
                         $steps["updateModalOpen"] = true
@@ -486,9 +498,8 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                           typeof $steps["updateModalOpen"] === "object" &&
                           typeof $steps["updateModalOpen"].then === "function"
                         ) {
-                          $steps["updateModalOpen"] = await $steps[
-                            "updateModalOpen"
-                          ];
+                          $steps["updateModalOpen"] =
+                            await $steps["updateModalOpen"];
                         }
 
                         $steps["updateModalOpen2"] = true
@@ -509,9 +520,8 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                           typeof $steps["updateModalOpen2"] === "object" &&
                           typeof $steps["updateModalOpen2"].then === "function"
                         ) {
-                          $steps["updateModalOpen2"] = await $steps[
-                            "updateModalOpen2"
-                          ];
+                          $steps["updateModalOpen2"] =
+                            await $steps["updateModalOpen2"];
                         }
                       }}
                     >
@@ -858,9 +868,8 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                     typeof $steps["invokeGlobalAction"] === "object" &&
                     typeof $steps["invokeGlobalAction"].then === "function"
                   ) {
-                    $steps["invokeGlobalAction"] = await $steps[
-                      "invokeGlobalAction"
-                    ];
+                    $steps["invokeGlobalAction"] =
+                      await $steps["invokeGlobalAction"];
                   }
 
                   $steps["updateIsLoading2"] = true
@@ -894,9 +903,8 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                     typeof $steps["updateIsLoading2"] === "object" &&
                     typeof $steps["updateIsLoading2"].then === "function"
                   ) {
-                    $steps["updateIsLoading2"] = await $steps[
-                      "updateIsLoading2"
-                    ];
+                    $steps["updateIsLoading2"] =
+                      await $steps["updateIsLoading2"];
                   }
 
                   $steps["runActionOnApiRequest"] = true
@@ -915,9 +923,8 @@ function PlasmicLauncherBlockNotifications__RenderFunc(props: {
                     typeof $steps["runActionOnApiRequest"] === "object" &&
                     typeof $steps["runActionOnApiRequest"].then === "function"
                   ) {
-                    $steps["runActionOnApiRequest"] = await $steps[
-                      "runActionOnApiRequest"
-                    ];
+                    $steps["runActionOnApiRequest"] =
+                      await $steps["runActionOnApiRequest"];
                   }
                 }}
                 outline={true}
@@ -1000,7 +1007,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLauncherBlockNotifications__VariantsArgs;
     args?: PlasmicLauncherBlockNotifications__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLauncherBlockNotifications__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLauncherBlockNotifications__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLauncherBlockNotifications__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
