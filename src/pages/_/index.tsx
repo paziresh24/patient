@@ -28,7 +28,7 @@ const Page = () => {
     <>
       <Seo title="خدمات" noIndex />
       <Modal {...modalProps} noHeader noLine bodyClassName="p-0" className="h-[90%]">
-        <AppFrame appKey={app} params={['launcher']} dontShowProfile />
+        <AppFrame appKey={app} params={['launcher']} />
       </Modal>
 
       <GlobalContextsProvider>
