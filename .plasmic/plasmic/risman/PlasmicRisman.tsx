@@ -79,9 +79,9 @@ export type PlasmicRisman__VariantsArgs = {};
 type VariantPropType = keyof PlasmicRisman__VariantsArgs;
 export const PlasmicRisman__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicRisman__ArgsType = { data?: any };
+export type PlasmicRisman__ArgsType = { data?: any; slug?: string };
 type ArgPropType = keyof PlasmicRisman__ArgsType;
-export const PlasmicRisman__ArgProps = new Array<ArgPropType>("data");
+export const PlasmicRisman__ArgProps = new Array<ArgPropType>("data", "slug");
 
 export type PlasmicRisman__OverridesType = {
   root?: Flex__<"div">;
@@ -91,6 +91,7 @@ export type PlasmicRisman__OverridesType = {
 
 export interface DefaultRismanProps {
   data?: any;
+  slug?: string;
   className?: string;
 }
 
