@@ -79,9 +79,9 @@ export type PlasmicRisman__VariantsArgs = {};
 type VariantPropType = keyof PlasmicRisman__VariantsArgs;
 export const PlasmicRisman__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicRisman__ArgsType = { data?: any; slug?: string };
+export type PlasmicRisman__ArgsType = { data?: any };
 type ArgPropType = keyof PlasmicRisman__ArgsType;
-export const PlasmicRisman__ArgProps = new Array<ArgPropType>("data", "slug");
+export const PlasmicRisman__ArgProps = new Array<ArgPropType>("data");
 
 export type PlasmicRisman__OverridesType = {
   root?: Flex__<"div">;
@@ -91,7 +91,6 @@ export type PlasmicRisman__OverridesType = {
 
 export interface DefaultRismanProps {
   data?: any;
-  slug?: string;
   className?: string;
 }
 
@@ -288,13 +287,11 @@ function PlasmicRisman__RenderFunc(props: {
           }
           link={(() => {
             try {
-              const base = `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${
+              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${
                 $props.data?.data?.fullName
               }&uri=${globalThis.encodeURIComponent(
                 $props.data.data?.destination?.url
               )}&platform=${$props.data.data?.destination?.platform}`;
-              const slugParam = $props.slug != null && $props.slug !== "" ? `&slug=${encodeURIComponent($props.slug)}` : "";
-              return base + slugParam;
             } catch (e) {
               if (
                 e instanceof TypeError ||
