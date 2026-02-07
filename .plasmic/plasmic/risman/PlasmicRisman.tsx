@@ -287,11 +287,7 @@ function PlasmicRisman__RenderFunc(props: {
           }
           link={(() => {
             try {
-              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${
-                $props.data?.data?.fullName
-              }&uri=${globalThis.encodeURIComponent(
-                $props.data.data?.destination?.url
-              )}&platform=${$props.data.data?.destination?.platform}`;
+              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${$props.data?.data?.fullName}&uri=${globalThis.encodeURIComponent($props.data.data?.destination?.url)}&platform=${$props.data.data?.destination?.platform}&slug=${$props.slug}`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -336,7 +332,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicRisman__VariantsArgs;
     args?: PlasmicRisman__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicRisman__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicRisman__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicRisman__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
