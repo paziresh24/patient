@@ -117,7 +117,7 @@
   height: 1em;
   flex-grow: 0;
   flex-shrink: 0;
-  transform: translateX(0px) translateY(0px) translateZ(0px);
+  transform: skew(0deg, 0deg);
   transition-property: all;
   transition-duration: 1s;
   left: auto;
