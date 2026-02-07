@@ -95,6 +95,7 @@ export const Aside = (data: any) => {
           Component={PlasmicRisman}
           args={{
             data: fragmentComponents?.risman,
+            slug: seo.slug,
           }}
         />
       ),
