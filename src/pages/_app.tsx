@@ -24,6 +24,7 @@ import GlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24/PlasmicGl
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
 import RouteProgress from '@/common/components/layouts/RouteProgress';
+import { RismanSurveyScript } from '@/common/components/layouts/RismanSurveyScript';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -163,6 +164,7 @@ function MyApp(props: AppProps) {
                   }}
                 />
               )}
+              <RismanSurveyScript />
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
