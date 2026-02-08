@@ -7,7 +7,7 @@ import { useCallback, useEffect, useState } from 'react';
 import DoctorTags from './doctorTags';
 import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import PlasmicReviewRateAndReviews from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews';
-import PlasmicReviewList from '.plasmic/plasmic/ravi_r_r/PlasmicReviewList';
+import PlasmicReviewList from '.plasmic/plasmic/ravi_r_r/PlasmicReviewList2';
 
 export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const [sort, setSort] = useState<'created_at' | 'count_like' | 'default_order'>('default_order');
