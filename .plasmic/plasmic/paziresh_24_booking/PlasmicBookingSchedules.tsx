@@ -494,9 +494,8 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                                   typeof $steps["updateService"].then ===
                                     "function"
                                 ) {
-                                  $steps["updateService"] = await $steps[
-                                    "updateService"
-                                  ];
+                                  $steps["updateService"] =
+                                    await $steps["updateService"];
                                 }
 
                                 $steps["updatePopoverCoreOpen"] = true
@@ -723,22 +722,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                                           )
                                           .map(
                                             item =>
-                                              `${
-                                                item.from_date
-                                                  ? `(از تاریخ ${new Date(
-                                                      item.from_date
-                                                    ).toLocaleDateString(
-                                                      "fa-IR-u-nu-latn"
-                                                    )} تا ${new Date(
-                                                      item.to_date
-                                                    ).toLocaleDateString(
-                                                      "fa-IR-u-nu-latn"
-                                                    )}) `
-                                                  : ""
-                                              }${item.from_hour.slice(
-                                                0,
-                                                5
-                                              )} - ${item.to_hour.slice(0, 5)}`
+                                              `${item.from_date ? `(از تاریخ ${new Date(item.from_date).toLocaleDateString("fa-IR-u-nu-latn")} تا ${new Date(item.to_date).toLocaleDateString("fa-IR-u-nu-latn")}) ` : ""}${item.from_hour.slice(0, 5)} - ${item.to_hour.slice(0, 5)}`
                                           )
                                           .join("<br/>") || "---"
                                       );
@@ -769,22 +753,7 @@ function PlasmicBookingSchedules__RenderFunc(props: {
                                           )
                                           .map(
                                             item =>
-                                              `${
-                                                item.from_date
-                                                  ? `(از تاریخ ${new Date(
-                                                      item.from_date
-                                                    ).toLocaleDateString(
-                                                      "fa-IR-u-nu-latn"
-                                                    )} تا ${new Date(
-                                                      item.to_date
-                                                    ).toLocaleDateString(
-                                                      "fa-IR-u-nu-latn"
-                                                    )}) `
-                                                  : ""
-                                              }${item.from_hour.slice(
-                                                0,
-                                                5
-                                              )} - ${item.to_hour.slice(0, 5)}`
+                                              `${item.from_date ? `(از تاریخ ${new Date(item.from_date).toLocaleDateString("fa-IR-u-nu-latn")} تا ${new Date(item.to_date).toLocaleDateString("fa-IR-u-nu-latn")}) ` : ""}${item.from_hour.slice(0, 5)} - ${item.to_hour.slice(0, 5)}`
                                           )
                                           .join("<br/>") || "---"
                                       );
@@ -1074,7 +1043,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicBookingSchedules__VariantsArgs;
     args?: PlasmicBookingSchedules__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicBookingSchedules__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicBookingSchedules__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicBookingSchedules__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
