@@ -359,7 +359,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicBookingCenterList__VariantsArgs;
     args?: PlasmicBookingCenterList__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicBookingCenterList__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicBookingCenterList__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicBookingCenterList__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

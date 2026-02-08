@@ -507,22 +507,22 @@ function PlasmicBookingCenterListCard__RenderFunc(props: {
                 }
               })()
             : hasVariant($state, "type", "external")
-            ? true
-            : hasVariant($state, "type", "online")
-            ? true
-            : (() => {
-                try {
-                  return !$props.isOnlineType;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return true;
-                  }
-                  throw e;
-                }
-              })()
+              ? true
+              : hasVariant($state, "type", "online")
+                ? true
+                : (() => {
+                    try {
+                      return !$props.isOnlineType;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return true;
+                      }
+                      throw e;
+                    }
+                  })()
         ) ? (
           <div
             className={classNames(
@@ -999,9 +999,7 @@ function PlasmicBookingCenterListCard__RenderFunc(props: {
                 <React.Fragment>
                   {(() => {
                     try {
-                      return `تماس تلفنی با ${
-                        $state?.type === "hospital" ? "مرکز درمانی" : "مطب پزشک"
-                      }`;
+                      return `تماس تلفنی با ${$state?.type === "hospital" ? "مرکز درمانی" : "مطب پزشک"}`;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -1167,9 +1165,7 @@ function PlasmicBookingCenterListCard__RenderFunc(props: {
               <React.Fragment>
                 {(() => {
                   try {
-                    return `تماس تلفنی با ${
-                      $state?.type === "hospital" ? "مرکز درمانی" : "مطب پزشک"
-                    }`;
+                    return `تماس تلفنی با ${$state?.type === "hospital" ? "مرکز درمانی" : "مطب پزشک"}`;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1248,7 +1244,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicBookingCenterListCard__VariantsArgs;
     args?: PlasmicBookingCenterListCard__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicBookingCenterListCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicBookingCenterListCard__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicBookingCenterListCard__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

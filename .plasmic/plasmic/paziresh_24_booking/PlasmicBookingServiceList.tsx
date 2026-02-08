@@ -388,13 +388,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                       const actionArgs = {
                         destination: (() => {
                           try {
-                            return `/booking/${
-                              $props.slug
-                            }?centerId=5532&skipTimeSelectStep=true&serviceId=${
-                              $state.getFullProfileData?.data?.data?.centers?.find(
-                                center => center?.id == 5532
-                              )?.services?.[0]?.id
-                            }`;
+                            return `/booking/${$props.slug}?centerId=5532&skipTimeSelectStep=true&serviceId=${$state.getFullProfileData?.data?.data?.centers?.find(center => center?.id == 5532)?.services?.[0]?.id}`;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -581,15 +575,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                         const actionArgs = {
                           destination: (() => {
                             try {
-                              return `/booking/${$props.slug}/?centerId=${
-                                $state.getFullProfileData.data.data.centers.find(
-                                  center => center.id != 5532
-                                ).id
-                              }&serviceId=${
-                                $state.getFullProfileData.data.data.centers.find(
-                                  center => center.id != 5532
-                                ).services[0].id
-                              }`;
+                              return `/booking/${$props.slug}/?centerId=${$state.getFullProfileData.data.data.centers.find(center => center.id != 5532).id}&serviceId=${$state.getFullProfileData.data.data.centers.find(center => center.id != 5532).services[0].id}`;
                             } catch (e) {
                               if (
                                 e instanceof TypeError ||
@@ -660,9 +646,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                   typeof $steps["updateSelectedCenter"] === "object" &&
                   typeof $steps["updateSelectedCenter"].then === "function"
                 ) {
-                  $steps["updateSelectedCenter"] = await $steps[
-                    "updateSelectedCenter"
-                  ];
+                  $steps["updateSelectedCenter"] =
+                    await $steps["updateSelectedCenter"];
                 }
 
                 $steps["updateMashhadBookingDialogOpen"] =
@@ -704,9 +689,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                   typeof $steps["updateMashhadBookingDialogOpen"].then ===
                     "function"
                 ) {
-                  $steps["updateMashhadBookingDialogOpen"] = await $steps[
-                    "updateMashhadBookingDialogOpen"
-                  ];
+                  $steps["updateMashhadBookingDialogOpen"] =
+                    await $steps["updateMashhadBookingDialogOpen"];
                 }
 
                 $steps["updateApplicationDialogOpen"] =
@@ -748,9 +732,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                   typeof $steps["updateApplicationDialogOpen"].then ===
                     "function"
                 ) {
-                  $steps["updateApplicationDialogOpen"] = await $steps[
-                    "updateApplicationDialogOpen"
-                  ];
+                  $steps["updateApplicationDialogOpen"] =
+                    await $steps["updateApplicationDialogOpen"];
                 }
 
                 $steps["updateServiceListDialogOpen"] =
@@ -791,9 +774,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                   typeof $steps["updateServiceListDialogOpen"].then ===
                     "function"
                 ) {
-                  $steps["updateServiceListDialogOpen"] = await $steps[
-                    "updateServiceListDialogOpen"
-                  ];
+                  $steps["updateServiceListDialogOpen"] =
+                    await $steps["updateServiceListDialogOpen"];
                 }
 
                 $steps["updateDialogOpen"] =
@@ -970,9 +952,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                 typeof $steps["updateSelectedCenter"] === "object" &&
                 typeof $steps["updateSelectedCenter"].then === "function"
               ) {
-                $steps["updateSelectedCenter"] = await $steps[
-                  "updateSelectedCenter"
-                ];
+                $steps["updateSelectedCenter"] =
+                  await $steps["updateSelectedCenter"];
               }
 
               $steps["updateMashhadBookingDialogOpen"] =
@@ -1010,9 +991,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                 typeof $steps["updateMashhadBookingDialogOpen"].then ===
                   "function"
               ) {
-                $steps["updateMashhadBookingDialogOpen"] = await $steps[
-                  "updateMashhadBookingDialogOpen"
-                ];
+                $steps["updateMashhadBookingDialogOpen"] =
+                  await $steps["updateMashhadBookingDialogOpen"];
               }
 
               $steps["goToPage"] =
@@ -1029,13 +1009,7 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                       const actionArgs = {
                         destination: (() => {
                           try {
-                            return `/booking/${
-                              $props.slug
-                            }/?centerId=${id}&serviceId=${
-                              $state.getFullProfileData.data.data.centers.find(
-                                center => center.id === id
-                              ).services[0].id
-                            }`;
+                            return `/booking/${$props.slug}/?centerId=${id}&serviceId=${$state.getFullProfileData.data.data.centers.find(center => center.id === id).services[0].id}`;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -1106,9 +1080,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                 typeof $steps["updateServiceListDialogOpen"] === "object" &&
                 typeof $steps["updateServiceListDialogOpen"].then === "function"
               ) {
-                $steps["updateServiceListDialogOpen"] = await $steps[
-                  "updateServiceListDialogOpen"
-                ];
+                $steps["updateServiceListDialogOpen"] =
+                  await $steps["updateServiceListDialogOpen"];
               }
 
               $steps["updateApplicationDialogOpen"] =
@@ -1149,9 +1122,8 @@ function PlasmicBookingServiceList__RenderFunc(props: {
                 typeof $steps["updateApplicationDialogOpen"] === "object" &&
                 typeof $steps["updateApplicationDialogOpen"].then === "function"
               ) {
-                $steps["updateApplicationDialogOpen"] = await $steps[
-                  "updateApplicationDialogOpen"
-                ];
+                $steps["updateApplicationDialogOpen"] =
+                  await $steps["updateApplicationDialogOpen"];
               }
             }}
           />
@@ -1473,7 +1445,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicBookingServiceList__VariantsArgs;
     args?: PlasmicBookingServiceList__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicBookingServiceList__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicBookingServiceList__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicBookingServiceList__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

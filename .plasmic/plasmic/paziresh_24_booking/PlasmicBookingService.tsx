@@ -321,9 +321,7 @@ function PlasmicBookingService__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return `${new Intl.NumberFormat().format(
-                    +$props.price / 10
-                  )} تومان`;
+                  return `${new Intl.NumberFormat().format(+$props.price / 10)} تومان`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -743,7 +741,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicBookingService__VariantsArgs;
     args?: PlasmicBookingService__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicBookingService__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicBookingService__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicBookingService__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
