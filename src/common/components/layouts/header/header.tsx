@@ -120,25 +120,22 @@ const Header = (props: HeaderProps) => {
                     <div className="flex flex-col flex-shrink-0 pl-4 border-l border-slate-200 w-44">
                       <a
                         onMouseOver={() => setMenu(MegaMenuItem.CONSULT)}
-                        className={`text-sm mb-2 cursor-pointer font-medium flex items-center  ${
-                          menu === MegaMenuItem.CONSULT ? 'bg-slate-100' : 'bg-white'
-                        } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
+                        className={`text-sm mb-2 cursor-pointer font-medium flex items-center  ${menu === MegaMenuItem.CONSULT ? 'bg-slate-100' : 'bg-white'
+                          } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
                       >
                         مشاوره آنلاین پزشکی
                       </a>
                       <a
                         onMouseOver={() => setMenu(MegaMenuItem.SPECIALTY)}
-                        className={`text-sm mb-2 cursor-pointer font-medium flex items-center  ${
-                          menu === MegaMenuItem.SPECIALTY ? 'bg-slate-100' : 'bg-white'
-                        } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
+                        className={`text-sm mb-2 cursor-pointer font-medium flex items-center  ${menu === MegaMenuItem.SPECIALTY ? 'bg-slate-100' : 'bg-white'
+                          } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
                       >
                         تخصص ها
                       </a>
                       <a
                         onMouseOver={() => setMenu(MegaMenuItem.ARTICLE)}
-                        className={`text-sm mb-2 cursor-pointer font-medium flex items-center  ${
-                          menu === MegaMenuItem.ARTICLE ? 'bg-slate-100' : 'bg-white'
-                        } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
+                        className={`text-sm mb-2 cursor-pointer font-medium flex items-center  ${menu === MegaMenuItem.ARTICLE ? 'bg-slate-100' : 'bg-white'
+                          } border-0 rounded text-slate-700 h-8 outline-none py-1 px-2 text-center`}
                       >
                         مجله سلامتی
                       </a>
@@ -164,7 +161,7 @@ const Header = (props: HeaderProps) => {
               </GlobalContextsProvider>
             )}
             {isLogin && (
-              <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[5px] [&>div>div>div]:right-[6px]">
+              <div>
                 <GlobalContextsProvider>
                   <LauncherBlockNotifications />
                 </GlobalContextsProvider>
