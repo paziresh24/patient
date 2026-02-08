@@ -124,6 +124,7 @@ export const PlasmicReviewCard2__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicReviewCard2__OverridesType = {
   verticalStack?: Flex__<"div">;
+  apiRequest?: Flex__<typeof ApiRequest>;
   userApi?: Flex__<typeof ApiRequest>;
   repliesApi?: Flex__<typeof ApiRequest>;
   avatarApi?: Flex__<typeof ApiRequest>;
@@ -132,7 +133,6 @@ export type PlasmicReviewCard2__OverridesType = {
   shareApi?: Flex__<typeof ApiRequest>;
   svg?: Flex__<"svg">;
   raviShare?: Flex__<typeof RaviShare>;
-  apiRequest?: Flex__<typeof ApiRequest>;
 };
 
 export interface DefaultReviewCard2Props {
@@ -452,6 +452,38 @@ function PlasmicReviewCard2__RenderFunc(props: {
       )}
       dir={"rtl"}
     >
+      <ApiRequest
+        data-plasmic-name={"apiRequest"}
+        data-plasmic-override={overrides.apiRequest}
+        className={classNames("__wab_instance", sty.apiRequest)}
+        errorDisplay={null}
+        loadingDisplay={null}
+        method={"GET"}
+        onError={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["apiRequest", "error"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        onLoading={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["apiRequest", "loading"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        onSuccess={async (...eventArgs: any) => {
+          generateStateOnChangeProp($state, ["apiRequest", "data"]).apply(
+            null,
+            eventArgs
+          );
+        }}
+        params={{ where: `(ravi_id,eq,${$props.feedbackId})` }}
+        ref={ref => {
+          $refs["apiRequest"] = ref;
+        }}
+        url={"https://apigw.paziresh24.com/ravi/v1/avg_like"}
+      />
+
       <ApiRequest
         data-plasmic-name={"userApi"}
         data-plasmic-override={overrides.userApi}
@@ -2000,38 +2032,6 @@ function PlasmicReviewCard2__RenderFunc(props: {
                   />
                 );
               })()}
-              <ApiRequest
-                data-plasmic-name={"apiRequest"}
-                data-plasmic-override={overrides.apiRequest}
-                className={classNames("__wab_instance", sty.apiRequest)}
-                errorDisplay={null}
-                loadingDisplay={null}
-                method={"GET"}
-                onError={async (...eventArgs: any) => {
-                  generateStateOnChangeProp($state, [
-                    "apiRequest",
-                    "error"
-                  ]).apply(null, eventArgs);
-                }}
-                onLoading={async (...eventArgs: any) => {
-                  generateStateOnChangeProp($state, [
-                    "apiRequest",
-                    "loading"
-                  ]).apply(null, eventArgs);
-                }}
-                onSuccess={async (...eventArgs: any) => {
-                  generateStateOnChangeProp($state, [
-                    "apiRequest",
-                    "data"
-                  ]).apply(null, eventArgs);
-                }}
-                params={{ where: `(ravi_id,eq,${$props.feedbackId})` }}
-                ref={ref => {
-                  $refs["apiRequest"] = ref;
-                }}
-                url={"https://apigw.paziresh24.com/ravi/v1/avg_like"}
-              />
-
               <div
                 className={classNames(projectcss.all, sty.freeBox___9EpHu)}
               />
@@ -2046,6 +2046,7 @@ function PlasmicReviewCard2__RenderFunc(props: {
 const PlasmicDescendants = {
   verticalStack: [
     "verticalStack",
+    "apiRequest",
     "userApi",
     "repliesApi",
     "avatarApi",
@@ -2053,9 +2054,9 @@ const PlasmicDescendants = {
     "reviewOptions",
     "shareApi",
     "svg",
-    "raviShare",
-    "apiRequest"
+    "raviShare"
   ],
+  apiRequest: ["apiRequest"],
   userApi: [
     "userApi",
     "repliesApi",
@@ -2064,8 +2065,7 @@ const PlasmicDescendants = {
     "reviewOptions",
     "shareApi",
     "svg",
-    "raviShare",
-    "apiRequest"
+    "raviShare"
   ],
   repliesApi: [
     "repliesApi",
@@ -2074,8 +2074,7 @@ const PlasmicDescendants = {
     "reviewOptions",
     "shareApi",
     "svg",
-    "raviShare",
-    "apiRequest"
+    "raviShare"
   ],
   avatarApi: [
     "avatarApi",
@@ -2083,21 +2082,20 @@ const PlasmicDescendants = {
     "reviewOptions",
     "shareApi",
     "svg",
-    "raviShare",
-    "apiRequest"
+    "raviShare"
   ],
   card: ["card", "reviewOptions", "shareApi", "svg", "raviShare"],
   reviewOptions: ["reviewOptions"],
   shareApi: ["shareApi", "svg", "raviShare"],
   svg: ["svg"],
-  raviShare: ["raviShare"],
-  apiRequest: ["apiRequest"]
+  raviShare: ["raviShare"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   verticalStack: "div";
+  apiRequest: typeof ApiRequest;
   userApi: typeof ApiRequest;
   repliesApi: typeof ApiRequest;
   avatarApi: typeof ApiRequest;
@@ -2106,7 +2104,6 @@ type NodeDefaultElementType = {
   shareApi: typeof ApiRequest;
   svg: "svg";
   raviShare: typeof RaviShare;
-  apiRequest: typeof ApiRequest;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -2171,6 +2168,7 @@ export const PlasmicReviewCard2 = Object.assign(
   makeNodeComponent("verticalStack"),
   {
     // Helper components rendering sub-elements
+    apiRequest: makeNodeComponent("apiRequest"),
     userApi: makeNodeComponent("userApi"),
     repliesApi: makeNodeComponent("repliesApi"),
     avatarApi: makeNodeComponent("avatarApi"),
@@ -2179,7 +2177,6 @@ export const PlasmicReviewCard2 = Object.assign(
     shareApi: makeNodeComponent("shareApi"),
     svg: makeNodeComponent("svg"),
     raviShare: makeNodeComponent("raviShare"),
-    apiRequest: makeNodeComponent("apiRequest"),
 
     // Metadata about props expected for PlasmicReviewCard2
     internalVariantProps: PlasmicReviewCard2__VariantProps,
