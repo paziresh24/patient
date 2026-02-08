@@ -11,11 +11,11 @@
 // Plasmic Project: 8NbkXymcLwvMUC2yXeRrWk
 // Component: z1k0-vbkFtby
 
-import * as React from 'react';
+import * as React from "react";
 
-import Head from 'next/head';
-import Link, { LinkProps } from 'next/link';
-import { useRouter } from 'next/router';
+import Head from "next/head";
+import Link, { LinkProps } from "next/link";
+import { useRouter } from "next/router";
 
 import {
   Flex as Flex__,
@@ -51,34 +51,39 @@ import {
   useDollarState,
   usePlasmicTranslator,
   useTrigger,
-  wrapWithClassName,
-} from '@plasmicapp/react-web';
-import { DataCtxReader as DataCtxReader__, useDataEnv, useGlobalActions } from '@plasmicapp/react-web/lib/host';
+  wrapWithClassName
+} from "@plasmicapp/react-web";
+import {
+  DataCtxReader as DataCtxReader__,
+  useDataEnv,
+  useGlobalActions
+} from "@plasmicapp/react-web/lib/host";
 
-import Collapsible from '../../Collapsible'; // plasmic-import: kYXN54tCkD2S/component
-import Button from '../../Button'; // plasmic-import: oVzoHzMf1TLl/component
-import BookingSchedules from '../../BookingSchedules'; // plasmic-import: Mt_WMP6AHSGv/component
-import { _useGlobalVariants } from './plasmic'; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
-import { _useStyleTokens } from './PlasmicStyleTokensProvider'; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
+import Collapsible from "../../Collapsible"; // plasmic-import: kYXN54tCkD2S/component
+import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import BookingSchedules from "../../BookingSchedules"; // plasmic-import: Mt_WMP6AHSGv/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/styleTokensProvider
 
-import '@plasmicapp/react-web/lib/plasmic.css';
+import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from './plasmic.module.css'; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
-import sty from './PlasmicBookingAddressesCard.module.css'; // plasmic-import: z1k0-vbkFtby/css
+import projectcss from "./plasmic.module.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
+import sty from "./PlasmicBookingAddressesCard.module.css"; // plasmic-import: z1k0-vbkFtby/css
 
-import ChevronDownIcon from '../fragment_icons/icons/PlasmicIcon__ChevronDown'; // plasmic-import: aC_QFogxt1Ko/icon
-import ChevronLeftIcon from '../fragment_icons/icons/PlasmicIcon__ChevronLeft'; // plasmic-import: r9Upp9NbiZkf/icon
-import ChevronUpIcon from '../fragment_icons/icons/PlasmicIcon__ChevronUp'; // plasmic-import: YXreB8gS3SjV/icon
-import Icon13Icon from './icons/PlasmicIcon__Icon13'; // plasmic-import: _jSTfORV1qH0/icon
-import Icon11Icon from './icons/PlasmicIcon__Icon11'; // plasmic-import: S_uiUWqNHHLN/icon
-import Icon12Icon from './icons/PlasmicIcon__Icon12'; // plasmic-import: gJeK2OqgBb2l/icon
+import ChevronDownIcon from "../fragment_icons/icons/PlasmicIcon__ChevronDown"; // plasmic-import: aC_QFogxt1Ko/icon
+import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
+import ChevronUpIcon from "../fragment_icons/icons/PlasmicIcon__ChevronUp"; // plasmic-import: YXreB8gS3SjV/icon
+import Icon13Icon from "./icons/PlasmicIcon__Icon13"; // plasmic-import: _jSTfORV1qH0/icon
+import Icon11Icon from "./icons/PlasmicIcon__Icon11"; // plasmic-import: S_uiUWqNHHLN/icon
+import Icon12Icon from "./icons/PlasmicIcon__Icon12"; // plasmic-import: gJeK2OqgBb2l/icon
 
 createPlasmicElementProxy;
 
 export type PlasmicBookingAddressesCard__VariantMembers = {};
 export type PlasmicBookingAddressesCard__VariantsArgs = {};
 type VariantPropType = keyof PlasmicBookingAddressesCard__VariantsArgs;
-export const PlasmicBookingAddressesCard__VariantProps = new Array<VariantPropType>();
+export const PlasmicBookingAddressesCard__VariantProps =
+  new Array<VariantPropType>();
 
 export type PlasmicBookingAddressesCard__ArgsType = {
   title?: string;
@@ -97,23 +102,23 @@ export type PlasmicBookingAddressesCard__ArgsType = {
 };
 type ArgPropType = keyof PlasmicBookingAddressesCard__ArgsType;
 export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
-  'title',
-  'address',
-  'city',
-  'displayNumberArray',
-  'map',
-  'centerType',
-  'description',
-  'centerId',
-  'centerName',
-  'slug',
-  'children',
-  'information',
-  'seo',
+  "title",
+  "address",
+  "city",
+  "displayNumberArray",
+  "map",
+  "centerType",
+  "description",
+  "centerId",
+  "centerName",
+  "slug",
+  "children",
+  "information",
+  "seo"
 );
 
 export type PlasmicBookingAddressesCard__OverridesType = {
-  root?: Flex__<'div'>;
+  root?: Flex__<"div">;
   collapsible?: Flex__<typeof Collapsible>;
   bookingSchedules?: Flex__<typeof BookingSchedules>;
 };
@@ -153,13 +158,19 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
   const { variants, overrides, forNode } = props;
 
   const args = React.useMemo(
-    () => Object.assign({}, Object.fromEntries(Object.entries(props.args).filter(([_, v]) => v !== undefined))),
-    [props.args],
+    () =>
+      Object.assign(
+        {},
+        Object.fromEntries(
+          Object.entries(props.args).filter(([_, v]) => v !== undefined)
+        )
+      ),
+    [props.args]
   );
 
   const $props = {
     ...args,
-    ...variants,
+    ...variants
   };
 
   const __nextRouter = useNextRouter();
@@ -174,7 +185,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
 
   return (
     <div
-      data-plasmic-name={'root'}
+      data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
@@ -184,7 +195,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
         styleTokensClassNames,
-        sty.root,
+        sty.root
       )}
     >
       <div className={classNames(projectcss.all, sty.freeBox___0OFb)}>
@@ -193,24 +204,38 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
           component={Link}
           href={(() => {
             try {
-              return `/${$props.centerType === 'office' ? 'dr' : 'center'}/${$props.slug}`;
+              return `/${$props.centerType === "office" ? "dr" : "center"}/${$props.slug}`;
             } catch (e) {
-              if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                return '';
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return "";
               }
               throw e;
             }
           })()}
-          platform={'nextjs'}
+          platform={"nextjs"}
         >
-          <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__z27Ck)}>
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text__z27Ck
+            )}
+          >
             <React.Fragment>
               {(() => {
                 try {
-                  return $props.centerType == 'office' ? `مطب ${$props.information.name} ${$props.information.family}` : $props.title;
+                  return $props.centerType == "office"
+                    ? `مطب ${$props.information.name} ${$props.information.family}`
+                    : $props.title;
                 } catch (e) {
-                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                    return '\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648\u0644\u0627\u06cc\u062a \u062f\u0627\u0645\u063a\u0627\u0646';
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "\u0628\u06cc\u0645\u0627\u0631\u0633\u062a\u0627\u0646 \u0648\u0644\u0627\u06cc\u062a \u062f\u0627\u0645\u063a\u0627\u0646";
                   }
                   throw e;
                 }
@@ -219,9 +244,15 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
           </div>
         </PlasmicLink__>
         <div className={classNames(projectcss.all, sty.freeBox__a2ONy)}>
-          <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text___2AcXj)}>
+          <div
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text___2AcXj
+            )}
+          >
             <React.Fragment>
-              <React.Fragment>{''}</React.Fragment>
+              <React.Fragment>{""}</React.Fragment>
               {
                 <span
                   className={classNames(
@@ -229,7 +260,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                     projectcss.span,
                     projectcss.__wab_text,
                     projectcss.plasmic_default__inline,
-                    sty.span__zUOp6,
+                    sty.span__zUOp6
                   )}
                 >
                   <React.Fragment>
@@ -237,8 +268,11 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                       try {
                         return $props.city;
                       } catch (e) {
-                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                          return '-';
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "-";
                         }
                         throw e;
                       }
@@ -246,7 +280,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                   </React.Fragment>
                 </span>
               }
-              <React.Fragment>{' - '}</React.Fragment>
+              <React.Fragment>{" - "}</React.Fragment>
               {
                 <span
                   className={classNames(
@@ -254,7 +288,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                     projectcss.span,
                     projectcss.__wab_text,
                     projectcss.plasmic_default__inline,
-                    sty.span__uaLGb,
+                    sty.span__uaLGb
                   )}
                 >
                   <React.Fragment>
@@ -262,8 +296,11 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                       try {
                         return $props.address;
                       } catch (e) {
-                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                          return '-';
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return "-";
                         }
                         throw e;
                       }
@@ -271,7 +308,7 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                   </React.Fragment>
                 </span>
               }
-              <React.Fragment>{''}</React.Fragment>
+              <React.Fragment>{""}</React.Fragment>
             </React.Fragment>
           </div>
         </div>
@@ -280,35 +317,52 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         try {
           return !!$props.description;
         } catch (e) {
-          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
             return false;
           }
           throw e;
         }
       })() ? (
         <Collapsible
-          data-plasmic-name={'collapsible'}
+          data-plasmic-name={"collapsible"}
           data-plasmic-override={overrides.collapsible}
-          className={classNames('__wab_instance', sty.collapsible)}
-          color={'#F8FAFC'}
-          defaultMaxHeight={'70px'}
+          className={classNames("__wab_instance", sty.collapsible)}
+          color={"#F8FAFC"}
+          defaultMaxHeight={"70px"}
           slot={
             <div className={classNames(projectcss.all, sty.freeBox__rX9UK)}>
               <Button
-                children2={'\u0628\u0633\u062a\u0646'}
-                className={classNames('__wab_instance', sty.button__wrjkp)}
-                color={'text'}
+                children2={"\u0628\u0633\u062a\u0646"}
+                className={classNames("__wab_instance", sty.button__wrjkp)}
+                color={"text"}
                 showStartIcon={true}
-                startIcon={<ChevronUpIcon className={classNames(projectcss.all, sty.svg__qf2Mr)} role={'img'} />}
+                startIcon={
+                  <ChevronUpIcon
+                    className={classNames(projectcss.all, sty.svg__qf2Mr)}
+                    role={"img"}
+                  />
+                }
               />
             </div>
           }
           slot2={
             <div className={classNames(projectcss.all, sty.freeBox__wvxjo)}>
-              <Icon13Icon className={classNames(projectcss.all, sty.svg__yK0C5)} role={'img'} />
+              <Icon13Icon
+                className={classNames(projectcss.all, sty.svg__yK0C5)}
+                role={"img"}
+              />
 
               <div className={classNames(projectcss.all, sty.freeBox__j6E3A)}>
-                <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__zjhiU)}>
+                <div
+                  className={classNames(
+                    projectcss.all,
+                    projectcss.__wab_text,
+                    sty.text__zjhiU
+                  )}
+                >
                   <div
                     className={projectcss.__wab_expr_html_text}
                     dangerouslySetInnerHTML={{
@@ -316,12 +370,15 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                         try {
                           return $props.description;
                         } catch (e) {
-                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                            return 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non est felis. Curabitur nibh velit, vehicula quis orci at, scelerisque malesuada sem. Ut tincidunt nisl nunc. Fusce in mollis enim, sodales porta eros. Sed quis pharetra tortor. Donec pulvinar bibendum ligula ultricies rutrum. Morbi ultricies ipsum vel augue venenatis interdum. Sed sodales cursus lectus, eget congue purus facilisis id. Suspendisse nec vestibulum justo, quis tincidunt justo. Morbi a nibh pharetra, vestibulum orci nec, varius magna. Duis blandit eros urna, sed iaculis tortor consequat non. Donec finibus, diam faucibus sodales condimentum, leo arcu egestas mauris, vitae sollicitudin leo nulla ut nisi.\nNam metus eros, sagittis sed rhoncus vitae, eleifend nec augue. Proin vulputate nulla nec leo ullamcorper scelerisque. Duis id massa sem. Proin hendrerit risus vitae tincidunt viverra. Donec augue risus, condimentum in metus eleifend, luctus hendrerit lacus. Quisque congue nibh a turpis tempor sodales. Aenean pretium non libero non pharetra. Nulla gravida odio metus, non accumsan dolor cursus et. Aenean consequat augue quis felis mattis consequat. Phasellus dapibus mauris in tincidunt tristique. In nec dui vitae sem facilisis egestas. Proin sollicitudin nec enim a mollis. Aenean a odio quis ipsum ultrices condimentum at id massa. Vestibulum eu magna enim. Etiam a mauris rutrum leo posuere consectetur.';
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non est felis. Curabitur nibh velit, vehicula quis orci at, scelerisque malesuada sem. Ut tincidunt nisl nunc. Fusce in mollis enim, sodales porta eros. Sed quis pharetra tortor. Donec pulvinar bibendum ligula ultricies rutrum. Morbi ultricies ipsum vel augue venenatis interdum. Sed sodales cursus lectus, eget congue purus facilisis id. Suspendisse nec vestibulum justo, quis tincidunt justo. Morbi a nibh pharetra, vestibulum orci nec, varius magna. Duis blandit eros urna, sed iaculis tortor consequat non. Donec finibus, diam faucibus sodales condimentum, leo arcu egestas mauris, vitae sollicitudin leo nulla ut nisi.\nNam metus eros, sagittis sed rhoncus vitae, eleifend nec augue. Proin vulputate nulla nec leo ullamcorper scelerisque. Duis id massa sem. Proin hendrerit risus vitae tincidunt viverra. Donec augue risus, condimentum in metus eleifend, luctus hendrerit lacus. Quisque congue nibh a turpis tempor sodales. Aenean pretium non libero non pharetra. Nulla gravida odio metus, non accumsan dolor cursus et. Aenean consequat augue quis felis mattis consequat. Phasellus dapibus mauris in tincidunt tristique. In nec dui vitae sem facilisis egestas. Proin sollicitudin nec enim a mollis. Aenean a odio quis ipsum ultrices condimentum at id massa. Vestibulum eu magna enim. Etiam a mauris rutrum leo posuere consectetur.";
                           }
                           throw e;
                         }
-                      })(),
+                      })()
                     }}
                   />
                 </div>
@@ -331,27 +388,35 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         >
           <div className={classNames(projectcss.all, sty.freeBox__j4Sfd)}>
             <Button
-              children2={'\u0627\u062f\u0627\u0645\u0647'}
-              className={classNames('__wab_instance', sty.button__yE2)}
-              color={'text'}
+              children2={"\u0627\u062f\u0627\u0645\u0647"}
+              className={classNames("__wab_instance", sty.button__yE2)}
+              color={"text"}
               showStartIcon={true}
-              startIcon={<ChevronDownIcon className={classNames(projectcss.all, sty.svg__wsIc9)} role={'img'} />}
+              startIcon={
+                <ChevronDownIcon
+                  className={classNames(projectcss.all, sty.svg__wsIc9)}
+                  role={"img"}
+                />
+              }
             />
           </div>
         </Collapsible>
       ) : null}
       {renderPlasmicSlot({
         defaultContents: null,
-        value: args.children,
+        value: args.children
       })}
       <BookingSchedules
-        data-plasmic-name={'bookingSchedules'}
+        data-plasmic-name={"bookingSchedules"}
         data-plasmic-override={overrides.bookingSchedules}
         centerId={(() => {
           try {
             return $props.centerId;
           } catch (e) {
-            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
               return undefined;
             }
             throw e;
@@ -361,18 +426,24 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
           try {
             return $props.centerName;
           } catch (e) {
-            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
               return undefined;
             }
             throw e;
           }
         })()}
-        className={classNames('__wab_instance', sty.bookingSchedules)}
+        className={classNames("__wab_instance", sty.bookingSchedules)}
         slug={(() => {
           try {
             return $props.seo.slug;
           } catch (e) {
-            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
               return undefined;
             }
             throw e;
@@ -384,7 +455,10 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         try {
           return $props.displayNumberArray.length > 0;
         } catch (e) {
-          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
             return false;
           }
           throw e;
@@ -395,26 +469,38 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
               try {
                 return $props.displayNumberArray;
               } catch (e) {
-                if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
                   return [];
                 }
                 throw e;
               }
-            })(),
+            })()
           ).map((__plasmic_item_0, __plasmic_idx_0) => {
             const currentItem = __plasmic_item_0;
             const currentIndex = __plasmic_idx_0;
             return (
               <Button
                 children2={
-                  <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text___01Rr4)}>
+                  <div
+                    className={classNames(
+                      projectcss.all,
+                      projectcss.__wab_text,
+                      sty.text___01Rr4
+                    )}
+                  >
                     <React.Fragment>
                       {(() => {
                         try {
                           return currentItem;
                         } catch (e) {
-                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                            return '0335444';
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return "0335444";
                           }
                           throw e;
                         }
@@ -422,30 +508,39 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
                     </React.Fragment>
                   </div>
                 }
-                className={classNames('__wab_instance', sty.button__fveAq)}
+                className={classNames("__wab_instance", sty.button__fveAq)}
                 key={currentIndex}
                 onClick={async event => {
                   const $steps = {};
 
-                  $steps['runCode'] = true
+                  $steps["runCode"] = true
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
                             return (location.href = `tel:${currentItem}`);
-                          },
+                          }
                         };
                         return (({ customFunction }) => {
                           return customFunction();
                         })?.apply(null, [actionArgs]);
                       })()
                     : undefined;
-                  if ($steps['runCode'] != null && typeof $steps['runCode'] === 'object' && typeof $steps['runCode'].then === 'function') {
-                    $steps['runCode'] = await $steps['runCode'];
+                  if (
+                    $steps["runCode"] != null &&
+                    typeof $steps["runCode"] === "object" &&
+                    typeof $steps["runCode"].then === "function"
+                  ) {
+                    $steps["runCode"] = await $steps["runCode"];
                   }
                 }}
                 outline={true}
                 showStartIcon={true}
-                startIcon={<Icon11Icon className={classNames(projectcss.all, sty.svg__ar77M)} role={'img'} />}
+                startIcon={
+                  <Icon11Icon
+                    className={classNames(projectcss.all, sty.svg__ar77M)}
+                    role={"img"}
+                  />
+                }
               />
             );
           })
@@ -455,22 +550,30 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         component={Link}
         href={(() => {
           try {
-            return `https://nshn.ir/?lat=${$props.map.lat}&lng=${$props.map.lon}`;
+            return globalThis.navigator.userAgent?.includes("Android")
+              ? `geo:${$props.map.lat},${$props.map.lon}`
+              : `https://www.google.com/maps?daddr=${$props.map.lat},${$props.map.lon}&amp;ll&openInBrowser=1`;
           } catch (e) {
-            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
               return undefined;
             }
             throw e;
           }
         })()}
-        platform={'nextjs'}
-        target={'_blank'}
+        platform={"nextjs"}
+        target={"_blank"}
       >
         {(() => {
           try {
             return !!$props.map.lat && !!$props.map.lon;
           } catch (e) {
-            if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
               return false;
             }
             throw e;
@@ -478,16 +581,27 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
         })() ? (
           <Button
             children2={
-              <div className={classNames(projectcss.all, projectcss.__wab_text, sty.text__nOaWr)}>
+              <div
+                className={classNames(
+                  projectcss.all,
+                  projectcss.__wab_text,
+                  sty.text__nOaWr
+                )}
+              >
                 {
-                  '\u0645\u0634\u0627\u0647\u062f\u0647 \u062f\u0631 \u0646\u0642\u0634\u0647 \u0648 \u0645\u0633\u06cc\u0631\u06cc\u0627\u0628\u06cc'
+                  "\u0645\u0634\u0627\u0647\u062f\u0647 \u062f\u0631 \u0646\u0642\u0634\u0647 \u0648 \u0645\u0633\u06cc\u0631\u06cc\u0627\u0628\u06cc"
                 }
               </div>
             }
-            className={classNames('__wab_instance', sty.button__dxuVg)}
+            className={classNames("__wab_instance", sty.button__dxuVg)}
             outline={true}
             showStartIcon={true}
-            startIcon={<Icon12Icon className={classNames(projectcss.all, sty.svg__vWeUa)} role={'img'} />}
+            startIcon={
+              <Icon12Icon
+                className={classNames(projectcss.all, sty.svg__vWeUa)}
+                role={"img"}
+              />
+            }
           />
         ) : null}
       </PlasmicLink__>
@@ -496,56 +610,70 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
 }
 
 const PlasmicDescendants = {
-  root: ['root', 'collapsible', 'bookingSchedules'],
-  collapsible: ['collapsible'],
-  bookingSchedules: ['bookingSchedules'],
+  root: ["root", "collapsible", "bookingSchedules"],
+  collapsible: ["collapsible"],
+  bookingSchedules: ["bookingSchedules"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
-type DescendantsType<T extends NodeNameType> = typeof PlasmicDescendants[T][number];
+type DescendantsType<T extends NodeNameType> =
+  (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
-  root: 'div';
+  root: "div";
   collapsible: typeof Collapsible;
   bookingSchedules: typeof BookingSchedules;
 };
 
-type ReservedPropsType = 'variants' | 'args' | 'overrides';
-type NodeOverridesType<T extends NodeNameType> = Pick<PlasmicBookingAddressesCard__OverridesType, DescendantsType<T>>;
+type ReservedPropsType = "variants" | "args" | "overrides";
+type NodeOverridesType<T extends NodeNameType> = Pick<
+  PlasmicBookingAddressesCard__OverridesType,
+  DescendantsType<T>
+>;
 type NodeComponentProps<T extends NodeNameType> =
   // Explicitly specify variants, args, and overrides as objects
   {
     variants?: PlasmicBookingAddressesCard__VariantsArgs;
     args?: PlasmicBookingAddressesCard__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicBookingAddressesCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicBookingAddressesCard__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicBookingAddressesCard__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
-    Omit<NodeOverridesType<T>, ReservedPropsType | VariantPropType | ArgPropType> &
+    Omit<
+      NodeOverridesType<T>,
+      ReservedPropsType | VariantPropType | ArgPropType
+    > &
     // Specify props for the root element
-    Omit<Partial<React.ComponentProps<NodeDefaultElementType[T]>>, ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>>;
+    Omit<
+      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+    >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };
-  const func = function <T extends PropsType>(props: T & StrictProps<T, PropsType>) {
+  const func = function <T extends PropsType>(
+    props: T & StrictProps<T, PropsType>
+  ) {
     const { variants, args, overrides } = React.useMemo(
       () =>
         deriveRenderOpts(props, {
           name: nodeName,
           descendantNames: PlasmicDescendants[nodeName],
           internalArgPropNames: PlasmicBookingAddressesCard__ArgProps,
-          internalVariantPropNames: PlasmicBookingAddressesCard__VariantProps,
+          internalVariantPropNames: PlasmicBookingAddressesCard__VariantProps
         }),
-      [props, nodeName],
+      [props, nodeName]
     );
     return PlasmicBookingAddressesCard__RenderFunc({
       variants,
       args,
       overrides,
-      forNode: nodeName,
+      forNode: nodeName
     });
   };
-  if (nodeName === 'root') {
-    func.displayName = 'PlasmicBookingAddressesCard';
+  if (nodeName === "root") {
+    func.displayName = "PlasmicBookingAddressesCard";
   } else {
     func.displayName = `PlasmicBookingAddressesCard.${nodeName}`;
   }
@@ -554,16 +682,16 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
 
 export const PlasmicBookingAddressesCard = Object.assign(
   // Top-level PlasmicBookingAddressesCard renders the root element
-  makeNodeComponent('root'),
+  makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
-    collapsible: makeNodeComponent('collapsible'),
-    bookingSchedules: makeNodeComponent('bookingSchedules'),
+    collapsible: makeNodeComponent("collapsible"),
+    bookingSchedules: makeNodeComponent("bookingSchedules"),
 
     // Metadata about props expected for PlasmicBookingAddressesCard
     internalVariantProps: PlasmicBookingAddressesCard__VariantProps,
-    internalArgProps: PlasmicBookingAddressesCard__ArgProps,
-  },
+    internalArgProps: PlasmicBookingAddressesCard__ArgProps
+  }
 );
 
 export default PlasmicBookingAddressesCard;

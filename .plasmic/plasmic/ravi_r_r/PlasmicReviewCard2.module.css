@@ -9,19 +9,13 @@
   row-gap: var(--token-fhaz6q6bl-fW);
   min-width: 0;
 }
-.userApi:global(.__wab_instance) {
+.apiRequest:global(.__wab_instance) {
   max-width: 100%;
   object-fit: cover;
 }
-.text__i3DGb {
-  position: relative;
-  width: 100%;
-  height: auto;
+.userApi:global(.__wab_instance) {
   max-width: 100%;
-  text-align: center;
-  font-size: var(--token-6NbVMeD6zQwn);
-  color: var(--token-u3OudfMChOo3);
-  min-width: 0;
+  object-fit: cover;
 }
 .repliesApi:global(.__wab_instance) {
   max-width: 100%;
@@ -116,13 +110,6 @@
   width: 24px;
   flex-shrink: 0;
   height: 1em;
-}
-.text__kwhxf {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 100%;
-  min-width: 0;
 }
 .raviShare:global(.__wab_instance) {
   max-width: 100%;

@@ -79,9 +79,9 @@ export type PlasmicRisman__VariantsArgs = {};
 type VariantPropType = keyof PlasmicRisman__VariantsArgs;
 export const PlasmicRisman__VariantProps = new Array<VariantPropType>();
 
-export type PlasmicRisman__ArgsType = { data?: any };
+export type PlasmicRisman__ArgsType = { data?: any; slug?: string };
 type ArgPropType = keyof PlasmicRisman__ArgsType;
-export const PlasmicRisman__ArgProps = new Array<ArgPropType>("data");
+export const PlasmicRisman__ArgProps = new Array<ArgPropType>("data", "slug");
 
 export type PlasmicRisman__OverridesType = {
   root?: Flex__<"div">;
@@ -91,6 +91,7 @@ export type PlasmicRisman__OverridesType = {
 
 export interface DefaultRismanProps {
   data?: any;
+  slug?: string;
   className?: string;
 }
 
@@ -287,11 +288,7 @@ function PlasmicRisman__RenderFunc(props: {
           }
           link={(() => {
             try {
-              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${
-                $props.data?.data?.fullName
-              }&uri=${globalThis.encodeURIComponent(
-                $props.data.data?.destination?.url
-              )}&platform=${$props.data.data?.destination?.platform}`;
+              return `https://sanje.paziresh24.com/interstitial_page/?source=profile&provide=page&display_name=${$props.data?.data?.fullName}&uri=${globalThis.encodeURIComponent($props.data.data?.destination?.url)}&platform=${$props.data.data?.destination?.platform}&slug=${$props.slug}`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -336,7 +333,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicRisman__VariantsArgs;
     args?: PlasmicRisman__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicRisman__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicRisman__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicRisman__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
