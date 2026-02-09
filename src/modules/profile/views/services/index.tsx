@@ -159,7 +159,6 @@ export const Services = ({
   };
 
   if (
-    !customize?.partnerKey &&
     dontShowDeactiveBox &&
     (alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk)
   ) {
