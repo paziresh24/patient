@@ -15,30 +15,28 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
   const customize = useCustomize(state => state.customize);
 
   return (
-    <>
-      {!customize.partnerKey && (
-        <Card className="space-y-3 !rounded-none md:!rounded-lg">
-          <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
-            <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
-          </Alert>
-          {availableTime && (
-            <div className="flex justify-between text-sm">
-              <Text className="text-slate-500">زمان اعلام نوبت های جدید: </Text>
-              <Text fontWeight="medium" className="text-slate-800">
-                {availableTime}
-              </Text>
-            </div>
-          )}
-          <SubstituteDoctorButton
-            displayName={displayName}
-            expertises={expertises}
-            doctorCity={dcotorCity}
-            buttonId="bulk-profile-button"
-            autoOpenDelay={6000}
-          />
-        </Card>
+    <Card className="space-y-3 !rounded-none md:!rounded-lg">
+      <Alert severity="error" className="flex items-center p-3 text-red-500 space-s-2">
+        <Text className="text-sm font-medium">درحال حاضر نوبت جدیدی برای {displayName} تعریف نشده است.</Text>
+      </Alert>
+      {availableTime && (
+        <div className="flex justify-between text-sm">
+          <Text className="text-slate-500">زمان اعلام نوبت های جدید: </Text>
+          <Text fontWeight="medium" className="text-slate-800">
+            {availableTime}
+          </Text>
+        </div>
       )}
-    </>
+      {!customize.partnerKey && (
+        <SubstituteDoctorButton
+          displayName={displayName}
+          expertises={expertises}
+          doctorCity={dcotorCity}
+          buttonId="bulk-profile-button"
+          autoOpenDelay={6000}
+        />
+      )}
+    </Card>
   );
 };
 
