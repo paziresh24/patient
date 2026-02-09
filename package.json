@@ -16,7 +16,7 @@
     "test": "jest --watch",
     "test:ci": "jest --ci",
     "plasmic-sync": "plasmic sync -p sMdpLWyxbzDCruwMRffW2m -p qQzsBf58SqzNJX45iggq96 -p iDYgiKJB9Yi7CUB81stQBK --yes --force",
-    "mkcert-localhost": "mkcert -key-file cert/localhost-key.pem -cert-file cert/localhost.pem localhost 127.0.0.1 local.paziresh24.com local.paziresh24.dev && mkcert -install"
+    "mkcert-localhost": "mkcert -key-file cert/localhost-key.pem -cert-file cert/localhost.pem localhost 127.0.0.1 local.paziresh24.com local.paziresh24.dev nobat.nkums.ac.ir && mkcert -install"
   },
   "dependencies": {
     "@ant-design/icons": "5.3.7",
