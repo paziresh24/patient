@@ -40,6 +40,7 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
     feedback.isSuccess &&
     feedback?.data?.pageInfo?.totalRows === 0 &&
     (status === BookStatus.expired || status === BookStatus.visited) &&
+    paymentStatus !== PaymentStatus.refunded &&
     feedbackUrl;
 
   const handleClickCard = () => {
