@@ -45,7 +45,7 @@ export const LoginForm = ({ title, description, postLogin }: LoginFormProps) => 
           retryGetPasswordNumber={retryGetPasswordNumber}
         />
       )}
-      {step === 'password' && <Password setStep={setStep} mobileNumberValue={mobileNumberValue} postLogin={postLogin} />}
+      {step === 'password' && <Password mobileNumberValue={mobileNumberValue} postLogin={postLogin} />}
     </div>
   );
 };
