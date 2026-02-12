@@ -33,6 +33,34 @@ export const OtpCode = (props: OtpCodeProps) => {
 
   const pinInputRef = useRef<any>(null);
   const otpAutofillRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const pastedText = e.clipboardData?.getData('text');
+      if (pastedText && pinInputRef.current?.elements) {
+        const converted = digitsFaToEn(pastedText).replace(/\D/g, '').slice(0, 4);
+        if (converted.length === 4) {
+          e.preventDefault();
+          e.stopPropagation();
+          setPassword(converted);
+          pinInputRef.current.value = converted;
+          const valueArr = converted.split('');
+          for (let i = 0; i < pinInputRef.current.elements.length; i++) {
+            pinInputRef.current.elements[i]?.update(valueArr[i] || '', true);
+          }
+        }
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('paste', handlePaste);
+      return () => {
+        container.removeEventListener('paste', handlePaste);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -140,7 +168,7 @@ export const OtpCode = (props: OtpCodeProps) => {
           )}
         </button>
       </div>
-      <div className="relative flex justify-center">
+      <div ref={containerRef} className="relative flex justify-center">
         {/* Input مخفی برای iOS: autocomplete="one-time-code" سبب پیشنهاد کد پیامک در کیبورد می‌شود */}
         <input
           ref={otpAutofillRef}
