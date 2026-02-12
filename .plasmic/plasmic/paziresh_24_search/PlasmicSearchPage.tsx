@@ -327,9 +327,8 @@ function PlasmicSearchPage__RenderFunc(props: {
                     typeof $steps["updateMainSearchRequestPage"].then ===
                       "function"
                   ) {
-                    $steps["updateMainSearchRequestPage"] = await $steps[
-                      "updateMainSearchRequestPage"
-                    ];
+                    $steps["updateMainSearchRequestPage"] =
+                      await $steps["updateMainSearchRequestPage"];
                   }
 
                   $steps["updateMainSearchRequestResult"] = true
@@ -365,9 +364,8 @@ function PlasmicSearchPage__RenderFunc(props: {
                     typeof $steps["updateMainSearchRequestResult"].then ===
                       "function"
                   ) {
-                    $steps["updateMainSearchRequestResult"] = await $steps[
-                      "updateMainSearchRequestResult"
-                    ];
+                    $steps["updateMainSearchRequestResult"] =
+                      await $steps["updateMainSearchRequestResult"];
                   }
 
                   $steps["goToPage"] = true
@@ -514,9 +512,8 @@ function PlasmicSearchPage__RenderFunc(props: {
                         typeof $steps["updateMainSearchRequestResult"].then ===
                           "function"
                       ) {
-                        $steps["updateMainSearchRequestResult"] = await $steps[
-                          "updateMainSearchRequestResult"
-                        ];
+                        $steps["updateMainSearchRequestResult"] =
+                          await $steps["updateMainSearchRequestResult"];
                       }
 
                       $steps["goToPage"] = true
@@ -524,15 +521,11 @@ function PlasmicSearchPage__RenderFunc(props: {
                             const actionArgs = {
                               destination: (() => {
                                 try {
-                                  return `/s/jahannama/?text=${
-                                    $ctx.query?.text ?? ""
-                                  }${Object.entries(
+                                  return `/s/jahannama/?text=${$ctx.query?.text ?? ""}${Object.entries(
                                     $state.searchFilters.selected
                                   ).reduce((acc, item) => {
                                     if (item[1]?.length == 0) return acc;
-                                    acc += `&${item[0]}=${JSON.stringify(
-                                      item[1]
-                                    )}`;
+                                    acc += `&${item[0]}=${JSON.stringify(item[1])}`;
                                     return acc;
                                   }, "")}`;
                                 } catch (e) {
@@ -602,9 +595,8 @@ function PlasmicSearchPage__RenderFunc(props: {
                         typeof $steps["updateMainSearchRequestPage"].then ===
                           "function"
                       ) {
-                        $steps["updateMainSearchRequestPage"] = await $steps[
-                          "updateMainSearchRequestPage"
-                        ];
+                        $steps["updateMainSearchRequestPage"] =
+                          await $steps["updateMainSearchRequestPage"];
                       }
                     }).apply(null, eventArgs);
                   },
@@ -715,14 +707,10 @@ function PlasmicSearchPage__RenderFunc(props: {
                           const actionArgs = {
                             destination: (() => {
                               try {
-                                return `/s/jahannama/?text=${
-                                  $ctx.query?.text ?? ""
-                                }${Object.entries(
+                                return `/s/jahannama/?text=${$ctx.query?.text ?? ""}${Object.entries(
                                   $state.searchFilters.selected
                                 ).reduce((acc, item) => {
-                                  acc += `&${item[0]}=${JSON.stringify(
-                                    item[1]
-                                  )}`;
+                                  acc += `&${item[0]}=${JSON.stringify(item[1])}`;
                                   return acc;
                                 }, "")}&page=${$state.mainSearchRequest.page}`;
                               } catch (e) {
@@ -996,7 +984,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchPage__VariantsArgs;
     args?: PlasmicSearchPage__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchPage__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchPage__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchPage__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
