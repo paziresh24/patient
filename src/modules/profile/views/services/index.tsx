@@ -214,6 +214,7 @@ export const Services = ({
             ))}
         {router.query.centerTarget != CENTERS.CONSULT && centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
           <Presence
+            doctorId={id}
             centers={centers
               .filter((center: any) => center.id !== CENTERS.CONSULT)
               .map(center => ({
