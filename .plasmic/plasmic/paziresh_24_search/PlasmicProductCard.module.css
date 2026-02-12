@@ -581,6 +581,7 @@
   max-width: 100%;
   width: auto;
   white-space: pre;
+  font-weight: 400;
   margin: 0px;
 }
 .text__pAe1T {
@@ -590,7 +591,8 @@
   max-width: 95%;
   margin-bottom: 0px;
   font-size: var(--token-VrIY9r5RDQZ_);
-  white-space: pre;
+  white-space: pre-wrap;
+  font-weight: 700;
 }
 .button__ihcOu:global(.__wab_instance) {
   max-width: 100%;
