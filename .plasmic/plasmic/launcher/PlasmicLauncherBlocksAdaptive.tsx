@@ -262,25 +262,7 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
             (() => {
               try {
-                return (() => {
-                  if (
-                    !globalThis?.ping?.push?.hasPermission?.() &&
-                    $props.title === "اقدامات پیشنهادی برای شما"
-                  ) {
-                    return [
-                      {
-                        app_key: "web-push",
-                        title:
-                          "برای دریافت آخرین اطلاع‌رسانی ها و پیام‌های جدید در چت نوتیفیکیشن را فعال کن.",
-                        action_label: "فعالسازی",
-                        icon: "https://hamdast.s3.ir-thr-at1.arvanstorage.ir/apps%2Fnotification.png?versionId="
-                      },
-                      ...$props.items
-                    ];
-                  } else {
-                    return $props.items;
-                  }
-                })();
+                return $props.items;
               } catch (e) {
                 if (
                   e instanceof TypeError ||
@@ -410,15 +392,17 @@ function PlasmicLauncherBlocksAdaptive__RenderFunc(props: {
 
       {(() => {
         try {
-          return $state.apiRequest.data?.every(item =>
-            $props.items?.map(i => i.app_key).includes(item.app_key)
+          return $props.items?.every?.(item =>
+            $state.apiRequest?.data
+              ?.map?.(i => i.app_key)
+              ?.includes?.(item.app_key)
           );
         } catch (e) {
           if (
             e instanceof TypeError ||
             e?.plasmicType === "PlasmicUndefinedDataError"
           ) {
-            return true;
+            return false;
           }
           throw e;
         }
