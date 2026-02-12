@@ -2334,18 +2334,9 @@ function PlasmicProductCard__RenderFunc(props: {
                                 sty.text__e4VZc
                               )}
                             >
-                              <React.Fragment>
-                                <span
-                                  className={
-                                    "plasmic_default__all plasmic_default__span"
-                                  }
-                                  style={{ fontWeight: 700 }}
-                                >
-                                  {
-                                    "\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a: "
-                                  }
-                                </span>
-                              </React.Fragment>
+                              {
+                                "\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a: "
+                              }
                             </div>
                             <div
                               className={classNames(
