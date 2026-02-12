@@ -3514,6 +3514,19 @@
           "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksAdaptive.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "DefXq4cgxz9g",
+          "name": "LauncherBlocksAppCard",
+          "type": "managed",
+          "projectId": "grxNYctbMek6PL66cujx3u",
+          "renderModuleFilePath": "plasmic/launcher/PlasmicLauncherBlocksAppCard.tsx",
+          "importSpec": {
+            "modulePath": "LauncherBlocksAppCard.tsx"
+          },
+          "cssFilePath": "plasmic/launcher/PlasmicLauncherBlocksAppCard.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -3648,6 +3661,21 @@
           "id": "ESYxiogpucLk",
           "name": "image",
           "filePath": "plasmic/launcher/images/image.svg"
+        },
+        {
+          "id": "HZiEdlqUYPn9",
+          "name": "image 2",
+          "filePath": "plasmic/launcher/images/image2.png"
+        },
+        {
+          "id": "NxvfIYj0O4kW",
+          "name": "image 3",
+          "filePath": "plasmic/launcher/images/image3.png"
+        },
+        {
+          "id": "v9KNCqnL0YjY",
+          "name": "image 4",
+          "filePath": "plasmic/launcher/images/image4.png"
         }
       ],
       "indirect": false,
