@@ -1,9 +1,7 @@
 import Script from 'next/script';
 import { useRouter } from 'next/router';
 
-const SCRIPT_URL =
-  process.env.NEXT_PUBLIC_RISMAN_SURVEY_SCRIPT_URL ||
-  'https://risman.s3.ir-thr-at1.arvanstorage.ir/risman-survey-porsline.js';
+const SCRIPT_URL = process.env.NEXT_PUBLIC_RISMAN_SURVEY_SCRIPT_URL || 'https://risman-storage.s3.ir-thr-at1.arvanstorage.ir/risman-survey-porsline.js';
 
 function shouldLoadSurvey(pathname: string): boolean {
   return pathname.startsWith('/dr/') || pathname.startsWith('/s/');
