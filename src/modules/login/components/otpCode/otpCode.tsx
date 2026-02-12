@@ -1,4 +1,5 @@
 import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
+import { digitsFaToEn } from '@persian-tools/persian-tools';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
@@ -31,6 +32,7 @@ export const OtpCode = (props: OtpCodeProps) => {
   const [shouldShowResetButton, setShouldShowResetButton] = useState(false);
 
   const pinInputRef = useRef<any>(null);
+  const otpAutofillRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -44,11 +46,12 @@ export const OtpCode = (props: OtpCodeProps) => {
           });
 
           if (content && content.code) {
-            setPassword(content.code);
+            const code = digitsFaToEn(content.code.toString());
+            setPassword(code);
             if (pinInputRef.current) {
-              pinInputRef.current.value = content.code;
+              pinInputRef.current.value = code;
 
-              const valueArr = (content.code || '').toString().split('');
+              const valueArr = code.split('');
 
               if (isEqual(valueArr, pinInputRef.current.values)) return;
 
@@ -137,21 +140,55 @@ export const OtpCode = (props: OtpCodeProps) => {
           )}
         </button>
       </div>
-      <PinInput
+      <div className="relative flex justify-center">
+        {/* Input مخفی برای iOS: autocomplete="one-time-code" سبب پیشنهاد کد پیامک در کیبورد می‌شود */}
+        <input
+          ref={otpAutofillRef}
+          type="text"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={4}
+          aria-hidden="true"
+          tabIndex={-1}
+          className="absolute opacity-0 w-0 h-0 pointer-events-none overflow-hidden"
+        onInput={e => {
+          const value = digitsFaToEn((e.target as HTMLInputElement).value).replace(/\D/g, '').slice(0, 4);
+          if (value.length === 4) {
+            setPassword(value);
+            if (pinInputRef.current?.elements) {
+              pinInputRef.current.value = value;
+              const valueArr = value.split('');
+              for (let i = 0; i < pinInputRef.current.elements.length; i++) {
+                pinInputRef.current.elements[i]?.update(valueArr[i] || '', true);
+              }
+              handleLogin(value);
+            }
+            (e.target as HTMLInputElement).value = '';
+          }
+        }}
+        />
+        <PinInput
         ref={pinInputRef}
         length={4}
         focus
         initialValue={''}
-        onChange={value => setPassword(value)}
+        onChange={value => setPassword(digitsFaToEn(value))}
         type="numeric"
         inputMode="number"
         style={{ padding: '10px', direction: 'ltr', alignSelf: 'center' }}
         inputStyle={{ borderColor: '#cbd5e1', borderRadius: '0.6rem', margin: '0 4px' }}
         inputFocusStyle={{ borderColor: '#3861fb' }}
-        onComplete={value => handleLogin(value)}
+        onComplete={value => handleLogin(digitsFaToEn(value))}
         autoSelect={true}
+        validate={v => {
+          if (!v) return '';
+          const en = digitsFaToEn(v);
+          const c = en.charCodeAt(0);
+          return c >= 48 && c <= 57 ? en : '';
+        }}
         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
-      />
+        />
+      </div>
       <Button size="sm" variant="text" className="underline !text-slate-500" onClick={() => setStep('mobile_number')}>
         {t('steps.otpCode.changeMobileNumber')}
       </Button>

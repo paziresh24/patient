@@ -1,3 +1,4 @@
+import { digitsFaToEn } from '@persian-tools/persian-tools';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField/textField';
@@ -48,9 +49,10 @@ export const Password = (props: PasswordProps) => {
         />
       </div>
       <TextField
+        value={password}
         onKeyDown={event => event.key === 'Enter' && handleLogin(password)}
         autoComplete="off"
-        onChange={e => setPassword(e.target.value)}
+        onChange={e => setPassword(digitsFaToEn(e.target.value))}
         type="password"
         style={{ direction: 'ltr' }}
         autoFocus
