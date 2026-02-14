@@ -1,0 +1,129 @@
+.root {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  column-gap: 10px;
+  position: relative;
+  min-width: 0;
+}
+.freeBox___4CFgL {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  left: auto;
+  top: 49px;
+  right: 14.5px;
+  bottom: 0;
+  background: none;
+  flex-shrink: 0;
+  min-height: 0;
+  border: 1px dashed var(--token-4iQ-8GWBqX6X);
+}
+.freeBox__oF5SG {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  background: var(--token-M8SHDPuEHkX2);
+  flex-shrink: 0;
+  border-radius: 80px;
+  border: 1.5px dotted var(--token-ezMpHdKVwSWQ);
+}
+.freeBoxchecked__oF5SGfRm3S {
+  background: var(--token-IFYe29KCwQQV);
+  align-items: center;
+  justify-content: center;
+  border-color: var(--token-IFYe29KCwQQV);
+}
+.svg {
+  object-fit: cover;
+  max-width: 100%;
+  color: #ffffff;
+  height: 1em;
+  flex-shrink: 0;
+  display: none;
+}
+.svgchecked {
+  display: block;
+}
+.freeBox__x0Nmx {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  background: #ffffff;
+  column-gap: 7px;
+  min-width: 0;
+  border-radius: 12px;
+  padding: 12px;
+}
+.freeBoxchecked__x0NmxFRm3S {
+  opacity: 0.5;
+}
+.img {
+  object-fit: cover;
+  max-width: 100%;
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+.img > picture > img {
+  object-fit: cover;
+}
+.freeBox__lgf2Y {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: space-between;
+  align-items: flex-start;
+  row-gap: 7px;
+  min-width: 0;
+}
+.text__bab94 {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.7;
+  min-width: 0;
+}
+.paziresh24Button:global(.__wab_instance) {
+  max-width: 100%;
+}
+.svg__vJ0Y3 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}
+.text__nEcbd {
+  font-size: 10px;
+  font-weight: 600;
+}
+.svg__jeqa8 {
+  position: relative;
+  object-fit: cover;
+  width: auto;
+  height: 1em;
+}

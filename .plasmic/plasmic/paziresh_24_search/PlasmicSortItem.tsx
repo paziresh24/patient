@@ -167,7 +167,7 @@ function PlasmicSortItem__RenderFunc(props: {
         path: "select.plasmicReactAriaSelectIsOpen",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -176,6 +176,7 @@ function PlasmicSortItem__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -476,7 +477,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSortItem__VariantsArgs;
     args?: PlasmicSortItem__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSortItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSortItem__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSortItem__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

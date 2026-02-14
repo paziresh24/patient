@@ -40,6 +40,7 @@ export default forwardRef(({ app_key, app_name, icon, onSuccess, onCancel, onErr
   useImperativeHandle(ref, () => ({
     open: (data: any) => {
       handleOpen();
+      setIsLoading(true);
       openAndCreateReceipt({
         ...data
       })
@@ -117,21 +118,19 @@ export default forwardRef(({ app_key, app_name, icon, onSuccess, onCancel, onErr
   const openAndCreateReceipt = ({ receipt_id, plan_key, product_key, payload }: { receipt_id?: string; plan_key?: string; product_key?: string, payload?: any }) => {
     deleteCookie('payment_state');
     if (receipt_id) {
-      splunkInstance('dashboard').sendEvent({
-        group: 'hamdast_payment',
-        type: 'show_receipt',
-        event: {
-          is_doctor: info?.is_doctor,
-          user_id: info?.id,
-          meta_data: {
-            app_key: app_key,
-            product_key: product_key,
-            receipt_id: receipt_id,
-            center_id: selectedCenter
-          },
-        },
+      axios.get(`https://apigw.paziresh24.com/katibe/v1/payments/${receipt_id}`, {
+        withCredentials: true,
+      }).then(data => {
+        setReceiptData({
+          receipt_id: receipt_id,
+          title: data.data?.data?.title,
+          price: data.data?.data?.amount,
+          ...(payload && { payload }),
+        });
+        sendEventLog("show_receipt")
+        setIsLoading(false);
       });
-      setIsLoading(false);
+
       return;
     }
     axios

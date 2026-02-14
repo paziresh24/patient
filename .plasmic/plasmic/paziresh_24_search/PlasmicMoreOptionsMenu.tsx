@@ -154,7 +154,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
         path: "popover.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false,
 
         refName: "popover"
       }
@@ -165,6 +165,7 @@ function PlasmicMoreOptionsMenu__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -427,7 +428,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicMoreOptionsMenu__VariantsArgs;
     args?: PlasmicMoreOptionsMenu__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicMoreOptionsMenu__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicMoreOptionsMenu__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicMoreOptionsMenu__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

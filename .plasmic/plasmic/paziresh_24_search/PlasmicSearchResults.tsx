@@ -212,13 +212,14 @@ function PlasmicSearchResults__RenderFunc(props: {
         path: "visibilityOfShowMySearchPerformance",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false
       },
       {
         path: "isHorizental",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isHorizental
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
+          $props.isHorizental
       }
     ],
     [$props, $ctx, $refs]
@@ -227,6 +228,7 @@ function PlasmicSearchResults__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -313,9 +315,8 @@ function PlasmicSearchResults__RenderFunc(props: {
             typeof $steps["setGrowthbookAttributes"] === "object" &&
             typeof $steps["setGrowthbookAttributes"].then === "function"
           ) {
-            $steps["setGrowthbookAttributes"] = await $steps[
-              "setGrowthbookAttributes"
-            ];
+            $steps["setGrowthbookAttributes"] =
+              await $steps["setGrowthbookAttributes"];
           }
         }}
       />
@@ -485,23 +486,7 @@ function PlasmicSearchResults__RenderFunc(props: {
               })()}
               avatarAltText={(() => {
                 try {
-                  return `${
-                    $props.searchConsultResponse.search.result[0].prefix
-                      ? $props.searchConsultResponse.search.result[0].prefix +
-                        " "
-                      : ""
-                  }${
-                    $props.searchConsultResponse.search.result[0].title
-                      ? $props.searchConsultResponse.search.result[0].title +
-                        " "
-                      : ""
-                  }${
-                    $props.searchConsultResponse.search.result[0]
-                      .display_expertise
-                      ? $props.searchConsultResponse.search.result[0]
-                          .display_expertise
-                      : ""
-                  }`;
+                  return `${$props.searchConsultResponse.search.result[0].prefix ? $props.searchConsultResponse.search.result[0].prefix + " " : ""}${$props.searchConsultResponse.search.result[0].title ? $props.searchConsultResponse.search.result[0].title + " " : ""}${$props.searchConsultResponse.search.result[0].display_expertise ? $props.searchConsultResponse.search.result[0].display_expertise : ""}`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -736,9 +721,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                   typeof $steps["runCodeSplunkEvent"] === "object" &&
                   typeof $steps["runCodeSplunkEvent"].then === "function"
                 ) {
-                  $steps["runCodeSplunkEvent"] = await $steps[
-                    "runCodeSplunkEvent"
-                  ];
+                  $steps["runCodeSplunkEvent"] =
+                    await $steps["runCodeSplunkEvent"];
                 }
               }}
               externalBookDesign={(() => {
@@ -848,23 +832,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                   return {
                     destination:
                       $props.searchConsultResponse.search.result[0].url,
-                    title: `${
-                      $props.searchConsultResponse.search.result[0].prefix
-                        ? $props.searchConsultResponse.search.result[0].prefix +
-                          " "
-                        : ""
-                    }${
-                      $props.searchConsultResponse.search.result[0].title
-                        ? $props.searchConsultResponse.search.result[0].title +
-                          " "
-                        : ""
-                    }${
-                      $props.searchConsultResponse.search.result[0]
-                        .display_expertise
-                        ? $props.searchConsultResponse.search.result[0]
-                            .display_expertise
-                        : ""
-                    }`
+                    title: `${$props.searchConsultResponse.search.result[0].prefix ? $props.searchConsultResponse.search.result[0].prefix + " " : ""}${$props.searchConsultResponse.search.result[0].title ? $props.searchConsultResponse.search.result[0].title + " " : ""}${$props.searchConsultResponse.search.result[0].display_expertise ? $props.searchConsultResponse.search.result[0].display_expertise : ""}`
                   };
                 } catch (e) {
                   if (
@@ -1158,13 +1126,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                   })()}
                   avatarAltText={(() => {
                     try {
-                      return `${
-                        currentItem.prefix ? currentItem.prefix + " " : ""
-                      }${currentItem.title ? currentItem.title + " " : ""}${
-                        currentItem.display_expertise
-                          ? currentItem.display_expertise
-                          : ""
-                      }`;
+                      return `${currentItem.prefix ? currentItem.prefix + " " : ""}${currentItem.title ? currentItem.title + " " : ""}${currentItem.display_expertise ? currentItem.display_expertise : ""}`;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -1197,8 +1159,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                         currentItem.image === ""
                         ? undefined
                         : currentItem.image.startsWith("https")
-                        ? currentItem.image
-                        : $props.imageSrcPrefix + currentItem.image;
+                          ? currentItem.image
+                          : $props.imageSrcPrefix + currentItem.image;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -1438,9 +1400,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                       typeof $steps["sendSplunkClickEvent"] === "object" &&
                       typeof $steps["sendSplunkClickEvent"].then === "function"
                     ) {
-                      $steps["sendSplunkClickEvent"] = await $steps[
-                        "sendSplunkClickEvent"
-                      ];
+                      $steps["sendSplunkClickEvent"] =
+                        await $steps["sendSplunkClickEvent"];
                     }
 
                     $steps["runCodeSv2CtrRequest"] = false
@@ -1495,9 +1456,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                       typeof $steps["runCodeSv2CtrRequest"] === "object" &&
                       typeof $steps["runCodeSv2CtrRequest"].then === "function"
                     ) {
-                      $steps["runCodeSv2CtrRequest"] = await $steps[
-                        "runCodeSv2CtrRequest"
-                      ];
+                      $steps["runCodeSv2CtrRequest"] =
+                        await $steps["runCodeSv2CtrRequest"];
                     }
 
                     $steps["setHistoryKeyword"] = true
@@ -1534,9 +1494,8 @@ function PlasmicSearchResults__RenderFunc(props: {
                       typeof $steps["setHistoryKeyword"] === "object" &&
                       typeof $steps["setHistoryKeyword"].then === "function"
                     ) {
-                      $steps["setHistoryKeyword"] = await $steps[
-                        "setHistoryKeyword"
-                      ];
+                      $steps["setHistoryKeyword"] =
+                        await $steps["setHistoryKeyword"];
                     }
 
                     $steps["runOnClick"] = true
@@ -1806,13 +1765,7 @@ function PlasmicSearchResults__RenderFunc(props: {
                     try {
                       return {
                         destination: currentItem.url,
-                        title: `${
-                          currentItem.prefix ? currentItem.prefix + " " : ""
-                        }${currentItem.title ? currentItem.title + " " : ""}${
-                          currentItem.display_expertise
-                            ? currentItem.display_expertise
-                            : ""
-                        }`
+                        title: `${currentItem.prefix ? currentItem.prefix + " " : ""}${currentItem.title ? currentItem.title + " " : ""}${currentItem.display_expertise ? currentItem.display_expertise : ""}`
                       };
                     } catch (e) {
                       if (
@@ -2105,9 +2058,8 @@ function PlasmicSearchResults__RenderFunc(props: {
             typeof $steps["sendClarityCustomTagsEventRunCode"].then ===
               "function"
           ) {
-            $steps["sendClarityCustomTagsEventRunCode"] = await $steps[
-              "sendClarityCustomTagsEventRunCode"
-            ];
+            $steps["sendClarityCustomTagsEventRunCode"] =
+              await $steps["sendClarityCustomTagsEventRunCode"];
           }
 
           $steps["topSuggestedCardViewSplunkEvent"] = false
@@ -2145,9 +2097,8 @@ function PlasmicSearchResults__RenderFunc(props: {
             typeof $steps["topSuggestedCardViewSplunkEvent"] === "object" &&
             typeof $steps["topSuggestedCardViewSplunkEvent"].then === "function"
           ) {
-            $steps["topSuggestedCardViewSplunkEvent"] = await $steps[
-              "topSuggestedCardViewSplunkEvent"
-            ];
+            $steps["topSuggestedCardViewSplunkEvent"] =
+              await $steps["topSuggestedCardViewSplunkEvent"];
           }
 
           $steps["visibleShowMySearchPerformanceVisibilityByFetchUrl"] = false
@@ -2292,7 +2243,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchResults__VariantsArgs;
     args?: PlasmicSearchResults__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchResults__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchResults__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchResults__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

@@ -189,7 +189,7 @@ function PlasmicSuggestionInput__RenderFunc(props: {
         path: "selectedOption",
         type: "readonly",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 0,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 0,
 
         onChangeProp: "onSelectedOptionChange"
       },
@@ -208,6 +208,7 @@ function PlasmicSuggestionInput__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -260,9 +261,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
             typeof $steps["updateSuggestedContentVisibility"].then ===
               "function"
           ) {
-            $steps["updateSuggestedContentVisibility"] = await $steps[
-              "updateSuggestedContentVisibility"
-            ];
+            $steps["updateSuggestedContentVisibility"] =
+              await $steps["updateSuggestedContentVisibility"];
           }
         }}
         onKeyDown={async event => {
@@ -393,9 +393,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
             typeof $steps["updateSuggestedContentVisibility"].then ===
               "function"
           ) {
-            $steps["updateSuggestedContentVisibility"] = await $steps[
-              "updateSuggestedContentVisibility"
-            ];
+            $steps["updateSuggestedContentVisibility"] =
+              await $steps["updateSuggestedContentVisibility"];
           }
 
           $steps["removesFocusFromSearchInput"] =
@@ -418,9 +417,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
             typeof $steps["removesFocusFromSearchInput"] === "object" &&
             typeof $steps["removesFocusFromSearchInput"].then === "function"
           ) {
-            $steps["removesFocusFromSearchInput"] = await $steps[
-              "removesFocusFromSearchInput"
-            ];
+            $steps["removesFocusFromSearchInput"] =
+              await $steps["removesFocusFromSearchInput"];
           }
         }}
       >
@@ -464,9 +462,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
                   typeof $steps["updateTextInputValue"] === "object" &&
                   typeof $steps["updateTextInputValue"].then === "function"
                 ) {
-                  $steps["updateTextInputValue"] = await $steps[
-                    "updateTextInputValue"
-                  ];
+                  $steps["updateTextInputValue"] =
+                    await $steps["updateTextInputValue"];
                 }
 
                 $steps["updateTextInputValue2"] = true
@@ -500,9 +497,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
                   typeof $steps["updateTextInputValue2"] === "object" &&
                   typeof $steps["updateTextInputValue2"].then === "function"
                 ) {
-                  $steps["updateTextInputValue2"] = await $steps[
-                    "updateTextInputValue2"
-                  ];
+                  $steps["updateTextInputValue2"] =
+                    await $steps["updateTextInputValue2"];
                 }
               }}
               role={"img"}
@@ -553,9 +549,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
                 typeof $steps["updateSelectedOption"] === "object" &&
                 typeof $steps["updateSelectedOption"].then === "function"
               ) {
-                $steps["updateSelectedOption"] = await $steps[
-                  "updateSelectedOption"
-                ];
+                $steps["updateSelectedOption"] =
+                  await $steps["updateSelectedOption"];
               }
 
               $steps["updateInputQueryText"] = true
@@ -584,9 +579,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
                 typeof $steps["updateInputQueryText"] === "object" &&
                 typeof $steps["updateInputQueryText"].then === "function"
               ) {
-                $steps["updateInputQueryText"] = await $steps[
-                  "updateInputQueryText"
-                ];
+                $steps["updateInputQueryText"] =
+                  await $steps["updateInputQueryText"];
               }
             }).apply(null, eventArgs);
           }}
@@ -715,9 +709,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
                       typeof $steps["updateSuggestedContentVisibility"].then ===
                         "function"
                     ) {
-                      $steps["updateSuggestedContentVisibility"] = await $steps[
-                        "updateSuggestedContentVisibility"
-                      ];
+                      $steps["updateSuggestedContentVisibility"] =
+                        await $steps["updateSuggestedContentVisibility"];
                     }
 
                     $steps["runCode"] = true
@@ -834,9 +827,8 @@ function PlasmicSuggestionInput__RenderFunc(props: {
               typeof $steps["updateSuggestedContentVisibility"].then ===
                 "function"
             ) {
-              $steps["updateSuggestedContentVisibility"] = await $steps[
-                "updateSuggestedContentVisibility"
-              ];
+              $steps["updateSuggestedContentVisibility"] =
+                await $steps["updateSuggestedContentVisibility"];
             }
           }}
         />
@@ -870,7 +862,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSuggestionInput__VariantsArgs;
     args?: PlasmicSuggestionInput__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSuggestionInput__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSuggestionInput__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSuggestionInput__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

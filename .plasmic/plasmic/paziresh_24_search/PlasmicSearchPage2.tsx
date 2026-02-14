@@ -73,6 +73,35 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchPage2.module.css"; // plasmic-import: nA_GgXV5mxEW/css
 
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export function generateDynamicMetadata($q: any, $ctx: any) {
+  return {
+    title: "موتور جستجوی پذیرش24 - جهان‌نما",
+
+    openGraph: {
+      title: "موتور جستجوی پذیرش24 - جهان‌نما"
+    },
+    twitter: {
+      card: "summary",
+      title: "موتور جستجوی پذیرش24 - جهان‌نما"
+    }
+  };
+}
+
 createPlasmicElementProxy;
 
 export type PlasmicSearchPage2__VariantMembers = {};
@@ -145,13 +174,13 @@ function PlasmicSearchPage2__RenderFunc(props: {
         path: "mainSearchRequest.apiRequestData",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "searchFilters.selected",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return typeof window === "undefined"
@@ -178,31 +207,31 @@ function PlasmicSearchPage2__RenderFunc(props: {
         path: "mainSearchRequest.page",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 1
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 1
       },
       {
         path: "userLocation.userCity",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "mainSearchRequest.result",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) => []
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => []
       },
       {
         path: "suggestion.suggestionInputInputQueryText",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ``
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ``
       },
       {
         path: "suggestion.suggestionInputTextInputValue",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -211,8 +240,14 @@ function PlasmicSearchPage2__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
+
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx
+  );
 
   const styleTokensClassNames = _useStyleTokens();
 
@@ -220,16 +255,12 @@ function PlasmicSearchPage2__RenderFunc(props: {
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary" />
-        <title key="title">{PlasmicSearchPage2.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicSearchPage2.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
           property="twitter:title"
-          content={PlasmicSearchPage2.pageMetadata.title}
+          content={pageMetadata.title}
         />
       </Head>
 
@@ -354,9 +385,8 @@ function PlasmicSearchPage2__RenderFunc(props: {
                     typeof $steps["updateMainSearchRequestResult"].then ===
                       "function"
                   ) {
-                    $steps["updateMainSearchRequestResult"] = await $steps[
-                      "updateMainSearchRequestResult"
-                    ];
+                    $steps["updateMainSearchRequestResult"] =
+                      await $steps["updateMainSearchRequestResult"];
                   }
 
                   $steps["goToPage"] = true
@@ -430,9 +460,8 @@ function PlasmicSearchPage2__RenderFunc(props: {
                     typeof $steps["updateMainSearchRequestPage"].then ===
                       "function"
                   ) {
-                    $steps["updateMainSearchRequestPage"] = await $steps[
-                      "updateMainSearchRequestPage"
-                    ];
+                    $steps["updateMainSearchRequestPage"] =
+                      await $steps["updateMainSearchRequestPage"];
                   }
                 }}
                 onSuggestionInputInputQueryTextChange={async (
@@ -540,9 +569,8 @@ function PlasmicSearchPage2__RenderFunc(props: {
                         typeof $steps["updateMainSearchRequestResult"].then ===
                           "function"
                       ) {
-                        $steps["updateMainSearchRequestResult"] = await $steps[
-                          "updateMainSearchRequestResult"
-                        ];
+                        $steps["updateMainSearchRequestResult"] =
+                          await $steps["updateMainSearchRequestResult"];
                       }
 
                       $steps["goToPage"] = true
@@ -550,15 +578,11 @@ function PlasmicSearchPage2__RenderFunc(props: {
                             const actionArgs = {
                               destination: (() => {
                                 try {
-                                  return `/s/jahannama/?text=${
-                                    $ctx.query?.text ?? ""
-                                  }${Object.entries(
+                                  return `/s/jahannama/?text=${$ctx.query?.text ?? ""}${Object.entries(
                                     $state.searchFilters.selected
                                   ).reduce((acc, item) => {
                                     if (item[1]?.length == 0) return acc;
-                                    acc += `&${item[0]}=${JSON.stringify(
-                                      item[1]
-                                    )}`;
+                                    acc += `&${item[0]}=${JSON.stringify(item[1])}`;
                                     return acc;
                                   }, "")}`;
                                 } catch (e) {
@@ -628,9 +652,8 @@ function PlasmicSearchPage2__RenderFunc(props: {
                         typeof $steps["updateMainSearchRequestPage"].then ===
                           "function"
                       ) {
-                        $steps["updateMainSearchRequestPage"] = await $steps[
-                          "updateMainSearchRequestPage"
-                        ];
+                        $steps["updateMainSearchRequestPage"] =
+                          await $steps["updateMainSearchRequestPage"];
                       }
                     }).apply(null, eventArgs);
                   },
@@ -645,7 +668,7 @@ function PlasmicSearchPage2__RenderFunc(props: {
                   [
                     {
                       name: "searchFilters.selected",
-                      initFunc: ({ $props, $state, $queries }) =>
+                      initFunc: ({ $props, $state, $queries, $q }) =>
                         (() => {
                           try {
                             return typeof window === "undefined"
@@ -741,14 +764,10 @@ function PlasmicSearchPage2__RenderFunc(props: {
                           const actionArgs = {
                             destination: (() => {
                               try {
-                                return `/s/jahannama/?text=${
-                                  $ctx.query?.text ?? ""
-                                }${Object.entries(
+                                return `/s/jahannama/?text=${$ctx.query?.text ?? ""}${Object.entries(
                                   $state.searchFilters.selected
                                 ).reduce((acc, item) => {
-                                  acc += `&${item[0]}=${JSON.stringify(
-                                    item[1]
-                                  )}`;
+                                  acc += `&${item[0]}=${JSON.stringify(item[1])}`;
                                   return acc;
                                 }, "")}&page=${$state.mainSearchRequest.page}`;
                               } catch (e) {
@@ -1029,7 +1048,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchPage2__VariantsArgs;
     args?: PlasmicSearchPage2__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchPage2__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchPage2__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchPage2__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -1093,13 +1114,11 @@ export const PlasmicSearchPage2 = Object.assign(
     internalVariantProps: PlasmicSearchPage2__VariantProps,
     internalArgProps: PlasmicSearchPage2__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "موتور جستجوی پذیرش24 - جهان‌نما",
-      description: "",
-      ogImageSrc: "",
-      canonical: ""
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pagePath: "/s/jahannama-2",
+      searchParams: {},
+      params: {}
+    })
   }
 );
 

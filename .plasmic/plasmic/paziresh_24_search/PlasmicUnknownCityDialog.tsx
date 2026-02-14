@@ -140,7 +140,7 @@ function PlasmicUnknownCityDialog__RenderFunc(props: {
         path: "dialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => true
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => true
       }
     ],
     [$props, $ctx, $refs]
@@ -149,6 +149,7 @@ function PlasmicUnknownCityDialog__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -185,9 +186,7 @@ function PlasmicUnknownCityDialog__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return `شما قبلاً «${
-                    $props.searchCity?.name || ""
-                  }» را برای مشاهده نتایج در پذیرش24 انتخاب کردید. لطفا شهر مورد نظر خود را انتخاب کنید`;
+                  return `شما قبلاً «${$props.searchCity?.name || ""}» را برای مشاهده نتایج در پذیرش24 انتخاب کردید. لطفا شهر مورد نظر خود را انتخاب کنید`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -325,7 +324,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicUnknownCityDialog__VariantsArgs;
     args?: PlasmicUnknownCityDialog__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicUnknownCityDialog__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicUnknownCityDialog__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicUnknownCityDialog__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

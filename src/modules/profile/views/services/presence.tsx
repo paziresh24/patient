@@ -28,10 +28,11 @@ interface PresenceProps {
   displayName: string;
   expertises?: any;
   doctorCity?: string;
+  doctorId?: string;
 }
 
 export const Presence = memo((props: PresenceProps) => {
-  const { centers, waitingTime, onBook, displayName, expertises, doctorCity } = props;
+  const { centers, waitingTime, onBook, displayName, expertises, doctorCity, doctorId } = props;
   const router = useRouter();
   const slug = router.query.slug as string;
   const { data: absentScoreData } = useAbsentScore(slug);
@@ -40,15 +41,15 @@ export const Presence = memo((props: PresenceProps) => {
   const isApplication = useApplication();
   const { profileEvent } = useProfileSplunkEvent();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
-  
+
   const penaltyScoreItem = absentScoreData?.list?.find(item => item.penalty_score != null && item.penalty_score !== undefined);
   const penaltyScore = penaltyScoreItem?.penalty_score;
-  
+
   const getAlertConfig = () => {
     if (!penaltyScore || penaltyScore === 0) {
       return null;
     }
-    
+
     if (penaltyScore >= 1) {
       return {
         bgColor: 'bg-red-50',
@@ -57,7 +58,7 @@ export const Presence = memo((props: PresenceProps) => {
         message: 'طبق نظر بیماران، "حتما" پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
     }
-    
+
     if (penaltyScore > 0.1 && penaltyScore < 1) {
       return {
         bgColor: 'bg-yellow-50',
@@ -66,7 +67,7 @@ export const Presence = memo((props: PresenceProps) => {
         message: 'طبق نظر بیماران، حتما پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
     }
-    
+
     if (penaltyScore <= 0.1) {
       return {
         bgColor: 'bg-[#f1f5f9]',
@@ -75,10 +76,10 @@ export const Presence = memo((props: PresenceProps) => {
         message: 'طبق نظر بیماران، پیش از مراجعه، از حضور پزشک در مرکز اطمینان حاصل کنید.',
       };
     }
-    
+
     return null;
   };
-  
+
   const alertConfig = getAlertConfig();
   const {
     handleOpen: handleOpenSelectCenterModal,
@@ -188,7 +189,7 @@ export const Presence = memo((props: PresenceProps) => {
   const mainCenterWaitingTime = orderBy(centers, ['isDisable', o => !o.isAvailable])[0]?.waiting_time_info;
 
   return (
-    <div>
+    <div className="flex flex-col space-y-3">
       <ServiceCard
         header={{
           icon: (
@@ -209,7 +210,7 @@ export const Presence = memo((props: PresenceProps) => {
           description: [
             'امکان دریافت زودترین نوبت',
             mainCenterWaitingTime?.waiting_time_title &&
-              `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
+            `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
           ].filter(Boolean),
         }}
         alert={
@@ -230,6 +231,39 @@ export const Presence = memo((props: PresenceProps) => {
           ],
         }}
       />
+
+      {doctorId === '61e9f734-30e1-11ed-8bbf-005056ade667' && (
+        <ServiceCard
+          header={{
+            icon: (
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M10 0C4.477 0 0 4.477 0 10C0 15.523 4.477 20 10 20C15.523 20 20 15.523 20 10C20 4.477 15.523 0 10 0ZM10 18C5.589 18 2 14.411 2 10C2 5.589 5.589 2 10 2C14.411 2 18 5.589 18 10C18 14.411 14.411 18 10 18ZM10 5C9.448 5 9 5.448 9 6V11C9 11.552 9.448 12 10 12C10.552 12 11 11.552 11 11V6C11 5.448 10.552 5 10 5ZM10 13C9.448 13 9 13.448 9 14C9 14.552 9.448 15 10 15C10.552 15 11 14.552 11 14C11 13.448 10.552 13 10 13Z"
+                  fill="currentColor"
+                />
+              </svg>
+            ),
+            title: 'درخواست نوبت',
+          }}
+          body={{
+            description: ['بدون نیاز به ثبت نوبت در زمان اعلامی مرکزدرمانی', 'بعد از بررسی، جهت هماهنگی با شما تماس گرفته می‌شود'],
+          }}
+          footer={{
+            actions: [
+              {
+                text: 'درخواست نوبت',
+                onClick: () => {
+                  profileEvent('doctor profile click waitlist button', {
+                    doctor_id: doctorId,
+                    doctor_name: displayName,
+                  });
+                  window.open('https://survey.porsline.ir/s/8Lek6qbV', '_blank');
+                },
+              },
+            ],
+          }}
+        />
+      )}
       <Modal title="انتخاب مرکز درمانی" {...selectCenterModalProps} bodyClassName="pl-3">
         {selectCenterModalProps.isOpen && (
           <div className="pl-2 overflow-auto max-h-[28rem]">

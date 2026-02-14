@@ -158,13 +158,13 @@ function PlasmicConsultBanner__RenderFunc(props: {
         path: "dialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "apiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       },
@@ -172,7 +172,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
         path: "apiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       },
@@ -180,7 +180,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
         path: "apiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       }
@@ -191,6 +191,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -307,9 +308,7 @@ function PlasmicConsultBanner__RenderFunc(props: {
               <React.Fragment>
                 {(() => {
                   try {
-                    return `همین الان با پزشک متخصص ${
-                      !!$props.categoryTitle ? $props.categoryTitle + " " : ""
-                    }گفتگو کنید`;
+                    return `همین الان با پزشک متخصص ${!!$props.categoryTitle ? $props.categoryTitle + " " : ""}گفتگو کنید`;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -493,9 +492,8 @@ function PlasmicConsultBanner__RenderFunc(props: {
                     typeof $steps["updateDialogOpen"] === "object" &&
                     typeof $steps["updateDialogOpen"].then === "function"
                   ) {
-                    $steps["updateDialogOpen"] = await $steps[
-                      "updateDialogOpen"
-                    ];
+                    $steps["updateDialogOpen"] =
+                      await $steps["updateDialogOpen"];
                   }
                 }}
                 showEndIcon={true}
@@ -608,7 +606,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicConsultBanner__VariantsArgs;
     args?: PlasmicConsultBanner__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicConsultBanner__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicConsultBanner__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicConsultBanner__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

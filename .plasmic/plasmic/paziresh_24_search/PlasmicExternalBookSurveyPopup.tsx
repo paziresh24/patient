@@ -383,9 +383,8 @@ function PlasmicExternalBookSurveyPopup__RenderFunc(props: {
             typeof $steps["removeTheTransitionDataCookie"] === "object" &&
             typeof $steps["removeTheTransitionDataCookie"].then === "function"
           ) {
-            $steps["removeTheTransitionDataCookie"] = await $steps[
-              "removeTheTransitionDataCookie"
-            ];
+            $steps["removeTheTransitionDataCookie"] =
+              await $steps["removeTheTransitionDataCookie"];
           }
         }}
       />
@@ -470,7 +469,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicExternalBookSurveyPopup__VariantsArgs;
     args?: PlasmicExternalBookSurveyPopup__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicExternalBookSurveyPopup__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicExternalBookSurveyPopup__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicExternalBookSurveyPopup__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

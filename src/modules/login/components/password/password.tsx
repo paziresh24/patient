@@ -1,19 +1,18 @@
+import { digitsFaToEn } from '@persian-tools/persian-tools';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import TextField from '@/common/components/atom/textField/textField';
 import PasswordIcon from '@/common/components/icons/password';
 import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useLogin } from '../../hooks/useLogin';
 import { UserInfo } from '../../store/userInfo';
-import { StepLoginForm } from '../../views/loginForm';
 import LoginTitleBar from '../titleBar';
 import { splunkInstance } from '@/common/services/splunk';
 
 interface PasswordProps {
-  setStep: Dispatch<SetStateAction<StepLoginForm>>;
   mobileNumberValue: string;
   postLogin?: (userInfo: UserInfo) => void;
 }
@@ -50,9 +49,10 @@ export const Password = (props: PasswordProps) => {
         />
       </div>
       <TextField
+        value={password}
         onKeyDown={event => event.key === 'Enter' && handleLogin(password)}
         autoComplete="off"
-        onChange={e => setPassword(e.target.value)}
+        onChange={e => setPassword(digitsFaToEn(e.target.value))}
         type="password"
         style={{ direction: 'ltr' }}
         autoFocus

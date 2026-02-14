@@ -141,7 +141,7 @@ function PlasmicOnlineVisit__RenderFunc(props: {
         path: "dialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -150,6 +150,7 @@ function PlasmicOnlineVisit__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -288,7 +289,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicOnlineVisit__VariantsArgs;
     args?: PlasmicOnlineVisit__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicOnlineVisit__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicOnlineVisit__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicOnlineVisit__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
