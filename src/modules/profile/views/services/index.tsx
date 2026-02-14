@@ -158,6 +158,7 @@ export const Services = ({
     router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
   };
 
+
   if (
     !customize?.partnerKey &&
     dontShowDeactiveBox &&
@@ -179,6 +180,8 @@ export const Services = ({
       }
       return undefined;
     };
+
+    console.log("hello")
     return (
       <BulkService
         displayName={doctor.display_name}
@@ -188,6 +191,8 @@ export const Services = ({
       />
     );
   }
+
+  console.log("hello")
 
   return (
     <>
@@ -249,6 +254,8 @@ export const Services = ({
               handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
             }
             displayName={doctor.display_name}
+            expertises={expertises}
+            doctorCity={doctor?.city_en_slug}
           />
         )}
       </div>

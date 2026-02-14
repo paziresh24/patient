@@ -23,6 +23,8 @@ interface AvailabilityResponse {
 const SamanBooking = ({ slug, displayName, expertises, doctorCity }: SamanBookingProps) => {
   const router = useRouter();
 
+  console.log("saman")
+
   const {
     data: availabilityData,
     isLoading,

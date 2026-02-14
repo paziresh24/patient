@@ -53,3 +53,31 @@ export const useConsultSearch = ({ route, query, timeout }: Params, option?: any
     ...option,
   });
 };
+
+export interface PartnerSubstituteParams {
+  city_en_slug: string;
+  university: string;
+  expertise_slug: string;
+}
+
+export const partnerSubstituteSearch = async ({ city_en_slug, university, expertise_slug }: PartnerSubstituteParams) => {
+  const { data } = await searchClient.get(`/seapi/v1/search/${encodeURIComponent(city_en_slug)}/${encodeURIComponent(expertise_slug)}`, {
+    params: {
+      university,
+      ref: 'hospital_team_substitution',
+    },
+  });
+  return data;
+};
+
+export const usePartnerSubstituteSearch = (params: PartnerSubstituteParams, option?: any) => {
+  return useQuery(
+    [ServerStateKeysEnum.Search, 'partner-substitute', params],
+    () => partnerSubstituteSearch(params),
+    {
+      keepPreviousData: true,
+      refetchOnMount: false,
+      ...option,
+    },
+  );
+};
