@@ -73,6 +73,35 @@ import "@plasmicapp/react-web/lib/plasmic.css";
 import projectcss from "./plasmic.module.css"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectcss
 import sty from "./PlasmicSearchPage2.module.css"; // plasmic-import: nA_GgXV5mxEW/css
 
+const emptyProxy: any = new Proxy(() => "", {
+  get(_, prop) {
+    return prop === Symbol.toPrimitive ? () => "" : emptyProxy;
+  }
+});
+
+function wrapQueriesWithLoadingProxy($q: any): any {
+  return new Proxy($q, {
+    get(target, queryName) {
+      const query = target[queryName];
+      return !query || query.isLoading || !query.data ? emptyProxy : query;
+    }
+  });
+}
+
+export function generateDynamicMetadata($q: any, $ctx: any) {
+  return {
+    title: "موتور جستجوی پذیرش24 - جهان‌نما",
+
+    openGraph: {
+      title: "موتور جستجوی پذیرش24 - جهان‌نما"
+    },
+    twitter: {
+      card: "summary",
+      title: "موتور جستجوی پذیرش24 - جهان‌نما"
+    }
+  };
+}
+
 createPlasmicElementProxy;
 
 export type PlasmicSearchPage2__VariantMembers = {};
@@ -145,13 +174,13 @@ function PlasmicSearchPage2__RenderFunc(props: {
         path: "mainSearchRequest.apiRequestData",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "searchFilters.selected",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return typeof window === "undefined"
@@ -178,31 +207,31 @@ function PlasmicSearchPage2__RenderFunc(props: {
         path: "mainSearchRequest.page",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 1
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 1
       },
       {
         path: "userLocation.userCity",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "mainSearchRequest.result",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) => []
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => []
       },
       {
         path: "suggestion.suggestionInputInputQueryText",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ``
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ``
       },
       {
         path: "suggestion.suggestionInputTextInputValue",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -211,8 +240,14 @@ function PlasmicSearchPage2__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
+
+  const pageMetadata = generateDynamicMetadata(
+    wrapQueriesWithLoadingProxy({}),
+    $ctx
+  );
 
   const styleTokensClassNames = _useStyleTokens();
 
@@ -220,16 +255,12 @@ function PlasmicSearchPage2__RenderFunc(props: {
     <React.Fragment>
       <Head>
         <meta name="twitter:card" content="summary" />
-        <title key="title">{PlasmicSearchPage2.pageMetadata.title}</title>
-        <meta
-          key="og:title"
-          property="og:title"
-          content={PlasmicSearchPage2.pageMetadata.title}
-        />
+        <title key="title">{pageMetadata.title}</title>
+        <meta key="og:title" property="og:title" content={pageMetadata.title} />
         <meta
           key="twitter:title"
           property="twitter:title"
-          content={PlasmicSearchPage2.pageMetadata.title}
+          content={pageMetadata.title}
         />
       </Head>
 
@@ -637,7 +668,7 @@ function PlasmicSearchPage2__RenderFunc(props: {
                   [
                     {
                       name: "searchFilters.selected",
-                      initFunc: ({ $props, $state, $queries }) =>
+                      initFunc: ({ $props, $state, $queries, $q }) =>
                         (() => {
                           try {
                             return typeof window === "undefined"
@@ -1083,13 +1114,11 @@ export const PlasmicSearchPage2 = Object.assign(
     internalVariantProps: PlasmicSearchPage2__VariantProps,
     internalArgProps: PlasmicSearchPage2__ArgProps,
 
-    // Page metadata
-    pageMetadata: {
-      title: "موتور جستجوی پذیرش24 - جهان‌نما",
-      description: "",
-      ogImageSrc: "",
-      canonical: ""
-    }
+    pageMetadata: generateDynamicMetadata(wrapQueriesWithLoadingProxy({}), {
+      pagePath: "/s/jahannama-2",
+      searchParams: {},
+      params: {}
+    })
   }
 );
 

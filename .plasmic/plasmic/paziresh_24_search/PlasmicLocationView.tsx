@@ -166,13 +166,13 @@ function PlasmicLocationView__RenderFunc(props: {
         path: "textInput.value",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ""
       },
       {
         path: "filteredCities",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.locations;
@@ -191,13 +191,13 @@ function PlasmicLocationView__RenderFunc(props: {
         path: "userLocation.userCity",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "isUserLocationOpen",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -206,6 +206,7 @@ function PlasmicLocationView__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -354,9 +355,8 @@ function PlasmicLocationView__RenderFunc(props: {
               typeof $steps["runOnClickAllCities"] === "object" &&
               typeof $steps["runOnClickAllCities"].then === "function"
             ) {
-              $steps["runOnClickAllCities"] = await $steps[
-                "runOnClickAllCities"
-              ];
+              $steps["runOnClickAllCities"] =
+                await $steps["runOnClickAllCities"];
             }
           }}
         >
@@ -597,7 +597,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLocationView__VariantsArgs;
     args?: PlasmicLocationView__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLocationView__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLocationView__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLocationView__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

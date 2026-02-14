@@ -158,7 +158,7 @@ function PlasmicTagsRowSingleTagItem__RenderFunc(props: {
         path: "isSelected",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSelected
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isSelected
       }
     ],
     [$props, $ctx, $refs]
@@ -167,6 +167,7 @@ function PlasmicTagsRowSingleTagItem__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -448,7 +449,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicTagsRowSingleTagItem__VariantsArgs;
     args?: PlasmicTagsRowSingleTagItem__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicTagsRowSingleTagItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicTagsRowSingleTagItem__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicTagsRowSingleTagItem__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

@@ -168,7 +168,7 @@ function PlasmicUserLocation__RenderFunc(props: {
         path: "dialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.isOpen;
@@ -187,13 +187,13 @@ function PlasmicUserLocation__RenderFunc(props: {
         path: "variable",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ""
       },
       {
         path: "userCity",
         type: "readonly",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return (() => {
@@ -223,6 +223,7 @@ function PlasmicUserLocation__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -427,9 +428,8 @@ function PlasmicUserLocation__RenderFunc(props: {
             typeof $steps["updateUserCityStateVar"] === "object" &&
             typeof $steps["updateUserCityStateVar"].then === "function"
           ) {
-            $steps["updateUserCityStateVar"] = await $steps[
-              "updateUserCityStateVar"
-            ];
+            $steps["updateUserCityStateVar"] =
+              await $steps["updateUserCityStateVar"];
           }
         }}
       />
@@ -488,8 +488,7 @@ function PlasmicUserLocation__RenderFunc(props: {
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return ($props.givLocationButtonLoadingStatus =
-                              true);
+                            return ($props.givLocationButtonLoadingStatus = true);
                           }
                         };
                         return (({ customFunction }) => {
@@ -502,9 +501,8 @@ function PlasmicUserLocation__RenderFunc(props: {
                     typeof $steps["startButtonLoading"] === "object" &&
                     typeof $steps["startButtonLoading"].then === "function"
                   ) {
-                    $steps["startButtonLoading"] = await $steps[
-                      "startButtonLoading"
-                    ];
+                    $steps["startButtonLoading"] =
+                      await $steps["startButtonLoading"];
                   }
 
                   $steps["locationAccessGivingSetToUrlParams"] = true
@@ -599,9 +597,8 @@ function PlasmicUserLocation__RenderFunc(props: {
                     typeof $steps["locationAccessGivingSetToUrlParams"].then ===
                       "function"
                   ) {
-                    $steps["locationAccessGivingSetToUrlParams"] = await $steps[
-                      "locationAccessGivingSetToUrlParams"
-                    ];
+                    $steps["locationAccessGivingSetToUrlParams"] =
+                      await $steps["locationAccessGivingSetToUrlParams"];
                   }
 
                   $steps["autoPressNearMeButtonRunCode2"] = true
@@ -623,17 +620,15 @@ function PlasmicUserLocation__RenderFunc(props: {
                     typeof $steps["autoPressNearMeButtonRunCode2"].then ===
                       "function"
                   ) {
-                    $steps["autoPressNearMeButtonRunCode2"] = await $steps[
-                      "autoPressNearMeButtonRunCode2"
-                    ];
+                    $steps["autoPressNearMeButtonRunCode2"] =
+                      await $steps["autoPressNearMeButtonRunCode2"];
                   }
 
                   $steps["endButtonLoading"] = true
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return ($props.givLocationButtonLoadingStatus =
-                              false);
+                            return ($props.givLocationButtonLoadingStatus = false);
                           }
                         };
                         return (({ customFunction }) => {
@@ -646,9 +641,8 @@ function PlasmicUserLocation__RenderFunc(props: {
                     typeof $steps["endButtonLoading"] === "object" &&
                     typeof $steps["endButtonLoading"].then === "function"
                   ) {
-                    $steps["endButtonLoading"] = await $steps[
-                      "endButtonLoading"
-                    ];
+                    $steps["endButtonLoading"] =
+                      await $steps["endButtonLoading"];
                   }
 
                   $steps["updateDialogOpen"] = true
@@ -682,9 +676,8 @@ function PlasmicUserLocation__RenderFunc(props: {
                     typeof $steps["updateDialogOpen"] === "object" &&
                     typeof $steps["updateDialogOpen"].then === "function"
                   ) {
-                    $steps["updateDialogOpen"] = await $steps[
-                      "updateDialogOpen"
-                    ];
+                    $steps["updateDialogOpen"] =
+                      await $steps["updateDialogOpen"];
                   }
                 }}
                 startIcon={
@@ -713,9 +706,7 @@ function PlasmicUserLocation__RenderFunc(props: {
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return (document.cookie = `user_geolocation_access_preference=denied; expires=${new Date(
-                              Date.now() + 5184000000
-                            ).toUTCString()}`);
+                            return (document.cookie = `user_geolocation_access_preference=denied; expires=${new Date(Date.now() + 5184000000).toUTCString()}`);
                           }
                         };
                         return (({ customFunction }) => {
@@ -891,9 +882,7 @@ function PlasmicUserLocation__RenderFunc(props: {
                                         "lon",
                                         position.coords.longitude
                                       );
-                                      const newUrl = `${
-                                        window.location.pathname
-                                      }?${queryParams.toString()}`;
+                                      const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
                                       console.log(
                                         `[checkGeolocationPermission] URL with coordinates: ${newUrl}`
                                       );
@@ -935,31 +924,30 @@ function PlasmicUserLocation__RenderFunc(props: {
                             console.log(
                               "[checkConditionsAndOpenDialog] Cookie is not 'denied', checking geolocation permission..."
                             );
-                            checkGeolocationPermission(function (
-                              hasPermissionOrSupported,
-                              url
-                            ) {
-                              console.log(
-                                `[checkGeolocationPermission Callback] hasPermissionOrSupported:`,
-                                hasPermissionOrSupported
-                              );
-                              if (!hasPermissionOrSupported) {
+                            checkGeolocationPermission(
+                              function (hasPermissionOrSupported, url) {
                                 console.log(
-                                  "[checkConditionsAndOpenDialog] Permission not granted or not supported, opening dialog..."
+                                  `[checkGeolocationPermission Callback] hasPermissionOrSupported:`,
+                                  hasPermissionOrSupported
                                 );
-                                $state.dialog.open = true;
-                              } else if (url) {
-                                console.log(
-                                  "[checkConditionsAndOpenDialog] Permission granted, URL with lat and lon:",
-                                  url
-                                );
-                                window.location.href = url;
-                              } else {
-                                console.log(
-                                  "[checkConditionsAndOpenDialog] No update to URL required."
-                                );
+                                if (!hasPermissionOrSupported) {
+                                  console.log(
+                                    "[checkConditionsAndOpenDialog] Permission not granted or not supported, opening dialog..."
+                                  );
+                                  $state.dialog.open = true;
+                                } else if (url) {
+                                  console.log(
+                                    "[checkConditionsAndOpenDialog] Permission granted, URL with lat and lon:",
+                                    url
+                                  );
+                                  window.location.href = url;
+                                } else {
+                                  console.log(
+                                    "[checkConditionsAndOpenDialog] No update to URL required."
+                                  );
+                                }
                               }
-                            });
+                            );
                           } else {
                             console.log(
                               "[checkConditionsAndOpenDialog] Cookie is 'denied', not checking geolocation permission or opening dialog."
@@ -1015,9 +1003,8 @@ function PlasmicUserLocation__RenderFunc(props: {
               typeof $steps["sendClarityCustomTagsEventRunCode"].then ===
                 "function"
             ) {
-              $steps["sendClarityCustomTagsEventRunCode"] = await $steps[
-                "sendClarityCustomTagsEventRunCode"
-              ];
+              $steps["sendClarityCustomTagsEventRunCode"] =
+                await $steps["sendClarityCustomTagsEventRunCode"];
             }
           }}
         />
@@ -1070,7 +1057,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicUserLocation__VariantsArgs;
     args?: PlasmicUserLocation__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicUserLocation__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicUserLocation__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicUserLocation__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

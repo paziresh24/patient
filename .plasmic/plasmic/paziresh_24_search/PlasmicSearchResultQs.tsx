@@ -158,7 +158,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         path: "serchiaSuggestion.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "serchiaSuggestion"
       },
@@ -166,7 +166,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         path: "serchiaSuggestion.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "serchiaSuggestion"
       },
@@ -174,7 +174,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         path: "serchiaSuggestion.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "serchiaSuggestion"
       }
@@ -185,6 +185,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -265,9 +266,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         url={(() => {
           try {
             return (() => {
-              return `https://apigw.paziresh24.com/v1/searchia-api/v2/qs/index/slim_clinic_query_su?query=${
-                $props.terms || ""
-              }&inContent=true&spellCheckEnabled=true`;
+              return `https://apigw.paziresh24.com/v1/searchia-api/v2/qs/index/slim_clinic_query_su?query=${$props.terms || ""}&inContent=true&spellCheckEnabled=true`;
             })();
           } catch (e) {
             if (
@@ -323,15 +322,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `/s/${
-                          $props.citySlug ? $props.citySlug + "/" : ""
-                        }?text=${value}&ref=search_suggestion_box_qs&semantic_search=${
-                          $ctx.Growthbook &&
-                          $ctx.Growthbook.isReady &&
-                          $ctx.Growthbook.features["search-semantic-search"]
-                            ? "true"
-                            : "false"
-                        }`;
+                        return `/s/${$props.citySlug ? $props.citySlug + "/" : ""}?text=${value}&ref=search_suggestion_box_qs&semantic_search=${$ctx.Growthbook && $ctx.Growthbook.isReady && $ctx.Growthbook.features["search-semantic-search"] ? "true" : "false"}`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -460,7 +451,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchResultQs__VariantsArgs;
     args?: PlasmicSearchResultQs__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchResultQs__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchResultQs__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchResultQs__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

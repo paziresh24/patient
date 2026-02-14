@@ -187,7 +187,7 @@ function PlasmicSearchInput__RenderFunc(props: {
         path: "textInput.value",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.inputValue;
@@ -206,13 +206,13 @@ function PlasmicSearchInput__RenderFunc(props: {
         path: "isFocused",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isFocused
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isFocused
       },
       {
         path: "enterPress",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ""
       }
     ],
     [$props, $ctx, $refs]
@@ -221,6 +221,7 @@ function PlasmicSearchInput__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -286,9 +287,8 @@ function PlasmicSearchInput__RenderFunc(props: {
                 typeof $steps["runOnClickSearchIcon"] === "object" &&
                 typeof $steps["runOnClickSearchIcon"].then === "function"
               ) {
-                $steps["runOnClickSearchIcon"] = await $steps[
-                  "runOnClickSearchIcon"
-                ];
+                $steps["runOnClickSearchIcon"] =
+                  await $steps["runOnClickSearchIcon"];
               }
             }}
             role={"img"}
@@ -476,9 +476,7 @@ function PlasmicSearchInput__RenderFunc(props: {
                       const actionArgs = {
                         destination: (() => {
                           try {
-                            return `/s/${
-                              $props.citySlug ? $props.citySlug + "/" : ""
-                            }?${$steps.runCode?.toString() ?? ""}`;
+                            return `/s/${$props.citySlug ? $props.citySlug + "/" : ""}?${$steps.runCode?.toString() ?? ""}`;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -604,9 +602,8 @@ function PlasmicSearchInput__RenderFunc(props: {
                         typeof $steps["updateTextInputValue"].then ===
                           "function"
                       ) {
-                        $steps["updateTextInputValue"] = await $steps[
-                          "updateTextInputValue"
-                        ];
+                        $steps["updateTextInputValue"] =
+                          await $steps["updateTextInputValue"];
                       }
 
                       $steps["updateTextInputValue2"] = true
@@ -641,9 +638,8 @@ function PlasmicSearchInput__RenderFunc(props: {
                         typeof $steps["updateTextInputValue2"].then ===
                           "function"
                       ) {
-                        $steps["updateTextInputValue2"] = await $steps[
-                          "updateTextInputValue2"
-                        ];
+                        $steps["updateTextInputValue2"] =
+                          await $steps["updateTextInputValue2"];
                       }
                     }}
                     role={"img"}
@@ -712,9 +708,8 @@ function PlasmicSearchInput__RenderFunc(props: {
                     typeof $steps["runOnChangeInput"] === "object" &&
                     typeof $steps["runOnChangeInput"].then === "function"
                   ) {
-                    $steps["runOnChangeInput"] = await $steps[
-                      "runOnChangeInput"
-                    ];
+                    $steps["runOnChangeInput"] =
+                      await $steps["runOnChangeInput"];
                   }
                 }).apply(null, eventArgs);
               }}
@@ -911,7 +906,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchInput__VariantsArgs;
     args?: PlasmicSearchInput__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchInput__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchInput__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchInput__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

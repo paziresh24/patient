@@ -163,7 +163,7 @@ function PlasmicSort__RenderFunc(props: {
         path: "freeTurnItems",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ({
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ({
           all: "\u0647\u0631 \u0632\u0645\u0627\u0646",
           today: "\u0627\u0645\u0631\u0648\u0632",
           tomorrow: "\u062a\u0627 \u0641\u0631\u062f\u0627",
@@ -179,13 +179,13 @@ function PlasmicSort__RenderFunc(props: {
         path: "sort.selectValue",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "freeTurn.selectValue",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           $props["initialSelectedValue"]
       }
     ],
@@ -195,6 +195,7 @@ function PlasmicSort__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -437,7 +438,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSort__VariantsArgs;
     args?: PlasmicSort__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSort__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSort__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSort__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

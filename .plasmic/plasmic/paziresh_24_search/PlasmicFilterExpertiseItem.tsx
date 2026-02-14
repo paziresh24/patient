@@ -162,19 +162,19 @@ function PlasmicFilterExpertiseItem__RenderFunc(props: {
         path: "isSelected",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSelected
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isSelected
       },
       {
         path: "hasIcon",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.hasIcon
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.hasIcon
       },
       {
         path: "hasBorder",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.hasBorder
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.hasBorder
       }
     ],
     [$props, $ctx, $refs]
@@ -183,6 +183,7 @@ function PlasmicFilterExpertiseItem__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -341,7 +342,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFilterExpertiseItem__VariantsArgs;
     args?: PlasmicFilterExpertiseItem__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFilterExpertiseItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFilterExpertiseItem__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFilterExpertiseItem__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
