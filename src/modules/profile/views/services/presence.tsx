@@ -19,17 +19,20 @@ import SelectService from '@/modules/booking/views/selectService';
 import SelectCenter from '@/modules/booking/views/selectCenter';
 import { useRouter } from 'next/router';
 import { useAbsentScore } from '@/common/apis/services/ravi/absentScore';
+import BulkService from './bulk';
 
 interface PresenceProps {
   centers: any[];
   waitingTime?: string;
   onBook: ({ centerId, serviceId }: { centerId: string; serviceId: string }) => void;
   displayName: string;
+  expertises?: any;
+  doctorCity?: string;
   doctorId?: string;
 }
 
 export const Presence = memo((props: PresenceProps) => {
-  const { centers, waitingTime, onBook, displayName, doctorId } = props;
+  const { centers, waitingTime, onBook, displayName, expertises, doctorCity, doctorId } = props;
   const router = useRouter();
   const slug = router.query.slug as string;
   const { data: absentScoreData } = useAbsentScore(slug);
@@ -174,11 +177,11 @@ export const Presence = memo((props: PresenceProps) => {
 
   if (centers.length === 1 && !!centers[0].freeturns_info?.length && isShowCenterAvailableBox) {
     return (
-      <Notification
-        centerId={centers[0].id}
-        serviceId={centers[0].services[0].id}
-        userCenterId={centers[0].services[0].user_center_id}
-        availalbeTime={centers[0].freeturns_info?.[0] && centers[0].freeturns_info?.[0]?.availalbe_time_text}
+      <BulkService
+        displayName={displayName}
+        expertises={expertises ?? { group_expertises: [], expertises: [] }}
+        dcotorCity={doctorCity ?? ''}
+        availableTime={centers[0].freeturns_info?.[0] && centers[0].freeturns_info?.[0]?.availalbe_time_text}
       />
     );
   }
@@ -207,7 +210,7 @@ export const Presence = memo((props: PresenceProps) => {
           description: [
             'امکان دریافت زودترین نوبت',
             mainCenterWaitingTime?.waiting_time_title &&
-              `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
+            `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
           ].filter(Boolean),
         }}
         alert={
