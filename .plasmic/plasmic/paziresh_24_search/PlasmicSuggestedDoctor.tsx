@@ -157,7 +157,7 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
         path: "apiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       },
@@ -165,7 +165,7 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
         path: "apiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       },
@@ -173,7 +173,7 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
         path: "apiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       }
@@ -184,6 +184,7 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -509,9 +510,7 @@ function PlasmicSuggestedDoctor__RenderFunc(props: {
               <React.Fragment>
                 {(() => {
                   try {
-                    return `مشاهده سایر پزشکان آنلاین ${
-                      $props?.categoryTitle || ""
-                    }`;
+                    return `مشاهده سایر پزشکان آنلاین ${$props?.categoryTitle || ""}`;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -639,7 +638,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSuggestedDoctor__VariantsArgs;
     args?: PlasmicSuggestedDoctor__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSuggestedDoctor__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSuggestedDoctor__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSuggestedDoctor__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

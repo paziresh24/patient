@@ -225,7 +225,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicDebugMode__VariantsArgs;
     args?: PlasmicDebugMode__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicDebugMode__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicDebugMode__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicDebugMode__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

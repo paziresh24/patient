@@ -268,27 +268,27 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "_5StarRatingMode3",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           $props._5StarRatingMode3
       },
       {
         path: "externalBookDesign",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           $props.externalBookDesign
       },
       {
         path: "actionButtonsVisibility",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => true
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => true
       },
       {
         path: "cardActionSduiV2UiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "cardActionSduiV2UiRequest"
       },
@@ -296,7 +296,7 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "cardActionSduiV2UiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "cardActionSduiV2UiRequest"
       },
@@ -304,7 +304,7 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "cardActionSduiV2UiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "cardActionSduiV2UiRequest"
       },
@@ -354,13 +354,14 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "isSingleCard",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSingleCard
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
+          $props.isSingleCard
       },
       {
         path: "rismanActionBtn.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "rismanActionBtn"
       },
@@ -368,7 +369,7 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "rismanActionBtn.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "rismanActionBtn"
       },
@@ -376,7 +377,7 @@ function PlasmicProductCard__RenderFunc(props: {
         path: "rismanActionBtn.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "rismanActionBtn"
       }
@@ -387,6 +388,7 @@ function PlasmicProductCard__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -2061,7 +2063,7 @@ function PlasmicProductCard__RenderFunc(props: {
                 [
                   {
                     name: "dialog[].open",
-                    initFunc: ({ $props, $state, $queries }) => false
+                    initFunc: ({ $props, $state, $queries, $q }) => false
                   }
                 ],
                 [__plasmic_idx_0]
@@ -2409,14 +2411,18 @@ function PlasmicProductCard__RenderFunc(props: {
                           link={(() => {
                             try {
                               return (
-                                "https://sanje.paziresh24.com/interstitial_page/?provide=page&display_name=" +
+                                "https://sanje.paziresh24.com/interstitial_page/?source=search&provide=page&display_name=" +
                                 $state.rismanActionBtn.data.data.fullName +
                                 "&uri=" +
-                                $state.rismanActionBtn.data.data.destination
-                                  .url +
+                                globalThis.encodeURIComponent(
+                                  $state.rismanActionBtn.data.data.destination
+                                    .url
+                                ) +
                                 "&platform=" +
                                 $state.rismanActionBtn.data.data.destination
-                                  .platform
+                                  .platform +
+                                "&doctor_id=" +
+                                $state.rismanActionBtn.data.data.doctorId
                               );
                             } catch (e) {
                               if (

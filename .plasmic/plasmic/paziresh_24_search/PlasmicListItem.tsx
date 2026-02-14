@@ -167,25 +167,25 @@ function PlasmicListItem__RenderFunc(props: {
         path: "isSelected",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isSelected
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isSelected
       },
       {
         path: "hasIcon",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.hasIcon
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.hasIcon
       },
       {
         path: "hasBorder",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.hasBorder
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.hasBorder
       },
       {
         path: "isBold",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isBold
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isBold
       }
     ],
     [$props, $ctx, $refs]
@@ -194,6 +194,7 @@ function PlasmicListItem__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -391,7 +392,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicListItem__VariantsArgs;
     args?: PlasmicListItem__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicListItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicListItem__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicListItem__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

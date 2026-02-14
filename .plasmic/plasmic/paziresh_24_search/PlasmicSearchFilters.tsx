@@ -157,7 +157,7 @@ function PlasmicSearchFilters__RenderFunc(props: {
         path: "dialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "selected",
@@ -174,6 +174,7 @@ function PlasmicSearchFilters__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -307,11 +308,7 @@ function PlasmicSearchFilters__RenderFunc(props: {
                         )
                     );
                     if (selectedRecords.length > 0) {
-                      return `${selectedRecords[0].label}${
-                        selectedRecords.length > 1
-                          ? ` + ${selectedRecords.length - 1}`
-                          : ""
-                      }`;
+                      return `${selectedRecords[0].label}${selectedRecords.length > 1 ? ` + ${selectedRecords.length - 1}` : ""}`;
                     }
                   }
                   return currentItem.facetLabel;
@@ -669,9 +666,8 @@ function PlasmicSearchFilters__RenderFunc(props: {
                           typeof $steps["updateSelected"] === "object" &&
                           typeof $steps["updateSelected"].then === "function"
                         ) {
-                          $steps["updateSelected"] = await $steps[
-                            "updateSelected"
-                          ];
+                          $steps["updateSelected"] =
+                            await $steps["updateSelected"];
                         }
 
                         $steps["updateDialogOpen2"] = true
@@ -708,9 +704,8 @@ function PlasmicSearchFilters__RenderFunc(props: {
                           typeof $steps["updateDialogOpen2"] === "object" &&
                           typeof $steps["updateDialogOpen2"].then === "function"
                         ) {
-                          $steps["updateDialogOpen2"] = await $steps[
-                            "updateDialogOpen2"
-                          ];
+                          $steps["updateDialogOpen2"] =
+                            await $steps["updateDialogOpen2"];
                         }
                       }}
                     />
@@ -800,9 +795,8 @@ function PlasmicSearchFilters__RenderFunc(props: {
                           typeof $steps["updateSelected"] === "object" &&
                           typeof $steps["updateSelected"].then === "function"
                         ) {
-                          $steps["updateSelected"] = await $steps[
-                            "updateSelected"
-                          ];
+                          $steps["updateSelected"] =
+                            await $steps["updateSelected"];
                         }
 
                         $steps["updateDialogOpen"] = true
@@ -839,9 +833,8 @@ function PlasmicSearchFilters__RenderFunc(props: {
                           typeof $steps["updateDialogOpen"] === "object" &&
                           typeof $steps["updateDialogOpen"].then === "function"
                         ) {
-                          $steps["updateDialogOpen"] = await $steps[
-                            "updateDialogOpen"
-                          ];
+                          $steps["updateDialogOpen"] =
+                            await $steps["updateDialogOpen"];
                         }
                       }}
                       options={(() => {
@@ -914,7 +907,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchFilters__VariantsArgs;
     args?: PlasmicSearchFilters__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchFilters__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchFilters__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchFilters__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

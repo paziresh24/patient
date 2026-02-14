@@ -173,7 +173,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         path: "fragmentApiRequest.data",
         type: "readonly",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         onChangeProp: "onApiRequestDataChange",
         refName: "fragmentApiRequest"
@@ -182,7 +182,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         path: "fragmentApiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "fragmentApiRequest"
       },
@@ -190,7 +190,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         path: "fragmentApiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "fragmentApiRequest"
       },
@@ -214,7 +214,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
         path: "total",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 0
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 0
       }
     ],
     [$props, $ctx, $refs]
@@ -223,6 +223,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -551,9 +552,8 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
               typeof $steps["searchViewSplunkEvent"] === "object" &&
               typeof $steps["searchViewSplunkEvent"].then === "function"
             ) {
-              $steps["searchViewSplunkEvent"] = await $steps[
-                "searchViewSplunkEvent"
-              ];
+              $steps["searchViewSplunkEvent"] =
+                await $steps["searchViewSplunkEvent"];
             }
           }).apply(null, eventArgs);
         }}
@@ -569,9 +569,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
               ).length > 0 && {
                 facetFilters: Object.entries($props.searchFilters).reduce(
                   (acc, item) => {
-                    return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
-                      .map(i => `${item[0]}:${i}`)
-                      .join(",")}`;
+                    return `${acc?.length > 0 ? `${acc},` : ""}${item[1].map(i => `${item[0]}:${i}`).join(",")}`;
                   },
                   ""
                 )
@@ -582,9 +580,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                 optionalFilters: Object.entries(
                   $props.searchOptionalFilters
                 ).reduce((acc, item) => {
-                  return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
-                    .map(i => `${item[0]}:${i}`)
-                    .join(",")}`;
+                  return `${acc?.length > 0 ? `${acc},` : ""}${item[1].map(i => `${item[0]}:${i}`).join(",")}`;
                 }, "")
               })
             };
@@ -690,9 +686,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                         type: "doctor",
                         title: item.source.display_name,
                         prefix: item.source.prefix || "",
-                        image: `/getImage/p24/search-${
-                          item.source.gender ? "men" : "women"
-                        }/${item?.source?.image ?? "noimage.png"}?size=150`,
+                        image: `/getImage/p24/search-${item.source.gender ? "men" : "women"}/${item?.source?.image ?? "noimage.png"}?size=150`,
                         view: item.source.number_of_visits,
                         display_expertise: item.source.expertises
                           .map(
@@ -870,9 +864,7 @@ function PlasmicMainSearchRequest__RenderFunc(props: {
                         server_id: item.source.server_id,
                         type: "center",
                         title: item.source.display_name,
-                        image: `/getImage/p24/search-hospitalclinic/${
-                          item.source.image ?? "noimage.png"
-                        }?size=150`,
+                        image: `/getImage/p24/search-hospitalclinic/${item.source.image ?? "noimage.png"}?size=150`,
                         view: item.source.number_of_visits,
                         address: item.source.address,
                         city_id: item.source.city_id,
@@ -932,7 +924,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicMainSearchRequest__VariantsArgs;
     args?: PlasmicMainSearchRequest__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicMainSearchRequest__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicMainSearchRequest__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicMainSearchRequest__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

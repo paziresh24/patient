@@ -543,7 +543,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchContentTree__VariantsArgs;
     args?: PlasmicSearchContentTree__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchContentTree__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchContentTree__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchContentTree__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

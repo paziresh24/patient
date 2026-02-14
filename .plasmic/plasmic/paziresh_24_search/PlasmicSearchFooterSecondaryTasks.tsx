@@ -174,14 +174,7 @@ function PlasmicSearchFooterSecondaryTasks__RenderFunc(props: {
           component={Link}
           href={(() => {
             try {
-              return `${$props.taskObject.destination}${
-                $props.taskObject.destination.includes("?") ? "" : "?"
-              }#url=${encodeURIComponent(
-                window.location.href
-              )}&tid=${document.cookie.replace(
-                /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
-                "$1"
-              )}`;
+              return `${$props.taskObject.destination}${$props.taskObject.destination.includes("?") ? "" : "?"}#url=${encodeURIComponent(window.location.href)}&tid=${document.cookie.replace(/(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/, "$1")}`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -255,7 +248,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchFooterSecondaryTasks__VariantsArgs;
     args?: PlasmicSearchFooterSecondaryTasks__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchFooterSecondaryTasks__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchFooterSecondaryTasks__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchFooterSecondaryTasks__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
