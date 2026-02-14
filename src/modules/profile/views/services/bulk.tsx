@@ -22,7 +22,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
         <Text className="text-sm font-medium"
         >
           {
-            availableTime? "زمان نوبت دهی پزشک به پایان رسیده است." : `درحال حاضر نوبت جدیدی برای ${displayName} تعریف نشده است.`
+            availableTime ? "زمان نوبت دهی پزشک به پایان رسیده است." : `درحال حاضر نوبت جدیدی برای ${displayName} تعریف نشده است.`
           }
         </Text>
       </Alert>

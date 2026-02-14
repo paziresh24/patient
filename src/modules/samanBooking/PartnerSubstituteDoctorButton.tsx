@@ -2,7 +2,7 @@ import Button from '@/common/components/atom/button';
 import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
-import { usePartnerSubstituteSearch, useSearch } from '@/common/apis/services/search/search';
+import { useSearch } from '@/common/apis/services/search/search';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import SearchCard from '@/modules/search/components/card/card';
@@ -36,21 +36,21 @@ const PartnerSubstituteDoctorButton = ({
       : `exp-${rawSlug}`
     : 'exp-internal-diseases';
 
-    const searchData = useSearch(
-      {
-        route: decodeURIComponent(doctorCity),
-        query: {
-          university: university,
-          ref: 'hospital_team_substitution',
-          text: expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-            ? expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-            : expertises?.expertises.filter((item: any) => item.expertise_id !== 325)?.map((expertise: any) => expertise.expertise_name)[0],
-        },
+  const searchData = useSearch(
+    {
+      route: decodeURIComponent(doctorCity),
+      query: {
+        university: university,
+        ref: 'hospital_team_substitution',
+        text: expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
+          ? expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
+          : expertises?.expertises.filter((item: any) => item.expertise_id !== 325)?.map((expertise: any) => expertise.expertise_name)[0],
       },
-      {
-        enabled: !!university && !!modalProps.isOpen,
-      },
-    );
+    },
+    {
+      enabled: !!university && !!modalProps.isOpen,
+    },
+  );
   const { changeRoute } = useSearchRouting();
 
   const substituteDoctor = useMemo(() => {

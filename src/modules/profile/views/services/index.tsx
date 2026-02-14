@@ -181,7 +181,6 @@ export const Services = ({
       return undefined;
     };
 
-    console.log("hello")
     return (
       <BulkService
         displayName={doctor.display_name}
@@ -192,7 +191,6 @@ export const Services = ({
     );
   }
 
-  console.log("hello")
 
   return (
     <>
@@ -228,12 +226,12 @@ export const Services = ({
                   is_active: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.status == 'AVAILABLE',
                   freeturn_text: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn
                     ? moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
-                        ?.locale('fa')
-                        .calendar(undefined, {
-                          sameDay: '[امروز] ساعت HH:mm',
-                          nextDay: '[فردا] ساعت HH:mm',
-                          sameElse: 'jD jMMMM ساعت HH:mm',
-                        })
+                      ?.locale('fa')
+                      .calendar(undefined, {
+                        sameDay: '[امروز] ساعت HH:mm',
+                        nextDay: '[فردا] ساعت HH:mm',
+                        sameElse: 'jD jMMMM ساعت HH:mm',
+                      })
                     : '',
                   freeturns_info: alabilityStatus.data?.data?.availability
                     ?.filter((c: any) => c.center_id === center.id)
@@ -241,10 +239,10 @@ export const Services = ({
                       available_time: item?.available_time ? new Date(item?.available_time).getTime() / 1000 : Date.now(),
                       availalbe_time_text: item?.available_time
                         ? moment(item?.available_time)?.locale('fa').calendar(undefined, {
-                            sameDay: '[امروز] ساعت HH:mm',
-                            nextDay: '[فردا] ساعت HH:mm',
-                            sameElse: 'jD jMMMM ساعت HH:mm',
-                          })
+                          sameDay: '[امروز] ساعت HH:mm',
+                          nextDay: '[فردا] ساعت HH:mm',
+                          sameElse: 'jD jMMMM ساعت HH:mm',
+                        })
                         : '',
                     })),
                 }),
