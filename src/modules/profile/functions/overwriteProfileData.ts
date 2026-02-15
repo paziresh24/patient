@@ -130,6 +130,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         degree_id: item.degree?.id,
         degree_name: item?.degree?.name ?? '',
         expertise_name: item.expertise?.name ?? '',
+        ...((item.expertise?.slug ?? item.slug) && { slug: item.expertise?.slug ?? item.slug }),
       })) ?? [],
   };
 

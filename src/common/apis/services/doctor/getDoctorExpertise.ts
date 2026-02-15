@@ -1,6 +1,7 @@
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import { splunkInstance } from '@/common/services/splunk';
 import { drProfileClient } from '../../client';
+import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 
 export interface DoctorExpertiseResponse {
   id: string;
@@ -64,4 +65,16 @@ export const getDoctorExpertise = async (slug: string): Promise<DoctorExpertiseR
     // Return fallback data in case of error
     return [];
   }
+};
+
+export const useDoctorExpertise = (slug: string | undefined, option?: { enabled?: boolean }) => {
+  return useQuery(
+    [ServerStateKeysEnum.SlugProfile, 'doctor-expertise', slug],
+    () => getDoctorExpertise(slug!),
+    {
+      enabled: !!slug && (option?.enabled !== false),
+      staleTime: 1000 * 60 * 5,
+      ...option,
+    },
+  );
 };

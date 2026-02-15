@@ -2,7 +2,7 @@ import Button from '@/common/components/atom/button';
 import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
-import { useSearch } from '@/common/apis/services/search/search';
+import { usePartnerSubstituteSearch } from '@/common/apis/services/search/search';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import SearchCard from '@/modules/search/components/card/card';
@@ -29,26 +29,24 @@ const PartnerSubstituteDoctorButton = ({
   const customize = useCustomize(state => state.customize);
   const university = customize?.partnerKey ?? '';
 
-  const rawSlug = expertises?.group_expertises?.[0]?.en_slug;
-  const expertiseSlug = rawSlug
-    ? rawSlug.startsWith('exp-')
-      ? rawSlug
-      : `exp-${rawSlug}`
-    : 'exp-internal-diseases';
+  const expertiseSlug = useMemo(() => {
+    const slug = expertises?.expertises?.[0]?.slug;
+    if (slug) return slug.startsWith('exp-') ? slug : `exp-${slug}`;
+    const groupSlug = expertises?.group_expertises?.[0]?.en_slug;
+    if (groupSlug) return groupSlug.startsWith('exp-') ? groupSlug : `exp-${groupSlug}`;
+    return 'exp-internal-diseases';
+  }, [expertises]);
 
-  const searchData = useSearch(
+  const cityEnSlug = doctorCity || 'ir';
+
+  const searchData = usePartnerSubstituteSearch(
     {
-      route: decodeURIComponent(doctorCity),
-      query: {
-        university: university,
-        ref: 'hospital_team_substitution',
-        text: expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-          ? expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-          : expertises?.expertises.filter((item: any) => item.expertise_id !== 325)?.map((expertise: any) => expertise.expertise_name)[0],
-      },
+      city_en_slug: cityEnSlug,
+      university,
+      expertise_slug: expertiseSlug,
     },
     {
-      enabled: !!university && !!modalProps.isOpen,
+      enabled: !!university && !!modalProps.isOpen && !!expertiseSlug,
     },
   );
   const { changeRoute } = useSearchRouting();
