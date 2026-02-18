@@ -25,6 +25,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
 import RouteProgress from '@/common/components/layouts/RouteProgress';
 import { RismanSurveyScript } from '@/common/components/layouts/RismanSurveyScript';
+import { useNotificationPermission } from '@/common/hooks/useNotificationPermission';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -102,6 +103,11 @@ function MyApp(props: AppProps) {
       };
     }
   }, [isLogin, isApplication]);
+
+  // Auto-subscribe نوتیفیکشن در صورت login و وجود دسترسی
+  useNotificationPermission({
+    autoSubscribe: isLogin, // فقط وقتی login است auto-subscribe کند
+  });
 
   useEffect(() => {
     if (isGtmDisabled || gtmEnabledRef.current) return;
