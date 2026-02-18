@@ -426,7 +426,7 @@ export async function getAggregatedProfileData(
       if (typeof numericCandidate === 'number' && Number.isFinite(numericCandidate)) {
         overwriteData.history = {
           ...(overwriteData.history ?? {}),
-          count_of_page_view: numericCandidate,
+          count_of_page_view: String(numericCandidate),
         };
       }
     } catch (error) {

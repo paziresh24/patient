@@ -43,7 +43,7 @@ const CustomDocument: NextComponentType = (props: any) => {
               }
               
               var s = document.createElement("script");
-              s.src = "https://rasan.darkube.app/sdk.js";
+              s.src = "https://rasan.paziresh24.com/sdk.js";
               s.async = true;
               s.onload = function() {
                 initRasan();

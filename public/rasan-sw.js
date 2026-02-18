@@ -1,2 +1,2 @@
 /* eslint-env serviceworker */
-importScripts('https://rasan.darkube.app/service-worker.js');
+importScripts('https://rasan.paziresh24.com/service-worker.js');
