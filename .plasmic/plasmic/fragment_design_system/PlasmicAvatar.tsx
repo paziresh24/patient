@@ -161,13 +161,13 @@ function PlasmicAvatar__RenderFunc(props: {
         path: "ring",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.ring
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.ring
       },
       {
         path: "badge",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.badge
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.badge
       }
     ],
     [$props, $ctx, $refs]
@@ -176,6 +176,7 @@ function PlasmicAvatar__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -318,9 +319,7 @@ function PlasmicAvatar__RenderFunc(props: {
             <React.Fragment>
               {(() => {
                 try {
-                  return `${$props.name.split(" ")?.[0]?.[0] ?? ""}${
-                    $props.name.split(" ")?.[1]?.[0] ?? ""
-                  }`;
+                  return `${$props.name.split(" ")?.[0]?.[0] ?? ""}${$props.name.split(" ")?.[1]?.[0] ?? ""}`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -377,7 +376,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicAvatar__VariantsArgs;
     args?: PlasmicAvatar__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicAvatar__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicAvatar__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicAvatar__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

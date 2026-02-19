@@ -61,6 +61,7 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import SearchContentSuggestion from "../../SearchContentSuggestion"; // plasmic-import: 6MD8zdNphdeG/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/styleTokensProvider
 
@@ -98,6 +99,7 @@ export type PlasmicSearchResultQs__OverridesType = {
   freeBox?: Flex__<"div">;
   svg?: Flex__<"svg">;
   searchContentSuggestion?: Flex__<typeof SearchContentSuggestion>;
+  sendSplunkEvent?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchResultQsProps {
@@ -151,6 +153,8 @@ function PlasmicSearchResultQs__RenderFunc(props: {
   const $ctx = useDataEnv?.() || {};
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
+
+  const $globalActions = useGlobalActions?.();
 
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
@@ -406,6 +410,126 @@ function PlasmicSearchResultQs__RenderFunc(props: {
             }
           })()}
         />
+
+        <SideEffect
+          data-plasmic-name={"sendSplunkEvent"}
+          data-plasmic-override={overrides.sendSplunkEvent}
+          className={classNames("__wab_instance", sty.sendSplunkEvent)}
+          onMount={async () => {
+            const $steps = {};
+
+            $steps["sendSplunkQuerySuggestionViewEvent"] = !!$state
+              .serchiaSuggestion.data.entity
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      {
+                        event_group: "search_metrics",
+                        event_type: "suggestion_view",
+                        current_url: window.location.href,
+                        terminal_id: (function () {
+                          try {
+                            return document.cookie.replace(
+                              /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                              "$1"
+                            );
+                          } catch (e) {
+                            return null;
+                          }
+                        })(),
+                        user_input: (function () {
+                          try {
+                            return $props.terms || "";
+                          } catch (e) {
+                            return "";
+                          }
+                        })(),
+                        suggestions: (function () {
+                          try {
+                            var rawSuggestions =
+                              $state.serchiaSuggestion.data.entity
+                                .topQuerySuggestions;
+                            if (!rawSuggestions) return [];
+                            if (typeof rawSuggestions === "string") {
+                              return JSON.parse(rawSuggestions);
+                            }
+                            return rawSuggestions;
+                          } catch (e) {
+                            return [];
+                          }
+                        })(),
+                        suggestion_count: (function () {
+                          try {
+                            var raw =
+                              $state.serchiaSuggestion.data.entity
+                                .topQuerySuggestions;
+                            if (!raw) return 0;
+                            var list =
+                              typeof raw === "string" ? JSON.parse(raw) : raw;
+                            return list.length;
+                          } catch (e) {
+                            return 0;
+                          }
+                        })(),
+                        city_id: (function () {
+                          if (
+                            $props &&
+                            $props.selectedCity &&
+                            $props.selectedCity.id
+                          ) {
+                            return $props.selectedCity.id;
+                          }
+                          if (
+                            $props &&
+                            $props.searchOptionalFilters &&
+                            $props.searchOptionalFilters.city_id
+                          ) {
+                            return $props.searchOptionalFilters.city_id[0];
+                          }
+                          return -1;
+                        })(),
+                        userAgent: globalThis.navigator.userAgent
+                          ? globalThis.navigator.userAgent
+                          : "",
+                        url: (function () {
+                          const url = {
+                            href: window.location.href,
+                            query: {},
+                            pathname: window.location.pathname,
+                            host: window.location.host
+                          };
+                          try {
+                            const urlParams = new URLSearchParams(
+                              window.location.search
+                            );
+                            for (const [key, value] of urlParams.entries()) {
+                              url.query[key] = value;
+                            }
+                          } catch (e) {}
+                          return url;
+                        })()
+                      },
+                      undefined,
+                      "2ba8b09a-1f2d-4051-ad04-358636bf70f8"
+                    ]
+                  };
+                  return $globalActions["Splunk.sendLog"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+            if (
+              $steps["sendSplunkQuerySuggestionViewEvent"] != null &&
+              typeof $steps["sendSplunkQuerySuggestionViewEvent"] ===
+                "object" &&
+              typeof $steps["sendSplunkQuerySuggestionViewEvent"].then ===
+                "function"
+            ) {
+              $steps["sendSplunkQuerySuggestionViewEvent"] =
+                await $steps["sendSplunkQuerySuggestionViewEvent"];
+            }
+          }}
+        />
       </ApiRequest>
     </div>
   ) as React.ReactElement | null;
@@ -417,17 +541,20 @@ const PlasmicDescendants = {
     "serchiaSuggestion",
     "freeBox",
     "svg",
-    "searchContentSuggestion"
+    "searchContentSuggestion",
+    "sendSplunkEvent"
   ],
   serchiaSuggestion: [
     "serchiaSuggestion",
     "freeBox",
     "svg",
-    "searchContentSuggestion"
+    "searchContentSuggestion",
+    "sendSplunkEvent"
   ],
   freeBox: ["freeBox", "svg"],
   svg: ["svg"],
-  searchContentSuggestion: ["searchContentSuggestion"]
+  searchContentSuggestion: ["searchContentSuggestion"],
+  sendSplunkEvent: ["sendSplunkEvent"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -438,6 +565,7 @@ type NodeDefaultElementType = {
   freeBox: "div";
   svg: "svg";
   searchContentSuggestion: typeof SearchContentSuggestion;
+  sendSplunkEvent: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -506,6 +634,7 @@ export const PlasmicSearchResultQs = Object.assign(
     freeBox: makeNodeComponent("freeBox"),
     svg: makeNodeComponent("svg"),
     searchContentSuggestion: makeNodeComponent("searchContentSuggestion"),
+    sendSplunkEvent: makeNodeComponent("sendSplunkEvent"),
 
     // Metadata about props expected for PlasmicSearchResultQs
     internalVariantProps: PlasmicSearchResultQs__VariantProps,
