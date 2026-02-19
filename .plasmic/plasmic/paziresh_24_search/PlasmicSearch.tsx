@@ -911,7 +911,13 @@ function PlasmicSearch__RenderFunc(props: {
 
               {(() => {
                 try {
-                  return $state.terms?.trim().length >= 3;
+                  return (() => {
+                    const isLongEnough = $state.terms?.trim().length >= 3;
+                    const isExplicitlyDisabled =
+                      !!$ctx.Growthbook.isReady &&
+                      !$ctx.Growthbook.features.is_instant_search_enabled;
+                    return isLongEnough && !isExplicitlyDisabled;
+                  })();
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -2313,7 +2319,15 @@ function PlasmicSearch__RenderFunc(props: {
                     hasVariant(globalVariants, "screen", "mobileOnly")
                       ? (() => {
                           try {
-                            return $state.inputValue.trim().length >= 3;
+                            return (() => {
+                              const isLongEnough =
+                                $state.terms?.trim().length >= 3;
+                              const isExplicitlyDisabled =
+                                !!$ctx.Growthbook.isReady &&
+                                !$ctx.Growthbook.features
+                                  .is_instant_search_enabled;
+                              return isLongEnough && !isExplicitlyDisabled;
+                            })();
                           } catch (e) {
                             if (
                               e instanceof TypeError ||

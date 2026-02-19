@@ -144,7 +144,7 @@ function PlasmicBookingAlert__RenderFunc(props: {
         path: "error",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.error
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.error
       }
     ],
     [$props, $ctx, $refs]
@@ -153,6 +153,7 @@ function PlasmicBookingAlert__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
