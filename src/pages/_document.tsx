@@ -28,7 +28,7 @@ const CustomDocument: NextComponentType = (props: any) => {
             (function() {
               function initRasan() {
                 if (window.rasan && window.rasan.init) {
-                  window.rasan.init({appId: "6bf2755a-6613-4344-be4e-f5de4b422828"});
+                  window.rasan.init({appId: "82f744a9-d1f2-4e4e-9a81-b1a28bb6fdf4"});
                   return true;
                 }
                 return false;
