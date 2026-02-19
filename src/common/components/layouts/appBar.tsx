@@ -10,20 +10,22 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 interface AppBarProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   backButton?: Boolean;
+  onBackClick?: () => void;
   titleLoading?: Boolean;
   actionButton?: ReactNode;
 }
 
-export const AppBar = ({ title, backButton, titleLoading = false, className, actionButton, ...rest }: AppBarProps) => {
+export const AppBar = ({ title, backButton, onBackClick, titleLoading = false, className, actionButton, ...rest }: AppBarProps) => {
   const router = useRouter();
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const handleBack = onBackClick ?? (() => router.back());
   return (
     <div
       className={classNames('flex sticky top-0  items-center min-h-14 h-14 px-6 bg-white border-b border-[#EBECEE] z-40', className)}
       {...rest}
     >
       {backButton && (
-        <div onClick={router.back} className="ml-2 -mr-3 cursor-pointer">
+        <div onClick={handleBack} className="ml-2 -mr-3 cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

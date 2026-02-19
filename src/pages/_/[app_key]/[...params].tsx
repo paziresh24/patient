@@ -165,6 +165,20 @@ const Page = ({ page, app }: any) => {
         <AppBar
           title={page.name?.fa}
           backButton={true}
+          onBackClick={() => {
+            if (typeof window === 'undefined') {
+              router.push('/_/');
+              return;
+            }
+            const hasHistory = window.history.length > 1;
+            const referrerSameOrigin =
+              document.referrer && document.referrer.startsWith(window.location.origin);
+            if (!hasHistory || !referrerSameOrigin) {
+              router.push('/_/');
+            } else {
+              router.back();
+            }
+          }}
           actionButton={
             showSupportButton ? (
               <Button
