@@ -184,7 +184,8 @@ function PlasmicBookingService__RenderFunc(props: {
         path: "isUnAvailable",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isUnAvailable
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
+          $props.isUnAvailable
       }
     ],
     [$props, $ctx, $refs]
@@ -193,6 +194,7 @@ function PlasmicBookingService__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
