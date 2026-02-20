@@ -7,6 +7,7 @@ import { setTerminal } from './setTerminal';
 interface Params {
   username: number;
   password: string;
+  force?: boolean;
 }
 
 export const login = async (params: Params) => {
