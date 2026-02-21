@@ -155,6 +155,7 @@ export const Suggestion = (props: SuggestionProps) => {
       query: {
         text: text,
       },
+      pageParam: false,
     });
   };
 
@@ -298,4 +299,3 @@ export const Suggestion = (props: SuggestionProps) => {
 };
 
 export default Suggestion;
-
