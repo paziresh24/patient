@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -250,5 +251,10 @@ const nextConfig = {
 
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-// Sentry should be the last thing to export to catch everything right
-module.exports = moduleExports;
+// Sentry as last wrapper (DSN & 1% sample rate in sentry.*.config.ts)
+module.exports = withSentryConfig(moduleExports, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+});
