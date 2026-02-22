@@ -154,12 +154,18 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     },
   };
 
-  // Merge galleries from all centers with center_type = 1 (fallback logic)
-  const fallbackGallery =
+  // Merge galleries from all centers (fallback logic)
+  const fallbackGalleryFromCenters =
     centers
-      ?.filter((center: any) => center?.center_type === 1)
       ?.flatMap((center: any) => center?.gallery ?? [])
       ?.filter(Boolean) ?? [];
+  // When new API returns no gallery, also try gallery from original profile centers (e.g. old API or different source)
+  const fallbackGalleryFromSource =
+    source?.centers
+      ?.flatMap((center: any) => center?.gallery ?? [])
+      ?.filter(Boolean) ?? [];
+  const fallbackGallery =
+    fallbackGalleryFromCenters.length > 0 ? fallbackGalleryFromCenters : fallbackGalleryFromSource;
 
   const media = {
     aparat: source?.aparat_video_code ?? null,
