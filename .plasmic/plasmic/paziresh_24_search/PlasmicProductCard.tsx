@@ -2308,11 +2308,16 @@ function PlasmicProductCard__RenderFunc(props: {
                       >
                         {(() => {
                           try {
-                            return (
+                            return $state.rismanActionBtn.data.data.destination[
+                              "first-appointment"
+                            ] !== null ||
                               $state.rismanActionBtn.data.data.destination[
                                 "first-appointment"
-                              ] !== null
-                            );
+                              ]
+                              ? $state.rismanActionBtn.data.data.destination[
+                                  "first-appointment"
+                                ]
+                              : false;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
