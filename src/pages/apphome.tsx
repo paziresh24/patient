@@ -2,6 +2,7 @@ import Logo from '@/common/components/atom/logo';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { Fragment } from '@/common/fragment';
+import { Fragment2 } from '@/common/fragment/fragment2';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
@@ -122,7 +123,7 @@ const Home = ({ fragmentComponents }: any) => {
         {customize.showConsultServices &&
           (fragmentComponents?.showPlasmicOnlineVisit || showPlasmicOnlineVisit ? (
             <div>
-              <Fragment Component={PlasmicOnlineVisit} name="OnlineVisit" />
+              <Fragment2 Component={PlasmicOnlineVisit} name="OnlineVisit" />
             </div>
           ) : (
             <OnlineVisitPromote />
