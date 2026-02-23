@@ -328,11 +328,11 @@ export async function getAggregatedProfileData(
   // Handle gallery API call after all other requests (depends on centers)
   let doctorGallery = null;
   if (options?.useNewDoctorGalleryAPI) {
-    const clinicCenters = Array.isArray(doctorCenters) ? doctorCenters.filter((center: any) => center.type_id === 1) : [];
+    const centersForGallery = Array.isArray(doctorCenters) ? doctorCenters : [];
 
-    if (clinicCenters.length > 0) {
+    if (centersForGallery.length > 0) {
       try {
-        const galleryPromises = clinicCenters.map((center: any) => getDoctorGallery(center.id));
+        const galleryPromises = centersForGallery.map((center: any) => getDoctorGallery(center.id));
         const galleryResults = await Promise.allSettled(galleryPromises);
 
         doctorGallery = galleryResults
