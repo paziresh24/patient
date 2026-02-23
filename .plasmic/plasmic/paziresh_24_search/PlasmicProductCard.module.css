@@ -530,6 +530,18 @@
   column-gap: var(--token-_c276Gs_1FIE);
   min-width: 0;
 }
+.freeBox__fFHu {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  row-gap: 8px;
+  min-width: 0;
+}
 .button__heg2:global(.__wab_instance) {
   max-width: 100%;
   width: 100%;
