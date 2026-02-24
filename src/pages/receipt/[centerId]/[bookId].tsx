@@ -142,10 +142,10 @@ const Receipt = () => {
   );
   const possibilityBeingVisited = bookDetailsData?.book_time
     ? !isAfterPastDaysFromTimestamp({
-        numberDay: 3,
-        currentTime: serverTime?.data?.data?.data.timestamp,
-        timestamp: bookDetailsData.book_time,
-      })
+      numberDay: 3,
+      currentTime: serverTime?.data?.data?.data.timestamp,
+      timestamp: bookDetailsData.book_time,
+    })
     : false;
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
   const showDoctorAvailabilityWarning = useFeatureValue('show-doctor-availability-warning', '');
@@ -291,7 +291,7 @@ const Receipt = () => {
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
 
   useEffect(() => {
-    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id) {
+    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id && centerId === CENTERS.CONSULT) {
       const fetchKey = `${centerId}-${bookId}-${bookDetailsData.doctor.id}-${bookDetailsData.doctor.server_id}`;
 
       if (lastFetchedKeyRef.current !== fetchKey) {
@@ -832,8 +832,8 @@ const Receipt = () => {
             centerType === 'consult'
               ? `لطفا دلیل ${turnStatus.notVisitedTurn ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
               : turnStatus.requestedTurn
-              ? 'آیا از لغو درخواست اطمینان دارید؟'
-              : 'آیا از لغو نوبت اطمینان دارید؟'
+                ? 'آیا از لغو درخواست اطمینان دارید؟'
+                : 'آیا از لغو نوبت اطمینان دارید؟'
           }
           {...removeModalProps}
         >
