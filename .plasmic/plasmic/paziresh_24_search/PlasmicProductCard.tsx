@@ -2108,13 +2108,14 @@ function PlasmicProductCard__RenderFunc(props: {
         >
           {(() => {
             try {
-              return (
-                !["paziresh24.com", "plasmic.app"].includes(
-                  window.location.hostname
-                ) &&
-                $props.actionButtons?.[0]?.outline &&
-                !$props.actionButtons?.[0]?.top_title
-              );
+              return (() => {
+                const isSpecificDomain = new RegExp(
+                  "paziresh24.com|plasmic.app"
+                ).test(globalThis.location.hostname);
+                const isOutline = $props.actionButtons?.[0]?.outline;
+                const noTopTitle = !$props.actionButtons?.[0]?.top_title;
+                return isSpecificDomain && isOutline && noTopTitle;
+              })();
             } catch (e) {
               if (
                 e instanceof TypeError ||
