@@ -619,6 +619,7 @@ function PlasmicSearch__RenderFunc(props: {
                                     "semantic_search",
                                     semanticSearchParam
                                   );
+                                  params.delete("page");
                                   return `/s/${citySlug}?${params.toString()}`;
                                 }
                               })();

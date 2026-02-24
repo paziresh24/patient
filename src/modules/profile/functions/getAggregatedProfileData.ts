@@ -328,11 +328,11 @@ export async function getAggregatedProfileData(
   // Handle gallery API call after all other requests (depends on centers)
   let doctorGallery = null;
   if (options?.useNewDoctorGalleryAPI) {
-    const clinicCenters = Array.isArray(doctorCenters) ? doctorCenters.filter((center: any) => center.type_id === 1) : [];
+    const centersForGallery = Array.isArray(doctorCenters) ? doctorCenters : [];
 
-    if (clinicCenters.length > 0) {
+    if (centersForGallery.length > 0) {
       try {
-        const galleryPromises = clinicCenters.map((center: any) => getDoctorGallery(center.id));
+        const galleryPromises = centersForGallery.map((center: any) => getDoctorGallery(center.id));
         const galleryResults = await Promise.allSettled(galleryPromises);
 
         doctorGallery = galleryResults
@@ -356,12 +356,26 @@ export async function getAggregatedProfileData(
       alias_title: exp.alias_title,
       degree: exp.degree,
       groups: exp.groups,
+      graduation_date: exp.graduation_date ?? null,
     })) ?? [];
+
+  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص)
+  const firstGraduationDate = doctorExpertise?.[0]?.graduation_date;
+  const experienceYears =
+    firstGraduationDate &&
+    (() => {
+      const year = parseInt(firstGraduationDate.slice(0, 4), 10);
+      if (Number.isNaN(year)) return null;
+      const currentYear = new Date().getFullYear();
+      const years = currentYear - year;
+      return years >= 0 ? String(years) : null;
+    })();
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
     provider: {
       user_id: slugInfo?.user_id ?? null,
+      ...(experienceYears && { experience: experienceYears }),
     },
     feedbacks: {
       ...rateDetailsResult,

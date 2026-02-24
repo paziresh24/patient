@@ -72,7 +72,7 @@ export const Factor = (props: FactorProps) => {
       : undefined;
 
   const { data: balance, isLoading: balanceLoading } = useGetBalance({
-    enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor) && isLogin,
+    enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor || !!isKatibePaymentMethodsEnabled) && isLogin,
   });
 
   const { data: paymentMethodsData } = useGetPaymentMethods(
@@ -81,6 +81,7 @@ export const Factor = (props: FactorProps) => {
       timezone,
       countryCode: userInfo?.country_code_id,
       center_id: centerId,
+      balance: balance?.data?.data?.balance,
     },
     {
       enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
@@ -135,11 +136,11 @@ export const Factor = (props: FactorProps) => {
           priceText={centerId === CENTERS.CONSULT || !useKatibePaymentForEarnestFactor ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
           price={price}
           totalPrice={totalPrice}
-          walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor ? balance?.data?.data?.balance : null}
+          walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor || isKatibePaymentMethodsEnabled ? balance?.data?.data?.balance : null}
           tax={tax}
           discount={discount}
           payment_description_html={payment_description_html || ''}
-          loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor ? balanceLoading : false)}
+          loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor || isKatibePaymentMethodsEnabled ? balanceLoading : false)}
         />
         {centerId === CENTERS.CONSULT && !refundTermsBadge && (
           <Chips

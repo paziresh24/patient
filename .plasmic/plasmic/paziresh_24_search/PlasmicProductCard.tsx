@@ -2108,13 +2108,14 @@ function PlasmicProductCard__RenderFunc(props: {
         >
           {(() => {
             try {
-              return $props.actionButtons?.[0]?.outline &&
-                !$props.actionButtons?.[0]?.top_title &&
-                $ctx.Growthbook.features?.["theme-config"]?.[
-                  "search_result:show_risman_action_btn"
-                ]
-                ? true
-                : false;
+              return (() => {
+                const isSpecificDomain = new RegExp(
+                  "paziresh24.com|plasmic.app"
+                ).test(globalThis.location.hostname);
+                const isOutline = $props.actionButtons?.[0]?.outline;
+                const noTopTitle = !$props.actionButtons?.[0]?.top_title;
+                return isSpecificDomain && isOutline && noTopTitle;
+              })();
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -2196,11 +2197,7 @@ function PlasmicProductCard__RenderFunc(props: {
                 <div className={classNames(projectcss.all, sty.freeBox__l4Yi8)}>
                   {(() => {
                     try {
-                      return (
-                        $ctx.Growthbook.features["theme-config"][
-                          "search_result:show_card_action_sdui_v2"
-                        ] && !!$state.rismanActionBtn.data.data?.doctorId
-                      );
+                      return !!$state.rismanActionBtn.data.data?.doctorId;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -2221,85 +2218,92 @@ function PlasmicProductCard__RenderFunc(props: {
                         }
                       )}
                     >
-                      <Button
-                        children2={
-                          <div
-                            className={classNames(
-                              projectcss.all,
-                              projectcss.__wab_text,
-                              sty.text__lvRrp
-                            )}
-                          >
-                            {
-                              "\u0645\u0634\u0627\u0647\u062f\u0647 \u0635\u0641\u062d\u0647"
-                            }
-                          </div>
-                        }
+                      <div
                         className={classNames(
-                          "__wab_instance",
-                          sty.button__heg2
+                          projectcss.all,
+                          sty.freeBox__fFHu
                         )}
-                        endIcon={
-                          <ChevronLeftIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg__uEvbb
-                            )}
-                            role={"img"}
-                          />
-                        }
-                        link={(() => {
-                          try {
-                            return "https://paziresh24.com/dr/" + $props.slug;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
+                      >
+                        <Button
+                          children2={
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                projectcss.__wab_text,
+                                sty.text__lvRrp
+                              )}
+                            >
+                              {
+                                "\u0645\u0634\u0627\u0647\u062f\u0647 \u0635\u0641\u062d\u0647"
+                              }
+                            </div>
+                          }
+                          className={classNames(
+                            "__wab_instance",
+                            sty.button__heg2
+                          )}
+                          endIcon={
+                            <ChevronLeftIcon
+                              className={classNames(
+                                projectcss.all,
+                                sty.svg__uEvbb
+                              )}
+                              role={"img"}
+                            />
+                          }
+                          link={(() => {
+                            try {
+                              return "https://paziresh24.com/dr/" + $props.slug;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
+                              }
+                              throw e;
                             }
-                            throw e;
-                          }
-                        })()}
-                        onClick={async event => {
-                          const $steps = {};
+                          })()}
+                          onClick={async event => {
+                            const $steps = {};
 
-                          $steps["runEventTrigger"] = true
-                            ? (() => {
-                                const actionArgs = {
-                                  eventRef: $props["eventTrigger"],
-                                  args: [
-                                    "action-button",
-                                    "\u0645\u0634\u0627\u0647\u062f\u0647 \u0635\u0641\u062d\u0647"
-                                  ]
-                                };
-                                return (({ eventRef, args }) => {
-                                  return eventRef?.(...(args ?? []));
-                                })?.apply(null, [actionArgs]);
-                              })()
-                            : undefined;
-                          if (
-                            $steps["runEventTrigger"] != null &&
-                            typeof $steps["runEventTrigger"] === "object" &&
-                            typeof $steps["runEventTrigger"].then === "function"
-                          ) {
-                            $steps["runEventTrigger"] =
-                              await $steps["runEventTrigger"];
+                            $steps["runEventTrigger"] = true
+                              ? (() => {
+                                  const actionArgs = {
+                                    eventRef: $props["eventTrigger"],
+                                    args: [
+                                      "action-button",
+                                      "\u0645\u0634\u0627\u0647\u062f\u0647 \u0635\u0641\u062d\u0647"
+                                    ]
+                                  };
+                                  return (({ eventRef, args }) => {
+                                    return eventRef?.(...(args ?? []));
+                                  })?.apply(null, [actionArgs]);
+                                })()
+                              : undefined;
+                            if (
+                              $steps["runEventTrigger"] != null &&
+                              typeof $steps["runEventTrigger"] === "object" &&
+                              typeof $steps["runEventTrigger"].then ===
+                                "function"
+                            ) {
+                              $steps["runEventTrigger"] =
+                                await $steps["runEventTrigger"];
+                            }
+                          }}
+                          outline={true}
+                          startIcon={
+                            <ChevronRightIcon
+                              className={classNames(
+                                projectcss.all,
+                                sty.svg___6Utg6
+                              )}
+                              role={"img"}
+                            />
                           }
-                        }}
-                        outline={true}
-                        startIcon={
-                          <ChevronRightIcon
-                            className={classNames(
-                              projectcss.all,
-                              sty.svg___6Utg6
-                            )}
-                            role={"img"}
-                          />
-                        }
-                        target={true}
-                      />
-
+                          target={true}
+                        />
+                      </div>
                       <div
                         className={classNames(
                           projectcss.all,
@@ -2308,11 +2312,16 @@ function PlasmicProductCard__RenderFunc(props: {
                       >
                         {(() => {
                           try {
-                            return (
+                            return $state.rismanActionBtn.data.data.destination[
+                              "first-appointment"
+                            ] !== null ||
                               $state.rismanActionBtn.data.data.destination[
                                 "first-appointment"
-                              ] !== null
-                            );
+                              ]
+                              ? $state.rismanActionBtn.data.data.destination[
+                                  "first-appointment"
+                                ]
+                              : false;
                           } catch (e) {
                             if (
                               e instanceof TypeError ||

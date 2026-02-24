@@ -415,6 +415,7 @@ function PlasmicSearchInput__RenderFunc(props: {
                               "semantic_search",
                               semanticSearchParam
                             );
+                            params.delete("page");
                             return params.toString();
                           })();
                         }
