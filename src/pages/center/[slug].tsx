@@ -22,7 +22,7 @@ import { GetServerSidePropsContext } from 'next';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useMemo, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useDebounce } from 'react-use';
 import { growthbook } from '../_app';
 import { usePageView } from '@/common/apis/services/profile/pageView';
@@ -38,6 +38,7 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
   const { customize } = useCustomize();
   const slug = query.slug as string;
   const addPageView = usePageView();
+  const vicControlSentForSlugRef = useRef<string | null>(null);
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { openScroll } = useLockScroll();
 
@@ -163,13 +164,16 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
           },
         },
       });
-      addPageView.mutate({
-        ownerId: profileData?.id,
-        serverId: profileData?.server_id,
-        type: 'center',
-      });
+      if (vicControlSentForSlugRef.current !== slug) {
+        vicControlSentForSlugRef.current = slug;
+        addPageView.mutate({
+          ownerId: profileData?.id,
+          serverId: profileData?.server_id,
+          type: 'center',
+        });
+      }
     }
-  }, [profileData]);
+  }, [profileData, slug]);
 
   const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین `;
   const ducmentDescription = `آدرس مطب، شماره تلفن و اطلاعات تماس ${profileData.name}، ${
