@@ -50,6 +50,7 @@ const DoctorProfile = (props: any) => {
   const { query, ...router } = useRouter();
   const [isProfileScriptsReady, setIsProfileScriptsReady] = useState(false);
   const profileScriptsReadyRef = useRef(false);
+  const vicControlSentForSlugRef = useRef<string | null>(null);
 
   const currentSlug = initialSlug ?? query.slug;
 
@@ -212,11 +213,14 @@ const DoctorProfile = (props: any) => {
         });
       }
 
-      addPageView.mutate({
-        ownerId: information.id,
-        serverId: information.server_id,
-        type: 'doctor',
-      });
+      if (vicControlSentForSlugRef.current !== slug) {
+        vicControlSentForSlugRef.current = slug;
+        addPageView.mutate({
+          ownerId: information.id,
+          serverId: information.server_id,
+          type: 'doctor',
+        });
+      }
 
       window.doctor = { ...information, centers, expertises, isBulk, slug, history };
 
