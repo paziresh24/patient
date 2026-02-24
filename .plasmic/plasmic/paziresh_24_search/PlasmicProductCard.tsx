@@ -2197,11 +2197,7 @@ function PlasmicProductCard__RenderFunc(props: {
                 <div className={classNames(projectcss.all, sty.freeBox__l4Yi8)}>
                   {(() => {
                     try {
-                      return (
-                        $ctx.Growthbook.features["theme-config"][
-                          "search_result:show_card_action_sdui_v2"
-                        ] && !!$state.rismanActionBtn.data.data?.doctorId
-                      );
+                      return !!$state.rismanActionBtn.data.data?.doctorId;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
