@@ -7,6 +7,7 @@ import { setTerminal } from './setTerminal';
 interface Params {
   cell: number;
   number_reset_password?: number;
+  force?: boolean;
 }
 
 export const resetPassword = async (params: Params) => {

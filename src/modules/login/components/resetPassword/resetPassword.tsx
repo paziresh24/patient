@@ -1,4 +1,4 @@
-import { useSendOtpCode } from '@/common/apis/services/auth/sendOtpCode';
+import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
 import Button from '@/common/components/atom/button';
 import useTranslation from 'next-translate/useTranslation';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -18,13 +18,13 @@ interface ResetPasswordProps {
 export const ResetPassword = (props: ResetPasswordProps) => {
   const { mobileNumberValue, setStep } = props;
   const { t } = useTranslation('login');
-  const sendOtpCode = useSendOtpCode();
+  const resetPassword = useResetPassword();
   const [password, setPassword] = useState('');
   const { login, isLoading } = useLogin();
 
   useEffect(() => {
     if (mobileNumberValue) {
-      sendOtpCode.mutate({ mobile: mobileNumberValue, force: true });
+      resetPassword.mutate({ cell: +mobileNumberValue, force: true });
     }
   }, [mobileNumberValue]);
 
@@ -33,6 +33,7 @@ export const ResetPassword = (props: ResetPasswordProps) => {
       await login({
         username: mobileNumberValue,
         password,
+        force: true,
       });
       setStep('change_password');
     } catch (error) {

@@ -20,11 +20,12 @@ export const useLogin = () => {
   const university = useCustomize(state => state.customize?.partnerKey);
   const webPushNotificationUserList = useFeatureValue<{ ids: string[] }>('notification:web-push|enabled', { ids: [] });
 
-  const handleLogin = async ({ username, password }: { username: string; password: string }) => {
+  const handleLogin = async ({ username, password, force }: { username: string; password: string; force?: boolean }) => {
     try {
       const { data } = await loginRequest.mutateAsync({
         username: +username,
         password,
+        ...(force !== undefined && { force }),
       });
 
       if (data.status === ClinicStatus.SUCCESS) {
