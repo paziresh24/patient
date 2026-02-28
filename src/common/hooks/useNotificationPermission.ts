@@ -30,11 +30,11 @@ const shouldShowModal = (): boolean => {
   if (typeof window === 'undefined') return true;
   const dismissedAt = localStorage.getItem(NOTIFICATION_DISMISSED_KEY);
   if (!dismissedAt) return true;
-  
+
   const dismissedTime = parseInt(dismissedAt, 10);
   const now = Date.now();
   const oneDayInMs = 24 * 60 * 60 * 1000; // 24 hours
-  
+
   return now - dismissedTime >= oneDayInMs;
 };
 
@@ -145,7 +145,7 @@ export const useNotificationPermission = (
       } else {
         hasAutoSubscribedRef.current = false;
       }
-    } catch {}
+    } catch { }
   }, [autoSubscribe]);
 
   useEffect(() => {
@@ -161,9 +161,9 @@ export const useNotificationPermission = (
   }, [hasPermissionState, autoSubscribe, autoSubscribeIfGranted]);
 
   const openModal = useCallback(() => {
-    if (shouldShowModal()) {
-      setShowModal(true);
-    }
+    // if (shouldShowModal()) {
+    //   setShowModal(true);
+    // }
   }, []);
 
   const closeModal = useCallback(() => {
