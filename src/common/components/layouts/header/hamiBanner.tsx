@@ -3,7 +3,7 @@ import CloseIcon from '../../icons/close';
 import { useRouter } from 'next/router';
 
 export default function HamiBanner() {
-  const [isShow, setIsShow] = useState(typeof window != 'undefined' && !window.localStorage.getItem('dont-show-hami-banner'));
+  const [isShow, setIsShow] = useState(typeof window != 'undefined' && !window.localStorage.getItem('dont-show-hami-banner-v2'));
   const router = useRouter();
 
   if (!isShow) return null;
@@ -16,7 +16,7 @@ export default function HamiBanner() {
         className="min-w-6 h-6 cursor-pointer bg-white/15 rounded-full flex items-center justify-center"
         onClick={() => {
           setIsShow(false);
-          localStorage.setItem('dont-show-hami-banner', 'true');
+          localStorage.setItem('dont-show-hami-banner-v2', 'true');
         }}
       >
         <CloseIcon className="min-w-4 h-4 text-white " />
