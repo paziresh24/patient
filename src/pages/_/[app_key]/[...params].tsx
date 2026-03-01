@@ -153,21 +153,6 @@ const Page = ({ page, app }: any) => {
   }, [app_key, isLogin, userPending, params?.[0]]);
 
 
-
-
-  useEffect(() => {
-    iframeRef.current.contentWindow.postMessage(
-      {
-        hamdast: {
-
-          event: "HAMDAST_CAPABILITY_SET",
-          data: { key: "khedmat", checked: true }
-        }
-      },
-      "*"
-    );
-  }, [])
-
   return (
     <LayoutWithHeaderAndFooter
       showSearchSuggestionButton={false}

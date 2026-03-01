@@ -201,6 +201,7 @@ const Receipt = () => {
         params: {
           medical_center_id: centerId,
           appointment_id: bookId,
+          doctor_id: bookDetailsData.doctor.id
         },
       });
 
@@ -938,7 +939,7 @@ const Receipt = () => {
             <AppFrame
               appKey={widgetApp}
               params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
-              queries={{ medical_center_id: centerId, appointment_id: bookId }}
+              queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_id: bookDetailsData.doctor.id }}
             />
           </Modal>
         )}
