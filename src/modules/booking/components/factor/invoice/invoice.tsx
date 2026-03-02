@@ -1,7 +1,7 @@
 import Accordion from '@/common/components/atom/accordion';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import { addCommas } from '@persian-tools/persian-tools';
+import { addCommas } from '@/common/utils/persianTools';
 
 interface InvoiceProps {
   serviceFeeText?: string;
@@ -128,4 +128,3 @@ export const Invoice = (props: InvoiceProps) => {
   );
 };
 export default Invoice;
-
