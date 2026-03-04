@@ -191,7 +191,7 @@ const Receipt = () => {
       const widgets = widgetsResponse.data || [];
       const targetWidget = widgets.find((widget: any) => widget.placement?.includes('booking_flow::ONLINE_VISIT_CHANNEL_BUTTON'));
 
-      if (!targetWidget?.app) {
+      if (!targetWidget?.app || !targetWidget?.placements_metadata?.center_info?.center_ids?.includes(centerId)) {
         isFetchingRef.current = false;
         hasFetchedWidgetRef.current = true;
         return;
@@ -292,7 +292,7 @@ const Receipt = () => {
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
 
   useEffect(() => {
-    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id && centerId === CENTERS.CONSULT) {
+    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id) {
       const fetchKey = `${centerId}-${bookId}-${bookDetailsData.doctor.id}-${bookDetailsData.doctor.server_id}`;
 
       if (lastFetchedKeyRef.current !== fetchKey) {
