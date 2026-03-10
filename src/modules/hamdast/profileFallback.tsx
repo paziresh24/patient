@@ -26,7 +26,6 @@ export const ProfileFallback = ({ addLabel, editLabel, title, app, profileData, 
   const { handleOpen, modalProps } = useModal();
   const isEnable = useFeatureIsOn("hamdast::profile_addon")
   const [fallbackRef, inViewFallback] = useInView({ triggerOnce: true, threshold: 0.3 });
-  const hasTrackedStatusRef = useRef(false);
   const previousInstallStateRef = useRef<boolean | undefined>(isInstall);
 
   const sendProfileFallbackEvent = (type: string, metaData: Record<string, any> = {}) => {
@@ -73,12 +72,6 @@ export const ProfileFallback = ({ addLabel, editLabel, title, app, profileData, 
     sendProfileFallbackEvent('widget_changed', { action });
   };
 
-  useEffect(() => {
-    if (!hasTrackedStatusRef.current) {
-      hasTrackedStatusRef.current = true;
-      sendProfileFallbackEvent('status');
-    }
-  }, []);
 
   useEffect(() => {
     if (inViewFallback) {
