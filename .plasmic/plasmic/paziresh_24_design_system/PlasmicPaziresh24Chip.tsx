@@ -172,19 +172,19 @@ function PlasmicPaziresh24Chip__RenderFunc(props: {
         path: "color",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.color
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.color
       },
       {
         path: "size",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.size
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.size
       },
       {
         path: "rounded",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.rounded
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.rounded
       }
     ],
     [$props, $ctx, $refs]
@@ -193,6 +193,7 @@ function PlasmicPaziresh24Chip__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -346,7 +347,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPaziresh24Chip__VariantsArgs;
     args?: PlasmicPaziresh24Chip__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPaziresh24Chip__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPaziresh24Chip__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPaziresh24Chip__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

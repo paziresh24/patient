@@ -156,7 +156,7 @@ function PlasmicPaziresh24Collapsible__RenderFunc(props: {
         path: "openStatus",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false
       }
     ],
     [$props, $ctx, $refs]
@@ -165,6 +165,7 @@ function PlasmicPaziresh24Collapsible__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -453,7 +454,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPaziresh24Collapsible__VariantsArgs;
     args?: PlasmicPaziresh24Collapsible__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPaziresh24Collapsible__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPaziresh24Collapsible__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPaziresh24Collapsible__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
