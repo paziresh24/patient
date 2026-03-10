@@ -187,7 +187,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPaziresh24AtomsDescription__VariantsArgs;
     args?: PlasmicPaziresh24AtomsDescription__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPaziresh24AtomsDescription__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPaziresh24AtomsDescription__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPaziresh24AtomsDescription__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
