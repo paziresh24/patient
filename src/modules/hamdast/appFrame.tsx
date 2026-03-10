@@ -27,13 +27,17 @@ export const AppFrame = ({
   params,
   queries,
   showBackButton,
-  dontShowProfile
+  dontShowProfile,
+  dontShowAppBar,
+  onChangeWidget
 }: {
   appKey: string;
   params: string[];
   queries?: any;
   showBackButton?: boolean;
   dontShowProfile?: boolean;
+  dontShowAppBar?: boolean;
+  onChangeWidget?: (action?: 'add' | 'remove' | 'update') => void;
 }) => {
   const router = useRouter();
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
@@ -133,31 +137,34 @@ export const AppFrame = ({
 
   return (
     <div className="flex flex-col h-full w-full">
-      <AppBar
-        title={page?.name?.fa}
-        backButton={showBackButton}
-        titleLoading={!page?.name}
-        actionButton={
-          showSupportButton ? (
-            <Button
-              size="sm"
-              variant="secondary"
-              className="rounded-full h-8 font-semibold text-xs"
-              onClick={() => supportRef.current?.open()}
-            >
-              پشتیبانی ابزارک
-            </Button>
-          ) : (
-            <Report app_key={appKey as string} page_key={page?.key} />
-          )
-        }
-      />
+      {dontShowAppBar && (
+
+        <AppBar
+          title={page?.name?.fa}
+          backButton={showBackButton}
+          titleLoading={!page?.name}
+          actionButton={
+            showSupportButton ? (
+              <Button
+                size="sm"
+                variant="secondary"
+                className="rounded-full h-8 font-semibold text-xs"
+                onClick={() => supportRef.current?.open()}
+              >
+                پشتیبانی ابزارک
+              </Button>
+            ) : (
+              <Report app_key={appKey as string} page_key={page?.key} />
+            )
+          }
+        />
+      )}
       {app?.id && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
-          <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+          <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} onChangeWidget={onChangeWidget} />
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />
           <Permissions onClose={() => router.push('/dashboard')} />
           <HamdastFlow iframeRef={iframeRef} />

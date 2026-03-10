@@ -36,6 +36,7 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
+import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -141,11 +142,16 @@ const DoctorProfile = (props: any) => {
     waitingTimeInfo,
     shouldUseIncrementPageView,
     fragmentComponents,
-    hamdastWidgets,
-    hamdastWidgetsData,
+    hamdastWidgets: hamdastWidgetsFromProps,
+    hamdastWidgetsData: hamdastWidgetsDataFromProps,
     user_id,
     dontShowRateAndReviewMessage,
   } = finalProps ?? {};
+
+  const isOwnProfile = !!user_id && !!userInfo?.id && String(user_id) === String(userInfo?.id);
+  const hamdastWidgetsQuery = useProfileHamdastWidgets(user_id, information?.id, isOwnProfile);
+  const hamdastWidgets = (isOwnProfile && hamdastWidgetsQuery.data) ? hamdastWidgetsQuery.data.widgets : hamdastWidgetsFromProps;
+  const hamdastWidgetsData = (isOwnProfile && hamdastWidgetsQuery.data) ? hamdastWidgetsQuery.data.widgetsData : hamdastWidgetsDataFromProps;
 
   useEffect(() => {
     useFeedbackDataStore.setState({ data: feedbacks?.feedbacks ?? [] });
