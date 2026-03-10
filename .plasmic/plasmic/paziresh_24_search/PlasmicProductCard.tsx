@@ -2420,7 +2420,7 @@ function PlasmicProductCard__RenderFunc(props: {
                           link={(() => {
                             try {
                               return (
-                                "https://sanje.paziresh24.com/interstitial_page/?source=search&provide=page&display_name=" +
+                                "https://risman-bridge.paziresh24.com/?source=search&provide=page&display_name=" +
                                 $state.rismanActionBtn.data.data.fullName +
                                 "&uri=" +
                                 globalThis.encodeURIComponent(
