@@ -12,7 +12,7 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json .npmrc ./ 
 RUN npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000 
 RUN npm cache verify
-RUN npm config set registry https://mirror-npm.runflare.com/
+RUN npm config set registry https://package-mirror.liara.ir/repository/npm/
 RUN npm install --force
 
 COPY . .
