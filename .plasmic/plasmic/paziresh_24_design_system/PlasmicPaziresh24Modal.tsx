@@ -175,6 +175,8 @@ function PlasmicPaziresh24Modal__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const globalVariants = _useGlobalVariants();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
@@ -189,25 +191,25 @@ function PlasmicPaziresh24Modal__RenderFunc(props: {
         path: "noTrigger",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.noTrigger
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.noTrigger
       },
       {
         path: "hideHeader",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.hideHeader
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.hideHeader
       },
       {
         path: "noSpacing",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.noSpacing
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.noSpacing
       },
       {
         path: "fullScreen",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.fullScreen
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.fullScreen
       }
     ],
     [$props, $ctx, $refs]
@@ -216,10 +218,10 @@ function PlasmicPaziresh24Modal__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
-  const globalVariants = _useGlobalVariants();
   const styleTokensClassNames = _useStyleTokens();
 
   return (
@@ -455,7 +457,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPaziresh24Modal__VariantsArgs;
     args?: PlasmicPaziresh24Modal__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPaziresh24Modal__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPaziresh24Modal__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPaziresh24Modal__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

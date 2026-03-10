@@ -351,31 +351,31 @@ function PlasmicPaziresh24TextField__RenderFunc(props: {
         path: "multiLine",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.multiLine
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.multiLine
       },
       {
         path: "iconStart",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.iconStart
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.iconStart
       },
       {
         path: "iconEnd",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.iconEnd
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.iconEnd
       },
       {
         path: "textInput.value",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "textAreaInput.value",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       }
     ],
     [$props, $ctx, $refs]
@@ -384,6 +384,7 @@ function PlasmicPaziresh24TextField__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -556,10 +557,10 @@ function PlasmicPaziresh24TextField__RenderFunc(props: {
               hasVariant($state, "iconEnd", "iconEnd")
                 ? ["right", "left"]
                 : hasVariant($state, "iconEnd", "iconEnd")
-                ? ["right"]
-                : hasVariant($state, "iconStart", "iconStart")
-                ? ["left"]
-                : undefined
+                  ? ["right"]
+                  : hasVariant($state, "iconStart", "iconStart")
+                    ? ["left"]
+                    : undefined
             }
             placeholder={args.placeholder}
             value={generateStateValueProp($state, ["textInput", "value"])}
@@ -595,10 +596,10 @@ function PlasmicPaziresh24TextField__RenderFunc(props: {
               hasVariant($state, "iconEnd", "iconEnd")
                 ? ["right", "left"]
                 : hasVariant($state, "iconEnd", "iconEnd")
-                ? ["right"]
-                : hasVariant($state, "iconStart", "iconStart")
-                ? ["left"]
-                : undefined
+                  ? ["right"]
+                  : hasVariant($state, "iconStart", "iconStart")
+                    ? ["left"]
+                    : undefined
             }
             placeholder={args.placeholder}
             value={generateStateValueProp($state, ["textAreaInput", "value"])}
@@ -685,7 +686,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPaziresh24TextField__VariantsArgs;
     args?: PlasmicPaziresh24TextField__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPaziresh24TextField__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPaziresh24TextField__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPaziresh24TextField__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

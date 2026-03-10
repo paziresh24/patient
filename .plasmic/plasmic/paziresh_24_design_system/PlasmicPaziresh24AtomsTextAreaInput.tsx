@@ -198,19 +198,19 @@ function PlasmicPaziresh24AtomsTextAreaInput__RenderFunc(props: {
         path: "type",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.type
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.type
       },
       {
         path: "flat",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.flat
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.flat
       },
       {
         path: "padded",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.padded
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.padded
       }
     ],
     [$props, $ctx, $refs]
@@ -219,6 +219,7 @@ function PlasmicPaziresh24AtomsTextAreaInput__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -327,10 +328,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPaziresh24AtomsTextAreaInput__VariantsArgs;
     args?: PlasmicPaziresh24AtomsTextAreaInput__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit< // Specify variants directly as props
-    PlasmicPaziresh24AtomsTextAreaInput__VariantsArgs,
-    ReservedPropsType
-  > &
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPaziresh24AtomsTextAreaInput__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPaziresh24AtomsTextAreaInput__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
