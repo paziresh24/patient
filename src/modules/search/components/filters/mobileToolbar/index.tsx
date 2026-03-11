@@ -1,7 +1,7 @@
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import { useSearch } from '@/modules/search/hooks/useSearch';
 import { Fragment } from '@/common/fragment';
-import { addCommas } from '@persian-tools/persian-tools';
+import { addCommas } from '@/common/utils/persianTools';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 
 export const MobileToolbar = () => {
@@ -38,4 +38,3 @@ export const MobileToolbar = () => {
 };
 
 export default MobileToolbar;
-

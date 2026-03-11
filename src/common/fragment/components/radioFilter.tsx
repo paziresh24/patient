@@ -2,7 +2,7 @@
 import { CodeComponentMeta } from '@plasmicapp/host';
 import React, { useState } from 'react';
 import Text from '@/common/components/atom/text';
-import { addCommas } from '@persian-tools/persian-tools';
+import { addCommas } from '@/common/utils/persianTools';
 import classNames from '@/common/utils/classNames';
 
 type RadioFilterType = {
