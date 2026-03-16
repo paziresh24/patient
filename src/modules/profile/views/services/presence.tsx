@@ -188,6 +188,58 @@ export const Presence = memo((props: PresenceProps) => {
 
   const mainCenterWaitingTime = orderBy(centers, ['isDisable', o => !o.isAvailable])[0]?.waiting_time_info;
 
+  if (doctorId === '61e9f734-30e1-11ed-8bbf-005056ade667') {
+    return (
+      <ServiceCard
+        header={{
+          icon: (
+            <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M5.654 3.98035C6.76757 3.98035 7.6703 3.12061 7.6703 2.06006C7.6703 0.999514 6.76757 0.139771 5.654 0.139771C4.54043 0.139771 3.6377 0.999514 3.6377 2.06006C3.6377 3.12061 4.54043 3.98035 5.654 3.98035Z"
+                fill="currentColor"
+              />
+              <path
+                d="M11.2023 8.29562C9.54185 7.38023 8.17947 6.14375 7.03265 4.68913C6.31202 3.72398 4.40678 3.77436 3.6326 4.65877C2.45489 5.75005 1.45561 6.87481 0.663016 8.00019C0.339014 8.46118 0.467827 9.08489 0.951529 9.39347C1.13193 9.50863 1.33534 9.56371 1.53743 9.56371C1.8772 9.56371 2.21106 9.40755 2.41414 9.11838C2.76213 8.62485 3.15678 8.12976 3.59382 7.63685C3.57706 8.67993 3.63194 10.562 3.65954 11.408C3.66874 11.6896 3.60138 11.965 3.46402 12.2151C2.37701 14.192 1.68168 16.0625 0.975846 18.3509C0.803001 18.9095 1.13916 19.4956 1.72539 19.66C1.85814 19.6972 1.99221 19.7097 2.12168 19.7003C2.56792 19.6678 2.96685 19.3783 3.10026 18.9458C3.75155 16.8358 4.38083 15.1274 5.36236 13.3185C5.41231 13.3204 5.46226 13.3204 5.51286 13.3182C6.1395 15.0989 6.76648 16.8806 7.39411 18.6613C7.84988 19.9591 9.96444 19.285 9.50735 17.9869C8.82156 16.04 8.13675 14.094 7.45326 12.1475C7.4135 12.0357 7.31722 11.5982 7.30374 11.4555C7.1907 10.2563 7.14963 9.0608 7.16179 7.86375C8.12394 8.74158 9.19091 9.503 10.3762 10.1571C11.5582 10.8105 12.3685 8.93937 11.2023 8.29562Z"
+                fill="currentColor"
+              />
+            </svg>
+          ),
+          title: 'نوبت اینترنتی و مراجعه حضوری',
+        }}
+        body={{
+          description: [
+            'امکان دریافت زودترین نوبت',
+            mainCenterWaitingTime?.waiting_time_title &&
+            `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <strong>${mainCenterWaitingTime?.waiting_time_title}</strong>`,
+          ].filter(Boolean),
+        }}
+        alert={
+          alertConfig ? (
+            <div className={`${alertConfig.bgColor} ${alertConfig.borderColor} border rounded-lg p-3`}>
+              <Text fontSize="sm" className={alertConfig.textColor}>
+                {alertConfig.message}
+              </Text>
+            </div>
+          ) : undefined
+        }
+        footer={{
+          actions: [
+            {
+              text: 'درخواست نوبت',
+              onClick: () => {
+                profileEvent('doctor profile click waitlist button', {
+                  doctor_id: doctorId,
+                  doctor_name: displayName,
+                });
+                window.open('https://survey.porsline.ir/s/8Lek6qbV', '_blank');
+              },
+            },
+          ],
+        }}
+      />
+    )
+  }
+
   return (
     <div className="flex flex-col space-y-3">
       <ServiceCard
@@ -232,38 +284,6 @@ export const Presence = memo((props: PresenceProps) => {
         }}
       />
 
-      {doctorId === '61e9f734-30e1-11ed-8bbf-005056ade667' && (
-        <ServiceCard
-          header={{
-            icon: (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M10 0C4.477 0 0 4.477 0 10C0 15.523 4.477 20 10 20C15.523 20 20 15.523 20 10C20 4.477 15.523 0 10 0ZM10 18C5.589 18 2 14.411 2 10C2 5.589 5.589 2 10 2C14.411 2 18 5.589 18 10C18 14.411 14.411 18 10 18ZM10 5C9.448 5 9 5.448 9 6V11C9 11.552 9.448 12 10 12C10.552 12 11 11.552 11 11V6C11 5.448 10.552 5 10 5ZM10 13C9.448 13 9 13.448 9 14C9 14.552 9.448 15 10 15C10.552 15 11 14.552 11 14C11 13.448 10.552 13 10 13Z"
-                  fill="currentColor"
-                />
-              </svg>
-            ),
-            title: 'درخواست نوبت',
-          }}
-          body={{
-            description: ['بدون نیاز به ثبت نوبت در زمان اعلامی مرکزدرمانی', 'بعد از بررسی، جهت هماهنگی با شما تماس گرفته می‌شود'],
-          }}
-          footer={{
-            actions: [
-              {
-                text: 'درخواست نوبت',
-                onClick: () => {
-                  profileEvent('doctor profile click waitlist button', {
-                    doctor_id: doctorId,
-                    doctor_name: displayName,
-                  });
-                  window.open('https://survey.porsline.ir/s/8Lek6qbV', '_blank');
-                },
-              },
-            ],
-          }}
-        />
-      )}
       <Modal title="انتخاب مرکز درمانی" {...selectCenterModalProps} bodyClassName="pl-3">
         {selectCenterModalProps.isOpen && (
           <div className="pl-2 overflow-auto max-h-[28rem]">

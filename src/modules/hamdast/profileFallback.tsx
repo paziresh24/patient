@@ -79,16 +79,6 @@ export const ProfileFallback = ({ addLabel, editLabel, title, app, profileData, 
     }
   }, [inViewFallback]);
 
-  useEffect(() => {
-    if (previousInstallStateRef.current !== isInstall) {
-      sendProfileFallbackEvent('status_changed', {
-        previous_status: previousInstallStateRef.current ? 'active' : 'inactive',
-        current_status: isInstall ? 'active' : 'inactive',
-      });
-      previousInstallStateRef.current = isInstall;
-    }
-  }, [isInstall]);
-
   if (!info?.id || !info?.is_doctor || profileData?.user_id !== info?.id || !isEnable) return null
   return (
     <>
