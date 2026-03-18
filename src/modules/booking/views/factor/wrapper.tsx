@@ -61,6 +61,25 @@ const FactorWrapper = (props: FactorWrapperProps) => {
   const discountInquiry = useDiscountInquiry();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
 
+  const appendPaymentMethodToUrl = (url: string, paymentMethod?: string) => {
+    if (!paymentMethod || !url) return url;
+
+    try {
+      const u = new URL(url, window.location.origin);
+      if (u.searchParams.has('payment_method')) return url;
+      u.searchParams.set('payment_method', paymentMethod);
+      // Preserve absolute vs relative as backend may rely on it
+      return url.startsWith('http') ? u.toString() : `${u.pathname}${u.search}${u.hash}`;
+    } catch {
+      // Fallback for non-standard URLs
+      if (url.includes('payment_method=')) return url;
+      const [base, hash = ''] = url.split('#');
+      const joiner = base.includes('?') ? '&' : '?';
+      const withQuery = `${base}${joiner}payment_method=${encodeURIComponent(paymentMethod)}`;
+      return hash ? `${withQuery}#${hash}` : withQuery;
+    }
+  };
+
   const handlePaymentMethodSelection = (paymentMethod: string) => {
     setSelectedPaymentMethod(paymentMethod);
   };
@@ -153,7 +172,8 @@ const FactorWrapper = (props: FactorWrapperProps) => {
                       user_id: userInfo.id,
                     },
                   });
-                  location.assign(paymentData.url);
+                  location.assign(appendPaymentMethodToUrl(paymentData.url, paymentMethod));
+                  //location.assign(paymentData.url);
                   return;
                 }
                 toast.error(paymentData?.message ?? 'یک خطای غیرمنتظره رخ داد.');
@@ -194,7 +214,8 @@ const FactorWrapper = (props: FactorWrapperProps) => {
             user_id: userInfo.id,
           },
         });
-        location.assign(data.url);
+        location.assign(appendPaymentMethodToUrl(data.url, paymentMethod));
+        //location.assign(data.url);
         return;
       }
       toast.error(data?.message ?? 'یک خطای غیرمنتظره رخ داد.');
