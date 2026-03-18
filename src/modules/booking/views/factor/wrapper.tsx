@@ -183,6 +183,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
       const { data } = await [centerId === CENTERS.CONSULT ? consultPayment : centerPayment][0].mutateAsync({
         book_id: bookId,
         ...(discountToken && { discount_token: discountToken }),
+        ...(paymentMethod && { payment_method: paymentMethod }),
       });
       if (data.status) {
         splunkInstance('booking').sendEvent({
