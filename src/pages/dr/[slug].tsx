@@ -25,7 +25,7 @@ import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { growthbook } from '../_app';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
@@ -123,6 +123,7 @@ const DoctorProfile = (props: any) => {
   const { openScroll, lockScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
+  const useUpdatedDrProfilePicture = useFeatureIsOn('update-dr-profile-picture');
 
   const finalProps = (!!shouldFetchOnClient && !props?.information) || (clientData?.props as any)?.information ? clientData?.props : props;
 
@@ -147,6 +148,16 @@ const DoctorProfile = (props: any) => {
     user_id,
     dontShowRateAndReviewMessage,
   } = finalProps ?? {};
+
+  const doctorProfileImageUrl = useMemo(() => {
+    if (useUpdatedDrProfilePicture && information?.user_id) {
+      return `https://pic.paziresh24.com/api/image/${information.user_id}`;
+    }
+
+    return information?.image
+      ? publicRuntimeConfig.CDN_BASE_URL + information.image
+      : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`;
+  }, [information?.image, information?.user_id, useUpdatedDrProfilePicture]);
 
   const isOwnProfile = !!user_id && !!userInfo?.id && String(user_id) === String(userInfo?.id);
   const hamdastWidgetsQuery = useProfileHamdastWidgets(user_id, information?.id, isOwnProfile);
@@ -368,9 +379,7 @@ const DoctorProfile = (props: any) => {
                     displayName: profileData.information.display_name,
                     title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
                     subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                    imageUrl: profileData.information?.image
-                      ? publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
-                      : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`,
+                    imageUrl: doctorProfileImageUrl,
                     slug: slug,
                     children: (
                       <div className="flex flex-col w-full gap-2">
@@ -527,7 +536,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         expertises?.group_expertises?.[0]?.name ? `${information?.display_name} ${expertises.group_expertises[0].name}` : null,
       ].filter(Boolean),
       'gender': information?.gender === '1' ? 'Male' : information?.gender === '2' ? 'Female' : undefined,
-      'image': publicRuntimeConfig.CDN_BASE_URL + information?.image,
+      'image': doctorProfileImageUrl,
       'medicalSpecialty': {
         '@type': 'MedicalSpecialty',
         'name': expertises?.expertises?.[0]?.alias_title || expertises?.group_expertises?.[0]?.name || doctorExpertise,
@@ -655,7 +664,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         jsonlds={centers?.length > 0 ? getJsonlds() : []}
         openGraph={{
           image: {
-            src: publicRuntimeConfig.CDN_BASE_URL + information?.image,
+            src: doctorProfileImageUrl,
             alt: `${information?.display_name}`,
             type: 'image/jpg',
           },
