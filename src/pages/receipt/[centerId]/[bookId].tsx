@@ -51,6 +51,7 @@ import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
 import axios from 'axios';
 import WarningIcon from '@/common/components/icons/warning';
+import Loading from '@/common/components/atom/loading/loading';
 import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
 import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 import { AppFrame } from '@/modules/hamdast/appFrame';
@@ -80,6 +81,7 @@ const Receipt = () => {
   const [hasHolidays, setHasHolidays] = useState(false);
   const { handleOpen: handleOpenWidgetModal, modalProps: widgetModalProps } = useModal();
   const [widgetApp, setWidgetApp] = useState<string | null>(null);
+  const [isHamdastReceiptLoading, setIsHamdastReceiptLoading] = useState(false);
   const hasFetchedWidgetRef = useRef(false);
   const isFetchingRef = useRef(false);
   const lastFetchedKeyRef = useRef<string>('');
@@ -184,41 +186,82 @@ const Receipt = () => {
         return;
       }
 
-      const widgetsResponse = await hamdastClient.get(`/api/v1/widgets/`, {
-        params: { user_id },
-      });
+      setIsHamdastReceiptLoading(true);
+      try {
+        const widgetsResponse = await hamdastClient.get(`/api/v1/widgets/`, {
+          params: { user_id },
+        });
 
-      const widgets = widgetsResponse.data || [];
-      const targetWidget = widgets.find((widget: any) => widget.placement?.includes('booking_flow::ONLINE_VISIT_CHANNEL_BUTTON'));
+        const widgets = widgetsResponse.data || [];
+        const targetWidget = widgets.find((widget: any) =>
+          widget.placement?.includes('booking_flow::ONLINE_VISIT_CHANNEL_BUTTON'),
+        );
 
-      if (!targetWidget?.app || !targetWidget?.placements_metadata?.center_info?.center_ids?.includes(centerId)) {
-        isFetchingRef.current = false;
+        if (targetWidget) {
+          splunkInstance('dashboard').sendEvent({
+            group: 'receipt_online_visit',
+            type: 'widgets_online_visit_channel_button',
+            event: {
+              viewer_user_id: user?.id,
+              appointment_id: bookId,
+              center_id: centerId,
+              doctor_user_id: user_id,
+              widget_app: targetWidget.app,
+            },
+          });
+        }
+
+        if (!targetWidget?.app || !targetWidget?.placements_metadata?.center_info?.center_ids?.includes(centerId)) {
+          hasFetchedWidgetRef.current = true;
+          return;
+        }
+
+        const addonsResponse = await apiGatewayClient.get('/v1/hamdast/addons/receipt', {
+          params: {
+            medical_center_id: centerId,
+            appointment_id: bookId,
+            doctor_id: bookDetailsData.doctor.id,
+          },
+        });
+
+        splunkInstance('dashboard').sendEvent({
+          group: 'receipt_online_visit',
+          type: 'hamdast_addons_receipt',
+          event: {
+            viewer_user_id: user?.id,
+            appointment_id: bookId,
+            center_id: centerId,
+            doctor_user_id: user_id,
+            addon_apps: addonsResponse.data?.apps,
+            data: addonsResponse.data
+          },
+        });
+
+        const apps = addonsResponse.data?.apps || [];
+
+        if (apps.includes(targetWidget.app)) {
+          setWidgetApp(targetWidget.app);
+          handleOpenWidgetModal();
+        }
+
         hasFetchedWidgetRef.current = true;
-        return;
+      } finally {
+        setIsHamdastReceiptLoading(false);
       }
-
-      const addonsResponse = await apiGatewayClient.get('/v1/hamdast/addons/receipt', {
-        params: {
-          medical_center_id: centerId,
-          appointment_id: bookId,
-          doctor_id: bookDetailsData.doctor.id
-        },
-      });
-
-      const apps = addonsResponse.data?.apps || [];
-
-      if (apps.includes(targetWidget.app)) {
-        setWidgetApp(targetWidget.app);
-        handleOpenWidgetModal();
-      }
-
-      hasFetchedWidgetRef.current = true;
     } catch (error) {
       hasFetchedWidgetRef.current = true;
     } finally {
       isFetchingRef.current = false;
     }
-  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, handleOpenWidgetModal, widgetModalProps.isOpen]);
+  }, [
+    centerId,
+    bookId,
+    bookDetailsData?.doctor?.id,
+    bookDetailsData?.doctor?.server_id,
+    handleOpenWidgetModal,
+    widgetModalProps.isOpen,
+    user?.id,
+  ]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
@@ -596,6 +639,15 @@ const Receipt = () => {
   return (
     <>
       <Seo title="رسید نوبت" noIndex />
+      {isHamdastReceiptLoading && (
+        <div
+          className="fixed inset-0 z-[1000] flex items-center justify-center bg-white/60 backdrop-blur-[1px]"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          <Loading />
+        </div>
+      )}
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full bg-white md:basis-4/6 md:rounded-lg shadow-card">
           <div id="receipt" className="flex flex-col px-5 pt-5 space-y-4">
