@@ -46,6 +46,19 @@ import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAnd
 
 const { publicRuntimeConfig } = config();
 
+function resolveDoctorProfileImageUrl(
+  information: { image?: string; user_id?: string } | undefined,
+  useUpdatedDrProfilePicture: boolean,
+  cdnBaseUrl: string,
+) {
+  if (useUpdatedDrProfilePicture && information?.user_id) {
+    return `https://pic.paziresh24.com/api/image/${information.user_id}`;
+  }
+  return information?.image
+    ? cdnBaseUrl + information.image
+    : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`;
+}
+
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
   const { query, ...router } = useRouter();
@@ -149,15 +162,10 @@ const DoctorProfile = (props: any) => {
     dontShowRateAndReviewMessage,
   } = finalProps ?? {};
 
-  const doctorProfileImageUrl = useMemo(() => {
-    if (useUpdatedDrProfilePicture && information?.user_id) {
-      return `https://pic.paziresh24.com/api/image/${information.user_id}`;
-    }
-
-    return information?.image
-      ? publicRuntimeConfig.CDN_BASE_URL + information.image
-      : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`;
-  }, [information?.image, information?.user_id, useUpdatedDrProfilePicture]);
+  const doctorProfileImageUrl = useMemo(
+    () => resolveDoctorProfileImageUrl(information, useUpdatedDrProfilePicture, publicRuntimeConfig.CDN_BASE_URL),
+    [information?.image, information?.user_id, useUpdatedDrProfilePicture],
+  );
 
   const isOwnProfile = !!user_id && !!userInfo?.id && String(user_id) === String(userInfo?.id);
   const hamdastWidgetsQuery = useProfileHamdastWidgets(user_id, information?.id, isOwnProfile);
@@ -473,6 +481,12 @@ const DoctorProfile = (props: any) => {
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
   const { title, description, slug, expertises, centers = [], information, feedbacks, host } = page.props;
+  const useUpdatedDrProfilePicture = growthbook.isOn('update-dr-profile-picture');
+  const doctorProfileImageUrl = resolveDoctorProfileImageUrl(
+    information,
+    useUpdatedDrProfilePicture,
+    publicRuntimeConfig.CDN_BASE_URL,
+  );
 
   const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
