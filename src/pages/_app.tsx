@@ -25,6 +25,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
 import RouteProgress from '@/common/components/layouts/RouteProgress';
 import { RismanSurveyScript } from '@/common/components/layouts/RismanSurveyScript';
+import { SearchExternalScripts } from '@/common/components/layouts/SearchExternalScripts';
 import { useNotificationPermission } from '@/common/hooks/useNotificationPermission';
 
 const { publicRuntimeConfig } = getConfig();
@@ -171,6 +172,7 @@ function MyApp(props: AppProps) {
                 />
               )}
               <RismanSurveyScript />
+              <SearchExternalScripts />
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
