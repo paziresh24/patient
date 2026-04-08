@@ -73,6 +73,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                 nationalCode: turnData?.patient?.national_code,
                 selectServeis: turnData?.services?.[0]?.title,
               },
+              service: turnData?.services?.[0],
               channels: turnData?.doctor?.online_visit_channels,
               selectedChannel: turnData.selected_online_visit_channel,
               ...(customize.showTermsAndConditions && {

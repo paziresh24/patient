@@ -56,6 +56,7 @@ import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/c
 import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 import { AppFrame } from '@/modules/hamdast/appFrame';
 import useResponsive from '@/common/hooks/useResponsive';
+import ChatIcon from '@/common/components/icons/chat';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
@@ -359,7 +360,7 @@ const Receipt = () => {
 
   const isShowRemoveButtonForOnlineVisit =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
-  const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
+  const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn && bookDetailsData?.services?.[0]?.service_type_id !== 9;
 
   const handleRemoveBookTurn = () => {
     removeBookApi.mutate(
@@ -709,6 +710,27 @@ const Receipt = () => {
               centerId={centerId?.toString()!}
             />
           </div>
+          {bookDetailsData?.services?.[0]?.service_type_id === 9 && !turnStatus?.deletedTurn && (
+            <>
+              {getReceiptDetails.isSuccess ? (
+
+                <div className="flex flex-col gap-2 p-5">
+                  {
+                    Date.now() <= (bookDetailsData?.book_time + 3 * 24 * 60 * 60) * 1000 && (
+                      <Button block onClick={() => window.open(`https://messaging-back.paziresh24.com/api/external/conversations/${bookId}`)} icon={<ChatIcon />}>
+                        شروع گفتگو با پزشک
+                      </Button>
+                    )
+                  }
+                  <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                    لغو نوبت
+                  </Button>
+                </div>
+              ) : (
+                <ReceiptButtonLoading />
+              )}
+            </>
+          )}
           {bookDetailsData.book_id && growthbook.ready && !userPednding && (
             <div className="p-5">
               {centerType === 'consult' && (
