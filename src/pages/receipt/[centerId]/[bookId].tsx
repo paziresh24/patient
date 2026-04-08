@@ -618,7 +618,7 @@ const Receipt = () => {
         slug: undefined,
       });
     };
-  }, [bookDetailsData?.id]);
+  }, [bookDetailsData?.book_id]);
 
   // Show error component if there's an error
   if (getReceiptDetails.isError) {
