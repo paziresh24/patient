@@ -79,8 +79,15 @@ const Receipt = () => {
   const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
   const [hasHolidays, setHasHolidays] = useState(false);
-  const { handleOpen: handleOpenWidgetModal, modalProps: widgetModalProps } = useModal();
+  const { handleOpen: handleOpenWidgetModal, handleClose: handleCloseWidgetModal, modalProps: widgetModalProps } = useModal();
+  const {
+    handleOpen: handleOpenClosePromptWidgetModal,
+    handleClose: handleCloseClosePromptWidgetModal,
+    modalProps: closePromptWidgetModalProps,
+  } = useModal();
+
   const [widgetApp, setWidgetApp] = useState<string | null>(null);
+  const [reportOpenSignal, setReportOpenSignal] = useState(0);
   const [isHamdastReceiptLoading, setIsHamdastReceiptLoading] = useState(false);
   const hasFetchedWidgetRef = useRef(false);
   const isFetchingRef = useRef(false);
@@ -641,11 +648,14 @@ const Receipt = () => {
       <Seo title="رسید نوبت" noIndex />
       {isHamdastReceiptLoading && (
         <div
-          className="fixed inset-0 z-[1000] flex items-center justify-center bg-white/60 backdrop-blur-[1px]"
+          className="fixed inset-0 z-[1000] flex  items-center justify-center bg-white/95 backdrop-blur-[1px]"
           aria-busy="true"
           aria-live="polite"
         >
-          <Loading />
+          <div className='flex flex-col justify-center items-center gap-2'>
+            <Loading />
+            <span className='text-sm'>لطفا کمی صبر کنید...</span>
+          </div>
         </div>
       )}
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
@@ -987,13 +997,44 @@ const Receipt = () => {
           </div>
         </Modal>
         {widgetApp && (
-          <Modal {...widgetModalProps} fullScreen={!isMobile} noHeader noLine bodyClassName="p-0 h-[45rem]">
-            <AppFrame
-              appKey={widgetApp}
-              params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
-              queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_id: bookDetailsData.doctor.id }}
-            />
-          </Modal>
+          <>
+            <Modal {...widgetModalProps} onClose={handleOpenClosePromptWidgetModal} fullScreen={!isMobile} noHeader noLine bodyClassName="p-0 h-[45rem]">
+              <AppFrame
+                dontShowNotification
+                appKey={widgetApp}
+                params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
+                queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_id: bookDetailsData.doctor.id }}
+                reportOpenSignal={reportOpenSignal}
+                onReportSubmit={() => {
+                  handleCloseClosePromptWidgetModal();
+                  handleCloseWidgetModal();
+                }}
+              />
+            </Modal>
+            <Modal {...closePromptWidgetModalProps} noHeader>
+              <div className='flex flex-col gap-3'>
+                <span>
+                  من دستیار پزشک هستم؛
+                </span>
+                <span className='font-medium'>
+                  تکمیل شرح‌حال برای ادامه ویزیت لازم هست، لطفا برای ارائه ویزیتِ بهتر سوالات را پاسخ دهید.
+                </span>
+
+                <Button onClick={closePromptWidgetModalProps.onClose}>به سوالات می‌خواهم پاسخ بدهم</Button>
+                <Divider />
+                <Button
+                  variant='text'
+                  size='sm'
+                  onClick={() => {
+                    handleCloseClosePromptWidgetModal();
+                    setReportOpenSignal(signal => signal + 1);
+                  }}
+                >
+                  آیا مشکلی برای تکمیل شرح حال وجود دارد؟
+                </Button>
+              </div>
+            </Modal>
+          </>
         )}
       </div>
     </>

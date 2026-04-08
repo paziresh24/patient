@@ -13,9 +13,10 @@ interface AppBarProps extends HTMLAttributes<HTMLDivElement> {
   onBackClick?: () => void;
   titleLoading?: Boolean;
   actionButton?: ReactNode;
+  notification?: boolean
 }
 
-export const AppBar = ({ title, backButton, onBackClick, titleLoading = false, className, actionButton, ...rest }: AppBarProps) => {
+export const AppBar = ({ title, backButton, notification = true, onBackClick, titleLoading = false, className, actionButton, ...rest }: AppBarProps) => {
   const router = useRouter();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const handleBack = onBackClick ?? (() => router.back());
@@ -53,7 +54,7 @@ export const AppBar = ({ title, backButton, onBackClick, titleLoading = false, c
 
       {actionButton && (
         <div className="cursor-pointer left-5 absolute flex gap-3 items-center">
-          {isLogin && (
+          {isLogin && notification && (
             <div className="[&>div>div>svg]:w-5 [&>div>div>svg]:h-5 [&>div>div>div]:top-[6px] ![&>div>div>div]:right-[7px]">
               <GlobalContextsProvider>
                 <LauncherBlockNotifications />

@@ -21,6 +21,7 @@ import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key
 import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './components/subscription-payment';
 import { HamdastFlow } from './components/flow';
+import { HamdastResize } from './components/resize';
 
 export const AppFrame = ({
   appKey,
@@ -29,7 +30,10 @@ export const AppFrame = ({
   showBackButton,
   dontShowProfile,
   dontShowAppBar,
-  onChangeWidget
+  dontShowNotification,
+  onChangeWidget,
+  reportOpenSignal,
+  onReportSubmit,
 }: {
   appKey: string;
   params: string[];
@@ -37,7 +41,10 @@ export const AppFrame = ({
   showBackButton?: boolean;
   dontShowProfile?: boolean;
   dontShowAppBar?: boolean;
+  dontShowNotification?: boolean;
   onChangeWidget?: (action?: 'add' | 'remove' | 'update') => void;
+  reportOpenSignal?: number;
+  onReportSubmit?: () => void;
 }) => {
   const router = useRouter();
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
@@ -137,12 +144,13 @@ export const AppFrame = ({
 
   return (
     <div className="flex flex-col h-full w-full">
-      {dontShowAppBar && (
+      {!dontShowAppBar && (
 
         <AppBar
           title={page?.name?.fa}
           backButton={showBackButton}
           titleLoading={!page?.name}
+          notification={!dontShowNotification}
           actionButton={
             showSupportButton ? (
               <Button
@@ -154,7 +162,7 @@ export const AppFrame = ({
                 پشتیبانی ابزارک
               </Button>
             ) : (
-              <Report app_key={appKey as string} page_key={page?.key} />
+              <Report app_key={appKey as string} page_key={page?.key} openSignal={reportOpenSignal} onSubmit={onReportSubmit} />
             )
           }
         />
@@ -168,6 +176,7 @@ export const AppFrame = ({
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />
           <Permissions onClose={() => router.push('/dashboard')} />
           <HamdastFlow iframeRef={iframeRef} />
+          <HamdastResize iframeRef={iframeRef} />
           {showTranslation && (
             <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center">
               <div className="flex items-center gap-5">
