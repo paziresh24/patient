@@ -21,7 +21,6 @@ import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key
 import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './components/subscription-payment';
 import { HamdastFlow } from './components/flow';
-import { HamdastResize } from './components/resize';
 
 export const AppFrame = ({
   appKey,
@@ -176,7 +175,6 @@ export const AppFrame = ({
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />
           <Permissions onClose={() => router.push('/dashboard')} />
           <HamdastFlow iframeRef={iframeRef} />
-          <HamdastResize iframeRef={iframeRef} />
           {showTranslation && (
             <div className="w-full flex-grow bg-white flex flex-col gap-5 justify-center items-center">
               <div className="flex items-center gap-5">
