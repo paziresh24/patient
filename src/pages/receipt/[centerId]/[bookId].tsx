@@ -88,11 +88,18 @@ const Receipt = () => {
   } = useModal();
 
   const [widgetApp, setWidgetApp] = useState<string | null>(null);
+  const [doctorUserId, setDoctorUserId] = useState<number | string | null>(null);
+  const [resolvedDoctorSlug, setResolvedDoctorSlug] = useState<string | null>(null);
+  const [doctorFullName, setDoctorFullName] = useState<{ name: string; family: string }>({ name: '', family: '' });
+  const [isAccessChatLoading, setIsAccessChatLoading] = useState(true);
+  const [isAccessChatReady, setIsAccessChatReady] = useState(false);
+  const [isAccessChatFailed, setIsAccessChatFailed] = useState(false);
   const [reportOpenSignal, setReportOpenSignal] = useState(0);
   const [isHamdastReceiptLoading, setIsHamdastReceiptLoading] = useState(false);
   const hasFetchedWidgetRef = useRef(false);
   const isFetchingRef = useRef(false);
   const lastFetchedKeyRef = useRef<string>('');
+  const accessChatRequestedBookIdRef = useRef<string | null>(null);
   const { isMobile } = useResponsive();
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -167,12 +174,101 @@ const Receipt = () => {
     }
   }, [isLogin, userPednding, pincode]);
 
+  useEffect(() => {
+    const doctorSlug = bookDetailsData?.doctor?.slug;
+
+    if (!doctorSlug) {
+      setDoctorUserId(null);
+      setResolvedDoctorSlug(null);
+      setDoctorFullName({ name: '', family: '' });
+      return;
+    }
+
+    const fetchDoctorUserId = async () => {
+      const visitedSlugs = new Set<string>();
+      let currentSlug: string | null = doctorSlug;
+
+      const getSlugFromRedirectRoute = (route: string) => {
+        try {
+          const path = route.startsWith('http') ? new URL(route).pathname : route;
+          const match = path.match(/^\/dr\/([^/?#]+)\/?$/);
+          return match?.[1] ?? null;
+        } catch {
+          return null;
+        }
+      };
+
+      const getRedirectRouteFromData = (data: unknown) => {
+        if (!data || typeof data !== 'object') {
+          return null;
+        }
+
+        const redirect = (data as { redirect?: { route?: unknown } }).redirect;
+        return typeof redirect?.route === 'string' ? redirect.route : null;
+      };
+
+      while (currentSlug && !visitedSlugs.has(currentSlug)) {
+        visitedSlugs.add(currentSlug);
+
+        try {
+          const doctorProfileResponse = await drProfileClient.get(`/api/doctors/${currentSlug}`);
+          const redirectRoute = getRedirectRouteFromData(doctorProfileResponse.data);
+          const redirectedSlug = redirectRoute ? getSlugFromRedirectRoute(redirectRoute) : null;
+
+          if (redirectedSlug && redirectedSlug !== currentSlug) {
+            currentSlug = redirectedSlug;
+            continue;
+          }
+
+          setDoctorUserId(doctorProfileResponse.data?.user_id ?? null);
+          setResolvedDoctorSlug(currentSlug);
+
+          try {
+            const encodedSlug = encodeURIComponent(currentSlug);
+            const { data: doctorFullNameResponse } = await drProfileClient.get(`/api/doctors/${encodedSlug}/fullname`, {
+              timeout: 5000,
+            });
+
+            setDoctorFullName({
+              name: doctorFullNameResponse?.name ?? '',
+              family: doctorFullNameResponse?.family ?? '',
+            });
+          } catch {
+            setDoctorFullName({ name: '', family: '' });
+          }
+
+          return;
+        } catch (error) {
+          const redirectRoute = axios.isAxiosError(error) ? getRedirectRouteFromData(error.response?.data) : null;
+          const redirectedSlug = redirectRoute ? getSlugFromRedirectRoute(redirectRoute) : null;
+
+          if (redirectedSlug && redirectedSlug !== currentSlug) {
+            currentSlug = redirectedSlug;
+            continue;
+          }
+
+          setDoctorUserId(null);
+          setResolvedDoctorSlug(null);
+          setDoctorFullName({ name: '', family: '' });
+          return;
+        }
+      }
+
+      setDoctorUserId(null);
+      setResolvedDoctorSlug(null);
+      setDoctorFullName({ name: '', family: '' });
+    };
+
+    fetchDoctorUserId();
+  }, [bookDetailsData?.doctor?.slug]);
+
   const fetchWidgetAndCheckAddons = useCallback(async () => {
     if (
       !centerId ||
       !bookId ||
       !bookDetailsData?.doctor?.id ||
       !bookDetailsData?.doctor?.server_id ||
+      !doctorUserId ||
       hasFetchedWidgetRef.current ||
       isFetchingRef.current ||
       widgetModalProps.isOpen
@@ -183,21 +279,10 @@ const Receipt = () => {
     isFetchingRef.current = true;
 
     try {
-      const doctorProfileResponse = await drProfileClient.get(
-        `/api/doctors/${bookDetailsData.doctor.id}/${bookDetailsData.doctor.server_id}`,
-      );
-      const user_id = doctorProfileResponse.data?.user_id;
-
-      if (!user_id) {
-        isFetchingRef.current = false;
-        hasFetchedWidgetRef.current = true;
-        return;
-      }
-
       setIsHamdastReceiptLoading(true);
       try {
         const widgetsResponse = await hamdastClient.get(`/api/v1/widgets/`, {
-          params: { user_id },
+          params: { user_id: doctorUserId },
         });
 
         const widgets = widgetsResponse.data || [];
@@ -213,7 +298,7 @@ const Receipt = () => {
               viewer_user_id: user?.id,
               appointment_id: bookId,
               center_id: centerId,
-              doctor_user_id: user_id,
+              doctor_user_id: doctorUserId,
               widget_app: targetWidget.app,
             },
           });
@@ -239,7 +324,7 @@ const Receipt = () => {
             viewer_user_id: user?.id,
             appointment_id: bookId,
             center_id: centerId,
-            doctor_user_id: user_id,
+            doctor_user_id: doctorUserId,
             addon_apps: addonsResponse.data?.apps,
             data: addonsResponse.data
           },
@@ -266,6 +351,7 @@ const Receipt = () => {
     bookId,
     bookDetailsData?.doctor?.id,
     bookDetailsData?.doctor?.server_id,
+    doctorUserId,
     handleOpenWidgetModal,
     widgetModalProps.isOpen,
     user?.id,
@@ -343,7 +429,7 @@ const Receipt = () => {
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
 
   useEffect(() => {
-    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id) {
+    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id && doctorUserId) {
       const fetchKey = `${centerId}-${bookId}-${bookDetailsData.doctor.id}-${bookDetailsData.doctor.server_id}`;
 
       if (lastFetchedKeyRef.current !== fetchKey) {
@@ -356,7 +442,103 @@ const Receipt = () => {
         fetchWidgetAndCheckAddons();
       }
     }
-  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, fetchWidgetAndCheckAddons]);
+  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, doctorUserId]);
+
+  useEffect(() => {
+    const serviceTypeId = bookDetailsData?.services?.[0]?.service_type_id;
+    const currentBookId = bookDetailsData?.book_id;
+    const doctorFirstName = doctorFullName.name?.trim();
+    const doctorFamilyName = doctorFullName.family?.trim();
+
+    if (
+      serviceTypeId !== 9 ||
+      !currentBookId ||
+      !bookDetailsData?.reference_code ||
+      !bookDetailsData?.patient?.cell ||
+      !bookDetailsData?.patient?.name ||
+      !bookDetailsData?.patient?.family ||
+      !doctorUserId ||
+      !resolvedDoctorSlug ||
+      !doctorFirstName ||
+      !doctorFamilyName ||
+      accessChatRequestedBookIdRef.current === currentBookId
+    ) {
+      return;
+    }
+
+    accessChatRequestedBookIdRef.current = currentBookId;
+    setIsAccessChatLoading(true);
+    setIsAccessChatReady(false);
+    setIsAccessChatFailed(false);
+
+    let isCancelled = false;
+    const maxRetries = 3;
+
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const requestAccessChatWithRetry = async (retryCount = 0): Promise<void> => {
+      try {
+        await apiGatewayClient.get('/v1/appointments/access-chat', {
+          params: {
+            book_id: currentBookId,
+            ref_id: bookDetailsData.reference_code,
+            patient_cell: bookDetailsData.patient.cell,
+            doctor_user_id: String(doctorUserId),
+            patient_name: bookDetailsData.patient.name,
+            patient_family: bookDetailsData.patient.family,
+            doctor_name: doctorFirstName,
+            doctor_family: doctorFamilyName,
+          },
+        });
+
+        if (!isCancelled) {
+          setIsAccessChatReady(true);
+          setIsAccessChatLoading(false);
+          setIsAccessChatFailed(false);
+        }
+      } catch {
+        if (retryCount < maxRetries) {
+          await sleep(1000 * (retryCount + 1));
+          if (!isCancelled) {
+            await requestAccessChatWithRetry(retryCount + 1);
+          }
+          return;
+        }
+
+        if (!isCancelled) {
+          setIsAccessChatLoading(false);
+          setIsAccessChatReady(false);
+          setIsAccessChatFailed(true);
+        }
+      }
+    };
+
+    requestAccessChatWithRetry();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [
+    bookDetailsData?.book_id,
+    bookDetailsData?.services,
+    bookDetailsData?.reference_code,
+    bookDetailsData?.patient?.cell,
+    bookDetailsData?.patient?.name,
+    bookDetailsData?.patient?.family,
+    doctorUserId,
+    resolvedDoctorSlug,
+    doctorFullName.name,
+    doctorFullName.family,
+  ]);
+
+  useEffect(() => {
+    if (bookDetailsData?.services?.[0]?.service_type_id !== 9) {
+      setIsAccessChatLoading(false);
+      setIsAccessChatReady(false);
+      setIsAccessChatFailed(false);
+      accessChatRequestedBookIdRef.current = null;
+    }
+  }, [bookDetailsData?.services, bookDetailsData?.book_id]);
 
   const isShowRemoveButtonForOnlineVisit =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
@@ -475,6 +657,19 @@ const Receipt = () => {
         type: turnStatus.requestedTurn ? 'book_request' : 'book',
       },
     });
+  };
+
+  const handleStartChatClick = () => {
+    if (isAccessChatLoading) {
+      return;
+    }
+
+    if (isAccessChatFailed || !isAccessChatReady) {
+      toast.error('مشکلی در ارتباط با پزشک به وجود آمده است، چند دقیقه دیگر تلاش کنید.');
+      return;
+    }
+
+    window.open(`https://messaging-back.paziresh24.com/api/external/conversations/${bookId}`);
   };
 
   const handleSafeCallAction = () => {
@@ -717,7 +912,7 @@ const Receipt = () => {
                 <div className="flex flex-col gap-2 p-5">
                   {
                     Date.now() <= (bookDetailsData?.book_time + 3 * 24 * 60 * 60) * 1000 && (
-                      <Button block onClick={() => window.open(`https://messaging-back.paziresh24.com/api/external/conversations/${bookId}`)} icon={<ChatIcon />}>
+                      <Button block onClick={handleStartChatClick} icon={<ChatIcon />} loading={isAccessChatLoading}>
                         شروع گفتگو با پزشک
                       </Button>
                     )

@@ -82,13 +82,6 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
         isBoldValue: true,
       },
       {
-        id: 2,
-        name: 'مدت زمان گفتگو',
-        value: `تا ${3} روز`,
-        type: 'Text',
-        isBoldValue: true,
-      },
-      {
         id: 3,
         name: 'کد پیگیری',
         value: trackingCode,
