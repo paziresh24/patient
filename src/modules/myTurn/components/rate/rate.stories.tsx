@@ -16,4 +16,7 @@ const Template = args => (
 export const Simple = Template.bind({});
 Simple.args = {
   link: '#',
+  bookId: '1',
+  centerId: 'c1',
+  doctorSlug: 'demo',
 };

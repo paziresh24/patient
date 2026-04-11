@@ -25,10 +25,11 @@ interface TurnBodyProps {
   };
   centerId: string;
   paymentStatus: PaymentStatus;
+  isFromDashboard?: boolean;
 }
 
 export const TurnBody: React.FC<TurnBodyProps> = props => {
-  const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo, paymentStatus } = props;
+  const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo, paymentStatus, isFromDashboard } = props;
   const router = useRouter();
   const { customize } = useCustomize();
   const feedback = useGetReview({
@@ -55,7 +56,15 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
       <TurnDetails items={detailsData} onClick={handleClickCard} />
 
       {shouldShowLocation && <Location address={location.address} lat={location.lat} lng={location.lng} />}
-      {shouldShowRate && customize.showRateAndReviews && <Rate link={feedbackUrl ?? ''} />}
+      {shouldShowRate && customize.showRateAndReviews && (
+        <Rate
+          link={feedbackUrl ?? ''}
+          bookId={id}
+          centerId={centerId}
+          doctorSlug={doctorInfo.slug}
+          isFromDashboard={isFromDashboard}
+        />
+      )}
     </>
   );
 };
