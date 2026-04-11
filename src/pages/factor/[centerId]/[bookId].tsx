@@ -78,6 +78,12 @@ const Factor = () => {
             bookId={bookId as string}
             centerId={centerId as string}
             respiteToRefundAfterDelete={bookDetailsData?.settings?.delay_to_delete_book_refund ?? '5'}
+            doctorName={doctorName}
+            groupExpertise={
+              bookDetailsData?.doctor?.display_expertise ??
+              bookDetailsData?.expertises?.[0]?.expertise?.name ??
+              bookDetailsData?.expertises?.[0]?.alias_title
+            }
           />
         </div>
         <div className="w-full p-3 mb-2 space-y-1 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">

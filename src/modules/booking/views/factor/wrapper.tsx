@@ -26,10 +26,12 @@ interface FactorWrapperProps {
   serviceId?: string;
   centerId: string;
   respiteToRefundAfterDelete?: string;
+  doctorName?: string;
+  groupExpertise?: string;
 }
 
 const FactorWrapper = (props: FactorWrapperProps) => {
-  const { bookId, centerId, serviceId, userCenterId, respiteToRefundAfterDelete } = props;
+  const { bookId, centerId, serviceId, userCenterId, respiteToRefundAfterDelete, doctorName, groupExpertise } = props;
   const centerPayment = useCenterPayment();
   const consultPayment = useConsultPayment();
   const userInfo = useUserInfoStore(state => state.info);
@@ -170,6 +172,8 @@ const FactorWrapper = (props: FactorWrapperProps) => {
                       book_id: data?.book_info?.id,
                       center_id: centerId,
                       user_id: userInfo.id,
+                      doctor_name: doctorName,
+                      group_expertise: groupExpertise,
                     },
                   });
                   location.assign(appendPaymentMethodToUrl(paymentData.url, paymentMethod));
@@ -212,6 +216,8 @@ const FactorWrapper = (props: FactorWrapperProps) => {
             book_id: bookId,
             center_id: centerId,
             user_id: userInfo.id,
+            doctor_name: doctorName,
+            group_expertise: groupExpertise,
           },
         });
         location.assign(appendPaymentMethodToUrl(data.url, paymentMethod));
