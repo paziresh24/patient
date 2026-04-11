@@ -107,22 +107,7 @@ const Receipt = () => {
     pincode: pincode as string,
   });
 
-  useEffect(() => {
-    if (action && getReceiptDetails?.data) {
-      if (action === 'open_channel') {
-        if (!widgetApp) {
-          window.location.replace(
-            decodeURIComponent(
-              getReceiptDetails?.data?.data?.data?.selected_online_visit_channel?.channel_link.replace(
-                'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
-                '',
-              ),
-            ),
-          );
-        }
-      }
-    }
-  }, [action, getReceiptDetails?.data, widgetApp]);
+
 
   // Error handling function
   const getErrorStatusCode = () => {
@@ -815,6 +800,28 @@ const Receipt = () => {
       });
     };
   }, [bookDetailsData?.book_id]);
+
+  useEffect(() => {
+    if (action && getReceiptDetails?.data) {
+      if (action === 'open_channel') {
+        const selected_channel = bookDetailsData?.selected_online_visit_channel;
+        const isRedirectToHami = bookDetailsData?.doctor.online_visit_channels?.some?.((item: any) => item.type == 'whatsapp')
+        if (!widgetApp) {
+          if (isRedirectToHami) {
+            return window.location.assign(`https://messaging-back.paziresh24.com/api/external/conversations/${bookId}`)
+          }
+          window.location.assign(
+            decodeURIComponent(
+              selected_channel?.channel_link.replace(
+                'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+                '',
+              ),
+            ),
+          );
+        }
+      }
+    }
+  }, [action, bookDetailsData, widgetApp]);
 
   // Show error component if there's an error
   if (getReceiptDetails.isError) {
