@@ -92,23 +92,26 @@ const Footer = () => {
                     {t('footer.menu.support')}
                   </a>
                 </div>
-                <div className="flex flex-col items-center justify-center mt-2 md:basis-[49%]">
-                  <div className="flex flex-row items-center justify-center">
-                    <span className="flex items-center justify-center w-20 h-20">
+                <div className="flex flex-col items-center justify-center mt-2  md:basis-[50%]">
+                  <div className="flex flex-row items-center justify-center gap-4 mb-3">
+                    <span className="flex items-center justify-center">
                       <a href="/home/about-us/">
-                        <img src={about.src} alt="نظام صنفی" loading="lazy" width={40} height={40} />
+                        <img src={about.src} alt="نظام صنفی" loading="lazy" className='w-11 h-11' />
                       </a>
                     </span>
-                    <span className="flex items-center justify-center w-20 h-20">
+                    <span className="flex items-center justify-center">
                       <a href="/home/about-us/">
-                        <img src={aboutUs.src} alt="نشان ملی ثبت" loading="lazy" width={40} height={40} />
+                        <img src={aboutUs.src} alt="نشان ملی ثبت" loading="lazy" className='w-11 h-11' />
                       </a>
                     </span>
-                    <span className="flex items-center justify-center w-20 h-20">
+                    {/* <span className="flex items-center justify-center w-20 h-20">
                       <a href="/home/about-us/">
                         <img src={aboutMe.src} alt="اینماد" loading="lazy" width={40} height={40} />
                       </a>
-                    </span>
+                    </span> */}
+                    <a referrerPolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=6915&Code=uwXhNitKjj0WnOAOR2I8W0Hi1jCsT1zN'>
+                      <img className='w-12 h-12' referrerPolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=6915&Code=uwXhNitKjj0WnOAOR2I8W0Hi1jCsT1zN' alt='' style={{ cursor: 'pointer' }} id='uwXhNitKjj0WnOAOR2I8W0Hi1jCsT1zN' />
+                    </a>
                   </div>
                   <div className="max-w-lg text-sm">
                     <Text as="p" align="center">
@@ -120,8 +123,8 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </Accordion>
-    </footer>
+      </Accordion >
+    </footer >
   );
 };
 
