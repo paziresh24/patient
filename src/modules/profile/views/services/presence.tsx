@@ -231,7 +231,7 @@ export const Presence = memo((props: PresenceProps) => {
                   doctor_id: doctorId,
                   doctor_name: displayName,
                 });
-                window.open('https://survey.porsline.ir/s/8Lek6qbV', '_blank');
+                window.open('https://survey.porsline.ir/s/fdbcwuc9', '_blank');
               },
             },
           ],
