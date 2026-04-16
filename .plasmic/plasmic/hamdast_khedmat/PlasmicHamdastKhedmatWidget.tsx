@@ -265,7 +265,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                 const actionArgs = {
                   args: [
                     "POST",
-                    "https://hosseinn8n.darkube.app/webhook/log-webhook",
+                    "https://apigw.paziresh24.com/v1/hamdast/widget-data/khedmat/log-webhook",
                     undefined,
                     (() => {
                       try {
@@ -332,7 +332,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
             url={(() => {
               try {
                 return (
-                  "https://hosseinn8n.darkube.app/webhook/servises?user_id=" +
+                  "https://apigw.paziresh24.com/v1/hamdast/widget-data/khedmat/servises?user_id=" +
                   $props.profileData.user_id
                 );
               } catch (e) {
