@@ -41,13 +41,13 @@ export const Logo: React.FC<LogoProps> = props => {
             <path className="cls-1" style={{ fill: "#dc1116" }} d="m41.2,7.922c.255-.336.359-.707.301-1.117-.058-.411-.261-.738-.594-.989.378.07.782.395.875.9.094.512-.17.989-.582,1.206Z"></path>
           </g>
         </svg>
-        <Image src={logoSvg.src} alt="پذیرش 24" width={width || 60} height={height || 60} priority className='grayscale contrast-150' />
+        <Image src={logoSvg.src} alt="پذیرش 24" width={width || 60} height={height || 60} priority />
 
       </div>
 
       {type === 'default' && (
         <>
-          <Text className={classNames('text-brand grayscale contrast-150', className)} as={as} fontSize={fontSize} fontWeight="black">
+          <Text className={classNames('text-brand', className)} as={as} fontSize={fontSize} fontWeight="black">
             {t('brandName')}
           </Text>
         </>
