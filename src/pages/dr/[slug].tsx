@@ -46,17 +46,17 @@ import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAnd
 
 const { publicRuntimeConfig } = config();
 
+const NO_DOCTOR_PROFILE_IMAGE = 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png';
+
 function resolveDoctorProfileImageUrl(
-  information: { image?: string; user_id?: string } | undefined,
-  useUpdatedDrProfilePicture: boolean,
-  cdnBaseUrl: string,
+  information: { user_id?: string | null } | undefined,
+  pageUserId?: string | null,
 ) {
-  if (useUpdatedDrProfilePicture && information?.user_id) {
-    return `https://pic.paziresh24.com/api/image/${information.user_id}`;
+  const userId = information?.user_id ?? pageUserId;
+  if (userId) {
+    return `https://pic.paziresh24.com/api/image/${userId}`;
   }
-  return information?.image
-    ? cdnBaseUrl + information.image
-    : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`;
+  return NO_DOCTOR_PROFILE_IMAGE;
 }
 
 const DoctorProfile = (props: any) => {
@@ -136,7 +136,6 @@ const DoctorProfile = (props: any) => {
   const { openScroll, lockScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
-  const useUpdatedDrProfilePicture = useFeatureIsOn('update-dr-profile-picture');
 
   const finalProps = (!!shouldFetchOnClient && !props?.information) || (clientData?.props as any)?.information ? clientData?.props : props;
 
@@ -163,8 +162,8 @@ const DoctorProfile = (props: any) => {
   } = finalProps ?? {};
 
   const doctorProfileImageUrl = useMemo(
-    () => resolveDoctorProfileImageUrl(information, useUpdatedDrProfilePicture, publicRuntimeConfig.CDN_BASE_URL),
-    [information?.image, information?.user_id, useUpdatedDrProfilePicture],
+    () => resolveDoctorProfileImageUrl(information, user_id),
+    [information?.user_id, user_id],
   );
 
   const isOwnProfile = !!user_id && !!userInfo?.id && String(user_id) === String(userInfo?.id);
@@ -480,13 +479,8 @@ const DoctorProfile = (props: any) => {
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, expertises, centers = [], information, feedbacks, host } = page.props;
-  const useUpdatedDrProfilePicture = growthbook.isOn('update-dr-profile-picture');
-  const doctorProfileImageUrl = resolveDoctorProfileImageUrl(
-    information,
-    useUpdatedDrProfilePicture,
-    publicRuntimeConfig.CDN_BASE_URL,
-  );
+  const { title, description, slug, expertises, centers = [], information, feedbacks, host, user_id } = page.props;
+  const doctorProfileImageUrl = resolveDoctorProfileImageUrl(information, user_id);
 
   const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
