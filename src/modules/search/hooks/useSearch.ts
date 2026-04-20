@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchStore } from '../store/search';
 import { useFeatureValue } from '@growthbook/growthbook-react';
+import { shouldShowTopSuggestedConsult } from '../functions/shouldShowTopSuggestedConsult';
 
 type Filter = {
   items: {
@@ -118,6 +119,7 @@ export const useSearch = () => {
   const isResultTypeExcluded =
     !resultTypeValue ||
     (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
+  const canShowTopSuggestedConsult = shouldShowTopSuggestedConsult(searchRequest?.data?.query_attributes);
 
   const searchConsultEnabled =
     !!searchRequest?.data &&
@@ -126,6 +128,7 @@ export const useSearch = () => {
     isResultTypeExcluded &&
     (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
     !searchRequest?.data?.search.is_landing &&
+    canShowTopSuggestedConsult &&
     (params?.length !== 1 || Object.keys(query).length > 0) &&
     showSuggestedDoctor?.enable;
 
