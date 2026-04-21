@@ -165,9 +165,8 @@ const Page = ({ page, app }: any) => {
     >
       <Link rel="preconnect" href="https://hamdast.paziresh24.com/bridge" />
       <Link rel="dns-prefetch" href="https://hamdast.paziresh24.com/bridge" />
-      <Link rel="preconnect" href={embedSrc!} />
-      <Link rel="dns-prefetch" href={embedSrc!} />
-
+      {embedSrc && <Link rel="preconnect" href={embedSrc!} />}
+      {embedSrc && <Link rel="dns-prefetch" href={embedSrc!} />}
 
       {page?.layout?.show_appbar && (
         <AppBar

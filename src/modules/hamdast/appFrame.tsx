@@ -169,8 +169,8 @@ export const AppFrame = ({
       )}
       <Link rel="preconnect" href="https://hamdast.paziresh24.com/bridge" />
       <Link rel="dns-prefetch" href="https://hamdast.paziresh24.com/bridge" />
-      <Link rel="preconnect" href={embedSrc!} />
-      <Link rel="dns-prefetch" href={embedSrc!} />
+      {embedSrc && <Link rel="preconnect" href={embedSrc!} />}
+      {embedSrc && <Link rel="dns-prefetch" href={embedSrc!} />}
       {app?.id && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
