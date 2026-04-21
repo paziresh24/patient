@@ -100,7 +100,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
     if (!isLogin || !info?.id) return;
 
     if (isPicGozargahEnabled) {
-      const imageUrl = `https://pic.paziresh24.com/api/image/${info.id}?w=150&h=150`;
+      const imageUrl = `https://pic.paziresh24.com/api/image/${info.id}`;
       const currentInfo = useUserInfoStore.getState().info;
       setUserInfo({
         ...currentInfo,
