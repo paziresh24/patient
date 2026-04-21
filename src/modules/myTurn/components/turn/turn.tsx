@@ -49,7 +49,6 @@ export const Turn: React.FC<TurnProps> = props => {
       <TurnHeader
         id={id}
         doctorInfo={doctorInfo}
-        serverId={serverId}
         centerType={centerType}
         centerId={centerInfo.centerId}
         trackingCode={turnDetails.trackingCode}

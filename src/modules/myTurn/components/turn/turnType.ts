@@ -20,8 +20,6 @@ export interface TurnProps {
   };
   doctorInfo: {
     avatar: string;
-    /** برای نوبت‌های من: id دکتر از پاسخ visits → GET drprofile /api/doctors/{id}/{serverId} → pic */
-    drProfileDoctorId?: string;
     firstName: string;
     lastName: string;
     expertise?: string;

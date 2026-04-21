@@ -13,24 +13,20 @@ import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
+import { getAppointmentDoctor } from '@/common/apis/services/booking/getAppointmentDoctor';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { toast } from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
-import { drProfileClient } from '@/common/apis/client';
+import { toast } from 'react-hot-toast';
+import { useMemo } from 'react';
 import DoctorInfo from '../../doctorInfo';
 import TagStatus from '../../tagStatus';
 import axios from 'axios';
-import { useMemo } from 'react';
-
-const TURN_VISITS_DOCTOR_PIC_FALLBACK = 'https://pic.paziresh24.com/api/image/1';
 
 interface TurnHeaderProps {
   id: string;
-  serverId: number;
   doctorInfo: {
     avatar: string;
-    drProfileDoctorId?: string;
     firstName: string;
     lastName: string;
     expertise?: string;
@@ -47,41 +43,7 @@ interface TurnHeaderProps {
 }
 
 export const TurnHeader: React.FC<TurnHeaderProps> = props => {
-  const { id, isDelete, doctorInfo, serverId, centerId, centerType, trackingCode, nationalCode, status, paymentStatus, isFromDashboard } =
-    props;
-
-  const drProfileDoctorId = doctorInfo.drProfileDoctorId;
-  const { data: drProfileForPic, isFetching: isDrProfileForPicFetching } = useQuery(
-    ['turnVisitsDoctorPic', drProfileDoctorId, serverId],
-    async () => {
-      const { data } = await drProfileClient.get<{ user_id?: number | string }>(
-        `/api/doctors/${drProfileDoctorId}/${serverId}`,
-      );
-      return data;
-    },
-    {
-      enabled: !!drProfileDoctorId && serverId != null && !Number.isNaN(Number(serverId)),
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      staleTime: 5 * 60 * 1000,
-      retry: 2,
-    },
-  );
-
-  const resolvedDoctorAvatar = useMemo(() => {
-    const legacy = doctorInfo.avatar;
-    if (!drProfileDoctorId || serverId == null) return legacy;
-    const uid = drProfileForPic?.user_id;
-    if (uid === undefined || uid === null || uid === '') return legacy || TURN_VISITS_DOCTOR_PIC_FALLBACK;
-    return `https://pic.paziresh24.com/api/image/${uid}`;
-  }, [doctorInfo.avatar, drProfileDoctorId, serverId, drProfileForPic]);
-
-  const doctorInfoLoading =
-    !!drProfileDoctorId &&
-    serverId != null &&
-    !Number.isNaN(Number(serverId)) &&
-    isDrProfileForPicFetching &&
-    drProfileForPic === undefined;
+  const { id, isDelete, doctorInfo, centerId, centerType, trackingCode, nationalCode, status, paymentStatus, isFromDashboard } = props;
   const router = useRouter();
   const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
 
@@ -133,6 +95,26 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     });
   };
 
+  const { data: appointmentDoctorData } = useQuery(
+    ['appointmentDoctorPic', id],
+    () => getAppointmentDoctor(id),
+    {
+      enabled: !!id,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: 5 * 60 * 1000,
+      retry: 2,
+    },
+  );
+
+  const doctorAvatarSrc = useMemo(() => {
+    const uid = appointmentDoctorData?.user_id;
+    if (uid !== undefined && uid !== null && uid !== '') {
+      return `https://pic.paziresh24.com/api/image/${uid}`;
+    }
+    return doctorInfo.avatar;
+  }, [appointmentDoctorData, doctorInfo.avatar]);
+
   const handleProfileClick = () => {
     if (isFromDashboard) {
       // Send click event to Splunk for dashboard appointments
@@ -183,11 +165,10 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     <div className="relative flex flex-col items-end">
       <Link href={`/dr/${doctorInfo.slug}`} className="self-start w-9/12" onClick={handleProfileClick}>
         <DoctorInfo
-          avatar={resolvedDoctorAvatar}
+          avatar={doctorAvatarSrc}
           firstName={doctorInfo.firstName}
           lastName={doctorInfo.lastName}
           expertise={doctorInfo.expertise}
-          isLoading={doctorInfoLoading}
         />
       </Link>
       {shouldShowTagStatus && <TagStatus status={isDelete ? BookStatus.deleted : status} className="mx-5" />}
