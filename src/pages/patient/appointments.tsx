@@ -187,6 +187,7 @@ export const Appointments = () => {
               }}
               doctorInfo={{
                 avatar: turn.doctor_info?.image,
+                drProfileDoctorId: turn.doctor_info?.id,
                 firstName: turn.doctor_info?.name,
                 lastName: turn.doctor_info?.family,
                 expertise:
