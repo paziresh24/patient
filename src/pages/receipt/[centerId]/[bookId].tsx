@@ -46,6 +46,7 @@ import md5 from 'md5';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { useQuery } from '@tanstack/react-query';
 import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
@@ -58,6 +59,8 @@ import { AppFrame } from '@/modules/hamdast/appFrame';
 import useResponsive from '@/common/hooks/useResponsive';
 import ChatIcon from '@/common/components/icons/chat';
 const { publicRuntimeConfig } = getConfig();
+
+const RECEIPT_DOCTOR_AVATAR_PIC_FALLBACK = 'https://pic.paziresh24.com/api/image/1';
 
 const Receipt = () => {
   const shouldUsePlasmicActionButtons = useFeatureIsOn('plasmic:receipt-action-buttons|enabled');
@@ -152,6 +155,40 @@ const Receipt = () => {
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
   const showDoctorAvailabilityWarning = useFeatureValue('show-doctor-availability-warning', '');
   const doctorName = bookDetailsData?.doctor?.display_name;
+
+  const receiptDoctorIdForPic = useMemo(() => {
+    if (!bookDetailsData || typeof bookDetailsData !== 'object' || !bookDetailsData.doctor?.id) return undefined;
+    return String(bookDetailsData.doctor.id);
+  }, [bookDetailsData]);
+
+  const receiptDoctorServerIdForPic = useMemo(() => {
+    if (!bookDetailsData || typeof bookDetailsData !== 'object' || bookDetailsData.doctor?.server_id == null) return undefined;
+    return String(bookDetailsData.doctor.server_id);
+  }, [bookDetailsData]);
+
+  const { data: receiptDoctorProfileForPic, isFetching: isReceiptDoctorProfileForPicFetching } = useQuery(
+    ['receiptDoctorProfileForPic', receiptDoctorIdForPic, receiptDoctorServerIdForPic],
+    async () => {
+      const { data } = await drProfileClient.get<{
+        user_id?: number | string;
+      }>(`/api/doctors/${receiptDoctorIdForPic}/${receiptDoctorServerIdForPic}`);
+      return data;
+    },
+    {
+      enabled: !!receiptDoctorIdForPic && !!receiptDoctorServerIdForPic,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: 5 * 60 * 1000,
+      retry: 2,
+    },
+  );
+
+  const receiptDoctorAvatar = useMemo(() => {
+    if (!bookDetailsData || typeof bookDetailsData !== 'object' || !bookDetailsData.doctor) return undefined;
+    const uid = receiptDoctorProfileForPic?.user_id;
+    if (uid === undefined || uid === null || uid === '') return RECEIPT_DOCTOR_AVATAR_PIC_FALLBACK;
+    return `https://pic.paziresh24.com/api/image/${uid}`;
+  }, [bookDetailsData, receiptDoctorProfileForPic]);
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
@@ -1108,10 +1145,16 @@ const Receipt = () => {
         <div className="w-full p-3 mb-2 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-100"
-            {...(bookDetailsData?.doctor?.image && { avatar: publicRuntimeConfig.CDN_BASE_URL + bookDetailsData?.doctor?.image })}
+            avatar={receiptDoctorAvatar}
             fullName={doctorName}
             expertise={bookDetailsData.doctor?.display_expertise}
-            isLoading={getReceiptDetails.isLoading}
+            isLoading={
+              getReceiptDetails.isLoading ||
+              (!!receiptDoctorIdForPic &&
+                !!receiptDoctorServerIdForPic &&
+                isReceiptDoctorProfileForPicFetching &&
+                receiptDoctorProfileForPic === undefined)
+            }
           />
         </div>
         <Modal

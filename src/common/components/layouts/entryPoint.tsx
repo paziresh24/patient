@@ -16,6 +16,8 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const removeInfo = useUserInfoStore(state => state.removeInfo);
   const info = useUserInfoStore(state => state.info);
   const autoLoginToGozargah = useFeatureIsOn('auto-login-to-gozargah');
+  /** فیچر بولین `pic_gozargah` در Growthbook: اگر true باشد، آواتار از pic.paziresh24.com؛ وگرنه apigw. */
+  const isPicGozargahEnabled = useFeatureIsOn('pic_gozargah');
 
   const getMe = useGetMe();
   const getDoctorProfile = useGetDoctorProfile();
@@ -97,6 +99,16 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   useEffect(() => {
     if (!isLogin || !info?.id) return;
 
+    if (isPicGozargahEnabled) {
+      const imageUrl = `https://pic.paziresh24.com/api/image/${info.id}`;
+      const currentInfo = useUserInfoStore.getState().info;
+      setUserInfo({
+        ...currentInfo,
+        image: imageUrl,
+      });
+      return;
+    }
+
     apiGatewayClient
       .get('https://apigw.paziresh24.com/v1/users/image', { params: { user_id: info.id } })
       .then(response => {
@@ -112,7 +124,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       .catch(error => {
         console.error('Error fetching user image:', error);
       });
-  }, [isLogin, info?.id, setUserInfo]);
+  }, [isLogin, info?.id, setUserInfo, isPicGozargahEnabled]);
 
   useEffect(() => {
     const centersData = getCentersByUserId?.data;

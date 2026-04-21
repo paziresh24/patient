@@ -36,6 +36,7 @@ import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
+import { shouldShowTopSuggestedConsult } from '@/modules/search/functions/shouldShowTopSuggestedConsult';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
   ssr: false,
@@ -425,6 +426,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
       const isResultTypeExcluded =
         !resultTypeValue ||
         (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
+      const canShowTopSuggestedConsult = shouldShowTopSuggestedConsult(searchData?.query_attributes);
 
       if (
         !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
@@ -432,6 +434,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         isResultTypeExcluded &&
         (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
         !searchData?.search?.is_landing &&
+        canShowTopSuggestedConsult &&
         showSuggestedDoctor?.enable
       ) {
         try {

@@ -1,3 +1,4 @@
+import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import Loading from '@/common/components/atom/loading/loading';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
@@ -17,6 +18,7 @@ import { useAbsentScore } from '@/common/apis/services/ravi/absentScore';
 import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { useQuery } from '@tanstack/react-query';
 import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 
 const Booking = () => {
@@ -40,6 +42,24 @@ const Booking = () => {
   const profileData = data?.data;
 
   const slug = router.query?.slug?.toString();
+  const { data: doctorSlugForImage } = useQuery(
+    ['bookingDoctorSlugForImage', slug],
+    () => validateDoctorSlug(slug!),
+    {
+      enabled: !!router.isReady && !!slug,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: 5 * 60 * 1000,
+      retry: 2,
+    },
+  );
+  const doctorAvatarFromPic = useMemo(() => {
+    const res = doctorSlugForImage;
+    if (!res || 'error' in res || 'redirect' in res) return undefined;
+    if (res.user_id == null) return undefined;
+    return `https://pic.paziresh24.com/api/image/${res.user_id}`;
+  }, [doctorSlugForImage]);
+
   const { data: doctorFullNameData } = useDoctorFullName(slug, !!router.isReady);
   const { data: absentScoreData } = useAbsentScore(slug, !!router.isReady);
 
@@ -183,7 +203,11 @@ const Booking = () => {
           </Transition>
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
-          <DoctorInfo className="p-4 rounded-lg bg-slate-100" slug={router.query?.slug?.toString()} />
+          <DoctorInfo
+            className="p-4 rounded-lg bg-slate-100"
+            slug={router.query?.slug?.toString()}
+            avatar={doctorAvatarFromPic}
+          />
 
           {router.query.centerId && (
             <div className="flex flex-col px-2 py-1 space-y-1 border-r-2 border-slate-200">

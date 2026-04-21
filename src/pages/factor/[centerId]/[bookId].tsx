@@ -1,3 +1,4 @@
+import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { useGetBookDetails } from '@/common/apis/services/booking/getBookDetails';
 import Badge from '@/common/components/atom/badge/badge';
 import Divider from '@/common/components/atom/divider/divider';
@@ -17,12 +18,13 @@ import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { digitsFaToEn } from '@persian-tools/persian-tools';
 import moment from 'jalali-moment';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
+import { useQuery } from '@tanstack/react-query';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { growthbook } from 'src/pages/_app';
-const { publicRuntimeConfig } = getConfig();
+
+const FACTOR_DOCTOR_AVATAR_PIC_FALLBACK = 'https://pic.paziresh24.com/api/image/1';
 
 const Factor = () => {
   const {
@@ -60,6 +62,41 @@ const Factor = () => {
   const bookDetailsData = useMemo(() => getBookDetails.isSuccess && getBookDetails.data?.data?.result?.[0], [getBookDetails.status]);
   const doctorName = `${bookDetailsData?.doctor_name} ${bookDetailsData?.doctor_family}`;
 
+  const doctorUserIdFromBook = useMemo(() => {
+    if (!bookDetailsData || typeof bookDetailsData !== 'object') return undefined;
+    const raw = (bookDetailsData as { doctor_user_id?: string | number }).doctor_user_id;
+    if (raw === undefined || raw === null || raw === '') return undefined;
+    return String(raw);
+  }, [bookDetailsData]);
+
+  const doctorSlugFromBook = useMemo(() => {
+    if (!bookDetailsData || typeof bookDetailsData !== 'object') return undefined;
+    const s = (bookDetailsData as { doctor_slug?: string }).doctor_slug;
+    return s && String(s).trim() ? String(s) : undefined;
+  }, [bookDetailsData]);
+
+  const { data: doctorSlugForImageResponse, isFetching: isDoctorSlugForImageFetching } = useQuery(
+    ['factorDoctorSlugForImage', doctorSlugFromBook],
+    () => validateDoctorSlug(doctorSlugFromBook!),
+    {
+      enabled: !!doctorSlugFromBook && !doctorUserIdFromBook,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: 5 * 60 * 1000,
+      retry: 2,
+    },
+  );
+
+  const factorDoctorAvatar = useMemo(() => {
+    if (!bookDetailsData || typeof bookDetailsData !== 'object') return undefined;
+    if (doctorUserIdFromBook) return `https://pic.paziresh24.com/api/image/${doctorUserIdFromBook}`;
+    if (!doctorSlugFromBook) return FACTOR_DOCTOR_AVATAR_PIC_FALLBACK;
+    const res = doctorSlugForImageResponse;
+    if (!res || 'error' in res || 'redirect' in res) return FACTOR_DOCTOR_AVATAR_PIC_FALLBACK;
+    if (res.user_id == null) return FACTOR_DOCTOR_AVATAR_PIC_FALLBACK;
+    return `https://pic.paziresh24.com/api/image/${res.user_id}`;
+  }, [bookDetailsData, doctorUserIdFromBook, doctorSlugFromBook, doctorSlugForImageResponse]);
+
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const convertTime = (time: string) => {
     return moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.calendar(undefined, {
@@ -89,14 +126,22 @@ const Factor = () => {
         <div className="w-full p-3 mb-2 space-y-1 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-100"
-            avatar={publicRuntimeConfig.CDN_BASE_URL + bookDetailsData?.doctor_image}
+            avatar={factorDoctorAvatar}
             fullName={doctorName}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: bookDetailsData?.expertises?.[0]?.alias_title,
               degree: bookDetailsData?.expertises?.[0]?.degree?.name,
               expertise: bookDetailsData?.expertises?.[0]?.expertise?.name,
             })}
-            isLoading={getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData}
+            isLoading={
+              getBookDetails.isLoading ||
+              getBookDetails.isIdle ||
+              !bookDetailsData ||
+              (!doctorUserIdFromBook &&
+                !!doctorSlugFromBook &&
+                isDoctorSlugForImageFetching &&
+                doctorSlugForImageResponse === undefined)
+            }
           />
           {centerId === CENTERS.CONSULT && (getBookDetails.isLoading || getBookDetails.isIdle || !bookDetailsData) && (
             <Skeleton w="100%" h="5em" className="!mt-2" rounded="md" />
