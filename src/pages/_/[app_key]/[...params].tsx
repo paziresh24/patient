@@ -27,6 +27,7 @@ import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from '@/modules/hamdast/components/subscription-payment';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
 import Button from '@/common/components/atom/button';
+import Link from 'next/link';
 
 export function replaceKeysInString(template: string, keys: string[], values: string[]) {
   const regex = /{{(.*?)}}/g;
@@ -67,7 +68,7 @@ const Page = ({ page, app }: any) => {
   const userPending = useUserInfoStore(state => state.pending);
   const { handleOpenLoginModal } = useLoginModalContext();
   const [showApp, setShowApp] = useState(direct ? true : false);
-  const [showTranslation, setShowTranslation] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(direct ? true : false);
   const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
   const supportRef = useRef<HamdastSupportRef>(null);
   const [showSupportButton, setShowSupportButton] = useState(false);
@@ -162,6 +163,12 @@ const Page = ({ page, app }: any) => {
       showBottomNavigation={page?.layout?.show_bottom_navigation ?? false}
       className="!h-svh !min-h-svh !max-h-svh:"
     >
+      <Link rel="preconnect" href="https://hamdast.paziresh24.com/bridge" />
+      <Link rel="dns-prefetch" href="https://hamdast.paziresh24.com/bridge" />
+      <Link rel="preconnect" href={embedSrc!} />
+      <Link rel="dns-prefetch" href={embedSrc!} />
+
+
       {page?.layout?.show_appbar && (
         <AppBar
           title={page.name?.fa}
@@ -259,23 +266,26 @@ const Page = ({ page, app }: any) => {
       <HamdastFlow iframeRef={iframeRef} />
       {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}
 
-      <div className={classNames('w-full flex-grow flex flex-col', { '!hidden !opacity-0': !showApp })}>
-        {(!showIframe || isAppLoading) && (
-          <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
-            <Loading />
-          </div>
-        )}
-        {showIframe && (
-          <iframe
-            ref={iframeRef}
-            onLoad={() => setIsAppLoading(false)}
-            className={classNames('w-full flex-grow h-full', { hidden: isAppLoading })}
-            src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
-              embedSrc!,
-            )}`}
-          />
-        )}
-      </div>
+      {(showApp || showTranslation) &&
+        <div className={classNames('w-full flex-grow flex flex-col', { '!opacity-0 invisible absolute -left-[9999px]': showTranslation })}>
+          {(!showIframe || isAppLoading) && (
+            <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
+              <Loading />
+            </div>
+          )}
+          {showIframe && (
+            <iframe
+              ref={iframeRef}
+              onLoad={() => setIsAppLoading(false)}
+              className={classNames('w-full flex-grow h-full', { '!opacity-0 invisible absolute -left-[9999px]': isAppLoading })}
+              loading="eager"
+              width="100%" height="100%"
+              src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
+                embedSrc!,
+              )}`}
+            />
+          )}
+        </div>}
     </LayoutWithHeaderAndFooter>
   );
 };

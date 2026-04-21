@@ -21,6 +21,7 @@ import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key
 import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './components/subscription-payment';
 import { HamdastFlow } from './components/flow';
+import Link from 'next/link';
 
 export const AppFrame = ({
   appKey,
@@ -166,6 +167,10 @@ export const AppFrame = ({
           }
         />
       )}
+      <Link rel="preconnect" href="https://hamdast.paziresh24.com/bridge" />
+      <Link rel="dns-prefetch" href="https://hamdast.paziresh24.com/bridge" />
+      <Link rel="preconnect" href={embedSrc!} />
+      <Link rel="dns-prefetch" href={embedSrc!} />
       {app?.id && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
@@ -231,29 +236,33 @@ export const AppFrame = ({
           )}
         </>
       )}
+      {(showApp || showTranslation) && (
+        <div className={classNames('w-full flex-grow flex flex-col', { '!opacity-0 invisible absolute -left-[9999px]': showTranslation })}>
+          {showIframe && embedSrc && (
+            <>
+              {isAppLoading && params?.[0] !== 'launcher' && (
+                <div className="w-full flex-grow flex flex-col items-center justify-center bg-white gap-3">
+                  <Loading />
+                  <Text fontSize="sm" className="text-slate-600">
+                    لطفا کمی صبر کنید...
+                  </Text>
+                </div>
+              )}
+              <iframe
+                ref={iframeRef}
+                onLoad={() => setIsAppLoading(false)}
+                className={classNames('w-full flex-grow h-full', { '!opacity-0 invisible absolute -left-[9999px]': isAppLoading })}
+                loading="eager"
+                width="100%" height="100%"
+                src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
+                  embedSrc!,
+                )}`}
+              />
+            </>
+          )}
+        </div>
 
-      <div className={classNames('w-full flex-grow flex flex-col', { hidden: !showApp })}>
-        {showIframe && embedSrc && (
-          <>
-            {isAppLoading && params?.[0] !== 'launcher' && (
-              <div className="w-full flex-grow flex flex-col items-center justify-center bg-white gap-3">
-                <Loading />
-                <Text fontSize="sm" className="text-slate-600">
-                  لطفا کمی صبر کنید...
-                </Text>
-              </div>
-            )}
-            <iframe
-              ref={iframeRef}
-              onLoad={() => setIsAppLoading(false)}
-              className={classNames('w-full flex-grow h-full', { hidden: isAppLoading })}
-              src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
-                embedSrc!,
-              )}`}
-            />
-          </>
-        )}
-      </div>
+      )}
     </div>
   );
 };
