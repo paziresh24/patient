@@ -55,6 +55,7 @@ import WarningIcon from '@/common/components/icons/warning';
 import Loading from '@/common/components/atom/loading/loading';
 import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
 import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
+import { getAppointmentDoctor } from '@/common/apis/services/booking/getAppointmentDoctor';
 import { AppFrame } from '@/modules/hamdast/appFrame';
 import useResponsive from '@/common/hooks/useResponsive';
 import ChatIcon from '@/common/components/icons/chat';
@@ -156,26 +157,11 @@ const Receipt = () => {
   const showDoctorAvailabilityWarning = useFeatureValue('show-doctor-availability-warning', '');
   const doctorName = bookDetailsData?.doctor?.display_name;
 
-  const receiptDoctorIdForPic = useMemo(() => {
-    if (!bookDetailsData || typeof bookDetailsData !== 'object' || !bookDetailsData.doctor?.id) return undefined;
-    return String(bookDetailsData.doctor.id);
-  }, [bookDetailsData]);
-
-  const receiptDoctorServerIdForPic = useMemo(() => {
-    if (!bookDetailsData || typeof bookDetailsData !== 'object' || bookDetailsData.doctor?.server_id == null) return undefined;
-    return String(bookDetailsData.doctor.server_id);
-  }, [bookDetailsData]);
-
-  const { data: receiptDoctorProfileForPic, isFetching: isReceiptDoctorProfileForPicFetching } = useQuery(
-    ['receiptDoctorProfileForPic', receiptDoctorIdForPic, receiptDoctorServerIdForPic],
-    async () => {
-      const { data } = await drProfileClient.get<{
-        user_id?: number | string;
-      }>(`/api/doctors/${receiptDoctorIdForPic}/${receiptDoctorServerIdForPic}`);
-      return data;
-    },
+  const { data: receiptAppointmentDoctorForPic, isFetching: isReceiptAppointmentDoctorForPicFetching } = useQuery(
+    ['receiptAppointmentDoctorForPic', bookId],
+    () => getAppointmentDoctor(bookId as string),
     {
-      enabled: !!receiptDoctorIdForPic && !!receiptDoctorServerIdForPic,
+      enabled: typeof bookId === 'string' && !!bookId,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       staleTime: 5 * 60 * 1000,
@@ -185,10 +171,10 @@ const Receipt = () => {
 
   const receiptDoctorAvatar = useMemo(() => {
     if (!bookDetailsData || typeof bookDetailsData !== 'object' || !bookDetailsData.doctor) return undefined;
-    const uid = receiptDoctorProfileForPic?.user_id;
+    const uid = receiptAppointmentDoctorForPic?.user_id;
     if (uid === undefined || uid === null || uid === '') return RECEIPT_DOCTOR_AVATAR_PIC_FALLBACK;
     return `https://pic.paziresh24.com/api/image/${uid}`;
-  }, [bookDetailsData, receiptDoctorProfileForPic]);
+  }, [bookDetailsData, receiptAppointmentDoctorForPic]);
 
   useEffect(() => {
     if (!pincode && !isLogin && !userPednding) {
@@ -1150,10 +1136,10 @@ const Receipt = () => {
             expertise={bookDetailsData.doctor?.display_expertise}
             isLoading={
               getReceiptDetails.isLoading ||
-              (!!receiptDoctorIdForPic &&
-                !!receiptDoctorServerIdForPic &&
-                isReceiptDoctorProfileForPicFetching &&
-                receiptDoctorProfileForPic === undefined)
+              (!!bookId &&
+                typeof bookId === 'string' &&
+                isReceiptAppointmentDoctorForPicFetching &&
+                receiptAppointmentDoctorForPic === undefined)
             }
           />
         </div>
