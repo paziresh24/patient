@@ -186,7 +186,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
           data-plasmic-name={"paziresh24Button"}
           data-plasmic-override={overrides.paziresh24Button}
           children2={
-            "\u0645\u0634\u0627\u0647\u062f\u0647 \u062e\u062f\u0645\u0627\u062a \u0648 \u062a\u0639\u0631\u0641\u0647\u200c\u0647\u0627"
+            "مشاهده قیمت خدمات"
           }
           className={classNames("__wab_instance", sty.paziresh24Button)}
           onClick={async event => {
