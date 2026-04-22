@@ -60,6 +60,16 @@ const Booking = () => {
 
   const doctorName = `${bookDetailsData?.doctor_name} ${bookDetailsData?.doctor_family}`;
 
+  const finalizeDoctorAvatar = useMemo(() => {
+    if (!bookDetailsData || typeof bookDetailsData !== 'object') return undefined;
+    const raw = (bookDetailsData as { doctor_user_id?: string | number }).doctor_user_id;
+    if (raw !== undefined && raw !== null && raw !== '') {
+      return `https://pic.paziresh24.com/api/image/${raw}`;
+    }
+    const img = (bookDetailsData as { doctor_image?: string }).doctor_image;
+    return img ? publicRuntimeConfig.CDN_BASE_URL + img : undefined;
+  }, [bookDetailsData]);
+
   const isLoading = getBookDetails.isLoading || getBookDetails?.isIdle || onlineChannelLoading;
 
   const [updateBookDetailsLoading, setUpdateBookDetailsLoading] = useState(false);
@@ -137,7 +147,7 @@ const Booking = () => {
           <DoctorInfo
             className="p-4 rounded-lg bg-slate-100"
             isLoading={isLoading}
-            avatar={publicRuntimeConfig.CDN_BASE_URL + bookDetailsData?.doctor_image}
+            avatar={finalizeDoctorAvatar}
             fullName={doctorName}
             expertise={getDisplayDoctorExpertise({
               aliasTitle: bookDetailsData?.expertises?.[0]?.alias_title,

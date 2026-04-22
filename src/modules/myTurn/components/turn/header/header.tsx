@@ -13,9 +13,12 @@ import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
+import { getAppointmentDoctor } from '@/common/apis/services/booking/getAppointmentDoctor';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
+import { useMemo } from 'react';
 import DoctorInfo from '../../doctorInfo';
 import TagStatus from '../../tagStatus';
 import axios from 'axios';
@@ -92,6 +95,26 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     });
   };
 
+  const { data: appointmentDoctorData } = useQuery(
+    ['appointmentDoctorPic', id],
+    () => getAppointmentDoctor(id),
+    {
+      enabled: !!id,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      staleTime: 5 * 60 * 1000,
+      retry: 2,
+    },
+  );
+
+  const doctorAvatarSrc = useMemo(() => {
+    const uid = appointmentDoctorData?.user_id;
+    if (uid !== undefined && uid !== null && uid !== '') {
+      return `https://pic.paziresh24.com/api/image/${uid}`;
+    }
+    return doctorInfo.avatar;
+  }, [appointmentDoctorData, doctorInfo.avatar]);
+
   const handleProfileClick = () => {
     if (isFromDashboard) {
       // Send click event to Splunk for dashboard appointments
@@ -142,7 +165,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     <div className="relative flex flex-col items-end">
       <Link href={`/dr/${doctorInfo.slug}`} className="self-start w-9/12" onClick={handleProfileClick}>
         <DoctorInfo
-          avatar={doctorInfo.avatar}
+          avatar={doctorAvatarSrc}
           firstName={doctorInfo.firstName}
           lastName={doctorInfo.lastName}
           expertise={doctorInfo.expertise}
