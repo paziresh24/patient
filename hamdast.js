@@ -23,7 +23,7 @@ import PlasmicHamdastRahnamaWidget, {
 import PlasmicHamdastKhedmatWidget, {
   PlasmicHamdastKhedmatWidget__ArgProps,
 } from '.plasmic/plasmic/hamdast_khedmat/PlasmicHamdastKhedmatWidget';
-
+import Etebar, { Etebar__ArgProps } from '@/modules/hamdast/widgets/etebar';
 
 export const Components = {
   hhhzbbsffq0nlna: {
@@ -62,10 +62,16 @@ export const Components = {
     Component: PlasmicHamdastRahnamaWidget,
     props_allowed: PlasmicHamdastRahnamaWidget__ArgProps,
   },
-   rrr3pbcc8ixyi8p: {
+  rrr3pbcc8ixyi8p: {
     component_id: 'M0Hes2jXBIMM',
     project_id: '666TdydnqTmUJpihDvjWrt',
     Component: PlasmicHamdastKhedmatWidget,
     props_allowed: PlasmicHamdastKhedmatWidget__ArgProps,
+  },
+  a0lgs56djmf09d2: {
+    component_id: '',
+    project_id: '',
+    Component: Etebar,
+    props_allowed: Etebar__ArgProps,
   },
 };
