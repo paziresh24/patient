@@ -127,6 +127,7 @@
   -webkit-transition-duration: 1s;
 }
 .freeBox___5VZeu {
+  display: flex;
   flex-direction: row;
   position: relative;
   width: 100%;
@@ -136,7 +137,6 @@
   align-items: stretch;
   column-gap: 3px;
   min-width: 0;
-  display: none;
   padding: 0rem 1rem 1rem;
 }
 .freeBox__tkO1C {
