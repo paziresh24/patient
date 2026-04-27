@@ -211,6 +211,7 @@ function PlasmicRisman__RenderFunc(props: {
                         className={classNames(
                           projectcss.all,
                           projectcss.span,
+                          projectcss.span__bN5uN,
                           projectcss.__wab_text,
                           projectcss.plasmic_default__inline,
                           sty.span
@@ -304,44 +305,58 @@ function PlasmicRisman__RenderFunc(props: {
           target={true}
         />
       </div>
-      <div className={classNames(projectcss.all, sty.freeBox___5VZeu)}>
-        <div className={classNames(projectcss.all, sty.freeBox__tkO1C)}>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__pTpGa
-            )}
-          >
-            {"\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a:"}
+      {(() => {
+        try {
+          return $props?.data?.data?.destination?.["first-appointment"] != null;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
+          }
+          throw e;
+        }
+      })() ? (
+        <div className={classNames(projectcss.all, sty.freeBox___5VZeu)}>
+          <div className={classNames(projectcss.all, sty.freeBox__tkO1C)}>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__pTpGa
+              )}
+            >
+              {"\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a:"}
+            </div>
           </div>
-        </div>
-        <div className={classNames(projectcss.all, sty.freeBox___3Ssl5)}>
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__cErYq
-            )}
-          >
-            <React.Fragment>
-              {(() => {
-                try {
-                  return $props.data.data.destination["first-appointment"];
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return "\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a:";
+          <div className={classNames(projectcss.all, sty.freeBox___3Ssl5)}>
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__cErYq
+              )}
+            >
+              <React.Fragment>
+                {(() => {
+                  try {
+                    return $props.data.data.destination["first-appointment"];
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return "\u0627\u0648\u0644\u06cc\u0646 \u0646\u0648\u0628\u062a:";
+                    }
+                    throw e;
                   }
-                  throw e;
-                }
-              })()}
-            </React.Fragment>
+                })()}
+              </React.Fragment>
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
     </div>
   ) as React.ReactElement | null;
 }

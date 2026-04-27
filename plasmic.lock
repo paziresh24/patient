@@ -4516,12 +4516,12 @@
         {
           "type": "renderModule",
           "assetId": "KinPlL1Jj1j3",
-          "checksum": "f70edaf27bee6839324e68494516daeb"
+          "checksum": "aa14bce6b31cf011a726d3dd7fde1d7b"
         },
         {
           "type": "cssRules",
           "assetId": "KinPlL1Jj1j3",
-          "checksum": "f70edaf27bee6839324e68494516daeb"
+          "checksum": "aa14bce6b31cf011a726d3dd7fde1d7b"
         },
         {
           "type": "icon",
@@ -4566,7 +4566,7 @@
         {
           "assetId": "bN5uNsAhTefwW3S14VjvMG",
           "type": "projectCss",
-          "checksum": "5100f44384953fd8c1121fbd3ddd8745"
+          "checksum": "3a9be789e3ba248a9cb89ebc6af2c41e"
         }
       ],
       "codegenVersion": "0.0.3"
