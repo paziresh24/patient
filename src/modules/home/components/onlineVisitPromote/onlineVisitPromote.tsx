@@ -7,6 +7,7 @@ import Modal from '@/common/components/atom/modal';
 import ChevronIcon from '@/common/components/icons/chevron';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 import SearchCard from '@/modules/search/components/card/card';
 import random from 'lodash/random';
 import { useMemo } from 'react';
@@ -68,7 +69,7 @@ export const OnlineVisitPromote = () => {
               {searchData.data?.search?.result?.map((item: any) => (
                 <Avatar
                   key={item?.id}
-                  src={publicRuntimeConfig.CDN_BASE_URL + item.image}
+                  src={getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)}
                   className="-ml-2 border-2 border-white"
                   width={25}
                   height={25}
