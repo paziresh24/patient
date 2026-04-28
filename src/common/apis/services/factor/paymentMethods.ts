@@ -16,7 +16,6 @@ interface Params {
   timezone?: string;
   countryCode?: string;
   center_id?: string;
-  balance?: number;
 }
 
 type Response = {
@@ -24,6 +23,7 @@ type Response = {
     payment_methods: PaymentMethod[];
     additional_html?: string;
     payment_description_html?: string;
+    scroll_to_payment_methods?: boolean;
   };
 };
 
@@ -34,7 +34,6 @@ export const getPaymentMethods = async (params: Params) => {
       'timezone': params.timezone,
       'country-code': params.countryCode,
       'center_id': params.center_id,
-      'balance': params.balance,
     },
   });
 };
