@@ -10,6 +10,7 @@ import LocationIcon from '@/common/components/icons/location';
 import MoneyIcon from '@/common/components/icons/money';
 import VerifyIcon from '@/common/components/icons/verify';
 import classNames from '@/common/utils/classNames';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 import getConfig from 'next/config';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -72,7 +73,7 @@ export const SearchCard = (props: SearchCardProps) => {
         >
           <div className="relative">
             <Avatar
-              src={publicRuntimeConfig.CDN_BASE_URL + baseInfo?.avatar}
+              src={getImageUrl(baseInfo?.avatar, publicRuntimeConfig.CDN_BASE_URL)}
               alt={alt ?? imageAlt}
               width={avatarSize === 'md' ? 80 : 100}
               height={avatarSize === 'md' ? 80 : 100}

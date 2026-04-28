@@ -6,7 +6,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import { CENTERS } from '@/common/types/centers';
 import clsx from 'clsx';
 import isEmpty from 'lodash/isEmpty';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -81,7 +81,6 @@ export const Factor = (props: FactorProps) => {
       timezone,
       countryCode: userInfo?.country_code_id,
       center_id: centerId,
-      balance: balance?.data?.data?.balance,
     },
     {
       enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
@@ -90,6 +89,8 @@ export const Factor = (props: FactorProps) => {
   const paymentMethods = paymentMethodsData?.data?.data?.payment_methods || [];
   const additionalContent = paymentMethodsData?.data?.data?.additional_html || '';
   const payment_description_html = paymentMethodsData?.data?.data?.payment_description_html || '';
+  const scrollToPaymentMethods = paymentMethodsData?.data?.data?.scroll_to_payment_methods;
+  const wasScrollToPaymentMethodsEnabled = useRef(false);
 
   const handlePaymentMethodSelection = (paymentMethod: string) => {
     setSelectedPaymentMethod(paymentMethod);
@@ -126,6 +127,26 @@ export const Factor = (props: FactorProps) => {
       onSelectionChange?.(firstPaymentMethod);
     }
   }, [paymentMethods, selectedPaymentMethod, onSelectionChange]);
+
+  useEffect(() => {
+    if (!scrollToPaymentMethods) {
+      wasScrollToPaymentMethodsEnabled.current = false;
+      return;
+    }
+
+    if (wasScrollToPaymentMethodsEnabled.current || paymentMethods.length === 0 || isPaymentMethodsLoading) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        behavior: 'smooth',
+        top: document.documentElement.scrollHeight,
+      });
+    });
+
+    wasScrollToPaymentMethodsEnabled.current = true;
+  }, [scrollToPaymentMethods, paymentMethods.length, isPaymentMethodsLoading]);
 
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
