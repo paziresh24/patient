@@ -1,6 +1,7 @@
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import CenterIcon from '@/common/components/icons/center';
 import ChevronIcon from '@/common/components/icons/chevron';
+import CheckIcon from '@/common/components/icons/check';
 import Seo from '@/common/components/layouts/seo';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { ThemeConfig } from '@/common/hooks/useCustomize';
@@ -8,6 +9,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 
 type PricingModule = {
+  id?: number;
   title: string;
   price: number;
 };
@@ -31,6 +33,9 @@ type PageProps = {
   turnRanges: TurnRange[];
 };
 
+const getModuleKey = (groupName: string, module: PricingModule) =>
+  module.id !== undefined && module.id !== null ? `${groupName}-${module.id}` : `${groupName}-${module.title}`;
+
 const formatPrice = (price: number) => {
   if (price === 0) return 'رایگان';
   return `${new Intl.NumberFormat('fa-IR').format(price)} تومان`;
@@ -40,9 +45,10 @@ const normalizeApiResponse = (payload: unknown): TurnRange[] => {
   if (!Array.isArray(payload) || !payload.length) return [];
 
   const firstItem = payload[0] as ApiEnvelope;
-  if (!Array.isArray(firstItem?.data)) return [];
+  const ranges = Array.isArray(firstItem?.data) ? firstItem.data : (payload as TurnRange[]);
+  if (!Array.isArray(ranges)) return [];
 
-  return firstItem.data.map(item => ({
+  return ranges.map(item => ({
     title: item?.title ?? '',
     groups: Array.isArray(item?.groups)
       ? item.groups.map(group => ({
@@ -50,6 +56,7 @@ const normalizeApiResponse = (payload: unknown): TurnRange[] => {
           description: group?.description ?? '',
           modules: Array.isArray(group?.modules)
             ? group.modules.map(module => ({
+                id: Number(module?.id ?? 0),
                 title: module?.title ?? '',
                 price: Number(module?.price ?? 0),
               }))
@@ -69,7 +76,7 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
     () =>
       (activeRange?.groups ?? []).flatMap(group =>
         group.modules.map(module => ({
-          moduleKey: `${group.name}-${module.title}`,
+          moduleKey: getModuleKey(group.name, module),
           module,
         })),
       ),
@@ -79,6 +86,20 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
   const selectedList = useMemo(() => Object.entries(selectedModules), [selectedModules]);
   const totalPrice = useMemo(() => selectedList.reduce((sum, [, item]) => sum + item.price, 0), [selectedList]);
   const isAllSelected = allModulesInActiveRange.length > 0 && selectedList.length === allModulesInActiveRange.length;
+  const suggestedModuleKeys = useMemo(
+    () =>
+      allModulesInActiveRange
+        .filter(item => {
+          const moduleId = Number(item.module.id);
+          return !Number.isNaN(moduleId) && [1, 7, 11].includes(moduleId);
+        })
+        .map(item => item.moduleKey),
+    [allModulesInActiveRange],
+  );
+  const isSuggestedPackageSelected =
+    suggestedModuleKeys.length > 0 &&
+    selectedList.length === suggestedModuleKeys.length &&
+    suggestedModuleKeys.every(moduleKey => !!selectedModules[moduleKey]);
 
   const handleRangeChange = (index: number) => {
     setActiveRangeIndex(index);
@@ -123,6 +144,19 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
     setSelectedModules(nextSelectedModules);
   };
 
+  const handleSelectSuggestedPackage = () => {
+    const suggestedIds = new Set([1, 7, 11]);
+    const nextSelectedModules = allModulesInActiveRange.reduce<Record<string, PricingModule>>((acc, item) => {
+      const moduleId = Number(item.module.id);
+      if (!Number.isNaN(moduleId) && suggestedIds.has(moduleId)) {
+        acc[item.moduleKey] = item.module;
+      }
+      return acc;
+    }, {});
+
+    setSelectedModules(nextSelectedModules);
+  };
+
   const toggleGroup = (groupName: string) => {
     setOpenGroups(prev => ({
       ...prev,
@@ -132,14 +166,14 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
 
   const getSelectedCountForGroup = (group: PricingGroup) => {
     return group.modules.reduce((count, module) => {
-      const moduleKey = `${group.name}-${module.title}`;
+      const moduleKey = getModuleKey(group.name, module);
       return selectedModules[moduleKey] ? count + 1 : count;
     }, 0);
   };
 
   const getSelectedPriceForGroup = (group: PricingGroup) => {
     return group.modules.reduce((sum, module) => {
-      const moduleKey = `${group.name}-${module.title}`;
+      const moduleKey = getModuleKey(group.name, module);
       return selectedModules[moduleKey] ? sum + module.price : sum;
     }, 0);
   };
@@ -172,7 +206,10 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
                       : 'border-slate-200 text-slate-700 hover:border-slate-300'
                   }`}
                 >
-                  {range.title}
+                  <span className="inline-flex items-center gap-1">
+                    {index === activeRangeIndex && <CheckIcon className="h-4 w-4" />}
+                    {range.title}
+                  </span>
                 </button>
               ))}
             </div>
@@ -181,13 +218,29 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-sm font-semibold text-slate-700">لیست گروه‌ها و ماژول‌ها</h3>
                 {!!activeRange?.groups?.length && (
-                  <button
-                    type="button"
-                    onClick={toggleSelectAll}
-                    className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:border-slate-300"
-                  >
-                    {isAllSelected ? 'لغو انتخاب همه' : 'انتخاب همه'}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleSelectSuggestedPackage}
+                      className={`inline-flex h-8 w-[120px] items-center justify-center rounded-lg border px-2 text-xs font-medium transition ${
+                        isSuggestedPackageSelected
+                          ? 'border-primary/40 bg-primary/20 text-primary'
+                          : 'border-primary/30 bg-white text-primary hover:bg-primary/10'
+                      }`}
+                    >
+                      <span className="relative inline-flex w-full items-center justify-center whitespace-nowrap">
+                        <CheckIcon className={`absolute right-0 h-3.5 w-3.5 ${isSuggestedPackageSelected ? 'opacity-100' : 'opacity-0'}`} />
+                        <span className="absolute inset-0 inline-flex items-center justify-center">بسته پیشنهادی</span>
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={toggleSelectAll}
+                      className="inline-flex h-8 w-[120px] items-center justify-center rounded-lg border border-slate-200 px-2 text-xs font-medium text-slate-700 transition hover:border-slate-300"
+                    >
+                      <span className="whitespace-nowrap">{isAllSelected ? 'لغو انتخاب همه' : 'انتخاب همه'}</span>
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -235,7 +288,7 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
                         {openGroups[group.name] && (
                           <div className="mt-2 border-t border-slate-200 pt-2 space-y-2">
                             {group.modules.map(module => {
-                              const moduleKey = `${group.name}-${module.title}`;
+                              const moduleKey = getModuleKey(group.name, module);
                               const checked = !!selectedModules[moduleKey];
 
                               return (
@@ -281,17 +334,17 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
               {!selectedList.length && <p className="text-sm text-slate-500">هنوز ماژولی انتخاب نشده است.</p>}
 
               {!!selectedList.length && (
-                <div className="overflow-hidden rounded-lg border border-slate-200">
+                <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-slate-50">
+                    <thead>
                       <tr>
                         <th className="px-3 py-2 text-right font-semibold text-slate-700">آیتم‌ها</th>
                         <th className="px-3 py-2 text-left font-semibold text-slate-700">قیمت ماهانه</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedList.map(([moduleKey, module]) => (
-                        <tr key={moduleKey} className="border-t border-slate-100">
+                      {selectedList.map(([moduleKey, module], index) => (
+                        <tr key={moduleKey} className={index === 0 ? '' : 'border-t border-slate-200'}>
                           <td className="px-3 py-2 text-slate-700">{module.title}</td>
                           <td className="px-3 py-2 text-left font-medium text-slate-900">{formatPrice(module.price)}</td>
                         </tr>
@@ -302,9 +355,9 @@ const PricingCalculatorPage = ({ turnRanges }: PageProps) => {
               )}
             </div>
 
-            <div className="mt-4 rounded-xl bg-primary/10 p-4">
-              <p className="text-sm text-slate-700">جمع کل ماهانه</p>
-              <p className="mt-1 text-xl font-bold text-primary">{formatPrice(totalPrice)}</p>
+            <div className="mt-4 rounded-xl border border-primary/30 bg-primary/15 p-4">
+              <p className="text-base font-semibold text-primary">جمع کل ماهانه</p>
+              <p className="mt-1 text-2xl font-extrabold text-primary">{formatPrice(totalPrice)}</p>
               <p className="mt-2 text-center text-xs text-slate-600">قیمت ها بروز و شامل مالیات بر ارزش افزوده می باشد.</p>
             </div>
 
