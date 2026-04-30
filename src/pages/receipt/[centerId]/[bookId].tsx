@@ -104,6 +104,7 @@ const Receipt = () => {
   const isFetchingRef = useRef(false);
   const lastFetchedKeyRef = useRef<string>('');
   const accessChatRequestedBookIdRef = useRef<string | null>(null);
+  const hamiChatWebhookRequestedBookIdRef = useRef<string | null>(null);
   const { isMobile } = useResponsive();
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -540,13 +541,61 @@ const Receipt = () => {
   ]);
 
   useEffect(() => {
-    if (bookDetailsData?.services?.[0]?.service_type_id !== 9) {
+    const serviceTypeId = bookDetailsData?.services?.[0]?.service_type_id;
+    const currentBookId = bookDetailsData?.book_id;
+    const isConsultCenter = String(centerId) === CENTERS.CONSULT || String(bookDetailsData?.center_id) === CENTERS.CONSULT;
+
+    if (!isConsultCenter || !currentBookId || hamiChatWebhookRequestedBookIdRef.current === currentBookId) {
+      return;
+    }
+
+    hamiChatWebhookRequestedBookIdRef.current = currentBookId;
+    let isCancelled = false;
+    const maxRetries = 5;
+
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const callWebhookWithRetry = async (retryCount = 0): Promise<void> => {
+      try {
+        await apiGatewayClient.get('/v1/n8n-nelson/webhook/hami-chat', {
+          params: { book_id: currentBookId },
+          timeout: 10000,
+        });
+      } catch (error) {
+        if (isCancelled) {
+          return;
+        }
+
+        if (retryCount < maxRetries) {
+          const retryDelay = Math.min(2000 * (retryCount + 1), 10000);
+          await sleep(retryDelay);
+
+          if (!isCancelled) {
+            await callWebhookWithRetry(retryCount + 1);
+          }
+          return;
+        }
+
+        hamiChatWebhookRequestedBookIdRef.current = null;
+      }
+    };
+
+    callWebhookWithRetry();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [centerId, bookDetailsData?.book_id, bookDetailsData?.services, bookDetailsData?.center_id]);
+
+  useEffect(() => {
+    if (bookDetailsData?.services?.[0]?.service_type_id !== 9 || String(centerId) !== CENTERS.CONSULT) {
       setIsAccessChatLoading(false);
       setIsAccessChatReady(false);
       setIsAccessChatFailed(false);
       accessChatRequestedBookIdRef.current = null;
+      hamiChatWebhookRequestedBookIdRef.current = null;
     }
-  }, [bookDetailsData?.services, bookDetailsData?.book_id]);
+  }, [centerId, bookDetailsData?.services, bookDetailsData?.book_id]);
 
   const isShowRemoveButtonForOnlineVisit =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
