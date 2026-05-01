@@ -22,6 +22,7 @@ import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './components/subscription-payment';
 import { HamdastFlow } from './components/flow';
 import Link from 'next/link';
+import { HamdastInvite } from './components/invite';
 
 export const AppFrame = ({
   appKey,
@@ -178,6 +179,7 @@ export const AppFrame = ({
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} onChangeWidget={onChangeWidget} />
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />
+          <HamdastInvite app_key={appKey} />
           <Permissions onClose={() => router.push('/dashboard')} />
           <HamdastFlow iframeRef={iframeRef} />
           {showTranslation && (

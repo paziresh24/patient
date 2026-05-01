@@ -545,6 +545,10 @@ const Receipt = () => {
     const currentBookId = bookDetailsData?.book_id;
     const isConsultCenter = String(centerId) === CENTERS.CONSULT || String(bookDetailsData?.center_id) === CENTERS.CONSULT;
 
+    if (true) {
+      return;
+    }
+
     if (!isConsultCenter || !currentBookId || hamiChatWebhookRequestedBookIdRef.current === currentBookId) {
       return;
     }

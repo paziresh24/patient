@@ -37,6 +37,7 @@ import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
+import { trackDoctorProfileViewByDoctorId } from '@/modules/hamdast/utils/profileViewFrequency';
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -65,6 +66,7 @@ const DoctorProfile = (props: any) => {
   const [isProfileScriptsReady, setIsProfileScriptsReady] = useState(false);
   const profileScriptsReadyRef = useRef(false);
   const vicControlSentForSlugRef = useRef<string | null>(null);
+  const trackedDoctorIdRef = useRef<string | null>(null);
 
   const currentSlug = initialSlug ?? query.slug;
 
@@ -252,6 +254,15 @@ const DoctorProfile = (props: any) => {
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
   }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
+
+  useEffect(() => {
+    const doctorId = information?.id ? String(information.id) : '';
+    if (!doctorId) return;
+    if (trackedDoctorIdRef.current === doctorId) return;
+
+    trackedDoctorIdRef.current = doctorId;
+    trackDoctorProfileViewByDoctorId(doctorId);
+  }, [information?.id, currentSlug]);
 
   useEffect(() => {
     if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug && information) {

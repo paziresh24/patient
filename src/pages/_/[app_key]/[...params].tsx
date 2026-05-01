@@ -26,6 +26,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from '@/modules/hamdast/components/subscription-payment';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
+import { HamdastInvite } from '@/modules/hamdast/components/invite';
 import Button from '@/common/components/atom/button';
 import Link from 'next/link';
 
@@ -262,6 +263,7 @@ const Page = ({ page, app }: any) => {
       <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
       <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={app?.key} iframeRef={iframeRef} />
+      <HamdastInvite app_key={app?.key} />
       <HamdastFlow iframeRef={iframeRef} />
       {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}
 
