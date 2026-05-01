@@ -78,8 +78,8 @@ export const AppFrame = ({
 
   const embedSrc = useMemo(() => {
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
-    return page?.embed_src ? constructUrlWithQuery(replaceParameters, queries) : null;
-  }, [page, params, queries]);
+    return page?.embed_src ? constructUrlWithQuery(replaceParameters, { ...queries, user_id: user.id, hamdast_embedded: true }) : null;
+  }, [page, params, queries, user.id]);
 
   const showIframe = page?.is_protected_route ? !!user.id : true;
 
@@ -168,8 +168,6 @@ export const AppFrame = ({
           }
         />
       )}
-      <Link rel="preconnect" href="https://hamdast.paziresh24.com/bridge" />
-      <Link rel="dns-prefetch" href="https://hamdast.paziresh24.com/bridge" />
       {embedSrc && <Link rel="preconnect" href={embedSrc!} />}
       {embedSrc && <Link rel="dns-prefetch" href={embedSrc!} />}
       {app?.id && (
@@ -256,9 +254,9 @@ export const AppFrame = ({
                 className={classNames('w-full flex-grow h-full', { '!opacity-0 invisible absolute -left-[9999px]': isAppLoading })}
                 loading="eager"
                 width="100%" height="100%"
-                src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
-                  embedSrc!,
-                )}`}
+                src={embedSrc!}
+                allow="microphone; camera; fullscreen; clipboard-write;"
+                sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />
             </>
           )}
