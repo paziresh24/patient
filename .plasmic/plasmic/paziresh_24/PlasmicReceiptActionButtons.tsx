@@ -404,7 +404,7 @@ function PlasmicReceiptActionButtons__RenderFunc(props: {
                           const actionArgs = {
                             customFunction: async () => {
                               return globalThis.open(
-                                `https://messaging-back.paziresh24.com/api/external/conversations/${$props.bookDetailsData.book_id}`,
+                                `https://apigw.paziresh24.com/v1/n8n-nelson/webhook/hami-chat?book_id=${$props.bookDetailsData.book_id}`,
                               );
                             },
                           };

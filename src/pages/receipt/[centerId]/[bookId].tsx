@@ -104,7 +104,6 @@ const Receipt = () => {
   const isFetchingRef = useRef(false);
   const lastFetchedKeyRef = useRef<string>('');
   const accessChatRequestedBookIdRef = useRef<string | null>(null);
-  const hamiChatWebhookRequestedBookIdRef = useRef<string | null>(null);
   const { isMobile } = useResponsive();
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -529,38 +528,6 @@ const Receipt = () => {
     doctorFullName.family,
   ]);
 
-  useEffect(() => {
-    const currentBookId = bookDetailsData?.book_id;
-    const isConsultCenter = String(centerId) === CENTERS.CONSULT;
-
-    if (!isConsultCenter || !currentBookId || hamiChatWebhookRequestedBookIdRef.current === currentBookId) {
-      return;
-    }
-
-    hamiChatWebhookRequestedBookIdRef.current = currentBookId;
-    let isCancelled = false;
-
-    const callWebhook = async (): Promise<void> => {
-      try {
-        await apiGatewayClient.get('/v1/n8n-nelson/webhook/hami-chat', {
-          params: { book_id: currentBookId },
-          timeout: 10000,
-        });
-      } catch (error) {
-        if (isCancelled) {
-          return;
-        }
-
-        hamiChatWebhookRequestedBookIdRef.current = null;
-      }
-    };
-
-    callWebhook();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [centerId, bookDetailsData?.book_id, bookDetailsData?.services, bookDetailsData?.center_id]);
 
   useEffect(() => {
     if (bookDetailsData?.services?.[0]?.service_type_id !== 9 || String(centerId) !== CENTERS.CONSULT) {
@@ -568,7 +535,6 @@ const Receipt = () => {
       setIsAccessChatReady(false);
       setIsAccessChatFailed(false);
       accessChatRequestedBookIdRef.current = null;
-      hamiChatWebhookRequestedBookIdRef.current = null;
     }
   }, [centerId, bookDetailsData?.services, bookDetailsData?.book_id]);
 
@@ -855,7 +821,7 @@ const Receipt = () => {
         const isRedirectToHami = bookDetailsData?.doctor.online_visit_channels?.some?.((item: any) => item.type == 'whatsapp')
         if (!widgetApp) {
           if (isRedirectToHami) {
-            return window.location.assign(`https://messaging-back.paziresh24.com/api/external/conversations/${bookId}`)
+            return window.location.assign(`https://apigw.paziresh24.com/v1/n8n-nelson/webhook/hami-chat?book_id=${bookId}`)
           }
           window.location.assign(
             decodeURIComponent(
