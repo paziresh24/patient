@@ -48,6 +48,12 @@ export const apiGatewayClient = axios.create({
   ...baseConfig,
 });
 
+export const raviApiClient = axios.create({
+  baseURL: publicRuntimeConfig.RAVI_API_BASE_URL ? publicRuntimeConfig.RAVI_API_BASE_URL : 'https://ravi-api.paziresh24.com',
+  validateStatus: status => (status >= 200 && status < 300) || status === 423,
+  ...baseConfig,
+});
+
 export const searchClient = axios.create({
   baseURL: publicRuntimeConfig.SEARCH_BASE_URL ? publicRuntimeConfig.SEARCH_BASE_URL : 'https://apigw.paziresh24.com',
   withCredentials: true,

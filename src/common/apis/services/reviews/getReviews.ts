@@ -1,4 +1,4 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { raviApiClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '../../serverStateKeysEnum';
 
@@ -16,7 +16,7 @@ export interface ReviewParams {
 }
 
 export const getReviews = async (params: ReviewParams) => {
-  const { data } = await apiGatewayClient.get(`/ravi/v1/feedbacks`, {
+  const { data } = await raviApiClient.get(`/ravi/v1/feedbacks`, {
     params: {
       where: [
         params.slug && `(doctor_slug,eq,${params.slug})`,
@@ -35,6 +35,7 @@ export const getReviews = async (params: ReviewParams) => {
       offset: params?.offset ?? 0,
       ...(params.sort && { sort: `-${params.sort}` }),
     },
+    withCredentials: false
   });
   return data;
 };
