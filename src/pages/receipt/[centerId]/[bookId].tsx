@@ -481,11 +481,8 @@ const Receipt = () => {
     setIsAccessChatFailed(false);
 
     let isCancelled = false;
-    const maxRetries = 3;
 
-    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-    const requestAccessChatWithRetry = async (retryCount = 0): Promise<void> => {
+    const requestAccessChat = async (): Promise<void> => {
       try {
         await apiGatewayClient.get('/v1/appointments/access-chat', {
           params: {
@@ -506,14 +503,6 @@ const Receipt = () => {
           setIsAccessChatFailed(false);
         }
       } catch {
-        if (retryCount < maxRetries) {
-          await sleep(1000 * (retryCount + 1));
-          if (!isCancelled) {
-            await requestAccessChatWithRetry(retryCount + 1);
-          }
-          return;
-        }
-
         if (!isCancelled) {
           setIsAccessChatLoading(false);
           setIsAccessChatReady(false);
@@ -522,7 +511,7 @@ const Receipt = () => {
       }
     };
 
-    requestAccessChatWithRetry();
+    requestAccessChat();
 
     return () => {
       isCancelled = true;
@@ -541,13 +530,8 @@ const Receipt = () => {
   ]);
 
   useEffect(() => {
-    const serviceTypeId = bookDetailsData?.services?.[0]?.service_type_id;
     const currentBookId = bookDetailsData?.book_id;
-    const isConsultCenter = String(centerId) === CENTERS.CONSULT || String(bookDetailsData?.center_id) === CENTERS.CONSULT;
-
-    if (true) {
-      return;
-    }
+    const isConsultCenter = String(centerId) === CENTERS.CONSULT;
 
     if (!isConsultCenter || !currentBookId || hamiChatWebhookRequestedBookIdRef.current === currentBookId) {
       return;
@@ -555,11 +539,8 @@ const Receipt = () => {
 
     hamiChatWebhookRequestedBookIdRef.current = currentBookId;
     let isCancelled = false;
-    const maxRetries = 5;
 
-    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-    const callWebhookWithRetry = async (retryCount = 0): Promise<void> => {
+    const callWebhook = async (): Promise<void> => {
       try {
         await apiGatewayClient.get('/v1/n8n-nelson/webhook/hami-chat', {
           params: { book_id: currentBookId },
@@ -570,21 +551,11 @@ const Receipt = () => {
           return;
         }
 
-        if (retryCount < maxRetries) {
-          const retryDelay = Math.min(2000 * (retryCount + 1), 10000);
-          await sleep(retryDelay);
-
-          if (!isCancelled) {
-            await callWebhookWithRetry(retryCount + 1);
-          }
-          return;
-        }
-
         hamiChatWebhookRequestedBookIdRef.current = null;
       }
     };
 
-    callWebhookWithRetry();
+    callWebhook();
 
     return () => {
       isCancelled = true;
