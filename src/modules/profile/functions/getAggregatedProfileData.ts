@@ -259,8 +259,8 @@ export async function getAggregatedProfileData(
       : Promise.resolve([]),
     shouldFetchReviews
       ? queryClient.fetchQuery(
-          [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }],
-          () => getReviews({ slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }),
+          [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }],
+          () => getReviews({ slug: validatedSlug, sort: 'default_order' }),
         )
       : Promise.resolve(null),
     getAverageWaitingTime({
