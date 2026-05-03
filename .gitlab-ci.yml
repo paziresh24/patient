@@ -1,67 +1,21 @@
-image: docker:20.10.16
-services:
-  - docker:20.10.16-dind
-
 stages:
-  - build_and_push
-  - deploy
-  - webhook # مرحله جدید برای فراخوانی وب‌هوک
+  - build
 
-variables:
-  DOCKER_IMAGE: $DOCKER_REGISTRY_ADDRESS/$CI_PROJECT_NAME:latest
-  KUBE_NAMESPACE: "frontend"
-  KUBE_APP: "patient"
-  WEBHOOK_URL: "https://n8n-search.darkube.app/webhook/test" # تعریف متغیر برای وب‌هوک
-
-build_and_push:
-  stage: build_and_push
+build-docker-image:
+  stage: build
+  image: docker:cli
+  variables:
+    DOCKER_HOST: "unix:///var/run/docker.sock"
+    
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - echo "Building image for main branch..."
-    - docker build -t $DOCKER_IMAGE .
-    - docker push $DOCKER_IMAGE
+    - docker build --provenance=false -t "$CI_REGISTRY_IMAGE:latest" -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
+    
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+    
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-  tags:
-    - arvan
-    - docker
-  when: manual
-
-deploy:
-  stage: deploy
-  image:
-    name: docker.arvancloud.ir/alpine/kubectl:1.34.1
-    entrypoint: [""]   # disable kubectl as default entrypoint
-  script:
-    - mkdir -p ~/.kube
-    - echo "$KUBE_CONFIG" | base64 -d > ~/.kube/config
-    - chmod 600 ~/.kube/config
-    - kubectl --kubeconfig ~/.kube/config -n $KUBE_NAMESPACE rollout restart deployment/$KUBE_APP
-    - kubectl --kubeconfig ~/.kube/config -n $KUBE_NAMESPACE rollout status deployment/$KUBE_APP
-  needs: ["build_and_push"]
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-  tags:
-    - arvan
-    - docker
-  when: manual
-
-
-webhook:
-  stage: webhook
-  image: curlimages/curl:latest # استفاده از یک ایمیج سبک که curl در آن موجود است
-  script:
-    # ارسال یک درخواست POST ساده به وب‌هوک
-    - |
-      echo "Calling webhook: $WEBHOOK_URL"
-      curl -X POST -H "Content-Type: application/json" -d "{
-        \"status\": \"build_pushed_to_arvan_and_deployed\",
-        \"project\": \"$CI_PROJECT_NAME\",
-        \"commit\": \"$CI_COMMIT_SHORT_SHA\",
-        \"branch\": \"$CI_COMMIT_REF_NAME\"
-      }" $WEBHOOK_URL
-  needs: ["deploy"] # مطمئن می‌شویم که بعد از deploy اجرا شود
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main" # فقط اگر در main اجرا شده باشد
-    - when: manual # می‌توانید آن را به صورت دستی هم قابل اجرا کنید
-  allow_failure: true # اگر فراخوانی وب‌هوک شکست خورد، خط لوله شکست نخورد
+      when: always
