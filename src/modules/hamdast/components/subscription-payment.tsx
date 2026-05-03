@@ -171,7 +171,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       history: any[];
     }> => {
       try {
-        const response = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/subscriptions`, {
+        const response = await axios.get(`https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/subscriptions`, {
           withCredentials: true,
         });
         return {
@@ -209,7 +209,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           return handleActiveSubscription(subscriptionInfo);
         }
 
-        const response = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/`, {
+        const response = await axios.get(`https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/plans/`, {
           withCredentials: true,
         });
         const plans = response.data?.items || [];
@@ -254,7 +254,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
           return handleActiveSubscription(subscriptionInfo);
         }
 
-        const planResponse = await axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${plan_key}`, {
+        const planResponse = await axios.get(`https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/plans/${plan_key}`, {
           withCredentials: true,
         });
         setPlanData(planResponse.data);
@@ -309,7 +309,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
     const subscribeToPlan = async (receipt_id: string, center_id: string, is_auto_renew?: boolean) => {
       try {
         await axios.post(
-          `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
+          `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/plans/${subscriptionData.current?.plan_key}/subscribe`,
           { receipt_id, auto_renew: is_auto_renew, wallet_id: center_id },
           { withCredentials: true },
         );
@@ -328,7 +328,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       setIsSubscribing(true);
       try {
         await axios.post(
-          `https://apigw.paziresh24.com/v1/hamdast/apps/${app_key}/plans/${subscriptionData.current?.plan_key}/subscribe`,
+          `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/plans/${subscriptionData.current?.plan_key}/subscribe`,
           { trial: true },
           { withCredentials: true },
         );

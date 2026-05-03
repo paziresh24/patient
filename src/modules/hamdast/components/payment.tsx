@@ -141,7 +141,7 @@ export default forwardRef(({ app_key, app_name, icon, onSuccess, onCancel, onErr
     }
     axios
       .post(
-        `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/payment/`,
+        `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/receipts/`,
         {
           product_key: product_key,
           plan_key: plan_key,
