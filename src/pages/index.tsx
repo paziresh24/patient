@@ -33,6 +33,7 @@ import PlasmicLocationSelectionScript from '.plasmic/plasmic/paziresh_24_search/
 import PlasmicRecentSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
 import PlasmicOnlineVisit from '.plasmic/plasmic/paziresh_24_search/PlasmicOnlineVisit';
 import PlasmicHomePageShortcuts from '.plasmic/plasmic/paziresh_24_search/PlasmicHomePageShortcuts';
+import { getHost, HeaderBag } from '@/common/utils/getHost';
 
 const Home = ({ fragmentComponents }: any) => {
   const { isMobile } = useResponsive();
@@ -67,13 +68,12 @@ const Home = ({ fragmentComponents }: any) => {
           style={
             customize.backgroundImage
               ? {
-                  backgroundImage: `linear-gradient(#05242dbf, #ffffff 90%), url(${
-                    publicRuntimeConfig.PARTNER_LOGO_BASE_URL + '/' + customize.backgroundImage
+                backgroundImage: `linear-gradient(#05242dbf, #ffffff 90%), url(${publicRuntimeConfig.PARTNER_LOGO_BASE_URL + '/' + customize.backgroundImage
                   })`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }
               : undefined
           }
         ></div>
@@ -229,7 +229,7 @@ export const getServerSideProps = withCSR(
     let showPlasmicRecentSearch: boolean = true;
     let showPlasmicOnlineVisit: boolean = false;
     try {
-      const host = context.req.headers.host;
+      const host = getHost(context.req.headers as unknown as HeaderBag);
       const path = context.resolvedUrl;
       const url = `https://${host}${path}`;
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);

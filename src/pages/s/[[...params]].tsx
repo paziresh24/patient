@@ -51,6 +51,7 @@ import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGro
 import Loading from '@/common/components/atom/loading';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import Button from '@/common/components/atom/button';
+import { getHost, HeaderBag } from '@/common/utils/getHost';
 
 const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
   const { isMobile } = useResponsive();
@@ -376,7 +377,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     let showPlasmicConsultBanner: boolean = false;
     let showSuggestedDoctor: any = {};
 
-    const host = context.req.headers.host;
+    const host = getHost(context.req.headers as unknown as HeaderBag);
     const path = context.resolvedUrl;
     const url = `https://${host}${path}`;
     const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';

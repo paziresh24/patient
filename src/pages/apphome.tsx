@@ -24,6 +24,7 @@ import useResponsive from '@/common/hooks/useResponsive';
 import Button from '@/common/components/atom/button';
 import ChevronIcon from '@/common/components/icons/chevron';
 import { splunkInstance } from '@/common/services/splunk';
+import { getHost, HeaderBag } from '@/common/utils/getHost';
 
 const Home = ({ fragmentComponents }: any) => {
   const isApplication = useApplication();
@@ -150,7 +151,7 @@ export const getServerSideProps = withCSR(
     let showPlasmicRecentSearch: boolean = false;
     let showPlasmicOnlineVisit: boolean = false;
     try {
-      const host = context.req.headers.host;
+      const host = getHost(context.req.headers as unknown as HeaderBag);
       const path = context.resolvedUrl;
 
       const url = `https://${host}${path}`;
