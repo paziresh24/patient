@@ -44,6 +44,7 @@ import Script from 'next/script';
 import Head from 'next/head';
 import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
+import { useRate } from '@/common/apis/services/reviews/rate';
 
 const { publicRuntimeConfig } = config();
 
@@ -162,6 +163,14 @@ const DoctorProfile = (props: any) => {
     user_id,
     dontShowRateAndReviewMessage,
   } = finalProps ?? {};
+
+  const rateDebug =
+    query.rateDebug === '1' || process.env.NEXT_PUBLIC_PROFILE_RATE_DEBUG === 'true';
+  const rateDebugSlug = slug ?? currentSlug;
+  const rateDebugProbe = useRate(
+    { slug: String(rateDebugSlug ?? '') },
+    { enabled: rateDebug && !!rateDebugSlug, refetchOnWindowFocus: false },
+  );
 
   const doctorProfileImageUrl = useMemo(
     () => resolveDoctorProfileImageUrl(information, user_id),
@@ -362,6 +371,39 @@ const DoctorProfile = (props: any) => {
 
   return (
     <>
+      {rateDebug && (
+        <div
+          className="fixed top-14 right-2 z-[10000] max-w-md rounded-md border border-amber-300 bg-amber-50/95 p-2 text-[11px] leading-relaxed text-amber-950 font-mono shadow-md backdrop-blur-sm"
+          dir="ltr"
+        >
+          <div className="font-bold text-amber-900">rateDebug (add ?rateDebug=1)</div>
+          <div>slug: {String(rateDebugSlug ?? '')}</div>
+          <div>showRateAndReviews (customize): {String(customize?.showRateAndReviews)}</div>
+          <div>ravi_show_external_rate (hides review bars): {String(dontShowRateDetails)}</div>
+          <div>
+            client probe /api/ravi-rate:{' '}
+            {rateDebugProbe.isLoading
+              ? 'loading…'
+              : rateDebugProbe.isError
+                ? `error: ${(rateDebugProbe.error as any)?.message ?? 'unknown'}`
+                : `ok (list ${rateDebugProbe.data?.list?.length ?? 0})`}
+          </div>
+          <div>
+            SSR props average_rates:{' '}
+            {[
+              feedbacks?.details?.average_rates?.average_quality_of_treatment,
+              feedbacks?.details?.average_rates?.average_doctor_encounter,
+              feedbacks?.details?.average_rates?.average_explanation_of_issue,
+            ].every(v => v == null || v === '')
+              ? 'empty (getRateDetails failed or no row)'
+              : 'set'}
+          </div>
+          <div className="text-[10px] text-amber-800 mt-1">
+            Tip: first HTML load fetches rate on the server — you will not see ravi-api in the browser Network tab until client
+            refetch (e.g. profile client fetch or this probe).
+          </div>
+        </div>
+      )}
       <Head>
         <link rel="dns-prefetch" href="//cdn.paziresh24.com" />
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
