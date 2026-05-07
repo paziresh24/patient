@@ -51,6 +51,7 @@ export const apiGatewayClient = axios.create({
 export const katibeApiClient = axios.create({
   baseURL: publicRuntimeConfig.KATIBE_API_BASE_URL ? publicRuntimeConfig.KATIBE_API_BASE_URL : 'https://katibe-api.paziresh24.com',
   validateStatus: status => (status >= 200 && status < 300) || status === 423,
+  withCredentials: true,
   ...baseConfig,
 });
 
