@@ -164,12 +164,11 @@ const DoctorProfile = (props: any) => {
     dontShowRateAndReviewMessage,
   } = finalProps ?? {};
 
-  const rateDebug =
-    query.rateDebug === '1' || process.env.NEXT_PUBLIC_PROFILE_RATE_DEBUG === 'true';
+  const rateDebug = query.rateDebug === '1';
   const rateDebugSlug = slug ?? currentSlug;
   const rateDebugProbe = useRate(
     { slug: String(rateDebugSlug ?? '') },
-    { enabled: rateDebug && !!rateDebugSlug, refetchOnWindowFocus: false },
+    { enabled: rateDebug && !!rateDebugSlug, refetchOnWindwFocus: false },
   );
 
   const doctorProfileImageUrl = useMemo(
@@ -604,30 +603,30 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
       },
       'affiliation': center
         ? {
-            '@type': 'MedicalClinic',
-            'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
-            'address': {
-              '@type': 'PostalAddress',
-              'streetAddress': center.address,
-              'addressLocality': center.city,
-              'addressRegion': center.province,
-              'addressCountry': 'IR',
-            },
-            'contactPoint': {
-              '@type': 'ContactPoint',
-              'telephone': center.display_number?.[0] || center.display_number,
-              'contactType': 'appointment',
-              'availableLanguage': ['fa'],
-            },
-            'openingHoursSpecification': getOpeningHours(),
-            'geo': center.map
-              ? {
-                  '@type': 'GeoCoordinates',
-                  'latitude': center.map.lat,
-                  'longitude': center.map.lon,
-                }
-              : undefined,
-          }
+          '@type': 'MedicalClinic',
+          'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': center.address,
+            'addressLocality': center.city,
+            'addressRegion': center.province,
+            'addressCountry': 'IR',
+          },
+          'contactPoint': {
+            '@type': 'ContactPoint',
+            'telephone': center.display_number?.[0] || center.display_number,
+            'contactType': 'appointment',
+            'availableLanguage': ['fa'],
+          },
+          'openingHoursSpecification': getOpeningHours(),
+          'geo': center.map
+            ? {
+              '@type': 'GeoCoordinates',
+              'latitude': center.map.lat,
+              'longitude': center.map.lon,
+            }
+            : undefined,
+        }
         : undefined,
       'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
       'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
@@ -657,38 +656,38 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
       },
       ...(!feedbacks?.details?.hide_rates &&
         (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 && {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            'ratingValue': +(
-              (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-              3
-            ).toFixed(1),
-            'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
-            'bestRating': 5,
-            'worstRating': 0,
-          },
-          review:
-            feedbacks?.feedbacks?.list
-              ?.filter((item: any) => !!item?.avg_rate_value)
-              ?.slice(0, 5) // Limit to 5 reviews for schema
-              ?.map?.((feedback: any) => ({
-                '@type': 'Review',
-                'author': {
-                  '@type': 'Person',
-                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
-                },
-                'reviewRating': {
-                  '@type': 'Rating',
-                  'ratingValue': feedback?.avg_rate_value ?? 0,
-                  'bestRating': 5,
-                  'worstRating': 0,
-                },
-                'reviewBody': feedback?.description,
-                'datePublished': feedback?.created_at?.split(' ')?.[0],
-              })) ?? [],
-        }),
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          'ratingValue': +(
+            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+            3
+          ).toFixed(1),
+          'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
+          'bestRating': 5,
+          'worstRating': 0,
+        },
+        review:
+          feedbacks?.feedbacks?.list
+            ?.filter((item: any) => !!item?.avg_rate_value)
+            ?.slice(0, 5) // Limit to 5 reviews for schema
+            ?.map?.((feedback: any) => ({
+              '@type': 'Review',
+              'author': {
+                '@type': 'Person',
+                'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
+              },
+              'reviewRating': {
+                '@type': 'Rating',
+                'ratingValue': feedback?.avg_rate_value ?? 0,
+                'bestRating': 5,
+                'worstRating': 0,
+              },
+              'reviewBody': feedback?.description,
+              'datePublished': feedback?.created_at?.split(' ')?.[0],
+            })) ?? [],
+      }),
     };
 
     const breadcrumbSchema = {
