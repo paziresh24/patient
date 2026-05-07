@@ -13,8 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const token = req.cookies?.token;
+    const authHeader = req.headers.authorization;
     const response = await axios.get(`${katibeBaseUrl}/v1/transactions/balance/p24`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      params: req.query,
+      headers: authHeader ? { Authorization: authHeader } : token ? { Authorization: `Bearer ${token}` } : undefined,
       timeout: 8000,
     });
 
