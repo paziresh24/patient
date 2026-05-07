@@ -707,9 +707,7 @@ function PlasmicFactor__RenderFunc(props: {
                                   "data"
                                 ]).apply(null, eventArgs);
                               }}
-                              url={
-                                "https://katibe-api.paziresh24.com/v1/transactions/balance/p24"
-                              }
+                              url={"/patient/api/wallet/balance"}
                             >
                               <div
                                 className={classNames(
