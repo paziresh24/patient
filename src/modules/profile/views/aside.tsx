@@ -250,6 +250,8 @@ export const Aside = (data: any) => {
             args={{
               ...profileData,
               slug: seo.slug,
+              // Remove "گزارش اشتباه در اطلاعات مرکز" action in header.
+              button: { render: () => null } as any,
               children: centers
                 .filter((center: any) => center.id !== CENTERS.CONSULT)
                 .map((center: any) => (
