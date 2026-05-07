@@ -306,7 +306,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                                   ?.map(
                                     async item =>
                                       await $$.axios(
-                                        `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24${
+                                        `/patient/api/wallet/balance${
                                           item.id == "5532"
                                             ? ``
                                             : `?centerid=${item.id}&account=organization`
@@ -356,7 +356,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                             try {
                               const katibeWalletRequests = [
                                 await $$.axios(
-                                  `https://https://katibe-api.paziresh24.com/v1/transactions/balance/p24`,
+                                  `/patient/api/wallet/balance`,
                                   {
                                     ...$ctx.Fragment.previewApiConfig,
                                     ...$ctx.Fragment.apiConfig
