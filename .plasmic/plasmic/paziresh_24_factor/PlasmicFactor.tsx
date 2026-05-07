@@ -708,7 +708,7 @@ function PlasmicFactor__RenderFunc(props: {
                                 ]).apply(null, eventArgs);
                               }}
                               url={
-                                "https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24"
+                                "https://katibe-api.paziresh24.com/v1/transactions/balance/p24"
                               }
                             >
                               <div
