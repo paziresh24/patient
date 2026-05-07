@@ -83,15 +83,15 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
 
   const items = [
     {
-      label: 'برخورد مناسب پزشک',
+      label: 'برخورد مناسب',
       value: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
     },
     {
-      label: 'توضیح پزشک در هنگام ویزیت',
+      label: 'توضیح در هنگام ویزیت',
       value: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
     },
     {
-      label: 'مهارت و تخصص پزشک',
+      label: 'مهارت و تخصص',
       value: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
     },
   ];
