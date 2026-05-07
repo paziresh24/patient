@@ -356,7 +356,7 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                             try {
                               const katibeWalletRequests = [
                                 await $$.axios(
-                                  `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24`,
+                                  `https://https://katibe-api.paziresh24.com/v1/transactions/balance/p24`,
                                   {
                                     ...$ctx.Fragment.previewApiConfig,
                                     ...$ctx.Fragment.apiConfig
