@@ -69,7 +69,7 @@ export default forwardRef(({ app_key, app_name, icon, onSuccess, onCancel, onErr
     Promise.all(
       centers.map((item: any) =>
         axios.get(
-          `/patient/api/wallet/balance${item.id == "5532" ? `` : `?centerid=${item.id}&account=organization`
+          `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24${item.id == "5532" ? `` : `?centerid=${item.id}&account=organization`
           }`,
           {
             withCredentials: true,
