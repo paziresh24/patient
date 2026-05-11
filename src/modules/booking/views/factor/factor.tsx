@@ -71,9 +71,15 @@ export const Factor = (props: FactorProps) => {
       ? Intl.DateTimeFormat().resolvedOptions().timeZone
       : undefined;
 
-  const { data: balance, isLoading: balanceLoading } = useGetBalance({
-    enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor || !!isKatibePaymentMethodsEnabled) && isLogin,
+  const walletBalanceQueryEnabled =
+    (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor || !!isKatibePaymentMethodsEnabled) && isLogin;
+
+  const { data: balance, isLoading: balanceLoading, isSuccess: balanceSuccess } = useGetBalance({
+    enabled: walletBalanceQueryEnabled,
   });
+
+  const balanceForPaymentMethods =
+    balanceSuccess && typeof balance?.data?.data?.balance === 'number' ? balance.data.data.balance : undefined;
 
   const { data: paymentMethodsData } = useGetPaymentMethods(
     {
@@ -81,9 +87,14 @@ export const Factor = (props: FactorProps) => {
       timezone,
       countryCode: userInfo?.country_code_id,
       center_id: centerId,
+      ...(balanceForPaymentMethods !== undefined ? { balance: balanceForPaymentMethods } : {}),
     },
     {
-      enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
+      enabled:
+        isKatibePaymentMethodsEnabled &&
+        !!totalPrice &&
+        !loading &&
+        (!walletBalanceQueryEnabled || !balanceLoading),
     },
   );
   const paymentMethods = paymentMethodsData?.data?.data?.payment_methods || [];
