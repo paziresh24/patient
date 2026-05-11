@@ -652,7 +652,8 @@ function PlasmicFactor__RenderFunc(props: {
                                       : {};
                                     return {
                                       headers,
-                                      ...$ctx.Fragment.previewApiConfig
+                                      ...$ctx.Fragment.previewApiConfig,
+                                      withCredentials: true
                                     };
                                   })();
                                 } catch (e) {
@@ -707,7 +708,9 @@ function PlasmicFactor__RenderFunc(props: {
                                   "data"
                                 ]).apply(null, eventArgs);
                               }}
-                              url={"/patient/api/wallet/balance"}
+                              url={
+                                "https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24"
+                              }
                             >
                               <div
                                 className={classNames(
