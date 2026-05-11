@@ -89,10 +89,18 @@ export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
     onLoading?.(true);
     onError?.(null);
     onSuccess?.(null);
+    const isKatibeWalletBalance =
+      typeof url === 'string' &&
+      ((url.includes('apigw.paziresh24.com') && url.includes('/katibe/v1/transactions/balance/p24')) ||
+        (url.includes('katibe-api.paziresh24.com') && url.includes('/v1/transactions/balance/p24')));
+    const axiosConfig = {
+      ...config,
+      ...(isKatibeWalletBalance ? { withCredentials: true } : {}),
+    };
     if (method === 'GET') {
       return await axios.get(url, {
         params,
-        ...config,
+        ...axiosConfig,
       });
     }
     if (method === 'DELETE') {
@@ -101,12 +109,12 @@ export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
         data: {
           ...body,
         },
-        ...config,
+        ...axiosConfig,
       });
     }
     return await axios[method.toLowerCase() as 'post' | 'delete' | 'put' | 'patch'](url, body, {
       params,
-      ...config,
+      ...axiosConfig,
     });
   };
 
