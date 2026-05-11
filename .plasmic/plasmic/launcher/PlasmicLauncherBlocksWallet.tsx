@@ -306,14 +306,15 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                                   ?.map(
                                     async item =>
                                       await $$.axios(
-                                        `/patient/api/wallet/balance${
+                                        `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24${
                                           item.id == "5532"
                                             ? ``
                                             : `?centerid=${item.id}&account=organization`
                                         }`,
                                         {
                                           ...$ctx.Fragment.previewApiConfig,
-                                          ...$ctx.Fragment.apiConfig
+                                          ...$ctx.Fragment.apiConfig,
+                                          withCredentials: true
                                         }
                                       )
                                   );
@@ -356,10 +357,11 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                             try {
                               const katibeWalletRequests = [
                                 await $$.axios(
-                                  `/patient/api/wallet/balance`,
+                                  `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24`,
                                   {
                                     ...$ctx.Fragment.previewApiConfig,
-                                    ...$ctx.Fragment.apiConfig
+                                    ...$ctx.Fragment.apiConfig,
+                                    withCredentials: true
                                   }
                                 )
                               ];
