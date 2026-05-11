@@ -1,9 +1,9 @@
-import axios from 'axios';
+import { apiGatewayClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
 
 export const getBalance = async () => {
-  return axios.get('/patient/api/wallet/balance');
+  return apiGatewayClient.get(`/katibe/v1/transactions/balance/p24`, { withCredentials: true });
 };
 
 export const useGetBalance = (options?: any) => {
