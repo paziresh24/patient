@@ -83,10 +83,11 @@ type VariantPropType = keyof PlasmicHamdastKhedmatWidget__VariantsArgs;
 export const PlasmicHamdastKhedmatWidget__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicHamdastKhedmatWidget__ArgsType = { profileData?: any };
+export type PlasmicHamdastKhedmatWidget__ArgsType = { profileData?: any, widgetData?: any };
 type ArgPropType = keyof PlasmicHamdastKhedmatWidget__ArgsType;
 export const PlasmicHamdastKhedmatWidget__ArgProps = new Array<ArgPropType>(
-  "profileData"
+  "profileData",
+  "widgetData"
 );
 
 export type PlasmicHamdastKhedmatWidget__OverridesType = {
@@ -99,6 +100,7 @@ export type PlasmicHamdastKhedmatWidget__OverridesType = {
 
 export interface DefaultHamdastKhedmatWidgetProps {
   profileData?: any;
+  widgetData?: any;
   className?: string;
 }
 
@@ -273,7 +275,8 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                           event_group: "khedmat_click_button",
                           doctor_user_id: $props.profileData.user_id,
                           doctor_slug: $props.profileData.seo.slug,
-                          user_id: $ctx.auth?.info?.id
+                          user_id: $ctx.auth?.info?.id,
+                          center_id: $props?.widgetData?.center_id
                         };
                       } catch (e) {
                         if (
@@ -332,7 +335,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
             url={(() => {
               try {
                 return (
-                  "https://apigw.paziresh24.com/v1/hamdast/widget-data/khedmat/servises?user_id=" +
+                  `https://apigw.paziresh24.com/v1/hamdast/widget-data/khedmat/servises?center_id=${$props.widgetData.center_id}&user_id=` +
                   $props.profileData.user_id
                 );
               } catch (e) {
