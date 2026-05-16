@@ -4,29 +4,33 @@ import Script from 'next/script';
 
 type ScriptStrategy = 'afterInteractive' | 'lazyOnload';
 
-type SearchExternalScriptItem = {
+type RoutedExternalScriptItem = {
   id?: string;
   src: string;
   strategy?: ScriptStrategy;
   enabled?: boolean;
 };
 
-type SearchExternalScriptsConfig = {
-  scripts: SearchExternalScriptItem[];
+type RoutedExternalScriptsConfig = {
+  scripts: RoutedExternalScriptItem[];
 };
 
-const SEARCH_EXTERNAL_SCRIPTS_FEATURE_KEY = 'search:external-scripts-config';
-const DEFAULT_CONFIG: SearchExternalScriptsConfig = { scripts: [] };
+const EXTERNAL_SCRIPTS_FEATURE_KEY = 'search:external-scripts-config';
+const DEFAULT_CONFIG: RoutedExternalScriptsConfig = { scripts: [] };
 
-function shouldLoadSearchScripts(pathname: string): boolean {
-  return pathname.startsWith('/s/');
+function shouldLoadRoutedExternalScripts(pathname: string): boolean {
+  if (pathname.startsWith('/s/')) return true;
+  if (pathname === '/' || pathname === '/apphome') return true;
+  if (pathname.startsWith('/dr/')) return true;
+  if (pathname.startsWith('/center/')) return true;
+  return false;
 }
 
 function isValidHttpUrl(url: unknown): url is string {
   return typeof url === 'string' && /^https?:\/\//.test(url);
 }
 
-function normalizeConfig(config: SearchExternalScriptsConfig): SearchExternalScriptItem[] {
+function normalizeConfig(config: RoutedExternalScriptsConfig): RoutedExternalScriptItem[] {
   if (!config || !Array.isArray(config.scripts)) return [];
 
   return config.scripts
@@ -39,11 +43,11 @@ function normalizeConfig(config: SearchExternalScriptsConfig): SearchExternalScr
     }));
 }
 
-export function SearchExternalScripts() {
+export function RoutedExternalScripts() {
   const router = useRouter();
-  const config = useFeatureValue<SearchExternalScriptsConfig>(SEARCH_EXTERNAL_SCRIPTS_FEATURE_KEY, DEFAULT_CONFIG);
+  const config = useFeatureValue<RoutedExternalScriptsConfig>(EXTERNAL_SCRIPTS_FEATURE_KEY, DEFAULT_CONFIG);
   const scripts = normalizeConfig(config);
-  const shouldLoad = shouldLoadSearchScripts(router.pathname);
+  const shouldLoad = shouldLoadRoutedExternalScripts(router.pathname);
 
   if (!shouldLoad || scripts.length === 0) return null;
 
