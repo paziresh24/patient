@@ -23,8 +23,7 @@ import { GetServerSidePropsContext } from 'next/types';
 import { useQuery } from '@tanstack/react-query';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { growthbook } from 'src/pages/_app';
-
-const FACTOR_DOCTOR_AVATAR_PIC_FALLBACK = 'https://pic.paziresh24.com/api/image/1';
+import { PIC_USER_IMAGE_FALLBACK_URL, picUserImageUrl } from '@/common/utils/picUserImageUrl';
 
 const Factor = () => {
   const {
@@ -89,12 +88,12 @@ const Factor = () => {
 
   const factorDoctorAvatar = useMemo(() => {
     if (!bookDetailsData || typeof bookDetailsData !== 'object') return undefined;
-    if (doctorUserIdFromBook) return `https://pic.paziresh24.com/api/image/${doctorUserIdFromBook}`;
-    if (!doctorSlugFromBook) return FACTOR_DOCTOR_AVATAR_PIC_FALLBACK;
+    if (doctorUserIdFromBook) return picUserImageUrl(doctorUserIdFromBook);
+    if (!doctorSlugFromBook) return PIC_USER_IMAGE_FALLBACK_URL;
     const res = doctorSlugForImageResponse;
-    if (!res || 'error' in res || 'redirect' in res) return FACTOR_DOCTOR_AVATAR_PIC_FALLBACK;
-    if (res.user_id == null) return FACTOR_DOCTOR_AVATAR_PIC_FALLBACK;
-    return `https://pic.paziresh24.com/api/image/${res.user_id}`;
+    if (!res || 'error' in res || 'redirect' in res) return PIC_USER_IMAGE_FALLBACK_URL;
+    if (res.user_id == null) return PIC_USER_IMAGE_FALLBACK_URL;
+    return picUserImageUrl(res.user_id);
   }, [bookDetailsData, doctorUserIdFromBook, doctorSlugFromBook, doctorSlugForImageResponse]);
 
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;

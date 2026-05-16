@@ -14,6 +14,7 @@ import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
 import { getAppointmentDoctor } from '@/common/apis/services/booking/getAppointmentDoctor';
+import { PIC_USER_IMAGE_FALLBACK_URL, picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
@@ -95,25 +96,34 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
     });
   };
 
-  const { data: appointmentDoctorData } = useQuery(
-    ['appointmentDoctorPic', id],
-    () => getAppointmentDoctor(id),
-    {
-      enabled: !!id,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      staleTime: 5 * 60 * 1000,
-      retry: 2,
-    },
-  );
+  const {
+    data: appointmentDoctorData,
+    isFetching: isAppointmentDoctorFetching,
+    isSuccess: isAppointmentDoctorSuccess,
+    isError: isAppointmentDoctorError,
+  } = useQuery(['appointmentDoctorPic', id], () => getAppointmentDoctor(id), {
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
+  });
+
+  const isAppointmentDoctorPicSettled = isAppointmentDoctorSuccess || isAppointmentDoctorError;
 
   const doctorAvatarSrc = useMemo(() => {
     const uid = appointmentDoctorData?.user_id;
     if (uid !== undefined && uid !== null && uid !== '') {
-      return `https://pic.paziresh24.com/api/image/${uid}`;
+      return picUserImageUrl(uid);
     }
-    return doctorInfo.avatar;
-  }, [appointmentDoctorData, doctorInfo.avatar]);
+    if (isAppointmentDoctorPicSettled) {
+      return PIC_USER_IMAGE_FALLBACK_URL;
+    }
+    return undefined;
+  }, [appointmentDoctorData, isAppointmentDoctorPicSettled]);
+
+  const isDoctorAvatarLoading =
+    !!id && isAppointmentDoctorFetching && !isAppointmentDoctorPicSettled;
 
   const handleProfileClick = () => {
     if (isFromDashboard) {
@@ -169,6 +179,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
           firstName={doctorInfo.firstName}
           lastName={doctorInfo.lastName}
           expertise={doctorInfo.expertise}
+          isLoading={isDoctorAvatarLoading}
         />
       </Link>
       {shouldShowTagStatus && <TagStatus status={isDelete ? BookStatus.deleted : status} className="mx-5" />}

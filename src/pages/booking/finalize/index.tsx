@@ -13,6 +13,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import { defaultMessengers } from '@/modules/booking/constants/defaultMessengers';
 import { uniqMessengers } from '@/modules/booking/functions/uniqMessengers';
 import BookingSteps from '@/modules/booking/views';
@@ -64,7 +65,7 @@ const Booking = () => {
     if (!bookDetailsData || typeof bookDetailsData !== 'object') return undefined;
     const raw = (bookDetailsData as { doctor_user_id?: string | number }).doctor_user_id;
     if (raw !== undefined && raw !== null && raw !== '') {
-      return `https://pic.paziresh24.com/api/image/${raw}`;
+      return picUserImageUrl(raw);
     }
     const img = (bookDetailsData as { doctor_image?: string }).doctor_image;
     return img ? publicRuntimeConfig.CDN_BASE_URL + img : undefined;

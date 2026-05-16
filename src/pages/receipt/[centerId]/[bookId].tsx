@@ -57,9 +57,8 @@ import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/
 import { getAppointmentDoctor } from '@/common/apis/services/booking/getAppointmentDoctor';
 import { AppFrame } from '@/modules/hamdast/appFrame';
 import useResponsive from '@/common/hooks/useResponsive';
+import { PIC_USER_IMAGE_FALLBACK_URL, picUserImageUrl } from '@/common/utils/picUserImageUrl';
 const { publicRuntimeConfig } = getConfig();
-
-const RECEIPT_DOCTOR_AVATAR_PIC_FALLBACK = 'https://pic.paziresh24.com/api/image/1';
 
 const Receipt = () => {
   const shouldUsePlasmicActionButtons = useFeatureIsOn('plasmic:receipt-action-buttons|enabled');
@@ -170,8 +169,8 @@ const Receipt = () => {
   const receiptDoctorAvatar = useMemo(() => {
     if (!bookDetailsData || typeof bookDetailsData !== 'object' || !bookDetailsData.doctor) return undefined;
     const uid = receiptAppointmentDoctorForPic?.user_id;
-    if (uid === undefined || uid === null || uid === '') return RECEIPT_DOCTOR_AVATAR_PIC_FALLBACK;
-    return `https://pic.paziresh24.com/api/image/${uid}`;
+    if (uid === undefined || uid === null || uid === '') return PIC_USER_IMAGE_FALLBACK_URL;
+    return picUserImageUrl(uid);
   }, [bookDetailsData, receiptAppointmentDoctorForPic]);
 
   useEffect(() => {
