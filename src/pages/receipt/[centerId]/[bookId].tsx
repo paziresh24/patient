@@ -1246,7 +1246,7 @@ const Receipt = () => {
                 dontShowNotification
                 appKey={widgetApp}
                 params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
-                queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_id: bookDetailsData.doctor.id }}
+                queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_id: bookDetailsData.doctor.id, doctor_user_id: doctorUserId }}
                 reportOpenSignal={reportOpenSignal}
                 onReportSubmit={() => {
                   handleCloseClosePromptWidgetModal();
