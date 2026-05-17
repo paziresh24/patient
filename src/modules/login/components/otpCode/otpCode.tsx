@@ -1,5 +1,5 @@
 import { useResetPassword } from '@/common/apis/services/auth/resetPassword';
-import { digitsFaToEn } from '@persian-tools/persian-tools';
+import { normalizeDigitInput } from '@/common/utils/normalizeDigitInput';
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
 import Timer from '@/common/components/atom/timer';
@@ -39,7 +39,7 @@ export const OtpCode = (props: OtpCodeProps) => {
     const handlePaste = (e: ClipboardEvent) => {
       const pastedText = e.clipboardData?.getData('text');
       if (pastedText && pinInputRef.current?.elements) {
-        const converted = digitsFaToEn(pastedText).replace(/\D/g, '').slice(0, 4);
+        const converted = normalizeDigitInput(pastedText, 4);
         if (converted.length === 4) {
           e.preventDefault();
           e.stopPropagation();
@@ -74,7 +74,7 @@ export const OtpCode = (props: OtpCodeProps) => {
           });
 
           if (content && content.code) {
-            const code = digitsFaToEn(content.code.toString());
+            const code = normalizeDigitInput(content.code.toString(), 4);
             setPassword(code);
             if (pinInputRef.current) {
               pinInputRef.current.value = code;
@@ -180,7 +180,7 @@ export const OtpCode = (props: OtpCodeProps) => {
           tabIndex={-1}
           className="absolute opacity-0 w-0 h-0 pointer-events-none overflow-hidden"
         onInput={e => {
-          const value = digitsFaToEn((e.target as HTMLInputElement).value).replace(/\D/g, '').slice(0, 4);
+          const value = normalizeDigitInput((e.target as HTMLInputElement).value, 4);
           if (value.length === 4) {
             setPassword(value);
             if (pinInputRef.current?.elements) {
@@ -200,17 +200,17 @@ export const OtpCode = (props: OtpCodeProps) => {
         length={4}
         focus
         initialValue={''}
-        onChange={value => setPassword(digitsFaToEn(value))}
+        onChange={value => setPassword(normalizeDigitInput(value, 4))}
         type="numeric"
         inputMode="number"
         style={{ padding: '10px', direction: 'ltr', alignSelf: 'center' }}
         inputStyle={{ borderColor: '#cbd5e1', borderRadius: '0.6rem', margin: '0 4px' }}
         inputFocusStyle={{ borderColor: '#3861fb' }}
-        onComplete={value => handleLogin(digitsFaToEn(value))}
+        onComplete={value => handleLogin(normalizeDigitInput(value, 4))}
         autoSelect={true}
         validate={v => {
           if (!v) return '';
-          const en = digitsFaToEn(v);
+          const en = normalizeDigitInput(v, 1);
           const c = en.charCodeAt(0);
           return c >= 48 && c <= 57 ? en : '';
         }}
