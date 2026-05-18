@@ -8,6 +8,7 @@ import provinces from '@/common/constants/places/province.json';
 import { prefixCountries } from '@/common/constants/prefixCountries';
 import classNames from '@/common/utils/classNames';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
+import { normalizeNationalCodeInput } from '@/common/utils/normalizeDigitInput';
 import useTranslation from 'next-translate/useTranslation';
 import { memo, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -97,7 +98,7 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
     defaultValues: {
       name: defaultValues?.NAME ?? '',
       family: defaultValues?.FAMILY ?? '',
-      national_code: defaultValues?.NATIONAL_CODE ?? '',
+      national_code: normalizeNationalCodeInput(defaultValues?.NATIONAL_CODE ?? ''),
       is_foreigner: defaultValues?.IS_FOREIGNER ?? false,
       ...(defaultValues?.CELL && { cell: defaultValues?.CELL ?? '' }),
       ...(defaultValues?.COUNTRY_CODE && {
@@ -173,16 +174,26 @@ export const PatinetProfileForm = memo((props: PatinetProfileFormProps) => {
         )}
         {fields?.includes('NATIONAL_CODE') && (
           <div className="flex flex-col space-y-2">
-            <TextField
-              error={!!errors.national_code}
-              inputMode="numeric"
-              helperText={errors.national_code?.message}
-              {...register('national_code', { required: !watch('is_foreigner') })}
-              label={t('userForm.nationalCode')}
-              disabled={watch('is_foreigner')}
-              classNameWrapper={classNames({
-                'opacity-40': watch('is_foreigner'),
-              })}
+            <Controller
+              control={control}
+              name="national_code"
+              rules={{ required: !watch('is_foreigner') }}
+              render={({ field: { onChange, value, onBlur, ref }, fieldState: { error } }) => (
+                <TextField
+                  ref={ref}
+                  error={!!error}
+                  inputMode="numeric"
+                  helperText={error?.message}
+                  label={t('userForm.nationalCode')}
+                  disabled={watch('is_foreigner')}
+                  classNameWrapper={classNames({
+                    'opacity-40': watch('is_foreigner'),
+                  })}
+                  value={value ?? ''}
+                  onBlur={onBlur}
+                  onChange={e => onChange(normalizeNationalCodeInput(e.target.value))}
+                />
+              )}
             />
             {fields?.includes('IS_FOREIGNER') && <Checkbox label={t('userForm.foreigner')} {...register('is_foreigner')} />}
           </div>

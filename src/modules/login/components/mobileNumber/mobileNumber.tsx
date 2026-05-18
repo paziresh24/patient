@@ -6,7 +6,7 @@ import TextField from '@/common/components/atom/textField';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { getErrorMessage } from '@/common/utils/errorHandler';
-import { digitsFaToEn } from '@persian-tools/persian-tools';
+import { normalizeDigitInput } from '@/common/utils/normalizeDigitInput';
 import Trans from 'next-translate/Trans';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';
@@ -51,7 +51,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-    const normalized = toNationalNumber(digitsFaToEn(mobileNumberValue));
+    const normalized = toNationalNumber(normalizeDigitInput(mobileNumberValue));
     if (!normalized) {
       toast.error('لطفا شماره موبایل را وارد کنید.');
       return;
@@ -103,7 +103,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
       <TextField
         label={t('steps.mobileNumber.phoneNumberFieldLable')}
         onChange={e => {
-          const raw = digitsFaToEn(e.target.value.trim());
+          const raw = normalizeDigitInput(e.target.value.trim());
           const withZero =
             raw.startsWith('+98') ? `0${raw.slice(3)}` : raw.startsWith('9') && raw.length >= 3 ? `0${raw}` : raw;
           setMobileNumberValue(withZero);

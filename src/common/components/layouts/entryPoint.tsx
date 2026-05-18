@@ -7,6 +7,7 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { growthbook } from 'src/pages/_app';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
+import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import { ReactElement, useEffect, useMemo, useRef } from 'react';
 
 export const EntryPoint = ({ children }: { children: ReactElement }) => {
@@ -100,7 +101,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
     if (!isLogin || !info?.id) return;
 
     if (isPicGozargahEnabled) {
-      const imageUrl = `https://pic.paziresh24.com/api/image/${info.id}`;
+      const imageUrl = picUserImageUrl(info.id);
       const currentInfo = useUserInfoStore.getState().info;
       setUserInfo({
         ...currentInfo,

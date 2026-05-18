@@ -1,4 +1,5 @@
 import classNames from '@/common/utils/classNames';
+import { isPicUserImageUrl } from '@/common/utils/picUserImageUrl';
 import { randomColor } from '@/common/utils/randomColor';
 import { ImageProps } from 'next/image';
 import Text from '../text';
@@ -28,6 +29,7 @@ export const Avatar: React.FC<AvatarProps> = props => {
   const { src, width = 70, height = 70, className, name, as = 'img', alt = 'avatar', ...rest } = props;
 
   const Component = as;
+  const usePicImageFit = isPicUserImageUrl(src);
 
   return src ? (
     <Component
@@ -37,8 +39,13 @@ export const Avatar: React.FC<AvatarProps> = props => {
       loading="eager"
       decoding="sync"
       alt={alt}
-      style={{ minWidth: width, height }}
-      className={classNames('rounded-full bg-gray', className)}
+      style={{
+        minWidth: width,
+        width,
+        height,
+        ...(usePicImageFit && { objectFit: 'cover' }),
+      }}
+      className={classNames('rounded-full bg-gray', usePicImageFit && 'object-cover', className)}
       src={src}
       {...rest}
     />

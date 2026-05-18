@@ -186,7 +186,7 @@ export const Appointments = () => {
                 serviceId: turn.service_id,
               }}
               doctorInfo={{
-                avatar: turn.doctor_info?.image,
+                avatar: '',
                 firstName: turn.doctor_info?.name,
                 lastName: turn.doctor_info?.family,
                 expertise:
