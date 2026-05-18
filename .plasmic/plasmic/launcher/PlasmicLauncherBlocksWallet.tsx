@@ -313,7 +313,8 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                                         }`,
                                         {
                                           ...$ctx.Fragment.previewApiConfig,
-                                          ...$ctx.Fragment.apiConfig
+                                          ...$ctx.Fragment.apiConfig,
+                                          withCredentials: true
                                         }
                                       )
                                   );
@@ -359,7 +360,8 @@ function PlasmicLauncherBlocksWallet__RenderFunc(props: {
                                   `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24`,
                                   {
                                     ...$ctx.Fragment.previewApiConfig,
-                                    ...$ctx.Fragment.apiConfig
+                                    ...$ctx.Fragment.apiConfig,
+                                    withCredentials: true
                                   }
                                 )
                               ];

@@ -238,9 +238,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                     optionalFilters: Object.entries(
                       $props.searchOptionalFilters
                     ).reduce((acc, item) => {
-                      return `${acc?.length > 0 ? `${acc},` : ""}${item[1]
-                        .map(i => `${item[0]}:${i}`)
-                        .join(",")}`;
+                      return `${acc?.length > 0 ? `${acc},` : ""}${item[1].map(i => `${item[0]}:${i}`).join(",")}`;
                     }, "")
                   })
                 };
@@ -338,11 +336,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                   type: "doctor",
                                   title: item.source?.display_name ?? "نامشخص",
                                   prefix: item.source?.prefix ?? "",
-                                  image: `/getImage/p24/search-${
-                                    item.source?.gender ? "men" : "women"
-                                  }/${
-                                    item?.source?.image ?? "noimage.png"
-                                  }?size=150`,
+                                  image: `/getImage/p24/search-${item.source?.gender ? "men" : "women"}/${item?.source?.image ?? "noimage.png"}?size=150`,
                                   view: item.source?.number_of_visits ?? 0,
                                   display_expertise:
                                     Array.from(
@@ -408,11 +402,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                       active_booking:
                                         center?.active_booking ?? false
                                     })) ?? [],
-                                  display_address_full: `${
-                                    item.source?.city_name ?? ""
-                                  }, ${
-                                    item.source?.centers?.[0]?.address ?? ""
-                                  }`,
+                                  display_address_full: `${item.source?.city_name ?? ""}, ${item.source?.centers?.[0]?.address ?? ""}`,
                                   display_address: (() => {
                                     const validCenters =
                                       item.source?.centers?.filter(
@@ -540,9 +530,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                         formatTimeToFarsi(presence_freeturn);
                                       inPersonTopTitle = `<span>اولین نوبت: <b>${timeText}</b></span>`;
                                     }
-                                    const inPersonUrl = `/dr/${
-                                      item.source?.slug ?? ""
-                                    }`;
+                                    const inPersonUrl = `/dr/${item.source?.slug ?? ""}`;
                                     actions.push({
                                       title: inPersonTitle,
                                       outline: inPersonOutline,
@@ -604,9 +592,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                                   server_id: item.source?.server_id ?? "",
                                   type: "center",
                                   title: item.source?.display_name ?? "نامشخص",
-                                  image: `/getImage/p24/search-hospitalclinic/${
-                                    item.source?.image ?? "noimage.png"
-                                  }?size=150`,
+                                  image: `/getImage/p24/search-hospitalclinic/${item.source?.image ?? "noimage.png"}?size=150`,
                                   view: item.source?.number_of_visits ?? 0,
                                   address: item.source?.address ?? "",
                                   city_id: item.source?.city_id ?? "",
@@ -821,9 +807,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
                       typeof $steps["searchViewEvent"] === "object" &&
                       typeof $steps["searchViewEvent"].then === "function"
                     ) {
-                      $steps["searchViewEvent"] = await $steps[
-                        "searchViewEvent"
-                      ];
+                      $steps["searchViewEvent"] =
+                        await $steps["searchViewEvent"];
                     }
 
                     $steps["searchCardViewEvent"] = false
@@ -1065,9 +1050,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
                       typeof $steps["searchCardViewEvent"] === "object" &&
                       typeof $steps["searchCardViewEvent"].then === "function"
                     ) {
-                      $steps["searchCardViewEvent"] = await $steps[
-                        "searchCardViewEvent"
-                      ];
+                      $steps["searchCardViewEvent"] =
+                        await $steps["searchCardViewEvent"];
                     }
                   }}
                 />
@@ -1500,9 +1484,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
                       typeof $steps["searchViewEvent"] === "object" &&
                       typeof $steps["searchViewEvent"].then === "function"
                     ) {
-                      $steps["searchViewEvent"] = await $steps[
-                        "searchViewEvent"
-                      ];
+                      $steps["searchViewEvent"] =
+                        await $steps["searchViewEvent"];
                     }
 
                     $steps["searchCardViewEvent"] = false
@@ -1744,9 +1727,8 @@ function PlasmicSearchRequest__RenderFunc(props: {
                       typeof $steps["searchCardViewEvent"] === "object" &&
                       typeof $steps["searchCardViewEvent"].then === "function"
                     ) {
-                      $steps["searchCardViewEvent"] = await $steps[
-                        "searchCardViewEvent"
-                      ];
+                      $steps["searchCardViewEvent"] =
+                        await $steps["searchCardViewEvent"];
                     }
                   }}
                 />
@@ -1868,7 +1850,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchRequest__VariantsArgs;
     args?: PlasmicSearchRequest__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchRequest__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchRequest__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchRequest__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

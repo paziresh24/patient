@@ -69,6 +69,7 @@ export const Turn: React.FC<TurnProps> = props => {
         location={location}
         feedbackUrl={feedbackUrl}
         status={status}
+        isFromDashboard={isFromDashboard}
       />
 
       <TurnFooter

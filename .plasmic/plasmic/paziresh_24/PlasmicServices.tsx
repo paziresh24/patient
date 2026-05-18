@@ -133,7 +133,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -288,7 +288,7 @@ function PlasmicServices__RenderFunc(props: {
                     [sty.freeBoxtype_onlineVisit__lnM17QAlK]: hasVariant($state, 'type', 'onlineVisit'),
                   })}
                 >
-                  <img src="https://p24supvoicemail.storage.iran.liara.space/logo/hami-logo.svg" className="w-6 h-6" />
+                  <img src="https://hami.paziresh24.com/hami-logo.svg" className="w-6 h-6" />
 
                   <div
                     className={classNames(projectcss.all, projectcss.__wab_text, sty.text__jNh3G, {
@@ -302,16 +302,16 @@ function PlasmicServices__RenderFunc(props: {
               {(
                 hasVariant($state, 'type', 'onlineVisit')
                   ? (() => {
-                      console.log($props.onlineVisit.channels);
-                      try {
-                        return !$props.onlineVisit.channels.includes('whatsapp');
-                      } catch (e) {
-                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                          return true;
-                        }
-                        throw e;
+                    console.log($props.onlineVisit.channels);
+                    try {
+                      return !$props.onlineVisit.channels.includes('whatsapp');
+                    } catch (e) {
+                      if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                        return true;
                       }
-                    })()
+                      throw e;
+                    }
+                  })()
                   : true
               ) ? (
                 <div
@@ -340,18 +340,18 @@ function PlasmicServices__RenderFunc(props: {
           {(
             hasVariant($state, 'type', 'onlineVisit') && hasVariant(globalVariants, 'screen', 'mobileOnly')
               ? (() => {
-                  try {
-                    return !$props.seo.slug.includes('دکتر-رسول-اسماعیلی-0');
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return !$props.seo.slug.includes('دکتر-رسول-اسماعیلی-0');
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
               : hasVariant($state, 'type', 'onlineVisit')
-              ? true
-              : false
+                ? true
+                : false
           ) ? (
             <div
               className={classNames(projectcss.all, projectcss.__wab_text, sty.text__orRx, {
@@ -386,15 +386,15 @@ function PlasmicServices__RenderFunc(props: {
           {(
             hasVariant($state, 'type', 'onlineVisit')
               ? (() => {
-                  try {
-                    return $props.expertises.group_expertises[0].id !== 21 && $props.expertises.group_expertises[0].id !== 47;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return $props.expertises.group_expertises[0].id !== 21 && $props.expertises.group_expertises[0].id !== 47;
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
               : false
           ) ? (
             <div
@@ -418,15 +418,15 @@ function PlasmicServices__RenderFunc(props: {
           {(
             hasVariant($state, 'type', 'onlineVisit')
               ? (() => {
-                  try {
-                    return $props.expertises.group_expertises[0].id === 21 || $props.expertises.group_expertises[0].id === 47;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
+                try {
+                  return $props.expertises.group_expertises[0].id === 21 || $props.expertises.group_expertises[0].id === 47;
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
                   }
-                })()
+                  throw e;
+                }
+              })()
               : false
           ) ? (
             <div
@@ -467,25 +467,25 @@ function PlasmicServices__RenderFunc(props: {
           {(
             hasVariant($state, 'type', 'onlineVisit')
               ? (() => {
-                  try {
-                    return !!$props.waitingTimeInfo.find(item => item.center_id === '5532')?.waiting_time_title;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
-                  }
-                })()
-              : (() => {
-                  try {
+                try {
+                  return !!$props.waitingTimeInfo.find(item => item.center_id === '5532')?.waiting_time_title;
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
                     return true;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return true;
-                    }
-                    throw e;
                   }
-                })()
+                  throw e;
+                }
+              })()
+              : (() => {
+                try {
+                  return true;
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return true;
+                  }
+                  throw e;
+                }
+              })()
           ) ? (
             <div
               className={classNames(projectcss.all, projectcss.__wab_text, sty.text__dNgG, {
@@ -497,9 +497,8 @@ function PlasmicServices__RenderFunc(props: {
                 dangerouslySetInnerHTML={{
                   __html: (() => {
                     try {
-                      return `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <b>${
-                        $props.waitingTimeInfo.find(item => item.center_id === '5532').waiting_time_title
-                      }</b>`;
+                      return `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <b>${$props.waitingTimeInfo.find(item => item.center_id === '5532').waiting_time_title
+                        }</b>`;
                     } catch (e) {
                       if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
                         return '\u0645\u06cc\u0627\u0646\u06af\u06cc\u0646 \u0632\u0645\u0627\u0646 \u0627\u0646\u062a\u0638\u0627\u0631 \u062a\u0627 \u0648\u06cc\u0632\u06cc\u062a: ';
@@ -527,15 +526,15 @@ function PlasmicServices__RenderFunc(props: {
           url={
             hasVariant($state, 'type', 'onlineVisit')
               ? (() => {
-                  try {
-                    return `https://apigw.paziresh24.com/ravi/v1/online_visit_absent_score?where=(slug,eq,${$props.seo.slug})`;
-                  } catch (e) {
-                    if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                      return undefined;
-                    }
-                    throw e;
+                try {
+                  return `https://apigw.paziresh24.com/ravi/v1/online_visit_absent_score?where=(slug,eq,${$props.seo.slug})`;
+                } catch (e) {
+                  if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                    return undefined;
                   }
-                })()
+                  throw e;
+                }
+              })()
               : 'https://api.github.com/users/plasmicapp/repos'
           }
         >
@@ -545,15 +544,15 @@ function PlasmicServices__RenderFunc(props: {
                 {(
                   hasVariant($state, 'type', 'onlineVisit')
                     ? (() => {
-                        try {
-                          return $ctx.fetchedData.list[0].penalty_score >= 2;
-                        } catch (e) {
-                          if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                            return false;
-                          }
-                          throw e;
+                      try {
+                        return $ctx.fetchedData.list[0].penalty_score >= 2;
+                      } catch (e) {
+                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                          return false;
                         }
-                      })()
+                        throw e;
+                      }
+                    })()
                     : true
                 ) ? (
                   <div
@@ -667,11 +666,11 @@ function PlasmicServices__RenderFunc(props: {
 
             $steps['runOnEvent'] = true
               ? (() => {
-                  const actionArgs = { eventRef: $props['onEvent'] };
-                  return (({ eventRef, args }) => {
-                    return eventRef?.(...(args ?? []));
-                  })?.apply(null, [actionArgs]);
-                })()
+                const actionArgs = { eventRef: $props['onEvent'] };
+                return (({ eventRef, args }) => {
+                  return eventRef?.(...(args ?? []));
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
             if (
               $steps['runOnEvent'] != null &&
@@ -683,26 +682,26 @@ function PlasmicServices__RenderFunc(props: {
 
             $steps['goToFactorV2'] = true
               ? (() => {
-                  const actionArgs = {
-                    destination: (() => {
-                      try {
-                        return `https://www.paziresh24.com/factor/v2/${$props.seo.slug}/${$props.service.id}/`;
-                      } catch (e) {
-                        if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
-                          return undefined;
-                        }
-                        throw e;
+                const actionArgs = {
+                  destination: (() => {
+                    try {
+                      return `https://www.paziresh24.com/factor/v2/${$props.seo.slug}/${$props.service.id}/`;
+                    } catch (e) {
+                      if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                        return undefined;
                       }
-                    })(),
-                  };
-                  return (({ destination }) => {
-                    if (typeof destination === 'string' && destination.startsWith('#')) {
-                      document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                      __nextRouter?.push(destination);
+                      throw e;
                     }
-                  })?.apply(null, [actionArgs]);
-                })()
+                  })(),
+                };
+                return (({ destination }) => {
+                  if (typeof destination === 'string' && destination.startsWith('#')) {
+                    document.getElementById(destination.substr(1)).scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    __nextRouter?.push(destination);
+                  }
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
             if (
               $steps['goToFactorV2'] != null &&
@@ -714,30 +713,30 @@ function PlasmicServices__RenderFunc(props: {
 
             $steps['sendEvent'] = true
               ? (() => {
-                  const actionArgs = {
-                    customFunction: async () => {
-                      return (() => {
-                        try {
-                          return window.paziresh24?.logger('doctor-profile').sendEvent({
-                            group: 'doctor profile',
-                            type: 'doctor profile press online visit book button',
-                            event: {
-                              page_url: window.location.pathname,
-                              referrer: window.document.referrer,
-                              group_expertises: $props.expertises.group_expertises[0]?.name ?? 'سایر',
-                              doctor_name: $props.information.display_name,
-                            },
-                          });
-                        } catch (error) {
-                          return console.log(error);
-                        }
-                      })();
-                    },
-                  };
-                  return (({ customFunction }) => {
-                    return customFunction();
-                  })?.apply(null, [actionArgs]);
-                })()
+                const actionArgs = {
+                  customFunction: async () => {
+                    return (() => {
+                      try {
+                        return window.paziresh24?.logger('doctor-profile').sendEvent({
+                          group: 'doctor profile',
+                          type: 'doctor profile press online visit book button',
+                          event: {
+                            page_url: window.location.pathname,
+                            referrer: window.document.referrer,
+                            group_expertises: $props.expertises.group_expertises[0]?.name ?? 'سایر',
+                            doctor_name: $props.information.display_name,
+                          },
+                        });
+                      } catch (error) {
+                        return console.log(error);
+                      }
+                    })();
+                  },
+                };
+                return (({ customFunction }) => {
+                  return customFunction();
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
             if ($steps['sendEvent'] != null && typeof $steps['sendEvent'] === 'object' && typeof $steps['sendEvent'].then === 'function') {
               $steps['sendEvent'] = await $steps['sendEvent'];
@@ -779,12 +778,12 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicServices__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicServices__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicServices__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<NodeOverridesType<T>, ReservedPropsType | VariantPropType | ArgPropType> &
-    // Specify props for the root element
-    Omit<Partial<React.ComponentProps<NodeDefaultElementType[T]>>, ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>>;
+  // Specify args directly as props
+  Omit<PlasmicServices__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<NodeOverridesType<T>, ReservedPropsType | VariantPropType | ArgPropType> &
+  // Specify props for the root element
+  Omit<Partial<React.ComponentProps<NodeDefaultElementType[T]>>, ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>>;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

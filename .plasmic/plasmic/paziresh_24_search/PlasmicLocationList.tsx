@@ -150,13 +150,13 @@ function PlasmicLocationList__RenderFunc(props: {
         path: "selectedId",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ""
       },
       {
         path: "searchCity",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.searchTerm;
@@ -178,6 +178,7 @@ function PlasmicLocationList__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -281,9 +282,8 @@ function PlasmicLocationList__RenderFunc(props: {
                     typeof $steps["updateSelectedId"] === "object" &&
                     typeof $steps["updateSelectedId"].then === "function"
                   ) {
-                    $steps["updateSelectedId"] = await $steps[
-                      "updateSelectedId"
-                    ];
+                    $steps["updateSelectedId"] =
+                      await $steps["updateSelectedId"];
                   }
                 }}
                 title={(() => {
@@ -652,7 +652,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLocationList__VariantsArgs;
     args?: PlasmicLocationList__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLocationList__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLocationList__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLocationList__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

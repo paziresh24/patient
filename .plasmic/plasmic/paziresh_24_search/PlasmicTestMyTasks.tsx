@@ -133,7 +133,7 @@ function PlasmicTestMyTasks__RenderFunc(props: {
         path: "apiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       },
@@ -141,7 +141,7 @@ function PlasmicTestMyTasks__RenderFunc(props: {
         path: "apiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       },
@@ -149,7 +149,7 @@ function PlasmicTestMyTasks__RenderFunc(props: {
         path: "apiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "apiRequest"
       }
@@ -160,6 +160,7 @@ function PlasmicTestMyTasks__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -272,7 +273,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicTestMyTasks__VariantsArgs;
     args?: PlasmicTestMyTasks__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicTestMyTasks__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicTestMyTasks__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicTestMyTasks__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

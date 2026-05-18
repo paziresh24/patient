@@ -7,13 +7,26 @@ import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export const Report = ({ app_key, page_key }: { app_key: string; page_key: string }) => {
+export const Report = ({
+  app_key,
+  page_key,
+  hideTrigger = false,
+  openSignal,
+  onSubmit,
+}: {
+  app_key: string;
+  page_key: string;
+  hideTrigger?: boolean;
+  openSignal?: number;
+  onSubmit?: () => void;
+}) => {
   const { handleOpen, handleClose, modalProps } = useModal();
   const [reportItemSelected, setReportItemSelected] = useState('empty');
   const [reason, setReason] = useState('');
+  const latestOpenSignal = useRef<number | undefined>(openSignal);
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -22,8 +35,8 @@ export const Report = ({ app_key, page_key }: { app_key: string; page_key: strin
   const reportItems = [
     { label: 'باز می‌شود اما کار نمی‌کند.', value: 'openButNotWork' },
     { label: 'کار می‌کند اما پیچیده است.', value: 'workButComplex' },
-    { label: 'ابزارک اصلاً باز نمی‌شود.', value: 'dontOpen' },
-    { label: 'سایر', value: 'others' },
+    { label: 'صفحه اصلاً باز نمی‌شود.', value: 'dontOpen' },
+    { label: 'سایر؛ توضیح بدهید.', value: 'others' },
   ];
 
   const handleReportSubmit = (user_id?: string) => {
@@ -47,29 +60,44 @@ export const Report = ({ app_key, page_key }: { app_key: string; page_key: strin
     });
     toast.success('گزارش شما با موفقیت ثبت شد.');
     handleClose();
+    onSubmit?.();
   };
+
+  useEffect(() => {
+    if (openSignal === undefined) {
+      return;
+    }
+
+    if (latestOpenSignal.current !== openSignal) {
+      handleOpen();
+    }
+
+    latestOpenSignal.current = openSignal;
+  }, [openSignal, handleOpen]);
 
   return (
     <>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        onClick={handleOpen}
-      >
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        <path d="M12 7v2" />
-        <path d="M12 13h.01" />
-      </svg>
+      {!hideTrigger && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          onClick={handleOpen}
+        >
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          <path d="M12 7v2" />
+          <path d="M12 13h.01" />
+        </svg>
+      )}
       <Modal {...modalProps} fullScreen={isMobile} title="گزارش مشکل">
         <div className="flex flex-col gap-6">
-          <span className="font-semibold">در بارگزاری یا عملکرد ابزارک مشکل دارید؟</span>
+          <span className="font-semibold">در بارگزاری یا عملکرد صفحه مشکل دارید؟</span>
           <span className="text-sm opacity-70">یکی از گزینه‌های زیر را انتخاب کنید و دکمه ثبت را بزنید.</span>
 
           <div className="flex flex-col gap-5">
@@ -87,11 +115,11 @@ export const Report = ({ app_key, page_key }: { app_key: string; page_key: strin
               </label>
             ))}
           </div>
-          {reportItemSelected != 'empty' && (
+          {reportItemSelected == 'others' && (
             <TextField onChange={e => setReason(e.target?.value)} multiLine className="h-36" placeholder="دلیل گزارش خود را بنویسید..." />
           )}
           <div className="fixed md:static md:p-0 md:border-none bottom-0 w-full right-0 p-5 bg-white border border-t border-slate-100">
-            <Button className="w-full" disabled={reason.length == 0} onClick={() => handleReportSubmit()}>
+            <Button className="w-full" disabled={reason.length == 0 && reportItemSelected === 'others'} onClick={() => handleReportSubmit()}>
               ثبت گزارش
             </Button>
           </div>

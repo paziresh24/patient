@@ -1,4 +1,4 @@
-FROM registry.hamdocker.ir/paziresh24-cloud/patient:37e31dfc-532f80
+FROM node:18.17.0
 
 WORKDIR /app
 
@@ -12,6 +12,7 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json .npmrc ./ 
 RUN npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000 
 RUN npm cache verify
+RUN npm config set registry https://npm.devneeds.ir/
 RUN npm install --force
 
 COPY . .

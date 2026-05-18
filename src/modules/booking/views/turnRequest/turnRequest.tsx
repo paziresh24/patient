@@ -111,7 +111,7 @@ export const TurnRequest = (props: TurnRequestProps) => {
             className={classNames({ hidden: isAppLoading })}
             onLoad={() => setIsAppLoading(false)}
             ref={ref}
-            src={`https://paziresh24-form.darkube.app/?center_id=${center_id}&service_id=${service_id}`}
+            src={`https://request-form.paziresh24.com/?center_id=${center_id}&service_id=${service_id}`}
             height={height + 'px'}
           />
           {!isAppLoading && formLoaded && (

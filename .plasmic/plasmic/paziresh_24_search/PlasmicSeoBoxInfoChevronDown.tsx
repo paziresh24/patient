@@ -140,7 +140,7 @@ function PlasmicSeoBoxInfoChevronDown__RenderFunc(props: {
         path: "isOpen",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isOpen
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isOpen
       }
     ],
     [$props, $ctx, $refs]
@@ -149,6 +149,7 @@ function PlasmicSeoBoxInfoChevronDown__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -204,7 +205,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSeoBoxInfoChevronDown__VariantsArgs;
     args?: PlasmicSeoBoxInfoChevronDown__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSeoBoxInfoChevronDown__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSeoBoxInfoChevronDown__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSeoBoxInfoChevronDown__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

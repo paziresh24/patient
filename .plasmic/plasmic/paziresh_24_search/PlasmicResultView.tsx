@@ -557,7 +557,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicResultView__VariantsArgs;
     args?: PlasmicResultView__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicResultView__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicResultView__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicResultView__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

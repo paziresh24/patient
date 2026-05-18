@@ -159,13 +159,13 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
         path: "open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false
       },
       {
         path: "selected",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props?.defaultSelected ? $props.defaultSelected : [];
@@ -187,6 +187,7 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -404,7 +405,7 @@ function PlasmicFilterItemSingleSelect__RenderFunc(props: {
             [
               {
                 name: "checkbox[].isChecked",
-                initFunc: ({ $props, $state, $queries }) =>
+                initFunc: ({ $props, $state, $queries, $q }) =>
                   (() => {
                     try {
                       return $state.selected?.includes(currentItem.name);
@@ -618,7 +619,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFilterItemSingleSelect__VariantsArgs;
     args?: PlasmicFilterItemSingleSelect__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFilterItemSingleSelect__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFilterItemSingleSelect__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFilterItemSingleSelect__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

@@ -151,19 +151,19 @@ function PlasmicAlert__RenderFunc(props: {
         path: "success",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.success
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.success
       },
       {
         path: "error",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.error
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.error
       },
       {
         path: "hasIcon",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.hasIcon
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.hasIcon
       }
     ],
     [$props, $ctx, $refs]
@@ -172,6 +172,7 @@ function PlasmicAlert__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -281,7 +282,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicAlert__VariantsArgs;
     args?: PlasmicAlert__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicAlert__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicAlert__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicAlert__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

@@ -23,30 +23,30 @@ const CustomDocument: NextComponentType = (props: any) => {
         <meta name="format-detection" content="telephone=no" />
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
         <meta name="google" content="notranslate" />
-        <Script id="ping-loader" strategy="afterInteractive">
+        <Script id="rasan-loader" strategy="afterInteractive">
           {`
             (function() {
-              function initPing() {
-                if (window.ping && window.ping.init) {
-                  window.ping.init({appId: "6bf2755a-6613-4344-be4e-f5de4b422828"});
+              function initRasan() {
+                if (window.rasan && window.rasan.init) {
+                  window.rasan.init({appId: "82f744a9-d1f2-4e4e-9a81-b1a28bb6fdf4"});
                   return true;
                 }
                 return false;
               }
               
-              window.PING = window.PING || { queue: [] };
-              window.ping = function() { window.PING.queue.push(arguments); };
+              window.RASAN = window.RASAN || { queue: [] };
+              window.rasan = function() { window.RASAN.queue.push(arguments); };
               
-              // اگر ping از قبل لود شده بود
-              if (initPing()) {
+              // اگر rasan از قبل لود شده بود
+              if (initRasan()) {
                 return;
               }
               
               var s = document.createElement("script");
-              s.src = "https://ping.darkube.app/sdk.js";
+              s.src = "https://rasan.paziresh24.com/sdk.js";
               s.async = true;
               s.onload = function() {
-                initPing();
+                initRasan();
               };
               document.head.appendChild(s);
             })();

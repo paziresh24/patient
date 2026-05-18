@@ -52,12 +52,14 @@ import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
 import axios from 'axios';
 import WarningIcon from '@/common/components/icons/warning';
+import Loading from '@/common/components/atom/loading/loading';
 import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
 import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 import { getAppointmentDoctor } from '@/common/apis/services/booking/getAppointmentDoctor';
 import { AppFrame } from '@/modules/hamdast/appFrame';
 import useResponsive from '@/common/hooks/useResponsive';
 import { PIC_USER_IMAGE_FALLBACK_URL, picUserImageUrl } from '@/common/utils/picUserImageUrl';
+import ChatIcon from '@/common/components/icons/chat';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
@@ -81,11 +83,26 @@ const Receipt = () => {
   const { handleOpen: handleOpenWaitingTimeFollowUpModal, modalProps: waitingTimeFollowUpModalProps } = useModal();
   const [isWattingTimeFollowUpLoadingButton, setIsWattingTimeFollowUpLoadingButton] = useState(false);
   const [hasHolidays, setHasHolidays] = useState(false);
-  const { handleOpen: handleOpenWidgetModal, modalProps: widgetModalProps } = useModal();
+  const { handleOpen: handleOpenWidgetModal, handleClose: handleCloseWidgetModal, modalProps: widgetModalProps } = useModal();
+  const {
+    handleOpen: handleOpenClosePromptWidgetModal,
+    handleClose: handleCloseClosePromptWidgetModal,
+    modalProps: closePromptWidgetModalProps,
+  } = useModal();
+
   const [widgetApp, setWidgetApp] = useState<string | null>(null);
+  const [doctorUserId, setDoctorUserId] = useState<number | string | null>(null);
+  const [resolvedDoctorSlug, setResolvedDoctorSlug] = useState<string | null>(null);
+  const [doctorFullName, setDoctorFullName] = useState<{ name: string; family: string }>({ name: '', family: '' });
+  const [isAccessChatLoading, setIsAccessChatLoading] = useState(true);
+  const [isAccessChatReady, setIsAccessChatReady] = useState(false);
+  const [isAccessChatFailed, setIsAccessChatFailed] = useState(false);
+  const [reportOpenSignal, setReportOpenSignal] = useState(0);
+  const [isHamdastReceiptLoading, setIsHamdastReceiptLoading] = useState(false);
   const hasFetchedWidgetRef = useRef(false);
   const isFetchingRef = useRef(false);
   const lastFetchedKeyRef = useRef<string>('');
+  const accessChatRequestedBookIdRef = useRef<string | null>(null);
   const { isMobile } = useResponsive();
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
@@ -93,22 +110,7 @@ const Receipt = () => {
     pincode: pincode as string,
   });
 
-  useEffect(() => {
-    if (action && getReceiptDetails?.data) {
-      if (action === 'open_channel') {
-        if (!widgetApp) {
-          window.location.replace(
-            decodeURIComponent(
-              getReceiptDetails?.data?.data?.data?.selected_online_visit_channel?.channel_link.replace(
-                'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
-                '',
-              ),
-            ),
-          );
-        }
-      }
-    }
-  }, [action, getReceiptDetails?.data, widgetApp]);
+
 
   // Error handling function
   const getErrorStatusCode = () => {
@@ -145,10 +147,10 @@ const Receipt = () => {
   );
   const possibilityBeingVisited = bookDetailsData?.book_time
     ? !isAfterPastDaysFromTimestamp({
-        numberDay: 3,
-        currentTime: serverTime?.data?.data?.data.timestamp,
-        timestamp: bookDetailsData.book_time,
-      })
+      numberDay: 3,
+      currentTime: serverTime?.data?.data?.data.timestamp,
+      timestamp: bookDetailsData.book_time,
+    })
     : false;
   const notificationGrantAccsesModalText = useFeatureValue('receipt:notification-grant-modal', '');
   const showDoctorAvailabilityWarning = useFeatureValue('show-doctor-availability-warning', '');
@@ -179,12 +181,101 @@ const Receipt = () => {
     }
   }, [isLogin, userPednding, pincode]);
 
+  useEffect(() => {
+    const doctorSlug = bookDetailsData?.doctor?.slug;
+
+    if (!doctorSlug) {
+      setDoctorUserId(null);
+      setResolvedDoctorSlug(null);
+      setDoctorFullName({ name: '', family: '' });
+      return;
+    }
+
+    const fetchDoctorUserId = async () => {
+      const visitedSlugs = new Set<string>();
+      let currentSlug: string | null = doctorSlug;
+
+      const getSlugFromRedirectRoute = (route: string) => {
+        try {
+          const path = route.startsWith('http') ? new URL(route).pathname : route;
+          const match = path.match(/^\/dr\/([^/?#]+)\/?$/);
+          return match?.[1] ?? null;
+        } catch {
+          return null;
+        }
+      };
+
+      const getRedirectRouteFromData = (data: unknown) => {
+        if (!data || typeof data !== 'object') {
+          return null;
+        }
+
+        const redirect = (data as { redirect?: { route?: unknown } }).redirect;
+        return typeof redirect?.route === 'string' ? redirect.route : null;
+      };
+
+      while (currentSlug && !visitedSlugs.has(currentSlug)) {
+        visitedSlugs.add(currentSlug);
+
+        try {
+          const doctorProfileResponse = await drProfileClient.get(`/api/doctors/${currentSlug}`);
+          const redirectRoute = getRedirectRouteFromData(doctorProfileResponse.data);
+          const redirectedSlug = redirectRoute ? getSlugFromRedirectRoute(redirectRoute) : null;
+
+          if (redirectedSlug && redirectedSlug !== currentSlug) {
+            currentSlug = redirectedSlug;
+            continue;
+          }
+
+          setDoctorUserId(doctorProfileResponse.data?.user_id ?? null);
+          setResolvedDoctorSlug(currentSlug);
+
+          try {
+            const encodedSlug = encodeURIComponent(currentSlug);
+            const { data: doctorFullNameResponse } = await drProfileClient.get(`/api/doctors/${encodedSlug}/fullname`, {
+              timeout: 5000,
+            });
+
+            setDoctorFullName({
+              name: doctorFullNameResponse?.name ?? '',
+              family: doctorFullNameResponse?.family ?? '',
+            });
+          } catch {
+            setDoctorFullName({ name: '', family: '' });
+          }
+
+          return;
+        } catch (error) {
+          const redirectRoute = axios.isAxiosError(error) ? getRedirectRouteFromData(error.response?.data) : null;
+          const redirectedSlug = redirectRoute ? getSlugFromRedirectRoute(redirectRoute) : null;
+
+          if (redirectedSlug && redirectedSlug !== currentSlug) {
+            currentSlug = redirectedSlug;
+            continue;
+          }
+
+          setDoctorUserId(null);
+          setResolvedDoctorSlug(null);
+          setDoctorFullName({ name: '', family: '' });
+          return;
+        }
+      }
+
+      setDoctorUserId(null);
+      setResolvedDoctorSlug(null);
+      setDoctorFullName({ name: '', family: '' });
+    };
+
+    fetchDoctorUserId();
+  }, [bookDetailsData?.doctor?.slug]);
+
   const fetchWidgetAndCheckAddons = useCallback(async () => {
     if (
       !centerId ||
       !bookId ||
       !bookDetailsData?.doctor?.id ||
       !bookDetailsData?.doctor?.server_id ||
+      !doctorUserId ||
       hasFetchedWidgetRef.current ||
       isFetchingRef.current ||
       widgetModalProps.isOpen
@@ -195,51 +286,83 @@ const Receipt = () => {
     isFetchingRef.current = true;
 
     try {
-      const doctorProfileResponse = await drProfileClient.get(
-        `/api/doctors/${bookDetailsData.doctor.id}/${bookDetailsData.doctor.server_id}`,
-      );
-      const user_id = doctorProfileResponse.data?.user_id;
+      setIsHamdastReceiptLoading(true);
+      try {
+        const widgetsResponse = await hamdastClient.get(`/api/v1/widgets/`, {
+          params: { user_id: doctorUserId },
+        });
 
-      if (!user_id) {
-        isFetchingRef.current = false;
+        const widgets = widgetsResponse.data || [];
+        const targetWidget = widgets.find((widget: any) =>
+          widget.placement?.includes('booking_flow::ONLINE_VISIT_CHANNEL_BUTTON'),
+        );
+
+        if (targetWidget) {
+          splunkInstance('dashboard').sendEvent({
+            group: 'receipt_online_visit',
+            type: 'widgets_online_visit_channel_button',
+            event: {
+              viewer_user_id: user?.id,
+              appointment_id: bookId,
+              center_id: centerId,
+              doctor_user_id: doctorUserId,
+              widget_app: targetWidget.app,
+            },
+          });
+        }
+
+        if (!targetWidget?.app || !targetWidget?.placements_metadata?.center_info?.center_ids?.includes(centerId)) {
+          hasFetchedWidgetRef.current = true;
+          return;
+        }
+
+        const addonsResponse = await apiGatewayClient.get('/v1/hamdast/addons/receipt', {
+          params: {
+            medical_center_id: centerId,
+            appointment_id: bookId,
+            doctor_id: bookDetailsData.doctor.id,
+          },
+        });
+
+        splunkInstance('dashboard').sendEvent({
+          group: 'receipt_online_visit',
+          type: 'hamdast_addons_receipt',
+          event: {
+            viewer_user_id: user?.id,
+            appointment_id: bookId,
+            center_id: centerId,
+            doctor_user_id: doctorUserId,
+            addon_apps: addonsResponse.data?.apps,
+            data: addonsResponse.data
+          },
+        });
+
+        const apps = addonsResponse.data?.apps || [];
+
+        if (apps.includes(targetWidget.app)) {
+          setWidgetApp(targetWidget.app);
+          handleOpenWidgetModal();
+        }
+
         hasFetchedWidgetRef.current = true;
-        return;
+      } finally {
+        setIsHamdastReceiptLoading(false);
       }
-
-      const widgetsResponse = await hamdastClient.get(`/api/v1/widgets/`, {
-        params: { user_id },
-      });
-
-      const widgets = widgetsResponse.data || [];
-      const targetWidget = widgets.find((widget: any) => widget.placement?.includes('booking_flow::ONLINE_VISIT_CHANNEL_BUTTON'));
-
-      if (!targetWidget?.app) {
-        isFetchingRef.current = false;
-        hasFetchedWidgetRef.current = true;
-        return;
-      }
-
-      const addonsResponse = await apiGatewayClient.get('/v1/hamdast/addons/receipt', {
-        params: {
-          medical_center_id: centerId,
-          appointment_id: bookId,
-        },
-      });
-
-      const apps = addonsResponse.data?.apps || [];
-
-      if (apps.includes(targetWidget.app)) {
-        setWidgetApp(targetWidget.app);
-        handleOpenWidgetModal();
-      }
-
-      hasFetchedWidgetRef.current = true;
     } catch (error) {
       hasFetchedWidgetRef.current = true;
     } finally {
       isFetchingRef.current = false;
     }
-  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, handleOpenWidgetModal, widgetModalProps.isOpen]);
+  }, [
+    centerId,
+    bookId,
+    bookDetailsData?.doctor?.id,
+    bookDetailsData?.doctor?.server_id,
+    doctorUserId,
+    handleOpenWidgetModal,
+    widgetModalProps.isOpen,
+    user?.id,
+  ]);
 
   useEffect(() => {
     if (getReceiptDetails.isSuccess) {
@@ -313,7 +436,7 @@ const Receipt = () => {
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
 
   useEffect(() => {
-    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id) {
+    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id && doctorUserId) {
       const fetchKey = `${centerId}-${bookId}-${bookDetailsData.doctor.id}-${bookDetailsData.doctor.server_id}`;
 
       if (lastFetchedKeyRef.current !== fetchKey) {
@@ -326,11 +449,97 @@ const Receipt = () => {
         fetchWidgetAndCheckAddons();
       }
     }
-  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, fetchWidgetAndCheckAddons]);
+  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, doctorUserId]);
+
+  useEffect(() => {
+    const serviceTypeId = bookDetailsData?.services?.[0]?.service_type_id;
+    const currentBookId = bookDetailsData?.book_id;
+    const doctorFirstName = doctorFullName.name?.trim();
+    const doctorFamilyName = doctorFullName.family?.trim();
+
+    if (
+      serviceTypeId !== 9 ||
+      !currentBookId ||
+      !bookDetailsData?.reference_code ||
+      !bookDetailsData?.patient?.cell ||
+      !bookDetailsData?.patient?.name ||
+      !bookDetailsData?.patient?.family ||
+      !doctorUserId ||
+      !resolvedDoctorSlug ||
+      !doctorFirstName ||
+      !doctorFamilyName ||
+      accessChatRequestedBookIdRef.current === currentBookId
+    ) {
+      return;
+    }
+
+    accessChatRequestedBookIdRef.current = currentBookId;
+    setIsAccessChatLoading(true);
+    setIsAccessChatReady(false);
+    setIsAccessChatFailed(false);
+
+    let isCancelled = false;
+
+    const requestAccessChat = async (): Promise<void> => {
+      try {
+        await apiGatewayClient.get('/v1/appointments/access-chat', {
+          params: {
+            book_id: currentBookId,
+            ref_id: bookDetailsData.reference_code,
+            patient_cell: bookDetailsData.patient.cell,
+            doctor_user_id: String(doctorUserId),
+            patient_name: bookDetailsData.patient.name,
+            patient_family: bookDetailsData.patient.family,
+            doctor_name: doctorFirstName,
+            doctor_family: doctorFamilyName,
+          },
+        });
+
+        if (!isCancelled) {
+          setIsAccessChatReady(true);
+          setIsAccessChatLoading(false);
+          setIsAccessChatFailed(false);
+        }
+      } catch {
+        if (!isCancelled) {
+          setIsAccessChatLoading(false);
+          setIsAccessChatReady(false);
+          setIsAccessChatFailed(true);
+        }
+      }
+    };
+
+    requestAccessChat();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [
+    bookDetailsData?.book_id,
+    bookDetailsData?.services,
+    bookDetailsData?.reference_code,
+    bookDetailsData?.patient?.cell,
+    bookDetailsData?.patient?.name,
+    bookDetailsData?.patient?.family,
+    doctorUserId,
+    resolvedDoctorSlug,
+    doctorFullName.name,
+    doctorFullName.family,
+  ]);
+
+
+  useEffect(() => {
+    if (bookDetailsData?.services?.[0]?.service_type_id !== 9 || String(centerId) !== CENTERS.CONSULT) {
+      setIsAccessChatLoading(false);
+      setIsAccessChatReady(false);
+      setIsAccessChatFailed(false);
+      accessChatRequestedBookIdRef.current = null;
+    }
+  }, [centerId, bookDetailsData?.services, bookDetailsData?.book_id]);
 
   const isShowRemoveButtonForOnlineVisit =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
-  const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn;
+  const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn && bookDetailsData?.services?.[0]?.service_type_id !== 9;
 
   const handleRemoveBookTurn = () => {
     removeBookApi.mutate(
@@ -445,6 +654,19 @@ const Receipt = () => {
         type: turnStatus.requestedTurn ? 'book_request' : 'book',
       },
     });
+  };
+
+  const handleStartChatClick = () => {
+    if (isAccessChatLoading) {
+      return;
+    }
+
+    if (isAccessChatFailed || !isAccessChatReady) {
+      toast.error('مشکلی در ارتباط با پزشک به وجود آمده است، چند دقیقه دیگر تلاش کنید.');
+      return;
+    }
+
+    window.open(`https://messaging-back.paziresh24.com/api/external/conversations/${bookId}`);
   };
 
   const handleSafeCallAction = () => {
@@ -589,7 +811,29 @@ const Receipt = () => {
         slug: undefined,
       });
     };
-  }, [bookDetailsData?.id]);
+  }, [bookDetailsData?.book_id]);
+
+  useEffect(() => {
+    if (action && getReceiptDetails?.data) {
+      if (action === 'open_channel') {
+        const selected_channel = bookDetailsData?.selected_online_visit_channel;
+        const isRedirectToHami = bookDetailsData?.doctor.online_visit_channels?.some?.((item: any) => item.type == 'whatsapp')
+        if (!widgetApp) {
+          if (isRedirectToHami) {
+            return window.location.assign(`https://apigw.paziresh24.com/v1/n8n-nelson/webhook/hami-chat?book_id=${bookId}`)
+          }
+          window.location.assign(
+            decodeURIComponent(
+              selected_channel?.channel_link.replace(
+                'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+                '',
+              ),
+            ),
+          );
+        }
+      }
+    }
+  }, [action, bookDetailsData, widgetApp]);
 
   // Show error component if there's an error
   if (getReceiptDetails.isError) {
@@ -617,6 +861,18 @@ const Receipt = () => {
   return (
     <>
       <Seo title="رسید نوبت" noIndex />
+      {isHamdastReceiptLoading && (
+        <div
+          className="fixed inset-0 z-[1000] flex  items-center justify-center bg-white/95 backdrop-blur-[1px]"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          <div className='flex flex-col justify-center items-center gap-2'>
+            <Loading />
+            <span className='text-sm'>لطفا کمی صبر کنید...</span>
+          </div>
+        </div>
+      )}
       <div className="flex flex-col-reverse items-start w-full max-w-screen-lg mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
         <div className="w-full bg-white md:basis-4/6 md:rounded-lg shadow-card">
           <div id="receipt" className="flex flex-col px-5 pt-5 space-y-4">
@@ -668,6 +924,27 @@ const Receipt = () => {
               centerId={centerId?.toString()!}
             />
           </div>
+          {bookDetailsData?.services?.[0]?.service_type_id === 9 && !turnStatus?.deletedTurn && (
+            <>
+              {getReceiptDetails.isSuccess ? (
+
+                <div className="flex flex-col gap-2 p-5">
+                  {
+                    Date.now() <= (bookDetailsData?.book_time + 3 * 24 * 60 * 60) * 1000 && (
+                      <Button block onClick={handleStartChatClick} icon={<ChatIcon />} loading={isAccessChatLoading}>
+                        شروع گفتگو با پزشک
+                      </Button>
+                    )
+                  }
+                  <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
+                    لغو نوبت
+                  </Button>
+                </div>
+              ) : (
+                <ReceiptButtonLoading />
+              )}
+            </>
+          )}
           {bookDetailsData.book_id && growthbook.ready && !userPednding && (
             <div className="p-5">
               {centerType === 'consult' && (
@@ -860,8 +1137,8 @@ const Receipt = () => {
             centerType === 'consult'
               ? `لطفا دلیل ${turnStatus.notVisitedTurn ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
               : turnStatus.requestedTurn
-              ? 'آیا از لغو درخواست اطمینان دارید؟'
-              : 'آیا از لغو نوبت اطمینان دارید؟'
+                ? 'آیا از لغو درخواست اطمینان دارید؟'
+                : 'آیا از لغو نوبت اطمینان دارید؟'
           }
           {...removeModalProps}
         >
@@ -962,13 +1239,44 @@ const Receipt = () => {
           </div>
         </Modal>
         {widgetApp && (
-          <Modal {...widgetModalProps} fullScreen={!isMobile} noHeader noLine bodyClassName="p-0 h-[45rem]">
-            <AppFrame
-              appKey={widgetApp}
-              params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
-              queries={{ medical_center_id: centerId, appointment_id: bookId }}
-            />
-          </Modal>
+          <>
+            <Modal {...widgetModalProps} onClose={handleOpenClosePromptWidgetModal} fullScreen={!isMobile} noHeader noLine bodyClassName="p-0 h-[45rem]">
+              <AppFrame
+                dontShowNotification
+                appKey={widgetApp}
+                params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
+                queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_id: bookDetailsData.doctor.id, doctor_user_id: doctorUserId }}
+                reportOpenSignal={reportOpenSignal}
+                onReportSubmit={() => {
+                  handleCloseClosePromptWidgetModal();
+                  handleCloseWidgetModal();
+                }}
+              />
+            </Modal>
+            <Modal {...closePromptWidgetModalProps} noHeader>
+              <div className='flex flex-col gap-3'>
+                <span>
+                  من دستیار پزشک هستم؛
+                </span>
+                <span className='font-medium'>
+                  برای تشخیص و درمان بهتر، لطفاً این بخش را تکمیل کنید تا شرح حال شما مستقیماً برای پزشک ارسال شود.
+                </span>
+
+                <Button onClick={closePromptWidgetModalProps.onClose}>به سوالات می‌خواهم پاسخ بدهم</Button>
+                <Divider />
+                <Button
+                  variant='text'
+                  size='sm'
+                  onClick={() => {
+                    handleCloseClosePromptWidgetModal();
+                    setReportOpenSignal(signal => signal + 1);
+                  }}
+                >
+                  آیا مشکلی برای تکمیل شرح حال وجود دارد؟
+                </Button>
+              </div>
+            </Modal>
+          </>
         )}
       </div>
     </>

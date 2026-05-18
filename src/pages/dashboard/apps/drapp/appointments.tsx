@@ -100,9 +100,9 @@ export const Dashboard = (props: any) => {
                 ref={iframeRef}
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
-                src={`https://hamdast.paziresh24.com/bridge/?app=suu4wxzcleelp4v&menu=9ctuac0ipcer0l7&user_id=${
-                  user.id
-                }&src=${encodeURIComponent(`https://opium-dashboard.paziresh24.com/book-list/`)}`}
+                src={`https://opium-dashboard.paziresh24.com/book-list/?user_id=${user.id}`}
+                allow="microphone; camera; fullscreen; clipboard-write;"
+                sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />
             )}
           </div>

@@ -1,4 +1,6 @@
+import Alert from '@/common/components/atom/alert';
 import InfoIcon from '@/common/components/icons/info';
+import { WarningIcon } from '@/common/components/icons/warning';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
@@ -36,7 +38,8 @@ interface TurnDetailsDataParam {
     selectedChannel?: any;
     isDeleted?: boolean;
     doctorName?: string;
-    channels?: Record<string, any>[]
+    channels?: Record<string, any>[],
+    service?: any
   };
   centerType: CenterType;
   metaData?: {
@@ -65,8 +68,101 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     selectedChannel,
     isDeleted,
     doctorName,
-    channels
+    channels,
+    service
   } = data;
+
+  if (service?.service_type_id == 9) {
+    return [
+      {
+        id: 1,
+        name: "زمان دقیق نوبت",
+        value: bookTime,
+        type: 'Text',
+        isBoldValue: true,
+      },
+      {
+        id: 3,
+        name: 'کد پیگیری',
+        value: trackingCode,
+        type: 'Text',
+        isBoldValue: false,
+      },
+      {
+        id: 4,
+        name: 'لینک قبض نوبت',
+        value: receiptLink,
+        copyable: true,
+        type: 'Text',
+        isBoldValue: false,
+      },
+      {
+        id: 5,
+        name: 'توضیحات',
+        value:
+          createElement(Alert, {
+            severity: 'warning',
+            className: 'p-3 text-amber-800 text-sm',
+          }, createElement('div', { className: 'flex items-start gap-2' },
+            createElement(WarningIcon, { className: 'w-5 h-5 min-w-5 text-amber-800' }),
+            createElement('span', null,
+              createElement('span', { className: 'text-amber-800 font-semibold' }, 'نکته مهم:'),
+              ' ',
+              createElement('span', { className: 'text-black' }, 'این نوبت کاملاً آنلاین است و نیازی به مراجعه  حضوری به بیمارستان نیست.'),
+            ),
+          )),
+        type: 'Label',
+        isBoldValue: true,
+      },
+      {
+        id: 6,
+        name: 'نوع خدمت',
+        value: service.title,
+        type: 'Text',
+        isBoldValue: false,
+      },
+      {
+        id: 7,
+        name: "مرکز درمانی",
+        value: centerName,
+        type: 'Text',
+        isBoldValue: false,
+      },
+      {
+        id: 8,
+        name: 'اطلاعات بیمار',
+        value: [
+          {
+            name: 'نام بیمار',
+            value: patientInfo.name,
+            type: 'Text',
+          },
+          {
+            name: 'کدملی',
+            value: patientInfo.nationalCode,
+            type: 'Text',
+          },
+          {
+            name: 'شماره موبایل',
+            value: patientInfo.cell,
+            type: 'Text',
+          },
+        ],
+        type: 'Accordion',
+        isOpen: false,
+      },
+      {
+        id: 9,
+        name: 'قوانین',
+        value: rules?.map((items, index) => ({
+          id: index,
+          value: items,
+          type: 'Label',
+        })),
+        type: 'Accordion',
+      },
+    ]
+  }
 
   const lists = [
     {

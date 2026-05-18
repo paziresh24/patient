@@ -154,7 +154,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
         path: "radioFilter.selected",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.selected;
@@ -173,7 +173,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
         path: "switchButton.checked",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.selected == "true" ? true : false;
@@ -192,7 +192,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
         path: "isLastChild",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isLastChild
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isLastChild
       }
     ],
     [$props, $ctx, $refs]
@@ -201,6 +201,7 @@ function PlasmicFilterListItem__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -476,7 +477,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFilterListItem__VariantsArgs;
     args?: PlasmicFilterListItem__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFilterListItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFilterListItem__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFilterListItem__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

@@ -1,3 +1,4 @@
+import PlasmicLauncherBlocksProfile from '.plasmic/plasmic/launcher/PlasmicLauncherBlocksProfile';
 import Avatar from '@/common/components/atom/avatar';
 import Loading from '@/common/components/atom/loading';
 import Skeleton from '@/common/components/atom/skeleton';
@@ -42,23 +43,13 @@ export const PatinetProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const share = useShare();
   const { customize } = useCustomize();
-  const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
-  const isEnabledLauncher = useFeatureIsOn('launcher-flag');
-
   const { getRatingAppLink } = usePwa();
 
   useEffect(() => {
-    if (userInfo.id && isEnabledLauncher && !customize.partnerKey) {
+    if (userInfo.id && userInfo.provider?.job_title === 'doctor' && !customize.partnerKey) {
       router.replace(`/_`);
-    } else if (
-      userInfo.id &&
-      !customize.partnerKey &&
-      (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
-    ) {
-      router.replace(`/dashboard`);
     }
-  }, [userInfo.id]);
+  }, [userInfo.id, userInfo.provider?.job_title, customize.partnerKey]);
 
   const openLoginForm = (link?: string) => {
     !isLogin &&
@@ -91,28 +82,9 @@ export const PatinetProfile = () => {
       ) : (
         <div className="mb-10">
           {isLogin && (
-            <div className="flex flex-col p-5 bg-white shadow-sm">
-              <Link href="/patient/profile?referrer=profile" className="flex items-center space-s-5">
-                <Avatar name={`${userInfo.name ?? ''} ${userInfo.family ?? ''}`} src={userInfo.image ?? ''} />
-                <div className="flex flex-col space-y-2">
-                  {loginPending ? (
-                    <>
-                      <Skeleton h="1rem" w="8rem" rounded="full" />
-                      <Skeleton h="1rem" rounded="full" />
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center">
-                        <Text fontWeight="bold" className="line-clamp-1">
-                          {userInfo.name} {userInfo.family}
-                        </Text>
-                        <EditIcon className="w-5 h-5" />
-                      </div>
-                      <Text fontSize="sm">{userInfo.cell ? `0${userInfo.cell}` : userInfo.email}</Text>
-                    </>
-                  )}
-                </div>
-              </Link>
+            <div className='bg-white p-2'>
+              <PlasmicLauncherBlocksProfile />
+
             </div>
           )}
           {!isLogin && (
@@ -132,7 +104,7 @@ export const PatinetProfile = () => {
           <div className="flex flex-col mt-2 bg-white shadow-sm">
             <div
               onClick={() => openPrivateLink('/patient/appointments?referrer=profile')}
-              className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+              className="flex cursor-pointer items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
             >
               <CalenderIcon />
               <Text fontWeight="medium" fontSize="sm">
@@ -142,7 +114,7 @@ export const PatinetProfile = () => {
             {customize.bookMark && (
               <div
                 onClick={() => openPrivateLink('/patient/bookmarks?referrer=profile')}
-                className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                className="flex cursor-pointer items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
               >
                 <BookmarkIcon />
                 <Text fontWeight="medium" fontSize="sm">
@@ -152,7 +124,7 @@ export const PatinetProfile = () => {
             )}
             <div
               onClick={() => openPrivateLink('/patient/subuser?referrer=profile')}
-              className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+              className="flex cursor-pointer items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
             >
               <UsersIcon />
               <Text fontWeight="medium" fontSize="sm">
@@ -221,7 +193,7 @@ export const PatinetProfile = () => {
             )}
             {customize.showShareApp && (
               <div
-                className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+                className="flex cursor-pointer items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
                 onClick={() => {
                   share({ url: 'https://www.paziresh24.com/app' });
                 }}

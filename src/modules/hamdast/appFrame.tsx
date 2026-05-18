@@ -21,19 +21,31 @@ import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key
 import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './components/subscription-payment';
 import { HamdastFlow } from './components/flow';
+import Link from 'next/link';
+import { HamdastInvite } from './components/invite';
 
 export const AppFrame = ({
   appKey,
   params,
   queries,
   showBackButton,
-  dontShowProfile
+  dontShowProfile,
+  dontShowAppBar,
+  dontShowNotification,
+  onChangeWidget,
+  reportOpenSignal,
+  onReportSubmit,
 }: {
   appKey: string;
   params: string[];
   queries?: any;
   showBackButton?: boolean;
   dontShowProfile?: boolean;
+  dontShowAppBar?: boolean;
+  dontShowNotification?: boolean;
+  onChangeWidget?: (action?: 'add' | 'remove' | 'update') => void;
+  reportOpenSignal?: number;
+  onReportSubmit?: () => void;
 }) => {
   const router = useRouter();
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
@@ -66,8 +78,8 @@ export const AppFrame = ({
 
   const embedSrc = useMemo(() => {
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
-    return page?.embed_src ? constructUrlWithQuery(replaceParameters, queries) : null;
-  }, [page, params, queries]);
+    return page?.embed_src ? constructUrlWithQuery(replaceParameters, { ...queries, user_id: user.id, hamdast_embedded: true }) : null;
+  }, [page, params, queries, user.id]);
 
   const showIframe = page?.is_protected_route ? !!user.id : true;
 
@@ -133,32 +145,39 @@ export const AppFrame = ({
 
   return (
     <div className="flex flex-col h-full w-full">
-      <AppBar
-        title={page?.name?.fa}
-        backButton={showBackButton}
-        titleLoading={!page?.name}
-        actionButton={
-          showSupportButton ? (
-            <Button
-              size="sm"
-              variant="secondary"
-              className="rounded-full h-8 font-semibold text-xs"
-              onClick={() => supportRef.current?.open()}
-            >
-              پشتیبانی ابزارک
-            </Button>
-          ) : (
-            <Report app_key={appKey as string} page_key={page?.key} />
-          )
-        }
-      />
+      {!dontShowAppBar && (
+
+        <AppBar
+          title={page?.name?.fa}
+          backButton={showBackButton}
+          titleLoading={!page?.name}
+          notification={!dontShowNotification}
+          actionButton={
+            showSupportButton ? (
+              <Button
+                size="sm"
+                variant="secondary"
+                className="rounded-full h-8 font-semibold text-xs"
+                onClick={() => supportRef.current?.open()}
+              >
+                پشتیبانی ابزارک
+              </Button>
+            ) : (
+              <Report app_key={appKey as string} page_key={page?.key} openSignal={reportOpenSignal} onSubmit={onReportSubmit} />
+            )
+          }
+        />
+      )}
+      {embedSrc && <Link rel="preconnect" href={embedSrc!} />}
+      {embedSrc && <Link rel="dns-prefetch" href={embedSrc!} />}
       {app?.id && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
-          <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
+          <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} onChangeWidget={onChangeWidget} />
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />
+          <HamdastInvite app_key={appKey} />
           <Permissions onClose={() => router.push('/dashboard')} />
           <HamdastFlow iframeRef={iframeRef} />
           {showTranslation && (
@@ -217,29 +236,33 @@ export const AppFrame = ({
           )}
         </>
       )}
+      {(showApp || showTranslation) && (
+        <div className={classNames('w-full flex-grow flex flex-col', { '!opacity-0 invisible absolute -left-[9999px]': showTranslation })}>
+          {showIframe && embedSrc && (
+            <>
+              {isAppLoading && params?.[0] !== 'launcher' && (
+                <div className="w-full flex-grow flex flex-col items-center justify-center bg-white gap-3">
+                  <Loading />
+                  <Text fontSize="sm" className="text-slate-600">
+                    لطفا کمی صبر کنید...
+                  </Text>
+                </div>
+              )}
+              <iframe
+                ref={iframeRef}
+                onLoad={() => setIsAppLoading(false)}
+                className={classNames('w-full flex-grow h-full', { '!opacity-0 invisible absolute -left-[9999px]': isAppLoading })}
+                loading="eager"
+                width="100%" height="100%"
+                src={embedSrc!}
+                allow="microphone; camera; fullscreen; clipboard-write;"
+                sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
+              />
+            </>
+          )}
+        </div>
 
-      <div className={classNames('w-full flex-grow flex flex-col', { hidden: !showApp })}>
-        {showIframe && embedSrc && (
-          <>
-            {isAppLoading && params?.[0] !== 'launcher' && (
-              <div className="w-full flex-grow flex flex-col items-center justify-center bg-white gap-3">
-                <Loading />
-                <Text fontSize="sm" className="text-slate-600">
-                  لطفا کمی صبر کنید...
-                </Text>
-              </div>
-            )}
-            <iframe
-              ref={iframeRef}
-              onLoad={() => setIsAppLoading(false)}
-              className={classNames('w-full flex-grow h-full', { hidden: isAppLoading })}
-              src={`https://hamdast.paziresh24.com/bridge/?app=${app?.id}&page=${page?.id}&user_id=${user.id}&src=${encodeURIComponent(
-                embedSrc!,
-              )}`}
-            />
-          </>
-        )}
-      </div>
+      )}
     </div>
   );
 };

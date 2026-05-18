@@ -160,13 +160,13 @@ function PlasmicFilterRowItem__RenderFunc(props: {
         path: "variable",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ""
       },
       {
         path: "active",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.active
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.active
       }
     ],
     [$props, $ctx, $refs]
@@ -175,6 +175,7 @@ function PlasmicFilterRowItem__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -391,7 +392,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFilterRowItem__VariantsArgs;
     args?: PlasmicFilterRowItem__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFilterRowItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFilterRowItem__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFilterRowItem__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

@@ -83,10 +83,11 @@ type VariantPropType = keyof PlasmicHamdastKhedmatWidget__VariantsArgs;
 export const PlasmicHamdastKhedmatWidget__VariantProps =
   new Array<VariantPropType>();
 
-export type PlasmicHamdastKhedmatWidget__ArgsType = { profileData?: any };
+export type PlasmicHamdastKhedmatWidget__ArgsType = { profileData?: any, widgetData?: any };
 type ArgPropType = keyof PlasmicHamdastKhedmatWidget__ArgsType;
 export const PlasmicHamdastKhedmatWidget__ArgProps = new Array<ArgPropType>(
-  "profileData"
+  "profileData",
+  "widgetData"
 );
 
 export type PlasmicHamdastKhedmatWidget__OverridesType = {
@@ -99,6 +100,7 @@ export type PlasmicHamdastKhedmatWidget__OverridesType = {
 
 export interface DefaultHamdastKhedmatWidgetProps {
   profileData?: any;
+  widgetData?: any;
   className?: string;
 }
 
@@ -107,7 +109,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -186,7 +188,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
           data-plasmic-name={"paziresh24Button"}
           data-plasmic-override={overrides.paziresh24Button}
           children2={
-            "\u0645\u0634\u0627\u0647\u062f\u0647 \u062e\u062f\u0645\u0627\u062a \u0648 \u062a\u0639\u0631\u0641\u0647\u200c\u0647\u0627"
+            "مشاهده قیمت خدمات"
           }
           className={classNames("__wab_instance", sty.paziresh24Button)}
           onClick={async event => {
@@ -194,24 +196,24 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
 
             $steps["updateModalOpen"] = true
               ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["modal", "open"]
-                    },
-                    operation: 0,
-                    value: true
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["modal", "open"]
+                  },
+                  operation: 0,
+                  value: true
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
 
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
+                  $stateSet(objRoot, variablePath, value);
+                  return value;
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
             if (
               $steps["updateModalOpen"] != null &&
@@ -223,34 +225,34 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
 
             $steps["updateModalNotiff"] = true
               ? (() => {
-                  const actionArgs = {
-                    args: [
-                      (() => {
-                        try {
-                          return {
-                            event_group: "khedmat_click_button",
-                            doctor_user_id: $props.profileData.user_id,
-                            doctor_slug: $props.profileData.seo.slug,
-                            user_id: $ctx.auth?.info?.id
-                          };
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+                const actionArgs = {
+                  args: [
+                    (() => {
+                      try {
+                        return {
+                          event_group: "khedmat_click_button",
+                          doctor_user_id: $props.profileData.user_id,
+                          doctor_slug: $props.profileData.seo.slug,
+                          user_id: $ctx.auth?.info?.id
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
                         }
-                      })(),
-                      "https://splunk-ravi-hec.paziresh24.com",
-                      "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d"
-                    ]
-                  };
-                  return $globalActions["Splunk.sendLog"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
+                        throw e;
+                      }
+                    })(),
+                    "https://splunk-ravi-hec.paziresh24.com",
+                    "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d"
+                  ]
+                };
+                return $globalActions["Splunk.sendLog"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
               : undefined;
             if (
               $steps["updateModalNotiff"] != null &&
@@ -262,35 +264,36 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
 
             $steps["updateModalOpen2"] = true
               ? (() => {
-                  const actionArgs = {
-                    args: [
-                      "POST",
-                      "https://hosseinz.liara.run/webhook/log-webhook",
-                      undefined,
-                      (() => {
-                        try {
-                          return {
-                            event_group: "khedmat_click_button",
-                            doctor_user_id: $props.profileData.user_id,
-                            doctor_slug: $props.profileData.seo.slug,
-                            user_id: $ctx.auth?.info?.id
-                          };
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+                const actionArgs = {
+                  args: [
+                    "POST",
+                    "https://apigw.paziresh24.com/v1/hamdast/widget-data/khedmat/log-webhook",
+                    undefined,
+                    (() => {
+                      try {
+                        return {
+                          event_group: "khedmat_click_button",
+                          doctor_user_id: $props.profileData.user_id,
+                          doctor_slug: $props.profileData.seo.slug,
+                          user_id: $ctx.auth?.info?.id,
+                          center_id: $props?.widgetData?.center_id
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
                         }
-                      })()
-                    ]
-                  };
-                  return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
               : undefined;
             if (
               $steps["updateModalOpen2"] != null &&
@@ -332,7 +335,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
             url={(() => {
               try {
                 return (
-                  "https://hosseinz.liara.run/webhook/servises?user_id=" +
+                  `https://apigw.paziresh24.com/v1/hamdast/widget-data/khedmat/servises?center_id=${$props.widgetData.center_id}&user_id=` +
                   $props.profileData.user_id
                 );
               } catch (e) {
@@ -407,7 +410,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                                       if (
                                         e instanceof TypeError ||
                                         e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
+                                        "PlasmicUndefinedDataError"
                                       ) {
                                         return "2";
                                       }
@@ -452,18 +455,18 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                                       return null ==
                                         $ctx.fetchedData[currentIndex].price_max
                                         ? Number(
-                                            $ctx.fetchedData[currentIndex]
-                                              .price_min
-                                          ).toLocaleString("en-US")
+                                          $ctx.fetchedData[currentIndex]
+                                            .price_min
+                                        ).toLocaleString("en-US")
                                         : $ctx.fetchedData[currentIndex]
-                                            .price_max == null ||
+                                          .price_max == null ||
                                           $ctx.fetchedData[currentIndex]
                                             .price_max === ""
-                                        ? Number(
+                                          ? Number(
                                             $ctx.fetchedData[currentIndex]
                                               .price_min
                                           ).toLocaleString("en-US")
-                                        : Number(
+                                          : Number(
                                             $ctx.fetchedData[currentIndex]
                                               .price_min
                                           ).toLocaleString("en-US") +
@@ -476,7 +479,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                                       if (
                                         e instanceof TypeError ||
                                         e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
+                                        "PlasmicUndefinedDataError"
                                       ) {
                                         return "";
                                       }
@@ -502,7 +505,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                                     if (
                                       e instanceof TypeError ||
                                       e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
+                                      "PlasmicUndefinedDataError"
                                     ) {
                                       return "";
                                     }
@@ -636,18 +639,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicHamdastKhedmatWidget__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicHamdastKhedmatWidget__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicHamdastKhedmatWidget__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicHamdastKhedmatWidget__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

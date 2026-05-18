@@ -154,13 +154,13 @@ function PlasmicSuggestion__RenderFunc(props: {
         path: "suggestionInput.suggestedContentVisibility",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false
       },
       {
         path: "fragmentApiRequest.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "fragmentApiRequest"
       },
@@ -168,7 +168,7 @@ function PlasmicSuggestion__RenderFunc(props: {
         path: "fragmentApiRequest.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "fragmentApiRequest"
       },
@@ -176,7 +176,7 @@ function PlasmicSuggestion__RenderFunc(props: {
         path: "fragmentApiRequest.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "fragmentApiRequest"
       },
@@ -184,7 +184,7 @@ function PlasmicSuggestion__RenderFunc(props: {
         path: "suggestionInput.suggestionTextInputValue",
         type: "readonly",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.defaultSearchQuery;
@@ -205,7 +205,7 @@ function PlasmicSuggestion__RenderFunc(props: {
         path: "suggestionInput.selectedOption",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "suggestionInput.inputQueryText",
@@ -222,6 +222,7 @@ function PlasmicSuggestion__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -334,9 +335,8 @@ function PlasmicSuggestion__RenderFunc(props: {
             typeof $steps["onSelectInteractProb"] === "object" &&
             typeof $steps["onSelectInteractProb"].then === "function"
           ) {
-            $steps["onSelectInteractProb"] = await $steps[
-              "onSelectInteractProb"
-            ];
+            $steps["onSelectInteractProb"] =
+              await $steps["onSelectInteractProb"];
           }
         }}
         onSelectedOptionChange={async (...eventArgs: any) => {
@@ -638,9 +638,10 @@ function PlasmicSuggestion__RenderFunc(props: {
                     ) {
                       $steps[
                         "updateSuggestionInputSuggestedContentVisibility"
-                      ] = await $steps[
-                        "updateSuggestionInputSuggestedContentVisibility"
-                      ];
+                      ] =
+                        await $steps[
+                          "updateSuggestionInputSuggestedContentVisibility"
+                        ];
                     }
                   }}
                 >
@@ -765,7 +766,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSuggestion__VariantsArgs;
     args?: PlasmicSuggestion__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSuggestion__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSuggestion__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSuggestion__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

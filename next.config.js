@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 
 const nextTranslate = require('next-translate');
+const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -49,19 +50,7 @@ const nextConfig = {
     },
   },
   transpilePackages: [
-    '@plasmicpkgs/antd5',
     '@plasmicpkgs/plasmic-rich-components',
-    'antd',
-    '@ant-design/icons',
-    '@ant-design/pro-components',
-    '@ant-design/cssinjs',
-    '@ant-design/icons-svg',
-    'rc-util',
-    'rc-pagination',
-    'rc-picker',
-    'rc-table',
-    'rc-tree',
-    'rc-input',
   ],
   compress: true,
   poweredByHeader: false,
@@ -197,6 +186,7 @@ const nextConfig = {
     FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
     RAVI_BASE_URL: process.env.RAVI_BASE_URL,
+    RAVI_API_BASE_URL: process.env.RAVI_API_BASE_URL,
     RAVI_IFRAME_BASE_URL: process.env.RAVI_IFRAME_BASE_URL,
     PLASMIC_PROJECT_ID: process.env.PLASMIC_PROJECT_ID,
     PLASMIC_PROJECT_TOKEN: process.env.PLASMIC_PROJECT_TOKEN,
@@ -250,5 +240,10 @@ const nextConfig = {
 
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
 
-// Sentry should be the last thing to export to catch everything right
-module.exports = moduleExports;
+// Sentry as last wrapper (DSN & 1% sample rate in sentry.*.config.ts)
+module.exports = withSentryConfig(moduleExports, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+});

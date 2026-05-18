@@ -391,9 +391,8 @@ function PlasmicFilterSelected__RenderFunc(props: {
                     typeof $steps["runOnClickRemoveItem"] === "object" &&
                     typeof $steps["runOnClickRemoveItem"].then === "function"
                   ) {
-                    $steps["runOnClickRemoveItem"] = await $steps[
-                      "runOnClickRemoveItem"
-                    ];
+                    $steps["runOnClickRemoveItem"] =
+                      await $steps["runOnClickRemoveItem"];
                   }
                 }}
                 role={"img"}
@@ -431,7 +430,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFilterSelected__VariantsArgs;
     args?: PlasmicFilterSelected__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFilterSelected__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFilterSelected__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFilterSelected__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

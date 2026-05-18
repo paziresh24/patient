@@ -1,7 +1,7 @@
 import classNames from '@/common/utils/classNames';
 
 interface AlertProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   severity: 'error' | 'warning' | 'success' | 'info';
   className?: string;
 }

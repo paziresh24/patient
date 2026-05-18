@@ -1,4 +1,4 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { raviApiClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
 
@@ -7,10 +7,11 @@ export interface Rate {
 }
 
 export const rate = async (params: Rate) => {
-  const { data } = await apiGatewayClient.get(`/ravi/v1/rate`, {
+  const { data } = await raviApiClient.get(`/ravi/v1/rate`, {
     params: {
       where: `(doctor_slug,eq,${params.slug})`,
     },
+    timeout: 12_000,
   });
   return data;
 };

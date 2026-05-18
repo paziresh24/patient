@@ -123,16 +123,6 @@ const Booking = () => {
           <Transition match={!isLoading} animation="bottom">
             <div className="p-5 bg-white rounded-lg">
               <div className="flex flex-col space-y-3">
-                {onlineChannels?.filter((item: any) => item !== 'secure_call')?.length <= 1 && (
-                  <div className="p-2 mb-3 rounded-md bg-slate-100">
-                    <Text
-                      fontSize="sm"
-                      dangerouslySetInnerHTML={{
-                        __html: messengers[doctorMessenger?.[0] ?? 'phone']?.description,
-                      }}
-                    />
-                  </div>
-                )}
                 <Text fontWeight="bold">لطفا بیمار را انتخاب کنید</Text>
                 <SelectUserWrapper
                   loading={updateBookDetailsLoading || isLoading}

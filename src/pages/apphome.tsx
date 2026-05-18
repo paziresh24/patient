@@ -2,10 +2,12 @@ import Logo from '@/common/components/atom/logo';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { Fragment } from '@/common/fragment';
+import { Fragment2 } from '@/common/fragment/fragment2';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
+import useCustomize from '@/common/hooks/useCustomize';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
@@ -16,11 +18,13 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
 import { ReactElement, useEffect, useState } from 'react';
 import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
+import PlasmicOnlineVisit from '../../.plasmic/plasmic/paziresh_24_search/PlasmicOnlineVisit';
 import classNames from '@/common/utils/classNames';
 import useResponsive from '@/common/hooks/useResponsive';
 import Button from '@/common/components/atom/button';
 import ChevronIcon from '@/common/components/icons/chevron';
 import { splunkInstance } from '@/common/services/splunk';
+import { getHost, HeaderBag } from '@/common/utils/getHost';
 
 const Home = ({ fragmentComponents }: any) => {
   const isApplication = useApplication();
@@ -28,6 +32,7 @@ const Home = ({ fragmentComponents }: any) => {
   const { recent } = useRecentSearch();
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const { setIsOpenSuggestion } = useSearchStore();
+  const customize = useCustomize(state => state.customize);
   const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
   const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
@@ -116,6 +121,14 @@ const Home = ({ fragmentComponents }: any) => {
           )}
         </div>
 
+        {customize.showConsultServices &&
+          (fragmentComponents?.showPlasmicOnlineVisit || showPlasmicOnlineVisit ? (
+            <div>
+              <Fragment2 Component={PlasmicOnlineVisit} name="OnlineVisit" />
+            </div>
+          ) : (
+            <OnlineVisitPromote />
+          ))}
         <SearchGlobalContextsProvider>
           <Fragment name="HomePageShortcuts" />
         </SearchGlobalContextsProvider>
@@ -138,7 +151,7 @@ export const getServerSideProps = withCSR(
     let showPlasmicRecentSearch: boolean = false;
     let showPlasmicOnlineVisit: boolean = false;
     try {
-      const host = context.req.headers.host;
+      const host = getHost(context.req.headers as unknown as HeaderBag);
       const path = context.resolvedUrl;
 
       const url = `https://${host}${path}`;

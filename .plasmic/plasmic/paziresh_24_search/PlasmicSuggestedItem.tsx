@@ -143,7 +143,7 @@ function PlasmicSuggestedItem__RenderFunc(props: {
         path: "selected",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.selected
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.selected
       }
     ],
     [$props, $ctx, $refs]
@@ -152,6 +152,7 @@ function PlasmicSuggestedItem__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -230,7 +231,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSuggestedItem__VariantsArgs;
     args?: PlasmicSuggestedItem__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSuggestedItem__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSuggestedItem__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSuggestedItem__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

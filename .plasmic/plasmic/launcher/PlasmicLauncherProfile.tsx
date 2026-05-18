@@ -126,7 +126,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -406,7 +406,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
         ref={ref => {
           $refs["apiRequest"] = ref;
         }}
-        url={`https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/`}
+        url={`https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/profile`}
       >
         {(() => {
           try {
@@ -640,20 +640,20 @@ function PlasmicLauncherProfile__RenderFunc(props: {
 
                     $steps["goToReviews"] = true
                       ? (() => {
-                          const actionArgs = { destination: "#reviews" };
-                          return (({ destination }) => {
-                            if (
-                              typeof destination === "string" &&
-                              destination.startsWith("#")
-                            ) {
-                              document
-                                .getElementById(destination.substr(1))
-                                .scrollIntoView({ behavior: "smooth" });
-                            } else {
-                              __nextRouter?.push(destination);
-                            }
-                          })?.apply(null, [actionArgs]);
-                        })()
+                        const actionArgs = { destination: "#reviews" };
+                        return (({ destination }) => {
+                          if (
+                            typeof destination === "string" &&
+                            destination.startsWith("#")
+                          ) {
+                            document
+                              .getElementById(destination.substr(1))
+                              .scrollIntoView({ behavior: "smooth" });
+                          } else {
+                            __nextRouter?.push(destination);
+                          }
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                     if (
                       $steps["goToReviews"] != null &&
@@ -815,7 +815,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                                     if (
                                       e instanceof TypeError ||
                                       e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
+                                      "PlasmicUndefinedDataError"
                                     ) {
                                       return "-";
                                     }
@@ -1081,11 +1081,11 @@ function PlasmicLauncherProfile__RenderFunc(props: {
 
                       $steps["runOnClick"] = true
                         ? (() => {
-                            const actionArgs = { eventRef: $props["onClick"] };
-                            return (({ eventRef, args }) => {
-                              return eventRef?.(...(args ?? []));
-                            })?.apply(null, [actionArgs]);
-                          })()
+                          const actionArgs = { eventRef: $props["onClick"] };
+                          return (({ eventRef, args }) => {
+                            return eventRef?.(...(args ?? []));
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps["runOnClick"] != null &&
@@ -1194,13 +1194,13 @@ function PlasmicLauncherProfile__RenderFunc(props: {
 
                         $steps["runOnSubscribe"] = true
                           ? (() => {
-                              const actionArgs = {
-                                eventRef: $props["onSubscribe"]
-                              };
-                              return (({ eventRef, args }) => {
-                                return eventRef?.(...(args ?? []));
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              eventRef: $props["onSubscribe"]
+                            };
+                            return (({ eventRef, args }) => {
+                              return eventRef?.(...(args ?? []));
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["runOnSubscribe"] != null &&
@@ -1254,13 +1254,13 @@ function PlasmicLauncherProfile__RenderFunc(props: {
 
                         $steps["runOnClick"] = true
                           ? (() => {
-                              const actionArgs = {
-                                eventRef: $props["onClick"]
-                              };
-                              return (({ eventRef, args }) => {
-                                return eventRef?.(...(args ?? []));
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              eventRef: $props["onClick"]
+                            };
+                            return (({ eventRef, args }) => {
+                              return eventRef?.(...(args ?? []));
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["runOnClick"] != null &&
@@ -1422,18 +1422,18 @@ function PlasmicLauncherProfile__RenderFunc(props: {
 
                       $steps["invokeGlobalAction"] = true
                         ? (() => {
-                            const actionArgs = {
-                              args: [
-                                undefined,
-                                "\u0646\u0638\u0631 \u0634\u0645\u0627 \u062b\u0628\u062a \u0634\u062f\u060c \u067e\u0633 \u0627\u0632 \u062a\u0627\u06cc\u06cc\u062f \u0646\u0645\u0627\u06cc\u0634 \u062f\u0627\u062f\u0647 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                                "top-center"
-                              ]
-                            };
-                            return $globalActions["Fragment.showToast"]?.apply(
-                              null,
-                              [...actionArgs.args]
-                            );
-                          })()
+                          const actionArgs = {
+                            args: [
+                              undefined,
+                              "\u0646\u0638\u0631 \u0634\u0645\u0627 \u062b\u0628\u062a \u0634\u062f\u060c \u067e\u0633 \u0627\u0632 \u062a\u0627\u06cc\u06cc\u062f \u0646\u0645\u0627\u06cc\u0634 \u062f\u0627\u062f\u0647 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                              "top-center"
+                            ]
+                          };
+                          return $globalActions["Fragment.showToast"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
                         : undefined;
                       if (
                         $steps["invokeGlobalAction"] != null &&
@@ -1548,53 +1548,53 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     </div>
                     {(_par =>
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                      (() => {
-                        try {
-                          return $state.apiRequest.data.features;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
+                        (() => {
+                          try {
+                            return $state.apiRequest.data.features;
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
                           }
-                          throw e;
-                        }
-                      })()
-                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                      const currentItem = __plasmic_item_0;
-                      const currentIndex = __plasmic_idx_0;
-                      return (
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            projectcss.__wab_text,
-                            sty.text__jymKt
-                          )}
-                          key={currentIndex}
-                        >
+                        })()
+                      ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                        const currentItem = __plasmic_item_0;
+                        const currentIndex = __plasmic_idx_0;
+                        return (
                           <div
-                            className={projectcss.__wab_expr_html_text}
-                            dangerouslySetInnerHTML={{
-                              __html: (() => {
-                                try {
-                                  return currentItem;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
+                            className={classNames(
+                              projectcss.all,
+                              projectcss.__wab_text,
+                              sty.text__jymKt
+                            )}
+                            key={currentIndex}
+                          >
+                            <div
+                              className={projectcss.__wab_expr_html_text}
+                              dangerouslySetInnerHTML={{
+                                __html: (() => {
+                                  try {
+                                    return currentItem;
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
                                       "PlasmicUndefinedDataError"
-                                  ) {
-                                    return "\u062a\u0648\u0636\u06cc\u062d\u0627\u062a";
+                                    ) {
+                                      return "\u062a\u0648\u0636\u06cc\u062d\u0627\u062a";
+                                    }
+                                    throw e;
                                   }
-                                  throw e;
-                                }
-                              })()
-                            }}
-                          />
-                        </div>
-                      );
-                    })}
+                                })()
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
                   </div>
                 ) : null}
               </div>
@@ -1832,18 +1832,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherProfile__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherProfile__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicLauncherProfile__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicLauncherProfile__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

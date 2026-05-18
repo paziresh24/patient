@@ -240,7 +240,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFilterExpertiseView__VariantsArgs;
     args?: PlasmicFilterExpertiseView__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFilterExpertiseView__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFilterExpertiseView__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFilterExpertiseView__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

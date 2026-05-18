@@ -191,19 +191,19 @@ function PlasmicSearch__RenderFunc(props: {
         path: "selectCityDialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "inputValue",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ``
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ``
       },
       {
         path: "getLocationList.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "getLocationList"
       },
@@ -211,7 +211,7 @@ function PlasmicSearch__RenderFunc(props: {
         path: "getLocationList.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "getLocationList"
       },
@@ -219,7 +219,7 @@ function PlasmicSearch__RenderFunc(props: {
         path: "getLocationList.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "getLocationList"
       },
@@ -227,31 +227,31 @@ function PlasmicSearch__RenderFunc(props: {
         path: "hasOverlay",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.hasOverlay
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.hasOverlay
       },
       {
         path: "isFocus",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.isFocus
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.isFocus
       },
       {
         path: "terms",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ""
       },
       {
         path: "isCityInputFocused",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => false
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => false
       },
       {
         path: "timoutRef",
         type: "private",
         variableType: "number",
-        initFunc: ({ $props, $state, $queries, $ctx }) => 0
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => 0
       }
     ],
     [$props, $ctx, $refs]
@@ -260,6 +260,7 @@ function PlasmicSearch__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -457,9 +458,8 @@ function PlasmicSearch__RenderFunc(props: {
                     typeof $steps["updateInputValue"] === "object" &&
                     typeof $steps["updateInputValue"].then === "function"
                   ) {
-                    $steps["updateInputValue"] = await $steps[
-                      "updateInputValue"
-                    ];
+                    $steps["updateInputValue"] =
+                      await $steps["updateInputValue"];
                   }
 
                   $steps["runCode"] = true
@@ -540,9 +540,8 @@ function PlasmicSearch__RenderFunc(props: {
                     typeof $steps["invokeGlobalAction"] === "object" &&
                     typeof $steps["invokeGlobalAction"].then === "function"
                   ) {
-                    $steps["invokeGlobalAction"] = await $steps[
-                      "invokeGlobalAction"
-                    ];
+                    $steps["invokeGlobalAction"] =
+                      await $steps["invokeGlobalAction"];
                   }
                 }}
                 onClickCities={async () => {
@@ -579,9 +578,8 @@ function PlasmicSearch__RenderFunc(props: {
                     typeof $steps["updateSelectCityOpen"] === "object" &&
                     typeof $steps["updateSelectCityOpen"].then === "function"
                   ) {
-                    $steps["updateSelectCityOpen"] = await $steps[
-                      "updateSelectCityOpen"
-                    ];
+                    $steps["updateSelectCityOpen"] =
+                      await $steps["updateSelectCityOpen"];
                   }
                 }}
                 onClickSearchIcon={async () => {
@@ -621,6 +619,7 @@ function PlasmicSearch__RenderFunc(props: {
                                     "semantic_search",
                                     semanticSearchParam
                                   );
+                                  params.delete("page");
                                   return `/s/${citySlug}?${params.toString()}`;
                                 }
                               })();
@@ -709,9 +708,8 @@ function PlasmicSearch__RenderFunc(props: {
                     typeof $steps["runOnClickOverlay"] === "object" &&
                     typeof $steps["runOnClickOverlay"].then === "function"
                   ) {
-                    $steps["runOnClickOverlay"] = await $steps[
-                      "runOnClickOverlay"
-                    ];
+                    $steps["runOnClickOverlay"] =
+                      await $steps["runOnClickOverlay"];
                   }
 
                   $steps["splunk"] = $steps.isOpen
@@ -803,9 +801,8 @@ function PlasmicSearch__RenderFunc(props: {
                     typeof $steps["sentClarityTagEvent"] === "object" &&
                     typeof $steps["sentClarityTagEvent"].then === "function"
                   ) {
-                    $steps["sentClarityTagEvent"] = await $steps[
-                      "sentClarityTagEvent"
-                    ];
+                    $steps["sentClarityTagEvent"] =
+                      await $steps["sentClarityTagEvent"];
                   }
                 }}
               />
@@ -906,9 +903,8 @@ function PlasmicSearch__RenderFunc(props: {
                     typeof $steps["runOnFocusChange"] === "object" &&
                     typeof $steps["runOnFocusChange"].then === "function"
                   ) {
-                    $steps["runOnFocusChange"] = await $steps[
-                      "runOnFocusChange"
-                    ];
+                    $steps["runOnFocusChange"] =
+                      await $steps["runOnFocusChange"];
                   }
                 }}
                 terms={$state.terms}
@@ -916,7 +912,13 @@ function PlasmicSearch__RenderFunc(props: {
 
               {(() => {
                 try {
-                  return $state.terms?.trim().length >= 3;
+                  return (() => {
+                    const isLongEnough = $state.terms?.trim().length >= 3;
+                    const isExplicitlyDisabled =
+                      !!$ctx.Growthbook.isReady &&
+                      !$ctx.Growthbook.features.is_instant_search_enabled;
+                    return isLongEnough && !isExplicitlyDisabled;
+                  })();
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
@@ -1043,8 +1045,8 @@ function PlasmicSearch__RenderFunc(props: {
         hasVariant(globalVariants, "screen", "mobileOnly")
           ? true
           : hasVariant(globalVariants, "screen", "mobileOnly")
-          ? true
-          : false
+            ? true
+            : false
       ) ? (
         <div
           className={classNames(projectcss.all, sty.freeBox__qUu1, {
@@ -1249,9 +1251,8 @@ function PlasmicSearch__RenderFunc(props: {
                 typeof $steps["invokeGlobalAction"] === "object" &&
                 typeof $steps["invokeGlobalAction"].then === "function"
               ) {
-                $steps["invokeGlobalAction"] = await $steps[
-                  "invokeGlobalAction"
-                ];
+                $steps["invokeGlobalAction"] =
+                  await $steps["invokeGlobalAction"];
               }
             }}
             onClickCities={async () => {
@@ -1283,9 +1284,8 @@ function PlasmicSearch__RenderFunc(props: {
                 typeof $steps["updateSelectCityOpen"] === "object" &&
                 typeof $steps["updateSelectCityOpen"].then === "function"
               ) {
-                $steps["updateSelectCityOpen"] = await $steps[
-                  "updateSelectCityOpen"
-                ];
+                $steps["updateSelectCityOpen"] =
+                  await $steps["updateSelectCityOpen"];
               }
             }}
             onClickSearchIcon={async () => {
@@ -1616,9 +1616,8 @@ function PlasmicSearch__RenderFunc(props: {
                       typeof $steps["updateSelectCityDialogOpen"].then ===
                         "function"
                     ) {
-                      $steps["updateSelectCityDialogOpen"] = await $steps[
-                        "updateSelectCityDialogOpen"
-                      ];
+                      $steps["updateSelectCityDialogOpen"] =
+                        await $steps["updateSelectCityDialogOpen"];
                     }
                   }}
                   onClickCity={async value => {
@@ -1691,9 +1690,8 @@ function PlasmicSearch__RenderFunc(props: {
                       typeof $steps["updateSelectCityDialogOpen"].then ===
                         "function"
                     ) {
-                      $steps["updateSelectCityDialogOpen"] = await $steps[
-                        "updateSelectCityDialogOpen"
-                      ];
+                      $steps["updateSelectCityDialogOpen"] =
+                        await $steps["updateSelectCityDialogOpen"];
                     }
                   }}
                   onFocusInput={async value => {
@@ -1731,9 +1729,8 @@ function PlasmicSearch__RenderFunc(props: {
                       typeof $steps["updateIsCityInputFocused"].then ===
                         "function"
                     ) {
-                      $steps["updateIsCityInputFocused"] = await $steps[
-                        "updateIsCityInputFocused"
-                      ];
+                      $steps["updateIsCityInputFocused"] =
+                        await $steps["updateIsCityInputFocused"];
                     }
                   }}
                   selectedCity={(() => {
@@ -1855,8 +1852,8 @@ function PlasmicSearch__RenderFunc(props: {
             hasVariant(globalVariants, "screen", "mobileOnly")
               ? true
               : hasVariant(globalVariants, "screen", "mobileOnly")
-              ? false
-              : false
+                ? false
+                : false
           ) ? (
             <div
               className={classNames(projectcss.all, sty.freeBox__vDoMn, {
@@ -2023,9 +2020,8 @@ function PlasmicSearch__RenderFunc(props: {
                       typeof $steps["updateInputValue"] === "object" &&
                       typeof $steps["updateInputValue"].then === "function"
                     ) {
-                      $steps["updateInputValue"] = await $steps[
-                        "updateInputValue"
-                      ];
+                      $steps["updateInputValue"] =
+                        await $steps["updateInputValue"];
                     }
 
                     $steps["runCode"] = true
@@ -2086,9 +2082,8 @@ function PlasmicSearch__RenderFunc(props: {
                       typeof $steps["invokeGlobalAction"] === "object" &&
                       typeof $steps["invokeGlobalAction"].then === "function"
                     ) {
-                      $steps["invokeGlobalAction"] = await $steps[
-                        "invokeGlobalAction"
-                      ];
+                      $steps["invokeGlobalAction"] =
+                        await $steps["invokeGlobalAction"];
                     }
                   }}
                   onClickCities={async () => {
@@ -2125,9 +2120,8 @@ function PlasmicSearch__RenderFunc(props: {
                       typeof $steps["updateSelectCityOpen"] === "object" &&
                       typeof $steps["updateSelectCityOpen"].then === "function"
                     ) {
-                      $steps["updateSelectCityOpen"] = await $steps[
-                        "updateSelectCityOpen"
-                      ];
+                      $steps["updateSelectCityOpen"] =
+                        await $steps["updateSelectCityOpen"];
                     }
                   }}
                   onClickSearchIcon={async () => {
@@ -2196,9 +2190,8 @@ function PlasmicSearch__RenderFunc(props: {
                       typeof $steps["runOnClickOverlay"] === "object" &&
                       typeof $steps["runOnClickOverlay"].then === "function"
                     ) {
-                      $steps["runOnClickOverlay"] = await $steps[
-                        "runOnClickOverlay"
-                      ];
+                      $steps["runOnClickOverlay"] =
+                        await $steps["runOnClickOverlay"];
                     }
                   }}
                 />
@@ -2300,9 +2293,8 @@ function PlasmicSearch__RenderFunc(props: {
                         typeof $steps["runOnFocusChange"] === "object" &&
                         typeof $steps["runOnFocusChange"].then === "function"
                       ) {
-                        $steps["runOnFocusChange"] = await $steps[
-                          "runOnFocusChange"
-                        ];
+                        $steps["runOnFocusChange"] =
+                          await $steps["runOnFocusChange"];
                       }
                     }}
                     terms={
@@ -2328,7 +2320,15 @@ function PlasmicSearch__RenderFunc(props: {
                     hasVariant(globalVariants, "screen", "mobileOnly")
                       ? (() => {
                           try {
-                            return $state.inputValue.trim().length >= 3;
+                            return (() => {
+                              const isLongEnough =
+                                $state.terms?.trim().length >= 3;
+                              const isExplicitlyDisabled =
+                                !!$ctx.Growthbook.isReady &&
+                                !$ctx.Growthbook.features
+                                  .is_instant_search_enabled;
+                              return isLongEnough && !isExplicitlyDisabled;
+                            })();
                           } catch (e) {
                             if (
                               e instanceof TypeError ||
@@ -2687,9 +2687,8 @@ function PlasmicSearch__RenderFunc(props: {
             typeof $steps["setGrowthbookAttributes"] === "object" &&
             typeof $steps["setGrowthbookAttributes"].then === "function"
           ) {
-            $steps["setGrowthbookAttributes"] = await $steps[
-              "setGrowthbookAttributes"
-            ];
+            $steps["setGrowthbookAttributes"] =
+              await $steps["setGrowthbookAttributes"];
           }
         }}
       />
@@ -2757,7 +2756,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearch__VariantsArgs;
     args?: PlasmicSearch__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearch__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearch__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearch__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

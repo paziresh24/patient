@@ -156,7 +156,7 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
         path: "textarea.value",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $state.value;
@@ -183,13 +183,13 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
         path: "height",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => "2.5rem"
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => "2.5rem"
       },
       {
         path: "elementId",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ""
       }
     ],
     [$props, $ctx, $refs]
@@ -198,6 +198,7 @@ function PlasmicMultilineTextInput__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -458,7 +459,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicMultilineTextInput__VariantsArgs;
     args?: PlasmicMultilineTextInput__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicMultilineTextInput__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicMultilineTextInput__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicMultilineTextInput__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

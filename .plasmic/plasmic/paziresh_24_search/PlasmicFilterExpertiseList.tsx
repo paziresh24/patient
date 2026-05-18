@@ -151,7 +151,7 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
         path: "selectedCategory",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.selectedFlters?.category || "";
@@ -173,6 +173,7 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -307,9 +308,8 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
                     typeof $steps["updateSelectedCategory"] === "object" &&
                     typeof $steps["updateSelectedCategory"].then === "function"
                   ) {
-                    $steps["updateSelectedCategory"] = await $steps[
-                      "updateSelectedCategory"
-                    ];
+                    $steps["updateSelectedCategory"] =
+                      await $steps["updateSelectedCategory"];
                   }
                 }}
                 title={(() => {
@@ -387,9 +387,8 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
                 typeof $steps["updateSelectedCategory"] === "object" &&
                 typeof $steps["updateSelectedCategory"].then === "function"
               ) {
-                $steps["updateSelectedCategory"] = await $steps[
-                  "updateSelectedCategory"
-                ];
+                $steps["updateSelectedCategory"] =
+                  await $steps["updateSelectedCategory"];
               }
             }}
           >
@@ -518,9 +517,8 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
                       typeof $steps["runOnClickSubCategory"] === "object" &&
                       typeof $steps["runOnClickSubCategory"].then === "function"
                     ) {
-                      $steps["runOnClickSubCategory"] = await $steps[
-                        "runOnClickSubCategory"
-                      ];
+                      $steps["runOnClickSubCategory"] =
+                        await $steps["runOnClickSubCategory"];
                     }
                   }}
                   title={(() => {
@@ -560,11 +558,7 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
               <React.Fragment>
                 {(() => {
                   try {
-                    return `همه تخصص های ${
-                      $props.categories.find(
-                        cat => cat.value === $state.selectedCategory
-                      ).title
-                    }`;
+                    return `همه تخصص های ${$props.categories.find(cat => cat.value === $state.selectedCategory).title}`;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -670,9 +664,8 @@ function PlasmicFilterExpertiseList__RenderFunc(props: {
                 typeof $steps["runOnClickSubCategory"] === "object" &&
                 typeof $steps["runOnClickSubCategory"].then === "function"
               ) {
-                $steps["runOnClickSubCategory"] = await $steps[
-                  "runOnClickSubCategory"
-                ];
+                $steps["runOnClickSubCategory"] =
+                  await $steps["runOnClickSubCategory"];
               }
             }}
             showStartIcon={true}
@@ -714,7 +707,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFilterExpertiseList__VariantsArgs;
     args?: PlasmicFilterExpertiseList__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFilterExpertiseList__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFilterExpertiseList__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFilterExpertiseList__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

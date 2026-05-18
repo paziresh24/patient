@@ -142,7 +142,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
         path: "history",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return [];
@@ -164,6 +164,7 @@ function PlasmicRecentSearch__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -374,7 +375,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicRecentSearch__VariantsArgs;
     args?: PlasmicRecentSearch__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicRecentSearch__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicRecentSearch__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicRecentSearch__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

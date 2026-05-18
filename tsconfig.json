@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,20 +23,60 @@
     "strictNullChecks": true,
     "baseUrl": "./",
     "paths": {
-      "@/modules/*": ["./src/modules/*"],
-      "@/common/*": ["./src/common/*"],
-      "@/types/*": ["./src/common/types/*"],
-      "@/components/*": ["./src/common/components/*"],
-      "@/utils/*": ["./src/common/utils/*"],
-      "@/images/*": ["./src/common/images/*"],
-      "@/constants/*": ["./src/common/constants/*"],
-      "@/hooks/*": ["./src/common/hooks/*"],
-      "@/store/*": ["./src/common/store/*"],
-      "@/apis/*": ["./src/common/apis/*"],
-      "@/public/*": ["./public/*"],
-      "@/firebase/*": ["./src/firebase/*"]
-    }
+      "@/modules/*": [
+        "./src/modules/*"
+      ],
+      "@/common/*": [
+        "./src/common/*"
+      ],
+      "@/types/*": [
+        "./src/common/types/*"
+      ],
+      "@/components/*": [
+        "./src/common/components/*"
+      ],
+      "@/utils/*": [
+        "./src/common/utils/*"
+      ],
+      "@/images/*": [
+        "./src/common/images/*"
+      ],
+      "@/constants/*": [
+        "./src/common/constants/*"
+      ],
+      "@/hooks/*": [
+        "./src/common/hooks/*"
+      ],
+      "@/store/*": [
+        "./src/common/store/*"
+      ],
+      "@/apis/*": [
+        "./src/common/apis/*"
+      ],
+      "@/public/*": [
+        "./public/*"
+      ],
+      "@/firebase/*": [
+        "./src/firebase/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "**/*.stories.ts", "**/*.stories.js", "**/*.stories.jsx", "**/*.stories.tsx"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.stories.ts",
+    "**/*.stories.js",
+    "**/*.stories.jsx",
+    "**/*.stories.tsx"
+  ]
 }

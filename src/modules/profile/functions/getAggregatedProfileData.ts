@@ -37,6 +37,38 @@ const getSearchLinks = ({ centers, group_expertises }: any): string[] => {
   return ['/s/', `/s/${center.city_en_slug}/`, `/s/${center.city_en_slug}/${gexp.en_slug}/`];
 };
 
+// Build links for "related specialities" section of the profile SEO box
+// - For each group expertise: /s/ir/{group_slug}/ and /consult/{group_slug}/
+// - For each city      : /s/{city_slug}/doctor/ and /s/{city_slug}/center/
+const getRelatedSpecialityLinks = ({ centers, group_expertises }: any): string[] => {
+  const links: string[] = [];
+
+  const groups = Array.isArray(group_expertises) ? group_expertises : [];
+  const allCenters = Array.isArray(centers) ? centers : [];
+
+  // Group-based links
+  groups.forEach((g: any) => {
+    const slug = g?.en_slug || g?.slug;
+    if (!slug) return;
+
+    links.push(`/s/ir/${slug}/`, `/consult/${slug}/`);
+  });
+
+  // City-based links (deduplicated by city slug)
+  const citySlugs = new Set<string>();
+  allCenters
+    .filter((c: any) => c?.city_en_slug && c.id !== IGNORED_CENTER_ID)
+    .forEach((c: any) => {
+      const citySlug = c.city_en_slug;
+      if (citySlugs.has(citySlug)) return;
+      citySlugs.add(citySlug);
+
+      links.push(`/s/${citySlug}/doctor/`, `/s/${citySlug}/center/`);
+    });
+
+  return links;
+};
+
 const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
   const reformattedBreadcrumb = links?.map(link => ({ href: link.orginalLink, text: link.title })) ?? [];
   reformattedBreadcrumb.unshift({ href: '/', text: 'پذیرش۲۴' });
@@ -206,14 +238,29 @@ export async function getAggregatedProfileData(
 
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
 
+  const searchLinks = getSearchLinks({
+    centers: fullProfileData?.centers,
+    group_expertises: fullProfileData?.group_expertises ?? [],
+  });
+
+  const relatedSpecialityLinks = getRelatedSpecialityLinks({
+    centers: fullProfileData?.centers,
+    group_expertises: fullProfileData?.group_expertises ?? [],
+  });
+
   const apiCalls = [
     internalLinks({
-      links: getSearchLinks({ centers: fullProfileData?.centers, group_expertises: fullProfileData?.group_expertises ?? [] }),
+      links: searchLinks,
     }),
+    relatedSpecialityLinks.length
+      ? internalLinks({
+          links: relatedSpecialityLinks,
+        })
+      : Promise.resolve([]),
     shouldFetchReviews
       ? queryClient.fetchQuery(
-          [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }],
-          () => getReviews({ slug: validatedSlug, sort: 'default_order', showOnlyPositiveFeedbacks: true }),
+          [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }],
+          () => getReviews({ slug: validatedSlug, sort: 'default_order' }),
         )
       : Promise.resolve(null),
     getAverageWaitingTime({
@@ -248,7 +295,8 @@ export async function getAggregatedProfileData(
   }
 
   const [
-    internalLinksResult,
+    internalLinksBreadcrumbResult,
+    internalLinksRelatedResult,
     reviewsResult,
     averageWaitingTimeResult,
     rismanResult,
@@ -280,11 +328,11 @@ export async function getAggregatedProfileData(
   // Handle gallery API call after all other requests (depends on centers)
   let doctorGallery = null;
   if (options?.useNewDoctorGalleryAPI) {
-    const clinicCenters = Array.isArray(doctorCenters) ? doctorCenters.filter((center: any) => center.type_id === 1) : [];
+    const centersForGallery = Array.isArray(doctorCenters) ? doctorCenters : [];
 
-    if (clinicCenters.length > 0) {
+    if (centersForGallery.length > 0) {
       try {
-        const galleryPromises = clinicCenters.map((center: any) => getDoctorGallery(center.id));
+        const galleryPromises = centersForGallery.map((center: any) => getDoctorGallery(center.id));
         const galleryResults = await Promise.allSettled(galleryPromises);
 
         doctorGallery = galleryResults
@@ -308,12 +356,26 @@ export async function getAggregatedProfileData(
       alias_title: exp.alias_title,
       degree: exp.degree,
       groups: exp.groups,
+      graduation_date: exp.graduation_date ?? null,
     })) ?? [];
+
+  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص)
+  const firstGraduationDate = doctorExpertise?.[0]?.graduation_date;
+  const experienceYears =
+    firstGraduationDate &&
+    (() => {
+      const year = parseInt(firstGraduationDate.slice(0, 4), 10);
+      if (Number.isNaN(year)) return null;
+      const currentYear = new Date().getFullYear();
+      const years = currentYear - year;
+      return years >= 0 ? String(years) : null;
+    })();
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
     provider: {
       user_id: slugInfo?.user_id ?? null,
+      ...(experienceYears && { experience: experienceYears }),
     },
     feedbacks: {
       ...rateDetailsResult,
@@ -350,6 +412,42 @@ export async function getAggregatedProfileData(
       }),
   };
 
+  // Fetch page-view count from drProfile service using slug and
+  // override history.count_of_page_view while keeping all existing
+  // frontend formatting / display rules (compact notation, SEO text, etc.)
+  if (!university) {
+    try {
+      const { data: pageViewData } = await drProfileClient.get(
+        `/api/doctors/${encodeURIComponent(validatedSlug)}/page-view`,
+        {
+          timeout: 2000,
+        },
+      );
+
+      const candidates = [
+        (pageViewData as any)?.page_view,
+        (pageViewData as any)?.count_of_page_view,
+        (pageViewData as any)?.number_of_visits,
+        (pageViewData as any)?.views,
+        (pageViewData as any)?.view,
+        (pageViewData as any)?.data?.page_view,
+        (pageViewData as any)?.data?.count_of_page_view,
+        (pageViewData as any)?.data?.number_of_visits,
+      ];
+
+      const numericCandidate = candidates.find(value => typeof value === 'number');
+
+      if (typeof numericCandidate === 'number' && Number.isFinite(numericCandidate)) {
+        overwriteData.history = {
+          ...(overwriteData.history ?? {}),
+          count_of_page_view: String(numericCandidate),
+        };
+      }
+    } catch (error) {
+      console.error('Error fetching doctor page-view from drProfile service:', error);
+    }
+  }
+
   // Handle null values from fullname web service
   const processedName = doctorFullName?.name;
   const processedFamily = doctorFullName?.family;
@@ -374,14 +472,37 @@ export async function getAggregatedProfileData(
     });
   }
 
-  const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
-    overwriteProfileData(overwriteData, {
-      ...(fullProfileData ?? {}),
-      id: slugInfo?.owner_id,
-      server_id: slugInfo?.server_id,
-      name: finalName,
-      family: finalFamily,
-    });
+  const {
+    centers,
+    expertises,
+    feedbacks,
+    history,
+    information,
+    media,
+    onlineVisit,
+    similarLinks: rawSimilarLinks,
+    symptomes,
+    waitingTimeInfo,
+  } = overwriteProfileData(overwriteData, {
+    ...(fullProfileData ?? {}),
+    id: slugInfo?.owner_id,
+    server_id: slugInfo?.server_id,
+    name: finalName,
+    family: finalFamily,
+  });
+
+  // Prefer internal-links based items for "تخصص های مرتبط" when available
+  let similarLinks = rawSimilarLinks;
+  if (internalLinksRelatedResult.status === 'fulfilled' && Array.isArray(internalLinksRelatedResult.value)) {
+    const enrichedLinks = internalLinksRelatedResult.value.map((item: any) => ({
+      caption: item.title,
+      link: item.link || item.orginalLink,
+    }));
+
+    if (enrichedLinks.length > 0) {
+      similarLinks = enrichedLinks;
+    }
+  }
 
   // Step 4: Fetch server-specific data only if running on the server
   let userData = overwriteData?.provider ?? null;
@@ -436,7 +557,7 @@ export async function getAggregatedProfileData(
         centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services?.every?.((s: any) => !s.hours_of_work))
       ),
       breadcrumbs: createBreadcrumb(
-        internalLinksResult.status === 'fulfilled' ? internalLinksResult.value : [],
+        internalLinksBreadcrumbResult.status === 'fulfilled' ? internalLinksBreadcrumbResult.value : [],
         information?.display_name,
         pageSlug,
       ),

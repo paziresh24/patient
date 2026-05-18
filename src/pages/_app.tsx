@@ -25,6 +25,8 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios from 'axios';
 import RouteProgress from '@/common/components/layouts/RouteProgress';
 import { RismanSurveyScript } from '@/common/components/layouts/RismanSurveyScript';
+import { RoutedExternalScripts } from '@/common/components/layouts/RoutedExternalScripts';
+import { useNotificationPermission } from '@/common/hooks/useNotificationPermission';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -103,6 +105,11 @@ function MyApp(props: AppProps) {
     }
   }, [isLogin, isApplication]);
 
+  // Auto-subscribe نوتیفیکشن در صورت login و وجود دسترسی
+  useNotificationPermission({
+    autoSubscribe: isLogin, // فقط وقتی login است auto-subscribe کند
+  });
+
   useEffect(() => {
     if (isGtmDisabled || gtmEnabledRef.current) return;
     const isDoctorPage = router.pathname === '/dr/[slug]' || router.asPath.startsWith('/dr/');
@@ -165,6 +172,7 @@ function MyApp(props: AppProps) {
                 />
               )}
               <RismanSurveyScript />
+              <RoutedExternalScripts />
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>

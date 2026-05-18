@@ -120,9 +120,9 @@ export const Dashboard = (props: any) => {
                 key={selctedMenu?.key}
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
-                src={`https://hamdast.paziresh24.com/bridge/?app=${app.id}&menu=${selctedMenu.id}&user_id=${
-                  user.id
-                }&src=${encodeURIComponent(`${selctedMenu?.embed_src}${window?.location?.search ? window?.location?.search : ''}`)}`}
+                src={`${selctedMenu?.embed_src}${window?.location?.search ? window?.location?.search + '&user_id=' + user.id : '?user_id=' + user.id}`}
+                allow="microphone; camera; fullscreen; clipboard-write;"
+                sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />
             )}
           </div>

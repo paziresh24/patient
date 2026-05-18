@@ -25,7 +25,7 @@ import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { growthbook } from '../_app';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
@@ -36,20 +36,38 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
+import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
+import { trackDoctorProfileViewByDoctorId } from '@/modules/hamdast/utils/profileViewFrequency';
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import Head from 'next/head';
 import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
+import { useRate } from '@/common/apis/services/reviews/rate';
 
 const { publicRuntimeConfig } = config();
+
+const NO_DOCTOR_PROFILE_IMAGE = 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png';
+
+function resolveDoctorProfileImageUrl(
+  information: { user_id?: string | null } | undefined,
+  pageUserId?: string | null,
+) {
+  const userId = information?.user_id ?? pageUserId;
+  if (userId) {
+    return `https://pic.paziresh24.com/api/image/${userId}`;
+  }
+  return NO_DOCTOR_PROFILE_IMAGE;
+}
 
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
   const { query, ...router } = useRouter();
   const [isProfileScriptsReady, setIsProfileScriptsReady] = useState(false);
   const profileScriptsReadyRef = useRef(false);
+  const vicControlSentForSlugRef = useRef<string | null>(null);
+  const trackedDoctorIdRef = useRef<string | null>(null);
 
   const currentSlug = initialSlug ?? query.slug;
 
@@ -140,11 +158,28 @@ const DoctorProfile = (props: any) => {
     waitingTimeInfo,
     shouldUseIncrementPageView,
     fragmentComponents,
-    hamdastWidgets,
-    hamdastWidgetsData,
+    hamdastWidgets: hamdastWidgetsFromProps,
+    hamdastWidgetsData: hamdastWidgetsDataFromProps,
     user_id,
     dontShowRateAndReviewMessage,
   } = finalProps ?? {};
+
+  const rateDebug = query.rateDebug === '1';
+  const rateDebugSlug = slug ?? currentSlug;
+  const rateDebugProbe = useRate(
+    { slug: String(rateDebugSlug ?? '') },
+    { enabled: rateDebug && !!rateDebugSlug, refetchOnWindwFocus: false },
+  );
+
+  const doctorProfileImageUrl = useMemo(
+    () => resolveDoctorProfileImageUrl(information, user_id),
+    [information?.user_id, user_id],
+  );
+
+  const isOwnProfile = !!user_id && !!userInfo?.id && String(user_id) === String(userInfo?.id);
+  const hamdastWidgetsQuery = useProfileHamdastWidgets(user_id, information?.id, isOwnProfile);
+  const hamdastWidgets = (isOwnProfile && hamdastWidgetsQuery.data) ? hamdastWidgetsQuery.data.widgets : hamdastWidgetsFromProps;
+  const hamdastWidgetsData = (isOwnProfile && hamdastWidgetsQuery.data) ? hamdastWidgetsQuery.data.widgetsData : hamdastWidgetsDataFromProps;
 
   useEffect(() => {
     useFeedbackDataStore.setState({ data: feedbacks?.feedbacks ?? [] });
@@ -212,11 +247,14 @@ const DoctorProfile = (props: any) => {
         });
       }
 
-      addPageView.mutate({
-        ownerId: information.id,
-        serverId: information.server_id,
-        type: 'doctor',
-      });
+      if (vicControlSentForSlugRef.current !== slug) {
+        vicControlSentForSlugRef.current = slug;
+        addPageView.mutate({
+          ownerId: information.id,
+          serverId: information.server_id,
+          type: 'doctor',
+        });
+      }
 
       window.doctor = { ...information, centers, expertises, isBulk, slug, history };
 
@@ -224,6 +262,15 @@ const DoctorProfile = (props: any) => {
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
   }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
+
+  useEffect(() => {
+    const doctorId = information?.id ? String(information.id) : '';
+    if (!doctorId) return;
+    if (trackedDoctorIdRef.current === doctorId) return;
+
+    trackedDoctorIdRef.current = doctorId;
+    trackDoctorProfileViewByDoctorId(doctorId);
+  }, [information?.id, currentSlug]);
 
   useEffect(() => {
     if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug && information) {
@@ -323,6 +370,39 @@ const DoctorProfile = (props: any) => {
 
   return (
     <>
+      {rateDebug && (
+        <div
+          className="fixed top-14 right-2 z-[10000] max-w-md rounded-md border border-amber-300 bg-amber-50/95 p-2 text-[11px] leading-relaxed text-amber-950 font-mono shadow-md backdrop-blur-sm"
+          dir="ltr"
+        >
+          <div className="font-bold text-amber-900">rateDebug (add ?rateDebug=1)</div>
+          <div>slug: {String(rateDebugSlug ?? '')}</div>
+          <div>showRateAndReviews (customize): {String(customize?.showRateAndReviews)}</div>
+          <div>ravi_show_external_rate (hides review bars): {String(dontShowRateDetails)}</div>
+          <div>
+            client probe /api/ravi-rate:{' '}
+            {rateDebugProbe.isLoading
+              ? 'loading…'
+              : rateDebugProbe.isError
+                ? `error: ${(rateDebugProbe.error as any)?.message ?? 'unknown'}`
+                : `ok (list ${rateDebugProbe.data?.list?.length ?? 0})`}
+          </div>
+          <div>
+            SSR props average_rates:{' '}
+            {[
+              feedbacks?.details?.average_rates?.average_quality_of_treatment,
+              feedbacks?.details?.average_rates?.average_doctor_encounter,
+              feedbacks?.details?.average_rates?.average_explanation_of_issue,
+            ].every(v => v == null || v === '')
+              ? 'empty (getRateDetails failed or no row)'
+              : 'set'}
+          </div>
+          <div className="text-[10px] text-amber-800 mt-1">
+            Tip: first HTML load fetches rate on the server — you will not see ravi-api in the browser Network tab until client
+            refetch (e.g. profile client fetch or this probe).
+          </div>
+        </div>
+      )}
       <Head>
         <link rel="dns-prefetch" href="//cdn.paziresh24.com" />
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
@@ -358,9 +438,7 @@ const DoctorProfile = (props: any) => {
                     displayName: profileData.information.display_name,
                     title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
                     subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                    imageUrl: profileData.information?.image
-                      ? publicRuntimeConfig.CDN_BASE_URL + profileData.information?.image
-                      : `https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png`,
+                    imageUrl: doctorProfileImageUrl,
                     slug: slug,
                     children: (
                       <div className="flex flex-col w-full gap-2">
@@ -453,7 +531,8 @@ const DoctorProfile = (props: any) => {
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, expertises, centers = [], information, feedbacks, host } = page.props;
+  const { title, description, slug, expertises, centers = [], information, feedbacks, host, user_id } = page.props;
+  const doctorProfileImageUrl = resolveDoctorProfileImageUrl(information, user_id);
 
   const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
 
@@ -517,37 +596,37 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         expertises?.group_expertises?.[0]?.name ? `${information?.display_name} ${expertises.group_expertises[0].name}` : null,
       ].filter(Boolean),
       'gender': information?.gender === '1' ? 'Male' : information?.gender === '2' ? 'Female' : undefined,
-      'image': publicRuntimeConfig.CDN_BASE_URL + information?.image,
+      'image': doctorProfileImageUrl,
       'medicalSpecialty': {
         '@type': 'MedicalSpecialty',
         'name': expertises?.expertises?.[0]?.alias_title || expertises?.group_expertises?.[0]?.name || doctorExpertise,
       },
       'affiliation': center
         ? {
-            '@type': 'MedicalClinic',
-            'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
-            'address': {
-              '@type': 'PostalAddress',
-              'streetAddress': center.address,
-              'addressLocality': center.city,
-              'addressRegion': center.province,
-              'addressCountry': 'IR',
-            },
-            'contactPoint': {
-              '@type': 'ContactPoint',
-              'telephone': center.display_number?.[0] || center.display_number,
-              'contactType': 'appointment',
-              'availableLanguage': ['fa'],
-            },
-            'openingHoursSpecification': getOpeningHours(),
-            'geo': center.map
-              ? {
-                  '@type': 'GeoCoordinates',
-                  'latitude': center.map.lat,
-                  'longitude': center.map.lon,
-                }
-              : undefined,
-          }
+          '@type': 'MedicalClinic',
+          'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': center.address,
+            'addressLocality': center.city,
+            'addressRegion': center.province,
+            'addressCountry': 'IR',
+          },
+          'contactPoint': {
+            '@type': 'ContactPoint',
+            'telephone': center.display_number?.[0] || center.display_number,
+            'contactType': 'appointment',
+            'availableLanguage': ['fa'],
+          },
+          'openingHoursSpecification': getOpeningHours(),
+          'geo': center.map
+            ? {
+              '@type': 'GeoCoordinates',
+              'latitude': center.map.lat,
+              'longitude': center.map.lon,
+            }
+            : undefined,
+        }
         : undefined,
       'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
       'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
@@ -577,38 +656,38 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
       },
       ...(!feedbacks?.details?.hide_rates &&
         (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 && {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            'ratingValue': +(
-              (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-              3
-            ).toFixed(1),
-            'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
-            'bestRating': 5,
-            'worstRating': 0,
-          },
-          review:
-            feedbacks?.feedbacks?.list
-              ?.filter((item: any) => !!item?.avg_rate_value)
-              ?.slice(0, 5) // Limit to 5 reviews for schema
-              ?.map?.((feedback: any) => ({
-                '@type': 'Review',
-                'author': {
-                  '@type': 'Person',
-                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
-                },
-                'reviewRating': {
-                  '@type': 'Rating',
-                  'ratingValue': feedback?.avg_rate_value ?? 0,
-                  'bestRating': 5,
-                  'worstRating': 0,
-                },
-                'reviewBody': feedback?.description,
-                'datePublished': feedback?.created_at?.split(' ')?.[0],
-              })) ?? [],
-        }),
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          'ratingValue': +(
+            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+            3
+          ).toFixed(1),
+          'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
+          'bestRating': 5,
+          'worstRating': 0,
+        },
+        review:
+          feedbacks?.feedbacks?.list
+            ?.filter((item: any) => !!item?.avg_rate_value)
+            ?.slice(0, 5) // Limit to 5 reviews for schema
+            ?.map?.((feedback: any) => ({
+              '@type': 'Review',
+              'author': {
+                '@type': 'Person',
+                'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
+              },
+              'reviewRating': {
+                '@type': 'Rating',
+                'ratingValue': feedback?.avg_rate_value ?? 0,
+                'bestRating': 5,
+                'worstRating': 0,
+              },
+              'reviewBody': feedback?.description,
+              'datePublished': feedback?.created_at?.split(' ')?.[0],
+            })) ?? [],
+      }),
     };
 
     const breadcrumbSchema = {
@@ -645,7 +724,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
         jsonlds={centers?.length > 0 ? getJsonlds() : []}
         openGraph={{
           image: {
-            src: publicRuntimeConfig.CDN_BASE_URL + information?.image,
+            src: doctorProfileImageUrl,
             alt: `${information?.display_name}`,
             type: 'image/jpg',
           },

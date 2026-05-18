@@ -6,7 +6,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import { CENTERS } from '@/common/types/centers';
 import clsx from 'clsx';
 import isEmpty from 'lodash/isEmpty';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Discount from '../../components/factor/discount';
 import Invoice from '../../components/factor/invoice';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -71,9 +71,15 @@ export const Factor = (props: FactorProps) => {
       ? Intl.DateTimeFormat().resolvedOptions().timeZone
       : undefined;
 
-  const { data: balance, isLoading: balanceLoading } = useGetBalance({
-    enabled: (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor) && isLogin,
+  const walletBalanceQueryEnabled =
+    (!!newVisitInvoice || !!useKatibePaymentForEarnestFactor || !!isKatibePaymentMethodsEnabled) && isLogin;
+
+  const { data: balance, isLoading: balanceLoading, isSuccess: balanceSuccess } = useGetBalance({
+    enabled: walletBalanceQueryEnabled,
   });
+
+  const balanceForPaymentMethods =
+    balanceSuccess && typeof balance?.data?.data?.balance === 'number' ? balance.data.data.balance : undefined;
 
   const { data: paymentMethodsData } = useGetPaymentMethods(
     {
@@ -81,14 +87,21 @@ export const Factor = (props: FactorProps) => {
       timezone,
       countryCode: userInfo?.country_code_id,
       center_id: centerId,
+      ...(balanceForPaymentMethods !== undefined ? { balance: balanceForPaymentMethods } : {}),
     },
     {
-      enabled: isKatibePaymentMethodsEnabled && !!totalPrice && !loading,
+      enabled:
+        isKatibePaymentMethodsEnabled &&
+        !!totalPrice &&
+        !loading &&
+        (!walletBalanceQueryEnabled || !balanceLoading),
     },
   );
   const paymentMethods = paymentMethodsData?.data?.data?.payment_methods || [];
   const additionalContent = paymentMethodsData?.data?.data?.additional_html || '';
   const payment_description_html = paymentMethodsData?.data?.data?.payment_description_html || '';
+  const scrollToPaymentMethods = paymentMethodsData?.data?.data?.scroll_to_payment_methods;
+  const wasScrollToPaymentMethodsEnabled = useRef(false);
 
   const handlePaymentMethodSelection = (paymentMethod: string) => {
     setSelectedPaymentMethod(paymentMethod);
@@ -126,6 +139,26 @@ export const Factor = (props: FactorProps) => {
     }
   }, [paymentMethods, selectedPaymentMethod, onSelectionChange]);
 
+  useEffect(() => {
+    if (!scrollToPaymentMethods) {
+      wasScrollToPaymentMethodsEnabled.current = false;
+      return;
+    }
+
+    if (wasScrollToPaymentMethodsEnabled.current || paymentMethods.length === 0 || isPaymentMethodsLoading) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        behavior: 'smooth',
+        top: document.documentElement.scrollHeight,
+      });
+    });
+
+    wasScrollToPaymentMethodsEnabled.current = true;
+  }, [scrollToPaymentMethods, paymentMethods.length, isPaymentMethodsLoading]);
+
   return (
     <div className="flex flex-col space-y-2 md:space-y-5">
       <div className="flex flex-col justify-center p-5 space-y-3 bg-white md:rounded-lg shadow-card">
@@ -135,11 +168,11 @@ export const Factor = (props: FactorProps) => {
           priceText={centerId === CENTERS.CONSULT || !useKatibePaymentForEarnestFactor ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
           price={price}
           totalPrice={totalPrice}
-          walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor ? balance?.data?.data?.balance : null}
+          walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor || isKatibePaymentMethodsEnabled ? balance?.data?.data?.balance : null}
           tax={tax}
           discount={discount}
           payment_description_html={payment_description_html || ''}
-          loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor ? balanceLoading : false)}
+          loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor || isKatibePaymentMethodsEnabled ? balanceLoading : false)}
         />
         {centerId === CENTERS.CONSULT && !refundTermsBadge && (
           <Chips

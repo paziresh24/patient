@@ -205,7 +205,7 @@ function PlasmicSelect__RenderFunc(props: {
         path: "ariaSelect.selectedValue",
         type: "readonly",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           $props["initialSelectedValue"],
 
         onChangeProp: "onChange"
@@ -214,7 +214,7 @@ function PlasmicSelect__RenderFunc(props: {
         path: "type",
         type: "private",
         variableType: "variant",
-        initFunc: ({ $props, $state, $queries, $ctx }) => $props.type
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => $props.type
       }
     ],
     [$props, $ctx, $refs]
@@ -223,6 +223,7 @@ function PlasmicSelect__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -345,9 +346,7 @@ function PlasmicSelect__RenderFunc(props: {
           style={(() => {
             try {
               return {
-                transform: `rotate(${
-                  $state.ariaSelect.isOpen ? "180" : "0"
-                }deg)`
+                transform: `rotate(${$state.ariaSelect.isOpen ? "180" : "0"}deg)`
               };
             } catch (e) {
               if (
@@ -472,7 +471,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSelect__VariantsArgs;
     args?: PlasmicSelect__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSelect__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSelect__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSelect__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

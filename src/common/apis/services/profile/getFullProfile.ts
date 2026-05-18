@@ -1,4 +1,4 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { apiGatewayClient, drProfileClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useQuery } from '@tanstack/react-query';
@@ -11,13 +11,9 @@ export interface Params {
   profile_page?: boolean;
 }
 
-export const getProfileData = async ({ slug, ...params }: Params) => {
-  const { data } = await apiGatewayClient.get(
-    params?.profile_page
-      ? `${
-          publicRuntimeConfig?.FULL_PROFILE_API_URL ?? serverRuntimeConfig?.FULL_PROFILE_API_URL ?? 'https://apigw.paziresh24.com'
-        }/${encodeURIComponent(slug)}/`
-      : `/v1/full-profile/${encodeURIComponent(slug)}/`,
+export const getProfileData = async ({ slug, profile_page, ...params }: Params) => {
+  const { data } = await drProfileClient.get(
+    `/api/full-profile/${encodeURIComponent(slug)}/`,
     { params, timeout: 6000 },
   );
   return data;

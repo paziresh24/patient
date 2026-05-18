@@ -162,13 +162,13 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
         path: "dialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "variable",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ""
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ""
       }
     ],
     [$props, $ctx, $refs]
@@ -177,6 +177,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -253,8 +254,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return ($props.givLocationButtonLoadingStatus =
-                              true);
+                            return ($props.givLocationButtonLoadingStatus = true);
                           }
                         };
                         return (({ customFunction }) => {
@@ -267,9 +267,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     typeof $steps["startButtonLoading"] === "object" &&
                     typeof $steps["startButtonLoading"].then === "function"
                   ) {
-                    $steps["startButtonLoading"] = await $steps[
-                      "startButtonLoading"
-                    ];
+                    $steps["startButtonLoading"] =
+                      await $steps["startButtonLoading"];
                   }
 
                   $steps["locationAccessGivingSetToUrlParams"] = true
@@ -364,9 +363,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     typeof $steps["locationAccessGivingSetToUrlParams"].then ===
                       "function"
                   ) {
-                    $steps["locationAccessGivingSetToUrlParams"] = await $steps[
-                      "locationAccessGivingSetToUrlParams"
-                    ];
+                    $steps["locationAccessGivingSetToUrlParams"] =
+                      await $steps["locationAccessGivingSetToUrlParams"];
                   }
 
                   $steps["autoPressNearMeButtonRunCode2"] = true
@@ -388,17 +386,15 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     typeof $steps["autoPressNearMeButtonRunCode2"].then ===
                       "function"
                   ) {
-                    $steps["autoPressNearMeButtonRunCode2"] = await $steps[
-                      "autoPressNearMeButtonRunCode2"
-                    ];
+                    $steps["autoPressNearMeButtonRunCode2"] =
+                      await $steps["autoPressNearMeButtonRunCode2"];
                   }
 
                   $steps["endButtonLoading"] = true
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return ($props.givLocationButtonLoadingStatus =
-                              false);
+                            return ($props.givLocationButtonLoadingStatus = false);
                           }
                         };
                         return (({ customFunction }) => {
@@ -411,9 +407,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     typeof $steps["endButtonLoading"] === "object" &&
                     typeof $steps["endButtonLoading"].then === "function"
                   ) {
-                    $steps["endButtonLoading"] = await $steps[
-                      "endButtonLoading"
-                    ];
+                    $steps["endButtonLoading"] =
+                      await $steps["endButtonLoading"];
                   }
 
                   $steps["updateDialogOpen"] = true
@@ -447,9 +442,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     typeof $steps["updateDialogOpen"] === "object" &&
                     typeof $steps["updateDialogOpen"].then === "function"
                   ) {
-                    $steps["updateDialogOpen"] = await $steps[
-                      "updateDialogOpen"
-                    ];
+                    $steps["updateDialogOpen"] =
+                      await $steps["updateDialogOpen"];
                   }
                 }}
                 startIcon={
@@ -478,9 +472,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                     ? (() => {
                         const actionArgs = {
                           customFunction: async () => {
-                            return (document.cookie = `user_geolocation_access_preference=denied; expires=${new Date(
-                              Date.now() + 5184000000
-                            ).toUTCString()}`);
+                            return (document.cookie = `user_geolocation_access_preference=denied; expires=${new Date(Date.now() + 5184000000).toUTCString()}`);
                           }
                         };
                         return (({ customFunction }) => {
@@ -656,9 +648,7 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                                         "lon",
                                         position.coords.longitude
                                       );
-                                      const newUrl = `${
-                                        window.location.pathname
-                                      }?${queryParams.toString()}`;
+                                      const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
                                       console.log(
                                         `[checkGeolocationPermission] URL with coordinates: ${newUrl}`
                                       );
@@ -700,31 +690,30 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
                             console.log(
                               "[checkConditionsAndOpenDialog] Cookie is not 'denied', checking geolocation permission..."
                             );
-                            checkGeolocationPermission(function (
-                              hasPermissionOrSupported,
-                              url
-                            ) {
-                              console.log(
-                                `[checkGeolocationPermission Callback] hasPermissionOrSupported:`,
-                                hasPermissionOrSupported
-                              );
-                              if (!hasPermissionOrSupported) {
+                            checkGeolocationPermission(
+                              function (hasPermissionOrSupported, url) {
                                 console.log(
-                                  "[checkConditionsAndOpenDialog] Permission not granted or not supported, opening dialog..."
+                                  `[checkGeolocationPermission Callback] hasPermissionOrSupported:`,
+                                  hasPermissionOrSupported
                                 );
-                                $state.dialog.open = true;
-                              } else if (url) {
-                                console.log(
-                                  "[checkConditionsAndOpenDialog] Permission granted, URL with lat and lon:",
-                                  url
-                                );
-                                window.location.href = url;
-                              } else {
-                                console.log(
-                                  "[checkConditionsAndOpenDialog] No update to URL required."
-                                );
+                                if (!hasPermissionOrSupported) {
+                                  console.log(
+                                    "[checkConditionsAndOpenDialog] Permission not granted or not supported, opening dialog..."
+                                  );
+                                  $state.dialog.open = true;
+                                } else if (url) {
+                                  console.log(
+                                    "[checkConditionsAndOpenDialog] Permission granted, URL with lat and lon:",
+                                    url
+                                  );
+                                  window.location.href = url;
+                                } else {
+                                  console.log(
+                                    "[checkConditionsAndOpenDialog] No update to URL required."
+                                  );
+                                }
                               }
-                            });
+                            );
                           } else {
                             console.log(
                               "[checkConditionsAndOpenDialog] Cookie is 'denied', not checking geolocation permission or opening dialog."
@@ -780,9 +769,8 @@ function PlasmicLocationSelectionScript__RenderFunc(props: {
               typeof $steps["sendClarityCustomTagsEventRunCode"].then ===
                 "function"
             ) {
-              $steps["sendClarityCustomTagsEventRunCode"] = await $steps[
-                "sendClarityCustomTagsEventRunCode"
-              ];
+              $steps["sendClarityCustomTagsEventRunCode"] =
+                await $steps["sendClarityCustomTagsEventRunCode"];
             }
           }}
         />
@@ -835,7 +823,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicLocationSelectionScript__VariantsArgs;
     args?: PlasmicLocationSelectionScript__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicLocationSelectionScript__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicLocationSelectionScript__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicLocationSelectionScript__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

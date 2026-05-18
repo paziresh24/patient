@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import { HTMLAttributes, ReactNode, useMemo } from 'react';
 import { animated, useTransition } from 'react-spring';
 
 interface TranstionProps extends HTMLAttributes<HTMLDivElement> {
@@ -8,10 +8,12 @@ interface TranstionProps extends HTMLAttributes<HTMLDivElement> {
   animation?: 'bottom' | 'left' | 'right' | 'fade';
   duration?: number;
   delay?: number;
+  easing?: (t: number) => number;
+  springConfig?: Record<string, any>;
 }
 
 export const Transition = (props: TranstionProps) => {
-  const { match, children, as = 'div', animation = 'fade', duration = 200, delay = 0, ...rest } = props;
+  const { match, children, as = 'div', animation = 'fade', duration = 200, delay = 0, easing, springConfig, ...rest } = props;
   const animationConfig = {
     bottom: {
       leave: { opacity: 0, y: 10 },
@@ -35,11 +37,19 @@ export const Transition = (props: TranstionProps) => {
     },
   };
 
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }, []);
+
   const transition = useTransition(match, {
     ...animationConfig[animation],
     config: {
-      duration: duration,
+      duration: prefersReducedMotion ? 0 : duration,
+      ...(easing ? { easing } : {}),
+      ...(springConfig || {}),
     },
+    immediate: prefersReducedMotion,
   });
 
   const Component = animated[as] as any;

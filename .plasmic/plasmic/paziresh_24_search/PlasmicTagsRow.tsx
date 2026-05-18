@@ -187,19 +187,19 @@ function PlasmicTagsRow__RenderFunc(props: {
         path: "filterListDialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "sortDialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "selectedFilterObject",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => ({
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => ({
           title: "\u0646\u0648\u0639 \u0646\u062a\u0627\u06cc\u062c",
           name: "result_type",
           type: "radio",
@@ -230,19 +230,19 @@ function PlasmicTagsRow__RenderFunc(props: {
         path: "optionsDialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "categoriesDialog.open",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined
       },
       {
         path: "suggestionTags",
         type: "private",
         variableType: "array",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return [
@@ -273,6 +273,7 @@ function PlasmicTagsRow__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -465,9 +466,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                           typeof $steps["openFiltersDialog"] === "object" &&
                           typeof $steps["openFiltersDialog"].then === "function"
                         ) {
-                          $steps["openFiltersDialog"] = await $steps[
-                            "openFiltersDialog"
-                          ];
+                          $steps["openFiltersDialog"] =
+                            await $steps["openFiltersDialog"];
                         }
 
                         $steps["openCategory"] =
@@ -543,9 +543,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                           typeof $steps["openSortDialog"] === "object" &&
                           typeof $steps["openSortDialog"].then === "function"
                         ) {
-                          $steps["openSortDialog"] = await $steps[
-                            "openSortDialog"
-                          ];
+                          $steps["openSortDialog"] =
+                            await $steps["openSortDialog"];
                         }
 
                         $steps["toggleSwitch"] =
@@ -637,9 +636,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                           typeof $steps["setSelectedObject"] === "object" &&
                           typeof $steps["setSelectedObject"].then === "function"
                         ) {
-                          $steps["setSelectedObject"] = await $steps[
-                            "setSelectedObject"
-                          ];
+                          $steps["setSelectedObject"] =
+                            await $steps["setSelectedObject"];
                         }
 
                         $steps["updateOptionsDialogOpen"] =
@@ -681,9 +679,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                           typeof $steps["updateOptionsDialogOpen"].then ===
                             "function"
                         ) {
-                          $steps["updateOptionsDialogOpen"] = await $steps[
-                            "updateOptionsDialogOpen"
-                          ];
+                          $steps["updateOptionsDialogOpen"] =
+                            await $steps["updateOptionsDialogOpen"];
                         }
                       }}
                       onDelete={async name => {
@@ -860,9 +857,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                     typeof $steps["updateSortDialogOpen"] === "object" &&
                     typeof $steps["updateSortDialogOpen"].then === "function"
                   ) {
-                    $steps["updateSortDialogOpen"] = await $steps[
-                      "updateSortDialogOpen"
-                    ];
+                    $steps["updateSortDialogOpen"] =
+                      await $steps["updateSortDialogOpen"];
                   }
 
                   $steps["runCode"] = true
@@ -980,9 +976,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                         typeof $steps["updateCategoriesDialogOpen"].then ===
                           "function"
                       ) {
-                        $steps["updateCategoriesDialogOpen"] = await $steps[
-                          "updateCategoriesDialogOpen"
-                        ];
+                        $steps["updateCategoriesDialogOpen"] =
+                          await $steps["updateCategoriesDialogOpen"];
                       }
                     }}
                   >
@@ -2324,9 +2319,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                         typeof $steps["updateFilterListDialogOpen"].then ===
                           "function"
                       ) {
-                        $steps["updateFilterListDialogOpen"] = await $steps[
-                          "updateFilterListDialogOpen"
-                        ];
+                        $steps["updateFilterListDialogOpen"] =
+                          await $steps["updateFilterListDialogOpen"];
                       }
                     }}
                   />
@@ -2356,9 +2350,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                         typeof $steps["runOnRemoveAllFilters"].then ===
                           "function"
                       ) {
-                        $steps["runOnRemoveAllFilters"] = await $steps[
-                          "runOnRemoveAllFilters"
-                        ];
+                        $steps["runOnRemoveAllFilters"] =
+                          await $steps["runOnRemoveAllFilters"];
                       }
 
                       $steps["updateFilterListDialogOpen"] = true
@@ -2394,9 +2387,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                         typeof $steps["updateFilterListDialogOpen"].then ===
                           "function"
                       ) {
-                        $steps["updateFilterListDialogOpen"] = await $steps[
-                          "updateFilterListDialogOpen"
-                        ];
+                        $steps["updateFilterListDialogOpen"] =
+                          await $steps["updateFilterListDialogOpen"];
                       }
                     }}
                     outline={true}
@@ -2523,9 +2515,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                     typeof $steps["updateCategoriesDialogOpen"].then ===
                       "function"
                   ) {
-                    $steps["updateCategoriesDialogOpen"] = await $steps[
-                      "updateCategoriesDialogOpen"
-                    ];
+                    $steps["updateCategoriesDialogOpen"] =
+                      await $steps["updateCategoriesDialogOpen"];
                   }
 
                   $steps["runCode"] = true
@@ -2721,9 +2712,8 @@ function PlasmicTagsRow__RenderFunc(props: {
                     typeof $steps["updateOptionsDialogOpen"] === "object" &&
                     typeof $steps["updateOptionsDialogOpen"].then === "function"
                   ) {
-                    $steps["updateOptionsDialogOpen"] = await $steps[
-                      "updateOptionsDialogOpen"
-                    ];
+                    $steps["updateOptionsDialogOpen"] =
+                      await $steps["updateOptionsDialogOpen"];
                   }
 
                   $steps["runCode"] = true
@@ -2979,7 +2969,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicTagsRow__VariantsArgs;
     args?: PlasmicTagsRow__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicTagsRow__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicTagsRow__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicTagsRow__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

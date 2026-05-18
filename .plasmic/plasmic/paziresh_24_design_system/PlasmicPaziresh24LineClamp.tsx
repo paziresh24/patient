@@ -200,7 +200,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicPaziresh24LineClamp__VariantsArgs;
     args?: PlasmicPaziresh24LineClamp__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicPaziresh24LineClamp__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicPaziresh24LineClamp__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicPaziresh24LineClamp__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

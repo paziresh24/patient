@@ -20,7 +20,6 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
       enabled: enabled,
       refetchOnWindowFocus: false,
       keepPreviousData: false,
-
       retry: 3,
     },
   );

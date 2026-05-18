@@ -47,30 +47,7 @@ export const BottomNavigation = () => {
   }, [router.pathname, launcherAsMainHome, isMobile, user.provider?.job_title]);
 
   const servicesMenu = useMemo(() => {
-    if (!user?.id) {
-      return {
-        name: 'پروفایل',
-        icon: <UserCircle />,
-        fillIcon: <UserCircle />,
-        link: '/patient',
-        pattern: '/patient',
-        privateRoute: false,
-        exact: false,
-      };
-    }
-    if (customize.partnerKey) {
-      return {
-        name: 'پروفایل',
-        icon: <UserCircle />,
-        fillIcon: <UserCircle />,
-        link: '/patient',
-        pattern: '/patient',
-        privateRoute: false,
-        exact: false,
-      };
-    }
-
-    if (localStorage.getItem('use-dashboard') != user.id)
+    if (user.provider?.job_title === 'doctor' && !customize.partnerKey) {
       return {
         name: user.provider?.job_title === 'doctor' ? 'داشبورد' : 'پروفایل',
         icon: <ElementIcon />,
@@ -80,16 +57,7 @@ export const BottomNavigation = () => {
         privateRoute: true,
         exact: false,
       };
-    if (localStorage.getItem('use-dashboard') == user.id && user.provider?.job_title === 'doctor')
-      return {
-        name: 'داشبورد',
-        icon: <ElementIcon />,
-        fillIcon: <ElementIcon isSolid />,
-        link: '/dashboard',
-        pattern: '/dashboard',
-        privateRoute: false,
-        exact: false,
-      };
+    }
 
     return {
       name: 'پروفایل',
@@ -192,33 +160,33 @@ export const BottomNavigation = () => {
     },
     user.provider?.job_title === 'doctor' && isShowDashboard
       ? {
-          name: 'مراجعین من',
-          icon: <CalenderIcon />,
-          fillIcon: <CalenderIcon isSolid />,
-          link: '/dashboard/apps/drapp/appointments/',
-          exact: true,
-          pattern: '',
-          privateRoute: true,
-        }
+        name: 'مراجعین من',
+        icon: <CalenderIcon />,
+        fillIcon: <CalenderIcon isSolid />,
+        link: '/dashboard/apps/drapp/appointments/',
+        exact: true,
+        pattern: '',
+        privateRoute: true,
+      }
       : {
-          name: 'نوبت های من',
-          icon: (
-            <div className="relative">
-              {!!turnsCount.presence && (
-                <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
-                  {turnsCount.presence}
-                </div>
-              )}
-              <CalenderIcon />
-            </div>
-          ),
-          fillIcon: <CalenderIcon isSolid />,
-          link: isShowDashboard ? '/dashboard/appointments/' : '/patient/appointments',
-          ...(isShowDashboard && { exact: true }),
-          pattern: '/patient/appointments',
-          privateRoute: true,
-          exact: false,
-        },
+        name: 'نوبت های من',
+        icon: (
+          <div className="relative">
+            {!!turnsCount.presence && (
+              <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
+                {turnsCount.presence}
+              </div>
+            )}
+            <CalenderIcon />
+          </div>
+        ),
+        fillIcon: <CalenderIcon isSolid />,
+        link: isShowDashboard ? '/dashboard/appointments/' : '/patient/appointments',
+        ...(isShowDashboard && { exact: true }),
+        pattern: '/patient/appointments',
+        privateRoute: true,
+        exact: false,
+      },
     servicesMenu,
   ];
 
@@ -250,7 +218,7 @@ export const BottomNavigation = () => {
             )}
           >
             {fillIcon &&
-            (exact ? router.asPath === link : router.pathname === pattern || (Array.isArray(pattern) && pattern.includes(router.pathname)))
+              (exact ? router.asPath === link : router.pathname === pattern || (Array.isArray(pattern) && pattern.includes(router.pathname)))
               ? fillIcon
               : icon}
 

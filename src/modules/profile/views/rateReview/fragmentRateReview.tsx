@@ -12,7 +12,6 @@ import PlasmicReviewList from '.plasmic/plasmic/ravi_r_r/PlasmicReviewList2';
 export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const [sort, setSort] = useState<'created_at' | 'count_like' | 'default_order'>('default_order');
   const userInfo = useUserInfoStore(state => state.info);
-  const isLogin = useUserInfoStore(state => state.isLogin);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterParams, setFilterParams] = useState({});
   const [response, setResponse] = useState(profileData.feedbacks?.feedbacks?.list ?? []);
@@ -30,7 +29,6 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
       sort,
       search: searchTerm,
       offset: (page - 1) * 10,
-      showOnlyPositiveFeedbacks: isLogin && userInfo?.id === profileData.information.user_id ? false : true,
       ...filterParams,
     },
     {
@@ -85,15 +83,15 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
 
   const items = [
     {
-      label: 'برخورد مناسب پزشک',
+      label: 'برخورد مناسب',
       value: profileData?.feedbacks?.details?.average_rates?.average_doctor_encounter,
     },
     {
-      label: 'توضیح پزشک در هنگام ویزیت',
+      label: 'توضیح در هنگام ویزیت',
       value: profileData?.feedbacks?.details?.average_rates?.average_explanation_of_issue,
     },
     {
-      label: 'مهارت و تخصص پزشک',
+      label: 'مهارت و تخصص',
       value: profileData?.feedbacks?.details?.average_rates?.average_quality_of_treatment,
     },
   ];

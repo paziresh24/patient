@@ -150,7 +150,7 @@ function PlasmicMenuPopover__RenderFunc(props: {
         path: "ariaListBox.selectedValue",
         type: "private",
         variableType: "text",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           $props["initialSelectedKey"],
 
         onMutate: generateOnMutateForSpec("selectedValue", BaseListBox_Helpers)
@@ -162,6 +162,7 @@ function PlasmicMenuPopover__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -316,7 +317,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicMenuPopover__VariantsArgs;
     args?: PlasmicMenuPopover__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicMenuPopover__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicMenuPopover__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicMenuPopover__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

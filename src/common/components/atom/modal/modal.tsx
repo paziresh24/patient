@@ -27,6 +27,7 @@ export const Modal = (props: ModalProps) => {
       <Transition
         match={isOpen}
         animation="fade"
+        duration={180}
         className="fixed top-0 bottom-0 left-0 right-0 flex items-end md:pb-14 z-infinity md:pt-20 md:justify-center md:items-start bg-slate-900 bg-opacity-60"
         onClick={onClose}
         id="modal"
@@ -34,7 +35,8 @@ export const Modal = (props: ModalProps) => {
         <Transition
           match={isOpen}
           animation={fullScreen && isMobile ? 'right' : 'bottom'}
-          duration={300}
+          duration={240}
+          delay={20}
           className={classNames(
             'bg-white w-full flex flex-col rounded-tr-xl rounded-tl-xl md:!rounded-lg md:w-[28rem] max-h-screen overflow-auto',
             {

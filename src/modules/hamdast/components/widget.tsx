@@ -11,7 +11,17 @@ import { useGetCenters } from '@/common/apis/services/profile/centers';
 import classNames from '@/common/utils/classNames';
 import CheckIcon from '@/common/components/icons/check';
 
-export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string; app_name: string; iframeRef: any }) => {
+export const HamdastWidget = ({
+  app_id,
+  app_name,
+  iframeRef,
+  onChangeWidget,
+}: {
+  app_id: string;
+  app_name: string;
+  iframeRef: any;
+  onChangeWidget?: (action?: 'add' | 'remove' | 'update') => void;
+}) => {
   const widgetInfo = useGetWidgetInfo({ app_id }, { enabled: false });
   const { handleClose, handleOpen, modalProps } = useModal({
     onClose: () => {
@@ -49,6 +59,9 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
         hashId.current = messageEvent.data?.hamdast?.hash_id;
         remove();
       }
+      if (messageEvent.data?.hamdast?.event === 'HAMDAST_WIDGET_REFRESH_PROFILE') {
+        onChangeWidget?.('update');
+      }
     };
     window.addEventListener('message', handleEventFunction);
 
@@ -66,12 +79,12 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
           app_id: app_id,
           ...(widgetInfo.data?.data?.placement.includes('center_info') &&
             selectedCenter && {
-              placements_metadata: {
-                center_info: {
-                  center_ids: [selectedCenter],
-                },
+            placements_metadata: {
+              center_info: {
+                center_ids: [selectedCenter],
               },
-            }),
+            },
+          }),
         },
         { withCredentials: true },
       );
@@ -92,6 +105,7 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
         },
         '*',
       );
+      onChangeWidget?.('add');
     } catch (error) {
       iframeRef.current?.contentWindow?.postMessage(
         {
@@ -175,6 +189,7 @@ export const HamdastWidget = ({ app_id, app_name, iframeRef }: { app_id: string;
         },
         '*',
       );
+      onChangeWidget?.('remove');
     } catch (error) {
       iframeRef.current?.contentWindow?.postMessage(
         {

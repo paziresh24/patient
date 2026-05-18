@@ -2,9 +2,10 @@ import { GrowthBook } from '@growthbook/growthbook-react';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import { getServerSideGrowthBookContext } from '../helper/getServerSideGrowthBookContext';
 import { splunkInstance } from '../services/splunk';
+import { getHost } from '../utils/getHost';
 
 export const withServerUtils = (next: GetServerSideProps & any) => async (ctx: GetServerSidePropsContext) => {
-  const host = ctx.req.headers?.host;
+  const host = getHost(ctx.req.headers);
   let themeConfing = {};
   try {
     const growthbookContext = getServerSideGrowthBookContext(ctx.req as NextApiRequest);
@@ -24,7 +25,7 @@ export const withServerUtils = (next: GetServerSideProps & any) => async (ctx: G
       ...data.props,
       query: ctx.query,
       themeConfing,
-      host: ctx.req.headers.host,
+      host: getHost(ctx.req.headers),
     },
   };
 };

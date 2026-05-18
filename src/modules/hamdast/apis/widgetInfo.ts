@@ -6,7 +6,10 @@ export interface Params {
 }
 
 export const getWidgetInfo = ({ app_id }: Params) => {
-  return axios.get(`https://hamdast.paziresh24.com/api/v1/apps/${app_id}/widgets/info/`, { withCredentials: true });
+  const cacheBust = `_=${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  return axios.get(`https://hamdast.paziresh24.com/api/v1/apps/${app_id}/widgets/info/?${cacheBust}`, {
+    withCredentials: true,
+  });
 };
 
 export const useGetWidgetInfo = (data: Params, options: any) => {

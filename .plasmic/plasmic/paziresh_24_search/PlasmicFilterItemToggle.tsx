@@ -148,7 +148,7 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
         path: "checkbox.isChecked",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) =>
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) =>
           (() => {
             try {
               return $props.defaultSelected;
@@ -170,6 +170,7 @@ function PlasmicFilterItemToggle__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -301,7 +302,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicFilterItemToggle__VariantsArgs;
     args?: PlasmicFilterItemToggle__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicFilterItemToggle__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicFilterItemToggle__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicFilterItemToggle__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props

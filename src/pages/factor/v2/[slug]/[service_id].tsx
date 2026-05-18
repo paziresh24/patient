@@ -37,6 +37,8 @@ const Factor = () => {
             centerId={'5532'}
             serviceId={service_id as string}
             userCenterId={profile?.data?.centers?.find((item: any) => item.id == CENTERS.CONSULT)?.user_center_id}
+            doctorName={profile?.data?.display_name}
+            groupExpertise={profile?.data?.group_expertises?.[0]?.name}
           />
         </div>
         <DoctorInvoiceNotice slug={slug as string} serviceId={service_id as string} />

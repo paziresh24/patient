@@ -61,6 +61,7 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: vW4UBuHCFshJ/codeComponent
 import SearchContentSuggestion from "../../SearchContentSuggestion"; // plasmic-import: 6MD8zdNphdeG/component
+import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: sMdpLWyxbzDCruwMRffW2m/styleTokensProvider
 
@@ -98,6 +99,7 @@ export type PlasmicSearchResultQs__OverridesType = {
   freeBox?: Flex__<"div">;
   svg?: Flex__<"svg">;
   searchContentSuggestion?: Flex__<typeof SearchContentSuggestion>;
+  sendSplunkEvent?: Flex__<typeof SideEffect>;
 };
 
 export interface DefaultSearchResultQsProps {
@@ -152,13 +154,15 @@ function PlasmicSearchResultQs__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const $globalActions = useGlobalActions?.();
+
   const stateSpecs: Parameters<typeof useDollarState>[0] = React.useMemo(
     () => [
       {
         path: "serchiaSuggestion.data",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "serchiaSuggestion"
       },
@@ -166,7 +170,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         path: "serchiaSuggestion.error",
         type: "private",
         variableType: "object",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "serchiaSuggestion"
       },
@@ -174,7 +178,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         path: "serchiaSuggestion.loading",
         type: "private",
         variableType: "boolean",
-        initFunc: ({ $props, $state, $queries, $ctx }) => undefined,
+        initFunc: ({ $props, $state, $queries, $q, $ctx }) => undefined,
 
         refName: "serchiaSuggestion"
       }
@@ -185,6 +189,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
     $props,
     $ctx,
     $queries: {},
+    $q: {},
     $refs
   });
 
@@ -265,9 +270,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
         url={(() => {
           try {
             return (() => {
-              return `https://apigw.paziresh24.com/v1/searchia-api/v2/qs/index/slim_clinic_query_su?query=${
-                $props.terms || ""
-              }&inContent=true&spellCheckEnabled=true`;
+              return `https://apigw.paziresh24.com/v1/searchia-api/v2/qs/index/slim_clinic_query_su?query=${$props.terms || ""}&inContent=true&spellCheckEnabled=true`;
             })();
           } catch (e) {
             if (
@@ -323,15 +326,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `/s/${
-                          $props.citySlug ? $props.citySlug + "/" : ""
-                        }?text=${value}&ref=search_suggestion_box_qs&semantic_search=${
-                          $ctx.Growthbook &&
-                          $ctx.Growthbook.isReady &&
-                          $ctx.Growthbook.features["search-semantic-search"]
-                            ? "true"
-                            : "false"
-                        }`;
+                        return `/s/${$props.citySlug ? $props.citySlug + "/" : ""}?text=${value}&ref=search_suggestion_box_qs&semantic_search=${$ctx.Growthbook && $ctx.Growthbook.isReady && $ctx.Growthbook.features["search-semantic-search"] ? "true" : "false"}`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -415,6 +410,126 @@ function PlasmicSearchResultQs__RenderFunc(props: {
             }
           })()}
         />
+
+        <SideEffect
+          data-plasmic-name={"sendSplunkEvent"}
+          data-plasmic-override={overrides.sendSplunkEvent}
+          className={classNames("__wab_instance", sty.sendSplunkEvent)}
+          onMount={async () => {
+            const $steps = {};
+
+            $steps["sendSplunkQuerySuggestionViewEvent"] = !!$state
+              .serchiaSuggestion.data.entity
+              ? (() => {
+                  const actionArgs = {
+                    args: [
+                      {
+                        event_group: "search_metrics",
+                        event_type: "suggestion_view",
+                        current_url: window.location.href,
+                        terminal_id: (function () {
+                          try {
+                            return document.cookie.replace(
+                              /(?:(?:^|.*;\s*)terminal_id\s*\=\s*([^;]*).*$)|^.*$/,
+                              "$1"
+                            );
+                          } catch (e) {
+                            return null;
+                          }
+                        })(),
+                        user_input: (function () {
+                          try {
+                            return $props.terms || "";
+                          } catch (e) {
+                            return "";
+                          }
+                        })(),
+                        suggestions: (function () {
+                          try {
+                            var rawSuggestions =
+                              $state.serchiaSuggestion.data.entity
+                                .topQuerySuggestions;
+                            if (!rawSuggestions) return [];
+                            if (typeof rawSuggestions === "string") {
+                              return JSON.parse(rawSuggestions);
+                            }
+                            return rawSuggestions;
+                          } catch (e) {
+                            return [];
+                          }
+                        })(),
+                        suggestion_count: (function () {
+                          try {
+                            var raw =
+                              $state.serchiaSuggestion.data.entity
+                                .topQuerySuggestions;
+                            if (!raw) return 0;
+                            var list =
+                              typeof raw === "string" ? JSON.parse(raw) : raw;
+                            return list.length;
+                          } catch (e) {
+                            return 0;
+                          }
+                        })(),
+                        city_id: (function () {
+                          if (
+                            $props &&
+                            $props.selectedCity &&
+                            $props.selectedCity.id
+                          ) {
+                            return $props.selectedCity.id;
+                          }
+                          if (
+                            $props &&
+                            $props.searchOptionalFilters &&
+                            $props.searchOptionalFilters.city_id
+                          ) {
+                            return $props.searchOptionalFilters.city_id[0];
+                          }
+                          return -1;
+                        })(),
+                        userAgent: globalThis.navigator.userAgent
+                          ? globalThis.navigator.userAgent
+                          : "",
+                        url: (function () {
+                          const url = {
+                            href: window.location.href,
+                            query: {},
+                            pathname: window.location.pathname,
+                            host: window.location.host
+                          };
+                          try {
+                            const urlParams = new URLSearchParams(
+                              window.location.search
+                            );
+                            for (const [key, value] of urlParams.entries()) {
+                              url.query[key] = value;
+                            }
+                          } catch (e) {}
+                          return url;
+                        })()
+                      },
+                      undefined,
+                      "2ba8b09a-1f2d-4051-ad04-358636bf70f8"
+                    ]
+                  };
+                  return $globalActions["Splunk.sendLog"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
+              : undefined;
+            if (
+              $steps["sendSplunkQuerySuggestionViewEvent"] != null &&
+              typeof $steps["sendSplunkQuerySuggestionViewEvent"] ===
+                "object" &&
+              typeof $steps["sendSplunkQuerySuggestionViewEvent"].then ===
+                "function"
+            ) {
+              $steps["sendSplunkQuerySuggestionViewEvent"] =
+                await $steps["sendSplunkQuerySuggestionViewEvent"];
+            }
+          }}
+        />
       </ApiRequest>
     </div>
   ) as React.ReactElement | null;
@@ -426,17 +541,20 @@ const PlasmicDescendants = {
     "serchiaSuggestion",
     "freeBox",
     "svg",
-    "searchContentSuggestion"
+    "searchContentSuggestion",
+    "sendSplunkEvent"
   ],
   serchiaSuggestion: [
     "serchiaSuggestion",
     "freeBox",
     "svg",
-    "searchContentSuggestion"
+    "searchContentSuggestion",
+    "sendSplunkEvent"
   ],
   freeBox: ["freeBox", "svg"],
   svg: ["svg"],
-  searchContentSuggestion: ["searchContentSuggestion"]
+  searchContentSuggestion: ["searchContentSuggestion"],
+  sendSplunkEvent: ["sendSplunkEvent"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
@@ -447,6 +565,7 @@ type NodeDefaultElementType = {
   freeBox: "div";
   svg: "svg";
   searchContentSuggestion: typeof SearchContentSuggestion;
+  sendSplunkEvent: typeof SideEffect;
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -460,7 +579,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicSearchResultQs__VariantsArgs;
     args?: PlasmicSearchResultQs__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicSearchResultQs__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicSearchResultQs__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicSearchResultQs__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
@@ -513,6 +634,7 @@ export const PlasmicSearchResultQs = Object.assign(
     freeBox: makeNodeComponent("freeBox"),
     svg: makeNodeComponent("svg"),
     searchContentSuggestion: makeNodeComponent("searchContentSuggestion"),
+    sendSplunkEvent: makeNodeComponent("sendSplunkEvent"),
 
     // Metadata about props expected for PlasmicSearchResultQs
     internalVariantProps: PlasmicSearchResultQs__VariantProps,

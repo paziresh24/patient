@@ -36,6 +36,7 @@ import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
+import { shouldShowTopSuggestedConsult } from '@/modules/search/functions/shouldShowTopSuggestedConsult';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
   ssr: false,
@@ -50,6 +51,7 @@ import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGro
 import Loading from '@/common/components/atom/loading';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import Button from '@/common/components/atom/button';
+import { getHost, HeaderBag } from '@/common/utils/getHost';
 
 const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
   const { isMobile } = useResponsive();
@@ -375,7 +377,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     let showPlasmicConsultBanner: boolean = false;
     let showSuggestedDoctor: any = {};
 
-    const host = context.req.headers.host;
+    const host = getHost(context.req.headers as unknown as HeaderBag);
     const path = context.resolvedUrl;
     const url = `https://${host}${path}`;
     const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
@@ -425,6 +427,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
       const isResultTypeExcluded =
         !resultTypeValue ||
         (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
+      const canShowTopSuggestedConsult = shouldShowTopSuggestedConsult(searchData?.query_attributes);
 
       if (
         !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
@@ -432,6 +435,7 @@ export const getServerSideProps: GetServerSideProps = withCSR(
         isResultTypeExcluded &&
         (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
         !searchData?.search?.is_landing &&
+        canShowTopSuggestedConsult &&
         showSuggestedDoctor?.enable
       ) {
         try {

@@ -16,6 +16,8 @@ interface Params {
   timezone?: string;
   countryCode?: string;
   center_id?: string;
+  /** فقط وقتی سرویس balance با موفقیت مقدار داده باشد ارسال می‌شود */
+  balance?: number;
 }
 
 type Response = {
@@ -23,17 +25,22 @@ type Response = {
     payment_methods: PaymentMethod[];
     additional_html?: string;
     payment_description_html?: string;
+    scroll_to_payment_methods?: boolean;
   };
 };
 
 export const getPaymentMethods = async (params: Params) => {
+  const query: Record<string, string | undefined> = {
+    amount: params.amount,
+    timezone: params.timezone,
+    'country-code': params.countryCode,
+    center_id: params.center_id,
+  };
+  if (typeof params.balance === 'number' && !Number.isNaN(params.balance)) {
+    query.balance = String(params.balance);
+  }
   return apiGatewayClient.get<Response>(`/katibe/v1/payment-methods/p24`, {
-    params: {
-      'amount': params.amount,
-      'timezone': params.timezone,
-      'country-code': params.countryCode,
-      'center_id': params.center_id,
-    },
+    params: query,
   });
 };
 

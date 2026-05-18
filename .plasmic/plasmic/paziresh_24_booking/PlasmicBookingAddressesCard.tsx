@@ -119,6 +119,7 @@ export const PlasmicBookingAddressesCard__ArgProps = new Array<ArgPropType>(
 
 export type PlasmicBookingAddressesCard__OverridesType = {
   root?: Flex__<"div">;
+  link?: Flex__<"a"> & Partial<LinkProps>;
   collapsible?: Flex__<typeof Collapsible>;
   bookingSchedules?: Flex__<typeof BookingSchedules>;
 };
@@ -200,7 +201,9 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
     >
       <div className={classNames(projectcss.all, sty.freeBox___0OFb)}>
         <PlasmicLink__
-          className={classNames(projectcss.all, projectcss.a, sty.link__vhgEz)}
+          data-plasmic-name={"link"}
+          data-plasmic-override={overrides.link}
+          className={classNames(projectcss.all, projectcss.a, sty.link)}
           component={Link}
           href={(() => {
             try {
@@ -545,72 +548,81 @@ function PlasmicBookingAddressesCard__RenderFunc(props: {
             );
           })
         : null}
-      <PlasmicLink__
-        className={classNames(projectcss.all, projectcss.a, sty.link__udEo9)}
-        component={Link}
-        href={(() => {
-          try {
-            return globalThis.navigator.userAgent?.includes("Android")
-              ? `geo:${$props.map.lat},${$props.map.lon}`
-              : `https://www.google.com/maps?daddr=${$props.map.lat},${$props.map.lon}&amp;ll&openInBrowser=1`;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
+      {(() => {
+        try {
+          return !!$props.map.lat && !!$props.map.lon;
+        } catch (e) {
+          if (
+            e instanceof TypeError ||
+            e?.plasmicType === "PlasmicUndefinedDataError"
+          ) {
+            return false;
           }
-        })()}
-        platform={"nextjs"}
-        target={"_blank"}
-      >
-        {(() => {
-          try {
-            return !!$props.map.lat && !!$props.map.lon;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return false;
-            }
-            throw e;
+          throw e;
+        }
+      })() ? (
+        <Button
+          children2={
+            <div
+              className={classNames(
+                projectcss.all,
+                projectcss.__wab_text,
+                sty.text__nOaWr
+              )}
+            >
+              {
+                "\u0645\u0634\u0627\u0647\u062f\u0647 \u062f\u0631 \u0646\u0642\u0634\u0647 \u0648 \u0645\u0633\u06cc\u0631\u06cc\u0627\u0628\u06cc"
+              }
+            </div>
           }
-        })() ? (
-          <Button
-            children2={
-              <div
-                className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
-                  sty.text__nOaWr
-                )}
-              >
-                {
-                  "\u0645\u0634\u0627\u0647\u062f\u0647 \u062f\u0631 \u0646\u0642\u0634\u0647 \u0648 \u0645\u0633\u06cc\u0631\u06cc\u0627\u0628\u06cc"
-                }
-              </div>
+          className={classNames("__wab_instance", sty.button__dxuVg)}
+          onClick={async event => {
+            const $steps = {};
+
+            $steps["runCode"] = true
+              ? (() => {
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        const link = globalThis.navigator.userAgent?.includes(
+                          "Android"
+                        )
+                          ? `geo:${$props.map.lat},${$props.map.lon}`
+                          : `https://www.google.com/maps?daddr=${$props.map.lat},${$props.map.lon}&amp;ll&openInBrowser=1`;
+                        return globalThis.open(link, "_blank");
+                      })();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
+              : undefined;
+            if (
+              $steps["runCode"] != null &&
+              typeof $steps["runCode"] === "object" &&
+              typeof $steps["runCode"].then === "function"
+            ) {
+              $steps["runCode"] = await $steps["runCode"];
             }
-            className={classNames("__wab_instance", sty.button__dxuVg)}
-            outline={true}
-            showStartIcon={true}
-            startIcon={
-              <Icon12Icon
-                className={classNames(projectcss.all, sty.svg__vWeUa)}
-                role={"img"}
-              />
-            }
-          />
-        ) : null}
-      </PlasmicLink__>
+          }}
+          outline={true}
+          showStartIcon={true}
+          startIcon={
+            <Icon12Icon
+              className={classNames(projectcss.all, sty.svg__vWeUa)}
+              role={"img"}
+            />
+          }
+        />
+      ) : null}
     </div>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root", "collapsible", "bookingSchedules"],
+  root: ["root", "link", "collapsible", "bookingSchedules"],
+  link: ["link"],
   collapsible: ["collapsible"],
   bookingSchedules: ["bookingSchedules"]
 } as const;
@@ -619,6 +631,7 @@ type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  link: "a";
   collapsible: typeof Collapsible;
   bookingSchedules: typeof BookingSchedules;
 };
@@ -685,6 +698,7 @@ export const PlasmicBookingAddressesCard = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    link: makeNodeComponent("link"),
     collapsible: makeNodeComponent("collapsible"),
     bookingSchedules: makeNodeComponent("bookingSchedules"),
 

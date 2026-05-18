@@ -401,7 +401,9 @@ type NodeComponentProps<T extends NodeNameType> =
     variants?: PlasmicHomePageShortcuts__VariantsArgs;
     args?: PlasmicHomePageShortcuts__ArgsType;
     overrides?: NodeOverridesType<T>;
-  } & Omit<PlasmicHomePageShortcuts__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
+  } &
+    // Specify variants directly as props
+    Omit<PlasmicHomePageShortcuts__VariantsArgs, ReservedPropsType> &
     // Specify args directly as props
     Omit<PlasmicHomePageShortcuts__ArgsType, ReservedPropsType> &
     // Specify overrides for each element directly as props
