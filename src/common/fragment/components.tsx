@@ -153,7 +153,7 @@ export const Components = {
   SearchResults: {
     Component: PlasmicSearchResults,
     id: 'XhSI4pxMLR3L',
-    propsAllowed: PlasmicSearchResults__ArgProps,
+    propsAllowed: [...PlasmicSearchResults__ArgProps, 'overrides'],
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
   Schedules: {
