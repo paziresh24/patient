@@ -6,7 +6,7 @@ export interface Params {
 }
 
 export const getSubscriptions = ({ appKey }: Params) => {
-  return axios.get(`https://apigw.paziresh24.com/v1/hamdast/apps/${appKey}/subscriptions`, { withCredentials: true });
+  return axios.get(`https://hamdast.paziresh24.com/v1/apps/${appKey}/billing/subscriptions`, { withCredentials: true });
 };
 
 export const useGetSubscriptions = (data: Params, options?: any) => {

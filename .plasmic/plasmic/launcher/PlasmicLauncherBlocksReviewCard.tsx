@@ -129,7 +129,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -270,50 +270,6 @@ function PlasmicLauncherBlocksReviewCard__RenderFunc(props: {
         sty.root
       )}
     >
-      <ApiRequest
-        data-plasmic-name={"apiRequest2"}
-        data-plasmic-override={overrides.apiRequest2}
-        children={null}
-        className={classNames("__wab_instance", sty.apiRequest2)}
-        errorDisplay={null}
-        loadingDisplay={null}
-        method={"GET"}
-        onError={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest2", "error"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onLoading={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest2", "loading"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest2", "data"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        ref={ref => {
-          $refs["apiRequest2"] = ref;
-        }}
-        url={(() => {
-          try {
-            return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-      />
-
       <div className={classNames(projectcss.all, sty.freeBox__uLirE)}>
         <div className={classNames(projectcss.all, sty.freeBox___5VuAz)}>
           <Paziresh24Avatar
@@ -344,19 +300,7 @@ function PlasmicLauncherBlocksReviewCard__RenderFunc(props: {
                 throw e;
               }
             })()}
-            src={(() => {
-              try {
-                return $state.apiRequest2?.data?.data?.image_url ?? null;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
+            src={`https://pic.paziresh24.com/api/image/${$props.userId}`}
           />
 
           <div className={classNames(projectcss.all, sty.freeBox___1RJqq)}>
@@ -567,29 +511,29 @@ function PlasmicLauncherBlocksReviewCard__RenderFunc(props: {
 
                   $steps["updateModalOpen"] = true
                     ? (() => {
-                        const actionArgs = {
-                          variable: {
-                            objRoot: $state,
-                            variablePath: ["modal", "open"]
-                          },
-                          operation: 0,
-                          value: false
-                        };
-                        return (({
-                          variable,
-                          value,
-                          startIndex,
-                          deleteCount
-                        }) => {
-                          if (!variable) {
-                            return;
-                          }
-                          const { objRoot, variablePath } = variable;
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["modal", "open"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
 
-                          $stateSet(objRoot, variablePath, value);
-                          return value;
-                        })?.apply(null, [actionArgs]);
-                      })()
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["updateModalOpen"] != null &&
@@ -803,7 +747,7 @@ function PlasmicLauncherBlocksReviewCard__RenderFunc(props: {
           }}
           url={(() => {
             try {
-              return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews/${$props.id}/replies`;
+              return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/reviews/${$props.id}/replies`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -965,18 +909,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherBlocksReviewCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherBlocksReviewCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicLauncherBlocksReviewCard__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicLauncherBlocksReviewCard__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

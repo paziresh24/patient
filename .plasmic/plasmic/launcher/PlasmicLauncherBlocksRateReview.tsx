@@ -116,7 +116,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -379,29 +379,29 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
 
                   $steps["updateModal2Open"] = true
                     ? (() => {
-                        const actionArgs = {
-                          variable: {
-                            objRoot: $state,
-                            variablePath: ["modal2", "open"]
-                          },
-                          operation: 0,
-                          value: false
-                        };
-                        return (({
-                          variable,
-                          value,
-                          startIndex,
-                          deleteCount
-                        }) => {
-                          if (!variable) {
-                            return;
-                          }
-                          const { objRoot, variablePath } = variable;
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["modal2", "open"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
 
-                          $stateSet(objRoot, variablePath, value);
-                          return value;
-                        })?.apply(null, [actionArgs]);
-                      })()
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["updateModal2Open"] != null &&
@@ -418,29 +418,29 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
 
                   $steps["updateModal2Open"] = true
                     ? (() => {
-                        const actionArgs = {
-                          variable: {
-                            objRoot: $state,
-                            variablePath: ["modal2", "open"]
-                          },
-                          operation: 0,
-                          value: false
-                        };
-                        return (({
-                          variable,
-                          value,
-                          startIndex,
-                          deleteCount
-                        }) => {
-                          if (!variable) {
-                            return;
-                          }
-                          const { objRoot, variablePath } = variable;
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["modal2", "open"]
+                        },
+                        operation: 0,
+                        value: false
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
 
-                          $stateSet(objRoot, variablePath, value);
-                          return value;
-                        })?.apply(null, [actionArgs]);
-                      })()
+                        $stateSet(objRoot, variablePath, value);
+                        return value;
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["updateModal2Open"] != null &&
@@ -454,18 +454,18 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
 
                   $steps["invokeGlobalAction"] = true
                     ? (() => {
-                        const actionArgs = {
-                          args: [
-                            undefined,
-                            "\u0646\u0638\u0631 \u0634\u0645\u0627 \u062b\u0628\u062a \u0634\u062f\u060c \u067e\u0633 \u0627\u0632 \u062a\u0627\u06cc\u06cc\u062f \u0646\u0645\u0627\u06cc\u0634 \u062f\u0627\u062f\u0647 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                            "top-center"
-                          ]
-                        };
-                        return $globalActions["Fragment.showToast"]?.apply(
-                          null,
-                          [...actionArgs.args]
-                        );
-                      })()
+                      const actionArgs = {
+                        args: [
+                          undefined,
+                          "\u0646\u0638\u0631 \u0634\u0645\u0627 \u062b\u0628\u062a \u0634\u062f\u060c \u067e\u0633 \u0627\u0632 \u062a\u0627\u06cc\u06cc\u062f \u0646\u0645\u0627\u06cc\u0634 \u062f\u0627\u062f\u0647 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                          "top-center"
+                        ]
+                      };
+                      return $globalActions["Fragment.showToast"]?.apply(
+                        null,
+                        [...actionArgs.args]
+                      );
+                    })()
                     : undefined;
                   if (
                     $steps["invokeGlobalAction"] != null &&
@@ -560,8 +560,8 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                   try {
                     return $state.apiRequest4.data?.count
                       ? ($state.apiRequest4.data[currentItem] /
-                          $state.apiRequest4.data?.count) *
-                          100
+                        $state.apiRequest4.data?.count) *
+                      100
                       : 0;
                   } catch (e) {
                     if (
@@ -608,7 +608,7 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
           }}
           url={(() => {
             try {
-              return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/rates`;
+              return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/rates`;
             } catch (e) {
               if (
                 e instanceof TypeError ||
@@ -657,7 +657,7 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
         }}
         url={(() => {
           try {
-            return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews`;
+            return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/reviews`;
           } catch (e) {
             if (
               e instanceof TypeError ||
@@ -683,110 +683,110 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
           }
         })()
           ? (_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-              (() => {
-                try {
-                  return $state.apiRequest3.data;
-                } catch (e) {
-                  if (
-                    e instanceof TypeError ||
-                    e?.plasmicType === "PlasmicUndefinedDataError"
-                  ) {
-                    return [];
-                  }
-                  throw e;
+            (() => {
+              try {
+                return $state.apiRequest3.data;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return [];
                 }
-              })()
-            ).map((__plasmic_item_0, __plasmic_idx_0) => {
-              const currentItem = __plasmic_item_0;
-              const currentIndex = __plasmic_idx_0;
-              return (
-                <LauncherBlocksReviewCard
-                  appKey={(() => {
-                    try {
-                      return $props.appKey;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                throw e;
+              }
+            })()
+          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+            const currentItem = __plasmic_item_0;
+            const currentIndex = __plasmic_idx_0;
+            return (
+              <LauncherBlocksReviewCard
+                appKey={(() => {
+                  try {
+                    return $props.appKey;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  })()}
-                  className={classNames(
-                    "__wab_instance",
-                    sty.launcherBlocksReviewCard__sx0Of
-                  )}
-                  content={(() => {
-                    try {
-                      return currentItem.content;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                    throw e;
+                  }
+                })()}
+                className={classNames(
+                  "__wab_instance",
+                  sty.launcherBlocksReviewCard__sx0Of
+                )}
+                content={(() => {
+                  try {
+                    return currentItem.content;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  })()}
-                  createdAt={(() => {
-                    try {
-                      return currentItem.created_at;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                    throw e;
+                  }
+                })()}
+                createdAt={(() => {
+                  try {
+                    return currentItem.created_at;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  })()}
-                  id={(() => {
-                    try {
-                      return currentItem.id;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                    throw e;
+                  }
+                })()}
+                id={(() => {
+                  try {
+                    return currentItem.id;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  })()}
-                  key={currentIndex}
-                  rate={(() => {
-                    try {
-                      return currentItem.rate;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                    throw e;
+                  }
+                })()}
+                key={currentIndex}
+                rate={(() => {
+                  try {
+                    return currentItem.rate;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  })()}
-                  userId={(() => {
-                    try {
-                      return currentItem.user_id;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
+                    throw e;
+                  }
+                })()}
+                userId={(() => {
+                  try {
+                    return currentItem.user_id;
+                  } catch (e) {
+                    if (
+                      e instanceof TypeError ||
+                      e?.plasmicType === "PlasmicUndefinedDataError"
+                    ) {
+                      return undefined;
                     }
-                  })()}
-                />
-              );
-            })
+                    throw e;
+                  }
+                })()}
+              />
+            );
+          })
           : null}
         {(() => {
           try {
@@ -888,32 +888,32 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                     $steps["updateReviews"] =
                       $state.apiRequest.data?.length > 0
                         ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["reviews"]
-                              },
-                              operation: 0,
-                              value: [
-                                ...$state.reviews,
-                                ...$state.apiRequest.data
-                              ]
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["reviews"]
+                            },
+                            operation: 0,
+                            value: [
+                              ...$state.reviews,
+                              ...$state.apiRequest.data
+                            ]
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
 
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                     if (
                       $steps["updateReviews"] != null &&
@@ -945,7 +945,7 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                 }}
                 url={(() => {
                   try {
-                    return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews`;
+                    return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/reviews`;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -1140,32 +1140,32 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
 
                         $steps["updatePage"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["page"]
-                                },
-                                operation: 2
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["page"]
+                              },
+                              operation: 2
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                const oldValue = $stateGet(
-                                  objRoot,
-                                  variablePath
-                                );
-                                $stateSet(objRoot, variablePath, oldValue + 1);
-                                return oldValue + 1;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              const oldValue = $stateGet(
+                                objRoot,
+                                variablePath
+                              );
+                              $stateSet(objRoot, variablePath, oldValue + 1);
+                              return oldValue + 1;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["updatePage"] != null &&
@@ -1203,24 +1203,24 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
 
               $steps["updateReviews"] = true
                 ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["reviews"]
-                      },
-                      operation: 0,
-                      value: []
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["reviews"]
+                    },
+                    operation: 0,
+                    value: []
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
 
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
-                    })?.apply(null, [actionArgs]);
-                  })()
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
                 : undefined;
               if (
                 $steps["updateReviews"] != null &&
@@ -1232,24 +1232,24 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
 
               $steps["updatePage"] = true
                 ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["page"]
-                      },
-                      operation: 0,
-                      value: 1
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["page"]
+                    },
+                    operation: 0,
+                    value: 1
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
 
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
-                    })?.apply(null, [actionArgs]);
-                  })()
+                    $stateSet(objRoot, variablePath, value);
+                    return value;
+                  })?.apply(null, [actionArgs]);
+                })()
                 : undefined;
               if (
                 $steps["updatePage"] != null &&
@@ -1332,7 +1332,7 @@ function PlasmicLauncherBlocksRateReview__RenderFunc(props: {
                                       if (
                                         e instanceof TypeError ||
                                         e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
+                                        "PlasmicUndefinedDataError"
                                       ) {
                                         return "1";
                                       }
@@ -1418,18 +1418,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherBlocksRateReview__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherBlocksRateReview__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicLauncherBlocksRateReview__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicLauncherBlocksRateReview__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };
