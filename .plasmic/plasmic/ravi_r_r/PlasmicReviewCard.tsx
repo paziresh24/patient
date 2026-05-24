@@ -211,7 +211,7 @@ const $$ = {
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -283,10 +283,10 @@ function PlasmicReviewCard__RenderFunc(props: {
                 if (typeof window === "undefined") return false;
                 return window.localStorage.getItem("likedComments")
                   ? JSON.parse(localStorage.getItem("likedComments")).some(
-                      item =>
-                        item.id === $props.feedbackId &&
-                        item.user_id === $ctx.auth.info.id
-                    )
+                    item =>
+                      item.id === $props.feedbackId &&
+                      item.user_id === $ctx.auth.info.id
+                  )
                   : false;
               })();
             } catch (e) {
@@ -360,10 +360,10 @@ function PlasmicReviewCard__RenderFunc(props: {
                 if (typeof window === "undefined") return 0;
                 return window.localStorage.getItem("likedComments")
                   ? JSON.parse(localStorage.getItem("likedComments")).find(
-                      item =>
-                        item.id === $props.feedbackId &&
-                        item.user_id === $ctx.auth.info.id
-                    )?.rate
+                    item =>
+                      item.id === $props.feedbackId &&
+                      item.user_id === $ctx.auth.info.id
+                  )?.rate
                   : 0;
               })();
             } catch (e) {
@@ -623,34 +623,34 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                   $steps["goToPage"] = true
                     ? (() => {
-                        const actionArgs = {
-                          destination: (() => {
-                            try {
-                              return "/ravi/" + $props.userId + "/";
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
-                              }
-                              throw e;
+                      const actionArgs = {
+                        destination: (() => {
+                          try {
+                            return "/ravi/" + $props.userId + "/";
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return undefined;
                             }
-                          })()
-                        };
-                        return (({ destination }) => {
-                          if (
-                            typeof destination === "string" &&
-                            destination.startsWith("#")
-                          ) {
-                            document
-                              .getElementById(destination.substr(1))
-                              .scrollIntoView({ behavior: "smooth" });
-                          } else {
-                            __nextRouter?.push(destination);
+                            throw e;
                           }
-                        })?.apply(null, [actionArgs]);
-                      })()
+                        })()
+                      };
+                      return (({ destination }) => {
+                        if (
+                          typeof destination === "string" &&
+                          destination.startsWith("#")
+                        ) {
+                          document
+                            .getElementById(destination.substr(1))
+                            .scrollIntoView({ behavior: "smooth" });
+                        } else {
+                          __nextRouter?.push(destination);
+                        }
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["goToPage"] != null &&
@@ -661,86 +661,33 @@ function PlasmicReviewCard__RenderFunc(props: {
                   }
                 }}
               >
-                <DataFetcher
-                  className={classNames(
-                    "__wab_instance",
-                    sty.httpRestApiFetcher__eXJp
+
+                <DataCtxReader__>
+                  {$ctx => (
+                    <Avatar
+                      data-plasmic-name={"userAvatar"}
+                      data-plasmic-override={overrides.userAvatar}
+                      className={classNames("__wab_instance", sty.userAvatar)}
+                      name={(() => {
+                        try {
+                          return (
+                            $ctx.fetchedData.users[0]?.name ||
+                            "کاربر بدون نام"
+                          );
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      src={`https://pic.paziresh24.com/api/image/${$props.doctorUserId}`}
+                    />
                   )}
-                  dataName={"avatarData"}
-                  errorDisplay={
-                    <DataCtxReader__>
-                      {$ctx => "Error fetching data"}
-                    </DataCtxReader__>
-                  }
-                  errorName={"fetchError"}
-                  loadingDisplay={
-                    <DataCtxReader__>
-                      {$ctx => (
-                        <div
-                          className={classNames(
-                            projectcss.all,
-                            sty.freeBox__o8OOa
-                          )}
-                        />
-                      )}
-                    </DataCtxReader__>
-                  }
-                  method={"GET"}
-                  noLayout={false}
-                  previewSpinner={false}
-                  url={(() => {
-                    try {
-                      return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return undefined;
-                      }
-                      throw e;
-                    }
-                  })()}
-                >
-                  <DataCtxReader__>
-                    {$ctx => (
-                      <Avatar
-                        data-plasmic-name={"userAvatar"}
-                        data-plasmic-override={overrides.userAvatar}
-                        className={classNames("__wab_instance", sty.userAvatar)}
-                        name={(() => {
-                          try {
-                            return (
-                              $ctx.fetchedData.users[0]?.name ||
-                              "کاربر بدون نام"
-                            );
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        src={(() => {
-                          try {
-                            return $ctx.avatarData.data.image_url;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                      />
-                    )}
-                  </DataCtxReader__>
-                </DataFetcher>
+                </DataCtxReader__>
               </div>
               <div className={classNames(projectcss.all, sty.freeBox__hJuBl)}>
                 <div className={classNames(projectcss.all, sty.freeBox__mTvMh)}>
@@ -1116,19 +1063,19 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["if10Caracter"] =
                     $ctx.auth.isLogin && $props.commentText.length <= 10
                       ? (() => {
-                          const actionArgs = {
-                            args: [
-                              "error",
-                              "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
-                              undefined,
-                              5000
-                            ]
-                          };
-                          return $globalActions["Fragment.showToast"]?.apply(
-                            null,
-                            [...actionArgs.args]
-                          );
-                        })()
+                        const actionArgs = {
+                          args: [
+                            "error",
+                            "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
+                            undefined,
+                            5000
+                          ]
+                        };
+                        return $globalActions["Fragment.showToast"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
                       : undefined;
                   if (
                     $steps["if10Caracter"] != null &&
@@ -1141,29 +1088,29 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["loading"] =
                     $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["reportLoadinButton"]
-                            },
-                            operation: 0,
-                            value: true
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["reportLoadinButton"]
+                          },
+                          operation: 0,
+                          value: true
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                   if (
                     $steps["loading"] != null &&
@@ -1176,29 +1123,29 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["request"] =
                     $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
-                          const actionArgs = {
-                            customFunction: async () => {
-                              return fetch(
-                                "https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id= " +
-                                  $props.feedbackId,
-                                {
-                                  headers: {
-                                    "content-type": "application/json"
-                                  },
-                                  body: JSON.stringify({
-                                    feedback_id: $props.feedbackId,
-                                    report_text: $state.reportText.value
-                                  }),
-                                  method: "POST",
-                                  credentials: "include"
-                                }
-                              );
-                            }
-                          };
-                          return (({ customFunction }) => {
-                            return customFunction();
-                          })?.apply(null, [actionArgs]);
-                        })()
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return fetch(
+                              "https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id= " +
+                              $props.feedbackId,
+                              {
+                                headers: {
+                                  "content-type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                  feedback_id: $props.feedbackId,
+                                  report_text: $state.reportText.value
+                                }),
+                                method: "POST",
+                                credentials: "include"
+                              }
+                            );
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                   if (
                     $steps["request"] != null &&
@@ -1211,29 +1158,29 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["closeDialog"] =
                     $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["dialog", "open"]
-                            },
-                            operation: 0,
-                            value: false
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["dialog", "open"]
+                          },
+                          operation: 0,
+                          value: false
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                   if (
                     $steps["closeDialog"] != null &&
@@ -1246,29 +1193,29 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["offLoading"] =
                     $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["reportLoadinButton"]
-                            },
-                            operation: 0,
-                            value: false
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["reportLoadinButton"]
+                          },
+                          operation: 0,
+                          value: false
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                   if (
                     $steps["offLoading"] != null &&
@@ -1281,19 +1228,19 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["toast"] =
                     $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
-                          const actionArgs = {
-                            args: [
-                              undefined,
-                              "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                              undefined,
-                              4989
-                            ]
-                          };
-                          return $globalActions["Fragment.showToast"]?.apply(
-                            null,
-                            [...actionArgs.args]
-                          );
-                        })()
+                        const actionArgs = {
+                          args: [
+                            undefined,
+                            "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                            undefined,
+                            4989
+                          ]
+                        };
+                        return $globalActions["Fragment.showToast"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
                       : undefined;
                   if (
                     $steps["toast"] != null &&
@@ -1306,11 +1253,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["login"] =
                     $ctx.auth.isLogin == false
                       ? (() => {
-                          const actionArgs = { args: [] };
-                          return $globalActions[
-                            "AuthGlobalContext.login"
-                          ]?.apply(null, [...actionArgs.args]);
-                        })()
+                        const actionArgs = { args: [] };
+                        return $globalActions[
+                          "AuthGlobalContext.login"
+                        ]?.apply(null, [...actionArgs.args]);
+                      })()
                       : undefined;
                   if (
                     $steps["login"] != null &&
@@ -1323,24 +1270,24 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["splunk"] =
                     $state.reportText.value.length >= 10 && $ctx.auth.isLogin
                       ? (() => {
-                          const actionArgs = {
-                            customFunction: async () => {
-                              return $$.splunkEvent({
-                                group: "feedback",
-                                data: {
-                                  doctor_id: $props.doctorId,
-                                  comment_id: $props.feedbackId,
-                                  report_text: $state.reportText.value
-                                },
-                                type: "report_comment",
-                                token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                              });
-                            }
-                          };
-                          return (({ customFunction }) => {
-                            return customFunction();
-                          })?.apply(null, [actionArgs]);
-                        })()
+                        const actionArgs = {
+                          customFunction: async () => {
+                            return $$.splunkEvent({
+                              group: "feedback",
+                              data: {
+                                doctor_id: $props.doctorId,
+                                comment_id: $props.feedbackId,
+                                report_text: $state.reportText.value
+                              },
+                              type: "report_comment",
+                              token: "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                            });
+                          }
+                        };
+                        return (({ customFunction }) => {
+                          return customFunction();
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                   if (
                     $steps["splunk"] != null &&
@@ -1460,100 +1407,100 @@ function PlasmicReviewCard__RenderFunc(props: {
                     >
                       {(_par =>
                         !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                        (() => {
-                          try {
-                            return $ctx.fetchedData.list;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return [];
-                            }
-                            throw e;
-                          }
-                        })()
-                      ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                        const currentItem = __plasmic_item_0;
-                        const currentIndex = __plasmic_idx_0;
-                        return (
-                          <div
-                            className={classNames(
-                              projectcss.all,
-                              sty.freeBox__wm16O
-                            )}
-                            key={currentIndex}
-                          >
-                            {(() => {
-                              try {
-                                return (
-                                  currentItem.description != "undefined" &&
-                                  !!currentItem.description
-                                );
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return true;
-                                }
-                                throw e;
+                          (() => {
+                            try {
+                              return $ctx.fetchedData.list;
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return [];
                               }
-                            })() ? (
-                              <ReplyCard
-                                className={classNames(
-                                  "__wab_instance",
-                                  sty.replyCard__sQuYr
-                                )}
-                                isDoctor={(() => {
-                                  try {
-                                    return (
-                                      currentItem.user_id == $props.doctorUserId
-                                    );
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return false;
-                                    }
-                                    throw e;
+                              throw e;
+                            }
+                          })()
+                        ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                          const currentItem = __plasmic_item_0;
+                          const currentIndex = __plasmic_idx_0;
+                          return (
+                            <div
+                              className={classNames(
+                                projectcss.all,
+                                sty.freeBox__wm16O
+                              )}
+                              key={currentIndex}
+                            >
+                              {(() => {
+                                try {
+                                  return (
+                                    currentItem.description != "undefined" &&
+                                    !!currentItem.description
+                                  );
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType === "PlasmicUndefinedDataError"
+                                  ) {
+                                    return true;
                                   }
-                                })()}
-                                replyText={(() => {
-                                  try {
-                                    return currentItem.description;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
+                                  throw e;
+                                }
+                              })() ? (
+                                <ReplyCard
+                                  className={classNames(
+                                    "__wab_instance",
+                                    sty.replyCard__sQuYr
+                                  )}
+                                  isDoctor={(() => {
+                                    try {
+                                      return (
+                                        currentItem.user_id == $props.doctorUserId
+                                      );
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
                                         "PlasmicUndefinedDataError"
-                                    ) {
-                                      return undefined;
+                                      ) {
+                                        return false;
+                                      }
+                                      throw e;
                                     }
-                                    throw e;
-                                  }
-                                })()}
-                                userId={(() => {
-                                  try {
-                                    return currentItem.user_id;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
+                                  })()}
+                                  replyText={(() => {
+                                    try {
+                                      return currentItem.description;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
                                         "PlasmicUndefinedDataError"
-                                    ) {
-                                      return undefined;
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
                                     }
-                                    throw e;
-                                  }
-                                })()}
-                              />
-                            ) : null}
-                          </div>
-                        );
-                      })}
+                                  })()}
+                                  userId={(() => {
+                                    try {
+                                      return currentItem.user_id;
+                                    } catch (e) {
+                                      if (
+                                        e instanceof TypeError ||
+                                        e?.plasmicType ===
+                                        "PlasmicUndefinedDataError"
+                                      ) {
+                                        return undefined;
+                                      }
+                                      throw e;
+                                    }
+                                  })()}
+                                />
+                              ) : null}
+                            </div>
+                          );
+                        })}
                     </div>
                   }
                   className={classNames("__wab_instance", sty.dialog2)}
@@ -1666,17 +1613,17 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                         $steps["invokeGlobalAction2"] = !$ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = { args: [] };
-                              return $globalActions[
-                                "AuthGlobalContext.login"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
+                            const actionArgs = { args: [] };
+                            return $globalActions[
+                              "AuthGlobalContext.login"
+                            ]?.apply(null, [...actionArgs.args]);
+                          })()
                           : undefined;
                         if (
                           $steps["invokeGlobalAction2"] != null &&
                           typeof $steps["invokeGlobalAction2"] === "object" &&
                           typeof $steps["invokeGlobalAction2"].then ===
-                            "function"
+                          "function"
                         ) {
                           $steps["invokeGlobalAction2"] = await $steps[
                             "invokeGlobalAction2"
@@ -1685,29 +1632,29 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                         $steps["updateLikeRate"] = $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["likeRate"]
-                                },
-                                operation: 0,
-                                value: currentItem
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["likeRate"]
+                              },
+                              operation: 0,
+                              value: currentItem
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["updateLikeRate"] != null &&
@@ -1721,35 +1668,35 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                         $steps["updatePopoverCoreOpen"] = $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["popoverCore", "open"]
-                                },
-                                operation: 0,
-                                value: false
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["popoverCore", "open"]
+                              },
+                              operation: 0,
+                              value: false
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["updatePopoverCoreOpen"] != null &&
                           typeof $steps["updatePopoverCoreOpen"] === "object" &&
                           typeof $steps["updatePopoverCoreOpen"].then ===
-                            "function"
+                          "function"
                         ) {
                           $steps["updatePopoverCoreOpen"] = await $steps[
                             "updatePopoverCoreOpen"
@@ -1758,29 +1705,29 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                         $steps["updateIsLike"] = $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["isLike"]
-                                },
-                                operation: 0,
-                                value: true
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["isLike"]
+                              },
+                              operation: 0,
+                              value: true
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["updateIsLike"] != null &&
@@ -1792,50 +1739,50 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                         $steps["runCode"] = $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return (() => {
-                                    if ($state.isLike) {
-                                      const likedComment = {
-                                        user_id: $ctx.auth.info.id,
-                                        id: $props.feedbackId,
-                                        rate: $state.likeRate
-                                      };
-                                      const likedCommentsList =
-                                        JSON.parse(
-                                          localStorage.getItem("likedComments")
-                                        ) || [];
-                                      likedCommentsList.push(likedComment);
-                                      localStorage.setItem(
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return (() => {
+                                  if ($state.isLike) {
+                                    const likedComment = {
+                                      user_id: $ctx.auth.info.id,
+                                      id: $props.feedbackId,
+                                      rate: $state.likeRate
+                                    };
+                                    const likedCommentsList =
+                                      JSON.parse(
+                                        localStorage.getItem("likedComments")
+                                      ) || [];
+                                    likedCommentsList.push(likedComment);
+                                    localStorage.setItem(
+                                      "likedComments",
+                                      JSON.stringify(likedCommentsList)
+                                    );
+                                  }
+                                  if (!$state.isLike) {
+                                    const likedCommentsList =
+                                      JSON.parse(
+                                        localStorage.getItem("likedComments")
+                                      ) || [];
+                                    const index = likedCommentsList.findIndex(
+                                      comment =>
+                                        comment.id === $props.feedbackId &&
+                                        comment.user_id === $ctx.auth.info.id
+                                    );
+                                    if (index !== -1) {
+                                      likedCommentsList.splice(index, 1);
+                                      return localStorage.setItem(
                                         "likedComments",
                                         JSON.stringify(likedCommentsList)
                                       );
                                     }
-                                    if (!$state.isLike) {
-                                      const likedCommentsList =
-                                        JSON.parse(
-                                          localStorage.getItem("likedComments")
-                                        ) || [];
-                                      const index = likedCommentsList.findIndex(
-                                        comment =>
-                                          comment.id === $props.feedbackId &&
-                                          comment.user_id === $ctx.auth.info.id
-                                      );
-                                      if (index !== -1) {
-                                        likedCommentsList.splice(index, 1);
-                                        return localStorage.setItem(
-                                          "likedComments",
-                                          JSON.stringify(likedCommentsList)
-                                        );
-                                      }
-                                    }
-                                  })();
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
+                                  }
+                                })();
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["runCode"] != null &&
@@ -1847,41 +1794,41 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                         $steps["invokeGlobalAction"] = $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  "POST",
-                                  "https://ir-ravi-n8n.darkube.app/webhook/like_rate",
-                                  undefined,
-                                  (() => {
-                                    try {
-                                      return {
-                                        feedback_id: $props.feedbackId,
-                                        rate: $state.likeRate,
-                                        user_id: $ctx.auth.info.id
-                                      };
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return undefined;
-                                      }
-                                      throw e;
+                            const actionArgs = {
+                              args: [
+                                "POST",
+                                "https://ir-ravi-n8n.darkube.app/webhook/like_rate",
+                                undefined,
+                                (() => {
+                                  try {
+                                    return {
+                                      feedback_id: $props.feedbackId,
+                                      rate: $state.likeRate,
+                                      user_id: $ctx.auth.info.id
+                                    };
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                    ) {
+                                      return undefined;
                                     }
-                                  })()
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.apiRequest"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
+                                    throw e;
+                                  }
+                                })()
+                              ]
+                            };
+                            return $globalActions[
+                              "Fragment.apiRequest"
+                            ]?.apply(null, [...actionArgs.args]);
+                          })()
                           : undefined;
                         if (
                           $steps["invokeGlobalAction"] != null &&
                           typeof $steps["invokeGlobalAction"] === "object" &&
                           typeof $steps["invokeGlobalAction"].then ===
-                            "function"
+                          "function"
                         ) {
                           $steps["invokeGlobalAction"] = await $steps[
                             "invokeGlobalAction"
@@ -1937,11 +1884,11 @@ function PlasmicReviewCard__RenderFunc(props: {
                   $steps["ifLogin"] =
                     $ctx.auth.isLogin == false
                       ? (() => {
-                          const actionArgs = { args: [] };
-                          return $globalActions[
-                            "AuthGlobalContext.login"
-                          ]?.apply(null, [...actionArgs.args]);
-                        })()
+                        const actionArgs = { args: [] };
+                        return $globalActions[
+                          "AuthGlobalContext.login"
+                        ]?.apply(null, [...actionArgs.args]);
+                      })()
                       : undefined;
                   if (
                     $steps["ifLogin"] != null &&
@@ -1953,30 +1900,30 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                   $steps["updatePopoverCoreOpen"] = $ctx.auth.isLogin
                     ? (() => {
-                        const actionArgs = {
-                          variable: {
-                            objRoot: $state,
-                            variablePath: ["popoverCore", "open"]
-                          },
-                          operation: 4,
-                          value: true
-                        };
-                        return (({
-                          variable,
-                          value,
-                          startIndex,
-                          deleteCount
-                        }) => {
-                          if (!variable) {
-                            return;
-                          }
-                          const { objRoot, variablePath } = variable;
+                      const actionArgs = {
+                        variable: {
+                          objRoot: $state,
+                          variablePath: ["popoverCore", "open"]
+                        },
+                        operation: 4,
+                        value: true
+                      };
+                      return (({
+                        variable,
+                        value,
+                        startIndex,
+                        deleteCount
+                      }) => {
+                        if (!variable) {
+                          return;
+                        }
+                        const { objRoot, variablePath } = variable;
 
-                          const oldValue = $stateGet(objRoot, variablePath);
-                          $stateSet(objRoot, variablePath, !oldValue);
-                          return !oldValue;
-                        })?.apply(null, [actionArgs]);
-                      })()
+                        const oldValue = $stateGet(objRoot, variablePath);
+                        $stateSet(objRoot, variablePath, !oldValue);
+                        return !oldValue;
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["updatePopoverCoreOpen"] != null &&
@@ -1990,24 +1937,24 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                   $steps["splunk"] = false
                     ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return $$.splunkEvent({
-                              group: "feedback",
-                              data: {
-                                comment_id: $props.feedbackId,
-                                doc_center: $props.docCenter
-                              },
-                              type: "like_comment",
-                              token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                              api_host: "https://splunk-ravi-hec.paziresh24.com"
-                            });
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return $$.splunkEvent({
+                            group: "feedback",
+                            data: {
+                              comment_id: $props.feedbackId,
+                              doc_center: $props.docCenter
+                            },
+                            type: "like_comment",
+                            token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                            api_host: "https://splunk-ravi-hec.paziresh24.com"
+                          });
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["splunk"] != null &&
@@ -2143,24 +2090,24 @@ function PlasmicReviewCard__RenderFunc(props: {
 
               $steps["runCode"] = true
                 ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return $$.splunkEvent({
-                          group: "feedback",
-                          data: {
-                            doctor_id: $props.doctorId,
-                            comment_id: $props.feedbackId
-                          },
-                          type: "share_comment",
-                          token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                          api_host: "https://splunk-ravi-hec.paziresh24.com"
-                        });
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return $$.splunkEvent({
+                        group: "feedback",
+                        data: {
+                          doctor_id: $props.doctorId,
+                          comment_id: $props.feedbackId
+                        },
+                        type: "share_comment",
+                        token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                        api_host: "https://splunk-ravi-hec.paziresh24.com"
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
                 : undefined;
               if (
                 $steps["runCode"] != null &&
@@ -2286,26 +2233,26 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                               $steps["runCode"] = true
                                 ? (() => {
-                                    const actionArgs = {
-                                      customFunction: async () => {
-                                        return $$.splunkEvent({
-                                          group: "feedback",
-                                          data: {
-                                            doctor_id: $props.doctorId,
-                                            comment_id: $props.feedbackId
-                                          },
-                                          type: "share_comment-tweeter",
-                                          token:
-                                            "1668355b-c055-487f-8cb3-4274801d368c",
-                                          api_host:
-                                            "https://splunk-ravi-hec.paziresh24.com"
-                                        });
-                                      }
-                                    };
-                                    return (({ customFunction }) => {
-                                      return customFunction();
-                                    })?.apply(null, [actionArgs]);
-                                  })()
+                                  const actionArgs = {
+                                    customFunction: async () => {
+                                      return $$.splunkEvent({
+                                        group: "feedback",
+                                        data: {
+                                          doctor_id: $props.doctorId,
+                                          comment_id: $props.feedbackId
+                                        },
+                                        type: "share_comment-tweeter",
+                                        token:
+                                          "1668355b-c055-487f-8cb3-4274801d368c",
+                                        api_host:
+                                          "https://splunk-ravi-hec.paziresh24.com"
+                                      });
+                                    }
+                                  };
+                                  return (({ customFunction }) => {
+                                    return customFunction();
+                                  })?.apply(null, [actionArgs]);
+                                })()
                                 : undefined;
                               if (
                                 $steps["runCode"] != null &&
@@ -2361,26 +2308,26 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                               $steps["runCode"] = true
                                 ? (() => {
-                                    const actionArgs = {
-                                      customFunction: async () => {
-                                        return $$.splunkEvent({
-                                          group: "feedback",
-                                          data: {
-                                            doctor_id: $props.doctorId,
-                                            comment_id: $props.feedbackId
-                                          },
-                                          type: "share_comment-eeta",
-                                          token:
-                                            "1668355b-c055-487f-8cb3-4274801d368c",
-                                          api_host:
-                                            "https://splunk-ravi-hec.paziresh24.com"
-                                        });
-                                      }
-                                    };
-                                    return (({ customFunction }) => {
-                                      return customFunction();
-                                    })?.apply(null, [actionArgs]);
-                                  })()
+                                  const actionArgs = {
+                                    customFunction: async () => {
+                                      return $$.splunkEvent({
+                                        group: "feedback",
+                                        data: {
+                                          doctor_id: $props.doctorId,
+                                          comment_id: $props.feedbackId
+                                        },
+                                        type: "share_comment-eeta",
+                                        token:
+                                          "1668355b-c055-487f-8cb3-4274801d368c",
+                                        api_host:
+                                          "https://splunk-ravi-hec.paziresh24.com"
+                                      });
+                                    }
+                                  };
+                                  return (({ customFunction }) => {
+                                    return customFunction();
+                                  })?.apply(null, [actionArgs]);
+                                })()
                                 : undefined;
                               if (
                                 $steps["runCode"] != null &&
@@ -2437,26 +2384,26 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                               $steps["runCode"] = true
                                 ? (() => {
-                                    const actionArgs = {
-                                      customFunction: async () => {
-                                        return $$.splunkEvent({
-                                          group: "feedback",
-                                          data: {
-                                            doctor_id: $props.doctorId,
-                                            comment_id: $props.feedbackId
-                                          },
-                                          type: "share_comment-telegram",
-                                          token:
-                                            "1668355b-c055-487f-8cb3-4274801d368c",
-                                          api_host:
-                                            "https://splunk-ravi-hec.paziresh24.com"
-                                        });
-                                      }
-                                    };
-                                    return (({ customFunction }) => {
-                                      return customFunction();
-                                    })?.apply(null, [actionArgs]);
-                                  })()
+                                  const actionArgs = {
+                                    customFunction: async () => {
+                                      return $$.splunkEvent({
+                                        group: "feedback",
+                                        data: {
+                                          doctor_id: $props.doctorId,
+                                          comment_id: $props.feedbackId
+                                        },
+                                        type: "share_comment-telegram",
+                                        token:
+                                          "1668355b-c055-487f-8cb3-4274801d368c",
+                                        api_host:
+                                          "https://splunk-ravi-hec.paziresh24.com"
+                                      });
+                                    }
+                                  };
+                                  return (({ customFunction }) => {
+                                    return customFunction();
+                                  })?.apply(null, [actionArgs]);
+                                })()
                                 : undefined;
                               if (
                                 $steps["runCode"] != null &&
@@ -2514,26 +2461,26 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                               $steps["runCode"] = true
                                 ? (() => {
-                                    const actionArgs = {
-                                      customFunction: async () => {
-                                        return $$.splunkEvent({
-                                          group: "feedback",
-                                          data: {
-                                            doctor_id: $props.doctorId,
-                                            comment_id: $props.feedbackId
-                                          },
-                                          type: "share_comment-whatsapp",
-                                          token:
-                                            "1668355b-c055-487f-8cb3-4274801d368c",
-                                          api_host:
-                                            "https://splunk-ravi-hec.paziresh24.com"
-                                        });
-                                      }
-                                    };
-                                    return (({ customFunction }) => {
-                                      return customFunction();
-                                    })?.apply(null, [actionArgs]);
-                                  })()
+                                  const actionArgs = {
+                                    customFunction: async () => {
+                                      return $$.splunkEvent({
+                                        group: "feedback",
+                                        data: {
+                                          doctor_id: $props.doctorId,
+                                          comment_id: $props.feedbackId
+                                        },
+                                        type: "share_comment-whatsapp",
+                                        token:
+                                          "1668355b-c055-487f-8cb3-4274801d368c",
+                                        api_host:
+                                          "https://splunk-ravi-hec.paziresh24.com"
+                                      });
+                                    }
+                                  };
+                                  return (({ customFunction }) => {
+                                    return customFunction();
+                                  })?.apply(null, [actionArgs]);
+                                })()
                                 : undefined;
                               if (
                                 $steps["runCode"] != null &&
@@ -2574,7 +2521,7 @@ function PlasmicReviewCard__RenderFunc(props: {
                                   if (
                                     e instanceof TypeError ||
                                     e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
+                                    "PlasmicUndefinedDataError"
                                   ) {
                                     return "";
                                   }
@@ -2621,18 +2568,18 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                               $steps["runCode"] = true
                                 ? (() => {
-                                    const actionArgs = {
-                                      customFunction: async () => {
-                                        return navigator.share({
-                                          url: $ctx.fetchedData.url,
-                                          text: "این نظر رو در پذیرش24 ببین \uD83D\uDC47"
-                                        });
-                                      }
-                                    };
-                                    return (({ customFunction }) => {
-                                      return customFunction();
-                                    })?.apply(null, [actionArgs]);
-                                  })()
+                                  const actionArgs = {
+                                    customFunction: async () => {
+                                      return navigator.share({
+                                        url: $ctx.fetchedData.url,
+                                        text: "این نظر رو در پذیرش24 ببین \uD83D\uDC47"
+                                      });
+                                    }
+                                  };
+                                  return (({ customFunction }) => {
+                                    return customFunction();
+                                  })?.apply(null, [actionArgs]);
+                                })()
                                 : undefined;
                               if (
                                 $steps["runCode"] != null &&
@@ -2644,26 +2591,26 @@ function PlasmicReviewCard__RenderFunc(props: {
 
                               $steps["runCode2"] = true
                                 ? (() => {
-                                    const actionArgs = {
-                                      customFunction: async () => {
-                                        return $$.splunkEvent({
-                                          group: "feedback",
-                                          data: {
-                                            doctor_id: $props.doctorId,
-                                            comment_id: $props.feedbackId
-                                          },
-                                          type: "share_comment-copy",
-                                          token:
-                                            "1668355b-c055-487f-8cb3-4274801d368c",
-                                          api_host:
-                                            "https://splunk-ravi-hec.paziresh24.com"
-                                        });
-                                      }
-                                    };
-                                    return (({ customFunction }) => {
-                                      return customFunction();
-                                    })?.apply(null, [actionArgs]);
-                                  })()
+                                  const actionArgs = {
+                                    customFunction: async () => {
+                                      return $$.splunkEvent({
+                                        group: "feedback",
+                                        data: {
+                                          doctor_id: $props.doctorId,
+                                          comment_id: $props.feedbackId
+                                        },
+                                        type: "share_comment-copy",
+                                        token:
+                                          "1668355b-c055-487f-8cb3-4274801d368c",
+                                        api_host:
+                                          "https://splunk-ravi-hec.paziresh24.com"
+                                      });
+                                    }
+                                  };
+                                  return (({ customFunction }) => {
+                                    return customFunction();
+                                  })?.apply(null, [actionArgs]);
+                                })()
                                 : undefined;
                               if (
                                 $steps["runCode2"] != null &&
@@ -2825,12 +2772,12 @@ function PlasmicReviewCard__RenderFunc(props: {
               $steps["invokeGlobalAction"] =
                 $ctx.auth.isLogin == false
                   ? (() => {
-                      const actionArgs = { args: [] };
-                      return $globalActions["AuthGlobalContext.login"]?.apply(
-                        null,
-                        [...actionArgs.args]
-                      );
-                    })()
+                    const actionArgs = { args: [] };
+                    return $globalActions["AuthGlobalContext.login"]?.apply(
+                      null,
+                      [...actionArgs.args]
+                    );
+                  })()
                   : undefined;
               if (
                 $steps["invokeGlobalAction"] != null &&
@@ -2844,31 +2791,31 @@ function PlasmicReviewCard__RenderFunc(props: {
 
               $steps["runCode"] = $ctx.auth.isLogin
                 ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return (() => {
-                          const formData = new globalThis.FormData();
-                          formData.append("feedback_id", $props.feedbackId);
-                          formData.append(
-                            "description",
-                            $state.multilineTextInput.value
-                          );
-                          return fetch(
-                            "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
-                              $props.feedbackId,
-                            {
-                              method: "POST",
-                              body: formData,
-                              credentials: "include"
-                            }
-                          );
-                        })();
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return (() => {
+                        const formData = new globalThis.FormData();
+                        formData.append("feedback_id", $props.feedbackId);
+                        formData.append(
+                          "description",
+                          $state.multilineTextInput.value
+                        );
+                        return fetch(
+                          "https://apigw.paziresh24.com/ravi/v1/feedbacks/reply?id=" +
+                          $props.feedbackId,
+                          {
+                            method: "POST",
+                            body: formData,
+                            credentials: "include"
+                          }
+                        );
+                      })();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
                 : undefined;
               if (
                 $steps["runCode"] != null &&
@@ -2880,18 +2827,18 @@ function PlasmicReviewCard__RenderFunc(props: {
 
               $steps["toast"] = $ctx.auth.isLogin
                 ? (() => {
-                    const actionArgs = {
-                      args: [
-                        undefined,
-                        "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062b\u0628\u062a \u0634\u062f. \u067e\u0633 \u0627\u0632 \u062a\u0627\u0626\u06cc\u062f \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u0642\u0627\u0628\u0644 \u0646\u0645\u0627\u06cc\u0634 \u062e\u0648\u0627\u0647\u062f \u0628\u0648\u062f.",
-                        undefined,
-                        5000
-                      ]
-                    };
-                    return $globalActions["Fragment.showToast"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
+                  const actionArgs = {
+                    args: [
+                      undefined,
+                      "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062b\u0628\u062a \u0634\u062f. \u067e\u0633 \u0627\u0632 \u062a\u0627\u0626\u06cc\u062f \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u0642\u0627\u0628\u0644 \u0646\u0645\u0627\u06cc\u0634 \u062e\u0648\u0627\u0647\u062f \u0628\u0648\u062f.",
+                      undefined,
+                      5000
+                    ]
+                  };
+                  return $globalActions["Fragment.showToast"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
                 : undefined;
               if (
                 $steps["toast"] != null &&
@@ -2903,25 +2850,25 @@ function PlasmicReviewCard__RenderFunc(props: {
 
               $steps["splunk"] = $ctx.auth.isLogin
                 ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return $$.splunkEvent({
-                          group: "feedback",
-                          data: {
-                            doctor_id: $props.doctorId,
-                            comment_id: $props.feedbackId,
-                            reply_text: $state.multilineTextInput.value
-                          },
-                          type: "reply_comment",
-                          token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                          api_host: "https://splunk-ravi-hec.paziresh24.com"
-                        });
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return $$.splunkEvent({
+                        group: "feedback",
+                        data: {
+                          doctor_id: $props.doctorId,
+                          comment_id: $props.feedbackId,
+                          reply_text: $state.multilineTextInput.value
+                        },
+                        type: "reply_comment",
+                        token: "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                        api_host: "https://splunk-ravi-hec.paziresh24.com"
+                      });
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
                 : undefined;
               if (
                 $steps["splunk"] != null &&
@@ -2933,23 +2880,23 @@ function PlasmicReviewCard__RenderFunc(props: {
 
               $steps["multiline"] = $ctx.auth.isLogin
                 ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["multilineTextInput", "value"]
-                      },
-                      operation: 1
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
+                  const actionArgs = {
+                    variable: {
+                      objRoot: $state,
+                      variablePath: ["multilineTextInput", "value"]
+                    },
+                    operation: 1
+                  };
+                  return (({ variable, value, startIndex, deleteCount }) => {
+                    if (!variable) {
+                      return;
+                    }
+                    const { objRoot, variablePath } = variable;
 
-                      $stateSet(objRoot, variablePath, undefined);
-                      return undefined;
-                    })?.apply(null, [actionArgs]);
-                  })()
+                    $stateSet(objRoot, variablePath, undefined);
+                    return undefined;
+                  })?.apply(null, [actionArgs]);
+                })()
                 : undefined;
               if (
                 $steps["multiline"] != null &&
@@ -3262,18 +3209,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReviewCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReviewCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicReviewCard__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicReviewCard__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

@@ -125,7 +125,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -394,8 +394,8 @@ function PlasmicReplyCard__RenderFunc(props: {
                           return $props.isDoctor
                             ? `${$ctx.fetchedData.users[0].name} ${$ctx.fetchedData.users[0].family}`
                             : $ctx.fetchedData.users[0].name
-                            ? $ctx.fetchedData.users[0].name
-                            : "کاربر بدون نام";
+                              ? $ctx.fetchedData.users[0].name
+                              : "کاربر بدون نام";
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -529,18 +529,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReplyCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReplyCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicReplyCard__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicReplyCard__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

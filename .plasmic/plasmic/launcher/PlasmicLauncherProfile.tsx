@@ -564,7 +564,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                       }}
                       url={(() => {
                         try {
-                          return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/users?page=1&limit=1`;
+                          return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/users?page=1&limit=1`;
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -710,7 +710,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     }}
                     url={(() => {
                       try {
-                        return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/rates`;
+                        return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/rates`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||
@@ -1150,7 +1150,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   ref={ref => {
                     $refs["apiRequest7"] = ref;
                   }}
-                  url={`https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/subscriptions`}
+                  url={`https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/billing/subscriptions`}
                 >
                   {(() => {
                     try {
@@ -1345,7 +1345,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
               }}
               url={(() => {
                 try {
-                  return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews?user_id=${$ctx.auth?.info?.id}`;
+                  return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/reviews?user_id=${$ctx.auth?.info?.id}`;
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
