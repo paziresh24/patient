@@ -12,9 +12,44 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useRef, useState } from 'react';
 
+const HAMI_ORIGIN = 'https://hami.paziresh24.com';
+
+const isHamiMainChatsUrl = (url: string) => {
+  try {
+    const raw = url?.trim();
+    if (!raw) return false;
+
+    let origin: string | null = null;
+    let pathname: string;
+
+    if (raw.startsWith('/')) {
+      // Sometimes iframe sends relative paths.
+      origin = HAMI_ORIGIN;
+      pathname = raw;
+    } else {
+      const candidate = raw.startsWith('http://') || raw.startsWith('https://') ? raw : `https://${raw}`;
+      const parsed = new URL(candidate);
+      origin = parsed.origin;
+      pathname = parsed.pathname;
+    }
+
+    if (origin !== HAMI_ORIGIN) return false;
+
+    const path = pathname.replace(/\/+$/, '') || '/';
+    if (path === '/' || path === '/chats') return true;
+    if (/^\/chat\/[^/]+/i.test(path)) return false;
+    if (/^\/stories(\/|$)/i.test(path)) return false;
+
+    return false;
+  } catch {
+    return false;
+  }
+};
+
 export const Dashboard = (props: any) => {
   const user = useUserInfoStore(state => state.info);
   const [isAppLoading, setIsAppLoading] = useState(true);
+  const [showBottomNavigation, setShowBottomNavigation] = useState(true);
   const iframeRef = useRef<any>(null);
   const { isMobile } = useResponsive();
 
@@ -24,21 +59,27 @@ export const Dashboard = (props: any) => {
     }, 3000);
   }, []);
 
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== HAMI_ORIGIN) return;
+      if (event.data?.type !== 'IFRAME_URL_CHANGED' || !event.data?.url) return;
+
+      setShowBottomNavigation(isHamiMainChatsUrl(event.data.url));
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   return (
     <LayoutWithHeaderAndFooter
       {...props.config}
       shouldShowPromoteApp={false}
       showFooter={false}
       showHeader={false}
-      showBottomNavigation={false}
+      showBottomNavigation={showBottomNavigation}
       className="!h-svh !min-h-svh !max-h-svh:"
     >
-      <AppBar
-        title={'گفت‌وگو‌ها'}
-        className="md:hidden"
-        backButton={true}
-        actionButton={<Report app_key={'drapp'} page_key={'appointments'} />}
-      />
       <Seo title={'گفت‌وگو‌ها'} noIndex />
       <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto h-full flex-col flex-grow w-full relative">
         {isAppLoading && (
