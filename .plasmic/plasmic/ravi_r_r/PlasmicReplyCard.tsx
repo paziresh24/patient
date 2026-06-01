@@ -287,51 +287,13 @@ function PlasmicReplyCard__RenderFunc(props: {
                 })()}
               />
 
-              <DataFetcher
-                data-plasmic-name={"httpRestApiFetcher"}
-                data-plasmic-override={overrides.httpRestApiFetcher}
-                className={classNames("__wab_instance", sty.httpRestApiFetcher)}
-                dataName={"avatarfetchedData"}
-                errorDisplay={
-                  <DataCtxReader__>
-                    {$ctx => "Error fetching data"}
-                  </DataCtxReader__>
-                }
-                errorName={"fetchError"}
-                loadingDisplay={
-                  <DataCtxReader__>
-                    {$ctx => (
-                      <Avatar
-                        data-plasmic-name={"userAvatar2"}
-                        data-plasmic-override={overrides.userAvatar2}
-                        className={classNames(
-                          "__wab_instance",
-                          sty.userAvatar2
-                        )}
-                        name={(() => {
-                          try {
-                            return $ctx.fetchedData.users[0].name;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        src={``}
-                      />
-                    )}
-                  </DataCtxReader__>
-                }
-                method={"GET"}
-                noLayout={false}
-                previewSpinner={false}
-                url={(() => {
+              <Avatar
+                data-plasmic-name={"userAvatar"}
+                data-plasmic-override={overrides.userAvatar}
+                className={classNames("__wab_instance", sty.userAvatar)}
+                name={(() => {
                   try {
-                    return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
+                    return $ctx.fetchedData.users[0].name;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -342,43 +304,8 @@ function PlasmicReplyCard__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-              >
-                <DataCtxReader__>
-                  {$ctx => (
-                    <Avatar
-                      data-plasmic-name={"userAvatar"}
-                      data-plasmic-override={overrides.userAvatar}
-                      className={classNames("__wab_instance", sty.userAvatar)}
-                      name={(() => {
-                        try {
-                          return $ctx.fetchedData.users[0].name;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      src={(() => {
-                        try {
-                          return $ctx.avatarfetchedData.data.image_url;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                    />
-                  )}
-                </DataCtxReader__>
-              </DataFetcher>
+                src={`https://pic.paziresh24.com/api/image/${$props.userId}`}
+              />
               <div className={classNames(projectcss.all, sty.freeBox__dbIvm)}>
                 <div className={classNames(projectcss.all, sty.freeBox__rie2S)}>
                   <div
