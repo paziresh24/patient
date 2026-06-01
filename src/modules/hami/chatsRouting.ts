@@ -1,5 +1,7 @@
 export const HAMI_ORIGIN = 'https://hami.paziresh24.com';
 
+export const VARDAST_DRAWER_FEATURE_FLAG = 'varsdast-drawer';
+
 export const getHamiPathFromUrl = (url: string) => {
   try {
     const raw = url?.trim();
@@ -47,6 +49,37 @@ export const toHamiPathFromAppRoute = (hamiSegments?: string | string[]) => {
   if (segments.length === 1) return `/chats/${decodeURIComponent(segments[0])}`;
 
   return `/${segments.join('/')}`;
+};
+
+export const getHamiChatIdFromAppRoute = (hamiSegments?: string | string[]) => {
+  const segments = Array.isArray(hamiSegments) ? hamiSegments : hamiSegments ? [hamiSegments] : [];
+  if (segments.length !== 1 || segments[0] === 'stories') return null;
+  return decodeURIComponent(segments[0]);
+};
+
+export const isHamiChatDetailFromAppRoute = (hamiSegments?: string | string[]) => {
+  const segments = Array.isArray(hamiSegments) ? hamiSegments : hamiSegments ? [hamiSegments] : [];
+  return segments.length === 1 && segments[0] !== 'stories';
+};
+
+export const isHamiChatDetailUrl = (url: string) => {
+  try {
+    const raw = url?.trim();
+    if (!raw) return false;
+
+    let pathname: string;
+    if (raw.startsWith('/')) {
+      pathname = raw;
+    } else {
+      const candidate = raw.startsWith('http://') || raw.startsWith('https://') ? raw : `https://${raw}`;
+      pathname = new URL(candidate).pathname;
+    }
+
+    const path = pathname.replace(/\/+$/, '') || '/';
+    return /^\/chats\/[^/]+/i.test(path) || /^\/chat\/[^/]+/i.test(path);
+  } catch {
+    return false;
+  }
 };
 
 export const isHamiMainChatsUrl = (url: string) => {
