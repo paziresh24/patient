@@ -5,13 +5,20 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import classNames from '@/common/utils/classNames';
 import {
+  getHamiChatIdFromAppRoute,
   getHamiPathFromUrl,
   HAMI_ORIGIN,
+  isHamiChatDetailFromAppRoute,
+  isHamiChatDetailUrl,
   isHamiMainChatsUrl,
   toAppChatsRouteFromHamiPath,
   toHamiIframeSrc,
   toHamiPathFromAppRoute,
+  VARDAST_DRAWER_FEATURE_FLAG,
 } from '@/modules/hami/chatsRouting';
+import { ChatAssistantDrawer } from '@/modules/hami/components/chatAssistantDrawer';
+import { ChatAssistantPanel } from '@/modules/hami/components/chatAssistantPanel';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useRef, useState } from 'react';
@@ -20,6 +27,7 @@ export const ChatsPage = (props: any) => {
   const router = useRouter();
   const [isAppLoading, setIsAppLoading] = useState(true);
   const [showBottomNavigation, setShowBottomNavigation] = useState(true);
+  const [isChatDetail, setIsChatDetail] = useState(false);
   const [iframeSrc, setIframeSrc] = useState(`${HAMI_ORIGIN}/`);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const lastSyncedRouteRef = useRef<string | null>(null);
@@ -32,6 +40,7 @@ export const ChatsPage = (props: any) => {
 
     const hamiPath = toHamiPathFromAppRoute(router.query.hami);
     setShowBottomNavigation(isHamiMainChatsUrl(hamiPath));
+    setIsChatDetail(isHamiChatDetailFromAppRoute(router.query.hami));
 
     if (syncFromIframeRef.current) {
       syncFromIframeRef.current = false;
@@ -59,6 +68,7 @@ export const ChatsPage = (props: any) => {
 
       const normalized = nextHamiPath.startsWith('/') ? nextHamiPath : `/${nextHamiPath}`;
       setShowBottomNavigation(isHamiMainChatsUrl(normalized));
+      setIsChatDetail(isHamiChatDetailUrl(normalized));
 
       const nextRoute = toAppChatsRouteFromHamiPath(normalized);
       if (lastSyncedRouteRef.current === nextRoute) return;
@@ -83,6 +93,20 @@ export const ChatsPage = (props: any) => {
     lastSyncedRouteRef.current = router.asPath.split('?')[0];
   }, [router.isReady, router.asPath]);
 
+  const chatId = router.isReady ? getHamiChatIdFromAppRoute(router.query.hami) : null;
+  const isVardastDrawerEnabled = useFeatureIsOn(VARDAST_DRAWER_FEATURE_FLAG);
+
+  const chatIframe = (
+    <iframe
+      ref={iframeRef}
+      onLoad={() => setIsAppLoading(false)}
+      className={classNames('h-full w-full flex-grow', { hidden: isAppLoading })}
+      allow="microphone; camera; fullscreen; clipboard-write;"
+      sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
+      src={iframeSrc}
+    />
+  );
+
   return (
     <LayoutWithHeaderAndFooter
       {...props.config}
@@ -93,22 +117,25 @@ export const ChatsPage = (props: any) => {
       className="!h-svh !min-h-svh !max-h-svh:"
     >
       <Seo title={'گفت‌وگو‌ها'} noIndex />
-      <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto h-full flex-col flex-grow w-full relative">
+      <div className="relative flex md:h-[calc(100vh-80px)] h-full w-full flex-grow flex-col items-center justify-center overflow-y-auto">
         {isAppLoading && (
-          <div className="w-full bg-white justify-center flex flex-col items-center h-full flex-grow">
+          <div className="flex h-full w-full flex-grow flex-col items-center justify-center bg-white">
             <Loading />
             <span className="text-xs font-medium">لطفا کمی صبر کنید...</span>
           </div>
         )}
 
-        <iframe
-          ref={iframeRef}
-          onLoad={() => setIsAppLoading(false)}
-          className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
-          allow="microphone; camera; fullscreen; clipboard-write;"
-          sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
-          src={iframeSrc}
-        />
+        {isVardastDrawerEnabled ? (
+          <ChatAssistantDrawer
+            isActive={isChatDetail && !isAppLoading}
+            chatId={chatId}
+            panelContent={({ isOpen }) => <ChatAssistantPanel isOpen={isOpen} chatId={chatId} />}
+          >
+            {chatIframe}
+          </ChatAssistantDrawer>
+        ) : (
+          chatIframe
+        )}
       </div>
     </LayoutWithHeaderAndFooter>
   );
