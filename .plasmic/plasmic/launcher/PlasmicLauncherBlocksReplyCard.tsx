@@ -225,50 +225,6 @@ function PlasmicLauncherBlocksReplyCard__RenderFunc(props: {
         sty.root
       )}
     >
-      <ApiRequest
-        data-plasmic-name={"apiRequest2"}
-        data-plasmic-override={overrides.apiRequest2}
-        children={null}
-        className={classNames("__wab_instance", sty.apiRequest2)}
-        errorDisplay={null}
-        loadingDisplay={null}
-        method={"GET"}
-        onError={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest2", "error"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onLoading={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest2", "loading"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        onSuccess={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["apiRequest2", "data"]).apply(
-            null,
-            eventArgs
-          );
-        }}
-        ref={ref => {
-          $refs["apiRequest2"] = ref;
-        }}
-        url={(() => {
-          try {
-            return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
-          } catch (e) {
-            if (
-              e instanceof TypeError ||
-              e?.plasmicType === "PlasmicUndefinedDataError"
-            ) {
-              return undefined;
-            }
-            throw e;
-          }
-        })()}
-      />
-
       <div className={classNames(projectcss.all, sty.freeBox__eNorR)}>
         <div className={classNames(projectcss.all, sty.freeBox__itDug)}>
           <Paziresh24Avatar
@@ -299,19 +255,7 @@ function PlasmicLauncherBlocksReplyCard__RenderFunc(props: {
                 throw e;
               }
             })()}
-            src={(() => {
-              try {
-                return $state.apiRequest2?.data?.data?.image_url ?? null;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
+            src={`https://pic.paziresh24.com/api/image/${$props.userId}`}
           />
 
           <div className={classNames(projectcss.all, sty.freeBox__uo3Hk)}>
