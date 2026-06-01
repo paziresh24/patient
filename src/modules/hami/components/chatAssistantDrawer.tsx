@@ -12,7 +12,7 @@ const DRAWER_SIZE_PERCENT = 80;
 const DRAWER_FIXED_WIDTH_PX = 380;
 const SNAP_THRESHOLD = 0.35;
 const DRAG_CLICK_THRESHOLD = 6;
-const OPEN_EDGE_WIDTH = 16;
+const OPEN_EDGE_WIDTH = 48;
 const DRAG_FAILSAFE_MS = 2500;
 const DRAWER_TRANSITION = 'transform 320ms cubic-bezier(0.32, 0.72, 0, 1)';
 
@@ -60,6 +60,7 @@ const ChatAssistantDrawerView = ({
   const dragStateRef = useRef<DragState | null>(null);
   const dragProgressRef = useRef(0);
   const openSourceRef = useRef<VardastDrawerOpenSource | undefined>();
+  const suppressTriggerClickRef = useRef(false);
   const wasOpenRef = useRef(false);
   const userId = useUserInfoStore(state => state.info?.id);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -94,9 +95,12 @@ const ChatAssistantDrawerView = ({
         openSourceRef.current = source === 'trigger' || source === 'edge' ? source : 'swipe';
       }
       setIsOpenRef.current(willOpen);
-    } else if (source === 'trigger' && !hasDragged) {
+    } else if ((source === 'trigger' || source === 'edge') && !hasDragged) {
+      suppressTriggerClickRef.current = source === 'trigger';
       openSourceRef.current = source;
       setIsOpenRef.current(true);
+    } else if (source === 'trigger' && hasDragged) {
+      suppressTriggerClickRef.current = true;
     } else if (source === 'peek' && !hasDragged) {
       setIsOpenRef.current(false);
     }
@@ -112,6 +116,13 @@ const ChatAssistantDrawerView = ({
 
     const isClosing = drag.startProgress > 0.05;
     const isOpening = drag.startProgress <= 0.05;
+
+    if (drag.source === 'trigger') {
+      if (Math.abs(deltaX) >= DRAG_CLICK_THRESHOLD && Math.abs(deltaX) >= Math.abs(deltaY)) {
+        drag.lockedHorizontal = true;
+      }
+      return;
+    }
 
     if (isClosing) {
       if (Math.abs(deltaX) >= DRAG_CLICK_THRESHOLD) {
@@ -438,7 +449,7 @@ const ChatAssistantDrawerView = ({
       {showOpenEdge && (
         <div
           aria-hidden
-          className={classNames('absolute inset-y-0 right-0 z-30', {
+          className={classNames('absolute right-0 z-30 top-[60px] bottom-[200px]', {
             'pointer-events-none': isDragging,
             'touch-none': !isDragging,
           })}
@@ -455,6 +466,15 @@ const ChatAssistantDrawerView = ({
       {showTrigger && (
         <ChatAssistantTrigger
           hidden={hideTrigger}
+          onOpen={() => {
+            if (suppressTriggerClickRef.current) {
+              suppressTriggerClickRef.current = false;
+              return;
+            }
+            if (isDragging || isOpen) return;
+            openSourceRef.current = 'trigger';
+            setIsOpen(true);
+          }}
           onPointerDown={event => {
             if (event.pointerType === 'touch') return;
             handleControlPointerDown(event, 0, 'trigger');
@@ -462,7 +482,9 @@ const ChatAssistantDrawerView = ({
           onTouchStart={event => {
             if (isDragging) return;
             const touch = event.touches[0];
-            if (touch) startDrag(touch.clientX, touch.clientY, touch.identifier, 0, 'trigger');
+            if (!touch) return;
+            event.stopPropagation();
+            startDrag(touch.clientX, touch.clientY, touch.identifier, 0, 'trigger');
           }}
         />
       )}
