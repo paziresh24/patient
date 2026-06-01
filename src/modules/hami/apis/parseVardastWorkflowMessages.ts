@@ -92,8 +92,10 @@ export const parseVardastWorkflowMessages = (
         return { content: item };
       }
 
-      if (item && typeof item === 'object' && 'content' in item && typeof item.content === 'string') {
+      if (item && typeof item === 'object') {
         const record = item as Record<string, unknown>;
+        if (typeof record.content !== 'string') return null;
+
         return {
           ...(item as VardastWorkflowMessageItem),
           event: parseVardastEvents(record.event),
