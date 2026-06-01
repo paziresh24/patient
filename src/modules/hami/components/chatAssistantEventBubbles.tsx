@@ -1,10 +1,14 @@
 import classNames from '@/common/utils/classNames';
 import { VardastWorkflowEvent, VardastWorkflowEventStatus } from '@/modules/hami/apis/parseVardastWorkflowMessages';
+import { MouseEvent, PointerEvent } from 'react';
 
 interface ChatAssistantEventBubblesProps {
   events: VardastWorkflowEvent[];
   hidden?: boolean;
-  onBubbleClick?: () => void;
+  onBubbleClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+  onPointerDown?: (event: PointerEvent<HTMLButtonElement>) => void;
+  onPointerUp?: (event: PointerEvent<HTMLButtonElement>) => void;
+  onPointerCancel?: (event: PointerEvent<HTMLButtonElement>) => void;
 }
 
 const isLoadingStatus = (status: VardastWorkflowEventStatus) => status.toLowerCase() === 'loading';
@@ -22,33 +26,37 @@ const getMostRelevantEvent = (events: VardastWorkflowEvent[]): VardastWorkflowEv
   events.find(e => e.status.toLowerCase() === 'error') ??
   events[events.length - 1];
 
-export const ChatAssistantEventBubbles = ({ events, hidden, onBubbleClick }: ChatAssistantEventBubblesProps) => {
+export const ChatAssistantEventBubbles = ({
+  events,
+  hidden,
+  onBubbleClick,
+  onPointerDown,
+  onPointerUp,
+  onPointerCancel,
+}: ChatAssistantEventBubblesProps) => {
   if (events.length === 0) return null;
 
   const activeEvent = getMostRelevantEvent(events);
   const otherCount = events.length - 1;
   const isLoading = isLoadingStatus(activeEvent.status);
-  const status = activeEvent.status.toLowerCase();
-  const variant =
-    isLoading ? 'live' :
-    status === 'success' || status === 'done' ? 'success' :
-    status === 'error' ? 'error' :
-    'neutral';
 
   return (
-    /* outer: vertical centering + fade transition — right-[34px] keeps trigger tab visible */
     <div
       className={classNames(
-        'pointer-events-none absolute inset-y-0 right-[34px] z-[41] flex items-center transition-opacity duration-300',
+        'pointer-events-none absolute inset-y-0 right-[34px] z-[50] flex items-center transition-opacity duration-300',
         hidden ? 'opacity-0' : 'opacity-100',
       )}
     >
-      {/* middle: slide-in from right */}
       <div className={classNames('vardast-event-slide', hidden && '[animation-play-state:paused]')}>
-        {/* inner button: float up-down */}
         <button
           type="button"
-          onClick={onBubbleClick}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerCancel}
+          onClick={event => {
+            event.stopPropagation();
+            onBubbleClick?.(event);
+          }}
           className={classNames(
             'vardast-event-msg pointer-events-auto w-[min(168px,calc(100vw-52px))] text-right active:scale-[0.97]',
             isLoading && 'vardast-event-msg--live',
@@ -57,8 +65,10 @@ export const ChatAssistantEventBubbles = ({ events, hidden, onBubbleClick }: Cha
           <div className="vardast-event-msg-body relative px-3 py-2.5">
             {isLoading ? (
               <div className="flex items-end gap-1.5">
-                <p className="min-w-0 flex-1 text-xs font-medium leading-[1.5] text-slate-700">{activeEvent.text}</p>
                 <LiveDots />
+                <p className="min-w-0 flex-1 text-right text-xs font-medium leading-[1.5] text-slate-700">
+                  {activeEvent.text}
+                </p>
               </div>
             ) : (
               <p className="text-xs font-medium leading-[1.5] text-slate-700">{activeEvent.text}</p>
@@ -68,7 +78,6 @@ export const ChatAssistantEventBubbles = ({ events, hidden, onBubbleClick }: Cha
               <p className="mt-0.5 text-[10px] leading-[1.4] text-slate-400">+{otherCount} رویداد دیگر</p>
             )}
           </div>
-
         </button>
       </div>
     </div>

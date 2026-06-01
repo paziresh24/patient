@@ -1,18 +1,23 @@
 import classNames from '@/common/utils/classNames';
 import { getVardastWorkflowEvents } from '@/modules/hami/apis/parseVardastWorkflowMessages';
 import { ChatAssistantEventBubbles } from '@/modules/hami/components/chatAssistantEventBubbles';
-import { ChatAssistantTrigger } from '@/modules/hami/components/chatAssistantTrigger';
+import { ChatAssistantTriggerVisual } from '@/modules/hami/components/chatAssistantTrigger';
 import { VARDAST_NAME } from '@/modules/hami/components/chatAssistantTypography';
 import { VardastWorkflowProvider, useVardastWorkflow } from '@/modules/hami/context/vardastWorkflowContext';
+import { useVardastTriggerInteraction } from '@/modules/hami/hooks/useVardastTriggerInteraction';
 import { trackVardastDrawerOpen, VardastDrawerOpenSource } from '@/modules/hami/utils/trackVardastDrawerOpen';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { CSSProperties, ReactNode, TouchEvent, useEffect, useRef, useState } from 'react';
+import { CSSProperties, ReactNode, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 const DRAWER_SIZE_PERCENT = 80;
 const DRAWER_FIXED_WIDTH_PX = 380;
 const SNAP_THRESHOLD = 0.35;
 const DRAG_CLICK_THRESHOLD = 6;
 const OPEN_EDGE_WIDTH = 48;
+const TRIGGER_LANE_WIDTH = 48;
+const EDGE_INSET_TOP = 60;
+const EDGE_INSET_BOTTOM = 200;
+const EDGE_LANE_CLASS = 'absolute top-[60px] bottom-[200px]';
 const DRAG_FAILSAFE_MS = 2500;
 const DRAWER_TRANSITION = 'transform 320ms cubic-bezier(0.32, 0.72, 0, 1)';
 
@@ -37,6 +42,7 @@ interface DragState {
   source: DragSource;
   lockedHorizontal: boolean;
   pointerId: number;
+  visualActive: boolean;
 }
 
 interface ChatAssistantDrawerViewProps extends ChatAssistantDrawerProps {
@@ -56,11 +62,11 @@ const ChatAssistantDrawerView = ({
   const workflowEvents = getVardastWorkflowEvents(messages);
   const [liveProgress, setLiveProgress] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const chatLayerRef = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const dragStateRef = useRef<DragState | null>(null);
   const dragProgressRef = useRef(0);
   const openSourceRef = useRef<VardastDrawerOpenSource | undefined>();
-  const suppressTriggerClickRef = useRef(false);
   const wasOpenRef = useRef(false);
   const userId = useUserInfoStore(state => state.info?.id);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -68,6 +74,8 @@ const ChatAssistantDrawerView = ({
   const setIsOpenRef = useRef(setIsOpen);
   const setLiveProgressRef = useRef(setLiveProgress);
 
+  const isOpenRef = useRef(isOpen);
+  isOpenRef.current = isOpen;
   setIsOpenRef.current = setIsOpen;
   setLiveProgressRef.current = setLiveProgress;
 
@@ -95,12 +103,12 @@ const ChatAssistantDrawerView = ({
         openSourceRef.current = source === 'trigger' || source === 'edge' ? source : 'swipe';
       }
       setIsOpenRef.current(willOpen);
-    } else if ((source === 'trigger' || source === 'edge') && !hasDragged) {
-      suppressTriggerClickRef.current = source === 'trigger';
-      openSourceRef.current = source;
+    } else if (source === 'trigger' && (!hasDragged || !lockedHorizontal)) {
+      openSourceRef.current = 'trigger';
       setIsOpenRef.current(true);
-    } else if (source === 'trigger' && hasDragged) {
-      suppressTriggerClickRef.current = true;
+    } else if (source === 'edge' && !hasDragged) {
+      openSourceRef.current = 'edge';
+      setIsOpenRef.current(true);
     } else if (source === 'peek' && !hasDragged) {
       setIsOpenRef.current(false);
     }
@@ -154,10 +162,15 @@ const ChatAssistantDrawerView = ({
     const deltaY = clientY - drag.startY;
 
     resolveAxis(deltaX, deltaY);
-    if (!dragStateRef.current?.lockedHorizontal) return;
+    if (!drag.lockedHorizontal) return;
+
+    if (!drag.visualActive) {
+      drag.visualActive = true;
+      setLiveProgressRef.current(drag.startProgress);
+    }
 
     if (Math.abs(deltaX) > DRAG_CLICK_THRESHOLD || Math.abs(deltaY) > DRAG_CLICK_THRESHOLD) {
-      dragStateRef.current.hasDragged = true;
+      drag.hasDragged = true;
     }
 
     preventDefault?.();
@@ -173,10 +186,19 @@ const ChatAssistantDrawerView = ({
     setLiveProgressRef.current(clampedProgress);
   };
 
-  const startDrag = (clientX: number, clientY: number, pointerId: number, startProgress: number, source: DragSource) => {
+  const startDrag = (
+    clientX: number,
+    clientY: number,
+    pointerId: number,
+    startProgress: number,
+    source: DragSource,
+    options?: { deferVisual?: boolean },
+  ) => {
     if (dragStateRef.current) return;
 
     dragProgressRef.current = startProgress;
+    const visualActive = !options?.deferVisual;
+
     dragStateRef.current = {
       startX: clientX,
       startY: clientY,
@@ -185,19 +207,66 @@ const ChatAssistantDrawerView = ({
       source,
       lockedHorizontal: source === 'drawer',
       pointerId,
+      visualActive,
     };
-    setLiveProgressRef.current(startProgress);
+
+    if (visualActive) {
+      setLiveProgressRef.current(startProgress);
+    }
   };
+
+  const openFromTrigger = useCallback(() => {
+    if (isOpenRef.current) return;
+    openSourceRef.current = 'trigger';
+    setIsOpenRef.current(true);
+  }, []);
+
+  const getDragSource = useCallback((): 'trigger' | undefined => {
+    return dragStateRef.current?.source === 'trigger' ? 'trigger' : undefined;
+  }, []);
+
+  const {
+    handleTriggerPointerDown,
+    handleTriggerPointerMove,
+    handleTriggerPointerUp,
+    handleTriggerPointerCancel,
+    handleTriggerClick,
+    handleBubblePointerDown,
+    handleBubblePointerUp,
+    handleBubbleClick,
+  } = useVardastTriggerInteraction({
+    containerRef,
+    chatLayerRef,
+    triggerLaneWidth: TRIGGER_LANE_WIDTH,
+    edgeInsetTop: EDGE_INSET_TOP,
+    edgeInsetBottom: EDGE_INSET_BOTTOM,
+    isActive,
+    isOpenRef,
+    onOpen: openFromTrigger,
+    startDrag,
+    updateDrag,
+    finishDrag,
+    getDragSource,
+  });
 
   const getDrawerWidthPx = () => {
     if (isDesktopRef.current) return DRAWER_FIXED_WIDTH_PX;
     return (containerRef.current?.offsetWidth ?? 0) * (DRAWER_SIZE_PERCENT / 100);
   };
 
-  const isNearRightEdge = (clientX: number) => {
+  const isInEdgeBand = (clientY: number) => {
     const container = containerRef.current;
     if (!container) return false;
-    return container.getBoundingClientRect().right - clientX <= OPEN_EDGE_WIDTH;
+    const rect = container.getBoundingClientRect();
+    return clientY >= rect.top + EDGE_INSET_TOP && clientY <= rect.bottom - EDGE_INSET_BOTTOM;
+  };
+
+  const isNearRightEdge = (clientX: number, clientY: number) => {
+    if (!isInEdgeBand(clientY)) return false;
+    const container = containerRef.current;
+    if (!container) return false;
+    const fromRight = container.getBoundingClientRect().right - clientX;
+    return fromRight <= OPEN_EDGE_WIDTH;
   };
 
   useEffect(() => {
@@ -311,15 +380,15 @@ const ChatAssistantDrawerView = ({
 
   const handleOpenSwipePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.button !== 0 || !isActive || isOpen || isDragging || event.pointerType === 'touch') return;
-    if (!isNearRightEdge(event.clientX)) return;
+    if (!isNearRightEdge(event.clientX, event.clientY)) return;
     startDrag(event.clientX, event.clientY, event.pointerId, 0, 'edge');
   };
 
   const handleOpenSwipeTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     if (!isActive || isOpen || isDragging) return;
     const touch = event.touches[0];
-    if (!touch || !isNearRightEdge(touch.clientX)) return;
-    startDrag(touch.clientX, touch.clientY, touch.identifier, 0, 'edge');
+    if (!touch || !isNearRightEdge(touch.clientX, touch.clientY)) return;
+    startDrag(touch.clientX, touch.clientY, touch.identifier, 0, 'edge', { deferVisual: true });
   };
 
   const handleDrawerPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -381,7 +450,8 @@ const ChatAssistantDrawerView = ({
   const showOverlay = isActive && progress > 0.001;
   const showOpenEdge = isActive && !isOpen;
   const showTrigger = isActive && !isOpen;
-  const hideTrigger = isDragging || progress > 0.02;
+  const hideTriggerVisual = progress > 0.02 || isDragging;
+  const showTriggerLane = showTrigger;
   const showPeek = isActive && progress > 0.05;
 
   return (
@@ -392,7 +462,9 @@ const ChatAssistantDrawerView = ({
         onPointerDown={handleOpenSwipePointerDown}
         onTouchStart={handleOpenSwipeTouchStart}
       >
-        {children}
+        <div ref={chatLayerRef} className="h-full w-full">
+          {children}
+        </div>
       </div>
 
       {showOverlay && (
@@ -435,58 +507,58 @@ const ChatAssistantDrawerView = ({
         </div>
       </div>
 
-      {showTrigger && workflowEvents.length > 0 && (
-        <ChatAssistantEventBubbles
-          events={workflowEvents}
-          hidden={hideTrigger}
-          onBubbleClick={() => {
-            openSourceRef.current = 'trigger';
-            setIsOpen(true);
-          }}
-        />
-      )}
-
       {showOpenEdge && (
         <div
           aria-hidden
-          className={classNames('absolute right-0 z-30 top-[60px] bottom-[200px]', {
+          className={classNames(EDGE_LANE_CLASS, 'right-0 z-30 touch-none', {
             'pointer-events-none': isDragging,
-            'touch-none': !isDragging,
           })}
           style={{ width: OPEN_EDGE_WIDTH }}
           onPointerDown={event => handleControlPointerDown(event, 0, 'edge')}
           onTouchStart={event => {
-            if (isDragging) return;
+            if (dragStateRef.current) return;
             const touch = event.touches[0];
-            if (touch) startDrag(touch.clientX, touch.clientY, touch.identifier, 0, 'edge');
+            if (touch) startDrag(touch.clientX, touch.clientY, touch.identifier, 0, 'edge', { deferVisual: true });
           }}
         />
       )}
 
-      {showTrigger && (
-        <ChatAssistantTrigger
-          hidden={hideTrigger}
-          onOpen={() => {
-            if (suppressTriggerClickRef.current) {
-              suppressTriggerClickRef.current = false;
-              return;
-            }
-            if (isDragging || isOpen) return;
-            openSourceRef.current = 'trigger';
-            setIsOpen(true);
-          }}
-          onPointerDown={event => {
-            if (event.pointerType === 'touch') return;
-            handleControlPointerDown(event, 0, 'trigger');
-          }}
-          onTouchStart={event => {
-            if (isDragging) return;
-            const touch = event.touches[0];
-            if (!touch) return;
-            event.stopPropagation();
-            startDrag(touch.clientX, touch.clientY, touch.identifier, 0, 'trigger');
-          }}
-        />
+      {showTriggerLane && (
+        <div className={classNames(EDGE_LANE_CLASS, 'right-0 z-[100]')} dir="ltr">
+          {workflowEvents.length > 0 && (
+            <ChatAssistantEventBubbles
+              events={workflowEvents}
+              hidden={hideTriggerVisual}
+              onPointerDown={handleBubblePointerDown}
+              onPointerUp={handleBubblePointerUp}
+              onPointerCancel={handleBubblePointerUp}
+              onBubbleClick={handleBubbleClick}
+            />
+          )}
+
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label={`باز کردن ${VARDAST_NAME}`}
+            className={classNames(
+              'absolute top-1/2 right-0 z-[42] flex -translate-y-1/2 touch-none cursor-pointer select-none items-center justify-end py-8 pl-5 pr-0 transition-opacity duration-300',
+              hideTriggerVisual ? 'pointer-events-none opacity-0' : 'opacity-100',
+            )}
+            onPointerDown={handleTriggerPointerDown}
+            onPointerMove={handleTriggerPointerMove}
+            onPointerUp={handleTriggerPointerUp}
+            onPointerCancel={handleTriggerPointerCancel}
+            onClick={handleTriggerClick}
+            onKeyDown={event => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openFromTrigger();
+              }
+            }}
+          >
+            <ChatAssistantTriggerVisual />
+          </div>
+        </div>
       )}
 
     </div>

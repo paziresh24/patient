@@ -248,7 +248,7 @@ body {
   }
 
   50% {
-    box-shadow: -6px 0 22px rgba(99, 102, 241, 0.18);
+    box-shadow: -6px 0 20px rgba(15, 23, 42, 0.12);
   }
 }
 
@@ -266,8 +266,9 @@ body {
   position: relative;
   z-index: 1;
   background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
   border-radius: 14px 14px 4px 14px;
-  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.14), 0 1px 4px rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.1), 0 1px 4px rgba(15, 23, 42, 0.08);
 }
 
 .vardast-event-msg--live .vardast-event-msg-body {
@@ -279,7 +280,7 @@ body {
   width: 4px;
   height: 4px;
   border-radius: 9999px;
-  background: rgb(59 91 255);
+  background: rgb(148 163 184);
   animation: vardast-event-dot-wave 1.1s ease-in-out infinite;
 }
 
