@@ -179,6 +179,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     enabled: false,
     centerId: center?.id,
     serviceId: service?.id,
+    server_id: center?.server_id || '',
     userCenterId: center?.user_center_id,
   });
   const searchData = useSearch(
