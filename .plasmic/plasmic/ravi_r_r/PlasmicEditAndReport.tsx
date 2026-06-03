@@ -150,7 +150,7 @@ const $$ = {
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -207,10 +207,10 @@ function PlasmicEditAndReport__RenderFunc(props: {
                 if (typeof window === "undefined") return false;
                 return window.localStorage.getItem("likedComments")
                   ? JSON.parse(localStorage.getItem("likedComments")).some(
-                      item =>
-                        item.id === $props.feedbackId &&
-                        item.user_id === $ctx.auth.info.id
-                    )
+                    item =>
+                      item.id === $props.feedbackId &&
+                      item.user_id === $ctx.auth.info.id
+                  )
                   : false;
               })();
             } catch (e) {
@@ -410,29 +410,29 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["loading"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["editLoadingButton"]
-                                },
-                                operation: 0,
-                                value: true
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["editLoadingButton"]
+                              },
+                              operation: 0,
+                              value: true
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["loading"] != null &&
@@ -445,28 +445,28 @@ function PlasmicEditAndReport__RenderFunc(props: {
                         $steps["request"] =
                           $state.edditTextBox.value.length >= 10
                             ? (() => {
-                                const actionArgs = {
-                                  customFunction: async () => {
-                                    return fetch(
-                                      "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
-                                        $props.feedbackId,
-                                      {
-                                        headers: {
-                                          "Content-Type": "application/json"
-                                        },
-                                        method: "PATCH",
-                                        body: JSON.stringify({
-                                          description: $state.edditTextBox.value
-                                        }),
-                                        credentials: "include"
-                                      }
-                                    );
-                                  }
-                                };
-                                return (({ customFunction }) => {
-                                  return customFunction();
-                                })?.apply(null, [actionArgs]);
-                              })()
+                              const actionArgs = {
+                                customFunction: async () => {
+                                  return fetch(
+                                    "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
+                                    $props.feedbackId,
+                                    {
+                                      headers: {
+                                        "Content-Type": "application/json"
+                                      },
+                                      method: "PATCH",
+                                      body: JSON.stringify({
+                                        description: $state.edditTextBox.value
+                                      }),
+                                      credentials: "include"
+                                    }
+                                  );
+                                }
+                              };
+                              return (({ customFunction }) => {
+                                return customFunction();
+                              })?.apply(null, [actionArgs]);
+                            })()
                             : undefined;
                         if (
                           $steps["request"] != null &&
@@ -478,29 +478,29 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["offLoading"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["editLoadingButton"]
-                                },
-                                operation: 0,
-                                value: false
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["editLoadingButton"]
+                              },
+                              operation: 0,
+                              value: false
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["offLoading"] != null &&
@@ -512,18 +512,18 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["toast"] = true
                           ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  undefined,
-                                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                                  "top-right",
-                                  4999
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.showToast"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
+                            const actionArgs = {
+                              args: [
+                                undefined,
+                                "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                                "top-right",
+                                4999
+                              ]
+                            };
+                            return $globalActions[
+                              "Fragment.showToast"
+                            ]?.apply(null, [...actionArgs.args]);
+                          })()
                           : undefined;
                         if (
                           $steps["toast"] != null &&
@@ -535,32 +535,32 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["close"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["dialog3", "open"]
-                                },
-                                operation: 4
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["dialog3", "open"]
+                              },
+                              operation: 4
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                const oldValue = $stateGet(
-                                  objRoot,
-                                  variablePath
-                                );
-                                $stateSet(objRoot, variablePath, !oldValue);
-                                return !oldValue;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              const oldValue = $stateGet(
+                                objRoot,
+                                variablePath
+                              );
+                              $stateSet(objRoot, variablePath, !oldValue);
+                              return !oldValue;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["close"] != null &&
@@ -572,25 +572,25 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["splunk"] = true
                           ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return $$.splunkEvent({
-                                    group: "feedback",
-                                    data: {
-                                      doctor_id: $props.doctorUserId,
-                                      comment_id: $props.feedbackId,
-                                      edit_text: $state.edditTextBox.value
-                                    },
-                                    type: "edit_comment",
-                                    token:
-                                      "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                                  });
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return $$.splunkEvent({
+                                  group: "feedback",
+                                  data: {
+                                    doctor_id: $props.doctorUserId,
+                                    comment_id: $props.feedbackId,
+                                    edit_text: $state.edditTextBox.value
+                                  },
+                                  type: "edit_comment",
+                                  token:
+                                    "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                });
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["splunk"] != null &&
@@ -711,29 +711,29 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["loading"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["deleteLoadingButton"]
-                                },
-                                operation: 0,
-                                value: true
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["deleteLoadingButton"]
+                              },
+                              operation: 0,
+                              value: true
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["loading"] != null &&
@@ -745,27 +745,24 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["request"] = true
                           ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return fetch(
-                                    "https://apigw.paziresh24.com/ravi/v1/feedbacks/delete/",
-                                    {
-                                      method: "DELETE",
-                                      credentials: "include",
-                                      headers: {
-                                        "Content-Type": "application/json"
-                                      },
-                                      body: JSON.stringify({
-                                        Id: $props.feedbackId
-                                      })
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return fetch(
+                                  `https://apigw.paziresh24.com/ravi/v1/feedbacks/${$props.feedbackId}`,
+                                  {
+                                    method: "DELETE",
+                                    credentials: "include",
+                                    headers: {
+                                      "Content-Type": "application/json"
                                     }
-                                  );
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
+                                  }
+                                );
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["request"] != null &&
@@ -777,39 +774,39 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["updateDeleteLoadingButton"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["deleteLoadingButton"]
-                                },
-                                operation: 4
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["deleteLoadingButton"]
+                              },
+                              operation: 4
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                const oldValue = $stateGet(
-                                  objRoot,
-                                  variablePath
-                                );
-                                $stateSet(objRoot, variablePath, !oldValue);
-                                return !oldValue;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              const oldValue = $stateGet(
+                                objRoot,
+                                variablePath
+                              );
+                              $stateSet(objRoot, variablePath, !oldValue);
+                              return !oldValue;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["updateDeleteLoadingButton"] != null &&
                           typeof $steps["updateDeleteLoadingButton"] ===
-                            "object" &&
+                          "object" &&
                           typeof $steps["updateDeleteLoadingButton"].then ===
-                            "function"
+                          "function"
                         ) {
                           $steps["updateDeleteLoadingButton"] = await $steps[
                             "updateDeleteLoadingButton"
@@ -818,18 +815,18 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["toast"] = true
                           ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  undefined,
-                                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f.",
-                                  "top-right",
-                                  5000
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.showToast"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
+                            const actionArgs = {
+                              args: [
+                                undefined,
+                                "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f.",
+                                "top-right",
+                                5000
+                              ]
+                            };
+                            return $globalActions[
+                              "Fragment.showToast"
+                            ]?.apply(null, [...actionArgs.args]);
+                          })()
                           : undefined;
                         if (
                           $steps["toast"] != null &&
@@ -841,32 +838,32 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["close"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["dialog4", "open"]
-                                },
-                                operation: 4
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["dialog4", "open"]
+                              },
+                              operation: 4
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                const oldValue = $stateGet(
-                                  objRoot,
-                                  variablePath
-                                );
-                                $stateSet(objRoot, variablePath, !oldValue);
-                                return !oldValue;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              const oldValue = $stateGet(
+                                objRoot,
+                                variablePath
+                              );
+                              $stateSet(objRoot, variablePath, !oldValue);
+                              return !oldValue;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["close"] != null &&
@@ -878,24 +875,24 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["splunk"] = true
                           ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return $$.splunkEvent({
-                                    group: "feedback",
-                                    data: {
-                                      doctor_id: $props.doctorUserId,
-                                      comment_id: $props.feedbackId
-                                    },
-                                    type: "delete_comment",
-                                    token:
-                                      "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
-                                  });
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return $$.splunkEvent({
+                                  group: "feedback",
+                                  data: {
+                                    doctor_id: $props.doctorUserId,
+                                    comment_id: $props.feedbackId
+                                  },
+                                  type: "delete_comment",
+                                  token:
+                                    "f4fd4b50-fe90-48f3-a1ab-5a5070140318"
+                                });
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["splunk"] != null &&
@@ -931,32 +928,32 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                         $steps["close"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["dialog4", "open"]
-                                },
-                                operation: 4
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["dialog4", "open"]
+                              },
+                              operation: 4
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                const oldValue = $stateGet(
-                                  objRoot,
-                                  variablePath
-                                );
-                                $stateSet(objRoot, variablePath, !oldValue);
-                                return !oldValue;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              const oldValue = $stateGet(
+                                objRoot,
+                                variablePath
+                              );
+                              $stateSet(objRoot, variablePath, !oldValue);
+                              return !oldValue;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["close"] != null &&
@@ -1092,11 +1089,11 @@ function PlasmicEditAndReport__RenderFunc(props: {
                       $steps["login"] =
                         $ctx.auth.isLogin == false
                           ? (() => {
-                              const actionArgs = { args: [] };
-                              return $globalActions[
-                                "AuthGlobalContext.login"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
+                            const actionArgs = { args: [] };
+                            return $globalActions[
+                              "AuthGlobalContext.login"
+                            ]?.apply(null, [...actionArgs.args]);
+                          })()
                           : undefined;
                       if (
                         $steps["login"] != null &&
@@ -1108,31 +1105,31 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                       $steps["loading"] =
                         $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
+                          $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["reportLoadinButton"]
-                                },
-                                operation: 0,
-                                value: true
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["reportLoadinButton"]
+                              },
+                              operation: 0,
+                              value: true
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                       if (
                         $steps["loading"] != null &&
@@ -1145,18 +1142,18 @@ function PlasmicEditAndReport__RenderFunc(props: {
                       $steps["if10Caracter"] =
                         $ctx.auth.isLogin && $state.reportText2.value <= 10
                           ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  "error",
-                                  "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
-                                  undefined,
-                                  5000
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.showToast"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
+                            const actionArgs = {
+                              args: [
+                                "error",
+                                "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
+                                undefined,
+                                5000
+                              ]
+                            };
+                            return $globalActions[
+                              "Fragment.showToast"
+                            ]?.apply(null, [...actionArgs.args]);
+                          })()
                           : undefined;
                       if (
                         $steps["if10Caracter"] != null &&
@@ -1168,31 +1165,31 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                       $steps["request"] =
                         $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
+                          $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return fetch(
-                                    "https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id= " +
-                                      $props.feedbackId,
-                                    {
-                                      headers: {
-                                        "content-type": "application/json"
-                                      },
-                                      body: JSON.stringify({
-                                        feedback_id: $props.feedbackId,
-                                        report_text: $state.reportText2.value
-                                      }),
-                                      method: "POST",
-                                      credentials: "include"
-                                    }
-                                  );
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return fetch(
+                                  "https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id= " +
+                                  $props.feedbackId,
+                                  {
+                                    headers: {
+                                      "content-type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                      feedback_id: $props.feedbackId,
+                                      report_text: $state.reportText2.value
+                                    }),
+                                    method: "POST",
+                                    credentials: "include"
+                                  }
+                                );
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                       if (
                         $steps["request"] != null &&
@@ -1204,33 +1201,33 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                       $steps["n8N"] =
                         $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
+                          $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return fetch(
-                                    "https://apigw.paziresh24.com/ravi/v1/report-webhook?id= " +
-                                      $props.feedbackId,
-                                    {
-                                      headers: {
-                                        "content-type": "application/json"
-                                      },
-                                      body: JSON.stringify({
-                                        feedback_id: $props.feedbackId,
-                                        report_text: $state.reportText2.value,
-                                        comment_text: $props.commentText,
-                                        doctor_slug: $props.doctorSlug
-                                      }),
-                                      method: "POST",
-                                      credentials: "include"
-                                    }
-                                  );
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return fetch(
+                                  "https://apigw.paziresh24.com/ravi/v1/report-webhook?id= " +
+                                  $props.feedbackId,
+                                  {
+                                    headers: {
+                                      "content-type": "application/json"
+                                    },
+                                    body: JSON.stringify({
+                                      feedback_id: $props.feedbackId,
+                                      report_text: $state.reportText2.value,
+                                      comment_text: $props.commentText,
+                                      doctor_slug: $props.doctorSlug
+                                    }),
+                                    method: "POST",
+                                    credentials: "include"
+                                  }
+                                );
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                       if (
                         $steps["n8N"] != null &&
@@ -1242,31 +1239,31 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                       $steps["closeDialog"] =
                         $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
+                          $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["dialog5", "open"]
-                                },
-                                operation: 0,
-                                value: false
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["dialog5", "open"]
+                              },
+                              operation: 0,
+                              value: false
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                       if (
                         $steps["closeDialog"] != null &&
@@ -1278,31 +1275,31 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                       $steps["offLoading"] =
                         $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
+                          $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["reportLoadinButton"]
-                                },
-                                operation: 0,
-                                value: false
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["reportLoadinButton"]
+                              },
+                              operation: 0,
+                              value: false
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                       if (
                         $steps["offLoading"] != null &&
@@ -1314,20 +1311,20 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                       $steps["toast"] =
                         $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
+                          $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                args: [
-                                  undefined,
-                                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                                  undefined,
-                                  4989
-                                ]
-                              };
-                              return $globalActions[
-                                "Fragment.showToast"
-                              ]?.apply(null, [...actionArgs.args]);
-                            })()
+                            const actionArgs = {
+                              args: [
+                                undefined,
+                                "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                                undefined,
+                                4989
+                              ]
+                            };
+                            return $globalActions[
+                              "Fragment.showToast"
+                            ]?.apply(null, [...actionArgs.args]);
+                          })()
                           : undefined;
                       if (
                         $steps["toast"] != null &&
@@ -1339,29 +1336,29 @@ function PlasmicEditAndReport__RenderFunc(props: {
 
                       $steps["splunk"] =
                         $state.reportText2.value.length >= 10 &&
-                        $ctx.auth.isLogin
+                          $ctx.auth.isLogin
                           ? (() => {
-                              const actionArgs = {
-                                customFunction: async () => {
-                                  return $$.splunkEvent({
-                                    group: "feedback",
-                                    data: {
-                                      doctor_id: $props.doctorUserId,
-                                      comment_id: $props.feedbackId,
-                                      report_text: $state.reportText2.value
-                                    },
-                                    type: "report_comment",
-                                    token:
-                                      "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
-                                    api_host:
-                                      "https://splunk-ravi-hec.paziresh24.com"
-                                  });
-                                }
-                              };
-                              return (({ customFunction }) => {
-                                return customFunction();
-                              })?.apply(null, [actionArgs]);
-                            })()
+                            const actionArgs = {
+                              customFunction: async () => {
+                                return $$.splunkEvent({
+                                  group: "feedback",
+                                  data: {
+                                    doctor_id: $props.doctorUserId,
+                                    comment_id: $props.feedbackId,
+                                    report_text: $state.reportText2.value
+                                  },
+                                  type: "report_comment",
+                                  token:
+                                    "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d",
+                                  api_host:
+                                    "https://splunk-ravi-hec.paziresh24.com"
+                                });
+                              }
+                            };
+                            return (({ customFunction }) => {
+                              return customFunction();
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                       if (
                         $steps["splunk"] != null &&
@@ -1501,18 +1498,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicEditAndReport__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicEditAndReport__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicEditAndReport__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicEditAndReport__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };
