@@ -179,6 +179,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     enabled: false,
     centerId: center?.id,
     serviceId: service?.id,
+    server_id: center?.server_id || '',
     userCenterId: center?.user_center_id,
   });
   const searchData = useSearch(
@@ -632,6 +633,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             loading: isLoading || !center || !service || !profile,
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
+            server_id: center?.server_id ?? '',
             userCenterId: service?.user_center_id,
             showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {

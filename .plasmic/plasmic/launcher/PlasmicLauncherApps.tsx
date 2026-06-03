@@ -127,7 +127,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -330,7 +330,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
         ref={ref => {
           $refs["apiRequest2"] = ref;
         }}
-        url={"https://apigw.paziresh24.com/v1/hamdast/apps"}
+        url={"https://hamdast.paziresh24.com/api/v1/list"}
       >
         <Reveal
           data-plasmic-name={"reveal"}
@@ -434,35 +434,35 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                     $steps["updateSelectedCategory"] = true
                       ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["selectedCategory"]
-                            },
-                            operation: 0,
-                            value: currentItem.key
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["selectedCategory"]
+                          },
+                          operation: 0,
+                          value: currentItem.key
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                     if (
                       $steps["updateSelectedCategory"] != null &&
                       typeof $steps["updateSelectedCategory"] === "object" &&
                       typeof $steps["updateSelectedCategory"].then ===
-                        "function"
+                      "function"
                     ) {
                       $steps["updateSelectedCategory"] = await $steps[
                         "updateSelectedCategory"
@@ -566,116 +566,116 @@ function PlasmicLauncherApps__RenderFunc(props: {
                     ) : null}
                     {(_par =>
                       !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                      (() => {
-                        try {
-                          return $state.apiRequest2.data?.filter(
-                            item => item.category?.key == currentItem.key
-                          );
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return [];
+                        (() => {
+                          try {
+                            return $state.apiRequest2.data?.filter(
+                              item => item.category?.key == currentItem.key
+                            );
+                          } catch (e) {
+                            if (
+                              e instanceof TypeError ||
+                              e?.plasmicType === "PlasmicUndefinedDataError"
+                            ) {
+                              return [];
+                            }
+                            throw e;
                           }
-                          throw e;
-                        }
-                      })()
-                    ).map((__plasmic_item_1, __plasmic_idx_1) => {
-                      const currentItem = __plasmic_item_1;
-                      const currentIndex = __plasmic_idx_1;
-                      return (
-                        <LauncherComponentsApp
-                          _new={(() => {
-                            try {
-                              return currentItem.badges?.includes("NEW");
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return [];
+                        })()
+                      ).map((__plasmic_item_1, __plasmic_idx_1) => {
+                        const currentItem = __plasmic_item_1;
+                        const currentIndex = __plasmic_idx_1;
+                        return (
+                          <LauncherComponentsApp
+                            _new={(() => {
+                              try {
+                                return currentItem.badges?.includes("NEW");
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return [];
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          appkey={(() => {
-                            try {
-                              return currentItem.app_key;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                            })()}
+                            appkey={(() => {
+                              try {
+                                return currentItem.app_key;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          avatar={(() => {
-                            try {
-                              return currentItem.icon;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                            })()}
+                            avatar={(() => {
+                              try {
+                                return currentItem.icon;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          className={classNames(
-                            "__wab_instance",
-                            sty.launcherComponentsApp__v6ChM
-                          )}
-                          description={(() => {
-                            try {
-                              return currentItem.subtitle;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                            })()}
+                            className={classNames(
+                              "__wab_instance",
+                              sty.launcherComponentsApp__v6ChM
+                            )}
+                            description={(() => {
+                              try {
+                                return currentItem.subtitle;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          key={currentIndex}
-                          link={(() => {
-                            try {
-                              return !!$props?.openAppFrame
-                                ? undefined
-                                : currentItem.link;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return "";
+                            })()}
+                            key={currentIndex}
+                            link={(() => {
+                              try {
+                                return !!$props?.openAppFrame
+                                  ? undefined
+                                  : currentItem.link;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return "";
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          name={(() => {
-                            try {
-                              return currentItem.title;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return undefined;
+                            })()}
+                            name={(() => {
+                              try {
+                                return currentItem.title;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          onEvent={async () => {
-                            const $steps = {};
+                            })()}
+                            onEvent={async () => {
+                              const $steps = {};
 
-                            $steps["sendLog"] = true
-                              ? (() => {
+                              $steps["sendLog"] = true
+                                ? (() => {
                                   const actionArgs = {
                                     args: [
                                       (() => {
@@ -697,7 +697,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                           if (
                                             e instanceof TypeError ||
                                             e?.plasmicType ===
-                                              "PlasmicUndefinedDataError"
+                                            "PlasmicUndefinedDataError"
                                           ) {
                                             return undefined;
                                           }
@@ -710,17 +710,17 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                     "Splunk.sendLog"
                                   ]?.apply(null, [...actionArgs.args]);
                                 })()
-                              : undefined;
-                            if (
-                              $steps["sendLog"] != null &&
-                              typeof $steps["sendLog"] === "object" &&
-                              typeof $steps["sendLog"].then === "function"
-                            ) {
-                              $steps["sendLog"] = await $steps["sendLog"];
-                            }
+                                : undefined;
+                              if (
+                                $steps["sendLog"] != null &&
+                                typeof $steps["sendLog"] === "object" &&
+                                typeof $steps["sendLog"].then === "function"
+                              ) {
+                                $steps["sendLog"] = await $steps["sendLog"];
+                              }
 
-                            $steps["runOnEvent"] = true
-                              ? (() => {
+                              $steps["runOnEvent"] = true
+                                ? (() => {
                                   const actionArgs = {
                                     eventRef: $props["onEvent"]
                                   };
@@ -728,17 +728,17 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                     return eventRef?.(...(args ?? []));
                                   })?.apply(null, [actionArgs]);
                                 })()
-                              : undefined;
-                            if (
-                              $steps["runOnEvent"] != null &&
-                              typeof $steps["runOnEvent"] === "object" &&
-                              typeof $steps["runOnEvent"].then === "function"
-                            ) {
-                              $steps["runOnEvent"] = await $steps["runOnEvent"];
-                            }
+                                : undefined;
+                              if (
+                                $steps["runOnEvent"] != null &&
+                                typeof $steps["runOnEvent"] === "object" &&
+                                typeof $steps["runOnEvent"].then === "function"
+                              ) {
+                                $steps["runOnEvent"] = await $steps["runOnEvent"];
+                              }
 
-                            $steps["runOpenAppFrame"] = !!$props?.openAppFrame
-                              ? (() => {
+                              $steps["runOpenAppFrame"] = !!$props?.openAppFrame
+                                ? (() => {
                                   const actionArgs = {
                                     eventRef: $props["openAppFrame"],
                                     args: [
@@ -749,7 +749,7 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                           if (
                                             e instanceof TypeError ||
                                             e?.plasmicType ===
-                                              "PlasmicUndefinedDataError"
+                                            "PlasmicUndefinedDataError"
                                           ) {
                                             return undefined;
                                           }
@@ -762,63 +762,63 @@ function PlasmicLauncherApps__RenderFunc(props: {
                                     return eventRef?.(...(args ?? []));
                                   })?.apply(null, [actionArgs]);
                                 })()
-                              : undefined;
-                            if (
-                              $steps["runOpenAppFrame"] != null &&
-                              typeof $steps["runOpenAppFrame"] === "object" &&
-                              typeof $steps["runOpenAppFrame"].then ===
+                                : undefined;
+                              if (
+                                $steps["runOpenAppFrame"] != null &&
+                                typeof $steps["runOpenAppFrame"] === "object" &&
+                                typeof $steps["runOpenAppFrame"].then ===
                                 "function"
-                            ) {
-                              $steps["runOpenAppFrame"] = await $steps[
-                                "runOpenAppFrame"
-                              ];
-                            }
-                          }}
-                          pagekey={"launcher"}
-                          showUsers={(() => {
-                            try {
-                              return currentItem.functions?.includes?.(
-                                "widget"
-                              );
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
                               ) {
-                                return false;
+                                $steps["runOpenAppFrame"] = await $steps[
+                                  "runOpenAppFrame"
+                                ];
                               }
-                              throw e;
-                            }
-                          })()}
-                          soon={(() => {
-                            try {
-                              return currentItem.badges?.includes("SOON");
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return [];
+                            }}
+                            pagekey={"launcher"}
+                            showUsers={(() => {
+                              try {
+                                return currentItem.functions?.includes?.(
+                                  "widget"
+                                );
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return false;
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                          widgetFrame={(() => {
-                            try {
-                              return $props.widgetFrames;
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return false;
+                            })()}
+                            soon={(() => {
+                              try {
+                                return currentItem.badges?.includes("SOON");
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return [];
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()}
-                        />
-                      );
-                    })}
+                            })()}
+                            widgetFrame={(() => {
+                              try {
+                                return $props.widgetFrames;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return false;
+                                }
+                                throw e;
+                              }
+                            })()}
+                          />
+                        );
+                      })}
                   </div>
                 ) : null}
                 {(() => {
@@ -899,38 +899,38 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["sendLog"] = true
                     ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
-                                return {
-                                  evant_group: "launcher_statistics",
-                                  event_type: "apps",
-                                  user_id: $ctx.auth.info?.id,
-                                  is_doctor: $ctx.auth.info?.is_doctor,
-                                  meta_data: {
-                                    name: "تشخیص کمبود آهن",
-                                    key: "liom/self-test",
-                                    link: "/_/liom/self-test/?app=paziresh24&type=ida&origin=paziresh24&gw=paziresh24"
-                                  },
-                                  source: "apps"
-                                };
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "تشخیص کمبود آهن",
+                                  key: "liom/self-test",
+                                  link: "/_/liom/self-test/?app=paziresh24&type=ida&origin=paziresh24&gw=paziresh24"
+                                },
+                                source: "apps"
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
                               }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Splunk.sendLog"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
                     : undefined;
                   if (
                     $steps["sendLog"] != null &&
@@ -942,11 +942,11 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["runOnEvent"] = true
                     ? (() => {
-                        const actionArgs = { eventRef: $props["onEvent"] };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
-                        })?.apply(null, [actionArgs]);
-                      })()
+                      const actionArgs = { eventRef: $props["onEvent"] };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["runOnEvent"] != null &&
@@ -997,38 +997,38 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["sendLog"] = true
                     ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
-                                return {
-                                  evant_group: "launcher_statistics",
-                                  event_type: "apps",
-                                  user_id: $ctx.auth.info?.id,
-                                  is_doctor: $ctx.auth.info?.is_doctor,
-                                  meta_data: {
-                                    name: "تفسیر",
-                                    key: "lab_result/launcher",
-                                    link: "/_/lab_result/launcher/"
-                                  },
-                                  source: "apps"
-                                };
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "تفسیر",
+                                  key: "lab_result/launcher",
+                                  link: "/_/lab_result/launcher/"
+                                },
+                                source: "apps"
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
                               }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Splunk.sendLog"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
                     : undefined;
                   if (
                     $steps["sendLog"] != null &&
@@ -1040,11 +1040,11 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["runOnEvent"] = true
                     ? (() => {
-                        const actionArgs = { eventRef: $props["onEvent"] };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
-                        })?.apply(null, [actionArgs]);
-                      })()
+                      const actionArgs = { eventRef: $props["onEvent"] };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["runOnEvent"] != null &&
@@ -1106,38 +1106,38 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["sendLog"] = true
                     ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
-                                return {
-                                  evant_group: "launcher_statistics",
-                                  event_type: "apps",
-                                  user_id: $ctx.auth.info?.id,
-                                  is_doctor: $ctx.auth.info?.is_doctor,
-                                  meta_data: {
-                                    name: "تشخیص احتمال ابتلا به فشار خون",
-                                    key: "blood_pressure/launcher",
-                                    link: "/_/blood_pressure/launcher/"
-                                  },
-                                  source: "apps"
-                                };
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "تشخیص احتمال ابتلا به فشار خون",
+                                  key: "blood_pressure/launcher",
+                                  link: "/_/blood_pressure/launcher/"
+                                },
+                                source: "apps"
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
                               }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Splunk.sendLog"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
                     : undefined;
                   if (
                     $steps["sendLog"] != null &&
@@ -1149,11 +1149,11 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["runOnEvent"] = true
                     ? (() => {
-                        const actionArgs = { eventRef: $props["onEvent"] };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
-                        })?.apply(null, [actionArgs]);
-                      })()
+                      const actionArgs = { eventRef: $props["onEvent"] };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["runOnEvent"] != null &&
@@ -1201,38 +1201,38 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["sendLog"] = true
                     ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
-                                return {
-                                  evant_group: "launcher_statistics",
-                                  event_type: "apps",
-                                  user_id: $ctx.auth.info?.id,
-                                  is_doctor: $ctx.auth.info?.is_doctor,
-                                  meta_data: {
-                                    name: "تشخیص احتمال ابتلا به دیابت",
-                                    key: "diabetes_risk/launcher",
-                                    link: "/_/diabetes_risk/launcher/"
-                                  },
-                                  source: "apps"
-                                };
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: "تشخیص احتمال ابتلا به دیابت",
+                                  key: "diabetes_risk/launcher",
+                                  link: "/_/diabetes_risk/launcher/"
+                                },
+                                source: "apps"
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
                               }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Splunk.sendLog"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
                     : undefined;
                   if (
                     $steps["sendLog"] != null &&
@@ -1244,11 +1244,11 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["runOnEvent"] = true
                     ? (() => {
-                        const actionArgs = { eventRef: $props["onEvent"] };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
-                        })?.apply(null, [actionArgs]);
-                      })()
+                      const actionArgs = { eventRef: $props["onEvent"] };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["runOnEvent"] != null &&
@@ -1396,18 +1396,18 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                       $steps["invokeGlobalAction"] = true
                         ? (() => {
-                            const actionArgs = {
-                              args: [
-                                undefined,
-                                "\u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627 \u062b\u0628\u062a \u0634\u062f\u060c \u0628\u0627\u062a\u0634\u06a9\u0631 \u0627\u0632 \u0634\u0645\u0627",
-                                "top-center"
-                              ]
-                            };
-                            return $globalActions["Fragment.showToast"]?.apply(
-                              null,
-                              [...actionArgs.args]
-                            );
-                          })()
+                          const actionArgs = {
+                            args: [
+                              undefined,
+                              "\u067e\u06cc\u0634\u0646\u0647\u0627\u062f \u0634\u0645\u0627 \u062b\u0628\u062a \u0634\u062f\u060c \u0628\u0627\u062a\u0634\u06a9\u0631 \u0627\u0632 \u0634\u0645\u0627",
+                              "top-center"
+                            ]
+                          };
+                          return $globalActions["Fragment.showToast"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
                         : undefined;
                       if (
                         $steps["invokeGlobalAction"] != null &&
@@ -1421,29 +1421,29 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                       $steps["updateModalOpen"] = true
                         ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["modal", "open"]
-                              },
-                              operation: 0,
-                              value: false
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["modal", "open"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
 
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps["updateModalOpen"] != null &&
@@ -1457,37 +1457,37 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                       $steps["invokeGlobalAction2"] = true
                         ? (() => {
-                            const actionArgs = {
-                              args: [
-                                "POST",
-                                "https://apigw.paziresh24.com/v1/hamdast/app-suggestion",
-                                undefined,
-                                (() => {
-                                  try {
-                                    return {
-                                      content: $state.textAreaInput.value,
-                                      workaround:
-                                        $state?.textAreaInput2?.value ?? "",
-                                      user_id: $ctx.auth.info?.id
-                                    };
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return undefined;
-                                    }
-                                    throw e;
+                          const actionArgs = {
+                            args: [
+                              "POST",
+                              "https://apigw.paziresh24.com/v1/hamdast/app-suggestion",
+                              undefined,
+                              (() => {
+                                try {
+                                  return {
+                                    content: $state.textAreaInput.value,
+                                    workaround:
+                                      $state?.textAreaInput2?.value ?? "",
+                                    user_id: $ctx.auth.info?.id
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                    "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
                                   }
-                                })()
-                              ]
-                            };
-                            return $globalActions["Fragment.apiRequest"]?.apply(
-                              null,
-                              [...actionArgs.args]
-                            );
-                          })()
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Fragment.apiRequest"]?.apply(
+                            null,
+                            [...actionArgs.args]
+                          );
+                        })()
                         : undefined;
                       if (
                         $steps["invokeGlobalAction2"] != null &&
@@ -1685,38 +1685,38 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["sendLog"] = true
                     ? (() => {
-                        const actionArgs = {
-                          args: [
-                            (() => {
-                              try {
-                                return {
-                                  evant_group: "launcher_statistics",
-                                  event_type: "apps",
-                                  user_id: $ctx.auth.info?.id,
-                                  is_doctor: $ctx.auth.info?.is_doctor,
-                                  meta_data: {
-                                    name: currentItem.name,
-                                    key: `${currentItem.key}/launcher`,
-                                    link: `/_/${currentItem.key}/launcher/`
-                                  },
-                                  source: "apps-development"
-                                };
-                              } catch (e) {
-                                if (
-                                  e instanceof TypeError ||
-                                  e?.plasmicType === "PlasmicUndefinedDataError"
-                                ) {
-                                  return undefined;
-                                }
-                                throw e;
+                      const actionArgs = {
+                        args: [
+                          (() => {
+                            try {
+                              return {
+                                evant_group: "launcher_statistics",
+                                event_type: "apps",
+                                user_id: $ctx.auth.info?.id,
+                                is_doctor: $ctx.auth.info?.is_doctor,
+                                meta_data: {
+                                  name: currentItem.name,
+                                  key: `${currentItem.key}/launcher`,
+                                  link: `/_/${currentItem.key}/launcher/`
+                                },
+                                source: "apps-development"
+                              };
+                            } catch (e) {
+                              if (
+                                e instanceof TypeError ||
+                                e?.plasmicType === "PlasmicUndefinedDataError"
+                              ) {
+                                return undefined;
                               }
-                            })()
-                          ]
-                        };
-                        return $globalActions["Splunk.sendLog"]?.apply(null, [
-                          ...actionArgs.args
-                        ]);
-                      })()
+                              throw e;
+                            }
+                          })()
+                        ]
+                      };
+                      return $globalActions["Splunk.sendLog"]?.apply(null, [
+                        ...actionArgs.args
+                      ]);
+                    })()
                     : undefined;
                   if (
                     $steps["sendLog"] != null &&
@@ -1728,11 +1728,11 @@ function PlasmicLauncherApps__RenderFunc(props: {
 
                   $steps["runOnEvent"] = true
                     ? (() => {
-                        const actionArgs = { eventRef: $props["onEvent"] };
-                        return (({ eventRef, args }) => {
-                          return eventRef?.(...(args ?? []));
-                        })?.apply(null, [actionArgs]);
-                      })()
+                      const actionArgs = { eventRef: $props["onEvent"] };
+                      return (({ eventRef, args }) => {
+                        return eventRef?.(...(args ?? []));
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["runOnEvent"] != null &&
@@ -1840,18 +1840,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherApps__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherApps__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicLauncherApps__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicLauncherApps__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

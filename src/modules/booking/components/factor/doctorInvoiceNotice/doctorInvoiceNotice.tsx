@@ -7,6 +7,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useQuery } from '@tanstack/react-query';
 import moment from 'jalali-moment';
@@ -30,7 +31,7 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
   const doctorName = `${profile?.data?.name} ${profile?.data?.family}`;
   const doctorUserId = (doctorSlugData as DoctorSlugValidationResponse | undefined)?.user_id;
   const doctorAvatar = doctorUserId
-    ? `https://pic.paziresh24.com/api/image/${doctorUserId}`
+    ? picUserImageUrl(doctorUserId)
     : publicRuntimeConfig.CDN_BASE_URL + profile?.data?.image;
 
   const convertTime = (time: number) => {

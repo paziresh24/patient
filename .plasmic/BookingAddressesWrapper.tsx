@@ -42,7 +42,16 @@ function BookingAddressesWrapper_(
   // By default, we are just piping all BookingAddressesWrapperProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicBookingAddressesWrapper root={{ ref }} {...props} />;
+  return (
+    <PlasmicBookingAddressesWrapper
+      root={{ ref }}
+      button={{
+        // Remove "گزارش اشتباه در اطلاعات مرکز" action in the header.
+        render: () => null,
+      } as any}
+      {...props}
+    />
+  );
 }
 
 const BookingAddressesWrapper = React.forwardRef(BookingAddressesWrapper_);

@@ -1,0 +1,116 @@
+export interface VardastWorkflowApp {
+  key: string;
+  icon: string;
+  name: string;
+}
+
+export interface VardastWorkflowMessageAction {
+  id: string;
+  label: string;
+  variant?: 'primary' | 'secondary';
+}
+
+export type VardastWorkflowEventStatus = 'loading' | 'success' | 'done' | 'error' | (string & {});
+
+export interface VardastWorkflowEvent {
+  text: string;
+  status: VardastWorkflowEventStatus;
+}
+
+export interface VardastWorkflowMessageItem {
+  content: string;
+  app?: VardastWorkflowApp;
+  pooling?: boolean;
+  event?: VardastWorkflowEvent[];
+  actions?: VardastWorkflowMessageAction[];
+}
+
+export interface StartHamiVardastWorkflowResponse {
+  message?: VardastWorkflowMessageItem[] | string;
+}
+
+export const parseVardastContent = (content: string) => {
+  const trimmed = content.trim();
+  if (!trimmed) return { title: '', body: '' };
+
+  const h2Match = trimmed.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i);
+  const title = h2Match?.[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
+  const body = trimmed.replace(/<h2[^>]*>[\s\S]*?<\/h2>/i, '').trim();
+
+  return { title, body };
+};
+
+const parseVardastEvents = (raw: unknown): VardastWorkflowEvent[] | undefined => {
+  if (!Array.isArray(raw)) return undefined;
+
+  const events = raw
+    .map(item => {
+      if (!item || typeof item !== 'object') return null;
+      const { text, status } = item as { text?: unknown; status?: unknown };
+      if (typeof text !== 'string' || !text.trim() || typeof status !== 'string' || !status.trim()) {
+        return null;
+      }
+      return { text: text.trim(), status: status.trim() as VardastWorkflowEventStatus };
+    })
+    .filter((item): item is VardastWorkflowEvent => item !== null);
+
+  return events.length > 0 ? events : undefined;
+};
+
+export const getVardastWorkflowEvents = (messages: VardastWorkflowMessageItem[]): VardastWorkflowEvent[] => {
+  const seen = new Set<string>();
+
+  return messages.flatMap(message => message.event ?? []).filter(event => {
+    const key = `${event.status}:${event.text}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
+export const parseVardastWorkflowMessages = (
+  message?: StartHamiVardastWorkflowResponse['message'],
+): VardastWorkflowMessageItem[] => {
+  if (!message) return [];
+
+  let items: unknown[] = [];
+
+  if (typeof message === 'string') {
+    try {
+      const parsed = JSON.parse(message);
+      items = Array.isArray(parsed) ? parsed : [{ content: message }];
+    } catch {
+      return [{ content: message.trim() }];
+    }
+  } else if (Array.isArray(message)) {
+    items = message;
+  }
+
+  return items
+    .map(item => {
+      if (typeof item === 'string') {
+        return { content: item };
+      }
+
+      if (item && typeof item === 'object') {
+        const record = item as Record<string, unknown>;
+        if (typeof record.content !== 'string') return null;
+
+        return {
+          ...(item as VardastWorkflowMessageItem),
+          event: parseVardastEvents(record.event),
+        };
+      }
+
+      return null;
+    })
+    .filter((item): item is VardastWorkflowMessageItem => !!item?.content?.trim());
+};
+
+export const shouldPoolVardastWorkflow = (messages: VardastWorkflowMessageItem[]) =>
+  messages.some(message => message.pooling);
+
+export const areVardastWorkflowMessagesEqual = (
+  current: VardastWorkflowMessageItem[],
+  next: VardastWorkflowMessageItem[],
+) => JSON.stringify(current) === JSON.stringify(next);

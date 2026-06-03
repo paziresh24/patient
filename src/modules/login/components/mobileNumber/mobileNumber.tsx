@@ -6,7 +6,7 @@ import TextField from '@/common/components/atom/textField';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { getErrorMessage } from '@/common/utils/errorHandler';
-import { digitsFaToEn } from '@persian-tools/persian-tools';
+import { normalizeDigitInput } from '@/common/utils/normalizeDigitInput';
 import Trans from 'next-translate/Trans';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';
@@ -51,7 +51,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
-    const normalized = toNationalNumber(digitsFaToEn(mobileNumberValue));
+    const normalized = toNationalNumber(normalizeDigitInput(mobileNumberValue));
     if (!normalized) {
       toast.error('لطفا شماره موبایل را وارد کنید.');
       return;
@@ -103,9 +103,8 @@ export const MobileNumber = (props: MobileNumberProps) => {
       <TextField
         label={t('steps.mobileNumber.phoneNumberFieldLable')}
         onChange={e => {
-          const raw = digitsFaToEn(e.target.value.trim());
-          const withZero =
-            raw.startsWith('+98') ? `0${raw.slice(3)}` : raw.startsWith('9') && raw.length >= 3 ? `0${raw}` : raw;
+          const raw = normalizeDigitInput(e.target.value.trim());
+          const withZero = raw.startsWith('+98') ? `0${raw.slice(3)}` : raw.startsWith('9') && raw.length >= 3 ? `0${raw}` : raw;
           setMobileNumberValue(withZero);
         }}
         value={mobileNumberValue}
@@ -174,18 +173,19 @@ export const MobileNumber = (props: MobileNumberProps) => {
                 });
                 window?.clarity?.('upgrade', 'google login');
                 setGoogleOauthLoading(true);
-                location.assign(
-                  `https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/shahrah${
-                    university ? '?university=true' : ''
-                  }&response_type=code&scope=openid&kc_idp_hint=google&state=` +
-                    encodeURI(
-                      `${window.location?.origin}/login?redirect_url=${
-                        router.query?.redirect_url
-                          ? encodeURI(router.query?.redirect_url as string)
-                          : encodeURI(`${window.location.pathname}${window.location.search}`)
-                      }`,
-                    ),
-                );
+
+                // ۱. مشخص کردن آدرسی که کاربر الان توش هست و آدرسی که باید بعدا برگرده
+                const origin = window.location.origin; // مثلاً https://www.paziresh24.com
+                const redirectUrl = router.query?.redirect_url
+                  ? (router.query?.redirect_url as string)
+                  : `${window.location.pathname}${window.location.search}`;
+
+                // ۲. ریدایرکت مستقیم به وب‌سرویس خودت (بک‌اِند کرسر امنیت و ریدایرکت به گوگل را هندل می‌کند)
+                const authServiceUrl = `https://user.paziresh24.com/auth/google?origin=${encodeURIComponent(
+                  origin,
+                )}&redirect_url=${encodeURIComponent(redirectUrl)}${university ? '&university=true' : ''}`;
+
+                location.assign(authServiceUrl);
               }}
             >
               ورود از طریق گوگل
@@ -208,3 +208,4 @@ export const MobileNumber = (props: MobileNumberProps) => {
 };
 
 export default MobileNumber;
+

@@ -268,64 +268,10 @@ function PlasmicReviewReply__RenderFunc(props: {
           }
         })()}
       >
-        <ApiRequest
-          data-plasmic-name={"avatarApi"}
-          data-plasmic-override={overrides.avatarApi}
-          className={classNames("__wab_instance", sty.avatarApi)}
-          errorDisplay={null}
-          loadingDisplay={null}
-          method={"GET"}
-          onError={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["avatarApi", "error"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          onLoading={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["avatarApi", "loading"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          onSuccess={async (...eventArgs: any) => {
-            generateStateOnChangeProp($state, ["avatarApi", "data"]).apply(
-              null,
-              eventArgs
-            );
-          }}
-          ref={ref => {
-            $refs["avatarApi"] = ref;
-          }}
-          url={(() => {
-            try {
-              return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return undefined;
-              }
-              throw e;
-            }
-          })()}
-        >
-          <RaviReviewReply
+        <RaviReviewReply
             data-plasmic-name={"raviReviewReply"}
             data-plasmic-override={overrides.raviReviewReply}
-            avatarUrl={(() => {
-              try {
-                return $state.avatarApi.data.data.image_url;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return undefined;
-                }
-                throw e;
-              }
-            })()}
+            avatarUrl={`https://pic.paziresh24.com/api/image/${$props.userId}`}
             className={classNames("__wab_instance", sty.raviReviewReply)}
             commentText={(() => {
               try {
@@ -444,8 +390,7 @@ function PlasmicReviewReply__RenderFunc(props: {
                 }
               })()}
             />
-          </RaviReviewReply>
-        </ApiRequest>
+        </RaviReviewReply>
       </ApiRequest>
     </div>
   ) as React.ReactElement | null;

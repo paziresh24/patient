@@ -10,6 +10,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
@@ -57,7 +58,7 @@ const Booking = () => {
     const res = doctorSlugForImage;
     if (!res || 'error' in res || 'redirect' in res) return undefined;
     if (res.user_id == null) return undefined;
-    return `https://pic.paziresh24.com/api/image/${res.user_id}`;
+    return picUserImageUrl(res.user_id);
   }, [doctorSlugForImage]);
 
   const { data: doctorFullNameData } = useDoctorFullName(slug, !!router.isReady);

@@ -1,12 +1,9 @@
-import { apiGatewayClient } from '@/common/apis/client';
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { useGetCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
 import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { growthbook } from 'src/pages/_app';
-import axios from 'axios';
-import { getCookie } from 'cookies-next';
+import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import { ReactElement, useEffect, useMemo, useRef } from 'react';
 
 export const EntryPoint = ({ children }: { children: ReactElement }) => {
@@ -15,10 +12,6 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const removeInfo = useUserInfoStore(state => state.removeInfo);
   const info = useUserInfoStore(state => state.info);
-  const autoLoginToGozargah = useFeatureIsOn('auto-login-to-gozargah');
-  /** فیچر بولین `pic_gozargah` در Growthbook: اگر true باشد، آواتار از pic.paziresh24.com؛ وگرنه apigw. */
-  const isPicGozargahEnabled = useFeatureIsOn('pic_gozargah');
-
   const getMe = useGetMe();
   const getDoctorProfile = useGetDoctorProfile();
   const getCentersByUserId = useGetCentersByUserId(info?.id?.toString() || '', { enabled: !!info?.id });
@@ -99,32 +92,13 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   useEffect(() => {
     if (!isLogin || !info?.id) return;
 
-    if (isPicGozargahEnabled) {
-      const imageUrl = `https://pic.paziresh24.com/api/image/${info.id}`;
-      const currentInfo = useUserInfoStore.getState().info;
-      setUserInfo({
-        ...currentInfo,
-        image: imageUrl,
-      });
-      return;
-    }
-
-    apiGatewayClient
-      .get('https://apigw.paziresh24.com/v1/users/image', { params: { user_id: info.id } })
-      .then(response => {
-        const imageUrl = response?.data?.data?.image_url;
-        if (imageUrl) {
-          const currentInfo = useUserInfoStore.getState().info;
-          setUserInfo({
-            ...currentInfo,
-            image: imageUrl,
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching user image:', error);
-      });
-  }, [isLogin, info?.id, setUserInfo, isPicGozargahEnabled]);
+    const imageUrl = picUserImageUrl(info.id);
+    const currentInfo = useUserInfoStore.getState().info;
+    setUserInfo({
+      ...currentInfo,
+      image: imageUrl,
+    });
+  }, [isLogin, info?.id, setUserInfo]);
 
   useEffect(() => {
     const centersData = getCentersByUserId?.data;

@@ -116,7 +116,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -259,29 +259,29 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                 $steps["updateSelectedRate"] = true
                   ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["selectedRate"]
-                        },
-                        operation: 0,
-                        value: currentItem
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["selectedRate"]
+                      },
+                      operation: 0,
+                      value: currentItem
+                    };
+                    return (({
+                      variable,
+                      value,
+                      startIndex,
+                      deleteCount
+                    }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
 
-                        $stateSet(objRoot, variablePath, value);
-                        return value;
-                      })?.apply(null, [actionArgs]);
-                    })()
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
+                    })?.apply(null, [actionArgs]);
+                  })()
                   : undefined;
                 if (
                   $steps["updateSelectedRate"] != null &&
@@ -295,29 +295,29 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                 $steps["updateModalOpen"] = !!$state.instance
                   ? (() => {
-                      const actionArgs = {
-                        variable: {
-                          objRoot: $state,
-                          variablePath: ["modal", "open"]
-                        },
-                        operation: 0,
-                        value: true
-                      };
-                      return (({
-                        variable,
-                        value,
-                        startIndex,
-                        deleteCount
-                      }) => {
-                        if (!variable) {
-                          return;
-                        }
-                        const { objRoot, variablePath } = variable;
+                    const actionArgs = {
+                      variable: {
+                        objRoot: $state,
+                        variablePath: ["modal", "open"]
+                      },
+                      operation: 0,
+                      value: true
+                    };
+                    return (({
+                      variable,
+                      value,
+                      startIndex,
+                      deleteCount
+                    }) => {
+                      if (!variable) {
+                        return;
+                      }
+                      const { objRoot, variablePath } = variable;
 
-                        $stateSet(objRoot, variablePath, value);
-                        return value;
-                      })?.apply(null, [actionArgs]);
-                    })()
+                      $stateSet(objRoot, variablePath, value);
+                      return value;
+                    })?.apply(null, [actionArgs]);
+                  })()
                   : undefined;
                 if (
                   $steps["updateModalOpen"] != null &&
@@ -384,18 +384,18 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
         hasVariant($state, "instance", "instance")
           ? true
           : (() => {
-              try {
-                return $state.selectedRate == 0;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
+            try {
+              return $state.selectedRate == 0;
+            } catch (e) {
+              if (
+                e instanceof TypeError ||
+                e?.plasmicType === "PlasmicUndefinedDataError"
+              ) {
+                return true;
               }
-            })()
+              throw e;
+            }
+          })()
       ) ? (
         <div
           className={classNames(
@@ -580,29 +580,29 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                     $steps["updateLoading"] = true
                       ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["loading"]
-                            },
-                            operation: 0,
-                            value: true
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["loading"]
+                          },
+                          operation: 0,
+                          value: true
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                     if (
                       $steps["updateLoading"] != null &&
@@ -614,48 +614,48 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                     $steps["invokeGlobalAction"] = true
                       ? (() => {
-                          const actionArgs = {
-                            args: [
-                              "POST",
-                              (() => {
-                                try {
-                                  return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews`;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
+                        const actionArgs = {
+                          args: [
+                            "POST",
+                            (() => {
+                              try {
+                                return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/reviews`;
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType ===
+                                  "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
                                 }
-                              })(),
-                              undefined,
-                              (() => {
-                                try {
-                                  return {
-                                    rate: $state.selectedRate,
-                                    content: $state.multilineTextInput2.value
-                                  };
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return undefined;
-                                  }
-                                  throw e;
+                                throw e;
+                              }
+                            })(),
+                            undefined,
+                            (() => {
+                              try {
+                                return {
+                                  rate: $state.selectedRate,
+                                  content: $state.multilineTextInput2.value
+                                };
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType ===
+                                  "PlasmicUndefinedDataError"
+                                ) {
+                                  return undefined;
                                 }
-                              })()
-                            ]
-                          };
-                          return $globalActions["Fragment.apiRequest"]?.apply(
-                            null,
-                            [...actionArgs.args]
-                          );
-                        })()
+                                throw e;
+                              }
+                            })()
+                          ]
+                        };
+                        return $globalActions["Fragment.apiRequest"]?.apply(
+                          null,
+                          [...actionArgs.args]
+                        );
+                      })()
                       : undefined;
                     if (
                       $steps["invokeGlobalAction"] != null &&
@@ -669,29 +669,29 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                     $steps["updateLoading2"] = true
                       ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["loading"]
-                            },
-                            operation: 0,
-                            value: false
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["loading"]
+                          },
+                          operation: 0,
+                          value: false
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                     if (
                       $steps["updateLoading2"] != null &&
@@ -703,11 +703,11 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                     $steps["runOnSubmit"] = true
                       ? (() => {
-                          const actionArgs = { eventRef: $props["onSubmit"] };
-                          return (({ eventRef, args }) => {
-                            return eventRef?.(...(args ?? []));
-                          })?.apply(null, [actionArgs]);
-                        })()
+                        const actionArgs = { eventRef: $props["onSubmit"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                     if (
                       $steps["runOnSubmit"] != null &&
@@ -719,29 +719,29 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                     $steps["updateModalOpen"] = true
                       ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["modal", "open"]
-                            },
-                            operation: 0,
-                            value: false
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["modal", "open"]
+                          },
+                          operation: 0,
+                          value: false
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                     if (
                       $steps["updateModalOpen"] != null &&
@@ -766,29 +766,29 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                     $steps["updateModalOpen"] = true
                       ? (() => {
-                          const actionArgs = {
-                            variable: {
-                              objRoot: $state,
-                              variablePath: ["modal", "open"]
-                            },
-                            operation: 0,
-                            value: false
-                          };
-                          return (({
-                            variable,
-                            value,
-                            startIndex,
-                            deleteCount
-                          }) => {
-                            if (!variable) {
-                              return;
-                            }
-                            const { objRoot, variablePath } = variable;
+                        const actionArgs = {
+                          variable: {
+                            objRoot: $state,
+                            variablePath: ["modal", "open"]
+                          },
+                          operation: 0,
+                          value: false
+                        };
+                        return (({
+                          variable,
+                          value,
+                          startIndex,
+                          deleteCount
+                        }) => {
+                          if (!variable) {
+                            return;
+                          }
+                          const { objRoot, variablePath } = variable;
 
-                            $stateSet(objRoot, variablePath, value);
-                            return value;
-                          })?.apply(null, [actionArgs]);
-                        })()
+                          $stateSet(objRoot, variablePath, value);
+                          return value;
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                     if (
                       $steps["updateModalOpen"] != null &&
@@ -802,11 +802,11 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
                     $steps["runOnCancel"] = true
                       ? (() => {
-                          const actionArgs = { eventRef: $props["onCancel"] };
-                          return (({ eventRef, args }) => {
-                            return eventRef?.(...(args ?? []));
-                          })?.apply(null, [actionArgs]);
-                        })()
+                        const actionArgs = { eventRef: $props["onCancel"] };
+                        return (({ eventRef, args }) => {
+                          return eventRef?.(...(args ?? []));
+                        })?.apply(null, [actionArgs]);
+                      })()
                       : undefined;
                     if (
                       $steps["runOnCancel"] != null &&
@@ -897,24 +897,24 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
             $steps["updateLoading"] = true
               ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["loading"]
-                    },
-                    operation: 0,
-                    value: true
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["loading"]
+                  },
+                  operation: 0,
+                  value: true
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
 
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
+                  $stateSet(objRoot, variablePath, value);
+                  return value;
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
             if (
               $steps["updateLoading"] != null &&
@@ -926,45 +926,45 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
             $steps["invokeGlobalAction"] = true
               ? (() => {
-                  const actionArgs = {
-                    args: [
-                      "POST",
-                      (() => {
-                        try {
-                          return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appKey}/reviews`;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+                const actionArgs = {
+                  args: [
+                    "POST",
+                    (() => {
+                      try {
+                        return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appKey}/reviews`;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
                         }
-                      })(),
-                      undefined,
-                      (() => {
-                        try {
-                          return {
-                            rate: $state.selectedRate,
-                            content: $state.multilineTextInput.value
-                          };
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
+                        throw e;
+                      }
+                    })(),
+                    undefined,
+                    (() => {
+                      try {
+                        return {
+                          rate: $state.selectedRate,
+                          content: $state.multilineTextInput.value
+                        };
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return undefined;
                         }
-                      })()
-                    ]
-                  };
-                  return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
+                        throw e;
+                      }
+                    })()
+                  ]
+                };
+                return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
               : undefined;
             if (
               $steps["invokeGlobalAction"] != null &&
@@ -976,24 +976,24 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
             $steps["updateLoading2"] = true
               ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["loading"]
-                    },
-                    operation: 0,
-                    value: false
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["loading"]
+                  },
+                  operation: 0,
+                  value: false
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
 
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
+                  $stateSet(objRoot, variablePath, value);
+                  return value;
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
             if (
               $steps["updateLoading2"] != null &&
@@ -1005,11 +1005,11 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
             $steps["runOnSubmit"] = true
               ? (() => {
-                  const actionArgs = { eventRef: $props["onSubmit"] };
-                  return (({ eventRef, args }) => {
-                    return eventRef?.(...(args ?? []));
-                  })?.apply(null, [actionArgs]);
-                })()
+                const actionArgs = { eventRef: $props["onSubmit"] };
+                return (({ eventRef, args }) => {
+                  return eventRef?.(...(args ?? []));
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
             if (
               $steps["runOnSubmit"] != null &&
@@ -1029,11 +1029,11 @@ function PlasmicLauncherBlocksWriteReview__RenderFunc(props: {
 
             $steps["runOnCancel"] = true
               ? (() => {
-                  const actionArgs = { eventRef: $props["onCancel"] };
-                  return (({ eventRef, args }) => {
-                    return eventRef?.(...(args ?? []));
-                  })?.apply(null, [actionArgs]);
-                })()
+                const actionArgs = { eventRef: $props["onCancel"] };
+                return (({ eventRef, args }) => {
+                  return eventRef?.(...(args ?? []));
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
             if (
               $steps["runOnCancel"] != null &&
@@ -1078,18 +1078,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherBlocksWriteReview__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherBlocksWriteReview__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicLauncherBlocksWriteReview__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicLauncherBlocksWriteReview__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

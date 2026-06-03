@@ -145,7 +145,9 @@ export const useNotificationPermission = (
       } else {
         hasAutoSubscribedRef.current = false;
       }
-    } catch { }
+    } catch {
+      // noop
+    }
   }, [autoSubscribe]);
 
   useEffect(() => {

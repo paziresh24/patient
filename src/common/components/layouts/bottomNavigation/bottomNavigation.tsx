@@ -124,7 +124,7 @@ export const BottomNavigation = () => {
       icon: <ChatIcon />,
       fillIcon: <ChatIcon />,
       link: `/_/chats`,
-      pattern: ['/_/chats', '/_/chats/[id]'],
+      pattern: ['/_/chats', '/_/chats/[[...hami]]'],
       privateRoute: true,
       exact: false,
     },
@@ -154,39 +154,39 @@ export const BottomNavigation = () => {
       icon: <ChatIcon />,
       fillIcon: <ChatIcon />,
       link: `/_/chats`,
-      pattern: ['/_/chats', '/_/chats/[id]'],
+      pattern: ['/_/chats', '/_/chats/[[...hami]]'],
       privateRoute: true,
       exact: false,
     },
     user.provider?.job_title === 'doctor' && isShowDashboard
       ? {
-        name: 'مراجعین من',
-        icon: <CalenderIcon />,
-        fillIcon: <CalenderIcon isSolid />,
-        link: '/dashboard/apps/drapp/appointments/',
-        exact: true,
-        pattern: '',
-        privateRoute: true,
-      }
+          name: 'مراجعین من',
+          icon: <CalenderIcon />,
+          fillIcon: <CalenderIcon isSolid />,
+          link: '/dashboard/apps/drapp/appointments/',
+          exact: true,
+          pattern: '',
+          privateRoute: true,
+        }
       : {
-        name: 'نوبت های من',
-        icon: (
-          <div className="relative">
-            {!!turnsCount.presence && (
-              <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
-                {turnsCount.presence}
-              </div>
-            )}
-            <CalenderIcon />
-          </div>
-        ),
-        fillIcon: <CalenderIcon isSolid />,
-        link: isShowDashboard ? '/dashboard/appointments/' : '/patient/appointments',
-        ...(isShowDashboard && { exact: true }),
-        pattern: '/patient/appointments',
-        privateRoute: true,
-        exact: false,
-      },
+          name: 'نوبت های من',
+          icon: (
+            <div className="relative">
+              {!!turnsCount.presence && (
+                <div className="absolute flex items-center justify-center w-4 h-4 text-xs text-white bg-red-500 rounded-full -top-1 -left-1">
+                  {turnsCount.presence}
+                </div>
+              )}
+              <CalenderIcon />
+            </div>
+          ),
+          fillIcon: <CalenderIcon isSolid />,
+          link: isShowDashboard ? '/dashboard/appointments/' : '/patient/appointments',
+          ...(isShowDashboard && { exact: true }),
+          pattern: '/patient/appointments',
+          privateRoute: true,
+          exact: false,
+        },
     servicesMenu,
   ];
 
@@ -218,7 +218,7 @@ export const BottomNavigation = () => {
             )}
           >
             {fillIcon &&
-              (exact ? router.asPath === link : router.pathname === pattern || (Array.isArray(pattern) && pattern.includes(router.pathname)))
+            (exact ? router.asPath === link : router.pathname === pattern || (Array.isArray(pattern) && pattern.includes(router.pathname)))
               ? fillIcon
               : icon}
 

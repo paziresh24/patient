@@ -652,7 +652,8 @@ function PlasmicFactor__RenderFunc(props: {
                                       : {};
                                     return {
                                       headers,
-                                      ...$ctx.Fragment.previewApiConfig
+                                      ...$ctx.Fragment.previewApiConfig,
+                                      withCredentials: true
                                     };
                                   })();
                                 } catch (e) {

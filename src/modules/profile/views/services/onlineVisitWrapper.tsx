@@ -75,6 +75,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     const { data } = await freeTurn.mutateAsync({
       center_id: CENTERS.CONSULT,
       service_id: id,
+      server_id: '1',
       type: isWebView || isApplication ? 'app' : 'web',
       user_center_id: userCenterId,
     });
@@ -110,7 +111,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         },
         onError(data) {
           handleCloseBoolingModal();
-          unSuspend.mutate({ center_id: CENTERS.CONSULT, request_code: timeId });
+          unSuspend.mutate({ center_id: CENTERS.CONSULT, server_id: '1', request_code: timeId });
           return toast.error(data.message);
         },
       },
@@ -147,7 +148,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         title="انتخاب کاربر برای گفتگو"
         {...bookingModalProps}
         onClose={() => {
-          unSuspend.mutate({ center_id: CENTERS.CONSULT, request_code: timeId });
+          unSuspend.mutate({ center_id: CENTERS.CONSULT, server_id: '1', request_code: timeId });
           bookingModalProps.onClose();
         }}
       >

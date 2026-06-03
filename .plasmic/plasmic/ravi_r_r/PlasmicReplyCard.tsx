@@ -125,7 +125,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -287,51 +287,13 @@ function PlasmicReplyCard__RenderFunc(props: {
                 })()}
               />
 
-              <DataFetcher
-                data-plasmic-name={"httpRestApiFetcher"}
-                data-plasmic-override={overrides.httpRestApiFetcher}
-                className={classNames("__wab_instance", sty.httpRestApiFetcher)}
-                dataName={"avatarfetchedData"}
-                errorDisplay={
-                  <DataCtxReader__>
-                    {$ctx => "Error fetching data"}
-                  </DataCtxReader__>
-                }
-                errorName={"fetchError"}
-                loadingDisplay={
-                  <DataCtxReader__>
-                    {$ctx => (
-                      <Avatar
-                        data-plasmic-name={"userAvatar2"}
-                        data-plasmic-override={overrides.userAvatar2}
-                        className={classNames(
-                          "__wab_instance",
-                          sty.userAvatar2
-                        )}
-                        name={(() => {
-                          try {
-                            return $ctx.fetchedData.users[0].name;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()}
-                        src={``}
-                      />
-                    )}
-                  </DataCtxReader__>
-                }
-                method={"GET"}
-                noLayout={false}
-                previewSpinner={false}
-                url={(() => {
+              <Avatar
+                data-plasmic-name={"userAvatar"}
+                data-plasmic-override={overrides.userAvatar}
+                className={classNames("__wab_instance", sty.userAvatar)}
+                name={(() => {
                   try {
-                    return `https://apigw.paziresh24.com/v1/users/image?user_id=${$props.userId}`;
+                    return $ctx.fetchedData.users[0].name;
                   } catch (e) {
                     if (
                       e instanceof TypeError ||
@@ -342,43 +304,8 @@ function PlasmicReplyCard__RenderFunc(props: {
                     throw e;
                   }
                 })()}
-              >
-                <DataCtxReader__>
-                  {$ctx => (
-                    <Avatar
-                      data-plasmic-name={"userAvatar"}
-                      data-plasmic-override={overrides.userAvatar}
-                      className={classNames("__wab_instance", sty.userAvatar)}
-                      name={(() => {
-                        try {
-                          return $ctx.fetchedData.users[0].name;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                      src={(() => {
-                        try {
-                          return $ctx.avatarfetchedData.data.image_url;
-                        } catch (e) {
-                          if (
-                            e instanceof TypeError ||
-                            e?.plasmicType === "PlasmicUndefinedDataError"
-                          ) {
-                            return undefined;
-                          }
-                          throw e;
-                        }
-                      })()}
-                    />
-                  )}
-                </DataCtxReader__>
-              </DataFetcher>
+                src={`https://pic.paziresh24.com/api/image/${$props.userId}`}
+              />
               <div className={classNames(projectcss.all, sty.freeBox__dbIvm)}>
                 <div className={classNames(projectcss.all, sty.freeBox__rie2S)}>
                   <div
@@ -394,8 +321,8 @@ function PlasmicReplyCard__RenderFunc(props: {
                           return $props.isDoctor
                             ? `${$ctx.fetchedData.users[0].name} ${$ctx.fetchedData.users[0].family}`
                             : $ctx.fetchedData.users[0].name
-                            ? $ctx.fetchedData.users[0].name
-                            : "کاربر بدون نام";
+                              ? $ctx.fetchedData.users[0].name
+                              : "کاربر بدون نام";
                         } catch (e) {
                           if (
                             e instanceof TypeError ||
@@ -529,18 +456,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReplyCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReplyCard__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicReplyCard__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicReplyCard__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

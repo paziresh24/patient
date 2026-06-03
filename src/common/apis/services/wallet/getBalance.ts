@@ -3,7 +3,7 @@ import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
 
 export const getBalance = async () => {
-  return apiGatewayClient.get(`/katibe/v1/transactions/balance/p24`);
+  return apiGatewayClient.get(`/katibe/v1/transactions/balance/p24`, { withCredentials: true });
 };
 
 export const useGetBalance = (options?: any) => {

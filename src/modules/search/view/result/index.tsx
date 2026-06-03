@@ -12,6 +12,7 @@ import LoadingAtom from '@/common/components/atom/loading';
 import Text from '@/common/components/atom/text';
 import axios from 'axios';
 import { getErrorMessage } from '@/common/utils/errorHandler';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 
 export const Result = () => {
   const {
@@ -80,6 +81,14 @@ export const Result = () => {
                 ...geoLocation,
               },
               paginationLoadingStatus: isLoading,
+              overrides: {
+                topSuggestedCard: {
+                  avatarSrc: getImageUrl(
+                    searchConsultResponseData?.search?.result?.[0]?.image,
+                    publicRuntimeConfig.CDN_BASE_URL,
+                  ),
+                },
+              },
             }}
           />
         </SearchGlobalContextsProvider>

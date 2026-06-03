@@ -156,7 +156,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -399,29 +399,29 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
                       $steps["updateIsOpen"] = true
                         ? (() => {
-                            const actionArgs = {
-                              variable: {
-                                objRoot: $state,
-                                variablePath: ["isOpen"]
-                              },
-                              operation: 0,
-                              value: false
-                            };
-                            return (({
-                              variable,
-                              value,
-                              startIndex,
-                              deleteCount
-                            }) => {
-                              if (!variable) {
-                                return;
-                              }
-                              const { objRoot, variablePath } = variable;
+                          const actionArgs = {
+                            variable: {
+                              objRoot: $state,
+                              variablePath: ["isOpen"]
+                            },
+                            operation: 0,
+                            value: false
+                          };
+                          return (({
+                            variable,
+                            value,
+                            startIndex,
+                            deleteCount
+                          }) => {
+                            if (!variable) {
+                              return;
+                            }
+                            const { objRoot, variablePath } = variable;
 
-                              $stateSet(objRoot, variablePath, value);
-                              return value;
-                            })?.apply(null, [actionArgs]);
-                          })()
+                            $stateSet(objRoot, variablePath, value);
+                            return value;
+                          })?.apply(null, [actionArgs]);
+                        })()
                         : undefined;
                       if (
                         $steps["updateIsOpen"] != null &&
@@ -504,24 +504,24 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
           $steps["updateIsOpen"] =
             !!$props.link && !$state.soon && $props.widgetFrame
               ? (() => {
-                  const actionArgs = {
-                    variable: {
-                      objRoot: $state,
-                      variablePath: ["isOpen"]
-                    },
-                    operation: 0,
-                    value: true
-                  };
-                  return (({ variable, value, startIndex, deleteCount }) => {
-                    if (!variable) {
-                      return;
-                    }
-                    const { objRoot, variablePath } = variable;
+                const actionArgs = {
+                  variable: {
+                    objRoot: $state,
+                    variablePath: ["isOpen"]
+                  },
+                  operation: 0,
+                  value: true
+                };
+                return (({ variable, value, startIndex, deleteCount }) => {
+                  if (!variable) {
+                    return;
+                  }
+                  const { objRoot, variablePath } = variable;
 
-                    $stateSet(objRoot, variablePath, value);
-                    return value;
-                  })?.apply(null, [actionArgs]);
-                })()
+                  $stateSet(objRoot, variablePath, value);
+                  return value;
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
           if (
             $steps["updateIsOpen"] != null &&
@@ -534,34 +534,34 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
           $steps["goToPage"] =
             !!$props.link && !$state.soon && !$props.widgetFrame
               ? (() => {
-                  const actionArgs = {
-                    destination: (() => {
-                      try {
-                        return $props.link;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+                const actionArgs = {
+                  destination: (() => {
+                    try {
+                      return $props.link;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()
-                  };
-                  return (({ destination }) => {
-                    if (
-                      typeof destination === "string" &&
-                      destination.startsWith("#")
-                    ) {
-                      document
-                        .getElementById(destination.substr(1))
-                        .scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      __nextRouter?.push(destination);
+                      throw e;
                     }
-                  })?.apply(null, [actionArgs]);
-                })()
+                  })()
+                };
+                return (({ destination }) => {
+                  if (
+                    typeof destination === "string" &&
+                    destination.startsWith("#")
+                  ) {
+                    document
+                      .getElementById(destination.substr(1))
+                      .scrollIntoView({ behavior: "smooth" });
+                  } else {
+                    __nextRouter?.push(destination);
+                  }
+                })?.apply(null, [actionArgs]);
+              })()
               : undefined;
           if (
             $steps["goToPage"] != null &&
@@ -573,11 +573,11 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
           $steps["runOnEvent"] = true
             ? (() => {
-                const actionArgs = { eventRef: $props["onEvent"] };
-                return (({ eventRef, args }) => {
-                  return eventRef?.(...(args ?? []));
-                })?.apply(null, [actionArgs]);
-              })()
+              const actionArgs = { eventRef: $props["onEvent"] };
+              return (({ eventRef, args }) => {
+                return eventRef?.(...(args ?? []));
+              })?.apply(null, [actionArgs]);
+            })()
             : undefined;
           if (
             $steps["runOnEvent"] != null &&
@@ -745,15 +745,15 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
                   $steps["runCode"] = true
                     ? (() => {
-                        const actionArgs = {
-                          customFunction: async () => {
-                            return event?.stopPropagation();
-                          }
-                        };
-                        return (({ customFunction }) => {
-                          return customFunction();
-                        })?.apply(null, [actionArgs]);
-                      })()
+                      const actionArgs = {
+                        customFunction: async () => {
+                          return event?.stopPropagation();
+                        }
+                      };
+                      return (({ customFunction }) => {
+                        return customFunction();
+                      })?.apply(null, [actionArgs]);
+                    })()
                     : undefined;
                   if (
                     $steps["runCode"] != null &&
@@ -779,32 +779,32 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                       >
                         {(_par =>
                           !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                          (() => {
-                            try {
-                              return [2, 3, 4, 5];
-                            } catch (e) {
-                              if (
-                                e instanceof TypeError ||
-                                e?.plasmicType === "PlasmicUndefinedDataError"
-                              ) {
-                                return [];
+                            (() => {
+                              try {
+                                return [2, 3, 4, 5];
+                              } catch (e) {
+                                if (
+                                  e instanceof TypeError ||
+                                  e?.plasmicType === "PlasmicUndefinedDataError"
+                                ) {
+                                  return [];
+                                }
+                                throw e;
                               }
-                              throw e;
-                            }
-                          })()
-                        ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                          const currentItem = __plasmic_item_0;
-                          const currentIndex = __plasmic_idx_0;
-                          return (
-                            <div
-                              className={classNames(
-                                projectcss.all,
-                                sty.freeBox__yocM3
-                              )}
-                              key={currentIndex}
-                            />
-                          );
-                        })}
+                            })()
+                          ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                            const currentItem = __plasmic_item_0;
+                            const currentIndex = __plasmic_idx_0;
+                            return (
+                              <div
+                                className={classNames(
+                                  projectcss.all,
+                                  sty.freeBox__yocM3
+                                )}
+                                key={currentIndex}
+                              />
+                            );
+                          })}
                       </div>
                       <div
                         className={classNames(
@@ -838,7 +838,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                   }}
                   url={(() => {
                     try {
-                      return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appkey}/users?page=1&limit=4`;
+                      return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appkey}/users?page=1&limit=4`;
                     } catch (e) {
                       if (
                         e instanceof TypeError ||
@@ -880,36 +880,36 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
                             $steps["updateIsUsersLoading"] = true
                               ? (() => {
-                                  const actionArgs = {
-                                    variable: {
-                                      objRoot: $state,
-                                      variablePath: ["isUsersLoading"]
-                                    },
-                                    operation: 0,
-                                    value: true
-                                  };
-                                  return (({
-                                    variable,
-                                    value,
-                                    startIndex,
-                                    deleteCount
-                                  }) => {
-                                    if (!variable) {
-                                      return;
-                                    }
-                                    const { objRoot, variablePath } = variable;
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["isUsersLoading"]
+                                  },
+                                  operation: 0,
+                                  value: true
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
 
-                                    $stateSet(objRoot, variablePath, value);
-                                    return value;
-                                  })?.apply(null, [actionArgs]);
-                                })()
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
                               : undefined;
                             if (
                               $steps["updateIsUsersLoading"] != null &&
                               typeof $steps["updateIsUsersLoading"] ===
-                                "object" &&
+                              "object" &&
                               typeof $steps["updateIsUsersLoading"].then ===
-                                "function"
+                              "function"
                             ) {
                               $steps["updateIsUsersLoading"] = await $steps[
                                 "updateIsUsersLoading"
@@ -918,29 +918,29 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
                             $steps["api"] = true
                               ? (() => {
-                                  const actionArgs = {
-                                    args: [
-                                      undefined,
-                                      (() => {
-                                        try {
-                                          return `https://apigw.paziresh24.com/v1/hamdast/apps/${$props.appkey}/users?page=${$state.page}`;
-                                        } catch (e) {
-                                          if (
-                                            e instanceof TypeError ||
-                                            e?.plasmicType ===
-                                              "PlasmicUndefinedDataError"
-                                          ) {
-                                            return undefined;
-                                          }
-                                          throw e;
+                                const actionArgs = {
+                                  args: [
+                                    undefined,
+                                    (() => {
+                                      try {
+                                        return `https://hamdast.paziresh24.com/api/v1/apps/${$props.appkey}/users?page=${$state.page}`;
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
                                         }
-                                      })()
-                                    ]
-                                  };
-                                  return $globalActions[
-                                    "Fragment.apiRequest"
-                                  ]?.apply(null, [...actionArgs.args]);
-                                })()
+                                        throw e;
+                                      }
+                                    })()
+                                  ]
+                                };
+                                return $globalActions[
+                                  "Fragment.apiRequest"
+                                ]?.apply(null, [...actionArgs.args]);
+                              })()
                               : undefined;
                             if (
                               $steps["api"] != null &&
@@ -953,39 +953,39 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                             $steps["updateUserList"] =
                               $steps.api?.data?.users?.length > 0
                                 ? (() => {
-                                    const actionArgs = {
-                                      variable: {
-                                        objRoot: $state,
-                                        variablePath: ["userList"]
-                                      },
-                                      operation: 0,
-                                      value: [
-                                        ...$state.userList,
-                                        ...($steps?.api?.data?.users ?? [])
-                                      ]
-                                    };
-                                    return (({
-                                      variable,
-                                      value,
-                                      startIndex,
-                                      deleteCount
-                                    }) => {
-                                      if (!variable) {
-                                        return;
-                                      }
-                                      const { objRoot, variablePath } =
-                                        variable;
+                                  const actionArgs = {
+                                    variable: {
+                                      objRoot: $state,
+                                      variablePath: ["userList"]
+                                    },
+                                    operation: 0,
+                                    value: [
+                                      ...$state.userList,
+                                      ...($steps?.api?.data?.users ?? [])
+                                    ]
+                                  };
+                                  return (({
+                                    variable,
+                                    value,
+                                    startIndex,
+                                    deleteCount
+                                  }) => {
+                                    if (!variable) {
+                                      return;
+                                    }
+                                    const { objRoot, variablePath } =
+                                      variable;
 
-                                      $stateSet(objRoot, variablePath, value);
-                                      return value;
-                                    })?.apply(null, [actionArgs]);
-                                  })()
+                                    $stateSet(objRoot, variablePath, value);
+                                    return value;
+                                  })?.apply(null, [actionArgs]);
+                                })()
                                 : undefined;
                             if (
                               $steps["updateUserList"] != null &&
                               typeof $steps["updateUserList"] === "object" &&
                               typeof $steps["updateUserList"].then ===
-                                "function"
+                              "function"
                             ) {
                               $steps["updateUserList"] = await $steps[
                                 "updateUserList"
@@ -995,48 +995,10 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                             $steps["updateShowPaginationButton"] =
                               $steps.api?.data?.users?.length < 20
                                 ? (() => {
-                                    const actionArgs = {
-                                      variable: {
-                                        objRoot: $state,
-                                        variablePath: ["showPaginationButton"]
-                                      },
-                                      operation: 0,
-                                      value: false
-                                    };
-                                    return (({
-                                      variable,
-                                      value,
-                                      startIndex,
-                                      deleteCount
-                                    }) => {
-                                      if (!variable) {
-                                        return;
-                                      }
-                                      const { objRoot, variablePath } =
-                                        variable;
-
-                                      $stateSet(objRoot, variablePath, value);
-                                      return value;
-                                    })?.apply(null, [actionArgs]);
-                                  })()
-                                : undefined;
-                            if (
-                              $steps["updateShowPaginationButton"] != null &&
-                              typeof $steps["updateShowPaginationButton"] ===
-                                "object" &&
-                              typeof $steps["updateShowPaginationButton"]
-                                .then === "function"
-                            ) {
-                              $steps["updateShowPaginationButton"] =
-                                await $steps["updateShowPaginationButton"];
-                            }
-
-                            $steps["updateIsUsersLoading2"] = true
-                              ? (() => {
                                   const actionArgs = {
                                     variable: {
                                       objRoot: $state,
-                                      variablePath: ["isUsersLoading"]
+                                      variablePath: ["showPaginationButton"]
                                     },
                                     operation: 0,
                                     value: false
@@ -1050,19 +1012,57 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                                     if (!variable) {
                                       return;
                                     }
-                                    const { objRoot, variablePath } = variable;
+                                    const { objRoot, variablePath } =
+                                      variable;
 
                                     $stateSet(objRoot, variablePath, value);
                                     return value;
                                   })?.apply(null, [actionArgs]);
                                 })()
+                                : undefined;
+                            if (
+                              $steps["updateShowPaginationButton"] != null &&
+                              typeof $steps["updateShowPaginationButton"] ===
+                              "object" &&
+                              typeof $steps["updateShowPaginationButton"]
+                                .then === "function"
+                            ) {
+                              $steps["updateShowPaginationButton"] =
+                                await $steps["updateShowPaginationButton"];
+                            }
+
+                            $steps["updateIsUsersLoading2"] = true
+                              ? (() => {
+                                const actionArgs = {
+                                  variable: {
+                                    objRoot: $state,
+                                    variablePath: ["isUsersLoading"]
+                                  },
+                                  operation: 0,
+                                  value: false
+                                };
+                                return (({
+                                  variable,
+                                  value,
+                                  startIndex,
+                                  deleteCount
+                                }) => {
+                                  if (!variable) {
+                                    return;
+                                  }
+                                  const { objRoot, variablePath } = variable;
+
+                                  $stateSet(objRoot, variablePath, value);
+                                  return value;
+                                })?.apply(null, [actionArgs]);
+                              })()
                               : undefined;
                             if (
                               $steps["updateIsUsersLoading2"] != null &&
                               typeof $steps["updateIsUsersLoading2"] ===
-                                "object" &&
+                              "object" &&
                               typeof $steps["updateIsUsersLoading2"].then ===
-                                "function"
+                              "function"
                             ) {
                               $steps["updateIsUsersLoading2"] = await $steps[
                                 "updateIsUsersLoading2"
@@ -1100,239 +1100,239 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                                 !_par
                                   ? []
                                   : Array.isArray(_par)
-                                  ? _par
-                                  : [_par])(
-                                (() => {
-                                  try {
-                                    return $state.userList;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return [];
-                                    }
-                                    throw e;
-                                  }
-                                })()
-                              ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                                const currentItem = __plasmic_item_0;
-                                const currentIndex = __plasmic_idx_0;
-                                return (
-                                  <div
-                                    className={classNames(
-                                      projectcss.all,
-                                      sty.freeBox__ptGgo
-                                    )}
-                                    key={currentIndex}
-                                  >
-                                    <PlasmicImg__
-                                      alt={""}
-                                      className={classNames(
-                                        sty.img__ndDfE,
-                                        "bg-white"
-                                      )}
-                                      displayHeight={"70px"}
-                                      displayMaxHeight={"none"}
-                                      displayMaxWidth={"100%"}
-                                      displayMinHeight={"0"}
-                                      displayMinWidth={"0"}
-                                      displayWidth={"70px"}
-                                      loading={"eager"}
-                                      onClick={async event => {
-                                        const $steps = {};
-
-                                        $steps["updateClickUserLoading"] = true
-                                          ? (() => {
-                                              const actionArgs = {
-                                                variable: {
-                                                  objRoot: $state,
-                                                  variablePath: [
-                                                    "clickUserLoading"
-                                                  ]
-                                                },
-                                                operation: 0,
-                                                value: true
-                                              };
-                                              return (({
-                                                variable,
-                                                value,
-                                                startIndex,
-                                                deleteCount
-                                              }) => {
-                                                if (!variable) {
-                                                  return;
-                                                }
-                                                const {
-                                                  objRoot,
-                                                  variablePath
-                                                } = variable;
-
-                                                $stateSet(
-                                                  objRoot,
-                                                  variablePath,
-                                                  value
-                                                );
-                                                return value;
-                                              })?.apply(null, [actionArgs]);
-                                            })()
-                                          : undefined;
-                                        if (
-                                          $steps["updateClickUserLoading"] !=
-                                            null &&
-                                          typeof $steps[
-                                            "updateClickUserLoading"
-                                          ] === "object" &&
-                                          typeof $steps[
-                                            "updateClickUserLoading"
-                                          ].then === "function"
-                                        ) {
-                                          $steps["updateClickUserLoading"] =
-                                            await $steps[
-                                              "updateClickUserLoading"
-                                            ];
-                                        }
-
-                                        $steps["api"] = true
-                                          ? (() => {
-                                              const actionArgs = {
-                                                args: [
-                                                  undefined,
-                                                  "https://apigw.paziresh24.com/v1/providers",
-                                                  (() => {
-                                                    try {
-                                                      return {
-                                                        user_id:
-                                                          currentItem?.user_id
-                                                      };
-                                                    } catch (e) {
-                                                      if (
-                                                        e instanceof
-                                                          TypeError ||
-                                                        e?.plasmicType ===
-                                                          "PlasmicUndefinedDataError"
-                                                      ) {
-                                                        return undefined;
-                                                      }
-                                                      throw e;
-                                                    }
-                                                  })()
-                                                ]
-                                              };
-                                              return $globalActions[
-                                                "Fragment.apiRequest"
-                                              ]?.apply(null, [
-                                                ...actionArgs.args
-                                              ]);
-                                            })()
-                                          : undefined;
-                                        if (
-                                          $steps["api"] != null &&
-                                          typeof $steps["api"] === "object" &&
-                                          typeof $steps["api"].then ===
-                                            "function"
-                                        ) {
-                                          $steps["api"] = await $steps["api"];
-                                        }
-
-                                        $steps["runCode"] = true
-                                          ? (() => {
-                                              const actionArgs = {
-                                                customFunction: async () => {
-                                                  return globalThis.open(
-                                                    `/dr/${$steps?.api?.data?.providers?.[0]?.slug}`,
-                                                    "_blank"
-                                                  );
-                                                }
-                                              };
-                                              return (({ customFunction }) => {
-                                                return customFunction();
-                                              })?.apply(null, [actionArgs]);
-                                            })()
-                                          : undefined;
-                                        if (
-                                          $steps["runCode"] != null &&
-                                          typeof $steps["runCode"] ===
-                                            "object" &&
-                                          typeof $steps["runCode"].then ===
-                                            "function"
-                                        ) {
-                                          $steps["runCode"] = await $steps[
-                                            "runCode"
-                                          ];
-                                        }
-
-                                        $steps["updateClickUserLoading2"] = true
-                                          ? (() => {
-                                              const actionArgs = {
-                                                variable: {
-                                                  objRoot: $state,
-                                                  variablePath: [
-                                                    "clickUserLoading"
-                                                  ]
-                                                },
-                                                operation: 0,
-                                                value: false
-                                              };
-                                              return (({
-                                                variable,
-                                                value,
-                                                startIndex,
-                                                deleteCount
-                                              }) => {
-                                                if (!variable) {
-                                                  return;
-                                                }
-                                                const {
-                                                  objRoot,
-                                                  variablePath
-                                                } = variable;
-
-                                                $stateSet(
-                                                  objRoot,
-                                                  variablePath,
-                                                  value
-                                                );
-                                                return value;
-                                              })?.apply(null, [actionArgs]);
-                                            })()
-                                          : undefined;
-                                        if (
-                                          $steps["updateClickUserLoading2"] !=
-                                            null &&
-                                          typeof $steps[
-                                            "updateClickUserLoading2"
-                                          ] === "object" &&
-                                          typeof $steps[
-                                            "updateClickUserLoading2"
-                                          ].then === "function"
-                                        ) {
-                                          $steps["updateClickUserLoading2"] =
-                                            await $steps[
-                                              "updateClickUserLoading2"
-                                            ];
-                                        }
-                                      }}
-                                      src={(() => {
+                                    ? _par
+                                    : [_par])(
+                                      (() => {
                                         try {
-                                          return currentItem.image_url;
+                                          return $state.userList;
                                         } catch (e) {
                                           if (
                                             e instanceof TypeError ||
                                             e?.plasmicType ===
-                                              "PlasmicUndefinedDataError"
+                                            "PlasmicUndefinedDataError"
                                           ) {
-                                            return undefined;
+                                            return [];
                                           }
                                           throw e;
                                         }
-                                      })()}
-                                      width={``}
-                                    />
-                                  </div>
-                                );
-                              })}
+                                      })()
+                                    ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                                      const currentItem = __plasmic_item_0;
+                                      const currentIndex = __plasmic_idx_0;
+                                      return (
+                                        <div
+                                          className={classNames(
+                                            projectcss.all,
+                                            sty.freeBox__ptGgo
+                                          )}
+                                          key={currentIndex}
+                                        >
+                                          <PlasmicImg__
+                                            alt={""}
+                                            className={classNames(
+                                              sty.img__ndDfE,
+                                              "bg-white"
+                                            )}
+                                            displayHeight={"70px"}
+                                            displayMaxHeight={"none"}
+                                            displayMaxWidth={"100%"}
+                                            displayMinHeight={"0"}
+                                            displayMinWidth={"0"}
+                                            displayWidth={"70px"}
+                                            loading={"eager"}
+                                            onClick={async event => {
+                                              const $steps = {};
+
+                                              $steps["updateClickUserLoading"] = true
+                                                ? (() => {
+                                                  const actionArgs = {
+                                                    variable: {
+                                                      objRoot: $state,
+                                                      variablePath: [
+                                                        "clickUserLoading"
+                                                      ]
+                                                    },
+                                                    operation: 0,
+                                                    value: true
+                                                  };
+                                                  return (({
+                                                    variable,
+                                                    value,
+                                                    startIndex,
+                                                    deleteCount
+                                                  }) => {
+                                                    if (!variable) {
+                                                      return;
+                                                    }
+                                                    const {
+                                                      objRoot,
+                                                      variablePath
+                                                    } = variable;
+
+                                                    $stateSet(
+                                                      objRoot,
+                                                      variablePath,
+                                                      value
+                                                    );
+                                                    return value;
+                                                  })?.apply(null, [actionArgs]);
+                                                })()
+                                                : undefined;
+                                              if (
+                                                $steps["updateClickUserLoading"] !=
+                                                null &&
+                                                typeof $steps[
+                                                "updateClickUserLoading"
+                                                ] === "object" &&
+                                                typeof $steps[
+                                                  "updateClickUserLoading"
+                                                ].then === "function"
+                                              ) {
+                                                $steps["updateClickUserLoading"] =
+                                                  await $steps[
+                                                    "updateClickUserLoading"
+                                                  ];
+                                              }
+
+                                              $steps["api"] = true
+                                                ? (() => {
+                                                  const actionArgs = {
+                                                    args: [
+                                                      undefined,
+                                                      "https://apigw.paziresh24.com/v1/providers",
+                                                      (() => {
+                                                        try {
+                                                          return {
+                                                            user_id:
+                                                              currentItem?.user_id
+                                                          };
+                                                        } catch (e) {
+                                                          if (
+                                                            e instanceof
+                                                            TypeError ||
+                                                            e?.plasmicType ===
+                                                            "PlasmicUndefinedDataError"
+                                                          ) {
+                                                            return undefined;
+                                                          }
+                                                          throw e;
+                                                        }
+                                                      })()
+                                                    ]
+                                                  };
+                                                  return $globalActions[
+                                                    "Fragment.apiRequest"
+                                                  ]?.apply(null, [
+                                                    ...actionArgs.args
+                                                  ]);
+                                                })()
+                                                : undefined;
+                                              if (
+                                                $steps["api"] != null &&
+                                                typeof $steps["api"] === "object" &&
+                                                typeof $steps["api"].then ===
+                                                "function"
+                                              ) {
+                                                $steps["api"] = await $steps["api"];
+                                              }
+
+                                              $steps["runCode"] = true
+                                                ? (() => {
+                                                  const actionArgs = {
+                                                    customFunction: async () => {
+                                                      return globalThis.open(
+                                                        `/dr/${$steps?.api?.data?.providers?.[0]?.slug}`,
+                                                        "_blank"
+                                                      );
+                                                    }
+                                                  };
+                                                  return (({ customFunction }) => {
+                                                    return customFunction();
+                                                  })?.apply(null, [actionArgs]);
+                                                })()
+                                                : undefined;
+                                              if (
+                                                $steps["runCode"] != null &&
+                                                typeof $steps["runCode"] ===
+                                                "object" &&
+                                                typeof $steps["runCode"].then ===
+                                                "function"
+                                              ) {
+                                                $steps["runCode"] = await $steps[
+                                                  "runCode"
+                                                ];
+                                              }
+
+                                              $steps["updateClickUserLoading2"] = true
+                                                ? (() => {
+                                                  const actionArgs = {
+                                                    variable: {
+                                                      objRoot: $state,
+                                                      variablePath: [
+                                                        "clickUserLoading"
+                                                      ]
+                                                    },
+                                                    operation: 0,
+                                                    value: false
+                                                  };
+                                                  return (({
+                                                    variable,
+                                                    value,
+                                                    startIndex,
+                                                    deleteCount
+                                                  }) => {
+                                                    if (!variable) {
+                                                      return;
+                                                    }
+                                                    const {
+                                                      objRoot,
+                                                      variablePath
+                                                    } = variable;
+
+                                                    $stateSet(
+                                                      objRoot,
+                                                      variablePath,
+                                                      value
+                                                    );
+                                                    return value;
+                                                  })?.apply(null, [actionArgs]);
+                                                })()
+                                                : undefined;
+                                              if (
+                                                $steps["updateClickUserLoading2"] !=
+                                                null &&
+                                                typeof $steps[
+                                                "updateClickUserLoading2"
+                                                ] === "object" &&
+                                                typeof $steps[
+                                                  "updateClickUserLoading2"
+                                                ].then === "function"
+                                              ) {
+                                                $steps["updateClickUserLoading2"] =
+                                                  await $steps[
+                                                    "updateClickUserLoading2"
+                                                  ];
+                                              }
+                                            }}
+                                            src={(() => {
+                                              try {
+                                                return currentItem.image_url;
+                                              } catch (e) {
+                                                if (
+                                                  e instanceof TypeError ||
+                                                  e?.plasmicType ===
+                                                  "PlasmicUndefinedDataError"
+                                                ) {
+                                                  return undefined;
+                                                }
+                                                throw e;
+                                              }
+                                            })()}
+                                            width={``}
+                                          />
+                                        </div>
+                                      );
+                                    })}
                             </div>
                             {(() => {
                               try {
@@ -1366,7 +1366,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                                     if (
                                       e instanceof TypeError ||
                                       e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
+                                      "PlasmicUndefinedDataError"
                                     ) {
                                       return [];
                                     }
@@ -1378,43 +1378,43 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
                                   $steps["updatePage"] = !$state.isUsersLoading
                                     ? (() => {
-                                        const actionArgs = {
-                                          variable: {
-                                            objRoot: $state,
-                                            variablePath: ["page"]
-                                          },
-                                          operation: 2
-                                        };
-                                        return (({
-                                          variable,
-                                          value,
-                                          startIndex,
-                                          deleteCount
-                                        }) => {
-                                          if (!variable) {
-                                            return;
-                                          }
-                                          const { objRoot, variablePath } =
-                                            variable;
+                                      const actionArgs = {
+                                        variable: {
+                                          objRoot: $state,
+                                          variablePath: ["page"]
+                                        },
+                                        operation: 2
+                                      };
+                                      return (({
+                                        variable,
+                                        value,
+                                        startIndex,
+                                        deleteCount
+                                      }) => {
+                                        if (!variable) {
+                                          return;
+                                        }
+                                        const { objRoot, variablePath } =
+                                          variable;
 
-                                          const oldValue = $stateGet(
-                                            objRoot,
-                                            variablePath
-                                          );
-                                          $stateSet(
-                                            objRoot,
-                                            variablePath,
-                                            oldValue + 1
-                                          );
-                                          return oldValue + 1;
-                                        })?.apply(null, [actionArgs]);
-                                      })()
+                                        const oldValue = $stateGet(
+                                          objRoot,
+                                          variablePath
+                                        );
+                                        $stateSet(
+                                          objRoot,
+                                          variablePath,
+                                          oldValue + 1
+                                        );
+                                        return oldValue + 1;
+                                      })?.apply(null, [actionArgs]);
+                                    })()
                                     : undefined;
                                   if (
                                     $steps["updatePage"] != null &&
                                     typeof $steps["updatePage"] === "object" &&
                                     typeof $steps["updatePage"].then ===
-                                      "function"
+                                    "function"
                                   ) {
                                     $steps["updatePage"] = await $steps[
                                       "updatePage"
@@ -1423,39 +1423,39 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
                                   $steps["updateIsUsersLoading"] = true
                                     ? (() => {
-                                        const actionArgs = {
-                                          variable: {
-                                            objRoot: $state,
-                                            variablePath: ["isUsersLoading"]
-                                          },
-                                          operation: 0,
-                                          value: true
-                                        };
-                                        return (({
-                                          variable,
-                                          value,
-                                          startIndex,
-                                          deleteCount
-                                        }) => {
-                                          if (!variable) {
-                                            return;
-                                          }
-                                          const { objRoot, variablePath } =
-                                            variable;
+                                      const actionArgs = {
+                                        variable: {
+                                          objRoot: $state,
+                                          variablePath: ["isUsersLoading"]
+                                        },
+                                        operation: 0,
+                                        value: true
+                                      };
+                                      return (({
+                                        variable,
+                                        value,
+                                        startIndex,
+                                        deleteCount
+                                      }) => {
+                                        if (!variable) {
+                                          return;
+                                        }
+                                        const { objRoot, variablePath } =
+                                          variable;
 
-                                          $stateSet(
-                                            objRoot,
-                                            variablePath,
-                                            value
-                                          );
-                                          return value;
-                                        })?.apply(null, [actionArgs]);
-                                      })()
+                                        $stateSet(
+                                          objRoot,
+                                          variablePath,
+                                          value
+                                        );
+                                        return value;
+                                      })?.apply(null, [actionArgs]);
+                                    })()
                                     : undefined;
                                   if (
                                     $steps["updateIsUsersLoading"] != null &&
                                     typeof $steps["updateIsUsersLoading"] ===
-                                      "object" &&
+                                    "object" &&
                                     typeof $steps["updateIsUsersLoading"]
                                       .then === "function"
                                   ) {
@@ -1550,29 +1550,29 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
                         $steps["updateUserList"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["userList"]
-                                },
-                                operation: 0,
-                                value: []
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["userList"]
+                              },
+                              operation: 0,
+                              value: []
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["updateUserList"] != null &&
@@ -1586,29 +1586,29 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
                         $steps["updatePage"] = true
                           ? (() => {
-                              const actionArgs = {
-                                variable: {
-                                  objRoot: $state,
-                                  variablePath: ["page"]
-                                },
-                                operation: 0,
-                                value: 1
-                              };
-                              return (({
-                                variable,
-                                value,
-                                startIndex,
-                                deleteCount
-                              }) => {
-                                if (!variable) {
-                                  return;
-                                }
-                                const { objRoot, variablePath } = variable;
+                            const actionArgs = {
+                              variable: {
+                                objRoot: $state,
+                                variablePath: ["page"]
+                              },
+                              operation: 0,
+                              value: 1
+                            };
+                            return (({
+                              variable,
+                              value,
+                              startIndex,
+                              deleteCount
+                            }) => {
+                              if (!variable) {
+                                return;
+                              }
+                              const { objRoot, variablePath } = variable;
 
-                                $stateSet(objRoot, variablePath, value);
-                                return value;
-                              })?.apply(null, [actionArgs]);
-                            })()
+                              $stateSet(objRoot, variablePath, value);
+                              return value;
+                            })?.apply(null, [actionArgs]);
+                          })()
                           : undefined;
                         if (
                           $steps["updatePage"] != null &&
@@ -1669,7 +1669,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                                       if (
                                         e instanceof TypeError ||
                                         e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
+                                        "PlasmicUndefinedDataError"
                                       ) {
                                         return "-";
                                       }
@@ -1711,66 +1711,66 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                           >
                             {(_par =>
                               !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                              (() => {
-                                try {
-                                  return $state.apiRequest.data?.users
-                                    ?.slice(0, 4)
-                                    ?.reverse();
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
+                                (() => {
+                                  try {
+                                    return $state.apiRequest.data?.users
+                                      ?.slice(0, 4)
+                                      ?.reverse();
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
                                       "PlasmicUndefinedDataError"
-                                  ) {
-                                    return [];
-                                  }
-                                  throw e;
-                                }
-                              })()
-                            ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                              const currentItem = __plasmic_item_0;
-                              const currentIndex = __plasmic_idx_0;
-                              return (
-                                <PlasmicImg__
-                                  alt={""}
-                                  className={classNames(
-                                    sty.img__tUwbH,
-                                    "bg-white"
-                                  )}
-                                  displayHeight={"23px"}
-                                  displayMaxHeight={"23px"}
-                                  displayMaxWidth={"23%"}
-                                  displayMinHeight={"23px"}
-                                  displayMinWidth={"23px"}
-                                  displayWidth={
-                                    hasVariant(
-                                      globalVariants,
-                                      "screen",
-                                      "mobileOnly"
-                                    )
-                                      ? "auto"
-                                      : "28px"
-                                  }
-                                  key={currentIndex}
-                                  loading={"eager"}
-                                  src={(() => {
-                                    try {
-                                      return currentItem.image_url;
-                                    } catch (e) {
-                                      if (
-                                        e instanceof TypeError ||
-                                        e?.plasmicType ===
-                                          "PlasmicUndefinedDataError"
-                                      ) {
-                                        return undefined;
-                                      }
-                                      throw e;
+                                    ) {
+                                      return [];
                                     }
-                                  })()}
-                                  width={``}
-                                />
-                              );
-                            })}
+                                    throw e;
+                                  }
+                                })()
+                              ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                                const currentItem = __plasmic_item_0;
+                                const currentIndex = __plasmic_idx_0;
+                                return (
+                                  <PlasmicImg__
+                                    alt={""}
+                                    className={classNames(
+                                      sty.img__tUwbH,
+                                      "bg-white"
+                                    )}
+                                    displayHeight={"23px"}
+                                    displayMaxHeight={"23px"}
+                                    displayMaxWidth={"23%"}
+                                    displayMinHeight={"23px"}
+                                    displayMinWidth={"23px"}
+                                    displayWidth={
+                                      hasVariant(
+                                        globalVariants,
+                                        "screen",
+                                        "mobileOnly"
+                                      )
+                                        ? "auto"
+                                        : "28px"
+                                    }
+                                    key={currentIndex}
+                                    loading={"eager"}
+                                    src={(() => {
+                                      try {
+                                        return currentItem.image_url;
+                                      } catch (e) {
+                                        if (
+                                          e instanceof TypeError ||
+                                          e?.plasmicType ===
+                                          "PlasmicUndefinedDataError"
+                                        ) {
+                                          return undefined;
+                                        }
+                                        throw e;
+                                      }
+                                    })()}
+                                    width={``}
+                                  />
+                                );
+                              })}
                           </div>
                         ) : null}
                         {(() => {
@@ -1812,7 +1812,7 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                                   if (
                                     e instanceof TypeError ||
                                     e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
+                                    "PlasmicUndefinedDataError"
                                   ) {
                                     return "";
                                   }
@@ -1843,33 +1843,33 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
                           >
                             {(_par =>
                               !_par ? [] : Array.isArray(_par) ? _par : [_par])(
-                              (() => {
-                                try {
-                                  return [2, 3, 4, 5];
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
+                                (() => {
+                                  try {
+                                    return [2, 3, 4, 5];
+                                  } catch (e) {
+                                    if (
+                                      e instanceof TypeError ||
+                                      e?.plasmicType ===
                                       "PlasmicUndefinedDataError"
-                                  ) {
-                                    return [];
+                                    ) {
+                                      return [];
+                                    }
+                                    throw e;
                                   }
-                                  throw e;
-                                }
-                              })()
-                            ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                              const currentItem = __plasmic_item_0;
-                              const currentIndex = __plasmic_idx_0;
-                              return (
-                                <div
-                                  className={classNames(
-                                    projectcss.all,
-                                    sty.freeBox__wiIy
-                                  )}
-                                  key={currentIndex}
-                                />
-                              );
-                            })}
+                                })()
+                              ).map((__plasmic_item_0, __plasmic_idx_0) => {
+                                const currentItem = __plasmic_item_0;
+                                const currentIndex = __plasmic_idx_0;
+                                return (
+                                  <div
+                                    className={classNames(
+                                      projectcss.all,
+                                      sty.freeBox__wiIy
+                                    )}
+                                    key={currentIndex}
+                                  />
+                                );
+                              })}
                           </div>
                         ) : null}
                         {(() => {
@@ -1949,15 +1949,15 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
               $steps["runCode"] = true
                 ? (() => {
-                    const actionArgs = {
-                      customFunction: async () => {
-                        return event?.stopPropagation();
-                      }
-                    };
-                    return (({ customFunction }) => {
-                      return customFunction();
-                    })?.apply(null, [actionArgs]);
-                  })()
+                  const actionArgs = {
+                    customFunction: async () => {
+                      return event?.stopPropagation();
+                    }
+                  };
+                  return (({ customFunction }) => {
+                    return customFunction();
+                  })?.apply(null, [actionArgs]);
+                })()
                 : undefined;
               if (
                 $steps["runCode"] != null &&
@@ -1969,36 +1969,36 @@ function PlasmicLauncherComponentsApp__RenderFunc(props: {
 
               $steps["invokeGlobalAction"] = true
                 ? (() => {
-                    const actionArgs = {
-                      args: [
-                        (() => {
-                          try {
-                            return {
-                              evant_group: "launcher_statistics",
-                              event_type: "apps-performance",
-                              is_doctor: $ctx.auth.info?.is_doctor,
-                              user_id: $ctx?.auth?.info?.id,
-                              meta_data: {
-                                name: $props.name,
-                                key: $props.appkey
-                              }
-                            };
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
+                  const actionArgs = {
+                    args: [
+                      (() => {
+                        try {
+                          return {
+                            evant_group: "launcher_statistics",
+                            event_type: "apps-performance",
+                            is_doctor: $ctx.auth.info?.is_doctor,
+                            user_id: $ctx?.auth?.info?.id,
+                            meta_data: {
+                              name: $props.name,
+                              key: $props.appkey
                             }
-                            throw e;
+                          };
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return undefined;
                           }
-                        })()
-                      ]
-                    };
-                    return $globalActions["Splunk.sendLog"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
+                          throw e;
+                        }
+                      })()
+                    ]
+                  };
+                  return $globalActions["Splunk.sendLog"]?.apply(null, [
+                    ...actionArgs.args
+                  ]);
+                })()
                 : undefined;
               if (
                 $steps["invokeGlobalAction"] != null &&
@@ -2269,18 +2269,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicLauncherComponentsApp__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicLauncherComponentsApp__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicLauncherComponentsApp__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicLauncherComponentsApp__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };

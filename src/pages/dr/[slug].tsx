@@ -44,6 +44,7 @@ import Script from 'next/script';
 import Head from 'next/head';
 import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
+import { useRate } from '@/common/apis/services/reviews/rate';
 
 const { publicRuntimeConfig } = config();
 
@@ -162,6 +163,13 @@ const DoctorProfile = (props: any) => {
     user_id,
     dontShowRateAndReviewMessage,
   } = finalProps ?? {};
+
+  const rateDebug = query.rateDebug === '1';
+  const rateDebugSlug = slug ?? currentSlug;
+  const rateDebugProbe = useRate(
+    { slug: String(rateDebugSlug ?? '') },
+    { enabled: rateDebug && !!rateDebugSlug, refetchOnWindwFocus: false },
+  );
 
   const doctorProfileImageUrl = useMemo(
     () => resolveDoctorProfileImageUrl(information, user_id),
@@ -362,6 +370,39 @@ const DoctorProfile = (props: any) => {
 
   return (
     <>
+      {rateDebug && (
+        <div
+          className="fixed top-14 right-2 z-[10000] max-w-md rounded-md border border-amber-300 bg-amber-50/95 p-2 text-[11px] leading-relaxed text-amber-950 font-mono shadow-md backdrop-blur-sm"
+          dir="ltr"
+        >
+          <div className="font-bold text-amber-900">rateDebug (add ?rateDebug=1)</div>
+          <div>slug: {String(rateDebugSlug ?? '')}</div>
+          <div>showRateAndReviews (customize): {String(customize?.showRateAndReviews)}</div>
+          <div>ravi_show_external_rate (hides review bars): {String(dontShowRateDetails)}</div>
+          <div>
+            client probe /api/ravi-rate:{' '}
+            {rateDebugProbe.isLoading
+              ? 'loading…'
+              : rateDebugProbe.isError
+                ? `error: ${(rateDebugProbe.error as any)?.message ?? 'unknown'}`
+                : `ok (list ${rateDebugProbe.data?.list?.length ?? 0})`}
+          </div>
+          <div>
+            SSR props average_rates:{' '}
+            {[
+              feedbacks?.details?.average_rates?.average_quality_of_treatment,
+              feedbacks?.details?.average_rates?.average_doctor_encounter,
+              feedbacks?.details?.average_rates?.average_explanation_of_issue,
+            ].every(v => v == null || v === '')
+              ? 'empty (getRateDetails failed or no row)'
+              : 'set'}
+          </div>
+          <div className="text-[10px] text-amber-800 mt-1">
+            Tip: first HTML load fetches rate on the server — you will not see ravi-api in the browser Network tab until client
+            refetch (e.g. profile client fetch or this probe).
+          </div>
+        </div>
+      )}
       <Head>
         <link rel="dns-prefetch" href="//cdn.paziresh24.com" />
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
@@ -562,30 +603,30 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
       },
       'affiliation': center
         ? {
-            '@type': 'MedicalClinic',
-            'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
-            'address': {
-              '@type': 'PostalAddress',
-              'streetAddress': center.address,
-              'addressLocality': center.city,
-              'addressRegion': center.province,
-              'addressCountry': 'IR',
-            },
-            'contactPoint': {
-              '@type': 'ContactPoint',
-              'telephone': center.display_number?.[0] || center.display_number,
-              'contactType': 'appointment',
-              'availableLanguage': ['fa'],
-            },
-            'openingHoursSpecification': getOpeningHours(),
-            'geo': center.map
-              ? {
-                  '@type': 'GeoCoordinates',
-                  'latitude': center.map.lat,
-                  'longitude': center.map.lon,
-                }
-              : undefined,
-          }
+          '@type': 'MedicalClinic',
+          'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
+          'address': {
+            '@type': 'PostalAddress',
+            'streetAddress': center.address,
+            'addressLocality': center.city,
+            'addressRegion': center.province,
+            'addressCountry': 'IR',
+          },
+          'contactPoint': {
+            '@type': 'ContactPoint',
+            'telephone': center.display_number?.[0] || center.display_number,
+            'contactType': 'appointment',
+            'availableLanguage': ['fa'],
+          },
+          'openingHoursSpecification': getOpeningHours(),
+          'geo': center.map
+            ? {
+              '@type': 'GeoCoordinates',
+              'latitude': center.map.lat,
+              'longitude': center.map.lon,
+            }
+            : undefined,
+        }
         : undefined,
       'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
       'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
@@ -615,38 +656,38 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
       },
       ...(!feedbacks?.details?.hide_rates &&
         (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 && {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            'ratingValue': +(
-              (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-              3
-            ).toFixed(1),
-            'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
-            'bestRating': 5,
-            'worstRating': 0,
-          },
-          review:
-            feedbacks?.feedbacks?.list
-              ?.filter((item: any) => !!item?.avg_rate_value)
-              ?.slice(0, 5) // Limit to 5 reviews for schema
-              ?.map?.((feedback: any) => ({
-                '@type': 'Review',
-                'author': {
-                  '@type': 'Person',
-                  'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
-                },
-                'reviewRating': {
-                  '@type': 'Rating',
-                  'ratingValue': feedback?.avg_rate_value ?? 0,
-                  'bestRating': 5,
-                  'worstRating': 0,
-                },
-                'reviewBody': feedback?.description,
-                'datePublished': feedback?.created_at?.split(' ')?.[0],
-              })) ?? [],
-        }),
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          'ratingValue': +(
+            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+            3
+          ).toFixed(1),
+          'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
+          'bestRating': 5,
+          'worstRating': 0,
+        },
+        review:
+          feedbacks?.feedbacks?.list
+            ?.filter((item: any) => !!item?.avg_rate_value)
+            ?.slice(0, 5) // Limit to 5 reviews for schema
+            ?.map?.((feedback: any) => ({
+              '@type': 'Review',
+              'author': {
+                '@type': 'Person',
+                'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
+              },
+              'reviewRating': {
+                '@type': 'Rating',
+                'ratingValue': feedback?.avg_rate_value ?? 0,
+                'bestRating': 5,
+                'worstRating': 0,
+              },
+              'reviewBody': feedback?.description,
+              'datePublished': feedback?.created_at?.split(' ')?.[0],
+            })) ?? [],
+      }),
     };
 
     const breadcrumbSchema = {
