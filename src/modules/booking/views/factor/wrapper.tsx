@@ -44,7 +44,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
     enabled: false,
     centerId: centerId,
     serviceId: serviceId!,
-    server_id: '1',
+    serverId: '1',
     userCenterId: userCenterId!,
   });
   const { handleBook, isLoading: bookLoading } = useBooking();

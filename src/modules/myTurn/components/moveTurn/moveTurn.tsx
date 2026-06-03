@@ -11,6 +11,7 @@ import { toast } from 'react-hot-toast';
 interface MoveTurnProps {
   centerId: string;
   serviceId: string;
+  serverId: string;
   userCenterId: string;
   currentDate: number;
   handleMove: ({ timeId, timeStamp }: { timeId: string; timeStamp: number }) => void;

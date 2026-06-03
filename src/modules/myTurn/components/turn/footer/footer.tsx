@@ -356,8 +356,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             {isOnlineVisitTurn && status !== BookStatus.notVisited
               ? 'حذف نوبت و استرداد وجه'
               : isRequestVisitTurn
-              ? 'لغو درخواست'
-              : 'لغو نوبت'}
+                ? 'لغو درخواست'
+                : 'لغو نوبت'}
           </Button>
         )}
         {status === BookStatus.notVisited && paymentStatus !== PaymentStatus.paying && !isOnlineVisitTurn && (
@@ -393,6 +393,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
 
       <Modal {...moveTurnModalProps} title="انتخاب تاريخ جابجایی نوبت" bodyClassName="space-y-3 pb-24 md:pb-5">
         <MoveTurn
+          serverId={serverId?.toString()}
           centerId={centerId}
           serviceId={serviceId}
           userCenterId={userCenterId}
@@ -423,10 +424,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           isOnlineVisitTurn
             ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست  حذف نوبت و استرداد وجه'} را انتخاب کنید`
             : notRefundable
-            ? 'عدم امکان لغو نوبت'
-            : isRequestVisitTurn
-            ? 'آیا از لغو درخواست اطمینان دارید؟'
-            : 'آیا از لغو نوبت اطمینان دارید؟'
+              ? 'عدم امکان لغو نوبت'
+              : isRequestVisitTurn
+                ? 'آیا از لغو درخواست اطمینان دارید؟'
+                : 'آیا از لغو نوبت اطمینان دارید؟'
         }
         {...removeTurnProp}
       >
@@ -474,8 +475,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
                 {isOnlineVisitTurn && status !== BookStatus.notVisited
                   ? 'حذف نوبت و استرداد وجه'
                   : isRequestVisitTurn
-                  ? 'لغو درخواست'
-                  : 'لغو نوبت'}
+                    ? 'لغو درخواست'
+                    : 'لغو نوبت'}
               </Button>
             )}
             <Button

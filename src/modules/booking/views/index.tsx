@@ -179,7 +179,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     enabled: false,
     centerId: center?.id,
     serviceId: service?.id,
-    server_id: center?.server_id || '',
+    serverId: center?.server_id || '',
     userCenterId: center?.user_center_id,
   });
   const searchData = useSearch(
@@ -633,7 +633,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             loading: isLoading || !center || !service || !profile,
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
-            server_id: center?.server_id ?? '',
+            serverId: center?.server_id ?? '',
             userCenterId: service?.user_center_id,
             showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {
@@ -815,8 +815,8 @@ const BookingSteps = (props: BookingStepsProps) => {
                 ...user,
                 ...(center?.id === CENTERS.CONSULT &&
                   doctorMessenger?.length === 1 && {
-                    messengerType: messengers[doctorMessenger?.[0]]?.type,
-                  }),
+                  messengerType: messengers[doctorMessenger?.[0]]?.type,
+                }),
               };
 
               const addonResult = await bookingAddon.checkAndExecuteAddon(finalUser);
@@ -870,7 +870,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             uploaderTitle: 'مدارک مورد نیاز خود را بارگذاری کنید',
             rulesBoxTitle: 'شرایط دریافت نوبت از پذیرش24',
             uploadRequired: services.find((item: any) => item.service_id === service.id)?.upload_required,
-            getData: () => {},
+            getData: () => { },
             loading: bookRequest.isLoading || bookRequestLoading,
             center_id: center.id,
             service_id: service.id,
@@ -882,7 +882,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         />
       )}
 
-      <Modal noHeader {...turnTimeOutModalProps} onClose={() => {}}>
+      <Modal noHeader {...turnTimeOutModalProps} onClose={() => { }}>
         <div className="flex flex-col space-y-3">
           <Text fontWeight="medium">زمان شما برای دریافت نوبت به پایان رسیده است، لطفا دوباره تلاش کنید.</Text>
           <Button
