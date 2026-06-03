@@ -81,6 +81,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
       if (timeMode === TimeMode.FIRST_FREE_TURN) {
         unSuspend.mutate({
           center_id: baseInfo.centerId,
+          server_id: baseInfo.server_id,
           request_code: firstFreeTime.timeId!,
         });
         getDays();
@@ -131,6 +132,7 @@ export const SelectTimeUi = (props: SelectTimeProps) => {
             const { data } = await suspend.mutateAsync({
               center_id: baseInfo.centerId,
               service_id: baseInfo.serviceId,
+              server_id: baseInfo.server_id,
               user_center_id: baseInfo.userCenterId,
               from,
               to,

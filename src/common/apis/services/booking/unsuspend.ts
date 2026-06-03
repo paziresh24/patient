@@ -7,6 +7,7 @@ import { growthbook } from 'src/pages/_app';
 
 interface Params {
   center_id: string;
+  server_id: string;
   request_code: string;
 }
 
@@ -22,6 +23,7 @@ export const unsuspend = (params: Params) => {
     {
       headers: {
         center_id: params.center_id,
+        server_id: params.server_id,
         terminal_id: getCookie('terminal_id'),
       },
     },
