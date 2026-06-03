@@ -9,6 +9,7 @@ interface Params {
   center_id: string;
   user_center_id: string;
   service_id: string;
+  server_id: string;
   type: 'web' | 'app';
 }
 
@@ -24,6 +25,7 @@ export const getFreeTurn = (params: Params) => {
     {
       headers: {
         center_id: params.center_id,
+        server_id: params.server_id,
         terminal_id: getCookie('terminal_id'),
       },
     },
