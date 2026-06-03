@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700%3B0%2C800&family=Inconsolata%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700%3B0%2C800&family=Vazirmatn%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700%3B0%2C800&display=swap");
+
 .plasmic_tokens {
   --token-8PAyMUV1FIA1: 11px;
   --plasmic-token-unnamed-style-token: var(--token-8PAyMUV1FIA1);
@@ -7,11 +9,14 @@
   --plsmc-standard-width: 800px;
   --plsmc-wide-width: 1280px;
   --plsmc-viewport-gap: 16px;
-  --plsmc-wide-chunk: calc(((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) - var(--plsmc-viewport-gap));
+  --plsmc-wide-chunk: calc(
+    ((var(--plsmc-wide-width) - var(--plsmc-standard-width)) / 2) -
+      var(--plsmc-viewport-gap)
+  );
 }
 
 .plasmic_default_styles {
-  --mixin-pg6xcYd7B0Xh_font-family: 'Inter', sans-serif;
+  --mixin-pg6xcYd7B0Xh_font-family: "Inter", sans-serif;
   --mixin-pg6xcYd7B0Xh_font-size: 16px;
   --mixin-pg6xcYd7B0Xh_font-weight: 400;
   --mixin-pg6xcYd7B0Xh_font-style: normal;
@@ -65,7 +70,7 @@
   --mixin-72EY4Tgujnku_border-bottom-right-radius: 3px;
   --mixin-72EY4Tgujnku_border-top-left-radius: 3px;
   --mixin-72EY4Tgujnku_border-top-right-radius: 3px;
-  --mixin-72EY4Tgujnku_font-family: 'Inconsolata';
+  --mixin-72EY4Tgujnku_font-family: "Inconsolata";
   --mixin-72EY4Tgujnku_padding-bottom: 1px;
   --mixin-72EY4Tgujnku_padding-left: 4px;
   --mixin-72EY4Tgujnku_padding-right: 4px;
@@ -94,7 +99,7 @@
   --mixin-2Xy-GhfaFknm_border-bottom-right-radius: 3px;
   --mixin-2Xy-GhfaFknm_border-top-left-radius: 3px;
   --mixin-2Xy-GhfaFknm_border-top-right-radius: 3px;
-  --mixin-2Xy-GhfaFknm_font-family: 'Inconsolata';
+  --mixin-2Xy-GhfaFknm_font-family: "Inconsolata";
   --mixin-2Xy-GhfaFknm_padding-bottom: 3px;
   --mixin-2Xy-GhfaFknm_padding-left: 6px;
   --mixin-2Xy-GhfaFknm_padding-right: 6px;
@@ -327,6 +332,58 @@
   text-transform: inherit;
 }
 
+:where(.i) {
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-transform: inherit;
+}
+:where(.__wab_expr_html_text i) {
+  white-space: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-transform: inherit;
+}
+
+:where(.em) {
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-transform: inherit;
+}
+:where(.__wab_expr_html_text em) {
+  white-space: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-transform: inherit;
+}
+
+:where(.strong) {
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-transform: inherit;
+}
+:where(.__wab_expr_html_text strong) {
+  white-space: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-transform: inherit;
+}
+
 :where(.h1) {
   font-size: inherit;
   font-weight: inherit;
@@ -463,8 +520,8 @@
   white-space: var(--mixin-pg6xcYd7B0Xh_white-space);
 }
 
-:where(.root_reset) h1:where(.h1),
-h1:where(.root_reset.h1),
+:where(.root_reset) h1:where(.h1__666Td),
+h1:where(.root_reset.h1__666Td),
 :where(.root_reset .__wab_expr_html_text) h1,
 :where(.root_reset_tags) h1,
 h1:where(.root_reset_tags) {
@@ -475,8 +532,8 @@ h1:where(.root_reset_tags) {
   letter-spacing: var(--mixin-2kV0DTzjPgAn_letter-spacing);
 }
 
-:where(.root_reset) h2:where(.h2),
-h2:where(.root_reset.h2),
+:where(.root_reset) h2:where(.h2__666Td),
+h2:where(.root_reset.h2__666Td),
 :where(.root_reset .__wab_expr_html_text) h2,
 :where(.root_reset_tags) h2,
 h2:where(.root_reset_tags) {
@@ -487,16 +544,16 @@ h2:where(.root_reset_tags) {
   line-height: var(--mixin-YSmZfTBviE-f_line-height);
 }
 
-:where(.root_reset) a:where(.a),
-a:where(.root_reset.a),
+:where(.root_reset) a:where(.a__666Td),
+a:where(.root_reset.a__666Td),
 :where(.root_reset .__wab_expr_html_text) a,
 :where(.root_reset_tags) a,
 a:where(.root_reset_tags) {
   color: var(--mixin-CKIDxfDY_0qs_color);
 }
 
-:where(.root_reset) h3:where(.h3),
-h3:where(.root_reset.h3),
+:where(.root_reset) h3:where(.h3__666Td),
+h3:where(.root_reset.h3__666Td),
 :where(.root_reset .__wab_expr_html_text) h3,
 :where(.root_reset_tags) h3,
 h3:where(.root_reset_tags) {
@@ -506,8 +563,8 @@ h3:where(.root_reset_tags) {
   line-height: var(--mixin-iT3OCPUb8Qez_line-height);
 }
 
-:where(.root_reset) h4:where(.h4),
-h4:where(.root_reset.h4),
+:where(.root_reset) h4:where(.h4__666Td),
+h4:where(.root_reset.h4__666Td),
 :where(.root_reset .__wab_expr_html_text) h4,
 :where(.root_reset_tags) h4,
 h4:where(.root_reset_tags) {
@@ -517,61 +574,78 @@ h4:where(.root_reset_tags) {
   line-height: var(--mixin-Q7RWFgtvt0hL_line-height);
 }
 
-:where(.root_reset) code:where(.code),
-code:where(.root_reset.code),
+:where(.root_reset) code:where(.code__666Td),
+code:where(.root_reset.code__666Td),
 :where(.root_reset .__wab_expr_html_text) code,
 :where(.root_reset_tags) code,
 code:where(.root_reset_tags) {
   background: #f8f8f8;
   font-family: var(--mixin-72EY4Tgujnku_font-family);
-  border-radius: var(--mixin-72EY4Tgujnku_border-top-left-radius) var(--mixin-72EY4Tgujnku_border-top-right-radius)
-    var(--mixin-72EY4Tgujnku_border-bottom-right-radius) var(--mixin-72EY4Tgujnku_border-bottom-left-radius);
-  padding: var(--mixin-72EY4Tgujnku_padding-top) var(--mixin-72EY4Tgujnku_padding-right) var(--mixin-72EY4Tgujnku_padding-bottom)
+  border-radius: var(--mixin-72EY4Tgujnku_border-top-left-radius)
+    var(--mixin-72EY4Tgujnku_border-top-right-radius)
+    var(--mixin-72EY4Tgujnku_border-bottom-right-radius)
+    var(--mixin-72EY4Tgujnku_border-bottom-left-radius);
+  padding: var(--mixin-72EY4Tgujnku_padding-top)
+    var(--mixin-72EY4Tgujnku_padding-right)
+    var(--mixin-72EY4Tgujnku_padding-bottom)
     var(--mixin-72EY4Tgujnku_padding-left);
-  border-top: var(--mixin-72EY4Tgujnku_border-top-width) var(--mixin-72EY4Tgujnku_border-top-style)
+  border-top: var(--mixin-72EY4Tgujnku_border-top-width)
+    var(--mixin-72EY4Tgujnku_border-top-style)
     var(--mixin-72EY4Tgujnku_border-top-color);
-  border-right: var(--mixin-72EY4Tgujnku_border-right-width) var(--mixin-72EY4Tgujnku_border-right-style)
+  border-right: var(--mixin-72EY4Tgujnku_border-right-width)
+    var(--mixin-72EY4Tgujnku_border-right-style)
     var(--mixin-72EY4Tgujnku_border-right-color);
-  border-bottom: var(--mixin-72EY4Tgujnku_border-bottom-width) var(--mixin-72EY4Tgujnku_border-bottom-style)
+  border-bottom: var(--mixin-72EY4Tgujnku_border-bottom-width)
+    var(--mixin-72EY4Tgujnku_border-bottom-style)
     var(--mixin-72EY4Tgujnku_border-bottom-color);
-  border-left: var(--mixin-72EY4Tgujnku_border-left-width) var(--mixin-72EY4Tgujnku_border-left-style)
+  border-left: var(--mixin-72EY4Tgujnku_border-left-width)
+    var(--mixin-72EY4Tgujnku_border-left-style)
     var(--mixin-72EY4Tgujnku_border-left-color);
 }
 
-:where(.root_reset) blockquote:where(.blockquote),
-blockquote:where(.root_reset.blockquote),
+:where(.root_reset) blockquote:where(.blockquote__666Td),
+blockquote:where(.root_reset.blockquote__666Td),
 :where(.root_reset .__wab_expr_html_text) blockquote,
 :where(.root_reset_tags) blockquote,
 blockquote:where(.root_reset_tags) {
   color: var(--mixin-kw7zL_M48VnT_color);
   padding-left: var(--mixin-kw7zL_M48VnT_padding-left);
-  border-left: var(--mixin-kw7zL_M48VnT_border-left-width) var(--mixin-kw7zL_M48VnT_border-left-style)
+  border-left: var(--mixin-kw7zL_M48VnT_border-left-width)
+    var(--mixin-kw7zL_M48VnT_border-left-style)
     var(--mixin-kw7zL_M48VnT_border-left-color);
 }
 
-:where(.root_reset) pre:where(.pre),
-pre:where(.root_reset.pre),
+:where(.root_reset) pre:where(.pre__666Td),
+pre:where(.root_reset.pre__666Td),
 :where(.root_reset .__wab_expr_html_text) pre,
 :where(.root_reset_tags) pre,
 pre:where(.root_reset_tags) {
   background: #f8f8f8;
   font-family: var(--mixin-2Xy-GhfaFknm_font-family);
-  border-radius: var(--mixin-2Xy-GhfaFknm_border-top-left-radius) var(--mixin-2Xy-GhfaFknm_border-top-right-radius)
-    var(--mixin-2Xy-GhfaFknm_border-bottom-right-radius) var(--mixin-2Xy-GhfaFknm_border-bottom-left-radius);
-  padding: var(--mixin-2Xy-GhfaFknm_padding-top) var(--mixin-2Xy-GhfaFknm_padding-right) var(--mixin-2Xy-GhfaFknm_padding-bottom)
+  border-radius: var(--mixin-2Xy-GhfaFknm_border-top-left-radius)
+    var(--mixin-2Xy-GhfaFknm_border-top-right-radius)
+    var(--mixin-2Xy-GhfaFknm_border-bottom-right-radius)
+    var(--mixin-2Xy-GhfaFknm_border-bottom-left-radius);
+  padding: var(--mixin-2Xy-GhfaFknm_padding-top)
+    var(--mixin-2Xy-GhfaFknm_padding-right)
+    var(--mixin-2Xy-GhfaFknm_padding-bottom)
     var(--mixin-2Xy-GhfaFknm_padding-left);
-  border-top: var(--mixin-2Xy-GhfaFknm_border-top-width) var(--mixin-2Xy-GhfaFknm_border-top-style)
+  border-top: var(--mixin-2Xy-GhfaFknm_border-top-width)
+    var(--mixin-2Xy-GhfaFknm_border-top-style)
     var(--mixin-2Xy-GhfaFknm_border-top-color);
-  border-right: var(--mixin-2Xy-GhfaFknm_border-right-width) var(--mixin-2Xy-GhfaFknm_border-right-style)
+  border-right: var(--mixin-2Xy-GhfaFknm_border-right-width)
+    var(--mixin-2Xy-GhfaFknm_border-right-style)
     var(--mixin-2Xy-GhfaFknm_border-right-color);
-  border-bottom: var(--mixin-2Xy-GhfaFknm_border-bottom-width) var(--mixin-2Xy-GhfaFknm_border-bottom-style)
+  border-bottom: var(--mixin-2Xy-GhfaFknm_border-bottom-width)
+    var(--mixin-2Xy-GhfaFknm_border-bottom-style)
     var(--mixin-2Xy-GhfaFknm_border-bottom-color);
-  border-left: var(--mixin-2Xy-GhfaFknm_border-left-width) var(--mixin-2Xy-GhfaFknm_border-left-style)
+  border-left: var(--mixin-2Xy-GhfaFknm_border-left-width)
+    var(--mixin-2Xy-GhfaFknm_border-left-style)
     var(--mixin-2Xy-GhfaFknm_border-left-color);
 }
 
-:where(.root_reset) ul:where(.ul),
-ul:where(.root_reset.ul),
+:where(.root_reset) ul:where(.ul__666Td),
+ul:where(.root_reset.ul__666Td),
 :where(.root_reset .__wab_expr_html_text) ul,
 :where(.root_reset_tags) ul,
 ul:where(.root_reset_tags) {
@@ -586,8 +660,8 @@ ul:where(.root_reset_tags) {
   column-gap: var(--mixin-ZdIMb2hj2d0T_column-gap);
 }
 
-:where(.root_reset) ol:where(.ol),
-ol:where(.root_reset.ol),
+:where(.root_reset) ol:where(.ol__666Td),
+ol:where(.root_reset.ol__666Td),
 :where(.root_reset .__wab_expr_html_text) ol,
 :where(.root_reset_tags) ol,
 ol:where(.root_reset_tags) {
@@ -602,8 +676,8 @@ ol:where(.root_reset_tags) {
   column-gap: var(--mixin-V_C3vR3kMkLC_column-gap);
 }
 
-:where(.root_reset) h5:where(.h5),
-h5:where(.root_reset.h5),
+:where(.root_reset) h5:where(.h5__666Td),
+h5:where(.root_reset.h5__666Td),
 :where(.root_reset .__wab_expr_html_text) h5,
 :where(.root_reset_tags) h5,
 h5:where(.root_reset_tags) {
@@ -613,8 +687,8 @@ h5:where(.root_reset_tags) {
   line-height: var(--mixin-3VQbYBFbkWHd_line-height);
 }
 
-:where(.root_reset) h6:where(.h6),
-h6:where(.root_reset.h6),
+:where(.root_reset) h6:where(.h6__666Td),
+h6:where(.root_reset.h6__666Td),
 :where(.root_reset .__wab_expr_html_text) h6,
 :where(.root_reset_tags) h6,
 h6:where(.root_reset_tags) {
@@ -624,23 +698,23 @@ h6:where(.root_reset_tags) {
   line-height: var(--mixin-UoILrNHs2KNZ_line-height);
 }
 
-:where(.root_reset) a:where(.a):hover,
-a:where(.root_reset.a):hover,
+:where(.root_reset) a:where(.a__666Td):hover,
+a:where(.root_reset.a__666Td):hover,
 :where(.root_reset .__wab_expr_html_text) a:hover,
 :where(.root_reset_tags) a:hover,
 a:where(.root_reset_tags):hover {
   color: var(--mixin-aD7OgdjO71gm_color);
 }
 
-:where(.root_reset) li:where(.li),
-li:where(.root_reset.li),
+:where(.root_reset) li:where(.li__666Td),
+li:where(.root_reset.li__666Td),
 :where(.root_reset .__wab_expr_html_text) li,
 :where(.root_reset_tags) li,
 li:where(.root_reset_tags) {
 }
 
-:where(.root_reset) p:where(.p),
-p:where(.root_reset.p),
+:where(.root_reset) p:where(.p__666Td),
+p:where(.root_reset.p__666Td),
 :where(.root_reset .__wab_expr_html_text) p,
 :where(.root_reset_tags) p,
 p:where(.root_reset_tags) {
