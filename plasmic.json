@@ -7574,6 +7574,19 @@
           "cssFilePath": "plasmic/hamdast_khedmat/PlasmicHamdastKhedmatWidget.module.css",
           "scheme": "blackbox",
           "componentType": "component"
+        },
+        {
+          "id": "KIALDnHqraz9",
+          "name": "Card",
+          "type": "managed",
+          "projectId": "666TdydnqTmUJpihDvjWrt",
+          "renderModuleFilePath": "plasmic/hamdast_khedmat/PlasmicCard.tsx",
+          "importSpec": {
+            "modulePath": "Card.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_khedmat/PlasmicCard.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
         }
       ],
       "icons": [
@@ -7601,9 +7614,20 @@
           "id": "up-9MMw2XjrH",
           "name": "Icon5Icon",
           "moduleFilePath": "plasmic/hamdast_khedmat/icons/PlasmicIcon__Icon5.tsx"
+        },
+        {
+          "id": "4gN0eEO49Ni3",
+          "name": "FrameIcon",
+          "moduleFilePath": "plasmic/hamdast_khedmat/icons/PlasmicIcon__Frame.tsx"
         }
       ],
-      "images": [],
+      "images": [
+        {
+          "id": "sP7D1EO8AgWg",
+          "name": "Rectangle 1",
+          "filePath": "plasmic/hamdast_khedmat/images/rectangle1.jpg"
+        }
+      ],
       "indirect": false,
       "globalContextsFilePath": "plasmic/hamdast_khedmat/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
@@ -7717,6 +7741,12 @@
           "name": "PWA",
           "displayName": "PWA",
           "componentImportPath": "@/common/fragment/pwa"
+        },
+        {
+          "id": "_zL4QzhBbvVF",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
@@ -7727,7 +7757,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "dataTokensFilePath": ""
     }
   ],
   "globalVariants": {
@@ -7847,7 +7878,7 @@
   "nextjsConfig": {
     "pagesDir": "../src/pages"
   },
-  "cliVersion": "0.1.352",
+  "cliVersion": "0.1.363",
   "packageManager": "npm",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.352/dist/plasmic.schema.json"
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.363/dist/plasmic.schema.json"
 }
