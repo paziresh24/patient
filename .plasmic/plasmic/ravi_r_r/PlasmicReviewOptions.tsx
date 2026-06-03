@@ -111,7 +111,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -212,42 +212,30 @@ function PlasmicReviewOptions__RenderFunc(props: {
 
           $steps["request"] = true
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    "GET",
-                    (() => {
-                      try {
-                        return "https://apigw.paziresh24.com/ravi/v2/feedbacks/delete/";
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+              const actionArgs = {
+                args: [
+                  "DELETE",
+                  (() => {
+                    try {
+                      return `https://apigw.paziresh24.com/ravi/v1/feedbacks/${$props.feedbackId}`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })(),
-                    undefined,
-                    (() => {
-                      try {
-                        return { Id: $props.feedbackId };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
-                      }
-                    })()
-                  ]
-                };
-                return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+                      throw e;
+                    }
+                  })(),
+                  undefined,
+                  undefined
+                ]
+              };
+              return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["request"] != null &&
@@ -259,16 +247,16 @@ function PlasmicReviewOptions__RenderFunc(props: {
 
           $steps["toast"] = true
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    undefined,
-                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f."
-                  ]
-                };
-                return $globalActions["Fragment.showToast"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+              const actionArgs = {
+                args: [
+                  undefined,
+                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0627 \u0645\u0648\u0641\u0642\u06cc\u062a \u062d\u0630\u0641 \u0634\u062f."
+                ]
+              };
+              return $globalActions["Fragment.showToast"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["toast"] != null &&
@@ -280,34 +268,34 @@ function PlasmicReviewOptions__RenderFunc(props: {
 
           $steps["splunk"] = true
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    (() => {
-                      try {
-                        return {
-                          group: "feedback",
-                          data: {
-                            doctor_id: $props.doctorUserId,
-                            comment_id: $props.feedbackId
-                          },
-                          type: "delete_comment"
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+              const actionArgs = {
+                args: [
+                  (() => {
+                    try {
+                      return {
+                        group: "feedback",
+                        data: {
+                          doctor_id: $props.doctorUserId,
+                          comment_id: $props.feedbackId
+                        },
+                        type: "delete_comment"
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()
-                  ]
-                };
-                return $globalActions["Splunk.sendLog"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return $globalActions["Splunk.sendLog"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["splunk"] != null &&
@@ -322,45 +310,45 @@ function PlasmicReviewOptions__RenderFunc(props: {
 
           $steps["request"] = true
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    "PATCH",
-                    (() => {
-                      try {
-                        return (
-                          "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
-                          $props.feedbackId
-                        );
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+              const actionArgs = {
+                args: [
+                  "PATCH",
+                  (() => {
+                    try {
+                      return (
+                        "https://apigw.paziresh24.com/ravi/v2/feedbacks?id=" +
+                        $props.feedbackId
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })(),
-                    undefined,
-                    (() => {
-                      try {
-                        return { description: value };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+                      throw e;
+                    }
+                  })(),
+                  undefined,
+                  (() => {
+                    try {
+                      return { description: value };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()
-                  ]
-                };
-                return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["request"] != null &&
@@ -372,16 +360,16 @@ function PlasmicReviewOptions__RenderFunc(props: {
 
           $steps["invokeGlobalAction"] = true
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    undefined,
-                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f."
-                  ]
-                };
-                return $globalActions["Fragment.showToast"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+              const actionArgs = {
+                args: [
+                  undefined,
+                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0639\u062f \u0627\u0632 \u0628\u0631\u0631\u0633\u06cc \u062a\u0648\u0633\u0637 \u067e\u0630\u06cc\u0631\u063424\u060c \u062f\u0631 \u0635\u0648\u0631\u062a \u0627\u0645\u06a9\u0627\u0646 \u0645\u0646\u062a\u0634\u0631 \u062e\u0648\u0627\u0647\u062f \u0634\u062f."
+                ]
+              };
+              return $globalActions["Fragment.showToast"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["invokeGlobalAction"] != null &&
@@ -393,35 +381,35 @@ function PlasmicReviewOptions__RenderFunc(props: {
 
           $steps["splunk"] = true
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    (() => {
-                      try {
-                        return {
-                          group: "feedback",
-                          data: {
-                            doctor_id: $props.doctorUserId,
-                            comment_id: $props.feedbackId,
-                            edit_text: value
-                          },
-                          type: "edit_comment"
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+              const actionArgs = {
+                args: [
+                  (() => {
+                    try {
+                      return {
+                        group: "feedback",
+                        data: {
+                          doctor_id: $props.doctorUserId,
+                          comment_id: $props.feedbackId,
+                          edit_text: value
+                        },
+                        type: "edit_comment"
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()
-                  ]
-                };
-                return $globalActions["Splunk.sendLog"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return $globalActions["Splunk.sendLog"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["splunk"] != null &&
@@ -437,12 +425,12 @@ function PlasmicReviewOptions__RenderFunc(props: {
           $steps["login"] =
             $ctx.auth.isLogin == false
               ? (() => {
-                  const actionArgs = { args: [] };
-                  return $globalActions["AuthGlobalContext.login"]?.apply(
-                    null,
-                    [...actionArgs.args]
-                  );
-                })()
+                const actionArgs = { args: [] };
+                return $globalActions["AuthGlobalContext.login"]?.apply(
+                  null,
+                  [...actionArgs.args]
+                );
+              })()
               : undefined;
           if (
             $steps["login"] != null &&
@@ -454,21 +442,21 @@ function PlasmicReviewOptions__RenderFunc(props: {
 
           $steps["if10Character"] =
             $ctx.auth.isLogin &&
-            value.length < 10 &&
-            $state.raviReviewOptions.isOther
+              value.length < 10 &&
+              $state.raviReviewOptions.isOther
               ? (() => {
-                  const actionArgs = {
-                    args: [
-                      "error",
-                      "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
-                      undefined,
-                      5000
-                    ]
-                  };
-                  return $globalActions["Fragment.showToast"]?.apply(null, [
-                    ...actionArgs.args
-                  ]);
-                })()
+                const actionArgs = {
+                  args: [
+                    "error",
+                    "\u062a\u0639\u062f\u0627\u062f \u062d\u0631\u0648\u0641 \u0628\u0627\u06cc\u062f \u0628\u06cc\u0634 \u0627\u0632 10 \u062d\u0631\u0641 \u0628\u0627\u0634\u062f.",
+                    undefined,
+                    5000
+                  ]
+                };
+                return $globalActions["Fragment.showToast"]?.apply(null, [
+                  ...actionArgs.args
+                ]);
+              })()
               : undefined;
           if (
             $steps["if10Character"] != null &&
@@ -488,45 +476,45 @@ function PlasmicReviewOptions__RenderFunc(props: {
             }
           })()
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    "POST",
-                    (() => {
-                      try {
-                        return `https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id=${$props.feedbackId}`;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+              const actionArgs = {
+                args: [
+                  "POST",
+                  (() => {
+                    try {
+                      return `https://apigw.paziresh24.com/ravi/v1/feedbacks/report?id=${$props.feedbackId}`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })(),
-                    undefined,
-                    (() => {
-                      try {
-                        return {
-                          feedback_id: $props.feedbackId,
-                          report_text: value
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+                      throw e;
+                    }
+                  })(),
+                  undefined,
+                  (() => {
+                    try {
+                      return {
+                        feedback_id: $props.feedbackId,
+                        report_text: value
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()
-                  ]
-                };
-                return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["request"] != null &&
@@ -546,47 +534,47 @@ function PlasmicReviewOptions__RenderFunc(props: {
             }
           })()
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    "POST",
-                    (() => {
-                      try {
-                        return `https://apigw.paziresh24.com/ravi/v1/report-webhook?id=${$props.feedbackId}`;
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+              const actionArgs = {
+                args: [
+                  "POST",
+                  (() => {
+                    try {
+                      return `https://apigw.paziresh24.com/ravi/v1/report-webhook?id=${$props.feedbackId}`;
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })(),
-                    undefined,
-                    (() => {
-                      try {
-                        return {
-                          feedback_id: $props.feedbackId,
-                          report_text: value,
-                          comment_text: $props.commentText,
-                          doctor_slug: $props.doctorSlug
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+                      throw e;
+                    }
+                  })(),
+                  undefined,
+                  (() => {
+                    try {
+                      return {
+                        feedback_id: $props.feedbackId,
+                        report_text: value,
+                        comment_text: $props.commentText,
+                        doctor_slug: $props.doctorSlug
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()
-                  ]
-                };
-                return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return $globalActions["Fragment.apiRequest"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["n8N"] != null &&
@@ -606,18 +594,18 @@ function PlasmicReviewOptions__RenderFunc(props: {
             }
           })()
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    undefined,
-                    "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
-                    undefined,
-                    5000
-                  ]
-                };
-                return $globalActions["Fragment.showToast"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+              const actionArgs = {
+                args: [
+                  undefined,
+                  "\u0646\u0638\u0631 \u0634\u0645\u0627 \u0628\u0631\u0631\u0633\u06cc \u062e\u0648\u0627\u0647\u062f \u0634\u062f.",
+                  undefined,
+                  5000
+                ]
+              };
+              return $globalActions["Fragment.showToast"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["toast"] != null &&
@@ -637,35 +625,35 @@ function PlasmicReviewOptions__RenderFunc(props: {
             }
           })()
             ? (() => {
-                const actionArgs = {
-                  args: [
-                    (() => {
-                      try {
-                        return {
-                          group: "feedback",
-                          data: {
-                            doctor_id: $props.doctorUserId,
-                            comment_id: $props.feedbackId,
-                            report_text: value
-                          },
-                          type: "report_comment"
-                        };
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return undefined;
-                        }
-                        throw e;
+              const actionArgs = {
+                args: [
+                  (() => {
+                    try {
+                      return {
+                        group: "feedback",
+                        data: {
+                          doctor_id: $props.doctorUserId,
+                          comment_id: $props.feedbackId,
+                          report_text: value
+                        },
+                        type: "report_comment"
+                      };
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return undefined;
                       }
-                    })()
-                  ]
-                };
-                return $globalActions["Splunk.sendLog"]?.apply(null, [
-                  ...actionArgs.args
-                ]);
-              })()
+                      throw e;
+                    }
+                  })()
+                ]
+              };
+              return $globalActions["Splunk.sendLog"]?.apply(null, [
+                ...actionArgs.args
+              ]);
+            })()
             : undefined;
           if (
             $steps["splunk"] != null &&
@@ -718,18 +706,18 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicReviewOptions__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicReviewOptions__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    // Specify args directly as props
-    Omit<PlasmicReviewOptions__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify args directly as props
+  Omit<PlasmicReviewOptions__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };
