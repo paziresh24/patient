@@ -14,13 +14,15 @@ import { useSearchRouting } from '../../hooks/useSearchRouting';
 import SearchCard from '../card/card';
 
 export const ConsultBanner = () => {
-  const { selectedCategory, isConsult, searchCity } = useSearchUtils();
+  const { selectedCategory, selectedSubCategory, isConsult, searchCity } = useSearchUtils();
   const { changeRoute } = useSearchRouting();
   const { handleOpen, handleClose, modalProps } = useModal();
 
+  const categorySlug = selectedSubCategory?.value ?? selectedCategory?.value;
+
   const searchData = useSearch(
     {
-      route: decodeURIComponent(`${searchCity?.en_slug ?? 'ir'}/${selectedCategory?.value}`),
+      route: decodeURIComponent(`${searchCity?.en_slug ?? 'ir'}/${categorySlug}`),
       query: {
         turn_type: 'consult',
       },
