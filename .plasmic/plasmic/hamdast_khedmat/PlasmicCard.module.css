@@ -1,0 +1,110 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: space-between;
+  align-items: center;
+  row-gap: var(--token-3WxvfyIdJppy);
+  cursor: pointer;
+  background: #ffffff;
+  min-width: 0;
+  border-radius: 9px;
+  padding: 8px;
+}
+.appleWatchSeries1046Mm7 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+  min-width: 0;
+}
+.img {
+  object-fit: cover;
+  max-width: 100%;
+  margin-bottom: 7px;
+  margin-top: 0px;
+  border-radius: 8px;
+}
+.img > picture > img {
+  object-fit: cover;
+}
+.a41 {
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+.text__jitqe {
+  display: block;
+  font-size: 15px;
+  font-family: "Vazirmatn", sans-serif;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 1);
+  position: relative;
+  text-align: right;
+  height: auto;
+  margin-bottom: 3px;
+}
+.a42 {
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.svg {
+  object-fit: cover;
+  max-width: 100%;
+  color: #4061fb;
+  width: 15px;
+  height: 22px;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  margin-left: 3px;
+  flex-shrink: 0;
+}
+.ماندگاری۱۲تا۱۸ماهه {
+  display: block;
+  font-size: 13px;
+  font-family: "Vazirmatn", sans-serif;
+  font-weight: 600;
+  color: rgba(72, 72, 73, 1);
+  position: relative;
+  text-align: right;
+}
+.a43 {
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  height: auto;
+  align-self: flex-end;
+  column-gap: var(--token-omrXvBNBcWTN);
+  margin-top: 12px;
+}
+.text__lEfIe {
+  display: block;
+  font-size: 14px;
+  font-family: "Vazirmatn", sans-serif;
+  font-weight: 800;
+  color: rgba(64, 97, 251, 1);
+  position: relative;
+}
+.text__rDhGf {
+  display: block;
+  font-size: 13px;
+  font-family: "Vazirmatn", sans-serif;
+  font-weight: 500;
+  color: rgba(64, 97, 251, 1);
+  position: relative;
+  top: auto;
+  left: auto;
+}
