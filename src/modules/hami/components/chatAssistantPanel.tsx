@@ -34,7 +34,11 @@ export const ChatAssistantPanel = ({ isOpen, chatId }: ChatAssistantPanelProps) 
     <div className={classNames('flex min-h-0 flex-1 flex-col bg-slate-50', vardastPanelClass)}>
       <ChatAssistantProfileHeader />
 
-      <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto overscroll-contain px-5 pb-6 pt-5 no-scroll [touch-action:pan-y]">
+      <div
+        data-vardast-panel-scroll
+        className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto overscroll-contain px-5 pb-6 pt-5 no-scroll [-webkit-overflow-scrolling:touch] [touch-action:pan-y]"
+        onTouchStart={event => event.stopPropagation()}
+      >
         {showBody && !isUnsupported && (
           <ChatAssistantIntro
             visible={showContent}

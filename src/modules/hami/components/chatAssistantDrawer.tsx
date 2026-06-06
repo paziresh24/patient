@@ -133,8 +133,10 @@ const ChatAssistantDrawerView = ({
     }
 
     if (isClosing) {
-      if (Math.abs(deltaX) >= DRAG_CLICK_THRESHOLD) {
+      if (Math.abs(deltaX) >= DRAG_CLICK_THRESHOLD && Math.abs(deltaX) >= Math.abs(deltaY)) {
         drag.lockedHorizontal = true;
+      } else if (Math.abs(deltaY) >= DRAG_CLICK_THRESHOLD && Math.abs(deltaY) > Math.abs(deltaX)) {
+        cancelDrag();
       }
       return;
     }
@@ -205,7 +207,7 @@ const ChatAssistantDrawerView = ({
       startProgress,
       hasDragged: false,
       source,
-      lockedHorizontal: source === 'drawer',
+      lockedHorizontal: source === 'handle',
       pointerId,
       visualActive,
     };
@@ -391,16 +393,20 @@ const ChatAssistantDrawerView = ({
     startDrag(touch.clientX, touch.clientY, touch.identifier, 0, 'edge', { deferVisual: true });
   };
 
-  const handleDrawerPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (event.button !== 0 || !isOpen || isDragging || event.pointerType === 'touch') return;
-    startDrag(event.clientX, event.clientY, event.pointerId, progress, 'drawer');
-  };
-
-  const handleDrawerTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+  const handleDrawerContentTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     if (!isOpen || isDragging) return;
+    const target = event.target;
+    if (!(target instanceof Element) || target.closest('[data-vardast-panel-scroll]')) return;
     const touch = event.touches[0];
     if (!touch) return;
-    startDrag(touch.clientX, touch.clientY, touch.identifier, progress, 'drawer');
+    startDrag(touch.clientX, touch.clientY, touch.identifier, progress, 'drawer', { deferVisual: true });
+  };
+
+  const handleDrawerContentPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0 || !isOpen || isDragging || event.pointerType === 'touch') return;
+    const target = event.target;
+    if (!(target instanceof Element) || target.closest('[data-vardast-panel-scroll]')) return;
+    startDrag(event.clientX, event.clientY, event.pointerId, progress, 'drawer');
   };
 
   const handleHandlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -490,8 +496,8 @@ const ChatAssistantDrawerView = ({
         className="absolute inset-y-0 right-0 z-20 flex flex-col overflow-hidden rounded-tl-2xl rounded-bl-2xl bg-white will-change-transform"
         style={drawerStyle}
         aria-hidden={!isOpen && !isDragging}
-        onPointerDown={handleDrawerPointerDown}
-        onTouchStart={handleDrawerTouchStart}
+        onPointerDown={handleDrawerContentPointerDown}
+        onTouchStart={handleDrawerContentTouchStart}
       >
         <div
           className="absolute inset-y-0 left-0 z-30 flex w-5 touch-none cursor-grab items-center justify-center active:cursor-grabbing"
