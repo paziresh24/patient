@@ -1,10 +1,10 @@
 import dynamic from 'next/dynamic';
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
-const PlasmicReviewList2 = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList2'));
+const ReviewList2 = dynamic(() => import('.plasmic/ReviewList2'));
 const PlasmicReviewRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount'));
 const PlasmicProgressList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewProgressList'));
 const PlasmicReviewRateAndReviews = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews'));
-const PlasmicReviewList = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicReviewList'));
+const ReviewList = dynamic(() => import('.plasmic/ReviewList'));
 const PlasmicRateAndCommentCount = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount'));
 const PlasmicRateProgressBar = dynamic(() => import('.plasmic/plasmic/ravi_r_r/PlasmicRateProgressBar'));
 const PlasmicServices = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicServices'));
@@ -78,7 +78,7 @@ import { PlasmicRisman__ArgProps } from '.plasmic/plasmic/risman/PlasmicRisman';
 export const Components = {
   Claim: { Component: PlasmicClaim, id: '5jjwlzFYfMqI', propsAllowed: PlasmicClaim__ArgProps, projectId: 'iDYgiKJB9Yi7CUB81stQBK' },
   ReviewList2: {
-    Component: PlasmicReviewList2,
+    Component: ReviewList2,
     id: 'Kz2u6VAJ02yE',
     propsAllowed: PlasmicReviewList__ArgProps,
     projectId: 'qQzsBf58SqzNJX45iggq96',
@@ -102,7 +102,7 @@ export const Components = {
     projectId: 'qQzsBf58SqzNJX45iggq96',
   },
   ReviewList: {
-    Component: PlasmicReviewList,
+    Component: ReviewList,
     id: 'Bx6gxTOoja9k',
     propsAllowed: PlasmicReviewList__ArgProps,
     projectId: 'qQzsBf58SqzNJX45iggq96',

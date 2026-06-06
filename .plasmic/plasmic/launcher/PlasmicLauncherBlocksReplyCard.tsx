@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
+import { formatFeedbackLocaleDate } from "@/common/utils/formatRelativeFeedbackTime";
 import Paziresh24Avatar from "../../Paziresh24Avatar"; // plasmic-import: zljt-TXjec48/component
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: grxNYctbMek6PL66cujx3u/styleTokensProvider
@@ -385,7 +386,7 @@ function PlasmicLauncherBlocksReplyCard__RenderFunc(props: {
             dangerouslySetInnerHTML={{
               __html: (() => {
                 try {
-                  return new Date($props.createdAt).toLocaleDateString("fa-IR");
+                  return formatFeedbackLocaleDate($props.createdAt) ?? "";
                 } catch (e) {
                   if (
                     e instanceof TypeError ||
