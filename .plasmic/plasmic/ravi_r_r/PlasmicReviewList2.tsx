@@ -65,6 +65,7 @@ import RaviFilters from "../../RaviFilters"; // plasmic-import: G0AKBMWLNTrM/com
 import ReviewCard2 from "../../ReviewCard2"; // plasmic-import: fh6BVdoIxXpv/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
 import RaviAlert from "../../RaviAlert"; // plasmic-import: 22UkaHSSFOEU/component
+import { formatRelativeFeedbackTime } from "@/common/utils/formatRelativeFeedbackTime";
 import { SideEffect } from "@plasmicpkgs/plasmic-basic-components";
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectModule
@@ -1033,121 +1034,10 @@ function PlasmicReviewList2__RenderFunc(props: {
                     })()}
                     setTime={(() => {
                       try {
-                        return (() => {
-                          return (() => {
-                            const createdDate = new Date(
-                              currentItem.created_at
-                            );
-                            const currentDate = new Date();
-                            const timeDiff = Math.abs(
-                              currentDate - createdDate
-                            );
-                            const daysDiff = Math.ceil(
-                              timeDiff / (1000 * 60 * 60 * 24)
-                            );
-                            const numbers = [
-                              "صفر",
-                              "یک",
-                              "دو",
-                              "سه",
-                              "چهار",
-                              "پنج",
-                              "شش",
-                              "هفت",
-                              "هشت",
-                              "نه",
-                              "ده"
-                            ];
-
-                            const numToPersian = num => {
-                              const units = [
-                                "",
-                                "یک",
-                                "دو",
-                                "سه",
-                                "چهار",
-                                "پنج",
-                                "شش",
-                                "هفت",
-                                "هشت",
-                                "نه"
-                              ];
-
-                              const teens = [
-                                "ده",
-                                "یازده",
-                                "دوازده",
-                                "سیزده",
-                                "چهارده",
-                                "پانزده",
-                                "شانزده",
-                                "هفده",
-                                "هجده",
-                                "نوزده"
-                              ];
-
-                              const tens = [
-                                "",
-                                "ده",
-                                "بیست",
-                                "سی",
-                                "چهل",
-                                "پنجاه",
-                                "شصت",
-                                "هفتاد",
-                                "هشتاد",
-                                "نود"
-                              ];
-
-                              if (num < 10) return units[num];
-                              if (num < 20) return teens[num - 10];
-                              if (num < 100) {
-                                const ten = Math.floor(num / 10);
-                                const unit = num % 10;
-                                return `${tens[ten]}${
-                                  unit > 0 ? ` و ${units[unit]}` : ""
-                                }`;
-                              }
-                              if (num < 1000) {
-                                const hundred = Math.floor(num / 100);
-                                const remainder = num % 100;
-                                return `${units[hundred]}صد${
-                                  remainder > 0
-                                    ? ` و ${numToPersian(remainder)}`
-                                    : ""
-                                }`;
-                              }
-                            };
-                            if (daysDiff === 0) {
-                              return "امروز";
-                            } else if (daysDiff === 1) {
-                              return "دیروز";
-                            } else if (daysDiff < 7) {
-                              return `${numbers[daysDiff]} روز پیش`;
-                            } else if (daysDiff < 30) {
-                              const weeksDiff = Math.floor(daysDiff / 7);
-                              if (weeksDiff === 1) {
-                                return "یک هفته پیش";
-                              }
-                              return `${numbers[weeksDiff]} هفته پیش`;
-                            } else if (daysDiff < 365) {
-                              const monthsDiff = Math.floor(daysDiff / 30);
-                              if (monthsDiff === 1) {
-                                return "یک ماه پیش";
-                              }
-                              return `${numToPersian(monthsDiff)} ماه پیش`;
-                            } else {
-                              const yearsDiff = Math.floor(daysDiff / 365);
-                              if (yearsDiff === 1) {
-                                return "یک سال پیش";
-                              } else if (yearsDiff === 2) {
-                                return "دو سال پیش";
-                              } else {
-                                return `${numToPersian(yearsDiff)} سال پیش`;
-                              }
-                            }
-                          })();
-                        })();
+                        return (
+                          currentItem.relativeCreatedTime ??
+                          formatRelativeFeedbackTime(currentItem.created_at)
+                        );
                       } catch (e) {
                         if (
                           e instanceof TypeError ||

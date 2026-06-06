@@ -1,5 +1,6 @@
 import { ReviewParams, useGetReview } from '@/common/apis/services/reviews/getReviews';
 import { Fragment2 } from '@/common/fragment/fragment2';
+import { enrichReviewResponseWithRelativeTime } from '@/common/utils/formatRelativeFeedbackTime';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
@@ -7,14 +8,16 @@ import { useCallback, useEffect, useState } from 'react';
 import DoctorTags from './doctorTags';
 import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import PlasmicReviewRateAndReviews from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews';
-import PlasmicReviewList from '.plasmic/plasmic/ravi_r_r/PlasmicReviewList2';
+import ReviewList2 from '.plasmic/ReviewList2';
 
 export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   const [sort, setSort] = useState<'created_at' | 'count_like' | 'default_order'>('default_order');
   const userInfo = useUserInfoStore(state => state.info);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterParams, setFilterParams] = useState({});
-  const [response, setResponse] = useState(profileData.feedbacks?.feedbacks?.list ?? []);
+  const [response, setResponse] = useState(() =>
+    enrichReviewResponseWithRelativeTime(profileData.feedbacks?.feedbacks?.list ?? []),
+  );
   const [pageInfo, setPageInfo] = useState(profileData.feedbacks?.feedbacks?.pageInfo);
   const [page, setPage] = useState(1);
   const listOfShowDoctorTags = useFeatureValue('profile:doctor-tags|enabled', { slugs: [] });
@@ -39,7 +42,8 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   useEffect(() => {
     if (getFeedbacks.data) {
       setPageInfo(getFeedbacks.data?.pageInfo);
-      setResponse(page > 1 ? [...response, ...getFeedbacks.data.list] : getFeedbacks.data.list);
+      const list = enrichReviewResponseWithRelativeTime(getFeedbacks.data.list);
+      setResponse(page > 1 ? [...response, ...list] : list);
     }
   }, [getFeedbacks.data]);
 
@@ -129,7 +133,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
       {newProgressList ? (
         <Fragment2
           name="ReviewList2"
-          Component={PlasmicReviewList}
+          Component={ReviewList2}
           args={{
             ...profileData,
             dontShow: false,
@@ -148,7 +152,7 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
       ) : (
         <Fragment2
           name="ReviewList"
-          Component={PlasmicReviewList}
+          Component={ReviewList2}
           args={{
             ...profileData,
             dontShow: false,
