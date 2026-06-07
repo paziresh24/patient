@@ -61,6 +61,10 @@ import {
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
 import { LauncherProfileActionButtons } from "@/modules/hamdast/components/launcherProfileActionButtons";
+import {
+  buildHamdastWidgetsUrl,
+  createHamdastCacheBustQueryParam
+} from "@/modules/hamdast/utils/launcherProfileButton";
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { Gallery } from "@/common/fragment/components/gallery"; // plasmic-import: OPegsXy4dTwC/codeComponent
@@ -354,6 +358,17 @@ function PlasmicLauncherProfile__RenderFunc(props: {
     $queries: {},
     $refs
   });
+
+  const widgetsRequestUrl = React.useMemo(() => {
+    try {
+      return buildHamdastWidgetsUrl($ctx.auth.info.id, createHamdastCacheBustQueryParam());
+    } catch (e) {
+      if (e instanceof TypeError || e?.plasmicType === "PlasmicUndefinedDataError") {
+        return undefined;
+      }
+      throw e;
+    }
+  }, [$ctx.auth?.info?.id]);
 
   const styleTokensClassNames = _useStyleTokens();
 
@@ -1056,7 +1071,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                 ref={ref => {
                   $refs["apiRequest5"] = ref;
                 }}
-                url={`https://hamdast.paziresh24.com/api/v1/widgets/?user_id=${$ctx.auth.info.id}`}
+                url={widgetsRequestUrl}
               >
                 {(() => {
                   try {

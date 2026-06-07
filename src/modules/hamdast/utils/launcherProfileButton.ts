@@ -116,6 +116,14 @@ export async function fetchHamdastSessionToken(appKey: string, scopes?: string[]
   return sessionToken;
 }
 
+export function createHamdastCacheBustQueryParam(): string {
+  return `_=${Date.now()}_${Math.random().toString(36).slice(2)}`;
+}
+
+export function buildHamdastWidgetsUrl(userId: string | number, cacheBust: string): string {
+  return `https://hamdast.paziresh24.com/api/v1/widgets/?user_id=${userId}&${cacheBust}`;
+}
+
 export async function openLauncherProfileButtonEndpoint(
   appKey: string,
   endpoint: string,

@@ -1,5 +1,6 @@
 import Paziresh24Button from '.plasmic/Paziresh24Button';
 import classNames from '@/common/utils/classNames';
+import { useRef, useState } from 'react';
 import {
   getLauncherProfileActiveWidgetButtonText,
   getLauncherProfileButtonEndpoint,
@@ -31,17 +32,24 @@ export function LauncherProfileActionButtons({
   onMainClick,
   className,
 }: LauncherProfileActionButtonsProps) {
+  const isEndpointLoadingRef = useRef(false);
+  const [isEndpointPending, setIsEndpointPending] = useState(false);
   const showMainWithActiveWidget = shouldShowLauncherProfileMainButtonWithActiveWidget(widgetInfo, userWidgets, appKey);
   const endpoint = getLauncherProfileButtonEndpoint(widgetInfo);
   const buttonClassName = classNames('__wab_instance', className);
+  const isEndpointButtonLoading = isLoading || isEndpointPending;
 
   const handleEndpointClick = async () => {
-    if (!endpoint || !appKey) return;
+    if (!endpoint || !appKey || isEndpointLoadingRef.current || isEndpointPending || isLoading) return;
 
+    isEndpointLoadingRef.current = true;
+    setIsEndpointPending(true);
     onLoadingChange?.(true);
     try {
       await openLauncherProfileButtonEndpoint(appKey, endpoint, profileData);
     } catch {
+      isEndpointLoadingRef.current = false;
+      setIsEndpointPending(false);
       onLoadingChange?.(false);
     }
   };
@@ -68,7 +76,8 @@ export function LauncherProfileActionButtons({
         <Paziresh24Button
           children2={getLauncherProfileActiveWidgetButtonText(widgetInfo, profileData)}
           className={buttonClassName}
-          loading={isLoading}
+          isDisabled={isEndpointButtonLoading}
+          loading={isEndpointButtonLoading}
           outline
           onClick={() => {
             void handleEndpointClick();
@@ -82,7 +91,8 @@ export function LauncherProfileActionButtons({
     <Paziresh24Button
       children2={getLauncherProfileWidgetButtonText(widgetInfo, userWidgets, appKey, profileData)}
       className={buttonClassName}
-      loading={Boolean(endpoint && isLoading)}
+      isDisabled={Boolean(endpoint && isEndpointButtonLoading)}
+      loading={Boolean(endpoint && isEndpointButtonLoading)}
       outline={isLauncherProfileButtonOutline(widgetInfo, userWidgets, appKey)}
       onClick={() => {
         void handleSingleButtonClick();
