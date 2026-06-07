@@ -60,6 +60,7 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: IpxudV5ARc89/codeComponent
+import { LauncherProfileActionButtons } from "@/modules/hamdast/components/launcherProfileActionButtons";
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import { Gallery } from "@/common/fragment/components/gallery"; // plasmic-import: OPegsXy4dTwC/codeComponent
@@ -1070,31 +1071,31 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     throw e;
                   }
                 })() ? (
-                  <Paziresh24Button
-                    children2={"\u0627\u062c\u0631\u0627"}
-                    className={classNames(
-                      "__wab_instance",
-                      sty.paziresh24Button__hufy1
-                    )}
-                    onClick={async event => {
-                      const $steps = {};
-
-                      $steps["runOnClick"] = true
-                        ? (() => {
-                          const actionArgs = { eventRef: $props["onClick"] };
-                          return (({ eventRef, args }) => {
-                            return eventRef?.(...(args ?? []));
-                          })?.apply(null, [actionArgs]);
-                        })()
-                        : undefined;
-                      if (
-                        $steps["runOnClick"] != null &&
-                        typeof $steps["runOnClick"] === "object" &&
-                        typeof $steps["runOnClick"].then === "function"
-                      ) {
-                        $steps["runOnClick"] = await $steps["runOnClick"];
+                  <LauncherProfileActionButtons
+                    appKey={$props.appKey}
+                    className={sty.paziresh24Button__hufy1}
+                    isLoading={(() => {
+                      try {
+                        return $state.isLoadingButton;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
                       }
+                    })()}
+                    onLoadingChange={loading => {
+                      $stateSet($state, ["isLoadingButton"], loading);
                     }}
+                    onMainClick={async () => {
+                      await $props.onClick?.();
+                    }}
+                    profileData={$state.apiRequest?.data}
+                    userWidgets={$state.apiRequest5?.data}
+                    widgetInfo={$state.apiRequest6?.data}
                   />
                 ) : null}
                 <ApiRequest
@@ -1230,13 +1231,10 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                       throw e;
                     }
                   })() ? (
-                    <Paziresh24Button
-                      children2={"\u0627\u062c\u0631\u0627"}
-                      className={classNames(
-                        "__wab_instance",
-                        sty.paziresh24Button__tk1Pm
-                      )}
-                      loading={(() => {
+                    <LauncherProfileActionButtons
+                      appKey={$props.appKey}
+                      className={sty.paziresh24Button__tk1Pm}
+                      isLoading={(() => {
                         try {
                           return $state.isLoadingButton;
                         } catch (e) {
@@ -1244,32 +1242,20 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                             e instanceof TypeError ||
                             e?.plasmicType === "PlasmicUndefinedDataError"
                           ) {
-                            return [];
+                            return false;
                           }
                           throw e;
                         }
                       })()}
-                      onClick={async event => {
-                        const $steps = {};
-
-                        $steps["runOnClick"] = true
-                          ? (() => {
-                            const actionArgs = {
-                              eventRef: $props["onClick"]
-                            };
-                            return (({ eventRef, args }) => {
-                              return eventRef?.(...(args ?? []));
-                            })?.apply(null, [actionArgs]);
-                          })()
-                          : undefined;
-                        if (
-                          $steps["runOnClick"] != null &&
-                          typeof $steps["runOnClick"] === "object" &&
-                          typeof $steps["runOnClick"].then === "function"
-                        ) {
-                          $steps["runOnClick"] = await $steps["runOnClick"];
-                        }
+                      onLoadingChange={loading => {
+                        $stateSet($state, ["isLoadingButton"], loading);
                       }}
+                      onMainClick={async () => {
+                        await $props.onClick?.();
+                      }}
+                      profileData={$state.apiRequest?.data}
+                      userWidgets={$state.apiRequest5?.data}
+                      widgetInfo={$state.apiRequest6?.data}
                     />
                   ) : null}
                 </ApiRequest>
