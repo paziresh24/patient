@@ -9,9 +9,9 @@ import { createUseStyleTokens } from "@plasmicapp/react-web";
 
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: bN5uNsAhTefwW3S14VjvMG/projectModule
 
-import projectcss from "../hamdast_risman/plasmic.module.css"; // plasmic-import: bN5uNsAhTefwW3S14VjvMG/projectcss
+import projectcss from "../hamdast_risman/plasmic.css"; // plasmic-import: bN5uNsAhTefwW3S14VjvMG/projectcss
 
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 
 const data = {
   base: `${projectcss.plasmic_tokens} ${plasmic_paziresh_24_design_system_css.plasmic_tokens}`,
