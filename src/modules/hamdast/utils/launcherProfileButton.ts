@@ -95,8 +95,9 @@ export function appendSessionTokenToEndpoint(endpoint: string, sessionToken: str
 }
 
 export function getProfileScopesForSessionToken(profileData: AppProfileData | undefined | null): string[] {
-  if (!Array.isArray(profileData?.scopes)) return [];
-  return profileData.scopes.map(item => item?.scope).filter((scope): scope is string => Boolean(scope));
+  const scopes = profileData?.scopes;
+  if (!Array.isArray(scopes)) return [];
+  return scopes.map(item => item?.scope).filter((scope): scope is string => Boolean(scope));
 }
 
 export async function fetchHamdastSessionToken(appKey: string, scopes?: string[] | null): Promise<string> {
