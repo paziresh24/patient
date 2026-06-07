@@ -9,6 +9,7 @@
   row-gap: var(--token-3WxvfyIdJppy);
   cursor: pointer;
   background: #ffffff;
+  box-shadow: 0px 8px 20px 0px #0000000a;
   min-width: 0;
   border-radius: 9px;
   padding: 8px;
@@ -46,13 +47,13 @@
 }
 .text__jitqe {
   display: block;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: rgba(0, 0, 0, 1);
   position: relative;
   text-align: right;
   height: auto;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
 }
 .a42 {
   background: rgba(255, 255, 255, 1);
@@ -62,7 +63,7 @@
   align-items: center;
   justify-content: center;
 }
-.svg {
+.svg___4FnB3 {
   object-fit: cover;
   max-width: 100%;
   color: #4061fb;
@@ -76,36 +77,80 @@
 }
 .ماندگاری۱۲تا۱۸ماهه {
   display: block;
-  font-size: 13px;
-  font-family: "Vazirmatn", sans-serif;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 500;
   color: rgba(72, 72, 73, 1);
   position: relative;
   text-align: right;
 }
+.freeBox__c9ThG {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  justify-content: center;
+  align-items: flex-end;
+  align-self: flex-end;
+  margin-top: 12px;
+  min-width: 0;
+  padding: 6px;
+}
 .a43 {
   background: rgba(255, 255, 255, 1);
   display: flex;
-  position: relative;
   flex-direction: row;
   height: auto;
-  align-self: flex-end;
-  column-gap: var(--token-omrXvBNBcWTN);
-  margin-top: 12px;
+  justify-content: flex-start;
+  align-items: stretch;
+  column-gap: 4px;
 }
 .text__lEfIe {
   display: block;
-  font-size: 14px;
-  font-weight: 800;
-  color: rgba(64, 97, 251, 1);
-  position: relative;
-}
-.text__rDhGf {
-  display: block;
   font-size: 13px;
-  font-weight: 500;
-  color: rgba(64, 97, 251, 1);
+  font-weight: 600;
+  color: #000000;
   position: relative;
-  top: auto;
-  left: auto;
+  padding-top: 0px;
+}
+.svg__n8AAq {
+  object-fit: cover;
+  max-width: 100%;
+  color: #000;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.freeBox__mg4Fq {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  margin-top: 8px;
+  min-width: 0;
+  padding: 0px;
+}
+.text___6Oeo6 {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  color: #3861fb;
+  font-weight: 600;
+  font-size: 13px;
+  min-width: 0;
+}
+.svg__sx0Ov {
+  object-fit: cover;
+  max-width: 100%;
+  color: #3861fb;
+  width: 18px;
+  height: 18px;
+  margin-left: -6px;
+  flex-shrink: 0;
 }

@@ -64,10 +64,11 @@ import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-impor
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import projectcss from "./plasmic.module.css"; // plasmic-import: 666TdydnqTmUJpihDvjWrt/projectcss
 import sty from "./PlasmicCard.module.css"; // plasmic-import: KIALDnHqraz9/css
 
 import FrameIcon from "./icons/PlasmicIcon__Frame"; // plasmic-import: 4gN0eEO49Ni3/icon
+import Icon6Icon from "./icons/PlasmicIcon__Icon6"; // plasmic-import: V1Z2Lvtq2PbD/icon
+import Icon5Icon from "./icons/PlasmicIcon__Icon5"; // plasmic-import: up-9MMw2XjrH/icon
 
 createPlasmicElementProxy;
 
@@ -98,7 +99,6 @@ export type PlasmicCard__OverridesType = {
   img?: Flex__<typeof PlasmicImg__>;
   a41?: Flex__<"div">;
   a42?: Flex__<"div">;
-  svg?: Flex__<"svg">;
   ماندگاری۱۲تا۱۸ماهه?: Flex__<"div">;
   a43?: Flex__<"div">;
 };
@@ -164,10 +164,10 @@ function PlasmicCard__RenderFunc(props: {
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
       className={classNames(
-        projectcss.all,
-        projectcss.root_reset,
-        projectcss.plasmic_default_styles,
-        projectcss.plasmic_mixins,
+        "all",
+        "root_reset_666TdydnqTmUJpihDvjWrt",
+        "plasmic_default_styles",
+        "plasmic_mixins",
         styleTokensClassNames,
         sty.root
       )}
@@ -194,7 +194,7 @@ function PlasmicCard__RenderFunc(props: {
       <div
         data-plasmic-name={"appleWatchSeries1046Mm7"}
         data-plasmic-override={overrides.appleWatchSeries1046Mm7}
-        className={classNames(projectcss.all, sty.appleWatchSeries1046Mm7)}
+        className={classNames("all", sty.appleWatchSeries1046Mm7)}
       >
         <PlasmicImg__
           data-plasmic-name={"img"}
@@ -226,15 +226,9 @@ function PlasmicCard__RenderFunc(props: {
         <div
           data-plasmic-name={"a41"}
           data-plasmic-override={overrides.a41}
-          className={classNames(projectcss.all, sty.a41)}
+          className={classNames("all", sty.a41)}
         >
-          <div
-            className={classNames(
-              projectcss.all,
-              projectcss.__wab_text,
-              sty.text__jitqe
-            )}
-          >
+          <div className={classNames("all", "__wab_text", sty.text__jitqe)}>
             <React.Fragment>
               {(() => {
                 try {
@@ -273,13 +267,11 @@ function PlasmicCard__RenderFunc(props: {
             <div
               data-plasmic-name={"a42"}
               data-plasmic-override={overrides.a42}
-              className={classNames(projectcss.all, sty.a42)}
+              className={classNames("all", sty.a42)}
               key={currentIndex}
             >
               <FrameIcon
-                data-plasmic-name={"svg"}
-                data-plasmic-override={overrides.svg}
-                className={classNames(projectcss.all, sty.svg)}
+                className={classNames("all", sty.svg___4FnB3)}
                 role={"img"}
               />
 
@@ -289,8 +281,8 @@ function PlasmicCard__RenderFunc(props: {
                 }
                 data-plasmic-override={overrides.ماندگاری۱۲تا۱۸ماهه}
                 className={classNames(
-                  projectcss.all,
-                  projectcss.__wab_text,
+                  "all",
+                  "__wab_text",
                   sty.ماندگاری۱۲تا۱۸ماهه
                 )}
               >
@@ -314,42 +306,42 @@ function PlasmicCard__RenderFunc(props: {
           );
         })}
       </div>
-      <div
-        data-plasmic-name={"a43"}
-        data-plasmic-override={overrides.a43}
-        className={classNames(projectcss.all, sty.a43)}
-      >
+      <div className={classNames("all", sty.freeBox__c9ThG)}>
         <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__lEfIe
-          )}
+          data-plasmic-name={"a43"}
+          data-plasmic-override={overrides.a43}
+          className={classNames("all", sty.a43)}
         >
-          <React.Fragment>
-            {(() => {
-              try {
-                return $props.priceMin;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return "\u06f6\u06f0\u06f0,\u06f0\u06f0\u06f0\u2028";
+          <div className={classNames("all", "__wab_text", sty.text__lEfIe)}>
+            <React.Fragment>
+              {(() => {
+                try {
+                  return $props.priceMin;
+                } catch (e) {
+                  if (
+                    e instanceof TypeError ||
+                    e?.plasmicType === "PlasmicUndefinedDataError"
+                  ) {
+                    return "\u06f6\u06f0\u06f0,\u06f0\u06f0\u06f0\u2028";
+                  }
+                  throw e;
                 }
-                throw e;
-              }
-            })()}
-          </React.Fragment>
+              })()}
+            </React.Fragment>
+          </div>
+          <Icon6Icon
+            className={classNames("all", sty.svg__n8AAq)}
+            role={"img"}
+          />
         </div>
-        <div
-          className={classNames(
-            projectcss.all,
-            projectcss.__wab_text,
-            sty.text__rDhGf
-          )}
-        >
-          {"\u062a\u0648\u0645\u0627\u0646"}
+        <div className={classNames("all", sty.freeBox__mg4Fq)}>
+          <div className={classNames("all", "__wab_text", sty.text___6Oeo6)}>
+            {"\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a"}
+          </div>
+          <Icon5Icon
+            className={classNames("all", sty.svg__sx0Ov)}
+            role={"img"}
+          />
         </div>
       </div>
     </div>
@@ -363,7 +355,6 @@ const PlasmicDescendants = {
     "img",
     "a41",
     "a42",
-    "svg",
     "\u0645\u0627\u0646\u062f\u06af\u0627\u0631\u06cc\u06f1\u06f2\u062a\u0627\u06f1\u06f8\u0645\u0627\u0647\u0647",
     "a43"
   ],
@@ -372,17 +363,14 @@ const PlasmicDescendants = {
     "img",
     "a41",
     "a42",
-    "svg",
     "\u0645\u0627\u0646\u062f\u06af\u0627\u0631\u06cc\u06f1\u06f2\u062a\u0627\u06f1\u06f8\u0645\u0627\u0647\u0647"
   ],
   img: ["img"],
   a41: ["a41"],
   a42: [
     "a42",
-    "svg",
     "\u0645\u0627\u0646\u062f\u06af\u0627\u0631\u06cc\u06f1\u06f2\u062a\u0627\u06f1\u06f8\u0645\u0627\u0647\u0647"
   ],
-  svg: ["svg"],
   ماندگاری۱۲تا۱۸ماهه: [
     "\u0645\u0627\u0646\u062f\u06af\u0627\u0631\u06cc\u06f1\u06f2\u062a\u0627\u06f1\u06f8\u0645\u0627\u0647\u0647"
   ],
@@ -397,7 +385,6 @@ type NodeDefaultElementType = {
   img: typeof PlasmicImg__;
   a41: "div";
   a42: "div";
-  svg: "svg";
   ماندگاری۱۲تا۱۸ماهه: "div";
   a43: "div";
 };
@@ -468,7 +455,6 @@ export const PlasmicCard = Object.assign(
     img: makeNodeComponent("img"),
     a41: makeNodeComponent("a41"),
     a42: makeNodeComponent("a42"),
-    svg: makeNodeComponent("svg"),
     ماندگاری۱۲تا۱۸ماهه: makeNodeComponent(
       "\u0645\u0627\u0646\u062f\u06af\u0627\u0631\u06cc\u06f1\u06f2\u062a\u0627\u06f1\u06f8\u0645\u0627\u0647\u0647"
     ),
