@@ -7,7 +7,7 @@
   },
   "style": {
     "scheme": "css-modules",
-    "defaultStyleCssFilePath": "plasmic/plasmic__default_style.module.css"
+    "defaultStyleCssFilePath": "plasmic/plasmic__default_style.css"
   },
   "images": {
     "scheme": "files"
@@ -24,7 +24,7 @@
       "projectApiToken": "34o5R5KswluuZ4sD83F88oQrcLWsNNeUpCptQ8Okf4hYqgjnHnX2idGAlhtB7WWQQelNAInf5XFazR1cGw",
       "projectName": "plasmic-embed-css",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/plasmic_embed_css/plasmic.module.css",
+      "cssFilePath": "plasmic/plasmic_embed_css/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -48,7 +48,7 @@
       "projectApiToken": "vXGGQpdi9fhcncabBdg8DcMRUbkz0iRW6HS1jzQufQR6QH0MasPwr9SX7ap4SsK3xXwwXmzZtglWGe0Rm2nw",
       "projectName": "plasmic-basic-components",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/plasmic_basic_components/plasmic.module.css",
+      "cssFilePath": "plasmic/plasmic_basic_components/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -108,7 +108,7 @@
       "projectApiToken": "Z0HEwdCEbNq2vJqCawLDXDkFahbOZftdUQ198aMRfnh2EL3KVg2GQ0q3G7MV4Q5hexgsS4BVG9ZpjLWYxcjg",
       "projectName": "Fragment/Icons",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/fragment_icons/plasmic.module.css",
+      "cssFilePath": "plasmic/fragment_icons/plasmic.css",
       "components": [],
       "icons": [
         {
@@ -260,7 +260,7 @@
       "projectApiToken": "iSkfEguGYRieW7aywQdeHJ2kHCgSYAzIucSfo1aoYAmuxbDKSEVLpn0OWlulrvi7DOO5qF0Mrt3ZjgPrFi2RA",
       "projectName": "radix-ui",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/radix_ui/plasmic.module.css",
+      "cssFilePath": "plasmic/radix_ui/plasmic.css",
       "components": [
         {
           "id": "5nirPCGmCnRD",
@@ -352,7 +352,7 @@
       "projectApiToken": "LBbn8U2dmbpX9oeuRsYNyEKki39EXydGQgs9vBvR5sLHfGEZsK4owvOj7Q7SnflW4ASIEdLFAeeoxGxXZ8dJtA",
       "projectName": "react-aria",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/react_aria/plasmic.module.css",
+      "cssFilePath": "plasmic/react_aria/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -562,7 +562,7 @@
       "projectApiToken": "a25mdMh3tcPRSuNv1E2rvIBmDBpG9JCKRYuxIkD7RITUZyuawzoUKjFwhNk2fb6znQOxWRaXBJkUCi3JMRwBQ",
       "projectName": "lodash",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/lodash/plasmic.module.css",
+      "cssFilePath": "plasmic/lodash/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -579,7 +579,7 @@
       "projectApiToken": "YE6pw0s6HZvyAZENjWdhh22CZUvZbVXVeOr7IxU58m9rwk2ITG1RfJGcJjzF2uEC7DCqa4PDzPP1UXxfKuuQ",
       "projectName": "antd5 hostless",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/antd_5_hostless/plasmic.module.css",
+      "cssFilePath": "plasmic/antd_5_hostless/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -982,7 +982,7 @@
       "projectApiToken": "yLKpJOE8mD6HqoNCSWF3Em8ut0LBzL7qb3QPqNeOLPjQsSBSc12yhYovnSRSekzgt1xjjbugBGDjOMLGMK4w",
       "projectName": "plasmic-query",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/plasmic_query/plasmic.module.css",
+      "cssFilePath": "plasmic/plasmic_query/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -1012,7 +1012,7 @@
       "projectApiToken": "qxq800gYC67BOqHYnTHxD4C7pBBFZm6VP4XdU8vevI8awru5kfW7ofg2msC86kBNrxxuzWwrQOpU6gvdkEg",
       "projectName": "Fragment/DesignSystem",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/fragment_design_system/plasmic.module.css",
+      "cssFilePath": "plasmic/fragment_design_system/plasmic.css",
       "components": [
         {
           "id": "3i84rYjQRrs4",
@@ -1161,7 +1161,7 @@
       "projectApiToken": "gQDIPkOschpHb4ICiXPSJ0Oy6OKiDpo6hhcCznXHL6LHKJyO1c5TbMsnW15K6JyMplVRXOa8nXAIh8oE6LQ",
       "projectName": "Paziresh24/Search",
       "version": "latest",
-      "cssFilePath": "plasmic/paziresh_24_search/plasmic.module.css",
+      "cssFilePath": "plasmic/paziresh_24_search/plasmic.css",
       "components": [
         {
           "id": "5bzKtjF_q24p",
@@ -2605,7 +2605,7 @@
       "projectApiToken": "C0WeaGluvh1JMNQxGD3U9VruCWXfO9CpVThuh4WTymgcKrKIq1IOiiZ03710ATu5kubWrWmRS0sMRb1Ijpw",
       "projectName": "Paziresh24/Booking",
       "version": "latest",
-      "cssFilePath": "plasmic/paziresh_24_booking/plasmic.module.css",
+      "cssFilePath": "plasmic/paziresh_24_booking/plasmic.css",
       "components": [
         {
           "id": "Mt_WMP6AHSGv",
@@ -2982,7 +2982,7 @@
       "projectApiToken": "DIkcfhBwjMCJSjcxfBkMuy4NImyytq5EWylxVcpS9t9EpdhnPQuBgBGxmk00AB1itMFa1KXTxOKnrjN2PN9nlA",
       "projectName": "react-awesome-reveal",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/react_awesome_reveal/plasmic.module.css",
+      "cssFilePath": "plasmic/react_awesome_reveal/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -3006,7 +3006,7 @@
       "projectApiToken": "90MSEcvFKJ7JnzOGXpgyMzXrrogPGQ524Mr3PNwqYAlDuUwaPlEIdLRE7Z6Fv9usfuiCGCqebtDS0exCqxhw",
       "projectName": "Launcher",
       "version": "latest",
-      "cssFilePath": "plasmic/launcher/plasmic.module.css",
+      "cssFilePath": "plasmic/launcher/plasmic.css",
       "components": [
         {
           "id": "zKD4DmZLEtqh",
@@ -3804,7 +3804,7 @@
       "projectApiToken": "ZNj972EbwCfknN1MAhdxLU3H7BjjWdUah5wjYLBnTSIVLgc0W6mbuSO49RMpnrdKocnSMgvQwlZ1GHOA3TuCg",
       "projectName": "nanoid",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/nanoid/plasmic.module.css",
+      "cssFilePath": "plasmic/nanoid/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -3821,7 +3821,7 @@
       "projectApiToken": "kYJJPT8sGpBPFpmue1ykweTZBNpehmPVBrrvPo8xTt9jK2mbK9sLSFUYHb1zKKYyG10SkD7ATe2juNGKcg",
       "projectName": "@hamdast/Cywoc24",
       "version": "latest",
-      "cssFilePath": "plasmic/hamdast_cywoc_24/plasmic.module.css",
+      "cssFilePath": "plasmic/hamdast_cywoc_24/plasmic.css",
       "components": [
         {
           "id": "Y2Dk4BvdV4zZ",
@@ -3981,7 +3981,7 @@
       "projectApiToken": "xrL8CoV81jSS9WLLyjo1n8Ad0RqAkbKzHAlKmS68en1Jt3Zx5oswlzrppARyWcGACRGdCKS2aczlLgsaiHw",
       "projectName": "Paziresh24/Profile",
       "version": "latest",
-      "cssFilePath": "plasmic/paziresh_24_profile/plasmic.module.css",
+      "cssFilePath": "plasmic/paziresh_24_profile/plasmic.css",
       "components": [
         {
           "id": "VtINgkEb27Pn",
@@ -4407,7 +4407,7 @@
       "projectApiToken": "Z9JffHbKIbzmVDViSEaJBhHZgPC0WAshkJyVg8elTeyVX8PAxnaijtBfOCKwgzzb0I1MOTEhg5LQu6hFVlqDA",
       "projectName": "Paziresh24/DesignSystem",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/paziresh_24_design_system/plasmic.module.css",
+      "cssFilePath": "plasmic/paziresh_24_design_system/plasmic.css",
       "components": [
         {
           "id": "zljt-TXjec48",
@@ -4651,7 +4651,7 @@
       "projectApiToken": "hzTSTGlJngoSp5POfkcA7h5DTl6Ljr3SjB13qmfSQyZSRpdU6xYkZHkFY0lyC6554949qx4OqosoQtxyNw",
       "projectName": "ravi design system",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/ravi_design_system/plasmic.module.css",
+      "cssFilePath": "plasmic/ravi_design_system/plasmic.css",
       "components": [
         {
           "id": "LGI_uX8bDUNt",
@@ -5067,7 +5067,7 @@
       "projectApiToken": "RgknWFHiJQH2Vr9gGQdCuxcShfxNuD5wdsaJEzHupOVNwSE0dHwlr62o0AbFE9Q0xAwsAfRV39txFhpB3GA",
       "projectName": "ravi (r&r)",
       "version": "latest",
-      "cssFilePath": "plasmic/ravi_r_r/plasmic.module.css",
+      "cssFilePath": "plasmic/ravi_r_r/plasmic.css",
       "components": [
         {
           "id": "hjUuvN6lhrZV",
@@ -5839,7 +5839,7 @@
       "projectApiToken": "AyUAG1O8tuJSh6suPHSWieHCx2P5p88csk0vvv7Adt0XkyavEGBvYBMQYFSOzNqkg17S3lUiAQ5yzlfMQmA",
       "projectName": "@hamdast/Bimehnama",
       "version": "latest",
-      "cssFilePath": "plasmic/hamdast_bimehnama/plasmic.module.css",
+      "cssFilePath": "plasmic/hamdast_bimehnama/plasmic.css",
       "components": [
         {
           "id": "6-Wp84uf7hB4",
@@ -5994,7 +5994,7 @@
       "projectApiToken": "IvzN3wRogyeRjfeLl1hqzdjIjkVBvUQXxxVMFtbbpBdxfeSyKuR8fwKkECaSQERdZAIiGsh8aXppCCjBiCYyg",
       "projectName": "loading-boundary",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/loading_boundary/plasmic.module.css",
+      "cssFilePath": "plasmic/loading_boundary/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -6018,7 +6018,7 @@
       "projectApiToken": "1IHtphNKS6GGn3MNsez8NOlUZOc7diWRFES7RpYSY0TaI1LjT7i4vaz9QTjgncxXRUsqlyHtKBMa8Fe6Q",
       "projectName": "axios",
       "version": ">0.0.0",
-      "cssFilePath": "plasmic/axios/plasmic.module.css",
+      "cssFilePath": "plasmic/axios/plasmic.css",
       "components": [],
       "icons": [],
       "images": [],
@@ -6035,7 +6035,7 @@
       "projectApiToken": "tBaWnP3FW4WqKFf58ORp8o9lI0w5WSOOXqggTPzpCHdUItRyT1f0Gj266BYdOBjh8zWyRFDR8WF8yreyG9fw",
       "projectName": "Paziresh24",
       "version": "latest",
-      "cssFilePath": "plasmic/paziresh_24/plasmic.module.css",
+      "cssFilePath": "plasmic/paziresh_24/plasmic.css",
       "components": [
         {
           "id": "MB7oMSw7lp7m",
@@ -6686,7 +6686,7 @@
       "projectApiToken": "DP65zGGtkFC7h8iJDlgMsEs6o99LciISS1xcteLAB7DlQiqJnbbnmwb1f98mv9VscgN57ZaopmB6jIvlpg",
       "projectName": "Risman",
       "version": "latest",
-      "cssFilePath": "plasmic/hamdast_risman/plasmic.module.css",
+      "cssFilePath": "plasmic/hamdast_risman/plasmic.css",
       "components": [
         {
           "id": "KinPlL1Jj1j3",
@@ -6871,7 +6871,7 @@
       "projectApiToken": "kCs11hI9jPXjCxbLWFxtfU2e1mLzy0TVNlDyAPJG7mxkrouRbf91vulldzIrOrNHzCbQLpPNJaBriCv8kURjA",
       "projectName": "Paziresh24/Factor",
       "version": "latest",
-      "cssFilePath": "plasmic/paziresh_24_factor/plasmic.module.css",
+      "cssFilePath": "plasmic/paziresh_24_factor/plasmic.css",
       "components": [
         {
           "id": "gwWZcNwcxOfS",
@@ -7067,7 +7067,7 @@
       "projectApiToken": "8We2tgI8YHR8tHWDzvKfj0qd9pjmegg6Z38BGkNFm59rOqvKyRUL5PPMWRmvB4Pdulcb0r2cb69Givejw",
       "projectName": "@hamdast/Hamyar",
       "version": "latest",
-      "cssFilePath": "plasmic/hamdast_hamyar/plasmic.module.css",
+      "cssFilePath": "plasmic/hamdast_hamyar/plasmic.css",
       "components": [
         {
           "id": "SXuHQqEYBK76",
@@ -7222,7 +7222,7 @@
       "projectApiToken": "HuortYm9HQzyptxgHEgbR9rdCceMEE1hF0WPeYzwOWH1oZSXzK1bsXhgx77aV4FFLpCHJ7N9aIF6YMX78Rw",
       "projectName": "@hamdast/Cheragh",
       "version": "latest",
-      "cssFilePath": "plasmic/hamdast_cheragh/plasmic.module.css",
+      "cssFilePath": "plasmic/hamdast_cheragh/plasmic.css",
       "components": [
         {
           "id": "ZjqBgretf8Lk",
@@ -7405,7 +7405,7 @@
       "projectApiToken": "1vuDmYffCzTHXJCcL18rAcJb8Z4EfdirJmLt4deXo01dfSbBKFJdtaHfMIdal66FJZUT8DumyBgVkmeQ",
       "projectName": "@hamdast/Rahnama",
       "version": "latest",
-      "cssFilePath": "plasmic/hamdast_rahnama/plasmic.module.css",
+      "cssFilePath": "plasmic/hamdast_rahnama/plasmic.css",
       "components": [
         {
           "id": "Q5Ep8mGNX1zK",
@@ -7560,7 +7560,7 @@
       "projectApiToken": "NJtUTosR9iklhVp5JXndLWKTDLtgfPeGDZCGHhCB3qxQwAzzhGfWrvn4O2uy5nwUR9hXNadkDS3bibSfosBUw",
       "projectName": "@hamdast/Khedmat",
       "version": "latest",
-      "cssFilePath": "plasmic/hamdast_khedmat/plasmic.module.css",
+      "cssFilePath": "plasmic/hamdast_khedmat/plasmic.css",
       "components": [
         {
           "id": "M0Hes2jXBIMM",
@@ -7572,6 +7572,19 @@
             "modulePath": "HamdastKhedmatWidget.tsx"
           },
           "cssFilePath": "plasmic/hamdast_khedmat/PlasmicHamdastKhedmatWidget.module.css",
+          "scheme": "blackbox",
+          "componentType": "component"
+        },
+        {
+          "id": "KIALDnHqraz9",
+          "name": "Card",
+          "type": "managed",
+          "projectId": "666TdydnqTmUJpihDvjWrt",
+          "renderModuleFilePath": "plasmic/hamdast_khedmat/PlasmicCard.tsx",
+          "importSpec": {
+            "modulePath": "Card.tsx"
+          },
+          "cssFilePath": "plasmic/hamdast_khedmat/PlasmicCard.module.css",
           "scheme": "blackbox",
           "componentType": "component"
         }
@@ -7601,9 +7614,25 @@
           "id": "up-9MMw2XjrH",
           "name": "Icon5Icon",
           "moduleFilePath": "plasmic/hamdast_khedmat/icons/PlasmicIcon__Icon5.tsx"
+        },
+        {
+          "id": "4gN0eEO49Ni3",
+          "name": "FrameIcon",
+          "moduleFilePath": "plasmic/hamdast_khedmat/icons/PlasmicIcon__Frame.tsx"
+        },
+        {
+          "id": "V1Z2Lvtq2PbD",
+          "name": "Icon6Icon",
+          "moduleFilePath": "plasmic/hamdast_khedmat/icons/PlasmicIcon__Icon6.tsx"
         }
       ],
-      "images": [],
+      "images": [
+        {
+          "id": "sP7D1EO8AgWg",
+          "name": "Rectangle 1",
+          "filePath": "plasmic/hamdast_khedmat/images/rectangle1.jpg"
+        }
+      ],
       "indirect": false,
       "globalContextsFilePath": "plasmic/hamdast_khedmat/PlasmicGlobalContextsProvider.tsx",
       "splitsProviderFilePath": "",
@@ -7717,6 +7746,12 @@
           "name": "PWA",
           "displayName": "PWA",
           "componentImportPath": "@/common/fragment/pwa"
+        },
+        {
+          "id": "_zL4QzhBbvVF",
+          "name": "HamdastAppsSelectorModalProvider",
+          "displayName": "HamdastAppsSelectorModalProvider",
+          "componentImportPath": "@/modules/hamdast/components/apps-selector-modal"
         }
       ],
       "customFunctions": [
@@ -7727,7 +7762,8 @@
           "name": "splunkEvent",
           "namespace": null
         }
-      ]
+      ],
+      "dataTokensFilePath": ""
     }
   ],
   "globalVariants": {
@@ -7847,7 +7883,7 @@
   "nextjsConfig": {
     "pagesDir": "../src/pages"
   },
-  "cliVersion": "0.1.352",
+  "cliVersion": "0.1.364",
   "packageManager": "npm",
-  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.352/dist/plasmic.schema.json"
+  "$schema": "https://unpkg.com/@plasmicapp/cli@0.1.364/dist/plasmic.schema.json"
 }

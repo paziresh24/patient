@@ -9,11 +9,11 @@ import { createUseStyleTokens } from "@plasmicapp/react-web";
 
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectModule
 
-import projectcss from "./plasmic.module.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
+import projectcss from "./plasmic.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
-import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.module.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
-import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.module.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
+import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
+import plasmic_ravi_design_system_css from "../ravi_design_system/plasmic.css"; // plasmic-import: pkMLinFwM9pzwv5S5KpiAu/projectcss
+import plasmic_paziresh_24_design_system_css from "../paziresh_24_design_system/plasmic.css"; // plasmic-import: 6HBcNwr8dz9LuS1Qe36xa5/projectcss
 
 const data = {
   base: `${projectcss.plasmic_tokens} ${plasmic_fragment_design_system_css.plasmic_tokens} ${plasmic_ravi_design_system_css.plasmic_tokens} ${plasmic_paziresh_24_design_system_css.plasmic_tokens}`,
