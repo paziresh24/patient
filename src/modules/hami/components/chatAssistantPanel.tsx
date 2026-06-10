@@ -1,11 +1,12 @@
 import classNames from '@/common/utils/classNames';
+import { ChatAssistantActionsBar } from '@/modules/hami/components/chatAssistantActionsBar';
 import { ChatAssistantIntro } from '@/modules/hami/components/chatAssistantIntro';
 import { ChatAssistantProfileHeader } from '@/modules/hami/components/chatAssistantProfileHeader';
 import { ChatAssistantUnsupported } from '@/modules/hami/components/chatAssistantUnsupported';
 import { vardastPanelClass } from '@/modules/hami/components/chatAssistantTypography';
-import { ChatAssistantTypingIndicator } from '@/modules/hami/components/chatAssistantTypingIndicator';
 import { ChatAssistantWorkflowWidget } from '@/modules/hami/components/chatAssistantWorkflowWidget';
 import { useVardastWorkflow } from '@/modules/hami/context/vardastWorkflowContext';
+import { useHamiVardastActions } from '@/modules/hami/hooks/useHamiVardastActions';
 import { useEffect, useState } from 'react';
 
 interface ChatAssistantPanelProps {
@@ -15,7 +16,9 @@ interface ChatAssistantPanelProps {
 
 export const ChatAssistantPanel = ({ isOpen, chatId }: ChatAssistantPanelProps) => {
   const [showContent, setShowContent] = useState(false);
-  const { messages, isLoading, isPooling, isUnsupported } = useVardastWorkflow();
+  const { messages, appointmentId: workflowAppointmentId, isLoading, isUnsupported } = useVardastWorkflow();
+  const { actions, appointmentId: actionsAppointmentId } = useHamiVardastActions(chatId, isOpen);
+  const appointmentId = actionsAppointmentId ?? workflowAppointmentId;
 
   useEffect(() => {
     if (!isOpen) {
@@ -28,7 +31,7 @@ export const ChatAssistantPanel = ({ isOpen, chatId }: ChatAssistantPanelProps) 
   }, [isOpen]);
 
   const showInitialLoading = isLoading && messages.length === 0 && !isUnsupported;
-  const showBody = showContent && (messages.length > 0 || showInitialLoading || isUnsupported || isPooling);
+  const showBody = showContent && (messages.length > 0 || showInitialLoading || isUnsupported);
 
   return (
     <div className={classNames('flex min-h-0 flex-1 flex-col bg-slate-50', vardastPanelClass)}>
@@ -40,10 +43,7 @@ export const ChatAssistantPanel = ({ isOpen, chatId }: ChatAssistantPanelProps) 
         onTouchStart={event => event.stopPropagation()}
       >
         {showBody && !isUnsupported && (
-          <ChatAssistantIntro
-            visible={showContent}
-            isLoading={showInitialLoading || (isPooling && messages.length === 0)}
-          />
+          <ChatAssistantIntro visible={showContent} isLoading={showInitialLoading} />
         )}
 
         {messages.map((message, index) => (
@@ -56,11 +56,16 @@ export const ChatAssistantPanel = ({ isOpen, chatId }: ChatAssistantPanelProps) 
         ))}
 
         {isUnsupported && <ChatAssistantUnsupported visible={showContent} />}
-
-        {(showInitialLoading || (isPooling && messages.length > 0)) && (
-          <ChatAssistantTypingIndicator visible={showContent} />
-        )}
       </div>
+
+      {chatId && (
+        <ChatAssistantActionsBar
+          chatId={chatId}
+          actions={actions}
+          appointmentId={appointmentId}
+          visible={showContent}
+        />
+      )}
     </div>
   );
 };

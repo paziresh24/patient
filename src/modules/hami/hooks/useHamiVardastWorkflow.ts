@@ -1,8 +1,9 @@
 import {
   areVardastWorkflowMessagesEqual,
-  parseVardastWorkflowMessages,
+  parseVardastWorkflowResponse,
   shouldPoolVardastWorkflow,
   VardastWorkflowMessageItem,
+  VardastWorkflowResult,
 } from '@/modules/hami/apis/parseVardastWorkflowMessages';
 import { startHamiVardastWorkflow } from '@/modules/hami/apis/startVardastWorkflow';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -20,7 +21,7 @@ const fetchWorkflowWithRetry = async (chatId: string, isCancelled: () => boolean
     try {
       const response = await startHamiVardastWorkflow(chatId);
       if (isCancelled()) return null;
-      return parseVardastWorkflowMessages(response.data.message);
+      return parseVardastWorkflowResponse(response.data);
     } catch (error) {
       console.error('Failed to start hami vardast workflow', error);
       if (attempt < MAX_RETRIES - 1) {
@@ -34,6 +35,7 @@ const fetchWorkflowWithRetry = async (chatId: string, isCancelled: () => boolean
 
 export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean) => {
   const [messages, setMessages] = useState<VardastWorkflowMessageItem[]>([]);
+  const [appointmentId, setAppointmentId] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [isPooling, setIsPooling] = useState(false);
   const [isUnsupported, setIsUnsupported] = useState(false);
@@ -51,16 +53,18 @@ export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean) =
 
     setIsPooling(false);
 
-    const applyMessages = (next: VardastWorkflowMessageItem[]) => {
+    const applyWorkflow = ({ messages: next, appointmentId: nextAppointmentId }: VardastWorkflowResult) => {
       setMessages(prev => (areVardastWorkflowMessagesEqual(prev, next) ? prev : next));
+      setAppointmentId(nextAppointmentId);
     };
 
     const markUnsupported = () => {
       setMessages([]);
+      setAppointmentId(undefined);
       setIsUnsupported(true);
     };
 
-    let currentMessages = await fetchWorkflowWithRetry(id, isCancelled);
+    let currentWorkflow = await fetchWorkflowWithRetry(id, isCancelled);
 
     if (isCancelled()) return;
 
@@ -68,42 +72,42 @@ export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean) =
       setIsLoading(false);
     }
 
-    if (!currentMessages) {
+    if (!currentWorkflow) {
       markUnsupported();
       return;
     }
 
-    if (currentMessages.length === 0) {
+    if (currentWorkflow.messages.length === 0) {
       markUnsupported();
       return;
     }
 
     setIsUnsupported(false);
-    applyMessages(currentMessages);
+    applyWorkflow(currentWorkflow);
 
-    while (shouldPoolVardastWorkflow(currentMessages)) {
+    while (shouldPoolVardastWorkflow(currentWorkflow.messages)) {
       await sleep(POOLING_DELAY_MS);
       if (isCancelled()) return;
 
       setIsPooling(true);
-      const nextMessages = await fetchWorkflowWithRetry(id, isCancelled);
+      const nextWorkflow = await fetchWorkflowWithRetry(id, isCancelled);
       setIsPooling(false);
 
       if (isCancelled()) return;
 
-      if (!nextMessages) {
+      if (!nextWorkflow) {
         markUnsupported();
         return;
       }
 
-      if (nextMessages.length === 0) {
+      if (nextWorkflow.messages.length === 0) {
         markUnsupported();
         return;
       }
 
       setIsUnsupported(false);
-      applyMessages(nextMessages);
-      currentMessages = nextMessages;
+      applyWorkflow(nextWorkflow);
+      currentWorkflow = nextWorkflow;
     }
   }, []);
 
@@ -113,6 +117,7 @@ export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean) =
 
     if (!chatId) {
       setMessages([]);
+      setAppointmentId(undefined);
       setIsLoading(false);
       setIsPooling(false);
       setIsUnsupported(false);
@@ -131,5 +136,5 @@ export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean) =
     }
   }, [isOpen, chatId, runWorkflow]);
 
-  return { messages, isLoading, isPooling, isUnsupported };
+  return { messages, appointmentId, isLoading, isPooling, isUnsupported };
 };

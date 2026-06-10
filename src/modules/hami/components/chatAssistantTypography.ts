@@ -15,6 +15,8 @@ export const vardastType = {
   profileStatus: 'text-xs font-medium leading-4 text-emerald-600',
   cardTitle: 'text-sm font-semibold leading-6 text-slate-900',
   cardMeta: 'text-xs font-medium leading-4 text-slate-500',
+  actionChip:
+    'inline-flex shrink-0 items-center whitespace-nowrap rounded-full border border-primary/40 bg-primary/[0.08] px-4 py-2 text-xs font-semibold text-primary shadow-[0_1px_4px_rgba(56,97,251,0.12)] transition active:scale-[0.98] hover:bg-primary/[0.12]',
 } as const;
 
 export const vardastRichContentClass =

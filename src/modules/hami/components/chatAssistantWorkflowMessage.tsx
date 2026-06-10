@@ -1,6 +1,6 @@
 import classNames from '@/common/utils/classNames';
 import { parseVardastContent, VardastWorkflowMessageItem } from '@/modules/hami/apis/parseVardastWorkflowMessages';
-import { ChatAssistantMessage, ChatAssistantMessageAction } from '@/modules/hami/components/chatAssistantMessage';
+import { ChatAssistantMessage } from '@/modules/hami/components/chatAssistantMessage';
 import { ChatAssistantRichContent } from '@/modules/hami/components/chatAssistantRichContent';
 import { useMemo } from 'react';
 
@@ -8,7 +8,6 @@ interface ChatAssistantWorkflowMessageProps {
   item: VardastWorkflowMessageItem;
   visible: boolean;
   index?: number;
-  onActionClick?: (action: ChatAssistantMessageAction) => void;
 }
 
 const cleanStatusTitle = (title: string) =>
@@ -33,7 +32,6 @@ export const ChatAssistantWorkflowMessage = ({
   item,
   visible,
   index = 0,
-  onActionClick,
 }: ChatAssistantWorkflowMessageProps) => {
   const { title, body } = useMemo(() => parseVardastContent(item.content), [item.content]);
   const hasHtmlBody = /<[^>]+>/.test(body);
@@ -64,8 +62,6 @@ export const ChatAssistantWorkflowMessage = ({
       visible={visible}
       index={index}
       wide={isLongContent}
-      actions={item.actions}
-      onActionClick={onActionClick}
     >
       <ChatAssistantRichContent html={hasHtmlBody ? body : undefined} plain={!hasHtmlBody ? body : undefined} />
     </ChatAssistantMessage>
