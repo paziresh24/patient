@@ -12,9 +12,16 @@ import { isToday } from '@/common/utils/isToday';
 import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
 import MegaphoneIcon from '@/components/icons/megaphone';
-import Select from '@/modules/booking/components/select/select';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
+import { OnlineVisitCancelModal } from '@/modules/myTurn/components/onlineVisitCancelModal';
+import { WrongDoctorCancelSuccessModal } from '@/modules/myTurn/components/wrongDoctorCancelSuccessModal';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
+import {
+  getExpiredOnlineVisitCancelReasons,
+  ONLINE_VISIT_BOOK_IN_PERSON_CANCEL_REASON,
+  ONLINE_VISIT_CANCEL_REASONS_BEFORE_VISIT,
+  WRONG_DOCTOR_CANCEL_REASON,
+} from '@/modules/myTurn/constants/deleteTurnReasons';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
@@ -99,12 +106,14 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const { handleOpen: handleOpenQueueModal, modalProps: queueModalProps } = useModal();
   const { handleOpen: handleOpenMoveTurnModal, handleClose: handleCloseMoveTurnModal, modalProps: moveTurnModalProps } = useModal();
   const { handleOpen: handleOpenTurnDesciription, modalProps: turnDesciriptionProp } = useModal();
+  const { handleOpen: handleOpenWrongDoctorSuccess, modalProps: wrongDoctorSuccessModalProps } = useModal();
   const {
     handleOpen: handleOpenRemoveTurn,
     handleClose: handleCloseRemoveTurnModal,
     modalProps: removeTurnProp,
   } = useModal({
     onClose: () => {
+      setReasonDeleteTurn(null);
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
         user_center_id: undefined,
@@ -118,14 +127,21 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const router = useRouter();
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
-  const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
+  const [reasonDeleteTurn, setReasonDeleteTurn] = useState<string | null>(null);
+  const [isBookInPersonLoading, setIsBookInPersonLoading] = useState(false);
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
   const isBookForToday = isToday(new Date(bookTime));
   const moveBookApi = useMoveBook();
   const isOnlineVisitTurn = centerType === CenterType.consult;
   const isRequestVisitTurn = status === BookStatus.requested;
+  const canShowBookInPersonBanner =
+    isOnlineVisitTurn && (status === BookStatus.notVisited || status === BookStatus.expired);
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
-  const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
+  const onlineVisitCancelReasons = useMemo(() => {
+    if (status === BookStatus.notVisited) return [...ONLINE_VISIT_CANCEL_REASONS_BEFORE_VISIT];
+    if (status === BookStatus.expired) return getExpiredOnlineVisitCancelReasons(deleteTurnQuestionAffterVisit);
+    return deleteTurnQuestionAffterVisit;
+  }, [status, deleteTurnQuestionAffterVisit]);
   const shouldShowRemoveTurn =
     !isDelete &&
     (isRequestVisitTurn ||
@@ -173,7 +189,13 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     </Button>
   );
 
-  const removeBookAction = () => {
+  const cancelOnlineVisitBook = async ({
+    reason,
+    onSuccess,
+  }: {
+    reason: string;
+    onSuccess?: () => void;
+  }) => {
     return removeBookApi.mutateAsync(
       {
         center_id: centerId,
@@ -200,10 +222,15 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
                   trackingCode,
                   patientName,
                   phoneNumber,
-                  reason: reasonDeleteTurn,
+                  reason,
                   isVisited: status === BookStatus.visited,
                 },
               });
+            }
+            if (reason === WRONG_DOCTOR_CANCEL_REASON) {
+              handleOpenWrongDoctorSuccess();
+            } else {
+              onSuccess?.();
             }
             return;
           }
@@ -213,6 +240,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
             toast.success(data.data.message ?? data.data?.[0]?.message);
+            if (reason === WRONG_DOCTOR_CANCEL_REASON) {
+              handleOpenWrongDoctorSuccess();
+            } else {
+              onSuccess?.();
+            }
           }
         },
         onError: (error: any) => {
@@ -222,6 +254,11 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         },
       },
     );
+  };
+
+  const removeBookAction = () => {
+    if (!reasonDeleteTurn) return;
+    return cancelOnlineVisitBook({ reason: reasonDeleteTurn });
   };
 
   const showRemoveTurnModal = () => {
@@ -311,6 +348,18 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
         },
       },
     });
+  };
+
+  const handleBookInPerson = async () => {
+    setIsBookInPersonLoading(true);
+    try {
+      await cancelOnlineVisitBook({
+        reason: ONLINE_VISIT_BOOK_IN_PERSON_CANCEL_REASON,
+        onSuccess: () => router.push(`/booking/${slug}`),
+      });
+    } finally {
+      setIsBookInPersonLoading(false);
+    }
   };
 
   const redirectToFactor = () => {
@@ -419,41 +468,24 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           }}
         />
       </Modal>
-      <Modal
-        title={
-          isOnlineVisitTurn
-            ? `لطفا دلیل ${status === BookStatus.notVisited ? 'لغو نوبت' : 'درخواست  حذف نوبت و استرداد وجه'} را انتخاب کنید`
-            : notRefundable
-              ? 'عدم امکان لغو نوبت'
-              : isRequestVisitTurn
-                ? 'آیا از لغو درخواست اطمینان دارید؟'
-                : 'آیا از لغو نوبت اطمینان دارید؟'
-        }
-        {...removeTurnProp}
-      >
-        <>
-          {isOnlineVisitTurn && (
-            <div className="mb-4 space-y-3">
-              {(status === BookStatus.notVisited ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
-                <Select
-                  key={question.id}
-                  selected={reasonDeleteTurn === question.value}
-                  onSelect={() => setReasonDeleteTurn(question.value)}
-                  title={question.text}
-                />
-              ))}
-            </div>
-          )}
-          {notRefundable && centerType !== CenterType.consult && (
-            <Alert severity="warning" className="flex items-center gap-2 p-2 mb-4">
-              <WarningIcon className="w-8" />
-              <Text fontSize="sm">
-                زمان نوبت شما کمتر از <b>{respiteDeleteTurn} ساعت</b> دیگر است و امکان لغو نوبت وجود ندارد.
-              </Text>
-            </Alert>
-          )}
+      {isOnlineVisitTurn ? (
+        <OnlineVisitCancelModal
+          modalProps={removeTurnProp}
+          title={
+            status === BookStatus.notVisited ? 'لغو نوبت ویزیت آنلاین' : 'لطفا دلیل درخواست حذف نوبت و استرداد وجه را انتخاب کنید'
+          }
+          confirmLabel={status === BookStatus.notVisited ? 'لغو نوبت' : 'حذف نوبت و استرداد وجه'}
+          selectedReason={reasonDeleteTurn}
+          onReasonChange={setReasonDeleteTurn}
+          onConfirm={removeBookAction}
+          onBookInPerson={canShowBookInPersonBanner ? handleBookInPerson : undefined}
+          reasons={onlineVisitCancelReasons}
+          isLoading={removeBookApi.isLoading || (serverId != 1 && getCancellationPolicyStatus.isLoading)}
+          isBookInPersonLoading={isBookInPersonLoading}
+          showInPersonBanner={canShowBookInPersonBanner}
+        >
           {serverId != 1 && getCancellationPolicyStatus.data?.data?.is_paid && (
-            <Alert severity="warning" className="flex items-center gap-3 p-3 mb-4">
+            <Alert severity="warning" className="mb-4 flex items-center gap-3 p-3">
               <WarningIcon className="w-5" />
               <Text fontSize="sm" fontWeight="medium">
                 {getCancellationPolicyStatus.data?.data?.refundable
@@ -462,38 +494,70 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
               </Text>
             </Alert>
           )}
-          <div className="flex space-s-2">
-            {(!notRefundable || centerType == CenterType.consult) && (
+        </OnlineVisitCancelModal>
+      ) : (
+        <Modal
+          title={
+            notRefundable
+              ? 'عدم امکان لغو نوبت'
+              : isRequestVisitTurn
+                ? 'آیا از لغو درخواست اطمینان دارید؟'
+                : 'آیا از لغو نوبت اطمینان دارید؟'
+          }
+          {...removeTurnProp}
+        >
+          <>
+            {notRefundable && (
+              <Alert severity="warning" className="mb-4 flex items-center gap-2 p-2">
+                <WarningIcon className="w-8" />
+                <Text fontSize="sm">
+                  زمان نوبت شما کمتر از <b>{respiteDeleteTurn} ساعت</b> دیگر است و امکان لغو نوبت وجود ندارد.
+                </Text>
+              </Alert>
+            )}
+            {serverId != 1 && getCancellationPolicyStatus.data?.data?.is_paid && (
+              <Alert severity="warning" className="mb-4 flex items-center gap-3 p-3">
+                <WarningIcon className="w-5" />
+                <Text fontSize="sm" fontWeight="medium">
+                  {getCancellationPolicyStatus.data?.data?.refundable
+                    ? 'وجه پرداختی شما تا یک ساعت بعد از لغو نوبت به شما مسترد خواهد شد.'
+                    : 'با توجه به قوانین استرداد مرکز، وجه پرداختی شما مسترد نخواهد شد.'}
+                </Text>
+              </Alert>
+            )}
+            <div className="flex space-s-2">
+              {!notRefundable && (
+                <Button
+                  theme="error"
+                  block
+                  onClick={removeBookAction}
+                  loading={removeBookApi.isLoading || (serverId != 1 && getCancellationPolicyStatus.isLoading)}
+                  data-testid="modal__remove-turn-button"
+                >
+                  {isRequestVisitTurn ? 'لغو درخواست' : 'لغو نوبت'}
+                </Button>
+              )}
               <Button
                 theme="error"
+                variant="secondary"
                 block
-                onClick={removeBookAction}
-                loading={removeBookApi.isLoading || (serverId != 1 && getCancellationPolicyStatus.isLoading)}
-                data-testid="modal__remove-turn-button"
-                disabled={isOnlineVisitTurn && !reasonDeleteTurn}
+                onClick={handleCloseRemoveTurnModal}
+                data-testid="modal__cancel-remove-turn-button"
               >
-                {isOnlineVisitTurn && status !== BookStatus.notVisited
-                  ? 'حذف نوبت و استرداد وجه'
-                  : isRequestVisitTurn
-                    ? 'لغو درخواست'
-                    : 'لغو نوبت'}
+                انصراف
               </Button>
-            )}
-            <Button
-              theme="error"
-              variant="secondary"
-              block
-              onClick={handleCloseRemoveTurnModal}
-              data-testid="modal__cancel-remove-turn-button"
-            >
-              انصراف
-            </Button>
-          </div>
-        </>
-      </Modal>
+            </div>
+          </>
+        </Modal>
+      )}
       <Modal {...turnDesciriptionProp} title="توضیحات درمان">
         <Text fontSize="sm">{description}</Text>
       </Modal>
+      <WrongDoctorCancelSuccessModal
+        modalProps={wrongDoctorSuccessModalProps}
+        doctorSlug={slug}
+        expertiseName={expertise}
+      />
     </>
   );
 };

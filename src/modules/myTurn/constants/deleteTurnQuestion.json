@@ -2,16 +2,21 @@
   "befor_visit": [
     {
       "id": 1,
-      "text": "پزشک رو اشتباه انتخاب کردم",
+      "text": "پزشک را اشتباه انتخاب کردم",
       "value": "wrong_doctor"
     },
     {
       "id": 2,
-      "text": "زمان برایم مناسب نیست",
-      "value": "wrong_time"
+      "text": "منصرف شدم",
+      "value": "changed_mind"
     },
     {
       "id": 3,
+      "text": "مشکل در ثبت نوبت",
+      "value": "booking_problem"
+    },
+    {
+      "id": 4,
       "text": "سایر",
       "value": "others"
     }

@@ -1,0 +1,1 @@
+export { WrongDoctorCancelSuccessModal } from './wrongDoctorCancelSuccessModal';

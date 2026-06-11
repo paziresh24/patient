@@ -28,13 +28,20 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTimestamp ';
 import { isPWA } from '@/common/utils/isPwa';
-import Select from '@/modules/booking/components/select/select';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
+import { OnlineVisitCancelModal } from '@/modules/myTurn/components/onlineVisitCancelModal';
+import { WrongDoctorCancelSuccessModal } from '@/modules/myTurn/components/wrongDoctorCancelSuccessModal';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
+import {
+  getExpiredOnlineVisitCancelReasons,
+  ONLINE_VISIT_BOOK_IN_PERSON_CANCEL_REASON,
+  ONLINE_VISIT_CANCEL_REASONS_BEFORE_VISIT,
+  WRONG_DOCTOR_CANCEL_REASON,
+} from '@/modules/myTurn/constants/deleteTurnReasons';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import ReceiptError from '@/modules/receipt/components/ReceiptError';
@@ -71,10 +78,18 @@ const Receipt = () => {
   const { appDownloadSource, getRatingAppLink } = usePwa();
   const user = useUserInfoStore(state => state.info);
   const customize = useCustomize(state => state.customize);
-  const { handleOpen: handleOpenRemoveModal, handleClose: handleCloseRemoveModal, modalProps: removeModalProps } = useModal();
+  const [reasonDeleteTurn, setReasonDeleteTurn] = useState<string | null>(null);
+  const [isBookInPersonLoading, setIsBookInPersonLoading] = useState(false);
+  const {
+    handleOpen: handleOpenRemoveModal,
+    handleClose: handleCloseRemoveModal,
+    modalProps: removeModalProps,
+  } = useModal({
+    onClose: () => setReasonDeleteTurn(null),
+  });
   const { handleOpen: handleOpenRateAppModal, handleClose: handleCloseRateAppModal, modalProps: rateAppModal } = useModal();
+  const { handleOpen: handleOpenWrongDoctorSuccess, modalProps: wrongDoctorSuccessModalProps } = useModal();
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
-  const deleteTurnQuestionBefforVisit = useMemo(() => shuffle(deleteTurnQuestion.befor_visit), [deleteTurnQuestion]);
   const {
     handleOpen: handleOpenWaitingTimeModal,
     handleClose: handleCloseWaitingTimeModal,
@@ -132,7 +147,6 @@ const Receipt = () => {
   });
   const getCancellationPolicyStatus = useGetCancellationPolicyStatus({ book_id: bookId as string }, { enabled: false });
   const { removeBookApi, centerMap } = useBookAction();
-  const [reasonDeleteTurn, setReasonDeleteTurn] = useState(null);
   const shouldShowRateAppModal = useFeatureIsOn('receipt:rate-app-modal');
   const rateAppModalInfo = useFeatureValue<any>('receipt:rate-app-info', {});
   const share = useShare();
@@ -432,6 +446,11 @@ const Receipt = () => {
     notVisitedTurn: bookDetailsData?.book_status === 'not_visited',
     visitedTurn: bookDetailsData?.book_status === 'visited',
   };
+  const onlineVisitCancelReasons = useMemo(() => {
+    if (turnStatus.notVisitedTurn) return [...ONLINE_VISIT_CANCEL_REASONS_BEFORE_VISIT];
+    if (turnStatus.expiredTurn) return getExpiredOnlineVisitCancelReasons(deleteTurnQuestionAffterVisit);
+    return deleteTurnQuestionAffterVisit;
+  }, [turnStatus.notVisitedTurn, turnStatus.expiredTurn, deleteTurnQuestionAffterVisit]);
   const isActiveTurn =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
 
@@ -539,6 +558,7 @@ const Receipt = () => {
 
   const isShowRemoveButtonForOnlineVisit =
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
+  const canShowBookInPersonBanner = turnStatus.notVisitedTurn || turnStatus.expiredTurn;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn && bookDetailsData?.services?.[0]?.service_type_id !== 9;
 
   const handleRemoveBookTurn = () => {
@@ -572,7 +592,11 @@ const Receipt = () => {
                 },
               });
             }
-            router.push('/patient/appointments');
+            if (reasonDeleteTurn === WRONG_DOCTOR_CANCEL_REASON) {
+              handleOpenWrongDoctorSuccess();
+            } else {
+              router.push('/patient/appointments');
+            }
             return;
           }
           if (data.data?.status) {
@@ -580,7 +604,11 @@ const Receipt = () => {
           } else {
             handleCloseRemoveModal();
             toast.success(data.data.message ?? data.data?.[0]?.message);
-            router.push('/patient/appointments');
+            if (reasonDeleteTurn === WRONG_DOCTOR_CANCEL_REASON) {
+              handleOpenWrongDoctorSuccess();
+            } else {
+              router.push('/patient/appointments');
+            }
           }
         },
         onError: (error: any) => {
@@ -624,6 +652,65 @@ const Receipt = () => {
             toast.error('خطایی در لغو نوبت رخ داده است');
           }
         },
+      },
+    );
+  };
+
+  const handleBookInPerson = () => {
+    setIsBookInPersonLoading(true);
+    removeBookApi.mutate(
+      {
+        center_id: bookDetailsData.center_id,
+        national_code: bookDetailsData.patient?.national_code,
+        reference_code: bookDetailsData.reference_code,
+        book_id: bookId as string,
+        isBookRequest: turnStatus.requestedTurn,
+      },
+      {
+        onSuccess: data => {
+          if (data.data.status === ClinicStatus.SUCCESS) {
+            handleCloseRemoveModal();
+            toast.success(data.data?.message);
+            splunkInstance('doctor-profile').sendEvent({
+              group: 'my-turn',
+              type: 'delete-turn-reason',
+              event: {
+                terminal_id: getCookie('terminal_id'),
+                doctorName: doctorName,
+                expertise: bookDetailsData.doctor?.display_expertise,
+                phoneNumber: bookDetailsData?.patient?.cell,
+                nationalCode: bookDetailsData?.patient?.national_code,
+                trackingCode: bookDetailsData?.reference_code,
+                patientName: `${bookDetailsData?.patient?.name} ${bookDetailsData?.patient?.family}`,
+                reason: ONLINE_VISIT_BOOK_IN_PERSON_CANCEL_REASON,
+                isVisited: turnStatus.visitedTurn,
+              },
+            });
+            const doctorSlug = bookDetailsData?.doctor?.slug ?? resolvedDoctorSlug;
+            if (doctorSlug) {
+              router.push(`/booking/${doctorSlug}`);
+            }
+            return;
+          }
+          if (data.data?.status) {
+            toast.error(data.data.message ?? data.data?.[0]?.message);
+          } else {
+            handleCloseRemoveModal();
+            toast.success(data.data.message ?? data.data?.[0]?.message);
+            const doctorSlug = bookDetailsData?.doctor?.slug ?? resolvedDoctorSlug;
+            if (doctorSlug) {
+              router.push(`/booking/${doctorSlug}`);
+            }
+          }
+        },
+        onError: (error: any) => {
+          if (axios.isAxiosError(error)) {
+            toast.error(error.response?.data?.message || 'خطایی در لغو نوبت رخ داده است');
+          } else {
+            toast.error('خطایی در لغو نوبت رخ داده است');
+          }
+        },
+        onSettled: () => setIsBookInPersonLoading(false),
       },
     );
   };
@@ -1132,51 +1219,66 @@ const Receipt = () => {
             }
           />
         </div>
-        <Modal
-          title={
-            centerType === 'consult'
-              ? `لطفا دلیل ${turnStatus.notVisitedTurn ? 'لغو نوبت' : 'درخواست استرداد وجه'} را انتخاب کنید`
-              : turnStatus.requestedTurn
-                ? 'آیا از لغو درخواست اطمینان دارید؟'
-                : 'آیا از لغو نوبت اطمینان دارید؟'
-          }
-          {...removeModalProps}
-        >
-          <div className="flex flex-col gap-3 mb-3">
-            {centerId === CENTERS.CONSULT &&
-              (turnStatus.notVisitedTurn ? deleteTurnQuestionBefforVisit : deleteTurnQuestionAffterVisit).map((question: any) => (
-                <Select
-                  key={question.id}
-                  selected={reasonDeleteTurn === question.value}
-                  onSelect={() => setReasonDeleteTurn(question.value)}
-                  title={question.text}
-                />
-              ))}
-          </div>
-          {bookDetailsData?.doctor?.server_id != 1 && getCancellationPolicyStatus.data?.data?.is_paid && (
-            <Alert severity="warning" className="flex items-center gap-3 p-3 mb-4">
-              <WarningIcon className="w-5" />
-              <Text fontSize="sm" fontWeight="medium">
-                {getCancellationPolicyStatus.data?.data?.refundable
-                  ? 'وجه پرداختی شما تا یک ساعت بعد از لغو نوبت به شما مسترد خواهد شد.'
-                  : 'با توجه به قوانین استرداد مرکز، وجه پرداختی شما مسترد نخواهد شد.'}
-              </Text>
-            </Alert>
-          )}
-          <div className="flex space-s-2">
-            <Button
-              theme="error"
-              block
-              onClick={handleRemoveBookTurn}
-              loading={removeBookApi.isLoading || (bookDetailsData?.doctor?.server_id != 1 && getCancellationPolicyStatus.isLoading)}
-            >
-              {turnStatus.requestedTurn ? 'لغو درخواست' : 'لغو نوبت'}
-            </Button>
-            <Button theme="error" variant="secondary" block onClick={handleCloseRemoveModal}>
-              انصراف
-            </Button>
-          </div>
-        </Modal>
+        {centerId === CENTERS.CONSULT ? (
+          <OnlineVisitCancelModal
+            modalProps={removeModalProps}
+            title={turnStatus.notVisitedTurn ? 'لغو نوبت ویزیت آنلاین' : 'لطفا دلیل درخواست استرداد وجه را انتخاب کنید'}
+            confirmLabel={turnStatus.requestedTurn ? 'لغو درخواست' : 'لغو نوبت'}
+            selectedReason={reasonDeleteTurn}
+            onReasonChange={setReasonDeleteTurn}
+            onConfirm={handleRemoveBookTurn}
+            onBookInPerson={canShowBookInPersonBanner ? handleBookInPerson : undefined}
+            reasons={onlineVisitCancelReasons}
+            isLoading={removeBookApi.isLoading || (bookDetailsData?.doctor?.server_id != 1 && getCancellationPolicyStatus.isLoading)}
+            isBookInPersonLoading={isBookInPersonLoading}
+            showInPersonBanner={canShowBookInPersonBanner}
+          >
+            {bookDetailsData?.doctor?.server_id != 1 && getCancellationPolicyStatus.data?.data?.is_paid && (
+              <Alert severity="warning" className="mb-4 flex items-center gap-3 p-3">
+                <WarningIcon className="w-5" />
+                <Text fontSize="sm" fontWeight="medium">
+                  {getCancellationPolicyStatus.data?.data?.refundable
+                    ? 'وجه پرداختی شما تا یک ساعت بعد از لغو نوبت به شما مسترد خواهد شد.'
+                    : 'با توجه به قوانین استرداد مرکز، وجه پرداختی شما مسترد نخواهد شد.'}
+                </Text>
+              </Alert>
+            )}
+          </OnlineVisitCancelModal>
+        ) : (
+          <Modal
+            title={turnStatus.requestedTurn ? 'آیا از لغو درخواست اطمینان دارید؟' : 'آیا از لغو نوبت اطمینان دارید؟'}
+            {...removeModalProps}
+          >
+            {bookDetailsData?.doctor?.server_id != 1 && getCancellationPolicyStatus.data?.data?.is_paid && (
+              <Alert severity="warning" className="mb-4 flex items-center gap-3 p-3">
+                <WarningIcon className="w-5" />
+                <Text fontSize="sm" fontWeight="medium">
+                  {getCancellationPolicyStatus.data?.data?.refundable
+                    ? 'وجه پرداختی شما تا یک ساعت بعد از لغو نوبت به شما مسترد خواهد شد.'
+                    : 'با توجه به قوانین استرداد مرکز، وجه پرداختی شما مسترد نخواهد شد.'}
+                </Text>
+              </Alert>
+            )}
+            <div className="flex space-s-2">
+              <Button
+                theme="error"
+                block
+                onClick={handleRemoveBookTurn}
+                loading={removeBookApi.isLoading || (bookDetailsData?.doctor?.server_id != 1 && getCancellationPolicyStatus.isLoading)}
+              >
+                {turnStatus.requestedTurn ? 'لغو درخواست' : 'لغو نوبت'}
+              </Button>
+              <Button theme="error" variant="secondary" block onClick={handleCloseRemoveModal}>
+                انصراف
+              </Button>
+            </div>
+          </Modal>
+        )}
+        <WrongDoctorCancelSuccessModal
+          modalProps={wrongDoctorSuccessModalProps}
+          doctorSlug={bookDetailsData?.doctor?.slug ?? resolvedDoctorSlug ?? ''}
+          expertiseName={bookDetailsData?.doctor?.display_expertise}
+        />
         <Modal title="احتمال معطلی بیش از یک ساعت!" {...waitingTimeModalProps}>
           <div className="flex flex-col space-y-3">
             <Text fontWeight="medium">نوبت شما ثبت شد ولی با توجه به گزارش کاربران، احتمال معطلی بیش از یک ساعت در مرکز وجود دارد.</Text>
