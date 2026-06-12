@@ -17,10 +17,12 @@ import toast from 'react-hot-toast';
 import { AppFrame } from '@/modules/hamdast/appFrame';
 import { useNotificationPermission } from '@/common/hooks/useNotificationPermission';
 import { NotificationPermissionModal } from '@/common/components/atom/notificationPermissionModal';
+import { DoctorLauncherContent, useIsNewDoctorLauncherEnabled } from '@/modules/doctorHome';
 
 const Page = () => {
   const { handleOpen, handleClose, modalProps } = useModal();
   const [app, setApp] = useState<string>('');
+  const isNewDoctorLauncher = useIsNewDoctorLauncherEnabled();
   const info = useUserInfoStore(state => state.info)
   const { isSupported, hasPermission, showModal, openModal, closeModal, checkPermission } = useNotificationPermission();
 
@@ -53,14 +55,18 @@ const Page = () => {
         onSuccess={handleSuccess}
       />
       <GlobalContextsProvider>
-        <LauncherMain
-          onAction={action => {
-            if (action.action === 'OPEN_APP') {
-              setApp(action.appKey);
-              handleOpen();
-            }
-          }}
-        />
+        {isNewDoctorLauncher ? (
+          <DoctorLauncherContent />
+        ) : (
+          <LauncherMain
+            onAction={action => {
+              if (action.action === 'OPEN_APP') {
+                setApp(action.appKey);
+                handleOpen();
+              }
+            }}
+          />
+        )}
       </GlobalContextsProvider>
     </>
   );

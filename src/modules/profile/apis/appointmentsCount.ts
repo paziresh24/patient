@@ -13,5 +13,5 @@ export const appointmentsCount = async (params: AppointmentsCountParams) => {
   return apiGatewayClient.get(`/v1/appointments/count`, { params, timeout: 2000 });
 };
 
-export const useAppointmentsCount = (params: AppointmentsCountParams) =>
-  useQuery(['appointmentsCount', params], () => appointmentsCount(params));
+export const useAppointmentsCount = (params: AppointmentsCountParams, options?: Parameters<typeof useQuery>[2]) =>
+  useQuery(['appointmentsCount', params], () => appointmentsCount(params), options);
