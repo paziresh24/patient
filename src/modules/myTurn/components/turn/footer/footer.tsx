@@ -134,8 +134,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const moveBookApi = useMoveBook();
   const isOnlineVisitTurn = centerType === CenterType.consult;
   const isRequestVisitTurn = status === BookStatus.requested;
-  const canShowBookInPersonBanner =
-    isOnlineVisitTurn && (status === BookStatus.notVisited || status === BookStatus.expired);
+  const canShowBookInPersonBanner = isOnlineVisitTurn && (status === BookStatus.notVisited || status === BookStatus.expired);
   const deleteTurnQuestionAffterVisit = useMemo(() => shuffle(deleteTurnQuestion.affter_visit), [deleteTurnQuestion]);
   const onlineVisitCancelReasons = useMemo(() => {
     if (status === BookStatus.notVisited) return [...ONLINE_VISIT_CANCEL_REASONS_BEFORE_VISIT];
@@ -189,13 +188,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
     </Button>
   );
 
-  const cancelOnlineVisitBook = async ({
-    reason,
-    onSuccess,
-  }: {
-    reason: string;
-    onSuccess?: () => void;
-  }) => {
+  const cancelOnlineVisitBook = async ({ reason, onSuccess }: { reason: string; onSuccess?: () => void }) => {
     return removeBookApi.mutateAsync(
       {
         center_id: centerId,
@@ -405,8 +398,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             {isOnlineVisitTurn && status !== BookStatus.notVisited
               ? 'حذف نوبت و استرداد وجه'
               : isRequestVisitTurn
-                ? 'لغو درخواست'
-                : 'لغو نوبت'}
+              ? 'لغو درخواست'
+              : 'لغو نوبت'}
           </Button>
         )}
         {status === BookStatus.notVisited && paymentStatus !== PaymentStatus.paying && !isOnlineVisitTurn && (
@@ -471,9 +464,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {isOnlineVisitTurn ? (
         <OnlineVisitCancelModal
           modalProps={removeTurnProp}
-          title={
-            status === BookStatus.notVisited ? 'لغو نوبت ویزیت آنلاین' : 'لطفا دلیل درخواست حذف نوبت و استرداد وجه را انتخاب کنید'
-          }
+          title={status === BookStatus.notVisited ? 'لغو نوبت ویزیت آنلاین' : 'لطفا دلیل درخواست حذف نوبت و استرداد وجه را انتخاب کنید'}
           confirmLabel={status === BookStatus.notVisited ? 'لغو نوبت' : 'حذف نوبت و استرداد وجه'}
           selectedReason={reasonDeleteTurn}
           onReasonChange={setReasonDeleteTurn}
@@ -501,8 +492,8 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
             notRefundable
               ? 'عدم امکان لغو نوبت'
               : isRequestVisitTurn
-                ? 'آیا از لغو درخواست اطمینان دارید؟'
-                : 'آیا از لغو نوبت اطمینان دارید؟'
+              ? 'آیا از لغو درخواست اطمینان دارید؟'
+              : 'آیا از لغو نوبت اطمینان دارید؟'
           }
           {...removeTurnProp}
         >
@@ -530,7 +521,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
                 <Button
                   theme="error"
                   block
-                  onClick={removeBookAction}
+                  onClick={() => cancelOnlineVisitBook({ reason: isRequestVisitTurn ? 'cancel_request' : 'offline_cancel' })}
                   loading={removeBookApi.isLoading || (serverId != 1 && getCancellationPolicyStatus.isLoading)}
                   data-testid="modal__remove-turn-button"
                 >
@@ -553,11 +544,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       <Modal {...turnDesciriptionProp} title="توضیحات درمان">
         <Text fontSize="sm">{description}</Text>
       </Modal>
-      <WrongDoctorCancelSuccessModal
-        modalProps={wrongDoctorSuccessModalProps}
-        doctorSlug={slug}
-        expertiseName={expertise}
-      />
+      <WrongDoctorCancelSuccessModal modalProps={wrongDoctorSuccessModalProps} doctorSlug={slug} expertiseName={expertise} />
     </>
   );
 };

@@ -125,17 +125,14 @@ export const ChatsPage = (props: any) => {
           </div>
         )}
 
-        {isVardastDrawerEnabled ? (
-          <ChatAssistantDrawer
-            isActive={isChatDetail && !isAppLoading}
-            chatId={chatId}
-            panelContent={({ isOpen }) => <ChatAssistantPanel isOpen={isOpen} chatId={chatId} />}
-          >
-            {chatIframe}
-          </ChatAssistantDrawer>
-        ) : (
-          chatIframe
-        )}
+        <ChatAssistantDrawer
+          isActive={isChatDetail && !isAppLoading}
+          isVardastEnabled={isVardastDrawerEnabled}
+          chatId={chatId}
+          panelContent={({ isOpen }) => <ChatAssistantPanel isOpen={isOpen} chatId={chatId} />}
+        >
+          {chatIframe}
+        </ChatAssistantDrawer>
       </div>
     </LayoutWithHeaderAndFooter>
   );

@@ -3,6 +3,7 @@ import { getVardastWorkflowEvents } from '@/modules/hami/apis/parseVardastWorkfl
 import { ChatAssistantEventBubbles } from '@/modules/hami/components/chatAssistantEventBubbles';
 import { ChatAssistantTriggerVisual } from '@/modules/hami/components/chatAssistantTrigger';
 import { VARDAST_NAME } from '@/modules/hami/components/chatAssistantTypography';
+import { useGetWidgets } from '@/modules/hamdast/apis/widgets';
 import { VardastWorkflowProvider, useVardastWorkflow } from '@/modules/hami/context/vardastWorkflowContext';
 import { useVardastTriggerInteraction } from '@/modules/hami/hooks/useVardastTriggerInteraction';
 import { trackVardastDrawerOpen, VardastDrawerOpenSource } from '@/modules/hami/utils/trackVardastDrawerOpen';
@@ -29,6 +30,7 @@ interface ChatAssistantPanelContext {
 
 interface ChatAssistantDrawerProps {
   isActive: boolean;
+  isVardastEnabled?: boolean;
   chatId: string | null;
   children: ReactNode;
   panelContent?: ReactNode | ((ctx: ChatAssistantPanelContext) => ReactNode);
@@ -48,10 +50,12 @@ interface DragState {
 interface ChatAssistantDrawerViewProps extends ChatAssistantDrawerProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  isVardastEnabled?: boolean;
 }
 
 const ChatAssistantDrawerView = ({
   isActive,
+  isVardastEnabled,
   chatId,
   children,
   panelContent,
@@ -60,6 +64,10 @@ const ChatAssistantDrawerView = ({
 }: ChatAssistantDrawerViewProps) => {
   const { messages } = useVardastWorkflow();
   const workflowEvents = getVardastWorkflowEvents(messages);
+  const userId = useUserInfoStore(state => state.info?.id);
+  const widgetsQuery = useGetWidgets({ user_id: String(userId) }, { enabled: !!userId });
+  const hasChatWidget = widgetsQuery.data?.data?.some((w: any) => w.placement?.includes('vardast::CHAT')) ?? false;
+  const shouldShowDrawerUI = isVardastEnabled || hasChatWidget;
   const [liveProgress, setLiveProgress] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const chatLayerRef = useRef<HTMLDivElement>(null);
@@ -68,7 +76,6 @@ const ChatAssistantDrawerView = ({
   const dragProgressRef = useRef(0);
   const openSourceRef = useRef<VardastDrawerOpenSource | undefined>();
   const wasOpenRef = useRef(false);
-  const userId = useUserInfoStore(state => state.info?.id);
   const [isDesktop, setIsDesktop] = useState(false);
   const isDesktopRef = useRef(false);
   const setIsOpenRef = useRef(setIsOpen);
@@ -179,9 +186,7 @@ const ChatAssistantDrawerView = ({
 
     const drawerWidth = getDrawerWidthPx();
     const isClosing = drag.startProgress > 0.05;
-    const nextProgress = isClosing
-      ? drag.startProgress - Math.abs(deltaX) / drawerWidth
-      : drag.startProgress - deltaX / drawerWidth;
+    const nextProgress = isClosing ? drag.startProgress - Math.abs(deltaX) / drawerWidth : drag.startProgress - deltaX / drawerWidth;
     const clampedProgress = Math.max(0, Math.min(1, nextProgress));
 
     dragProgressRef.current = clampedProgress;
@@ -325,12 +330,12 @@ const ChatAssistantDrawerView = ({
   }, []);
 
   useEffect(() => {
-    const onPointerMove = (event: globalThis.PointerEvent) => {
+    const onPointerMove = (event: PointerEvent) => {
       if (event.pointerId !== dragStateRef.current?.pointerId) return;
       updateDrag(event.clientX, event.clientY, () => event.preventDefault());
     };
 
-    const onPointerEnd = (event: globalThis.PointerEvent) => {
+    const onPointerEnd = (event: PointerEvent) => {
       if (!dragStateRef.current) return;
       if (event.pointerId !== dragStateRef.current.pointerId) return;
       finishDrag();
@@ -351,7 +356,7 @@ const ChatAssistantDrawerView = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const onTouchMove = (event: globalThis.TouchEvent) => {
+    const onTouchMove = (event: TouchEvent) => {
       if (!dragStateRef.current) return;
 
       const touch = Array.from(event.touches).find(item => item.identifier === dragStateRef.current?.pointerId);
@@ -360,7 +365,7 @@ const ChatAssistantDrawerView = ({
       updateDrag(touch.clientX, touch.clientY, () => event.preventDefault());
     };
 
-    const onTouchEnd = (event: globalThis.TouchEvent) => {
+    const onTouchEnd = (event: TouchEvent) => {
       if (!dragStateRef.current) return;
 
       const ended = Array.from(event.changedTouches).some(item => item.identifier === dragStateRef.current?.pointerId);
@@ -424,11 +429,7 @@ const ChatAssistantDrawerView = ({
     startDrag(touch.clientX, touch.clientY, touch.identifier, progress, 'handle');
   };
 
-  const handleControlPointerDown = (
-    event: React.PointerEvent<HTMLElement>,
-    startProgress: number,
-    source: DragSource,
-  ) => {
+  const handleControlPointerDown = (event: React.PointerEvent<HTMLElement>, startProgress: number, source: DragSource) => {
     if (event.button !== 0 || isDragging) return;
     event.currentTarget.setPointerCapture(event.pointerId);
     startDrag(event.clientX, event.clientY, event.pointerId, startProgress, source);
@@ -454,8 +455,8 @@ const ChatAssistantDrawerView = ({
 
   const overlayOpacity = progress * 0.32;
   const showOverlay = isActive && progress > 0.001;
-  const showOpenEdge = isActive && !isOpen;
-  const showTrigger = isActive && !isOpen;
+  const showOpenEdge = isActive && !isOpen && shouldShowDrawerUI;
+  const showTrigger = isActive && !isOpen && shouldShowDrawerUI;
   const hideTriggerVisual = progress > 0.02 || isDragging;
   const showTriggerLane = showTrigger;
   const showPeek = isActive && progress > 0.05;
@@ -566,7 +567,6 @@ const ChatAssistantDrawerView = ({
           </div>
         </div>
       )}
-
     </div>
   );
 };
