@@ -12,7 +12,7 @@ import { getLastUsedEmail, isValidEmail, saveLastUsedEmail } from './utils';
 
 type IconStatus = 'idle' | 'loading' | 'success';
 
-interface GoogleCalendarAddEventProps {
+export interface GoogleCalendarAddEventProps {
   bookId: string;
   centerId: string;
 }
