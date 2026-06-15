@@ -65,7 +65,7 @@ const ChatAssistantDrawerView = ({
   const { messages } = useVardastWorkflow();
   const workflowEvents = getVardastWorkflowEvents(messages);
   const userId = useUserInfoStore(state => state.info?.id);
-  const widgetsQuery = useGetWidgets({ user_id: String(userId) }, { enabled: !!userId });
+  const widgetsQuery = useGetWidgets({ user_id: String(userId) }, { enabled: !!userId && !isVardastEnabled });
   const hasChatWidget = widgetsQuery.data?.data?.some((w: any) => w.placement?.includes('vardast::CHAT')) ?? false;
   const shouldShowDrawerUI = isVardastEnabled || hasChatWidget;
   const [liveProgress, setLiveProgress] = useState<number | null>(null);
