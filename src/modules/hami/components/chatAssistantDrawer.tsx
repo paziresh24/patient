@@ -356,7 +356,8 @@ const ChatAssistantDrawerView = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const onTouchMove = (event: TouchEvent) => {
+    // eslint-disable-next-line no-undef
+    const onTouchMove = (event: globalThis.TouchEvent) => {
       if (!dragStateRef.current) return;
 
       const touch = Array.from(event.touches).find(item => item.identifier === dragStateRef.current?.pointerId);
@@ -365,7 +366,8 @@ const ChatAssistantDrawerView = ({
       updateDrag(touch.clientX, touch.clientY, () => event.preventDefault());
     };
 
-    const onTouchEnd = (event: TouchEvent) => {
+    // eslint-disable-next-line no-undef
+    const onTouchEnd = (event: globalThis.TouchEvent) => {
       if (!dragStateRef.current) return;
 
       const ended = Array.from(event.changedTouches).some(item => item.identifier === dragStateRef.current?.pointerId);
