@@ -48,7 +48,7 @@ interface HamdastSubscriptionPaymentProps {
   app_key: string;
   app_name: string;
   iframeRef: any;
-  icon: string
+  icon: string;
 }
 
 export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentRef, HamdastSubscriptionPaymentProps>(
@@ -61,7 +61,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
     const [showPlansList, setShowPlansList] = useState(false);
     const [plansList, setPlansList] = useState<PlanListItem[]>([]);
     const [isSubscribing, setIsSubscribing] = useState(false);
-    const payment = useRef<any>(null)
+    const payment = useRef<any>(null);
     const { handleClose, handleOpen, modalProps } = useModal({
       onClose: () => {
         const currentData = { ...subscriptionData.current };
@@ -123,13 +123,10 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       [sendEvent],
     );
 
-
     useImperativeHandle(
       ref,
       () => ({
-        open: (
-          plan_key?: string,
-        ): Promise<{ success: boolean; plan_key?: string }> => {
+        open: (plan_key?: string): Promise<{ success: boolean; plan_key?: string }> => {
           return new Promise((resolve, reject) => {
             subscriptionPromiseRef.current = { resolve, reject };
             resetStates();
@@ -163,7 +160,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       }),
       [isLogin, handleOpen, handleClose, handleOpenLoginModal, resetStates, sendCancelEvent],
     );
-
 
     const checkActiveSubscription = async (): Promise<{
       hasActive: boolean;
@@ -242,8 +238,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       }
     };
 
-
-
     const fetchPlanData = async (plan_key: string) => {
       try {
         setIsLoading(true);
@@ -284,7 +278,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
     };
 
     const openAndCreateReceipt = () => {
-      payment.current?.open({ plan_key: subscriptionData.current?.plan_key })
+      payment.current?.open({ plan_key: subscriptionData.current?.plan_key });
       handleClose();
       setShowPlanSelection(false);
       setShowPlansList(false);
@@ -329,7 +323,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       try {
         await axios.post(
           `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/plans/${subscriptionData.current?.plan_key}/subscribe`,
-          { trial: true },
+          { trial: true, auto_renew: true },
           { withCredentials: true },
         );
         logSplunkEvent('trial_activated');
@@ -366,7 +360,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       handleClose();
     };
 
-
     useEffect(() => {
       const handleEventFunction = (messageEvent: MessageEvent) => {
         if (messageEvent.data?.hamdast?.event === 'HAMDAST_PAYMENT_SUBSCRIBE') {
@@ -397,9 +390,6 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
             handleOpenWithLogin(() => fetchPlansList());
           }
         }
-
-
-
       };
 
       window.addEventListener('message', handleEventFunction);
@@ -431,12 +421,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
 
     return (
       <div>
-        <Modal
-          noHeader
-          bodyClassName={classNames('justify-center flex items-center')}
-          {...modalProps}
-          onClose={modalProps.onClose}
-        >
+        <Modal noHeader bodyClassName={classNames('justify-center flex items-center')} {...modalProps} onClose={modalProps.onClose}>
           {isLoading && <Loading />}
           {!isLoading && showPlansList && plansList.length > 0 && !showPlanSelection && (
             <div className="flex-grow flex flex-col overflow-y-auto">
@@ -500,7 +485,16 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
             </div>
           )}
         </Modal>
-        <Payment showAutoRenew={true} icon={icon} app_key={app_key} app_name={app_name} onSuccess={handlePaymentSuccess} onCancel={handleCancelPayment} onError={handlePaymentError} ref={payment} />
+        <Payment
+          showAutoRenew={true}
+          icon={icon}
+          app_key={app_key}
+          app_name={app_name}
+          onSuccess={handlePaymentSuccess}
+          onCancel={handleCancelPayment}
+          onError={handlePaymentError}
+          ref={payment}
+        />
       </div>
     );
   },
