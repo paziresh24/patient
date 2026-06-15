@@ -10,11 +10,12 @@ interface PaymentDetailsProps {
   loading: boolean;
   turnData: any;
   centerId: string;
+  bookId?: string;
   possibilityBeingVisited?: boolean;
 }
 
 export const BookInfo = (props: PaymentDetailsProps) => {
-  const { loading = false, turnData, centerId, possibilityBeingVisited } = props;
+  const { loading = false, turnData, centerId, bookId, possibilityBeingVisited } = props;
   const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
   const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === turnData?.services?.[0]?.id);
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
@@ -67,6 +68,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               messengerList: messengers,
               receiptLink: turnData?.share_url,
               centerId: centerId,
+              bookId: bookId ?? turnData?.book_id,
               patientInfo: {
                 name: `${turnData?.patient?.name} ${turnData?.patient?.family}`,
                 cell: turnData?.patient?.cell,
