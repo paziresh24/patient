@@ -1009,6 +1009,7 @@ const Receipt = () => {
               loading={getReceiptDetails.isLoading}
               possibilityBeingVisited={possibilityBeingVisited}
               centerId={centerId?.toString()!}
+              bookId={bookId as string}
             />
           </div>
           {bookDetailsData?.services?.[0]?.service_type_id === 9 && !turnStatus?.deletedTurn && (

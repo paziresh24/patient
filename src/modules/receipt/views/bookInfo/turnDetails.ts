@@ -32,6 +32,7 @@ interface TurnDetailsDataParam {
     centerPhone?: string;
     address?: string;
     centerId: string;
+    bookId?: string;
     patientInfo: Patient;
     rules?: string[];
     messengerList?: Record<string, MessengerDataType>;
@@ -58,6 +59,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     centerPhone,
     address,
     centerId,
+    bookId,
     patientInfo,
     receiptLink,
     rules,
@@ -80,6 +82,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
         value: bookTime,
         type: 'Text',
         isBoldValue: true,
+        calendarEvent: bookId ? { bookId, centerId } : undefined,
       },
       {
         id: 3,
@@ -172,6 +175,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
       shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: true,
+      calendarEvent: bookId ? { bookId, centerId } : undefined,
     },
     {
       id: 17,

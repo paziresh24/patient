@@ -2,6 +2,7 @@ import Accordion from '@/common/components/atom/accordion/accordion';
 import Text from '@/common/components/atom/text/text';
 import RowButton from '@/modules/booking/components/rowButton/rowButton';
 import RowText from '@/modules/booking/components/rowText/rowText';
+import { GoogleCalendarAddEventButton } from '@/modules/receipt/components/GoogleCalendarAddEvent/GoogleCalendarAddEventButton';
 import { ReactNode } from 'react';
 
 export type Data = {
@@ -15,6 +16,8 @@ export type Data = {
   isBoldValue?: boolean;
   copyable?: boolean;
   isOpen?: boolean;
+  suffix?: ReactNode;
+  calendarEvent?: { bookId: string; centerId: string };
 };
 
 interface BaseRowProps {
@@ -35,6 +38,13 @@ export const BaseRow = (props: BaseRowProps) => {
             valueFontSize="sm"
             valueFontWeight={data.isBoldValue ? 'bold' : 'medium'}
             copyable={data.copyable}
+            suffix={
+              data.calendarEvent ? (
+                <GoogleCalendarAddEventButton bookId={data.calendarEvent.bookId} centerId={data.calendarEvent.centerId} />
+              ) : (
+                data.suffix
+              )
+            }
           />
         )}
         {data.type === 'Button' && (
