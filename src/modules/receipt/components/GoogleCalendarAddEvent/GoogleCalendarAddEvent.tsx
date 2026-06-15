@@ -144,7 +144,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
           onClick={handleIconClick}
           disabled={iconStatus === 'loading'}
         >
-          <GoogleCalendarIcon className={iconClassName} alt="" />
+          <GoogleCalendarIcon className={iconClassName} aria-hidden />
         </button>
       </div>
 
