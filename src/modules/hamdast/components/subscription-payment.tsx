@@ -1,6 +1,9 @@
 import Loading from '@/common/components/atom/loading/loading';
 import Modal from '@/common/components/atom/modal';
 import Button from '@/common/components/atom/button/button';
+import Divider from '@/common/components/atom/divider';
+import Switch from '@/common/components/atom/switch';
+import Text from '@/common/components/atom/text';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -61,6 +64,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
     const [showPlansList, setShowPlansList] = useState(false);
     const [plansList, setPlansList] = useState<PlanListItem[]>([]);
     const [isSubscribing, setIsSubscribing] = useState(false);
+    const [isTrialAutoRenew, setIsTrialAutoRenew] = useState(true);
     const payment = useRef<any>(null);
     const { handleClose, handleOpen, modalProps } = useModal({
       onClose: () => {
@@ -323,7 +327,7 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
       try {
         await axios.post(
           `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/plans/${subscriptionData.current?.plan_key}/subscribe`,
-          { trial: true, auto_renew: true },
+          { trial: true, auto_renew: isTrialAutoRenew },
           { withCredentials: true },
         );
         logSplunkEvent('trial_activated');
@@ -474,6 +478,18 @@ export const HamdastSubscriptionPayment = forwardRef<HamdastSubscriptionPaymentR
                 </div>
               </div>
               <div className="flex flex-col gap-2 border-t border-slate-200 pt-4">
+                <div className="flex gap-2 items-center border border-slate-200 p-2 rounded-lg">
+                  <Switch onChange={() => setIsTrialAutoRenew(prev => !prev)} checked={isTrialAutoRenew} />
+                  <div className="flex flex-col cursor-pointer" onClick={() => setIsTrialAutoRenew(prev => !prev)}>
+                    <Text fontSize="sm" fontWeight="semiBold">
+                      تمدید خودکار <span className="text-primary text-xs">({isTrialAutoRenew ? 'فعال' : 'غیر فعال'})</span>
+                    </Text>
+                    <Text fontSize="xs" className="opacity-80">
+                      اشتراک شما در پایان دوره به‌صورت خودکار تمدید می‌شود.
+                    </Text>
+                  </div>
+                </div>
+                <Divider />
                 <Button variant="primary" block onClick={activateTrialPeriod} loading={isSubscribing} disabled={isSubscribing}>
                   فعال‌سازی دوره آزمایشی{' '}
                   <span className="text-xs bg-white rounded-full text-primary p-1 px-3">{planData.trial_period} روز رایگان</span>
