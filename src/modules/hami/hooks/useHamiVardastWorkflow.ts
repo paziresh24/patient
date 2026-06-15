@@ -8,7 +8,7 @@ import {
 import { startHamiVardastWorkflow } from '@/modules/hami/apis/startVardastWorkflow';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const POOLING_DELAY_MS = 3000;
+const POOLING_DELAY_MS = 12000;
 const RETRY_DELAY_MS = 3000;
 const MAX_RETRIES = 3;
 
