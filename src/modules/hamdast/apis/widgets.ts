@@ -6,7 +6,7 @@ export interface Params {
 }
 
 export const getWidgets = ({ user_id }: Params) => {
-  return axios.get(`https://hamdast.paziresh24.com/api/v1/widgets/?user_id=${user_id}`, { withCredentials: true });
+  return axios.get(`https://hamdast.paziresh24.com/api/v1/widgets/?user_id=${user_id}`);
 };
 
 export const useGetWidgets = (data: Params, options?: any) => {
