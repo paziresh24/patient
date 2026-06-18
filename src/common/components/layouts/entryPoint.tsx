@@ -18,8 +18,12 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const pending = useUserInfoStore(state => state.pending);
   const getMe = useGetMe();
   const getDoctorProfile = useGetDoctorProfile();
+  const getMeRef = useRef(getMe);
+  const syncDoctorProfileRef = useRef<(userId: string) => Promise<void>>(async () => {});
   const hasCalledLogin = useRef(false);
   const syncedDoctorProfileUserId = useRef<string | null>(null);
+
+  getMeRef.current = getMe;
 
   useDoctorHomeRedirect();
   useLauncherPageAccess();
@@ -64,6 +68,8 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
     [getDoctorProfile, setDoctorProfilePending, setUserInfo],
   );
 
+  syncDoctorProfileRef.current = syncDoctorProfile;
+
   useEffect(() => {
     if (typeof window === 'undefined' || hasCalledLogin.current) return;
 
@@ -73,7 +79,11 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       setPending(true);
 
       try {
-        const userData = await getMe.mutateAsync();
+        const userData = await getMeRef.current.mutateAsync();
+
+        if (!userData?.id) {
+          throw new Error('User is not authenticated');
+        }
 
         const currentInfo = useUserInfoStore.getState().info;
         setUserInfo({
@@ -82,10 +92,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
         });
 
         setPending(false);
-
-        if (userData?.id) {
-          await syncDoctorProfile(userData.id.toString());
-        }
+        await syncDoctorProfileRef.current(userData.id.toString());
       } catch (error) {
         if (typeof window !== 'undefined' && window.user) {
           window.user = {};
@@ -97,7 +104,6 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
           is_doctor: false,
         });
 
-        hasCalledLogin.current = false;
         syncedDoctorProfileUserId.current = null;
 
         useUserInfoStore.setState({
@@ -113,7 +119,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
     };
 
     fetchUserData();
-  }, [getMe, setPending, setUserInfo, syncDoctorProfile]);
+  }, []);
 
   useEffect(() => {
     if (!isLogin) {

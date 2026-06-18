@@ -64,7 +64,6 @@ const Header = (props: HeaderProps) => {
   return (
     <>
       {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
-      {customize.showPromoteApp && !router.pathname.includes('chats') && <HamiBanner />}
       <header className="z-50 flex items-center min-h-14 h-14 px-3 text-lg bg-white border-b border-solid shadow-sm print:hidden text-slate-700 md:px-4 md:min-h-20 md:h-20 border-slate-100">
         <div className="max-w-screen-xl relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (
