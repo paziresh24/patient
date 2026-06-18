@@ -1,12 +1,10 @@
 import React, { memo } from 'react';
 
-interface Props extends React.SVGAttributes<SVGElement> {
+interface Props extends React.SVGAttributes<SVGSVGElement> {
   dir: 'top' | 'bottom' | 'left' | 'right';
   color?: string;
   width?: string;
   height?: string;
-  style?: React.StyleHTMLAttributes<SVGAElement>;
-  className?: string;
 }
 
 const rotateDegrees = {
