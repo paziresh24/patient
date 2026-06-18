@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import {
   getLauncherProfileActiveWidgetButtonText,
   getLauncherProfileButtonEndpoint,
+  getLauncherProfileDisconnectButtonEndpoint,
   getLauncherProfileMainButtonText,
   getLauncherProfileWidgetButtonText,
   isLauncherProfileButtonOutline,
@@ -14,7 +15,17 @@ import {
 } from '@/modules/hamdast/utils/launcherProfileButton';
 
 type LauncherProfileActionButtonsProps = {
-  widgetInfo?: { button?: { active_text?: string; deactive_text?: string; endpoint?: string } } | null;
+  widgetInfo?: {
+    button?: {
+      connect_text?: string;
+      connect_endpoint?: string;
+      disconnect_text?: string;
+      disconnect_endpoint?: string;
+      active_text?: string;
+      deactive_text?: string;
+      endpoint?: string;
+    };
+  } | null;
   userWidgets?: Array<{ app?: string }> | null;
   appKey?: string;
   profileData?: { button_text?: string; scopes?: Array<{ id?: string; scope?: string }> } | null;
@@ -38,18 +49,19 @@ export function LauncherProfileActionButtons({
   const [isEndpointPending, setIsEndpointPending] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const showMainWithActiveWidget = shouldShowLauncherProfileMainButtonWithActiveWidget(widgetInfo, userWidgets, appKey);
-  const endpoint = getLauncherProfileButtonEndpoint(widgetInfo);
+  const endpoint = getLauncherProfileButtonEndpoint(widgetInfo, userWidgets, appKey);
+  const disconnectEndpoint = getLauncherProfileDisconnectButtonEndpoint(widgetInfo);
   const buttonClassName = classNames('__wab_instance', className);
   const isEndpointButtonLoading = isLoading || isEndpointPending;
 
-  const handleEndpointClick = async () => {
-    if (!endpoint || !appKey || isEndpointLoadingRef.current || isEndpointPending || isLoading) return;
+  const handleEndpointClick = async (targetEndpoint: string) => {
+    if (!targetEndpoint || !appKey || isEndpointLoadingRef.current || isEndpointPending || isLoading) return;
 
     isEndpointLoadingRef.current = true;
     setIsEndpointPending(true);
     onLoadingChange?.(true);
     try {
-      await openLauncherProfileButtonEndpoint(appKey, endpoint, profileData);
+      await openLauncherProfileButtonEndpoint(appKey, targetEndpoint, profileData);
     } catch {
       isEndpointLoadingRef.current = false;
       setIsEndpointPending(false);
@@ -59,7 +71,7 @@ export function LauncherProfileActionButtons({
 
   const handleSingleButtonClick = async () => {
     if (endpoint) {
-      await handleEndpointClick();
+      await handleEndpointClick(endpoint);
       return;
     }
 
@@ -105,7 +117,8 @@ export function LauncherProfileActionButtons({
                 className="flex w-full items-center px-3 py-2.5 text-right text-sm font-bold text-[#e54d2e] transition-colors hover:bg-[#fff0ee] disabled:cursor-not-allowed disabled:opacity-60"
                 onClick={() => {
                   setIsMenuOpen(false);
-                  void handleEndpointClick();
+                  if (!disconnectEndpoint) return;
+                  void handleEndpointClick(disconnectEndpoint);
                 }}
               >
                 {isEndpointButtonLoading ? 'در حال پردازش...' : disconnectText}

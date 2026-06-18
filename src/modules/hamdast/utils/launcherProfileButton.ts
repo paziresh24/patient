@@ -1,11 +1,17 @@
 import axios from 'axios';
 
+type WidgetButton = {
+  connect_text?: string;
+  connect_endpoint?: string;
+  disconnect_text?: string;
+  disconnect_endpoint?: string;
+  active_text?: string;
+  deactive_text?: string;
+  endpoint?: string;
+};
+
 type WidgetInfo = {
-  button?: {
-    active_text?: string;
-    deactive_text?: string;
-    endpoint?: string;
-  };
+  button?: WidgetButton;
 };
 
 type UserWidget = {
@@ -31,19 +37,34 @@ export function getLauncherProfileMainButtonText(profileData?: AppProfileData | 
   return profileData?.button_text ?? 'اجرا';
 }
 
+function getWidgetButton(widgetInfo: WidgetInfo | undefined | null): WidgetButton | undefined {
+  return widgetInfo?.button;
+}
+
+export function getLauncherProfileConnectButtonEndpoint(widgetInfo: WidgetInfo | undefined | null): string | undefined {
+  const button = getWidgetButton(widgetInfo);
+  return button?.connect_endpoint || button?.endpoint || undefined;
+}
+
+export function getLauncherProfileDisconnectButtonEndpoint(widgetInfo: WidgetInfo | undefined | null): string | undefined {
+  const button = getWidgetButton(widgetInfo);
+  return button?.disconnect_endpoint || button?.endpoint || undefined;
+}
+
 export function shouldShowLauncherProfileMainButtonWithActiveWidget(
   widgetInfo: WidgetInfo | undefined | null,
   userWidgets: UserWidget[] | undefined | null,
   appKey: string | undefined,
 ): boolean {
-  return Boolean(getLauncherProfileButtonEndpoint(widgetInfo)) && hasActiveLauncherWidget(userWidgets, appKey);
+  return Boolean(getLauncherProfileDisconnectButtonEndpoint(widgetInfo)) && hasActiveLauncherWidget(userWidgets, appKey);
 }
 
 export function getLauncherProfileActiveWidgetButtonText(
   widgetInfo: WidgetInfo | undefined | null,
   profileData?: AppProfileData | null,
 ): string {
-  return widgetInfo?.button?.active_text ?? getLauncherProfileMainButtonText(profileData);
+  const button = getWidgetButton(widgetInfo);
+  return button?.disconnect_text ?? button?.active_text ?? getLauncherProfileMainButtonText(profileData);
 }
 
 export function getLauncherProfileWidgetButtonText(
@@ -53,14 +74,16 @@ export function getLauncherProfileWidgetButtonText(
   profileData?: AppProfileData | null,
 ): string {
   const mainText = getLauncherProfileMainButtonText(profileData);
-  const endpoint = getLauncherProfileButtonEndpoint(widgetInfo);
-  if (!endpoint) return mainText;
+  const button = getWidgetButton(widgetInfo);
+  const connectEndpoint = getLauncherProfileConnectButtonEndpoint(widgetInfo);
+  const disconnectEndpoint = getLauncherProfileDisconnectButtonEndpoint(widgetInfo);
+  if (!connectEndpoint && !disconnectEndpoint) return mainText;
 
   if (hasActiveLauncherWidget(userWidgets, appKey)) {
     return getLauncherProfileActiveWidgetButtonText(widgetInfo, profileData);
   }
 
-  return widgetInfo?.button?.deactive_text ?? mainText;
+  return button?.connect_text ?? button?.deactive_text ?? mainText;
 }
 
 export function getLauncherProfileButtonText(
@@ -77,15 +100,24 @@ export function isLauncherProfileButtonOutline(
   userWidgets: UserWidget[] | undefined | null,
   appKey: string | undefined,
 ): boolean | undefined {
-  const endpoint = widgetInfo?.button?.endpoint;
-  if (!endpoint) return undefined;
+  const connectEndpoint = getLauncherProfileConnectButtonEndpoint(widgetInfo);
+  const disconnectEndpoint = getLauncherProfileDisconnectButtonEndpoint(widgetInfo);
+  if (!connectEndpoint && !disconnectEndpoint) return undefined;
 
-  // active_text (e.g. لغو اتصال) → outline, deactive_text (e.g. همگام‌سازی) → filled
+  // disconnect_text (e.g. لغو اتصال) → outline, connect_text (e.g. همگام‌سازی) → filled
   return hasActiveLauncherWidget(userWidgets, appKey);
 }
 
-export function getLauncherProfileButtonEndpoint(widgetInfo: WidgetInfo | undefined | null): string | undefined {
-  return widgetInfo?.button?.endpoint || undefined;
+export function getLauncherProfileButtonEndpoint(
+  widgetInfo: WidgetInfo | undefined | null,
+  userWidgets?: UserWidget[] | undefined | null,
+  appKey?: string | undefined,
+): string | undefined {
+  if (hasActiveLauncherWidget(userWidgets, appKey)) {
+    return getLauncherProfileDisconnectButtonEndpoint(widgetInfo);
+  }
+
+  return getLauncherProfileConnectButtonEndpoint(widgetInfo);
 }
 
 export function appendSessionTokenToEndpoint(endpoint: string, sessionToken: string): string {
