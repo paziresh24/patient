@@ -3,7 +3,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 
-const LAUNCHER_HOME_PATHS = ['/_', '/apphome'];
+const LAUNCHER_HOME_PATHS = ['/_'];
 
 export const useLauncherPageAccess = () => {
   const router = useRouter();

@@ -1,4 +1,5 @@
 import Logo from '@/common/components/atom/logo';
+import Loading from '@/common/components/atom/loading';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { Fragment } from '@/common/fragment';
@@ -8,6 +9,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
+import { useDoctorHomeRedirectLoading } from '@/common/hooks/useDoctorHomeRedirectLoading';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
@@ -28,6 +30,7 @@ import { getHost, HeaderBag } from '@/common/utils/getHost';
 
 const Home = ({ fragmentComponents }: any) => {
   const isApplication = useApplication();
+  const showRedirectLoading = useDoctorHomeRedirectLoading();
   const { query, isReady, ...router } = useRouter();
   const { recent } = useRecentSearch();
   const [defaultInputValue, setDefaultInputValue] = useState('');
@@ -62,6 +65,14 @@ const Home = ({ fragmentComponents }: any) => {
     // Prefetch the search page
     router.prefetch('/s/[[...params]]');
   }, []);
+
+  if (showRedirectLoading) {
+    return (
+      <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <>

@@ -2,7 +2,6 @@ import { useGetMe } from '@/common/apis/services/auth/me';
 import { getCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
 import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 import { useDoctorHomeRedirect, isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
-import { useLauncherPageAccess } from '@/common/hooks/useLauncherPageAccess';
 import { clearDoctorDeviceCache, setDoctorDeviceCache } from '@/common/utils/doctorDeviceCache';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { growthbook } from 'src/pages/_app';
@@ -26,7 +25,6 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
   getMeRef.current = getMe;
 
   useDoctorHomeRedirect();
-  useLauncherPageAccess();
 
   const syncDoctorProfile = useCallback(
     async (userId: string) => {
@@ -92,6 +90,14 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
         });
 
         setPending(false);
+
+        const updatedInfo = useUserInfoStore.getState().info;
+        if (isDoctorUser(updatedInfo)) {
+          setDoctorDeviceCache();
+        } else {
+          clearDoctorDeviceCache();
+        }
+
         await syncDoctorProfileRef.current(userData.id.toString());
       } catch (error) {
         if (typeof window !== 'undefined' && window.user) {

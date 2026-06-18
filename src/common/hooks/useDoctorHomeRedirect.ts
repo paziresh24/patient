@@ -52,7 +52,7 @@ export const useDoctorHomeRedirect = () => {
     }
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (hasRedirected.current) return;
     if (!shouldRedirect) return;
 
