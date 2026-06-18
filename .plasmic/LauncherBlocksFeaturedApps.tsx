@@ -29,14 +29,10 @@ function LauncherBlocksFeaturedApps_(
       root={{ ref }}
       {...props}
       apiRequest3={{
-        props: {
-          params: hamdastAppListParams,
-        },
+        params: hamdastAppListParams as Record<string, string | string[]>,
       }}
       apiRequest2={{
-        props: {
-          params: hamdastAppListParams,
-        },
+        params: hamdastAppListParams as Record<string, string | string[]>,
       }}
     />
   );
