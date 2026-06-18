@@ -1,7 +1,5 @@
 export const HAMI_ORIGIN = 'https://hami.paziresh24.com';
 
-export const VARDAST_DRAWER_FEATURE_FLAG = 'varsdast-drawer';
-
 export const getHamiPathFromUrl = (url: string) => {
   try {
     const raw = url?.trim();

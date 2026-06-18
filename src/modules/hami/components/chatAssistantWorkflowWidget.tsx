@@ -2,7 +2,7 @@ import classNames from '@/common/utils/classNames';
 import { parseVardastContent, VardastWorkflowMessageItem } from '@/modules/hami/apis/parseVardastWorkflowMessages';
 import { ChatAssistantAppSource } from '@/modules/hami/components/chatAssistantAppSource';
 import { ChatAssistantRichContent } from '@/modules/hami/components/chatAssistantRichContent';
-import { vardastType } from '@/modules/hami/components/chatAssistantTypography';
+import { vardastGlass, vardastType } from '@/modules/hami/components/chatAssistantTypography';
 import { useMemo } from 'react';
 
 interface ChatAssistantWorkflowWidgetProps {
@@ -30,11 +30,11 @@ export const ChatAssistantWorkflowWidget = ({
       })}
       style={{ transitionDelay: visible ? `${80 + index * 50}ms` : '0ms' }}
     >
-      <div className="overflow-hidden rounded-xl bg-white p-4 shadow-[0_1px_12px_rgba(15,23,42,0.06)] ring-1 ring-slate-100">
+      <div className={classNames('overflow-hidden rounded-2xl rounded-br-md p-4', vardastGlass.bubble)}>
         {item.app?.key && item.app?.name && <ChatAssistantAppSource app={item.app} />}
 
         {statusTitle && (
-          <div className="mb-3 border-b border-slate-50 pb-3">
+          <div className="mb-3 border-b border-white/50 pb-3">
             <p className={vardastType.cardTitle}>{statusTitle}</p>
           </div>
         )}

@@ -33,7 +33,7 @@ const fetchWorkflowWithRetry = async (chatId: string, isCancelled: () => boolean
   return null;
 };
 
-export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean) => {
+export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean, enabled = true) => {
   const [messages, setMessages] = useState<VardastWorkflowMessageItem[]>([]);
   const [appointmentId, setAppointmentId] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(false);
@@ -115,7 +115,7 @@ export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean) =
     prevIsOpenRef.current = false;
     runSeqRef.current += 1;
 
-    if (!chatId) {
+    if (!chatId || !enabled) {
       setMessages([]);
       setAppointmentId(undefined);
       setIsLoading(false);
@@ -125,16 +125,16 @@ export const useHamiVardastWorkflow = (chatId: string | null, isOpen: boolean) =
     }
 
     runWorkflow(chatId);
-  }, [chatId, runWorkflow]);
+  }, [chatId, enabled, runWorkflow]);
 
   useEffect(() => {
     const wasOpen = prevIsOpenRef.current;
     prevIsOpenRef.current = isOpen;
 
-    if (isOpen && !wasOpen && chatId) {
+    if (isOpen && !wasOpen && chatId && enabled) {
       runWorkflow(chatId, { silent: true });
     }
-  }, [isOpen, chatId, runWorkflow]);
+  }, [isOpen, chatId, enabled, runWorkflow]);
 
   return { messages, appointmentId, isLoading, isPooling, isUnsupported };
 };

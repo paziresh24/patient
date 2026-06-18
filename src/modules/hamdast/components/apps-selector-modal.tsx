@@ -1,7 +1,9 @@
 import Loading from '@/common/components/atom/loading/loading';
 import Modal from '@/common/components/atom/modal';
 import useModal from '@/common/hooks/useModal';
+import useResponsive from '@/common/hooks/useResponsive';
 import { apiGatewayClient } from '@/common/apis/client';
+import { AppFrame } from '@/modules/hamdast/appFrame';
 import { forwardRef, useImperativeHandle, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import classNames from 'classnames';
@@ -38,10 +40,40 @@ export interface CustomApp {
   [key: string]: any;
 }
 
+export interface HamdastAppsSelectorOpenOptions {
+  openInModal?: boolean;
+  chatId?: string;
+}
+
 export interface HamdastAppsSelectorModalRef {
-  open: (appKeys?: string[], customApps?: CustomApp[], title?: string) => void;
+  open: (
+    appKeys?: string[],
+    customApps?: CustomApp[],
+    title?: string,
+    categoryKey?: string,
+    options?: HamdastAppsSelectorOpenOptions,
+  ) => void;
   close: () => void;
 }
+
+const parseAppLink = (app: HamdastApp | CustomApp) => {
+  const link = app.link || `/_/${app.app_key}/launcher`;
+
+  try {
+    const url = new URL(link, 'https://localhost');
+    const pathParts = url.pathname.split('/').filter(Boolean);
+    const appKeyIndex = pathParts.indexOf(app.app_key);
+    const params = appKeyIndex >= 0 ? pathParts.slice(appKeyIndex + 1) : ['launcher'];
+    const queries = Object.fromEntries(url.searchParams.entries());
+
+    return {
+      params: params.length > 0 ? params : ['launcher'],
+      queries,
+    };
+  } catch {
+    return { params: ['launcher'], queries: {} as Record<string, string> };
+  }
+};
 
 interface HamdastAppsSelectorModalProps {
   onAppSelect?: (app: HamdastApp | CustomApp) => void;
@@ -49,12 +81,16 @@ interface HamdastAppsSelectorModalProps {
 
 export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, HamdastAppsSelectorModalProps>(({ onAppSelect }, ref) => {
   const router = useRouter();
+  const { isMobile } = useResponsive();
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [apps, setApps] = useState<HamdastApp[]>([]);
   const [customApps, setCustomApps] = useState<CustomApp[]>([]);
   const [filteredApps, setFilteredApps] = useState<(HamdastApp | CustomApp)[]>([]);
   const [selectedAppKeys, setSelectedAppKeys] = useState<string[]>([]);
+  const [openOptions, setOpenOptions] = useState<HamdastAppsSelectorOpenOptions | undefined>();
+  const [activeApp, setActiveApp] = useState<HamdastApp | CustomApp | null>(null);
+  const [activeAppOptions, setActiveAppOptions] = useState<HamdastAppsSelectorOpenOptions | undefined>();
   const [title, setTitle] = useState<string>('انتخاب اپلیکیشن');
 
   const { handleClose, handleOpen, modalProps } = useModal({
@@ -63,8 +99,20 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
       setCustomApps([]);
       setFilteredApps([]);
       setSelectedAppKeys([]);
+      setOpenOptions(undefined);
       setTitle('انتخاب اپلیکیشن');
       setIsNavigating(false);
+    },
+  });
+
+  const {
+    handleClose: handleCloseAppModal,
+    handleOpen: handleOpenAppModal,
+    modalProps: appModalProps,
+  } = useModal({
+    onClose: () => {
+      setActiveApp(null);
+      setActiveAppOptions(undefined);
     },
   });
 
@@ -86,43 +134,58 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
     }
   }, []);
 
-  const filterApps = useCallback((allApps: HamdastApp[], customAppsList: CustomApp[], appKeys?: string[]) => {
-    if (!appKeys || appKeys.length === 0) {
-      return [...allApps, ...customAppsList];
-    }
+  const filterApps = useCallback(
+    (allApps: HamdastApp[], customAppsList: CustomApp[], appKeys?: string[], category?: string) => {
+      const appsByCategory = category ? allApps.filter(app => app.category?.key === category) : allApps;
+      const customAppsByCategory = category
+        ? customAppsList.filter(app => app.category?.key === category)
+        : customAppsList;
 
-    const appsMap = new Map(allApps.map(app => [app.app_key, app]));
-    const customAppsMap = new Map(customAppsList.map(app => [app.app_key, app]));
-
-    const orderedApps: (HamdastApp | CustomApp)[] = [];
-
-    appKeys.forEach(key => {
-      const app = appsMap.get(key) || customAppsMap.get(key);
-      if (app) {
-        orderedApps.push(app);
+      if (!appKeys || appKeys.length === 0) {
+        return [...appsByCategory, ...customAppsByCategory];
       }
-    });
 
-    customAppsList.forEach(customApp => {
-      if (!appKeys.includes(customApp.app_key)) {
-        orderedApps.push(customApp);
-      }
-    });
+      const appsMap = new Map(appsByCategory.map(app => [app.app_key, app]));
+      const customAppsMap = new Map(customAppsByCategory.map(app => [app.app_key, app]));
 
-    return orderedApps;
-  }, []);
+      const orderedApps: (HamdastApp | CustomApp)[] = [];
+
+      appKeys.forEach(key => {
+        const app = appsMap.get(key) || customAppsMap.get(key);
+        if (app) {
+          orderedApps.push(app);
+        }
+      });
+
+      customAppsByCategory.forEach(customApp => {
+        if (!appKeys.includes(customApp.app_key)) {
+          orderedApps.push(customApp);
+        }
+      });
+
+      return orderedApps;
+    },
+    [],
+  );
 
   useImperativeHandle(
     ref,
     () => ({
-      open: async (appKeys?: string[], customAppsList?: CustomApp[], modalTitle?: string) => {
+      open: async (
+        appKeys?: string[],
+        customAppsList?: CustomApp[],
+        modalTitle?: string,
+        category?: string,
+        options?: HamdastAppsSelectorOpenOptions,
+      ) => {
         setSelectedAppKeys(appKeys || []);
         setCustomApps(customAppsList || []);
+        setOpenOptions(options);
         setTitle(modalTitle || 'انتخاب اپلیکیشن');
         handleOpen();
 
         const fetchedApps = await fetchApps();
-        const filtered = filterApps(fetchedApps, customAppsList || [], appKeys);
+        const filtered = filterApps(fetchedApps, customAppsList || [], appKeys, category);
         setFilteredApps(filtered);
       },
       close: handleClose,
@@ -133,11 +196,21 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
   const handleAppClick = (app: HamdastApp | CustomApp) => {
     onAppSelect?.(app);
 
+    if (openOptions?.openInModal) {
+      setActiveAppOptions(openOptions);
+      handleClose();
+      setActiveApp(app);
+      handleOpenAppModal();
+      return;
+    }
+
     const link = app.link || `/_/${app.app_key}/launcher`;
 
     setIsNavigating(true);
     router.push(link);
   };
+
+  const activeAppFrame = activeApp ? parseAppLink(activeApp) : null;
 
   return (
     <>
@@ -203,6 +276,28 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
           </div>
         )}
       </Modal>
+
+      {activeApp && (
+        <Modal
+          {...appModalProps}
+          onClose={handleCloseAppModal}
+          fullScreen={!isMobile}
+          noHeader
+          bodyClassName="p-0 h-[45rem]"
+        >
+          <AppFrame
+            dontShowNotification
+            dontShowAppBar
+            appKey={activeApp.app_key}
+            params={['launcher']}
+            queries={{
+              ...activeAppFrame?.queries,
+              open_from: 'vardast',
+              ...(activeAppOptions?.chatId ? { 'hami.chat_id': activeAppOptions.chatId } : {}),
+            }}
+          />
+        </Modal>
+      )}
     </>
   );
 });
@@ -226,8 +321,8 @@ export const HamdastAppsSelectorModalProvider = ({ children, onAppSelect }: Hamd
 
   const actions = useMemo(
     () => ({
-      open: (appKeys?: string[], customApps?: CustomApp[], title?: string) => {
-        modalRef.current?.open(appKeys, customApps, title);
+      open: (appKeys?: string[], customApps?: CustomApp[], title?: string, category?: string, options?: HamdastAppsSelectorOpenOptions) => {
+        modalRef.current?.open(appKeys, customApps, title, category, options);
       },
       close: () => {
         modalRef.current?.close();
@@ -275,6 +370,10 @@ export const hamdastAppsSelectorModalMeta: any = {
         },
         {
           name: 'title',
+          type: 'string' as any,
+        },
+        {
+          name: 'categoryKey',
           type: 'string' as any,
         },
       ],

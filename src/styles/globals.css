@@ -244,11 +244,15 @@ body {
 @keyframes vardast-event-msg-breathe {
   0%,
   100% {
-    box-shadow: -4px 0 16px rgba(15, 23, 42, 0.08);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.88),
+      -4px 0 16px rgba(15, 23, 42, 0.08);
   }
 
   50% {
-    box-shadow: -6px 0 20px rgba(15, 23, 42, 0.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      -6px 0 22px rgba(99, 102, 241, 0.14);
   }
 }
 
@@ -262,13 +266,227 @@ body {
   animation: vardast-event-float 2.8s ease-in-out infinite;
 }
 
+.vardast-glass-panel {
+  --messenger-wallpaper-base: #f6f8fc;
+  --messenger-wallpaper-mid: #eef3fa;
+  --messenger-wallpaper-deep: #e8eef7;
+  --messenger-blob-lavender: rgba(186, 168, 255, 0.22);
+  --messenger-blob-sky: rgba(148, 198, 255, 0.2);
+  --messenger-blob-mint: rgba(152, 228, 200, 0.18);
+  --messenger-blob-blush: rgba(255, 182, 200, 0.16);
+  --messenger-blob-peach: rgba(255, 204, 168, 0.14);
+  --messenger-pattern-fine: rgba(100, 116, 139, 0.028);
+  --messenger-pattern-soft: rgba(148, 163, 184, 0.02);
+  --messenger-pattern-fine-size: 20px;
+  --messenger-pattern-soft-size: 40px;
+  --messenger-grid-size: 32px;
+  --messenger-line-color: rgba(100, 116, 139, 0.012);
+  --messenger-line-diagonal: rgba(100, 116, 139, 0.009);
+  --chat-scrim-top-rgb: 248, 250, 252;
+  --chat-scrim-mid-rgb: 242, 246, 252;
+  --chat-scrim-soft-rgb: 236, 242, 250;
+  --chat-glass-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(250, 252, 255, 0.56));
+  --chat-glass-border: rgba(255, 255, 255, 0.68);
+  --chat-glass-shadow: 0 3px 14px rgba(15, 23, 42, 0.045), inset 0 1px 0 rgba(255, 255, 255, 0.86);
+  --chat-page-pattern-fine: var(--messenger-pattern-fine);
+  --chat-page-pattern-soft: var(--messenger-pattern-soft);
+  --chat-page-pattern-fine-size: var(--messenger-pattern-fine-size);
+  --chat-page-pattern-soft-size: var(--messenger-pattern-soft-size);
+  --messenger-wallpaper-image:
+    radial-gradient(circle, var(--messenger-pattern-fine) 0.55px, transparent 0.65px),
+    radial-gradient(circle, var(--messenger-pattern-soft) 0.45px, transparent 0.55px),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent calc(var(--messenger-grid-size) - 1px),
+      var(--messenger-line-color) calc(var(--messenger-grid-size) - 1px),
+      var(--messenger-line-color) var(--messenger-grid-size)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(var(--messenger-grid-size) - 1px),
+      var(--messenger-line-color) calc(var(--messenger-grid-size) - 1px),
+      var(--messenger-line-color) var(--messenger-grid-size)
+    ),
+    repeating-linear-gradient(
+      122deg,
+      transparent 0,
+      transparent 22px,
+      var(--messenger-line-diagonal) 22px,
+      var(--messenger-line-diagonal) 23px
+    ),
+    radial-gradient(ellipse 540px 400px at 94% 2%, var(--messenger-blob-lavender), transparent 66%),
+    radial-gradient(ellipse 500px 380px at 6% 98%, var(--messenger-blob-mint), transparent 68%),
+    radial-gradient(ellipse 440px 340px at 80% 90%, var(--messenger-blob-sky), transparent 70%),
+    radial-gradient(ellipse 380px 300px at 12% 16%, var(--messenger-blob-blush), transparent 72%),
+    radial-gradient(ellipse 320px 260px at 50% 44%, var(--messenger-blob-peach), transparent 76%),
+    linear-gradient(168deg, #fbfcff 0%, var(--messenger-wallpaper-mid) 42%, var(--messenger-wallpaper-deep) 100%);
+  --messenger-wallpaper-size:
+    var(--messenger-pattern-fine-size) var(--messenger-pattern-fine-size),
+    var(--messenger-pattern-soft-size) var(--messenger-pattern-soft-size),
+    auto,
+    auto,
+    auto,
+    auto,
+    auto,
+    auto,
+    auto,
+    auto,
+    auto;
+  --messenger-wallpaper-position:
+    0 0,
+    calc(var(--messenger-pattern-soft-size) / 2) calc(var(--messenger-pattern-soft-size) / 2),
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0;
+  --messenger-header-fade: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 62%,
+    rgba(var(--chat-scrim-soft-rgb), 0.1) 84%,
+    rgba(var(--chat-scrim-soft-rgb), 0) 100%
+  );
+
+  position: relative;
+  isolation: isolate;
+  border-left: 1px solid var(--chat-glass-border);
+  box-shadow: -10px 0 36px rgba(15, 23, 42, 0.08);
+}
+
+.vardast-glass-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--messenger-wallpaper-base);
+  background-image: var(--messenger-wallpaper-image);
+  background-size: var(--messenger-wallpaper-size);
+  background-position: var(--messenger-wallpaper-position);
+}
+
+.vardast-glass-header {
+  position: relative;
+  overflow: hidden;
+  background: var(--chat-glass-bg);
+  backdrop-filter: blur(16px) saturate(175%);
+  -webkit-backdrop-filter: blur(16px) saturate(175%);
+  border-bottom: 1px solid var(--chat-glass-border);
+  box-shadow: var(--chat-glass-shadow);
+}
+
+.vardast-glass-header::before {
+  content: '';
+  position: absolute;
+  inset: -24px -40px auto -40px;
+  height: 140px;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(80px 60px at 18% 34%, rgba(255, 255, 255, 0.8), transparent 70%),
+    radial-gradient(140px 96px at 82% 22%, rgba(255, 255, 255, 0.6), transparent 68%),
+    radial-gradient(260px 120px at 60% 0%, rgba(255, 255, 255, 0.35), transparent 70%);
+  filter: blur(0.2px);
+  opacity: 0.95;
+}
+
+.vardast-glass-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--messenger-header-fade);
+}
+
+.vardast-glass-header > * {
+  position: relative;
+  z-index: 1;
+}
+
+.vardast-glass-footer {
+  position: relative;
+  overflow: hidden;
+  background: var(--chat-glass-bg);
+  backdrop-filter: blur(16px) saturate(175%);
+  -webkit-backdrop-filter: blur(16px) saturate(175%);
+  border-top: 1px solid var(--chat-glass-border);
+  box-shadow: var(--chat-glass-shadow);
+}
+
+.vardast-glass-footer::before {
+  content: '';
+  position: absolute;
+  inset: auto -48px -56px -48px;
+  height: 200px;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120px 90px at 20% 62%, rgba(255, 255, 255, 0.65), transparent 68%),
+    radial-gradient(220px 140px at 76% 88%, rgba(255, 255, 255, 0.45), transparent 70%),
+    radial-gradient(520px 220px at 50% 120%, rgba(255, 255, 255, 0.18), transparent 72%);
+  opacity: 0.9;
+}
+
+.vardast-glass-footer > * {
+  position: relative;
+  z-index: 1;
+}
+
+.vardast-glass-surface {
+  background: transparent;
+}
+
+.vardast-glass-bubble {
+  background: var(--chat-glass-bg);
+  backdrop-filter: blur(12px) saturate(165%);
+  -webkit-backdrop-filter: blur(12px) saturate(165%);
+  border: 1px solid var(--chat-glass-border);
+  box-shadow: var(--chat-glass-shadow);
+}
+
+.vardast-glass-chip {
+  background: linear-gradient(145deg, rgba(56, 97, 251, 0.1), rgba(56, 97, 251, 0.06));
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  border: 1px solid rgba(56, 97, 251, 0.22);
+  box-shadow: var(--chat-glass-shadow);
+}
+
+.vardast-glass-badge {
+  background: var(--chat-glass-bg);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  border: 1px solid var(--chat-glass-border);
+  box-shadow: var(--chat-glass-shadow);
+}
+
+.vardast-glass-trigger {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-right: 0;
+  box-shadow: -4px 0 20px rgba(99, 102, 241, 0.12);
+}
+
 .vardast-event-msg-body {
   position: relative;
   z-index: 1;
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  background: var(
+    --chat-glass-bg,
+    linear-gradient(145deg, rgba(255, 255, 255, 0.58), rgba(248, 250, 253, 0.44))
+  );
+  backdrop-filter: blur(12px) saturate(165%);
+  -webkit-backdrop-filter: blur(12px) saturate(165%);
+  border: 1px solid var(--chat-glass-border, rgba(255, 255, 255, 0.55));
   border-radius: 14px 14px 4px 14px;
-  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.1), 0 1px 4px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--chat-glass-shadow, 0 3px 14px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.78));
 }
 
 .vardast-event-msg--live .vardast-event-msg-body {
