@@ -3,10 +3,11 @@ import { getVardastWorkflowEvents } from '@/modules/hami/apis/parseVardastWorkfl
 import { ChatAssistantEventBubbles } from '@/modules/hami/components/chatAssistantEventBubbles';
 import { ChatAssistantTriggerVisual } from '@/modules/hami/components/chatAssistantTrigger';
 import { VARDAST_NAME } from '@/modules/hami/components/chatAssistantTypography';
-import { useGetWidgets } from '@/modules/hamdast/apis/widgets';
 import { VardastWorkflowProvider, useVardastWorkflow } from '@/modules/hami/context/vardastWorkflowContext';
+import { useHasVardastChatWidget } from '@/modules/hami/hooks/useHasVardastChatWidget';
 import { useVardastTriggerInteraction } from '@/modules/hami/hooks/useVardastTriggerInteraction';
 import { trackVardastDrawerOpen, VardastDrawerOpenSource } from '@/modules/hami/utils/trackVardastDrawerOpen';
+import { isDoctorUser } from '@/modules/doctorHome/store/viewMode';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { CSSProperties, ReactNode, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -26,11 +27,12 @@ type DragSource = 'trigger' | 'peek' | 'edge' | 'drawer' | 'handle';
 
 interface ChatAssistantPanelContext {
   isOpen: boolean;
+  hasChatWidget: boolean;
+  isWidgetsLoading: boolean;
 }
 
 interface ChatAssistantDrawerProps {
   isActive: boolean;
-  isVardastEnabled?: boolean;
   chatId: string | null;
   children: ReactNode;
   panelContent?: ReactNode | ((ctx: ChatAssistantPanelContext) => ReactNode);
@@ -50,24 +52,26 @@ interface DragState {
 interface ChatAssistantDrawerViewProps extends ChatAssistantDrawerProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  isVardastEnabled?: boolean;
+  isDoctor: boolean;
+  hasChatWidget: boolean;
+  isWidgetsLoading: boolean;
 }
 
 const ChatAssistantDrawerView = ({
   isActive,
-  isVardastEnabled,
   chatId,
   children,
   panelContent,
   isOpen,
   setIsOpen,
+  isDoctor,
+  hasChatWidget,
+  isWidgetsLoading,
 }: ChatAssistantDrawerViewProps) => {
   const { messages } = useVardastWorkflow();
   const workflowEvents = getVardastWorkflowEvents(messages);
   const userId = useUserInfoStore(state => state.info?.id);
-  const widgetsQuery = useGetWidgets({ user_id: String(userId) }, { enabled: !!userId && !isVardastEnabled, staleTime: 0 });
-  const hasChatWidget = widgetsQuery.data?.data?.some((w: any) => w.placement?.includes('vardast::CHAT')) ?? false;
-  const shouldShowDrawerUI = isVardastEnabled || hasChatWidget;
+  const shouldShowDrawerUI = isDoctor;
   const [liveProgress, setLiveProgress] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const chatLayerRef = useRef<HTMLDivElement>(null);
@@ -451,11 +455,10 @@ const ChatAssistantDrawerView = ({
     width: isDesktop ? `${DRAWER_FIXED_WIDTH_PX}px` : `${DRAWER_SIZE_PERCENT}%`,
     transform: `translateX(${(1 - progress) * 100}%)`,
     transition: isDragging ? 'none' : DRAWER_TRANSITION,
-    boxShadow: '-8px 0 32px rgba(15, 23, 42, 0.12)',
     pointerEvents: isOpen || isDragging ? 'auto' : 'none',
   };
 
-  const overlayOpacity = progress * 0.32;
+  const overlayOpacity = progress * 0.18;
   const showOverlay = isActive && progress > 0.001;
   const showOpenEdge = isActive && !isOpen && shouldShowDrawerUI;
   const showTrigger = isActive && !isOpen && shouldShowDrawerUI;
@@ -480,7 +483,7 @@ const ChatAssistantDrawerView = ({
         <button
           type="button"
           aria-label={`بستن ${VARDAST_NAME}`}
-          className="absolute inset-0 z-[15] touch-none bg-slate-900"
+          className="absolute inset-0 z-[15] touch-none bg-slate-900/20"
           style={{
             opacity: overlayOpacity,
             transition: isDragging ? 'none' : 'opacity 320ms cubic-bezier(0.32, 0.72, 0, 1)',
@@ -496,23 +499,29 @@ const ChatAssistantDrawerView = ({
 
       <div
         ref={drawerRef}
-        className="absolute inset-y-0 right-0 z-20 flex flex-col overflow-hidden rounded-tl-2xl rounded-bl-2xl bg-white will-change-transform"
+        className="absolute inset-y-0 right-0 z-20 overflow-hidden will-change-transform"
         style={drawerStyle}
         aria-hidden={!isOpen && !isDragging}
         onPointerDown={handleDrawerContentPointerDown}
         onTouchStart={handleDrawerContentTouchStart}
       >
-        <div
-          className="absolute inset-y-0 left-0 z-30 flex w-5 touch-none cursor-grab items-center justify-center active:cursor-grabbing"
-          onPointerDown={handleHandlePointerDown}
-          onTouchStart={handleHandleTouchStart}
-          aria-hidden
-        >
-          <span className="pointer-events-none h-6 w-0.5 rounded-full bg-slate-300" />
-        </div>
+        <div className="vardast-glass-panel relative flex h-full w-full flex-col overflow-hidden">
+          <div className="vardast-glass-backdrop" aria-hidden />
 
-        <div className="flex min-h-0 flex-1 flex-col bg-white">
-          {typeof panelContent === 'function' ? panelContent({ isOpen }) : panelContent}
+          <div
+            className="absolute inset-y-0 left-0 z-30 flex w-5 touch-none cursor-grab items-center justify-center active:cursor-grabbing"
+            onPointerDown={handleHandlePointerDown}
+            onTouchStart={handleHandleTouchStart}
+            aria-hidden
+          >
+            <span className="pointer-events-none h-6 w-0.5 rounded-full bg-slate-300" />
+          </div>
+
+          <div className="relative z-[3] flex min-h-0 flex-1 flex-col">
+            {typeof panelContent === 'function'
+              ? panelContent({ isOpen, hasChatWidget, isWidgetsLoading })
+              : panelContent}
+          </div>
         </div>
       </div>
 
@@ -575,10 +584,21 @@ const ChatAssistantDrawerView = ({
 
 export const ChatAssistantDrawer = (props: ChatAssistantDrawerProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const userInfo = useUserInfoStore(state => state.info);
+  const isDoctor = isDoctorUser(userInfo);
+  const { hasChatWidget, isLoading: isWidgetsLoading } = useHasVardastChatWidget(userInfo?.id, isDoctor);
+  const vardastEnabled = hasChatWidget && !isWidgetsLoading;
 
   return (
-    <VardastWorkflowProvider chatId={props.chatId} isOpen={isOpen}>
-      <ChatAssistantDrawerView {...props} isOpen={isOpen} setIsOpen={setIsOpen} />
+    <VardastWorkflowProvider chatId={props.chatId} isOpen={isOpen} enabled={vardastEnabled}>
+      <ChatAssistantDrawerView
+        {...props}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        isDoctor={isDoctor}
+        hasChatWidget={hasChatWidget}
+        isWidgetsLoading={isWidgetsLoading}
+      />
     </VardastWorkflowProvider>
   );
 };

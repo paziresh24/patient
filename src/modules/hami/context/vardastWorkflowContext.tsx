@@ -8,11 +8,12 @@ const VardastWorkflowContext = createContext<VardastWorkflowContextValue | null>
 interface VardastWorkflowProviderProps {
   chatId: string | null;
   isOpen: boolean;
+  enabled?: boolean;
   children: ReactNode;
 }
 
-export const VardastWorkflowProvider = ({ chatId, isOpen, children }: VardastWorkflowProviderProps) => {
-  const value = useHamiVardastWorkflow(chatId, isOpen);
+export const VardastWorkflowProvider = ({ chatId, isOpen, enabled = true, children }: VardastWorkflowProviderProps) => {
+  const value = useHamiVardastWorkflow(chatId, isOpen, enabled);
 
   return <VardastWorkflowContext.Provider value={value}>{children}</VardastWorkflowContext.Provider>;
 };

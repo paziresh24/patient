@@ -2,7 +2,7 @@ import { fetchHamiVardastActions } from '@/modules/hami/apis/fetchVardastActions
 import { areVardastActionsEqual, VardastWorkflowAppPopupAction } from '@/modules/hami/apis/parseVardastActions';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export const useHamiVardastActions = (chatId: string | null, isOpen: boolean) => {
+export const useHamiVardastActions = (chatId: string | null, isOpen: boolean, enabled = true) => {
   const [actions, setActions] = useState<VardastWorkflowAppPopupAction[]>([]);
   const [appointmentId, setAppointmentId] = useState<string | undefined>();
   const runSeqRef = useRef(0);
@@ -30,23 +30,23 @@ export const useHamiVardastActions = (chatId: string | null, isOpen: boolean) =>
     prevIsOpenRef.current = false;
     runSeqRef.current += 1;
 
-    if (!chatId) {
+    if (!chatId || !enabled) {
       setActions([]);
       setAppointmentId(undefined);
       return;
     }
 
     fetchActions(chatId);
-  }, [chatId, fetchActions]);
+  }, [chatId, enabled, fetchActions]);
 
   useEffect(() => {
     const wasOpen = prevIsOpenRef.current;
     prevIsOpenRef.current = isOpen;
 
-    if (isOpen && !wasOpen && chatId) {
+    if (isOpen && !wasOpen && chatId && enabled) {
       fetchActions(chatId);
     }
-  }, [isOpen, chatId, fetchActions]);
+  }, [isOpen, chatId, enabled, fetchActions]);
 
   return { actions, appointmentId };
 };

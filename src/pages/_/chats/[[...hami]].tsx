@@ -14,11 +14,9 @@ import {
   toAppChatsRouteFromHamiPath,
   toHamiIframeSrc,
   toHamiPathFromAppRoute,
-  VARDAST_DRAWER_FEATURE_FLAG,
 } from '@/modules/hami/chatsRouting';
 import { ChatAssistantDrawer } from '@/modules/hami/components/chatAssistantDrawer';
 import { ChatAssistantPanel } from '@/modules/hami/components/chatAssistantPanel';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useRef, useState } from 'react';
@@ -94,7 +92,6 @@ export const ChatsPage = (props: any) => {
   }, [router.isReady, router.asPath]);
 
   const chatId = router.isReady ? getHamiChatIdFromAppRoute(router.query.hami) : null;
-  const isVardastDrawerEnabled = useFeatureIsOn(VARDAST_DRAWER_FEATURE_FLAG);
 
   const chatIframe = (
     <iframe
@@ -127,9 +124,15 @@ export const ChatsPage = (props: any) => {
 
         <ChatAssistantDrawer
           isActive={isChatDetail && !isAppLoading}
-          isVardastEnabled={isVardastDrawerEnabled}
           chatId={chatId}
-          panelContent={({ isOpen }) => <ChatAssistantPanel isOpen={isOpen} chatId={chatId} />}
+          panelContent={({ isOpen, hasChatWidget, isWidgetsLoading }) => (
+            <ChatAssistantPanel
+              isOpen={isOpen}
+              chatId={chatId}
+              hasChatWidget={hasChatWidget}
+              isWidgetsLoading={isWidgetsLoading}
+            />
+          )}
         >
           {chatIframe}
         </ChatAssistantDrawer>

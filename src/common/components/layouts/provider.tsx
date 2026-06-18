@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import TagManager from 'react-gtm-module';
 import { Toaster } from 'react-hot-toast';
 import { EntryPoint } from './entryPoint';
+import { DoctorHomeEarlyRedirect } from './doctorHomeEarlyRedirect';
 import Splash from './splash';
 import config from 'next/config';
 import GoogleOneTap from '@/modules/login/components/googleOneTapLogin';
@@ -27,6 +28,7 @@ const Provider = ({ children, pageProps }: { children: React.ReactNode; pageProp
   return (
     <QueryClientProvider client={queryClient}>
       <LoginModalProvider>
+        <DoctorHomeEarlyRedirect />
         <EntryPoint>
           <AppBridge {...appBridgeConfig}>
             <>{children}</>

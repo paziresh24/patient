@@ -1,4 +1,6 @@
 import Paziresh24Button from '.plasmic/Paziresh24Button';
+import { Popover } from '@/common/fragment/components/popover';
+import ThreeDotsIcon from '@/common/components/icons/threeDots';
 import classNames from '@/common/utils/classNames';
 import { useRef, useState } from 'react';
 import {
@@ -34,6 +36,7 @@ export function LauncherProfileActionButtons({
 }: LauncherProfileActionButtonsProps) {
   const isEndpointLoadingRef = useRef(false);
   const [isEndpointPending, setIsEndpointPending] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const showMainWithActiveWidget = shouldShowLauncherProfileMainButtonWithActiveWidget(widgetInfo, userWidgets, appKey);
   const endpoint = getLauncherProfileButtonEndpoint(widgetInfo);
   const buttonClassName = classNames('__wab_instance', className);
@@ -64,24 +67,51 @@ export function LauncherProfileActionButtons({
   };
 
   if (showMainWithActiveWidget) {
+    const disconnectText = getLauncherProfileActiveWidgetButtonText(widgetInfo, profileData);
+
     return (
-      <div className="flex flex-col w-full gap-2.5 min-w-0">
+      <div className="flex w-full min-w-0 items-stretch gap-2.5">
         <Paziresh24Button
           children2={getLauncherProfileMainButtonText(profileData)}
-          className={buttonClassName}
+          className={classNames(buttonClassName, 'min-w-0 flex-1')}
           onClick={() => {
             void onMainClick?.();
           }}
         />
-        <Paziresh24Button
-          children2={getLauncherProfileActiveWidgetButtonText(widgetInfo, profileData)}
-          className={buttonClassName}
-          isDisabled={isEndpointButtonLoading}
-          loading={isEndpointButtonLoading}
-          outline
-          onClick={() => {
-            void handleEndpointClick();
-          }}
+        <Popover
+          open={isMenuOpen}
+          onOpenChange={setIsMenuOpen}
+          align="start"
+          side="bottom"
+          sideOffset={6}
+          trigger={
+            <Paziresh24Button
+              outline
+              isDisabled={isEndpointButtonLoading}
+              className="!min-w-0 shrink-0 !px-3"
+              children2={<ThreeDotsIcon className="h-4 w-4" />}
+            />
+          }
+          content={
+            <div
+              role="menu"
+              className="w-36 overflow-hidden rounded-md border border-slate-200 bg-white py-1 shadow-card"
+            >
+              <button
+                type="button"
+                role="menuitem"
+                data-testid="launcher-profile-disconnect"
+                disabled={isEndpointButtonLoading}
+                className="flex w-full items-center px-3 py-2.5 text-right text-sm font-bold text-[#e54d2e] transition-colors hover:bg-[#fff0ee] disabled:cursor-not-allowed disabled:opacity-60"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  void handleEndpointClick();
+                }}
+              >
+                {isEndpointButtonLoading ? 'در حال پردازش...' : disconnectText}
+              </button>
+            </div>
+          }
         />
       </div>
     );

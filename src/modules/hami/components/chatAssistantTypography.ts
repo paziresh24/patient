@@ -7,16 +7,29 @@ export const VARDAST_NAME = 'وردست';
 /** مقیاس تایپوگرافی یکپارچه پنل وردست */
 export const vardastPanelClass = 'text-sm leading-6 text-slate-700 antialiased';
 
+export const vardastGlass = {
+  panel: 'vardast-glass-panel',
+  backdrop: 'vardast-glass-backdrop',
+  header: 'vardast-glass-header',
+  footer: 'vardast-glass-footer',
+  surface: 'vardast-glass-surface',
+  bubble: 'vardast-glass-bubble',
+  card: 'vardast-glass-bubble',
+  chip: 'vardast-glass-chip',
+  badge: 'vardast-glass-badge',
+  trigger: 'vardast-glass-trigger',
+} as const;
+
 export const vardastType = {
-  greeting: 'text-base font-semibold leading-snug tracking-tight text-slate-900',
+  greeting: 'text-[15px] font-semibold leading-snug tracking-tight text-slate-900',
   body: 'text-sm font-normal leading-6 text-slate-600',
   caption: 'text-xs font-medium leading-5 text-slate-500',
-  profileName: 'text-base font-semibold leading-tight text-slate-900',
+  profileName: 'text-[15px] font-semibold leading-tight text-slate-900',
   profileStatus: 'text-xs font-medium leading-4 text-emerald-600',
   cardTitle: 'text-sm font-semibold leading-6 text-slate-900',
   cardMeta: 'text-xs font-medium leading-4 text-slate-500',
   actionChip:
-    'inline-flex shrink-0 items-center whitespace-nowrap rounded-full border border-primary/40 bg-primary/[0.08] px-4 py-2 text-xs font-semibold text-primary shadow-[0_1px_4px_rgba(56,97,251,0.12)] transition active:scale-[0.98] hover:bg-primary/[0.12]',
+    'vardast-glass-chip inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-4 py-2 text-xs font-semibold text-primary transition active:scale-[0.98] hover:bg-primary/15',
 } as const;
 
 export const vardastRichContentClass =

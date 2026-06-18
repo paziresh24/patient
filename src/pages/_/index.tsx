@@ -18,11 +18,14 @@ import { AppFrame } from '@/modules/hamdast/appFrame';
 import { useNotificationPermission } from '@/common/hooks/useNotificationPermission';
 import { NotificationPermissionModal } from '@/common/components/atom/notificationPermissionModal';
 import { DoctorLauncherContent, useIsNewDoctorLauncherEnabled } from '@/modules/doctorHome';
+import Loading from '@/common/components/atom/loading';
+import { useLauncherPageAccess } from '@/common/hooks/useLauncherPageAccess';
 
 const Page = () => {
   const { handleOpen, handleClose, modalProps } = useModal();
   const [app, setApp] = useState<string>('');
   const isNewDoctorLauncher = useIsNewDoctorLauncherEnabled();
+  const { isResolving, shouldShowLauncher } = useLauncherPageAccess();
   const info = useUserInfoStore(state => state.info)
   const { isSupported, hasPermission, showModal, openModal, closeModal, checkPermission } = useNotificationPermission();
 
@@ -54,20 +57,27 @@ const Page = () => {
         onClose={closeModal}
         onSuccess={handleSuccess}
       />
-      <GlobalContextsProvider>
-        {isNewDoctorLauncher ? (
-          <DoctorLauncherContent />
-        ) : (
-          <LauncherMain
-            onAction={action => {
-              if (action.action === 'OPEN_APP') {
-                setApp(action.appKey);
-                handleOpen();
-              }
-            }}
-          />
-        )}
-      </GlobalContextsProvider>
+      {isResolving && (
+        <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+          <Loading />
+        </div>
+      )}
+      {!isResolving && shouldShowLauncher && (
+        <GlobalContextsProvider>
+          {isNewDoctorLauncher ? (
+            <DoctorLauncherContent />
+          ) : (
+            <LauncherMain
+              onAction={action => {
+                if (action.action === 'OPEN_APP') {
+                  setApp(action.appKey);
+                  handleOpen();
+                }
+              }}
+            />
+          )}
+        </GlobalContextsProvider>
+      )}
     </>
   );
 };

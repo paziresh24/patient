@@ -196,33 +196,46 @@ function PlasmicCard__RenderFunc(props: {
         data-plasmic-override={overrides.appleWatchSeries1046Mm7}
         className={classNames("all", sty.appleWatchSeries1046Mm7)}
       >
-        <PlasmicImg__
-          data-plasmic-name={"img"}
-          data-plasmic-override={overrides.img}
-          alt={""}
-          className={classNames(sty.img)}
-          displayHeight={"153px"}
-          displayMaxHeight={"none"}
-          displayMaxWidth={"100%"}
-          displayMinHeight={"0"}
-          displayMinWidth={"0"}
-          displayWidth={"100%"}
-          loading={"lazy"}
-          src={(() => {
-            try {
-              return $props.imageLink;
-            } catch (e) {
-              if (
-                e instanceof TypeError ||
-                e?.plasmicType === "PlasmicUndefinedDataError"
-              ) {
-                return "https://khedmat.s3.ir-thr-at1.arvanstorage.ir/nothing_2K_2026051552221.jpeg?versionId=";
-              }
-              throw e;
+        {(() => {
+          try {
+            return !!$props.imageLink;
+          } catch (e) {
+            if (
+              e instanceof TypeError ||
+              e?.plasmicType === "PlasmicUndefinedDataError"
+            ) {
+              return true;
             }
-          })()}
-        />
-
+            throw e;
+          }
+        })() ? (
+          <PlasmicImg__
+            data-plasmic-name={"img"}
+            data-plasmic-override={overrides.img}
+            alt={""}
+            className={classNames(sty.img)}
+            displayHeight={"153px"}
+            displayMaxHeight={"none"}
+            displayMaxWidth={"100%"}
+            displayMinHeight={"0"}
+            displayMinWidth={"0"}
+            displayWidth={"100%"}
+            loading={"lazy"}
+            src={(() => {
+              try {
+                return $props.imageLink;
+              } catch (e) {
+                if (
+                  e instanceof TypeError ||
+                  e?.plasmicType === "PlasmicUndefinedDataError"
+                ) {
+                  return "https://khedmat.s3.ir-thr-at1.arvanstorage.ir/nothing_2K_2026051552221.jpeg?versionId=";
+                }
+                throw e;
+              }
+            })()}
+          />
+        ) : null}
         <div
           data-plasmic-name={"a41"}
           data-plasmic-override={overrides.a41}

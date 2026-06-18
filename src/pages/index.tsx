@@ -1,175 +1,30 @@
-import Logo from '@/common/components/atom/logo';
-import Text from '@/common/components/atom/text';
+import Loading from '@/common/components/atom/loading';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import useCustomize from '@/common/hooks/useCustomize';
-import useResponsive from '@/common/hooks/useResponsive';
-import classNames from '@/common/utils/classNames';
-import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
-import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
-import Suggestion from '@/modules/search/view/suggestion';
-import { useRouter } from 'next/dist/client/router';
+import { useDoctorHomeRedirectLoading } from '@/common/hooks/useDoctorHomeRedirectLoading';
+import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
+import { getHost, HeaderBag } from '@/common/utils/getHost';
+import { GrowthBook } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
-import { ReactElement, useEffect, useState } from 'react';
-const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
-const Promote = dynamic(() => import('@/modules/home/components/promote'));
-import RecentSearch from '@/modules/search/view/recentSearch';
-import getConfig from 'next/config';
-const { publicRuntimeConfig } = getConfig();
-import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
-import { useSearchStore } from '@/modules/search/store/search';
-import { GrowthBook, useFeatureIsOn } from '@growthbook/growthbook-react';
-import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
-import toast from 'react-hot-toast';
-import { toastActionble } from '@/common/utils/toastActionble';
-import Button from '@/common/components/atom/button';
-import ChevronIcon from '@/common/components/icons/chevron';
-import { splunkInstance } from '@/common/services/splunk';
-import { Fragment2 } from '@/common/fragment/fragment2';
-import PlasmicLocationSelectionScript from '.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript';
-import PlasmicRecentSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
-import PlasmicOnlineVisit from '.plasmic/plasmic/paziresh_24_search/PlasmicOnlineVisit';
-import PlasmicHomePageShortcuts from '.plasmic/plasmic/paziresh_24_search/PlasmicHomePageShortcuts';
-import { getHost, HeaderBag } from '@/common/utils/getHost';
+import { ReactElement } from 'react';
+
+const HomePageBody = dynamic(() => import('@/modules/home/views/homePageBody'));
 
 const Home = ({ fragmentComponents }: any) => {
-  const { isMobile } = useResponsive();
-  const router = useRouter();
-  const { recent } = useRecentSearch();
-  const [defaultInputValue, setDefaultInputValue] = useState('');
-  const { setIsOpenSuggestion } = useSearchStore();
-  const customize = useCustomize(state => state.customize);
-  const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
-  const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
+  const showRedirectLoading = useDoctorHomeRedirectLoading();
 
-  useEffect(() => {
-    splunkInstance('homepage').sendEvent({
-      group: 'home-page-load',
-      type: 'home-page-load',
-      event: {
-        features: {
-          'health-assistants-button': showHealthAssistantsButton,
-        },
-      },
-    });
-    // Prefetch the search page
-    router.prefetch('/s/[[...params]]');
-  }, []);
+  if (showRedirectLoading) {
+    return (
+      <div className="flex items-center justify-center flex-grow min-h-[50vh]">
+        <Loading />
+      </div>
+    );
+  }
 
-  return (
-    <>
-      <Fragment2 Component={PlasmicLocationSelectionScript} name="LocationSelectionScript" />
-      {customize.backgroundImage && (
-        <div
-          className="h-screen fixed top-0 w-full -z-10"
-          style={
-            customize.backgroundImage
-              ? {
-                backgroundImage: `linear-gradient(#05242dbf, #ffffff 90%), url(${publicRuntimeConfig.PARTNER_LOGO_BASE_URL + '/' + customize.backgroundImage
-                  })`,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }
-              : undefined
-          }
-        ></div>
-      )}
-      <main
-        className={classNames('h-[92.3vh] md:mb-0 md:h-[92vh] flex flex-col !pb-44 justify-center items-center p-4 space-y-6', {
-          'pt-20 !pb-0 md:!pb-48 !h-full md:!min-h-screen': customize?.partnerKey,
-          'bg-white': !customize.backgroundImage,
-        })}
-      >
-        {!customize.partnerTitle && <Logo as="h1" home className="text-2xl md:text-3xl" width={55} />}
-        {customize.partnerTitle && (
-          <Text fontWeight="black" className={classNames('text-primary md:text-lg', { 'text-white': customize.backgroundImage })}>
-            {customize.partnerTitle}
-          </Text>
-        )}
-        {customize.partnerSubTitle && (
-          <Text fontWeight="bold" fontSize="sm">
-            {customize.partnerSubTitle}
-          </Text>
-        )}
-        <div className="flex flex-col items-center w-full gap-3">
-          <Suggestion
-            showPlasmicSuggestion={!customize.partnerKey}
-            defaultInputValue={defaultInputValue}
-            setDefaultInputValue={setDefaultInputValue}
-            className={classNames('!p-0', {
-              '[&>div]:border-2 [&>div]:rounded-lg [&>div>div>div]:rounded-lg  [&>div>div>div>div>div>div]:rounded-none [&>div>div>div]:border-0  [&>div]:border-primary':
-                isMobile,
-            })}
-          />
-          {!customize.partnerKey && (
-            <div className="lg:w-[50rem] w-full">
-              <Fragment2
-                Component={PlasmicRecentSearch}
-                name="RecentSearch"
-                args={{
-                  onClick: (value: any) => {
-                    setDefaultInputValue(value?.name || value || '');
-                    setIsOpenSuggestion(true);
-                  },
-                }}
-              />
-            </div>
-          )}
-
-          {recent.length > 0 && customize.partnerKey && (
-            <div className="lg:w-[50rem] w-full">
-              <RecentSearch />
-            </div>
-          )}
-          {showHealthAssistantsButton && (
-            <div className="flex flex-col gap-3 w-full lg:w-[50rem]">
-              <div className="flex items-center gap-5 w-full">
-                <div className="h-px bg-[#386BFC]/15 w-full" />
-              </div>
-              <Button
-                variant="secondary"
-                className="border-[#BECEFD] h-16 bg-[#F1F4FF] shadow-sm justify-between font-semibold shadow-[#3262EB]/10"
-                onClick={() => router.push('/s/?result_type=ابزارک%E2%80%8Cهای+سلامتی&text=ابزارک&ref=HomePageIcon')}
-              >
-                <div className="flex gap-1 items-center">
-                  <div className="flex flex-col items-start">
-                    <span>دستیارهای سلامتی</span>
-                    <span className="font-normal text-xs">تشخیص کمبود آهن، تفسیر آزمایش و ...</span>
-                  </div>
-                </div>
-                <ChevronIcon dir="left" />
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {customize.showConsultServices &&
-          (fragmentComponents?.showPlasmicOnlineVisit || showPlasmicOnlineVisit ? (
-            <div>
-              <Fragment2 Component={PlasmicOnlineVisit} name="OnlineVisit" />
-            </div>
-          ) : (
-            <OnlineVisitPromote />
-          ))}
-        <SearchGlobalContextsProvider>
-          <Fragment2 Component={PlasmicHomePageShortcuts} name="HomePageShortcuts" />
-        </SearchGlobalContextsProvider>
-        {customize?.partnerKey && <CentersList />}
-      </main>
-      {isMobile && customize.showPromoteApp && <Promote />}
-      {!customize.partnerKey && (
-        <div className="w-full max-w-screen-lg py-4 mx-auto text-center ">
-          <Text fontWeight="semiBold" fontSize="sm" as="h2" className="text-slate-400">
-            نوبت دهی پزشکی، سامانه نوبت دهی اینترنتی بیمارستان و پزشکان
-          </Text>
-        </div>
-      )}
-    </>
-  );
+  return <HomePageBody fragmentComponents={fragmentComponents} />;
 };
 
 Home.getLayout = function getLayout(page: ReactElement) {
@@ -183,37 +38,37 @@ Home.getLayout = function getLayout(page: ReactElement) {
           {
             '@context': 'https://schema.org',
             '@type': 'WebSite',
-            'url': 'https://www.paziresh24.com/',
-            'potentialAction': {
+            url: 'https://www.paziresh24.com/',
+            potentialAction: {
               '@type': 'SearchAction',
-              'target': 'https://www.paziresh24.com/s/?text={search_term_string}',
+              target: 'https://www.paziresh24.com/s/?text={search_term_string}',
               'query-input': 'required name=search_term_string',
             },
           },
           {
             '@context': 'https://schema.org',
             '@type': 'Corporation',
-            'name': 'paziresh24',
-            'alternateName': 'پذیرش24',
-            'url': 'https://www.paziresh24.com/',
-            'logo': 'https://www.paziresh24.com/img/logo.png',
-            'description':
+            name: 'paziresh24',
+            alternateName: 'پذیرش24',
+            url: 'https://www.paziresh24.com/',
+            logo: 'https://www.paziresh24.com/img/logo.png',
+            description:
               'پذیرش24 پلتفرم سلامت الکترونیک با هدف بهبود ارتباط بین پزشک و بیمار در سال 94 توسط ابوالفضل ساجدی ، ابراهیم قانع ، محمد رضا طباطبایی ، حامد صادقی نژاد و یک تیم یزدی طراحی شد . امکان ثبت نوبت بدون محدودیت و با هر روشی که شما راحت ترید ( وبسایت ، اپلیکیشن ، تلفن ، تلگرام و… ) از وجه تمایزهای پذیرش24 با سایر سامانه‌های نوبت دهی می باشد . از طرف دیگر پذیرش24 با امکان مدیریت یکپارچه نوبت ها ، تحلیل داده ها و امکانات بسیار دیگر ، به راهکاری برای افزایش بهره وری و کاهش هزینه های پزشکان ، بیمارستان ها و کلینیک ها تبدیل شد که این دو بعدی بودن کاربری برای پزشکان و بیماران را تایید می کند .',
-            'foundingDate': '2016',
-            'founders': [
-              { '@type': 'Person', 'name': 'ابوالفضل ساجدی' },
-              { '@type': 'Person', 'name': 'محمد ابراهیم قانع' },
-              { '@type': 'Person', 'name': 'محمد رضا طباطبایی' },
-              { '@type': 'Person', 'name': 'حامد صادقی نژاد' },
+            foundingDate: '2016',
+            founders: [
+              { '@type': 'Person', name: 'ابوالفضل ساجدی' },
+              { '@type': 'Person', name: 'محمد ابراهیم قانع' },
+              { '@type': 'Person', name: 'محمد رضا طباطبایی' },
+              { '@type': 'Person', name: 'حامد صادقی نژاد' },
             ],
-            'sameAs': [
+            sameAs: [
               'https://www.facebook.com/paziresh24com/',
               'https://twitter.com/paziresh24/',
               'https://www.instagram.com/paziresh24/',
               'https://www.linkedin.com/company/paziresh24/',
               'https://www.paziresh24.com/home/about/',
             ],
-            'contactPoint': [{ '@type': 'ContactPoint', 'telephone': '+98-21-25015015', 'contactType': 'customer service' }],
+            contactPoint: [{ '@type': 'ContactPoint', telephone: '+98-21-25015015', contactType: 'customer service' }],
           },
         ]}
         host={page.props?.host}
@@ -237,7 +92,6 @@ export const getServerSideProps = withCSR(
       growthbook.setAttributes({ url });
       await growthbook.loadFeatures({ timeout: 500 });
 
-      // Plasmic
       showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
       showPlasmicRecentSearch = growthbook.isOn('search_plasmic_recent_search');
       showPlasmicOnlineVisit = growthbook.isOn('search_plasmic_online_visit');

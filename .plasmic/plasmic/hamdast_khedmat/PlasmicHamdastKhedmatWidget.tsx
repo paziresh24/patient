@@ -216,8 +216,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         try {
           return (
             $state.apiRequest.data?.length > 0 &&
-            $props.widgetData?.center_id ==
-              "6ac517d3-c583-4225-ae97-39d7bda66b58"
+            $state.apiRequest.data?.[0]?.plus == true
           );
         } catch (e) {
           if (
@@ -320,7 +319,9 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                               event_group: "khedmat_click_card",
                               doctor_user_id: $props.profileData.user_id,
                               doctor_slug: $props.profileData.seo.slug,
-                              user_id: $ctx.auth?.info?.id
+                              user_id: $ctx.auth?.info?.id,
+                              sevice: currentItem.service,
+                              id: currentItem.id
                             }
                           ]
                         };
@@ -382,8 +383,8 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
       {(() => {
         try {
           return (
-            $props.widgetData?.center_id !=
-            "6ac517d3-c583-4225-ae97-39d7bda66b58"
+            $state.apiRequest.data?.length > 0 &&
+            !$state.apiRequest.data?.[0]?.plus
           );
         } catch (e) {
           if (
