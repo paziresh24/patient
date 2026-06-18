@@ -27,7 +27,7 @@ export const AuthGlobalContext = ({ children, previewToken }: React.PropsWithChi
       login: () => handleOpenLoginModal({ state: true }),
       logout,
     }),
-    [],
+    [handleOpenLoginModal, logout],
   );
 
   return (

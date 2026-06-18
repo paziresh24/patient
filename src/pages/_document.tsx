@@ -1,3 +1,4 @@
+import { DOCTOR_HOME_INLINE_REDIRECT_SCRIPT } from '@/common/utils/doctorDeviceCache';
 import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
@@ -10,6 +11,7 @@ const CustomDocument: NextComponentType = (props: any) => {
   return (
     <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
+        <script dangerouslySetInnerHTML={{ __html: DOCTOR_HOME_INLINE_REDIRECT_SCRIPT }} />
         <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />

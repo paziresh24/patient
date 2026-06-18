@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
+export const isMobileViewport = () =>
+  typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+
 export const useResponsive = () => {
   const [isClient, setIsClient] = useState(false);
 

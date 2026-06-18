@@ -1,22 +1,68 @@
 import { useGetMe } from '@/common/apis/services/auth/me';
-import { useGetCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
+import { getCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
 import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
+import { useDoctorHomeRedirect, isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
+import { useLauncherPageAccess } from '@/common/hooks/useLauncherPageAccess';
+import { clearDoctorDeviceCache, setDoctorDeviceCache } from '@/common/utils/doctorDeviceCache';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { growthbook } from 'src/pages/_app';
 import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
-import { ReactElement, useEffect, useMemo, useRef } from 'react';
+import { ReactElement, useCallback, useEffect, useRef } from 'react';
 
 export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const setPending = useUserInfoStore(state => state.setPending);
+  const setDoctorProfilePending = useUserInfoStore(state => state.setDoctorProfilePending);
   const isLogin = useUserInfoStore(state => state.isLogin);
-  const removeInfo = useUserInfoStore(state => state.removeInfo);
   const info = useUserInfoStore(state => state.info);
+  const pending = useUserInfoStore(state => state.pending);
   const getMe = useGetMe();
   const getDoctorProfile = useGetDoctorProfile();
-  const getCentersByUserId = useGetCentersByUserId(info?.id?.toString() || '', { enabled: !!info?.id });
   const hasCalledLogin = useRef(false);
-  const lastUserId = useRef<string | undefined>(undefined);
+  const syncedDoctorProfileUserId = useRef<string | null>(null);
+
+  useDoctorHomeRedirect();
+  useLauncherPageAccess();
+
+  const syncDoctorProfile = useCallback(
+    async (userId: string) => {
+      if (syncedDoctorProfileUserId.current === userId) return;
+
+      syncedDoctorProfileUserId.current = userId;
+      setDoctorProfilePending(true);
+
+      try {
+        const [doctorProfileData, centersData] = await Promise.all([
+          getDoctorProfile.mutateAsync(),
+          getCentersByUserId(userId),
+        ]);
+
+        const latestInfo = useUserInfoStore.getState().info;
+
+        setUserInfo({
+          ...latestInfo,
+          provider: {
+            ...latestInfo?.provider,
+            ...doctorProfileData,
+            ...(Array.isArray(centersData) ? { centers: centersData } : {}),
+          },
+        });
+
+        const updatedInfo = useUserInfoStore.getState().info;
+        if (isDoctorUser(updatedInfo)) {
+          setDoctorDeviceCache();
+        } else {
+          clearDoctorDeviceCache();
+        }
+      } catch (error) {
+        console.error('Error fetching doctor data:', error);
+        syncedDoctorProfileUserId.current = null;
+      } finally {
+        setDoctorProfilePending(false);
+      }
+    },
+    [getDoctorProfile, setDoctorProfilePending, setUserInfo],
+  );
 
   useEffect(() => {
     if (typeof window === 'undefined' || hasCalledLogin.current) return;
@@ -36,6 +82,10 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
         });
 
         setPending(false);
+
+        if (userData?.id) {
+          await syncDoctorProfile(userData.id.toString());
+        }
       } catch (error) {
         if (typeof window !== 'undefined' && window.user) {
           window.user = {};
@@ -47,13 +97,14 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
           is_doctor: false,
         });
 
-        lastUserId.current = undefined;
         hasCalledLogin.current = false;
+        syncedDoctorProfileUserId.current = null;
 
         useUserInfoStore.setState({
           info: {},
           isLogin: false,
           pending: false,
+          doctorProfilePending: false,
           turnsCount: {
             presence: 0,
           },
@@ -62,32 +113,17 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
     };
 
     fetchUserData();
-  }, []);
+  }, [getMe, setPending, setUserInfo, syncDoctorProfile]);
 
   useEffect(() => {
-    if (!info?.id || info.id === lastUserId.current) return;
+    if (!isLogin) {
+      syncedDoctorProfileUserId.current = null;
+      return;
+    }
+    if (!info?.id || pending) return;
 
-    lastUserId.current = info.id;
-
-    const fetchProfileAndCenters = async () => {
-      try {
-        const doctorProfileData = await getDoctorProfile.mutateAsync();
-        const currentInfo = useUserInfoStore.getState().info;
-
-        setUserInfo({
-          ...currentInfo,
-          provider: {
-            ...currentInfo?.provider,
-            ...doctorProfileData,
-          },
-        });
-      } catch (error) {
-        console.error('Error fetching doctor profile:', error);
-      }
-    };
-
-    fetchProfileAndCenters();
-  }, [info?.id, getDoctorProfile, setUserInfo]);
+    void syncDoctorProfile(info.id.toString());
+  }, [isLogin, info?.id, pending, syncDoctorProfile]);
 
   useEffect(() => {
     if (!isLogin || !info?.id) return;
@@ -99,24 +135,6 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
       image: imageUrl,
     });
   }, [isLogin, info?.id, setUserInfo]);
-
-  useEffect(() => {
-    const centersData = getCentersByUserId?.data;
-    if (!centersData || !info?.id) return;
-
-    const isDoctor = Array.isArray(centersData) && centersData.length > 0;
-    const currentInfo = useUserInfoStore.getState().info;
-
-    setUserInfo({
-      ...currentInfo,
-      is_doctor: isDoctor,
-      provider: {
-        ...currentInfo?.provider,
-        job_title: isDoctor ? 'doctor' : null,
-        centers: centersData,
-      },
-    });
-  }, [getCentersByUserId?.data, info?.id, setUserInfo]);
 
   return <>{children}</>;
 };

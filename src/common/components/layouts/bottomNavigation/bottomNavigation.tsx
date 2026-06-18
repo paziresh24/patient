@@ -40,12 +40,6 @@ export const BottomNavigation = () => {
     !customize.partnerKey &&
     (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
 
-  useEffect(() => {
-    if (['/', '/apphome'].includes(router.pathname) && launcherAsMainHome && isMobile && user.provider?.job_title == 'doctor') {
-      router.replace('/_');
-    }
-  }, [router.pathname, launcherAsMainHome, isMobile, user.provider?.job_title]);
-
   const servicesMenu = useMemo(() => {
     if (user.provider?.job_title === 'doctor' && !customize.partnerKey) {
       return {

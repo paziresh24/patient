@@ -5,6 +5,7 @@ import { getCookie, removeCookies } from 'cookies-next';
 import isEmpty from 'lodash/isEmpty';
 import { growthbook } from 'src/pages/_app';
 import { create } from 'zustand';
+import { clearDoctorDeviceCache, setDoctorDeviceCache } from '@/common/utils/doctorDeviceCache';
 
 interface UseUserInfoStore {
   isLogin: boolean;
@@ -13,9 +14,11 @@ interface UseUserInfoStore {
     presence: number;
   };
   pending: boolean;
+  doctorProfilePending: boolean;
   setUserInfo: (info: UserInfo) => void;
   removeInfo: () => void;
   setPending: (state: boolean) => void;
+  setDoctorProfilePending: (state: boolean) => void;
   setTurnsCount: (turnsCount: { presence: number }) => void;
   logout: () => void;
 }
@@ -51,19 +54,25 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   isLogin: false,
   info: {},
   pending: true,
+  doctorProfilePending: false,
   turnsCount: {
     presence: 0,
   },
   setUserInfo: info => {
     set(() => {
+      const mergedProvider = {
+        ...get().info?.provider,
+        ...info?.provider,
+      };
+      const isDoctor = !!(mergedProvider.slug || !isEmpty(mergedProvider.centers));
+
       const infoCopy = {
-        is_doctor: info.provider?.slug || !isEmpty(info.provider?.centers) ? true : false,
         ...get().info,
         ...info,
+        is_doctor: info.is_doctor ?? isDoctor,
         provider: {
-          job_title: info.provider?.slug || !isEmpty(info.provider?.centers) ? 'doctor' : null,
-          ...get().info?.provider,
-          ...info?.provider,
+          ...mergedProvider,
+          job_title: isDoctor ? 'doctor' : null,
         },
       };
 
@@ -73,6 +82,10 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         is_doctor: infoCopy.provider?.job_title === 'doctor',
       });
       window.user = infoCopy;
+
+      if (infoCopy.provider?.job_title === 'doctor') {
+        setDoctorDeviceCache();
+      }
 
       return {
         info: {
@@ -94,6 +107,12 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       pending,
     }));
   },
+  setDoctorProfilePending: doctorProfilePending => {
+    set(state => ({
+      ...state,
+      doctorProfilePending,
+    }));
+  },
   setTurnsCount: turnsCount => {
     set(state => ({
       ...state,
@@ -101,6 +120,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     }));
   },
   logout: () => {
+    clearDoctorDeviceCache();
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       user_id: undefined,
@@ -109,6 +129,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
     set(() => ({
       info: {},
       isLogin: false,
+      doctorProfilePending: false,
     }));
     try {
       axios

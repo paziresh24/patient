@@ -8,9 +8,13 @@ type PopoverType = {
   content: ReactNode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  align?: 'start' | 'center' | 'end';
+  side?: 'top' | 'right' | 'bottom' | 'left';
+  sideOffset?: number;
 };
 
-export const Popover = forwardRef(({ trigger, content, open, onOpenChange }: PopoverType, ref) => {
+export const Popover = forwardRef(
+  ({ trigger, content, open, onOpenChange, align = 'center', side = 'bottom', sideOffset = 4 }: PopoverType, ref) => {
   const [isOpen, setIsOpen] = useState(open);
   useImperativeHandle(
     ref,
@@ -37,13 +41,22 @@ export const Popover = forwardRef(({ trigger, content, open, onOpenChange }: Pop
 
   return (
     <RadixPopover.Root open={isOpen} onOpenChange={setIsOpen}>
-      <RadixPopover.Trigger>{trigger}</RadixPopover.Trigger>
+      <RadixPopover.Trigger asChild>{trigger}</RadixPopover.Trigger>
       <RadixPopover.Portal>
-        <RadixPopover.Content className="overflow-visible outline-none">{content}</RadixPopover.Content>
+        <RadixPopover.Content
+          className="z-50 overflow-visible outline-none"
+          side={side}
+          align={align}
+          sideOffset={sideOffset}
+          collisionPadding={8}
+        >
+          {content}
+        </RadixPopover.Content>
       </RadixPopover.Portal>
     </RadixPopover.Root>
   );
-});
+},
+);
 
 export const popoverMeta: CodeComponentMeta<PopoverType> = {
   name: 'Popover',

@@ -8,7 +8,7 @@ export const useIsNewDoctorLauncherEnabled = () => {
   const customize = useCustomize(state => state.customize);
   const isEnabled = useFeatureIsOn('doctor-home:enable');
 
-  if (!isDoctorUser(user) || customize.partnerKey) {
+  if (customize.partnerKey || !isDoctorUser(user)) {
     return false;
   }
 
