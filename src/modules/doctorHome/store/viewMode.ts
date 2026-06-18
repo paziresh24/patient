@@ -27,5 +27,4 @@ export const useDoctorViewModeStore = create<DoctorViewModeStore>(set => ({
   hydrate: () => set({ mode: readStoredMode() }),
 }));
 
-export const isDoctorUser = (user?: { is_doctor?: boolean; provider?: { job_title?: string | null } }) =>
-  !!user?.is_doctor && user?.provider?.job_title === 'doctor';
+export { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';

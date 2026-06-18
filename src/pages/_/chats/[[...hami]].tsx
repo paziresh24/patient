@@ -6,6 +6,7 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import classNames from '@/common/utils/classNames';
 import {
   getHamiChatIdFromAppRoute,
+  getHamiChatIdFromPath,
   getHamiPathFromUrl,
   HAMI_ORIGIN,
   isHamiChatDetailFromAppRoute,
@@ -26,6 +27,7 @@ export const ChatsPage = (props: any) => {
   const [isAppLoading, setIsAppLoading] = useState(true);
   const [showBottomNavigation, setShowBottomNavigation] = useState(true);
   const [isChatDetail, setIsChatDetail] = useState(false);
+  const [iframeChatId, setIframeChatId] = useState<string | null>(null);
   const [iframeSrc, setIframeSrc] = useState(`${HAMI_ORIGIN}/`);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const lastSyncedRouteRef = useRef<string | null>(null);
@@ -37,8 +39,10 @@ export const ChatsPage = (props: any) => {
     if (!router.isReady) return;
 
     const hamiPath = toHamiPathFromAppRoute(router.query.hami);
+    const inChatDetail = isHamiChatDetailFromAppRoute(router.query.hami);
     setShowBottomNavigation(isHamiMainChatsUrl(hamiPath));
-    setIsChatDetail(isHamiChatDetailFromAppRoute(router.query.hami));
+    setIsChatDetail(inChatDetail);
+    setIframeChatId(inChatDetail ? getHamiChatIdFromAppRoute(router.query.hami) : null);
 
     if (syncFromIframeRef.current) {
       syncFromIframeRef.current = false;
@@ -65,8 +69,10 @@ export const ChatsPage = (props: any) => {
       if (!nextHamiPath) return;
 
       const normalized = nextHamiPath.startsWith('/') ? nextHamiPath : `/${nextHamiPath}`;
+      const inChatDetail = isHamiChatDetailUrl(normalized);
       setShowBottomNavigation(isHamiMainChatsUrl(normalized));
-      setIsChatDetail(isHamiChatDetailUrl(normalized));
+      setIsChatDetail(inChatDetail);
+      setIframeChatId(inChatDetail ? getHamiChatIdFromPath(normalized) : null);
 
       const nextRoute = toAppChatsRouteFromHamiPath(normalized);
       if (lastSyncedRouteRef.current === nextRoute) return;
@@ -91,7 +97,9 @@ export const ChatsPage = (props: any) => {
     lastSyncedRouteRef.current = router.asPath.split('?')[0];
   }, [router.isReady, router.asPath]);
 
-  const chatId = router.isReady ? getHamiChatIdFromAppRoute(router.query.hami) : null;
+  const routeChatId = router.isReady ? getHamiChatIdFromAppRoute(router.query.hami) : null;
+  const chatId = routeChatId ?? iframeChatId;
+  const isVardastActive = isChatDetail && !isAppLoading;
 
   const chatIframe = (
     <iframe
@@ -123,7 +131,7 @@ export const ChatsPage = (props: any) => {
         )}
 
         <ChatAssistantDrawer
-          isActive={isChatDetail && !isAppLoading}
+          isActive={isVardastActive}
           chatId={chatId}
           panelContent={({ isOpen, hasChatWidget, isWidgetsLoading }) => (
             <ChatAssistantPanel

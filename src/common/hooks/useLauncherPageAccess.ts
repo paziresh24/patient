@@ -13,18 +13,18 @@ export const useLauncherPageAccess = () => {
   const doctorProfilePending = useUserInfoStore(state => state.doctorProfilePending);
   const hasRedirected = useRef(false);
 
-  const isResolving = pending || doctorProfilePending;
+  const isResolving = pending;
   const isDoctor = isLogin && isDoctorUser(user);
 
   useEffect(() => {
     if (!LAUNCHER_HOME_PATHS.includes(router.pathname)) return;
-    if (isResolving) return;
+    if (pending || doctorProfilePending) return;
     if (isDoctor) return;
     if (hasRedirected.current) return;
 
     hasRedirected.current = true;
     router.replace('/patient');
-  }, [isResolving, isDoctor, router, router.pathname]);
+  }, [pending, doctorProfilePending, isDoctor, router, router.pathname]);
 
   return {
     isResolving,

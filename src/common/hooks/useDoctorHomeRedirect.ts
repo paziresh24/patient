@@ -41,7 +41,7 @@ export const useDoctorHomeRedirect = () => {
 
   useEffect(() => {
     if (isLogin || isCachedDoctor) {
-      router.prefetch('/_');
+      router.prefetch('/_/');
     }
   }, [isLogin, isCachedDoctor, router]);
 
@@ -57,6 +57,6 @@ export const useDoctorHomeRedirect = () => {
     if (!shouldRedirect) return;
 
     hasRedirected.current = true;
-    router.replace('/_');
+    router.replace('/_/');
   }, [shouldRedirect, router]);
 };

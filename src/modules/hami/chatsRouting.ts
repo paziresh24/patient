@@ -55,6 +55,17 @@ export const getHamiChatIdFromAppRoute = (hamiSegments?: string | string[]) => {
   return decodeURIComponent(segments[0]);
 };
 
+export const getHamiChatIdFromPath = (hamiPath: string) => {
+  const normalized = (hamiPath.startsWith('/') ? hamiPath : `/${hamiPath}`).replace(/\/+$/, '') || '/';
+  const chatsMatch = normalized.match(/^\/chats\/([^/?#]+)/i);
+  if (chatsMatch?.[1]) return decodeURIComponent(chatsMatch[1]);
+
+  const chatMatch = normalized.match(/^\/chat\/([^/?#]+)/i);
+  if (chatMatch?.[1]) return decodeURIComponent(chatMatch[1]);
+
+  return null;
+};
+
 export const isHamiChatDetailFromAppRoute = (hamiSegments?: string | string[]) => {
   const segments = Array.isArray(hamiSegments) ? hamiSegments : hamiSegments ? [hamiSegments] : [];
   return segments.length === 1 && segments[0] !== 'stories';

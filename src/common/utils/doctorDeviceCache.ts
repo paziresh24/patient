@@ -24,9 +24,9 @@ export const shouldRedirectCachedDoctorHome = () => {
 
 export const redirectCachedDoctorHome = () => {
   if (!shouldRedirectCachedDoctorHome()) return false;
-  window.location.replace('/_');
+  window.location.replace('/_/');
   return true;
 };
 
 /** Runs before React hydrates — must stay in sync with helpers above. */
-export const DOCTOR_HOME_INLINE_REDIRECT_SCRIPT = `(function(){try{var k='${DOCTOR_DEVICE_CACHE_KEY}';if(localStorage.getItem(k)!=='1')return;if(!window.matchMedia('(max-width:767px)').matches)return;var p=location.pathname;if(p==='/'||p==='/apphome')location.replace('/_');}catch(e){}})();`;
+export const DOCTOR_HOME_INLINE_REDIRECT_SCRIPT = `(function(){try{var k='${DOCTOR_DEVICE_CACHE_KEY}';if(localStorage.getItem(k)!=='1')return;if(!window.matchMedia('(max-width:767px)').matches)return;var p=location.pathname;if(p==='/'||p==='/apphome')location.replace('/_/');}catch(e){}})();`;

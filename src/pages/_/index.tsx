@@ -6,25 +6,18 @@ import { ReactElement, useEffect, useState } from 'react';
 import LauncherMain from '.plasmic/LauncherMain';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import Seo from '@/common/components/layouts/seo';
-import CloseIcon from '@/common/components/icons/close';
 import useModal from '@/common/hooks/useModal';
 import Modal from '@/common/components/atom/modal';
-import Button from '@/common/components/atom/button';
-import TextField from '@/common/components/atom/textField';
-import { splunkInstance } from '@/common/services/splunk';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import toast from 'react-hot-toast';
 import { AppFrame } from '@/modules/hamdast/appFrame';
 import { useNotificationPermission } from '@/common/hooks/useNotificationPermission';
 import { NotificationPermissionModal } from '@/common/components/atom/notificationPermissionModal';
-import { DoctorLauncherContent, useIsNewDoctorLauncherEnabled } from '@/modules/doctorHome';
 import Loading from '@/common/components/atom/loading';
 import { useLauncherPageAccess } from '@/common/hooks/useLauncherPageAccess';
 
 const Page = () => {
-  const { handleOpen, handleClose, modalProps } = useModal();
+  const { handleOpen, modalProps } = useModal();
   const [app, setApp] = useState<string>('');
-  const isNewDoctorLauncher = useIsNewDoctorLauncherEnabled();
   const { isResolving, shouldShowLauncher } = useLauncherPageAccess();
   const info = useUserInfoStore(state => state.info)
   const { isSupported, hasPermission, showModal, openModal, closeModal, checkPermission } = useNotificationPermission();
@@ -64,18 +57,14 @@ const Page = () => {
       )}
       {!isResolving && shouldShowLauncher && (
         <GlobalContextsProvider>
-          {isNewDoctorLauncher ? (
-            <DoctorLauncherContent />
-          ) : (
-            <LauncherMain
-              onAction={action => {
-                if (action.action === 'OPEN_APP') {
-                  setApp(action.appKey);
-                  handleOpen();
-                }
-              }}
-            />
-          )}
+          <LauncherMain
+            onAction={action => {
+              if (action.action === 'OPEN_APP') {
+                setApp(action.appKey);
+                handleOpen();
+              }
+            }}
+          />
         </GlobalContextsProvider>
       )}
     </>

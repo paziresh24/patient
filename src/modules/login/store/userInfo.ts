@@ -64,12 +64,18 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         ...get().info?.provider,
         ...info?.provider,
       };
-      const isDoctor = !!(mergedProvider.slug || !isEmpty(mergedProvider.centers));
+      const isDoctor = !!(
+        mergedProvider.slug ||
+        !isEmpty(mergedProvider.centers) ||
+        mergedProvider.job_title === 'doctor' ||
+        info.is_doctor === true ||
+        get().info?.is_doctor === true
+      );
 
       const infoCopy = {
         ...get().info,
         ...info,
-        is_doctor: info.is_doctor ?? isDoctor,
+        is_doctor: isDoctor,
         provider: {
           ...mergedProvider,
           job_title: isDoctor ? 'doctor' : null,

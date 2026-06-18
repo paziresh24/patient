@@ -38,6 +38,9 @@ export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
     onSuccess,
   } = props;
   const fragmentConfig = useSelector('Fragment');
+  const growthbookContext = useSelector('Growthbook');
+  const growthbookReady = growthbookContext?.isReady ?? true;
+
   const fetchProps = useMemo(
     () => ({
       method,
@@ -54,7 +57,7 @@ export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
   );
 
   const { data, isLoading, isInitialLoading, isError, refetch } = useQuery(
-    [method, url, params, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig],
+    [method, url, params, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig, growthbookReady],
     () => reuqestFn(fetchProps),
     {
       onError(err) {

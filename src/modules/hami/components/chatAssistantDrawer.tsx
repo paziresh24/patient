@@ -7,7 +7,8 @@ import { VardastWorkflowProvider, useVardastWorkflow } from '@/modules/hami/cont
 import { useHasVardastChatWidget } from '@/modules/hami/hooks/useHasVardastChatWidget';
 import { useVardastTriggerInteraction } from '@/modules/hami/hooks/useVardastTriggerInteraction';
 import { trackVardastDrawerOpen, VardastDrawerOpenSource } from '@/modules/hami/utils/trackVardastDrawerOpen';
-import { isDoctorUser } from '@/modules/doctorHome/store/viewMode';
+import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
+import { isDoctorDeviceCached } from '@/common/utils/doctorDeviceCache';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { CSSProperties, ReactNode, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -52,7 +53,7 @@ interface DragState {
 interface ChatAssistantDrawerViewProps extends ChatAssistantDrawerProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  isDoctor: boolean;
+  shouldShowVardastUI: boolean;
   hasChatWidget: boolean;
   isWidgetsLoading: boolean;
 }
@@ -64,14 +65,14 @@ const ChatAssistantDrawerView = ({
   panelContent,
   isOpen,
   setIsOpen,
-  isDoctor,
+  shouldShowVardastUI,
   hasChatWidget,
   isWidgetsLoading,
 }: ChatAssistantDrawerViewProps) => {
   const { messages } = useVardastWorkflow();
   const workflowEvents = getVardastWorkflowEvents(messages);
   const userId = useUserInfoStore(state => state.info?.id);
-  const shouldShowDrawerUI = isDoctor;
+  const shouldShowDrawerUI = shouldShowVardastUI;
   const [liveProgress, setLiveProgress] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const chatLayerRef = useRef<HTMLDivElement>(null);
@@ -585,8 +586,16 @@ const ChatAssistantDrawerView = ({
 export const ChatAssistantDrawer = (props: ChatAssistantDrawerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const userInfo = useUserInfoStore(state => state.info);
+  const isLogin = useUserInfoStore(state => state.isLogin);
+  const doctorProfilePending = useUserInfoStore(state => state.doctorProfilePending);
   const isDoctor = isDoctorUser(userInfo);
-  const { hasChatWidget, isLoading: isWidgetsLoading } = useHasVardastChatWidget(userInfo?.id, isDoctor);
+  const shouldShowVardastUI =
+    isDoctor ||
+    doctorProfilePending ||
+    isDoctorDeviceCached() ||
+    (typeof window !== 'undefined' && window.user?.is_doctor === true);
+  const shouldFetchWidgets = isLogin && !!userInfo?.id && shouldShowVardastUI;
+  const { hasChatWidget, isLoading: isWidgetsLoading } = useHasVardastChatWidget(userInfo?.id, shouldFetchWidgets);
   const vardastEnabled = hasChatWidget && !isWidgetsLoading;
 
   return (
@@ -595,7 +604,7 @@ export const ChatAssistantDrawer = (props: ChatAssistantDrawerProps) => {
         {...props}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        isDoctor={isDoctor}
+        shouldShowVardastUI={shouldShowVardastUI}
         hasChatWidget={hasChatWidget}
         isWidgetsLoading={isWidgetsLoading}
       />

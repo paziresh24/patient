@@ -47,7 +47,7 @@ export const PatinetProfile = () => {
 
   useEffect(() => {
     if (userInfo.id && userInfo.provider?.job_title === 'doctor' && !customize.partnerKey) {
-      router.replace(`/_`);
+      router.replace('/_/');
     }
   }, [userInfo.id, userInfo.provider?.job_title, customize.partnerKey]);
 
