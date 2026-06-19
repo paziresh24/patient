@@ -4,8 +4,8 @@ import { useUserInfoStore } from '../login/store/userInfo';
 import Text from '@/common/components/atom/text';
 import PlusIcon from '@/common/components/icons/plus';
 import useModal from '@/common/hooks/useModal';
-import Modal from '@/common/components/atom/modal';
 import { AppFrame } from './appFrame';
+import { HamdastAppModal } from './components/appModal';
 import { splunkInstance } from '@/common/services/splunk';
 
 interface HamdastProps {
@@ -18,7 +18,7 @@ interface HamdastProps {
 
 export const Hamdast = ({ id, app, backendData, profileData, widgetData }: HamdastProps) => {
   const info = useUserInfoStore(state => state.info);
-  const { handleOpen, modalProps } = useModal();
+  const { handleOpen, handleClose, modalProps } = useModal();
   if (!id) return null;
 
   const { Component, component_id, project_id, props_allowed } = (Components as any)?.[id] ?? {
@@ -64,9 +64,15 @@ export const Hamdast = ({ id, app, backendData, profileData, widgetData }: Hamda
               </div>
               <div className="border border-t-0 border-r-0 rounded-bl-3xl border-dashed w-full mb-7 border-slate-400" />
             </div>
-            <Modal {...modalProps} fullScreen noHeader noLine bodyClassName="p-0">
-              <AppFrame appKey={app} params={['launcher']} queries={{ open_from: 'profile' }} showBackButton />
-            </Modal>
+            <HamdastAppModal {...modalProps} title="افزودن به پروفایل">
+              <AppFrame
+                appKey={app}
+                params={['launcher']}
+                queries={{ open_from: 'profile' }}
+                showBackButton
+                onHamdastClose={handleClose}
+              />
+            </HamdastAppModal>
           </>
         )}
       </div>

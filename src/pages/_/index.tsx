@@ -7,16 +7,19 @@ import LauncherMain from '.plasmic/LauncherMain';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import Seo from '@/common/components/layouts/seo';
 import useModal from '@/common/hooks/useModal';
-import Modal from '@/common/components/atom/modal';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { AppFrame } from '@/modules/hamdast/appFrame';
-import { useNotificationPermission } from '@/common/hooks/useNotificationPermission';
 import { NotificationPermissionModal } from '@/common/components/atom/notificationPermissionModal';
 import Loading from '@/common/components/atom/loading';
 import { useLauncherPageAccess } from '@/common/hooks/useLauncherPageAccess';
+import { AppFrame } from '@/modules/hamdast/appFrame';
+import { HamdastAppModal } from '@/modules/hamdast/components/appModal';
+import { prefetchOneApp } from '@/modules/hamdast/utils/prefetchOneApp';
+import { useNotificationPermission } from '@/common/hooks/useNotificationPermission';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Page = () => {
-  const { handleOpen, modalProps } = useModal();
+  const queryClient = useQueryClient();
+  const { handleOpen, handleClose, modalProps } = useModal();
   const [app, setApp] = useState<string>('');
   const { isResolving, shouldShowLauncher } = useLauncherPageAccess();
   const info = useUserInfoStore(state => state.info)
@@ -42,9 +45,9 @@ const Page = () => {
     <>
       <Seo title="خدمات" noIndex />
 
-      <Modal {...modalProps} noHeader noLine bodyClassName="p-0" className="h-[90%]">
-        <AppFrame appKey={app} params={['launcher']} />
-      </Modal>
+      <HamdastAppModal {...modalProps} title="اپلیکیشن">
+        <AppFrame appKey={app} params={['launcher']} onHamdastClose={handleClose} />
+      </HamdastAppModal>
       <NotificationPermissionModal
         isOpen={showModal}
         onClose={closeModal}
@@ -60,6 +63,7 @@ const Page = () => {
           <LauncherMain
             onAction={action => {
               if (action.action === 'OPEN_APP') {
+                void prefetchOneApp(queryClient, { appKey: action.appKey, pageKey: 'launcher' }, 0);
                 setApp(action.appKey);
                 handleOpen();
               }

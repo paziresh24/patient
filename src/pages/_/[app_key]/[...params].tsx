@@ -17,7 +17,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import isEmpty from 'lodash/isEmpty';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
 import LauncherProfile from '.plasmic/LauncherProfile';
@@ -62,8 +62,9 @@ const Page = ({ page, app }: any) => {
     ...router
   } = useRouter();
 
-  const iframeRef = useRef<any>(null);
-  const [isAppLoading, setIsAppLoading] = useState(true);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const loadedEmbedSrcRef = useRef<string | null>(null);
+  const [isAppLoading, setIsAppLoading] = useState(false);
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPending = useUserInfoStore(state => state.pending);
@@ -80,6 +81,53 @@ const Page = ({ page, app }: any) => {
   }, [page, params, queries, user.id]);
 
   const showIframe = page?.is_protected_route ? !!user.id : true;
+
+  const markIframeLoaded = useCallback(() => {
+    if (embedSrc) {
+      loadedEmbedSrcRef.current = embedSrc;
+    }
+    setIsAppLoading(false);
+  }, [embedSrc]);
+
+  useLayoutEffect(() => {
+    if (!embedSrc) {
+      setIsAppLoading(false);
+      return;
+    }
+
+    if (loadedEmbedSrcRef.current === embedSrc) {
+      setIsAppLoading(false);
+      return;
+    }
+
+    const iframe = iframeRef.current;
+
+    const handleLoad = () => {
+      markIframeLoaded();
+    };
+
+    if (iframe) {
+      try {
+        if (iframe.contentWindow?.document?.readyState === 'complete') {
+          handleLoad();
+          return;
+        }
+      } catch {
+        // Cross-origin iframe: rely on load event and fallback timer.
+      }
+
+      iframe.addEventListener('load', handleLoad);
+    }
+
+    setIsAppLoading(true);
+
+    const fallbackTimer = window.setTimeout(handleLoad, 8000);
+
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      iframe?.removeEventListener('load', handleLoad);
+    };
+  }, [embedSrc, markIframeLoaded]);
 
   useEffect(() => {
     if (!userPending && !isLogin && page?.is_protected_route) {
@@ -110,12 +158,6 @@ const Page = ({ page, app }: any) => {
       });
     }
   }, [app?.key, page?.key, user?.id, userPending]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsAppLoading(false);
-    }, 10000);
-  }, []);
 
   useEffect(() => {
     if (showTranslation) {
@@ -265,26 +307,35 @@ const Page = ({ page, app }: any) => {
       <HamdastFlow iframeRef={iframeRef} />
       {page?.key == 'launcher' && <Permissions onClose={() => router.back()} />}
 
-      {(showApp || showTranslation) &&
-        <div className={classNames('w-full flex-grow flex flex-col', { '!opacity-0 invisible absolute -left-[9999px]': showTranslation })}>
-          {(!showIframe || isAppLoading) && (
-            <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
-              <Loading />
+      {(showApp || showTranslation) && (
+        <div
+          className={classNames('relative flex min-h-0 w-full flex-1 flex-col', {
+            '!opacity-0 invisible absolute -left-[9999px]': showTranslation,
+          })}
+        >
+          {showIframe && embedSrc && (
+            <div className="relative flex min-h-0 w-full flex-1 flex-col">
+              {isAppLoading && (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-white">
+                  <Loading />
+                </div>
+              )}
+              <iframe
+                key={embedSrc}
+                ref={iframeRef}
+                onLoad={markIframeLoaded}
+                className="min-h-0 w-full flex-1 border-0 bg-white"
+                loading="eager"
+                width="100%"
+                height="100%"
+                src={embedSrc}
+                allow="microphone; camera; fullscreen; clipboard-write;"
+                sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
+              />
             </div>
           )}
-          {showIframe && (
-            <iframe
-              ref={iframeRef}
-              onLoad={() => setIsAppLoading(false)}
-              className={classNames('w-full flex-grow h-full', { '!opacity-0 invisible absolute -left-[9999px]': isAppLoading })}
-              loading="eager"
-              width="100%" height="100%"
-              src={embedSrc!}
-              allow="microphone; camera; fullscreen; clipboard-write;"
-              sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
-            />
-          )}
-        </div>}
+        </div>
+      )}
     </LayoutWithHeaderAndFooter>
   );
 };

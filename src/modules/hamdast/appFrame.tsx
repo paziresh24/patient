@@ -20,6 +20,7 @@ import Logo from '@/common/components/atom/logo';
 import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key]/[...params]';
 import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './components/subscription-payment';
+import { HamdastClose } from './components/close';
 import { HamdastFlow } from './components/flow';
 import Link from 'next/link';
 import { HamdastInvite } from './components/invite';
@@ -35,6 +36,8 @@ export const AppFrame = ({
   onChangeWidget,
   reportOpenSignal,
   onReportSubmit,
+  onHamdastClose,
+  closeVardastOnHamdastClose,
 }: {
   appKey: string;
   params: string[];
@@ -46,28 +49,27 @@ export const AppFrame = ({
   onChangeWidget?: (action?: 'add' | 'remove' | 'update') => void;
   reportOpenSignal?: number;
   onReportSubmit?: () => void;
+  onHamdastClose?: () => void;
+  closeVardastOnHamdastClose?: boolean;
 }) => {
   const router = useRouter();
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
-  const [app, setApp] = useState<any>({});
-  const [page, setPage] = useState<any>({});
+  const app = useMemo(() => getOneApp.data?.data ?? {}, [getOneApp.data?.data]);
+  const page = useMemo(() => {
+    if (!app?.fragments) return {};
 
-  useEffect(() => {
-    if (getOneApp?.data?.data && getOneApp.isSuccess) {
-      const app = getOneApp?.data?.data;
-      const page = app?.fragments
+    return (
+      app.fragments
         ?.find((item: any) => item.type === 'pages')
-        ?.options?.find((item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1);
+        ?.options?.find(
+          (item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1,
+        ) ?? {}
+    );
+  }, [app, params]);
 
-      setApp(app);
-      setPage(page);
-    }
-  }, [getOneApp?.data?.data, getOneApp.isSuccess]);
-
-  const iframeRef = useRef<any>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const subscriptionPaymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
   const supportRef = useRef<HamdastSupportRef>(null);
-  const [isAppLoading, setIsAppLoading] = useState(true);
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userPending = useUserInfoStore(state => state.pending);
@@ -76,11 +78,14 @@ export const AppFrame = ({
   const [showTranslation, setShowTranslation] = useState(false);
   const [showSupportButton, setShowSupportButton] = useState(false);
 
+  const isEmbeddedModal = Boolean(dontShowAppBar && dontShowProfile && dontShowNotification);
+
   const embedSrc = useMemo(() => {
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
     return page?.embed_src ? constructUrlWithQuery(replaceParameters, { ...queries, user_id: user.id, hamdast_embedded: true }) : null;
   }, [page, params, queries, user.id]);
 
+  const isMetadataLoading = !embedSrc && (getOneApp.isLoading || getOneApp.isFetching);
   const showIframe = page?.is_protected_route ? !!user.id : true;
 
   useEffect(() => {
@@ -98,13 +103,6 @@ export const AppFrame = ({
       });
     };
   }, [isLogin, userPending, page]);
-
-  useEffect(() => {
-    getOneApp.refetch();
-    setTimeout(() => {
-      setIsAppLoading(false);
-    }, 10000);
-  }, []);
 
   useEffect(() => {
     if (showTranslation) {
@@ -144,7 +142,7 @@ export const AppFrame = ({
   }, [params?.[0]]);
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden">
       {!dontShowAppBar && (
 
         <AppBar
@@ -170,7 +168,17 @@ export const AppFrame = ({
       )}
       {embedSrc && <Link rel="preconnect" href={embedSrc!} />}
       {embedSrc && <Link rel="dns-prefetch" href={embedSrc!} />}
-      {app?.id && (
+      {onHamdastClose && (
+        <HamdastClose onClose={onHamdastClose} closeVardast={closeVardastOnHamdastClose} />
+      )}
+      {app?.id && isEmbeddedModal && (
+        <>
+          <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
+          <HamdastFlow iframeRef={iframeRef} />
+        </>
+      )}
+      {app?.id && !isEmbeddedModal && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
@@ -237,31 +245,39 @@ export const AppFrame = ({
         </>
       )}
       {(showApp || showTranslation) && (
-        <div className={classNames('w-full flex-grow flex flex-col', { '!opacity-0 invisible absolute -left-[9999px]': showTranslation })}>
+        <div
+          className={classNames('relative min-h-0 w-full flex-1 overflow-hidden', {
+            '!opacity-0 invisible absolute -left-[9999px]': showTranslation,
+          })}
+        >
+          {isMetadataLoading && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-white">
+              <Loading />
+              <Text fontSize="sm" className="text-slate-600">
+                لطفا کمی صبر کنید...
+              </Text>
+            </div>
+          )}
+          {!isMetadataLoading && !embedSrc && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-white px-4 text-center">
+              <Text fontSize="sm" className="text-slate-600">
+                خطا در بارگذاری اپلیکیشن
+              </Text>
+            </div>
+          )}
           {showIframe && embedSrc && (
-            <>
-              {isAppLoading && params?.[0] !== 'launcher' && (
-                <div className="w-full flex-grow flex flex-col items-center justify-center bg-white gap-3">
-                  <Loading />
-                  <Text fontSize="sm" className="text-slate-600">
-                    لطفا کمی صبر کنید...
-                  </Text>
-                </div>
-              )}
-              <iframe
-                ref={iframeRef}
-                onLoad={() => setIsAppLoading(false)}
-                className={classNames('w-full flex-grow h-full', { '!opacity-0 invisible absolute -left-[9999px]': isAppLoading })}
-                loading="eager"
-                width="100%" height="100%"
-                src={embedSrc!}
-                allow="microphone; camera; fullscreen; clipboard-write;"
-                sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
-              />
-            </>
+            <iframe
+              key={embedSrc}
+              ref={iframeRef}
+              className="absolute inset-0 h-full w-full border-0 bg-white"
+              loading="eager"
+              title={page?.name?.fa || app?.display_name?.fa || 'Hamdast app'}
+              src={embedSrc}
+              allow="microphone; camera; fullscreen; clipboard-write;"
+              sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
+            />
           )}
         </div>
-
       )}
     </div>
   );

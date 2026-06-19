@@ -64,12 +64,15 @@ import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/c
 import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 import { getAppointmentDoctor } from '@/common/apis/services/booking/getAppointmentDoctor';
 import { AppFrame } from '@/modules/hamdast/appFrame';
-import useResponsive from '@/common/hooks/useResponsive';
+import { HamdastAppModal } from '@/modules/hamdast/components/appModal';
+import { prefetchOneApp } from '@/modules/hamdast/utils/prefetchOneApp';
 import { PIC_USER_IMAGE_FALLBACK_URL, picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import ChatIcon from '@/common/components/icons/chat';
+import { useQueryClient } from '@tanstack/react-query';
 const { publicRuntimeConfig } = getConfig();
 
 const Receipt = () => {
+  const queryClient = useQueryClient();
   const shouldUsePlasmicActionButtons = useFeatureIsOn('plasmic:receipt-action-buttons|enabled');
   const {
     query: { bookId, centerId, pincode, action },
@@ -118,7 +121,6 @@ const Receipt = () => {
   const isFetchingRef = useRef(false);
   const lastFetchedKeyRef = useRef<string>('');
   const accessChatRequestedBookIdRef = useRef<string | null>(null);
-  const { isMobile } = useResponsive();
   const getReceiptDetails = useGetReceiptDetails({
     book_id: bookId as string,
     center_id: centerId as string,
@@ -329,6 +331,8 @@ const Receipt = () => {
           hasFetchedWidgetRef.current = true;
           return;
         }
+
+        void prefetchOneApp(queryClient, { appKey: targetWidget.app, pageKey: 'flows' }, 1);
 
         const addonsResponse = await apiGatewayClient.get('/v1/hamdast/addons/receipt', {
           params: {
@@ -1343,7 +1347,12 @@ const Receipt = () => {
         </Modal>
         {widgetApp && (
           <>
-            <Modal {...widgetModalProps} onClose={handleOpenClosePromptWidgetModal} fullScreen={!isMobile} noHeader noLine bodyClassName="p-0 h-[45rem]">
+            <HamdastAppModal
+              {...widgetModalProps}
+              onClose={handleOpenClosePromptWidgetModal}
+              noHeader
+              noLine
+            >
               <AppFrame
                 dontShowNotification
                 appKey={widgetApp}
@@ -1354,8 +1363,9 @@ const Receipt = () => {
                   handleCloseClosePromptWidgetModal();
                   handleCloseWidgetModal();
                 }}
+                onHamdastClose={handleCloseWidgetModal}
               />
-            </Modal>
+            </HamdastAppModal>
             <Modal {...closePromptWidgetModalProps} noHeader>
               <div className='flex flex-col gap-3'>
                 <span>

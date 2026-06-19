@@ -1,9 +1,10 @@
 import Loading from '@/common/components/atom/loading/loading';
 import Modal from '@/common/components/atom/modal';
 import useModal from '@/common/hooks/useModal';
-import useResponsive from '@/common/hooks/useResponsive';
 import { apiGatewayClient } from '@/common/apis/client';
 import { AppFrame } from '@/modules/hamdast/appFrame';
+import { HamdastAppModal } from '@/modules/hamdast/components/appModal';
+import { prefetchOneApp, prefetchOneApps } from '@/modules/hamdast/utils/prefetchOneApp';
 import { forwardRef, useImperativeHandle, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import classNames from 'classnames';
@@ -11,6 +12,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { GlobalActionsProvider } from '@plasmicapp/host';
 import { createContext, useContext, useRef, useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export interface HamdastApp {
   app_key: string;
@@ -81,7 +83,7 @@ interface HamdastAppsSelectorModalProps {
 
 export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, HamdastAppsSelectorModalProps>(({ onAppSelect }, ref) => {
   const router = useRouter();
-  const { isMobile } = useResponsive();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [apps, setApps] = useState<HamdastApp[]>([]);
@@ -116,6 +118,23 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
     },
   });
 
+  const prefetchAppsMetadata = useCallback(
+    (appsList: Array<HamdastApp | CustomApp>) => {
+      const uniqueAppKeys = [...new Set(appsList.map(app => app.app_key).filter(Boolean))];
+      if (uniqueAppKeys.length === 0) return;
+
+      prefetchOneApps(
+        queryClient,
+        uniqueAppKeys.map(appKey => ({
+          appKey,
+          pageKey: 'launcher',
+          routeParamCount: 0,
+        })),
+      );
+    },
+    [queryClient],
+  );
+
   const fetchApps = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -124,6 +143,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
       });
       const fetchedApps: HamdastApp[] = response.data || [];
       setApps(fetchedApps);
+      prefetchAppsMetadata(fetchedApps);
       return fetchedApps;
     } catch (error: any) {
       console.error('Error fetching apps:', error);
@@ -132,7 +152,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [prefetchAppsMetadata]);
 
   const filterApps = useCallback(
     (allApps: HamdastApp[], customAppsList: CustomApp[], appKeys?: string[], category?: string) => {
@@ -196,6 +216,8 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
   const handleAppClick = (app: HamdastApp | CustomApp) => {
     onAppSelect?.(app);
 
+    void prefetchOneApp(queryClient, { appKey: app.app_key, pageKey: 'launcher' }, 0);
+
     if (openOptions?.openInModal) {
       setActiveAppOptions(openOptions);
       handleClose();
@@ -239,6 +261,9 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
                   'flex items-center gap-2 md:gap-3 p-2.5 md:p-4 cursor-pointer transition-colors border-b border-slate-100 last:border-b-0',
                   'hover:bg-slate-50 active:bg-slate-100',
                 )}
+                onPointerEnter={() => {
+                  void prefetchOneApp(queryClient, { appKey: app.app_key, pageKey: 'launcher' }, 0);
+                }}
                 onClick={() => handleAppClick(app)}
               >
                 {app.icon && (
@@ -278,13 +303,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
       </Modal>
 
       {activeApp && (
-        <Modal
-          {...appModalProps}
-          onClose={handleCloseAppModal}
-          fullScreen={!isMobile}
-          noHeader
-          bodyClassName="p-0 h-[45rem]"
-        >
+        <HamdastAppModal {...appModalProps} onClose={handleCloseAppModal} title={activeApp.title}>
           <AppFrame
             dontShowNotification
             dontShowAppBar
@@ -295,8 +314,10 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
               open_from: 'vardast',
               ...(activeAppOptions?.chatId ? { 'hami.chat_id': activeAppOptions.chatId } : {}),
             }}
+            onHamdastClose={handleCloseAppModal}
+            closeVardastOnHamdastClose
           />
-        </Modal>
+        </HamdastAppModal>
       )}
     </>
   );

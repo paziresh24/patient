@@ -1,10 +1,11 @@
-import Modal from '@/common/components/atom/modal';
 import useModal from '@/common/hooks/useModal';
-import useResponsive from '@/common/hooks/useResponsive';
 import { VardastWorkflowAppPopupAction } from '@/modules/hami/apis/parseVardastActions';
 import { vardastType } from '@/modules/hami/components/chatAssistantTypography';
 import { AppFrame } from '@/modules/hamdast/appFrame';
-import { useState } from 'react';
+import { HamdastAppModal } from '@/modules/hamdast/components/appModal';
+import { prefetchVardastActionEmbed } from '@/modules/hami/utils/prefetchVardastActionEmbed';
+import { useQueryClient } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
 
 export interface ChatAssistantActionTagsProps {
   chatId: string;
@@ -13,11 +14,24 @@ export interface ChatAssistantActionTagsProps {
 }
 
 export const ChatAssistantActionTags = ({ chatId, actions, appointmentId }: ChatAssistantActionTagsProps) => {
+  const queryClient = useQueryClient();
   const [activeAction, setActiveAction] = useState<VardastWorkflowAppPopupAction | null>(null);
   const { handleOpen, handleClose, modalProps } = useModal({
     onClose: () => setActiveAction(null),
   });
-  const { isMobile } = useResponsive();
+
+  const frameQueries = useMemo(
+    () =>
+      activeAction
+        ? {
+            'hami.chat_id': chatId,
+            open_from: 'vardast',
+            ...(appointmentId ? { appointment_id: appointmentId } : {}),
+            ...activeAction.parameters,
+          }
+        : null,
+    [activeAction, appointmentId, chatId],
+  );
 
   if (actions.length === 0) return null;
 
@@ -29,6 +43,7 @@ export const ChatAssistantActionTags = ({ chatId, actions, appointmentId }: Chat
             key={`${action.app_key}-${action.title}`}
             type="button"
             onClick={() => {
+              prefetchVardastActionEmbed(queryClient, action);
               setActiveAction(action);
               handleOpen();
             }}
@@ -40,27 +55,18 @@ export const ChatAssistantActionTags = ({ chatId, actions, appointmentId }: Chat
       </div>
 
       {activeAction && (
-        <Modal
-          {...modalProps}
-          onClose={handleClose}
-          fullScreen={!isMobile}
-          noHeader
-          bodyClassName="p-0 h-[45rem]"
-        >
+        <HamdastAppModal {...modalProps} onClose={handleClose} title={activeAction.title}>
           <AppFrame
             dontShowNotification
             dontShowAppBar
             dontShowProfile
             appKey={activeAction.app_key}
             params={['flows', 'CHAT']}
-            queries={{
-              'hami.chat_id': chatId,
-              open_from: 'vardast',
-              ...(appointmentId ? { appointment_id: appointmentId } : {}),
-              ...activeAction.parameters,
-            }}
+            queries={frameQueries ?? undefined}
+            onHamdastClose={handleClose}
+            closeVardastOnHamdastClose
           />
-        </Modal>
+        </HamdastAppModal>
       )}
     </>
   );

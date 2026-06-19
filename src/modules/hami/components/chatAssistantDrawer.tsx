@@ -10,6 +10,7 @@ import { trackVardastDrawerOpen, VardastDrawerOpenSource } from '@/modules/hami/
 import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
 import { isDoctorDeviceCached } from '@/common/utils/doctorDeviceCache';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { HAMDAST_CLOSE_VARDAST_EVENT } from '@/modules/hamdast/components/close';
 import { CSSProperties, ReactNode, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 const DRAWER_SIZE_PERCENT = 80;
@@ -586,6 +587,16 @@ const ChatAssistantDrawerView = ({
 export const ChatAssistantDrawer = (props: ChatAssistantDrawerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const userInfo = useUserInfoStore(state => state.info);
+
+  useEffect(() => {
+    const handleHamdastCloseVardast = () => setIsOpen(false);
+
+    window.addEventListener(HAMDAST_CLOSE_VARDAST_EVENT, handleHamdastCloseVardast);
+
+    return () => {
+      window.removeEventListener(HAMDAST_CLOSE_VARDAST_EVENT, handleHamdastCloseVardast);
+    };
+  }, []);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const doctorProfilePending = useUserInfoStore(state => state.doctorProfilePending);
   const isDoctor = isDoctorUser(userInfo);
