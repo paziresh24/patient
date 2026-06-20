@@ -43,10 +43,18 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
     });
   };
 
+  const freeturnRaw = profile?.data?.centers
+    ?.find((item: any) => item.id == CENTERS.CONSULT)
+    ?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn;
+
   const freeturn =
-    profile?.data?.centers
-      ?.find((item: any) => item.id == CENTERS.CONSULT)
-      ?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn * 1000;
+    typeof freeturnRaw === 'number' && Number.isFinite(freeturnRaw) ? freeturnRaw * 1000 : null;
+
+  const getFreeturnText = () => {
+    if (freeturn === null) return 'در اسرع وقت';
+    if (freeturn < Date.now()) return 'در کمتر از ۱۵ دقیقه آینده';
+    return convertTime(freeturn);
+  };
 
   return (
     <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
@@ -70,7 +78,7 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
           <Text as="p" fontSize="sm" align="justify" className="leading-6">
             پس از نهایی شدن نوبت،{' '}
             <Text className="text-primary" fontWeight="semiBold">
-              {freeturn < new Date().getTime() ? 'در کمتر از ۱۵ دقیقه آینده' : convertTime(freeturn)}
+              {getFreeturnText()}
             </Text>{' '}
             شما را آنلاین ویزیت خواهم کرد.
           </Text>
