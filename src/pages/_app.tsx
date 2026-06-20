@@ -23,7 +23,7 @@ import useServerQuery from "@/common/hooks/useServerQuery";
 import { splunkInstance } from "@/common/services/splunk";
 import Provider from "@/components/layouts/provider";
 import "@/firebase/analytics";
-import { GrowthBook, GrowthBookProvider } from "@growthbook/growthbook-react";
+import { GrowthBook, GrowthBookProvider, configureCache } from "@growthbook/growthbook-react";
 import { PlasmicRootProvider } from "@plasmicapp/react-web";
 import { Hydrate } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
@@ -48,6 +48,13 @@ const { publicRuntimeConfig } = getConfig();
 const isEnabledGrowthbook =
   !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
   !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
+
+if (isEnabledGrowthbook) {
+  configureCache({
+    staleTTL: 30 * 1000,
+  });
+}
+
 export const growthbook = new GrowthBook({
   enabled: isEnabledGrowthbook,
   apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,

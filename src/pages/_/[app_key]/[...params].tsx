@@ -274,7 +274,7 @@ const Page = ({ page, app }: any) => {
             </svg>
 
             <div className="bg-white rounded-xl shadow-card w-16 h-16 flex justify-center items-center">
-              <img src={app?.icon} className="w-10 h-10 rounded-xl" />
+              <img src={app?.icon} className="w-14 h-14 min-w-14 min-h-14 rounded-xl object-cover" />
             </div>
           </div>
           <span className="text-sm">
