@@ -120,7 +120,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
 
   const prefetchAppsMetadata = useCallback(
     (appsList: Array<HamdastApp | CustomApp>) => {
-      const uniqueAppKeys = [...new Set(appsList.map(app => app.app_key).filter(Boolean))];
+      const uniqueAppKeys = Array.from(new Set(appsList.map(app => app.app_key).filter(Boolean)));
       if (uniqueAppKeys.length === 0) return;
 
       prefetchOneApps(
