@@ -1,7 +1,7 @@
 import { memo, SVGAttributes } from 'react';
 
-export const GoogleCalendarIcon = memo(({ ...rest }: SVGAttributes<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" {...rest}>
+export const GoogleCalendarIcon = memo(({ className, width, height, ...rest }: SVGAttributes<SVGSVGElement>) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" {...rest} className={className} width={width ?? 26} height={height ?? 26}>
     <rect width="22" height="22" x="13" y="13" fill="#fff" />
     <polygon fill="#1e88e5" points="25.68,20.92 26.688,22.36 28.272,21.208 28.272,29.56 30,29.56 30,18.616 28.56,18.616" />
     <path

@@ -28,4 +28,5 @@ export enum ServerStateKeysEnum {
   OnlineChannels = 'onlineChannels',
   GetCancellationPolicyStatus = 'getCancellationPolicyStatus',
   PaymentMethods = 'paymentMethods',
+  GhandonPreference = 'ghandonPreference',
 }
