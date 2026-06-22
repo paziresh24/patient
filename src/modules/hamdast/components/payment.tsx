@@ -57,6 +57,11 @@ export default forwardRef(
     const gatewayWindow = useRef<any>();
     const [isAutoRenew, setIsAutoRenew] = useState(true);
 
+    const medicalCenters = info?.provider?.centers?.filter?.(center => center.type_id == 1) ?? [];
+    const paymentCenters =
+      info?.provider?.centers?.filter?.(center => center.id == '5532' || center.type_id == 1) ?? [];
+    const shouldSendCenter = (centerId?: string) => !!centerId && centerId !== '5532';
+
     useImperativeHandle(ref, () => ({
       open: (data: any) => {
         handleOpen();
@@ -74,16 +79,15 @@ export default forwardRef(
     }, [app_key]);
 
     useEffect(() => {
-      // Ensure info?.provider?.centers is an array before proceeding
-      const centers = info?.provider?.centers?.filter?.(center => center.id == '5532' || center.type_id == 1) ?? [];
-      if (!centers.length) {
+      if (!paymentCenters.length) {
         setBalances([]);
+        setSelectedCenter(undefined);
         setIsLoadingBalances(false);
         return;
       }
       setIsLoadingBalances(true);
       Promise.all(
-        centers.map((item: any) =>
+        paymentCenters.map((item: any) =>
           axios
             .get(
               `https://apigw.paziresh24.com/katibe/v1/transactions/balance/p24${
@@ -118,7 +122,7 @@ export default forwardRef(
         .finally(() => {
           setIsLoadingBalances(false);
         });
-    }, [info?.provider?.centers, modalProps?.isOpen]);
+    }, [paymentCenters, modalProps?.isOpen]);
 
     const sendEventLog = (type: 'show_receipt' | 'success' | 'cancel' | 'open_gateway') => {
       splunkInstance('dashboard').sendEvent({
@@ -132,7 +136,7 @@ export default forwardRef(
             product_key: receiptData?.product_key,
             plan_key: receiptData?.plan_key,
             receipt_id: receiptData?.receipt_id,
-            center_id: selectedCenter,
+            ...(shouldSendCenter(selectedCenter) && { center_id: selectedCenter }),
           },
         },
       });
@@ -229,7 +233,9 @@ export default forwardRef(
           `https://www.paziresh24.com/_/${app_key}/payment_return_link/?status=success`,
         )}&uuid=${uuidV4()}&cancel_returnlink=${encodeURIComponent(
           `https://www.paziresh24.com/_/${app_key}/payment_return_link/?status=cancel`,
-        )}&receipt_id=${receiptData?.receipt_id}&center_id=${selectedCenter}${selectedCenter != '5532' ? '&account=organization' : ''}`,
+        )}&receipt_id=${receiptData?.receipt_id}${
+          shouldSendCenter(selectedCenter) ? `&center_id=${selectedCenter}&account=organization` : ''
+        }`,
         '_blank',
       );
     };
@@ -240,11 +246,11 @@ export default forwardRef(
       try {
         await payRequest.mutateAsync({
           id: receiptData?.receipt_id,
-          centerid: selectedCenter != '5532' ? selectedCenter : undefined,
+          centerid: shouldSendCenter(selectedCenter) ? selectedCenter : undefined,
         });
         onSuccess({
           receipt_id: receiptData?.receipt_id,
-          center_id: selectedCenter,
+          ...(shouldSendCenter(selectedCenter) && { center_id: selectedCenter }),
           product_key: receiptData?.product_key,
           plan_key: receiptData?.plan_key,
           is_auto_renew: isAutoRenew,
@@ -255,7 +261,7 @@ export default forwardRef(
           toast.error(error?.response?.data?.message || 'خطا در پرداخت');
           onError({
             receipt_id: receiptData?.receipt_id,
-            center_id: selectedCenter,
+            ...(shouldSendCenter(selectedCenter) && { center_id: selectedCenter }),
             message: error?.response?.data?.message,
             product_key: receiptData?.product_key,
             plan_key: receiptData?.plan_key,
@@ -271,7 +277,7 @@ export default forwardRef(
       gatewayWindow.current?.close();
       onCancel({
         receipt_id: receiptData?.receipt_id,
-        center_id: selectedCenter,
+        ...(shouldSendCenter(selectedCenter) && { center_id: selectedCenter }),
         product_key: receiptData?.product_key,
         plan_key: receiptData?.plan_key,
       });
@@ -343,43 +349,43 @@ export default forwardRef(
                 </Text>
               </div>
               <Divider />
-              <div className="flex flex-col gap-3">
-                <Text fontSize="sm" fontWeight="semiBold">
-                  پول از حساب کدام مرکزدرمانی شما کسر شود؟
-                </Text>
-                <div className="flex flex-col gap-2">
-                  {sortBy(
-                    info?.provider?.centers
-                      ?.filter?.(center => center.id == '5532' || center.type_id == 1)
-                      .map(item => ({ ...item, ...balances?.find((b: any) => b.center_id == item.id) })),
-                    'balance',
-                  )?.map?.((item, index) => (
-                    <div
-                      key={item?.id}
-                      onClick={() => setSelectedCenter(item?.id)}
-                      className={classNames('flex cursor-pointer flex-col border border-slate-300 rounded-md p-3', {
-                        'border-primary border-2': selectedCenter == item.id,
-                      })}
-                    >
-                      <div className="flex items-center gap-1">
-                        <Text fontSize="xs" fontWeight="medium" className="min-w-fit max-w-fit w-full">
-                          {item?.name ?? 'کیف پول'}
-                        </Text>
-                        {item?.id !== '5532' && <Text className="line-clamp-1 text-[10px] max-w-full opacity-50">({item?.address})</Text>}
+              {medicalCenters.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  <Text fontSize="sm" fontWeight="semiBold">
+                    پول از حساب کدام مرکزدرمانی شما کسر شود؟
+                  </Text>
+                  <div className="flex flex-col gap-2">
+                    {sortBy(
+                      paymentCenters.map(item => ({ ...item, ...balances?.find((b: any) => b.center_id == item.id) })),
+                      'balance',
+                    )?.map?.(item => (
+                      <div
+                        key={item?.id}
+                        onClick={() => setSelectedCenter(item?.id)}
+                        className={classNames('flex cursor-pointer flex-col border border-slate-300 rounded-md p-3', {
+                          'border-primary border-2': selectedCenter == item.id,
+                        })}
+                      >
+                        <div className="flex items-center gap-1">
+                          <Text fontSize="xs" fontWeight="medium" className="min-w-fit max-w-fit w-full">
+                            {item?.name ?? 'کیف پول'}
+                          </Text>
+                          {item?.id !== '5532' && <Text className="line-clamp-1 text-[10px] max-w-full opacity-50">({item?.address})</Text>}
+                        </div>
+                        <div>
+                          <Text fontSize="sm" fontWeight="medium" className="text-primary">
+                            موجودی:{' '}
+                          </Text>
+                          <Text fontSize="sm" fontWeight="medium" className="text-primary">
+                            {new Intl.NumberFormat('fa-IR').format((item?.balance ?? 0) / 10)} تومان
+                          </Text>
+                        </div>
                       </div>
-                      <div>
-                        <Text fontSize="sm" fontWeight="medium" className="text-primary">
-                          موجودی:{' '}
-                        </Text>
-                        <Text fontSize="sm" fontWeight="medium" className="text-primary">
-                          {new Intl.NumberFormat('fa-IR').format((item?.balance ?? 0) / 10)} تومان
-                        </Text>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <Divider />
+              )}
+              {medicalCenters.length > 0 && <Divider />}
               {showAutoRenew && (
                 <>
                   <div className="flex gap-2 items-center border border-slate-200 p-2 rounded-lg">
