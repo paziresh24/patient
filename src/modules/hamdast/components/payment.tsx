@@ -10,7 +10,7 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import axios, { isAxiosError } from 'axios';
 import { deleteCookie, getCookie } from 'cookies-next';
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useEffectOnce } from 'react-use';
 import { v4 as uuidV4 } from 'uuid';
@@ -57,9 +57,8 @@ export default forwardRef(
     const gatewayWindow = useRef<any>();
     const [isAutoRenew, setIsAutoRenew] = useState(true);
 
-    const medicalCenters = info?.provider?.centers?.filter?.(center => center.type_id == 1) ?? [];
-    const paymentCenters =
-      info?.provider?.centers?.filter?.(center => center.id == '5532' || center.type_id == 1) ?? [];
+    const paymentCenters = useMemo(() => info?.provider?.centers ?? [], [info?.provider?.centers]);
+    const showCenterSelection = paymentCenters.length > 1;
     const shouldSendCenter = (centerId?: string) => !!centerId && centerId !== '5532';
 
     useImperativeHandle(ref, () => ({
@@ -79,6 +78,8 @@ export default forwardRef(
     }, [app_key]);
 
     useEffect(() => {
+      if (!modalProps.isOpen) return;
+
       if (!paymentCenters.length) {
         setBalances([]);
         setSelectedCenter(undefined);
@@ -122,7 +123,7 @@ export default forwardRef(
         .finally(() => {
           setIsLoadingBalances(false);
         });
-    }, [paymentCenters, modalProps?.isOpen]);
+    }, [modalProps.isOpen, paymentCenters]);
 
     const sendEventLog = (type: 'show_receipt' | 'success' | 'cancel' | 'open_gateway') => {
       splunkInstance('dashboard').sendEvent({
@@ -349,7 +350,7 @@ export default forwardRef(
                 </Text>
               </div>
               <Divider />
-              {medicalCenters.length > 0 && (
+              {showCenterSelection && (
                 <div className="flex flex-col gap-3">
                   <Text fontSize="sm" fontWeight="semiBold">
                     پول از حساب کدام مرکزدرمانی شما کسر شود؟
@@ -385,7 +386,7 @@ export default forwardRef(
                   </div>
                 </div>
               )}
-              {medicalCenters.length > 0 && <Divider />}
+              {showCenterSelection && <Divider />}
               {showAutoRenew && (
                 <>
                   <div className="flex gap-2 items-center border border-slate-200 p-2 rounded-lg">
