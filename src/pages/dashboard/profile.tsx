@@ -6,6 +6,7 @@ import classNames from '@/common/utils/classNames';
 import { Wrapper } from '@/modules/dashboard/components/wrapper';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useState } from 'react';
 import PatinetProfile from '../patient/profile';
@@ -14,6 +15,11 @@ import Loading from '@/common/components/atom/loading';
 export const AppointmentsPage = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
   const user = useUserInfoStore(state => state.info);
+  const useDrappProfile = useFeatureIsOn('hamdast::drapp-profile');
+  const doctorProfileSrc = useDrappProfile
+    ? 'https://providers.paziresh24.com/app/profile'
+    : `https://opium-dashboard.paziresh24.com/profile-page/?user_id=${user.id}`;
+
   return (
     <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
       {user.provider?.job_title === 'doctor' ? (
@@ -25,9 +31,10 @@ export const AppointmentsPage = () => {
             </div>
           )}
           <iframe
+            key={doctorProfileSrc}
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full h-full', { hidden: isAppLoading })}
-            src={`https://opium-dashboard.paziresh24.com/profile-page/?user_id=${user.id}`}
+            src={doctorProfileSrc}
           />
         </>
       ) : (
