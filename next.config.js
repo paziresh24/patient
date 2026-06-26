@@ -225,6 +225,16 @@ const nextConfig = {
         destination: '/.well-known/assetlinks.json',
         permanent: true,
       },
+      {
+        source: '/home/privacy-policy/',
+        destination: '/privacy-policy/',
+        permanent: true,
+      },
+      {
+        source: '/home/faq/',
+        destination: '/faq/',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

@@ -354,7 +354,7 @@ export const withUserMenu = [
   },
   {
     title: 'سوالات متداول',
-    link: '/home/faq/',
+    link: '/faq/',
   },
   {
     title: 'مجله سلامتی',

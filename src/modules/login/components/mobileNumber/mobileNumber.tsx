@@ -199,7 +199,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
           i18nKey="login:steps.mobileNumber.termAndprivacyPolicyNotice"
           components={[
             <a key={0} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/rules/`} target="_blank" className="text-blue-700" />,
-            <a key={1} href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/privacy-policy/`} target="_blank" className="text-blue-700" />,
+            <a key={1} href="/privacy-policy/" target="_blank" className="text-blue-700" />,
           ]}
         />
       </Text>
