@@ -10,6 +10,7 @@ import Hamdast from '@/modules/hamdast/render';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { SamanBooking } from '@/modules/samanBooking';
 import { Fragment2 } from '@/common/fragment/fragment2';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
@@ -179,7 +180,7 @@ export const Aside = (data: any) => {
               address: center.address,
               city: center.city,
               slug: center.center_type === 1 ? `/dr/${seo.slug}` : `/center/${center.slug}`,
-              description: center.description,
+              description: removeHtmlTagInString(center.description ?? '').trim(),
               phoneNumbers: center?.display_number_array,
               name: center.center_type !== 1 ? center.name : `مطب ${information?.display_name}`,
               location: center.map,
@@ -269,7 +270,7 @@ export const Aside = (data: any) => {
                       displayNumberArray: center.display_number_array,
                       slug: center.slug,
                       centerType: center.center_type == 1 ? 'office' : 'hospital',
-                      description: center.description?.trim(),
+                      description: removeHtmlTagInString(center.description ?? '').trim(),
                       userCenterId: center.user_center_id,
                       centerName: center.name,
                       children: hamdastWidgets.some(
