@@ -33,6 +33,7 @@ import PlasmicLocationSelectionScript from '.plasmic/plasmic/paziresh_24_search/
 import PlasmicRecentSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch';
 import PlasmicOnlineVisit from '.plasmic/plasmic/paziresh_24_search/PlasmicOnlineVisit';
 import PlasmicHomePageShortcuts from '.plasmic/plasmic/paziresh_24_search/PlasmicHomePageShortcuts';
+import PlasmicSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
 import { getHost, HeaderBag } from '@/common/utils/getHost';
 
 const Home = ({ fragmentComponents }: any) => {
@@ -46,6 +47,7 @@ const Home = ({ fragmentComponents }: any) => {
   const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
 
   useEffect(() => {
+    setIsOpenSuggestion(false);
     splunkInstance('homepage').sendEvent({
       group: 'home-page-load',
       type: 'home-page-load',
@@ -98,6 +100,7 @@ const Home = ({ fragmentComponents }: any) => {
         <div className="flex flex-col items-center w-full gap-3">
           <Suggestion
             showPlasmicSuggestion={!customize.partnerKey}
+            plasmicSearchComponent={PlasmicSearch}
             defaultInputValue={defaultInputValue}
             setDefaultInputValue={setDefaultInputValue}
             className={classNames('!p-0', {
