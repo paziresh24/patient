@@ -2,8 +2,6 @@ import { useIncrementPageView } from '@/common/apis/services/profile/incrementPa
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import Modal from '@/common/components/atom/modal/modal';
 import Section from '@/common/components/atom/section/section';
-import Text from '@/common/components/atom/text/text';
-import InfoIcon from '@/common/components/icons/info';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import useApplication from '@/common/hooks/useApplication';
@@ -418,15 +416,6 @@ const DoctorProfile = (props: any) => {
                 </Script>
               ))}
           <main key={information?.id} className="lg:py-10 pwa:pb-24">
-            {editable && (
-              <div className="flex items-center p-2 !mb-4 bg-slate-200 lg:mb-0 lg:rounded-md text-slate-600 space-s-1">
-                <InfoIcon className="min-w-6" />
-                <Text fontSize="sm" fontWeight="medium">
-                  پزشک گرامی؛ تغییرات شما بعد از <strong className="font-bold">2 ساعت</strong> در پروفایل نمایش داده می‌شود.
-                </Text>
-              </div>
-            )}
-
             <div className="lg:float-right lg:w-[670px] mb-3">
               <ProfileGlobalContextsProvider>
                 <Fragment2

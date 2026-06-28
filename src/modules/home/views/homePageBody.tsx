@@ -14,7 +14,7 @@ import { useSearchStore } from '@/modules/search/store/search';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { ComponentType, useEffect, useState } from 'react';
 import getConfig from 'next/config';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
@@ -27,7 +27,13 @@ const { publicRuntimeConfig } = getConfig();
 const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
 
-const HomePageBody = ({ fragmentComponents }: { fragmentComponents?: any }) => {
+const HomePageBody = ({
+  fragmentComponents,
+  plasmicSearchComponent,
+}: {
+  fragmentComponents?: any;
+  plasmicSearchComponent: ComponentType<any>;
+}) => {
   const { isMobile } = useResponsive();
   const router = useRouter();
   const { recent } = useRecentSearch();
@@ -88,6 +94,7 @@ const HomePageBody = ({ fragmentComponents }: { fragmentComponents?: any }) => {
         <div className="flex flex-col items-center w-full gap-3">
           <Suggestion
             showPlasmicSuggestion={!customize.partnerKey}
+            plasmicSearchComponent={plasmicSearchComponent}
             defaultInputValue={defaultInputValue}
             setDefaultInputValue={setDefaultInputValue}
             className={classNames('!p-0', {

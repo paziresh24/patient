@@ -9,12 +9,19 @@ import { getHost, HeaderBag } from '@/common/utils/getHost';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
-import { ReactElement } from 'react';
+import { ReactElement, useLayoutEffect } from 'react';
+import PlasmicSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
+import { useSearchStore } from '@/modules/search/store/search';
 
 const HomePageBody = dynamic(() => import('@/modules/home/views/homePageBody'));
 
 const Home = ({ fragmentComponents }: any) => {
   const showRedirectLoading = useDoctorHomeRedirectLoading();
+  const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
+
+  useLayoutEffect(() => {
+    setIsOpenSuggestion(false);
+  }, [setIsOpenSuggestion]);
 
   if (showRedirectLoading) {
     return (
@@ -24,7 +31,7 @@ const Home = ({ fragmentComponents }: any) => {
     );
   }
 
-  return <HomePageBody fragmentComponents={fragmentComponents} />;
+  return <HomePageBody fragmentComponents={fragmentComponents} plasmicSearchComponent={PlasmicSearch} />;
 };
 
 Home.getLayout = function getLayout(page: ReactElement) {
