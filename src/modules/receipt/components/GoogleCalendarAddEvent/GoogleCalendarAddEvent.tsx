@@ -24,6 +24,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
 
   const userEmail = useUserInfoStore(state => state.info?.email);
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const user_id = useUserInfoStore(state => state.info?.id?.toString());
   const { handleOpen, handleClose, modalProps } = useModal();
   const inputRef = useRef<HTMLInputElement>(null);
   const isActiveRef = useRef(true);
@@ -34,16 +35,40 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const { data: preference } = useGhandonPreference(isLogin);
   const savePreference = useSaveGhandonPreference();
 
-  const autoSyncEnabled = Boolean(preference?.auto_sync && preference.email);
-  const preferenceEmail = preference?.email?.trim() ?? '';
+  
+  const [localBackup, setLocalBackup] = useState<{ autoSync: boolean; email: string } | null>(null);
+
+ 
+  const [sessionPref, setSessionPref] = useState<{ autoSync: boolean; email: string } | null>(null);
+
+  useEffect(() => {
+    if (user_id && typeof window !== 'undefined') {
+      const storedSync = localStorage.getItem(`ghandon_auto_sync_${user_id}`);
+      const storedEmail = localStorage.getItem(`ghandon_email_${user_id}`);
+
+      if (storedSync !== null) {
+        setLocalBackup({
+          autoSync: storedSync === 'true',
+          email: storedEmail || '',
+        });
+      }
+    }
+  }, [user_id]);
+
+  const serverAutoSync = Boolean(preference?.auto_sync && preference.email);
+  const serverEmail = preference?.email?.trim() ?? '';
+
+  
+  const activeAutoSyncEnabled = sessionPref?.autoSync ?? localBackup?.autoSync ?? serverAutoSync;
+  const activePreferenceEmail = sessionPref?.email ?? localBackup?.email ?? serverEmail;
 
   const [iconStatus, setIconStatus] = useState<IconStatus>(() => {
     if (getSubmittedEmail(normalizedCenterId, normalizedBookId)) {
       return 'success';
     }
-
     return 'idle';
   });
+
   const [email, setEmail] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [autoSync, setAutoSync] = useState(false);
@@ -53,20 +78,19 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const handleModalClose = useCallback(() => {
     const savedSubmittedEmail = getSubmittedEmail(normalizedCenterId, normalizedBookId);
 
-    if (savedSubmittedEmail || autoSyncEnabled) {
-      setEmail(savedSubmittedEmail || preferenceEmail);
+    if (savedSubmittedEmail || activeAutoSyncEnabled) {
+      setEmail(savedSubmittedEmail || activePreferenceEmail);
       setSubmittedEmail(savedSubmittedEmail);
       setIsEditing(false);
-      setAutoSync(autoSyncEnabled);
-      setInitialAutoSync(autoSyncEnabled);
+      setAutoSync(activeAutoSyncEnabled);
+      setInitialAutoSync(activeAutoSyncEnabled);
     }
 
     handleClose();
-  }, [autoSyncEnabled, handleClose, normalizedBookId, normalizedCenterId, preferenceEmail]);
+  }, [activeAutoSyncEnabled, handleClose, normalizedBookId, normalizedCenterId, activePreferenceEmail]);
 
   useEffect(() => {
     isActiveRef.current = true;
-
     return () => {
       isActiveRef.current = false;
     };
@@ -84,7 +108,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   }, [normalizedBookId, normalizedCenterId]);
 
   useEffect(() => {
-    if (!autoSyncEnabled || !preferenceEmail) {
+    if (!activeAutoSyncEnabled || !activePreferenceEmail) {
       return;
     }
 
@@ -94,7 +118,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     if (getSubmittedEmail(normalizedCenterId, normalizedBookId)) {
       setIconStatus(prev => (prev === 'loading' ? prev : 'success'));
     }
-  }, [autoSyncEnabled, normalizedBookId, normalizedCenterId, preferenceEmail]);
+  }, [activeAutoSyncEnabled, normalizedBookId, normalizedCenterId, activePreferenceEmail]);
 
   useEffect(() => {
     if (!modalProps.isOpen) {
@@ -129,6 +153,8 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
 
       try {
         await apiGatewayClient.post(ADD_EVENT_API_PATH, {
+          action: 'create_event',
+          user_id: user_id,
           email: targetEmail.trim(),
           book_id: normalizedBookId,
           center_id: normalizedCenterId,
@@ -164,11 +190,11 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
         }
       }
     },
-    [normalizedBookId, normalizedCenterId],
+    [normalizedBookId, normalizedCenterId, user_id],
   );
 
   useEffect(() => {
-    if (!autoSyncEnabled || !preferenceEmail || autoSyncAttemptedRef.current) {
+    if (!activeAutoSyncEnabled || !activePreferenceEmail || autoSyncAttemptedRef.current) {
       return;
     }
 
@@ -177,8 +203,8 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     }
 
     autoSyncAttemptedRef.current = true;
-    sendToCalendar(preferenceEmail, { silent: true });
-  }, [autoSyncEnabled, normalizedBookId, normalizedCenterId, preferenceEmail, sendToCalendar]);
+    sendToCalendar(activePreferenceEmail, { silent: true });
+  }, [activeAutoSyncEnabled, normalizedBookId, normalizedCenterId, activePreferenceEmail, sendToCalendar]);
 
   const handleIconClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -191,22 +217,13 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     const savedSubmittedEmail = getSubmittedEmail(normalizedCenterId, normalizedBookId);
     setSubmittedEmail(savedSubmittedEmail);
 
-    if (savedSubmittedEmail) {
-      setEmail(savedSubmittedEmail);
-      setIsEditing(false);
-      setAutoSync(autoSyncEnabled);
-      setInitialAutoSync(autoSyncEnabled);
-    } else if (autoSyncEnabled && preferenceEmail) {
-      setEmail(preferenceEmail);
-      setIsEditing(false);
-      setAutoSync(true);
-      setInitialAutoSync(true);
-    } else {
-      setEmail(getLastUsedEmail(userEmail));
-      setIsEditing(true);
-      setAutoSync(false);
-      setInitialAutoSync(false);
-    }
+    const initialEmail = savedSubmittedEmail || activePreferenceEmail || getLastUsedEmail(userEmail);
+    setEmail(initialEmail);
+
+    setIsEditing(!savedSubmittedEmail);
+
+    setAutoSync(activeAutoSyncEnabled);
+    setInitialAutoSync(activeAutoSyncEnabled);
 
     handleOpen();
   };
@@ -226,9 +243,9 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
 
     const savedBookEmail = getSubmittedEmail(normalizedCenterId, normalizedBookId);
     const isLocked = Boolean(submittedEmail) && !isEditing;
-    const hasPreferenceChanges = autoSync !== initialAutoSync;
-    const shouldSavePreference =
-      isLogin && (hasPreferenceChanges || (autoSync && trimmedEmail !== preferenceEmail));
+
+    const hasPreferenceChanges = autoSync !== initialAutoSync || trimmedEmail !== activePreferenceEmail;
+    const shouldSavePreference = isLogin && hasPreferenceChanges;
     const shouldAddEvent = !isLocked && (!savedBookEmail || trimmedEmail !== savedBookEmail);
 
     isSubmittingRef.current = true;
@@ -238,10 +255,29 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     try {
       if (shouldSavePreference) {
         try {
-          await savePreference.mutateAsync({
+          await apiGatewayClient.post(ADD_EVENT_API_PATH, {
+            action: 'save_settings',
+            user_id: user_id,
             email: trimmedEmail,
-            auto_sync: autoSync,
           });
+
+          try {
+            await savePreference.mutateAsync({
+              email: trimmedEmail,
+              auto_sync: autoSync,
+            });
+          } catch (prefError) {
+            console.warn('Paziresh24 core preference save failed, skipping local error:', prefError);
+          }
+
+          // ذخیره ایمن در LocalStorage
+          if (user_id) {
+            localStorage.setItem(`ghandon_auto_sync_${user_id}`, String(autoSync));
+            localStorage.setItem(`ghandon_email_${user_id}`, trimmedEmail);
+          }
+
+          setSessionPref({ autoSync, email: trimmedEmail });
+          setLocalBackup({ autoSync, email: trimmedEmail });
           setInitialAutoSync(autoSync);
 
           if (autoSync && !initialAutoSync) {
@@ -255,6 +291,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
         }
       }
 
+      setIsEditing(false);
       handleClose();
 
       if (shouldAddEvent) {
@@ -288,11 +325,11 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const triggerTitle =
     iconStatus === 'loading'
       ? 'در حال ارسال دعوتنامه...'
-      : autoSyncEnabled && iconStatus === 'success'
-        ? 'نوبت‌ها به‌صورت خودکار به Google Calendar اضافه می‌شوند'
-        : iconStatus === 'success'
-          ? 'نوبت به Google Calendar اضافه شده'
-          : 'برای افزودن نوبت به Google Calendar کلیک کنید';
+      : activeAutoSyncEnabled && iconStatus === 'success'
+      ? 'نوبت‌ها به‌صورت خودکار به Google Calendar اضافه می‌شوند'
+      : iconStatus === 'success'
+      ? 'نوبت به Google Calendar اضافه شده'
+      : 'برای افزودن نوبت به Google Calendar کلیک کنید';
 
   return (
     <>
