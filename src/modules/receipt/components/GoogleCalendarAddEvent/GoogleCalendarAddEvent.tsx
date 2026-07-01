@@ -1,5 +1,4 @@
 import { useGhandonPreference, useSaveGhandonPreference } from '@/common/apis/services/ghandon/preference';
-import { apiGatewayClient } from '@/common/apis/client';
 import GoogleCalendarIcon from '@/common/components/icons/googleCalendar';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
@@ -35,10 +34,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const { data: preference } = useGhandonPreference(isLogin);
   const savePreference = useSaveGhandonPreference();
 
-  
   const [localBackup, setLocalBackup] = useState<{ autoSync: boolean; email: string } | null>(null);
-
- 
   const [sessionPref, setSessionPref] = useState<{ autoSync: boolean; email: string } | null>(null);
 
   useEffect(() => {
@@ -58,7 +54,6 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const serverAutoSync = Boolean(preference?.auto_sync && preference.email);
   const serverEmail = preference?.email?.trim() ?? '';
 
-  
   const activeAutoSyncEnabled = sessionPref?.autoSync ?? localBackup?.autoSync ?? serverAutoSync;
   const activePreferenceEmail = sessionPref?.email ?? localBackup?.email ?? serverEmail;
 
@@ -152,13 +147,27 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
       setIconStatus('loading');
 
       try {
-        await apiGatewayClient.post(ADD_EVENT_API_PATH, {
-          action: 'create_event',
-          user_id: user_id,
-          email: targetEmail.trim(),
-          book_id: normalizedBookId,
-          center_id: normalizedCenterId,
+        const response = await fetch(ADD_EVENT_API_PATH, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'create_event',
+            user_id: user_id,
+            email: targetEmail.trim(),
+            book_id: normalizedBookId,
+            center_id: normalizedCenterId,
+            headers: {
+              cookie: typeof document !== 'undefined' ? document.cookie : '',
+            },
+          }),
         });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
 
         if (!isActiveRef.current) {
           return;
@@ -174,10 +183,6 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
           toast.success('نوبت به Google Calendar اضافه شد');
         }
       } catch {
-        if (!isActiveRef.current) {
-          return;
-        }
-
         if (options?.silent) {
           autoSyncAttemptedRef.current = false;
         }
@@ -255,11 +260,25 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     try {
       if (shouldSavePreference) {
         try {
-          await apiGatewayClient.post(ADD_EVENT_API_PATH, {
-            action: 'save_settings',
-            user_id: user_id,
-            email: trimmedEmail,
+          const saveResponse = await fetch(ADD_EVENT_API_PATH, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+              action: 'save_settings',
+              user_id: user_id,
+              email: trimmedEmail,
+              headers: {
+                cookie: typeof document !== 'undefined' ? document.cookie : '',
+              },
+            }),
           });
+
+          if (!saveResponse.ok) {
+            throw new Error('Failed to save settings via fetch');
+          }
 
           try {
             await savePreference.mutateAsync({
@@ -270,7 +289,6 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
             console.warn('Paziresh24 core preference save failed, skipping local error:', prefError);
           }
 
-          // ذخیره ایمن در LocalStorage
           if (user_id) {
             localStorage.setItem(`ghandon_auto_sync_${user_id}`, String(autoSync));
             localStorage.setItem(`ghandon_email_${user_id}`, trimmedEmail);
@@ -291,12 +309,12 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
         }
       }
 
-      setIsEditing(false);
-      handleClose();
-
       if (shouldAddEvent) {
         await sendToCalendar(trimmedEmail);
       }
+
+      setIsEditing(false);
+      handleClose();
     } finally {
       isSubmittingRef.current = false;
       setIsSaving(false);
@@ -326,10 +344,10 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     iconStatus === 'loading'
       ? 'در حال ارسال دعوتنامه...'
       : activeAutoSyncEnabled && iconStatus === 'success'
-      ? 'نوبت‌ها به‌صورت خودکار به Google Calendar اضافه می‌شوند'
-      : iconStatus === 'success'
-      ? 'نوبت به Google Calendar اضافه شده'
-      : 'برای افزودن نوبت به Google Calendar کلیک کنید';
+        ? 'نوبت‌ها به‌صورت خودکار به Google Calendar اضافه می‌شوند'
+        : iconStatus === 'success'
+          ? 'نوبت به Google Calendar اضافه شده'
+          : 'برای افزودن نوبت به Google Calendar کلیک کنید';
 
   return (
     <>
