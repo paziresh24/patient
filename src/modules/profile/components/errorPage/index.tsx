@@ -1,17 +1,32 @@
 import Button from '@/common/components/atom/button';
+import Text from '@/common/components/atom/text';
 import { splunkInstance } from '@/common/services/splunk';
+import { useSearchStore } from '@/modules/search/store/search';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-const ErrorPage = ({ statusCode, refresh, message }: { message?: string; statusCode?: number; refresh: () => void }) => {
+const CENTER_SEARCH_PATH = `/s/ir/?result_type=${encodeURIComponent('فقط کلینیک‌ها و بیمارستان‌ها')}`;
+
+type ErrorPageProps = {
+  message?: string;
+  statusCode?: number;
+  refresh: () => void;
+  profileType?: 'center' | 'doctor';
+};
+
+const ErrorPage = ({ statusCode, refresh, message, profileType = 'doctor' }: ErrorPageProps) => {
   const router = useRouter();
+  const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
+  const splunkSource = profileType === 'center' ? 'center-profile' : 'doctor-profile';
 
   useEffect(() => {
-    splunkInstance('doctor-profile').sendEvent({
+    splunkInstance(splunkSource).sendEvent({
       group: 'profile_error',
       type: 'profile_error_client_side',
       event: {
         handle_error_status: statusCode,
+        profile_type: profileType,
       },
     });
   }, []);
@@ -19,13 +34,19 @@ const ErrorPage = ({ statusCode, refresh, message }: { message?: string; statusC
   const errors: { [key: number]: { status: number; title: string; message: string } } = {
     404: {
       status: 404,
-      title: 'صفحه یافت نشد',
-      message: 'متاسفیم، اما صفحه‌ای که دنبال آن هستید وجود ندارد.',
+      title: profileType === 'center' ? 'مرکز درمانی یافت نشد' : 'صفحه یافت نشد',
+      message:
+        profileType === 'center'
+          ? 'متأسفیم، مرکز درمانی که دنبال آن هستید در پذیرش۲۴ وجود ندارد یا حذف شده است.'
+          : 'متاسفیم، اما صفحه‌ای که دنبال آن هستید وجود ندارد.',
     },
     410: {
       status: 404,
-      title: 'صفحه یافت نشد',
-      message: 'متاسفیم، اما صفحه‌ای که دنبال آن هستید وجود ندارد.',
+      title: profileType === 'center' ? 'مرکز درمانی یافت نشد' : 'صفحه یافت نشد',
+      message:
+        profileType === 'center'
+          ? 'این مرکز درمانی دیگر در پذیرش۲۴ فعال نیست.'
+          : 'متاسفیم، اما صفحه‌ای که دنبال آن هستید وجود ندارد.',
     },
     500: {
       status: 500,
@@ -45,23 +66,54 @@ const ErrorPage = ({ statusCode, refresh, message }: { message?: string; statusC
   };
 
   const error: any = statusCode ? errors[statusCode ?? 500] || errors[500] : {};
+  const isNotFound = [404, 410].includes(statusCode ?? 0);
 
   return (
-    <div className="flex flex-col items-center justify-center flex-grow bg-gray-100 text-center p-6">
-      {error.status && <h1 className="text-6xl font-bold text-red-600">{error?.status}</h1>}
-      {error.title && <h2 className="text-3xl font-semibold mt-4">{error?.title}</h2>}
-      <p className="text-lg text-gray-600 mt-2">{message || error?.message}</p>
-      <div className="flex gap-3">
-        <Button className="mt-6" onClick={refresh}>
-          تلاش مجدد
-        </Button>
-        {error.status == 404 && (
-          <Button variant="secondary" className="mt-6" onClick={() => router.push('/')}>
-            بازگشت به صفحه اصلی
-          </Button>
+    <div className="flex flex-col items-center justify-center flex-grow min-h-[50vh] px-4 py-10">
+      <div className="flex flex-col items-center w-full max-w-lg p-8 text-center bg-white shadow-card rounded-2xl space-y-4">
+        {error.status && (
+          <Text as="span" className="text-6xl font-bold text-red-500 leading-none">
+            {error.status}
+          </Text>
         )}
+        {error.title && (
+          <Text as="h1" fontWeight="bold" className="text-2xl md:text-3xl">
+            {error.title}
+          </Text>
+        )}
+        <Text className="text-base text-slate-600 leading-relaxed">{message || error?.message}</Text>
+        <div className="flex flex-col w-full gap-3 pt-2 sm:flex-row sm:justify-center">
+          {!isNotFound && (
+            <Button className="w-full sm:w-auto" onClick={refresh}>
+              تلاش مجدد
+            </Button>
+          )}
+          {isNotFound && profileType === 'center' && (
+            <>
+              <Button
+                className="w-full sm:w-auto"
+                onClick={() => {
+                  setIsOpenSuggestion(true);
+                }}
+              >
+                جستجوی مراکز درمانی
+              </Button>
+              <Link href={CENTER_SEARCH_PATH} className="w-full sm:w-auto">
+                <Button variant="secondary" className="w-full">
+                  مشاهده لیست مراکز
+                </Button>
+              </Link>
+            </>
+          )}
+          {isNotFound && (
+            <Button variant="secondary" className="w-full sm:w-auto" onClick={() => router.push('/')}>
+              بازگشت به صفحه اصلی
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
 };
+
 export default ErrorPage;

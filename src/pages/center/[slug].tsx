@@ -1,8 +1,11 @@
-import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
+﻿import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slugProfile';
 import { search as searchApi } from '@/common/apis/services/search/search';
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
-import Text from '@/common/components/atom/text';
+import HospitalIcon from '@/common/components/icons/hospital';
+import LocationIcon from '@/common/components/icons/location';
+import PhoneIcon from '@/common/components/icons/phone';
+import UsersIcon from '@/common/components/icons/users';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
@@ -10,9 +13,9 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
-import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
+import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import CentersInfo from '@/modules/profile/views/centersInfo';
-import Head from '@/modules/profile/views/head';
+import { CenterHead, CenterMobileNav, CenterSectionTitle } from '@/modules/profile/views/centerHead';
 import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
@@ -28,11 +31,48 @@ import { growthbook } from '../_app';
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
+import Loading from '@/common/components/atom/loading';
+import ErrorPage from '@/modules/profile/components/errorPage';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
 
-const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) => {
+const normalizeExpertiseRoute = (path = '') => path.replace(/^\/s\//, '').replace(/\/$/, '');
+
+const getSearchNextPageParam = (lastPage: any) => {
+  const pagination = lastPage.search?.pagination;
+  if (!pagination) return undefined;
+
+  const { limit, page } = pagination;
+  const total = lastPage.search?.total ?? 0;
+
+  return limit * page < total ? { page: page + 1 } : undefined;
+};
+
+const buildCenterNotFoundProps = (context: GetServerSidePropsContext, slug: string) => {
+  context.res.statusCode = 404;
+
+  return {
+    props: sanitizeObject({
+      status: 404,
+      slug,
+      shouldFetchOnClient: false,
+      dehydratedState: dehydrate(new QueryClient()),
+    }),
+  };
+};
+
+const buildCenterSsrFallbackProps = (slug: string) => ({
+  props: sanitizeObject({
+    slug,
+    shouldFetchOnClient: true,
+    status: 200,
+    dehydratedState: dehydrate(new QueryClient()),
+  }),
+});
+
+const CenterProfile = (props: any) => {
+  const { query: { text, expertise } = {}, host, status, shouldFetchOnClient } = props;
   const { query, ...router } = useRouter();
   const share = useShare();
   const { customize } = useCustomize();
@@ -49,31 +89,28 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
 
   const [searchQuery, setSearchQuery] = useState(text ?? '');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(text ?? '');
-  useDebounce(
-    () => {
-      setDebouncedSearchTerm(searchQuery);
-      remove();
-    },
-    600,
-    [searchQuery],
+  const [selectedExpertise, setSelectedExpertise] = useState(
+    expertise ? `ir/exp-${expertise}/` : '',
   );
-  const [selectedExpertise, setSelectedExpertise] = useState(expertise ? `ir/exp-${expertise}/` : '');
 
   const profile = useSlugProfile(
     { slug },
     {
       keepPreviousData: true,
-      refetchOnMount: false,
+      enabled: !!slug,
+      refetchOnMount: shouldFetchOnClient ? 'always' : false,
     },
   );
   const profileData = profile.data?.result?.data;
+  const centerId = profileData?.id;
+
   const filters = useMemo(
     () => ({
-      center: profileData.id,
+      ...(centerId && { center: centerId }),
       result_type: 'پزشکان+بیمارستانی',
       ...(debouncedSearchTerm && { text: debouncedSearchTerm, page: 1 }),
     }),
-    [debouncedSearchTerm, profileData.id],
+    [debouncedSearchTerm, centerId],
   );
 
   const {
@@ -81,8 +118,10 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading,
-    remove,
+    isLoading: isDoctorsLoading,
+    isFetching: isDoctorsFetching,
+    isError: isDoctorsError,
+    refetch: refetchDoctors,
   } = useInfiniteQuery({
     queryKey: [
       ServerStateKeysEnum.Search,
@@ -102,35 +141,43 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
           ...filters,
         },
       }),
-    getNextPageParam: (lastPage, pages) => {
-      return lastPage.search?.pagination?.limit * lastPage.search?.pagination?.page <= lastPage.search?.total
-        ? { pages: lastPage }
-        : undefined;
-    },
-    refetchOnMount: false,
+    getNextPageParam: getSearchNextPageParam,
+    enabled: !!centerId,
   });
+
+  const isDoctorsListLoading = isDoctorsLoading || (isDoctorsFetching && !doctors?.pages?.length);
+
+  useDebounce(
+    () => {
+      setDebouncedSearchTerm(searchQuery);
+    },
+    600,
+    [searchQuery],
+  );
 
   const expertises = useSearchSuggestion(
     {
       query: '',
-      center_id: profileData.id,
+      center_id: centerId,
       return_expertise: true,
     },
     {
+      enabled: !!centerId,
       keepPreviousData: true,
     },
   );
 
   const defaultExpertise = useMemo(() => {
+    const normalizedRoute = normalizeExpertiseRoute(selectedExpertise);
     const data = expertises.data?.[0]?.items?.[0]?.sub_items
-      ?.filter((item: any) => item.url === `/s/${selectedExpertise}`)
+      ?.filter((item: any) => normalizeExpertiseRoute(item.url) === normalizedRoute)
       ?.map((expertise: any) => ({
         label: expertise.name,
-        value: expertise.name,
+        value: expertise.url,
       }))[0];
 
     return (
-      data?.label ?? {
+      data ?? {
         label: 'همه تخصص ها',
         value: '',
       }
@@ -175,10 +222,53 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     }
   }, [profileData, slug]);
 
+  if (status === 404) {
+    return <ErrorPage statusCode={404} profileType="center" refresh={() => router.reload()} />;
+  }
+
+  if (shouldFetchOnClient && profile.isLoading && !profileData) {
+    return (
+      <div className="flex flex-grow justify-center items-center min-h-[50vh]">
+        <Loading width={50} />
+      </div>
+    );
+  }
+
+  if (profile.isLoading && !profileData) {
+    return (
+      <div className="flex flex-grow justify-center items-center min-h-[50vh]">
+        <Loading width={50} />
+      </div>
+    );
+  }
+
+  if (profile.isError || !profileData) {
+    const errorStatusCode = (profile.error as any)?.response?.status ?? (profileData ? undefined : 404);
+    return (
+      <ErrorPage
+        statusCode={errorStatusCode ?? 500}
+        profileType="center"
+        refresh={() => profile.refetch()}
+      />
+    );
+  }
+
   const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین `;
-  const ducmentDescription = `آدرس مطب، شماره تلفن و اطلاعات تماس ${profileData.name}، ${
+  const documentDescription = `آدرس مطب، شماره تلفن و اطلاعات تماس ${profileData.name}، ${
     profileData.city ? `در ${profileData.city}` : ''
   } با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش24`;
+
+  const centerInfoItems = [
+    {
+      id: profileData.id,
+      address: profileData.address,
+      city: profileData.city,
+      slug: profileData.slug,
+      phoneNumbers: profileData.tell,
+      location: profileData.map,
+      description: profileData.desk,
+    },
+  ];
 
   const handleShare = () => {
     const url = `${publicRuntimeConfig.CLINIC_BASE_URL}/${slug}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
@@ -228,43 +318,21 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
   const getJsonlds = () => {
     return [
       {
-        '@context': 'http://www.schema.org',
-        '@type': 'Physician',
+        '@context': 'https://schema.org',
+        '@type': 'MedicalClinic',
         'priceRange': '$$',
         'name': profileData.name,
-        'telephone': profileData?.tell,
-        'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
+        'telephone': profileData.tell,
+        'description': profileData.biography ? removeHtmlTagInString(profileData.biography) : '',
         'image': publicRuntimeConfig.CDN_BASE_URL + profileData.image,
         'isAcceptingNewPatients': true,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
           '@type': 'PostalAddress',
-          'addressCountry': {
-            '@type': 'Country',
-            'name': 'IRN',
-          },
-          'addressLocality': profileData?.city,
-          'addressRegion': profileData?.province,
-          'streetAddress': profileData?.address,
-        },
-      },
-      {
-        '@context': 'http://www.schema.org',
-        '@type': 'Person',
-        'jobTitle': 'physician',
-        'name': profileData.name,
-        'telephone': profileData?.tell,
-        'image': publicRuntimeConfig.CDN_BASE_URL + profileData.image,
-        'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
-        'address': {
-          '@type': 'PostalAddress',
-          'addressCountry': {
-            '@type': 'Country',
-            'name': 'IRN',
-          },
-          'addressLocality': profileData?.city,
-          'addressRegion': profileData?.province,
-          'streetAddress': profileData?.address,
+          'addressCountry': 'IR',
+          'addressLocality': profileData.city,
+          'addressRegion': profileData.province,
+          'streetAddress': profileData.address,
         },
       },
     ];
@@ -274,82 +342,51 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     <>
       <Seo
         title={documentTitle}
-        description={ducmentDescription}
+        description={documentDescription}
         jsonlds={getJsonlds()}
         openGraph={{
           image: {
-            src: publicRuntimeConfig.CDN_BASE_URL + profileData?.image,
-            alt: profileData?.name,
+            src: publicRuntimeConfig.CDN_BASE_URL + profileData.image,
+            alt: profileData.name,
             type: 'image/jpg',
           },
         }}
         host={host}
       />
-      <main className="flex flex-col items-start w-full max-w-screen-xl mx-auto md:flex-row space-s-0 md:space-s-5 md:py-10">
-        <section className="flex flex-col w-full space-y-3 md:basis-7/12">
-          <Head
-            pageViewCount={profileData?.number_of_visits}
-            displayName={profileData?.name}
-            image={publicRuntimeConfig.CDN_BASE_URL + profileData?.image}
-            title={`${profileData?.group_expertises?.length} تخصص پزشکی`}
-            subTitle={`پزشک فعال: ${profileData?.doctors?.length}`}
-            serviceList={profileData?.expertises?.map((expertise: any) => expertise.alias_title)}
+      <main className="mx-auto flex w-full max-w-screen-xl flex-col items-start bg-slate-50 md:flex-row md:gap-5 md:bg-transparent md:px-0 md:py-10">
+        <section className="flex w-full flex-col space-y-3 md:basis-7/12 md:space-y-4">
+          <CenterHead
+            pageViewCount={profileData.number_of_visits}
+            displayName={profileData.name}
+            image={publicRuntimeConfig.CDN_BASE_URL + profileData.image}
+            city={profileData.city}
+            province={profileData.province}
+            expertiseCount={profileData.group_expertises?.length ?? 0}
+            activeDoctorsCount={profileData.doctors?.length ?? 0}
+            serviceList={profileData.expertises?.map((expertise: any) => expertise.alias_title)}
             toolBarItems={[
               {
                 type: 'share',
                 action: handleShare,
               },
             ]}
-            className="shadow-card md:rounded-lg"
           />
-          <nav className="md:hidden p-4 px-6 shadow-card border-t border-slate-100 sticky top-0 z-50 !mt-0 bg-white">
-            <ul className="flex justify-around">
-              <a
-                href="#doctors-list"
-                onClick={e => {
-                  e.preventDefault();
-                  scrollIntoViewWithOffset('#doctors-list', 90);
-                }}
-                title="لیست پرشکان"
-                className="text-sm font-medium"
-              >
-                لیست پزشکان
-              </a>
-              <li>
-                <a
-                  href="#phone-and-address"
-                  onClick={e => {
-                    e.preventDefault();
-                    scrollIntoViewWithOffset('#phone-and-address', 90);
-                  }}
-                  title="آدرس و تلفن"
-                  className="text-sm font-medium"
-                >
-                  آدرس و تلفن
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#about"
-                  onClick={e => {
-                    e.preventDefault();
-                    scrollIntoViewWithOffset('#about', 90);
-                  }}
-                  title="درباره مرکز"
-                  className="text-sm font-medium"
-                >
-                  درباره مرکز
-                </a>
-              </li>
-            </ul>
-          </nav>
-          <section id="doctors-list" className="flex flex-col w-full space-y-3">
-            <Text fontWeight="bold" className="px-4 md:px-0">
-              لیست پزشکان
-            </Text>
+          <CenterMobileNav
+            items={[
+              { id: 'doctors-list', label: 'لیست پزشکان', icon: <UsersIcon width={16} height={16} /> },
+              { id: 'phone-and-address', label: 'آدرس و تلفن', icon: <PhoneIcon width={16} height={16} /> },
+              ...(profileData.biography
+                ? [{ id: 'about', label: 'درباره مرکز', icon: <HospitalIcon width={16} height={16} /> }]
+                : []),
+            ]}
+          />
+          <section
+            id="doctors-list"
+            className="flex w-full flex-col space-y-3 bg-white py-4 shadow-sm md:rounded-2xl md:p-5 md:shadow-card"
+          >
+            <CenterSectionTitle title="لیست پزشکان" icon={<UsersIcon width={18} height={18} />} />
             <div className="px-4 md:p-0">
               <ListOfDoctors
-                isMainSite={isMainSite}
                 doctors={doctors}
                 expertises={
                   expertises.data?.[0]?.items?.[0]?.sub_items?.map((expertise: any) => ({
@@ -360,70 +397,47 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
                 onChangePage={page => {
                   fetchNextPage({ pageParam: { page } });
                 }}
-                hasNextPage={hasNextPage ?? true}
+                hasNextPage={!!hasNextPage}
                 showRateAndReviews={customize.showRateAndReviews}
                 expertiseListLoading={expertises.isLoading}
-                loading={isLoading}
+                expertiseListError={expertises.isError}
+                doctorsError={isDoctorsError}
+                onRetryDoctors={() => refetchDoctors()}
+                onRetryExpertises={() => expertises.refetch()}
+                loading={isDoctorsListLoading}
                 isFetchingNextPage={isFetchingNextPage}
-                onSelectExpertise={expertise => {
-                  setSelectedExpertise(expertise.replace('/s/', ''));
+                onSelectExpertise={expertiseUrl => {
+                  const normalized = normalizeExpertiseRoute(expertiseUrl);
+                  setSelectedExpertise(normalized ? `${normalized}/` : '');
                 }}
                 searchQuery={searchQuery}
                 onSearch={query => {
                   setSearchQuery(query);
                 }}
                 defaultValue={defaultExpertise}
-                center_id={profileData?.id}
               />
             </div>
           </section>
-          <section id="phone-and-address" className="flex flex-col w-full space-y-3 md:hidden">
-            <Text fontWeight="bold" className="px-4 md:px-0">
-              آدرس و تلفن تماس
-            </Text>
-            <CentersInfo
-              className="bg-white md:rounded-lg"
-              centers={[
-                {
-                  id: profileData.id,
-                  address: profileData.address,
-                  city: profileData.city,
-                  slug: profileData.slug,
-                  phoneNumbers: profileData.tell,
-                  location: profileData.map,
-                  description: profileData.desk,
-                },
-              ]}
-            />
+          <section id="phone-and-address" className="flex w-full flex-col space-y-3 bg-white py-4 shadow-sm md:hidden">
+            <CenterSectionTitle title="آدرس و تلفن تماس" icon={<LocationIcon width={18} height={18} />} />
+            <CentersInfo className="mx-4 rounded-xl border border-slate-100 bg-white md:mx-0" centers={centerInfoItems} />
           </section>
           {profileData.biography && (
-            <section id="about" className="flex flex-col w-full space-y-3">
-              <Text fontWeight="bold" className="px-4 md:px-0">
-                درباره مرکز درمانی
-              </Text>
-              <Biography content={profileData.biography} className="bg-white md:rounded-lg" />
+            <section
+              id="about"
+              className="flex w-full flex-col space-y-3 bg-white py-4 shadow-sm md:rounded-2xl md:p-5 md:shadow-card"
+            >
+              <CenterSectionTitle title="درباره مرکز درمانی" icon={<HospitalIcon width={18} height={18} />} />
+              <Biography content={profileData.biography} className="mx-4 rounded-xl border border-slate-100 bg-white md:mx-0" />
             </section>
           )}
           {customize.showSeoBoxs && <ProfileSeoBox about={about} />}
         </section>
-        <aside className="sticky flex-col hidden w-full space-y-3 top-5 md:flex md:basis-5/12">
-          <Text fontWeight="bold" className="px-4 md:px-0">
-            آدرس و تلفن تماس
-          </Text>
-          <CentersInfo
-            className="bg-white md:rounded-lg"
-            centers={[
-              {
-                id: profileData.id,
-                address: profileData.address,
-                city: profileData.city,
-                slug: profileData.slug,
-                phoneNumbers: profileData.tell,
-                location: profileData.map,
-                description: profileData.desk,
-              },
-            ]}
-          />
+        <aside className="sticky top-5 hidden w-full flex-col space-y-3 md:flex md:basis-5/12">
+          <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-card">
+            <CenterSectionTitle title="آدرس و تلفن تماس" icon={<PhoneIcon width={18} height={18} />} className="mb-4 !px-0" />
+            <CentersInfo className="!p-0" centers={centerInfoItems} />
+          </div>
         </aside>
       </main>
     </>
@@ -439,16 +453,12 @@ CenterProfile.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
-  const { slug, ...query } = context.query;
-  const host = context.req.headers?.host;
-  const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
-  const text = query?.text as string;
-  const expertise = query?.expertise as string;
+  const { slug } = context.query;
 
-  const slugFormatted = slug as string;
+  const slugFormatted = decodeURIComponent(slug as string);
   try {
     const queryClient = new QueryClient();
-    const { result, redirect } = await queryClient.fetchQuery(
+    const slugProfileResponse = await queryClient.fetchQuery(
       [
         ServerStateKeysEnum.SlugProfile,
         {
@@ -461,6 +471,8 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
         }),
     );
 
+    const { result, redirect } = slugProfileResponse ?? {};
+
     if (result?.slugInfo?.type === 'doctor') {
       return {
         redirect: {
@@ -472,9 +484,7 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
 
     if (redirect?.statusCode || result?.redirect?.statusCode) {
       if (redirect?.statusCode == 404 || result?.redirect?.statusCode == 404) {
-        return {
-          notFound: true,
-        };
+        return buildCenterNotFoundProps(context, slugFormatted);
       }
       return {
         redirect: {
@@ -484,42 +494,24 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       };
     }
 
-    const filters = {
-      center: result?.data?.id,
-      result_type: 'پزشکان+بیمارستانی',
-      ...(text && { text }),
-    };
-
-    await queryClient.fetchQuery(
-      [
-        ServerStateKeysEnum.Search,
-        {
-          route: expertise ? `ir/exp-${expertise}/` : '',
-          query: {
-            ...filters,
-            page: 1,
-          },
-        },
-      ],
-      () => searchApi({ route: expertise ? `ir/exp-${expertise}/` : '', query: { ...filters, page: 1 } }).then(data => ({ pages: [data] })),
-    );
+    if (!result?.data?.id && !redirect?.statusCode && !result?.redirect?.statusCode) {
+      return buildCenterNotFoundProps(context, slugFormatted);
+    }
 
     return {
-      props: {
+      props: sanitizeObject({
         dehydratedState: dehydrate(queryClient),
         slug: slugFormatted,
-        isMainSite,
-      },
+      }),
     };
   } catch (error) {
-    console.dir(error);
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status == 404)
-        return {
-          notFound: true,
-        };
+    console.error(error);
+    if (axios.isAxiosError(error) && error.response?.status == 404) {
+      return buildCenterNotFoundProps(context, slugFormatted);
     }
-    throw new TypeError(JSON.stringify(error));
+
+    console.warn(`SSR error for center slug: ${slugFormatted}. Falling back to client-side rendering.`);
+    return buildCenterSsrFallbackProps(slugFormatted);
   }
 });
 

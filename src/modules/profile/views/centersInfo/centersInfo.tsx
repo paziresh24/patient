@@ -1,14 +1,11 @@
-import PlasmicBookingSchedules from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingSchedules';
 import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import LocationIcon from '@/common/components/icons/location';
 import PhoneIcon from '@/common/components/icons/phone';
 import QuotesIcon from '@/common/components/icons/quotes';
-import { Fragment2 } from '@/common/fragment/fragment2';
 import classNames from '@/common/utils/classNames';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { openGoogleMap } from '@/common/utils/openGoogleMap';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import isEmpty from 'lodash/isEmpty';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -23,10 +20,10 @@ interface CentersInfoProps {
     phoneNumbers: string | string[];
     address: string;
     city: string;
-    location: {
-      lat: number;
-      lon: number;
-    };
+    location?: {
+      lat?: number;
+      lon?: number;
+    } | null;
     description?: string;
     slug: string;
   }[];
@@ -37,7 +34,6 @@ interface CentersInfoProps {
 
 export const CentersInfo = memo((props: CentersInfoProps) => {
   const { centers, className, onEventPhoneNumber, onEventAddress } = props;
-  const showSchedules = useFeatureIsOn('booking:schedules-section');
 
   const DescriptionWrapper = ({ children, length }: { children: ReactNode; length: number }) => {
     if (length >= 140) {
@@ -56,94 +52,83 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
         const description = removeHtmlTagInString(center.description ?? '').trim();
 
         return (
-        <div key={index} className="flex flex-col p-4 space-y-3 rounded-lg bg-slate-50">
-          {center.name && (
-            <div className="flex justify-between">
-              <Link href={center.slug} scroll prefetch={false}>
-                <Text fontWeight="bold">{center.name}</Text>
-              </Link>
-            </div>
-          )}
-          {(center.address || center.city) && (
-            <div className="!mt-1">
-              {center.city && (
-                <>
-                  {' '}
-                  <Text fontSize="sm" fontWeight="semiBold">
-                    {center.city}
-                  </Text>{' '}
-                  -{' '}
-                </>
-              )}
-              <Text fontSize="sm">{center.address}</Text>
-            </div>
-          )}
-          {description && (
-            <DescriptionWrapper length={description.length}>
-              <div className="flex space-s-1">
-                <QuotesIcon className="w-5 h-5 min-w-5" />
-                <Text align="justify" fontSize="sm" className="leading-6">
-                  {description}
-                </Text>
+          <div key={index} className="flex flex-col p-4 space-y-3 rounded-lg bg-slate-50">
+            {center.name && (
+              <div className="flex justify-between">
+                <Link href={center.slug} scroll prefetch={false}>
+                  <Text fontWeight="bold">{center.name}</Text>
+                </Link>
               </div>
-            </DescriptionWrapper>
-          )}
-          <div className="flex flex-col space-y-2">
-            {showSchedules && center?.userCenterId && (
-              <Fragment2
-                name="Schedules"
-                Component={PlasmicBookingSchedules}
-                args={{
-                  centerId: center.id,
-                  userCenterId: center.userCenterId,
-                  centerName: center.name,
-                }}
-              />
             )}
-            {(center.location.lat || !isEmpty(center.phoneNumbers)) && (
-              <>
-                {typeof center.phoneNumbers === 'string' && (
-                  <Button
-                    variant="secondary"
-                    icon={<PhoneIcon width={20} height={20} />}
-                    onClick={() => {
-                      onEventPhoneNumber?.(center.id);
-                      location.href = `tel:${center.phoneNumbers}`;
-                    }}
-                  >
-                    {center.phoneNumbers}
-                  </Button>
+            {(center.address || center.city) && (
+              <div className="!mt-1">
+                {center.city && (
+                  <>
+                    {' '}
+                    <Text fontSize="sm" fontWeight="semiBold">
+                      {center.city}
+                    </Text>{' '}
+                    -{' '}
+                  </>
                 )}
-                {Array.isArray(center.phoneNumbers) &&
-                  center.phoneNumbers.map(phoneNumber => (
+                <Text fontSize="sm">{center.address}</Text>
+              </div>
+            )}
+            {description && (
+              <DescriptionWrapper length={description.length}>
+                <div className="flex space-s-1">
+                  <QuotesIcon className="w-5 h-5 min-w-5" />
+                  <Text align="justify" fontSize="sm" className="leading-6">
+                    {description}
+                  </Text>
+                </div>
+              </DescriptionWrapper>
+            )}
+            <div className="flex flex-col space-y-2">
+              {(center.location?.lat || !isEmpty(center.phoneNumbers)) && (
+                <>
+                  {typeof center.phoneNumbers === 'string' && (
                     <Button
-                      key={phoneNumber}
                       variant="secondary"
                       icon={<PhoneIcon width={20} height={20} />}
                       onClick={() => {
                         onEventPhoneNumber?.(center.id);
-                        location.href = `tel:${phoneNumber}`;
+                        location.href = `tel:${center.phoneNumbers}`;
                       }}
                     >
-                      {phoneNumber}
+                      {center.phoneNumbers}
                     </Button>
-                  ))}
-                {center.location.lat && (
-                  <Button
-                    variant="secondary"
-                    icon={<LocationIcon width={20} height={20} />}
-                    onClick={() => {
-                      onEventAddress?.(center.id);
-                      openGoogleMap(center.location);
-                    }}
-                  >
-                    مشاهده در نقشه و مسیریابی
-                  </Button>
-                )}
-              </>
-            )}
+                  )}
+                  {Array.isArray(center.phoneNumbers) &&
+                    center.phoneNumbers.map(phoneNumber => (
+                      <Button
+                        key={phoneNumber}
+                        variant="secondary"
+                        icon={<PhoneIcon width={20} height={20} />}
+                        onClick={() => {
+                          onEventPhoneNumber?.(center.id);
+                          location.href = `tel:${phoneNumber}`;
+                        }}
+                      >
+                        {phoneNumber}
+                      </Button>
+                    ))}
+                  {center.location?.lat && center.location?.lon && (
+                    <Button
+                      variant="secondary"
+                      icon={<LocationIcon width={20} height={20} />}
+                      onClick={() => {
+                        onEventAddress?.(center.id);
+                        openGoogleMap(center.location as { lat: number; lon: number });
+                      }}
+                    >
+                      مشاهده در نقشه و مسیریابی
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
         );
       })}
     </div>
