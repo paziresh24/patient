@@ -7,6 +7,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { getErrorMessage } from '@/common/utils/errorHandler';
 import { normalizeDigitInput } from '@/common/utils/normalizeDigitInput';
+import { resolveSafeRedirectUrl } from '@/common/utils/safeRedirectUrl';
 import Trans from 'next-translate/Trans';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';
@@ -43,6 +44,15 @@ export const MobileNumber = (props: MobileNumberProps) => {
   const showOidcLogin = useFeatureIsOn('aaa:oidc-login-button');
   const university = useCustomize(state => state.customize?.partnerKey);
   const router = useRouter();
+
+  const getOAuthRedirectUrl = () => {
+    const fallback = `${window.location.pathname}${window.location.search}`;
+    if (!router.query?.redirect_url) {
+      return fallback;
+    }
+
+    return resolveSafeRedirectUrl(router.query.redirect_url as string, window.location.origin, '/');
+  };
 
   const toNationalNumber = (value: string) => {
     const trimmed = value.trim();
@@ -145,9 +155,7 @@ export const MobileNumber = (props: MobileNumberProps) => {
                 setOidcOauthLoading(true);
 
                 const origin = window.location.origin;
-                const redirectUrl = router.query?.redirect_url
-                  ? (router.query?.redirect_url as string)
-                  : `${window.location.pathname}${window.location.search}`;
+                const redirectUrl = getOAuthRedirectUrl();
 
                 const authServiceUrl = `https://user.paziresh24.com/auth/gov?origin=${encodeURIComponent(
                   origin,
@@ -174,10 +182,8 @@ export const MobileNumber = (props: MobileNumberProps) => {
                 setGoogleOauthLoading(true);
 
                 // ۱. مشخص کردن آدرسی که کاربر الان توش هست و آدرسی که باید بعدا برگرده
-                const origin = window.location.origin; // مثلاً https://www.paziresh24.com
-                const redirectUrl = router.query?.redirect_url
-                  ? (router.query?.redirect_url as string)
-                  : `${window.location.pathname}${window.location.search}`;
+                const origin = window.location.origin;
+                const redirectUrl = getOAuthRedirectUrl();
 
                 // ۲. ریدایرکت مستقیم به وب‌سرویس خودت (بک‌اِند کرسر امنیت و ریدایرکت به گوگل را هندل می‌کند)
                 const authServiceUrl = `https://user.paziresh24.com/auth/google?origin=${encodeURIComponent(
