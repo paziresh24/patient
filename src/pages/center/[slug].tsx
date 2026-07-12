@@ -12,12 +12,19 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import { splunkInstance } from '@/common/services/splunk';
-import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import CentersInfo from '@/modules/profile/views/centersInfo';
-import { CenterHead, CenterMobileNav, CenterSectionTitle } from '@/modules/profile/views/centerHead';
-import ListOfDoctors from '@/modules/profile/views/listOfDoctors';
+import { CenterDoctorCrawlLinks, CenterHead, CenterMobileNav, CenterSectionTitle } from '@/modules/profile/views/centerHead';
 import ProfileSeoBox from '@/modules/profile/views/seoBox';
+import {
+  buildCenterDocumentDescription,
+  buildCenterJsonLd,
+  buildCenterSeoAbout,
+  CenterCrawlDoctor,
+  getCenterCanonicalUrl,
+  mapSearchResultsToCrawlDoctors,
+  slimCenterSlugProfileResponse,
+} from '@/modules/profile/utils/centerProfileSsr';
 import { QueryClient, dehydrate, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
@@ -32,8 +39,18 @@ import { usePageView } from '@/common/apis/services/profile/pageView';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import Loading from '@/common/components/atom/loading';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import ErrorPage from '@/modules/profile/components/errorPage';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
+const ListOfDoctors = dynamic(() => import('@/modules/profile/views/listOfDoctors'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex flex-col space-y-2">
+      <Skeleton h="13rem" w="100%" rounded="lg" />
+      <Skeleton h="13rem" w="100%" rounded="lg" />
+    </div>
+  ),
+});
 
 const { publicRuntimeConfig } = config();
 
@@ -72,8 +89,10 @@ const buildCenterSsrFallbackProps = (slug: string) => ({
 });
 
 const CenterProfile = (props: any) => {
-  const { query: { text, expertise } = {}, host, status, shouldFetchOnClient } = props;
+  const { host, status, shouldFetchOnClient, crawlDoctors = [] } = props;
   const { query, ...router } = useRouter();
+  const text = (query.text as string) ?? '';
+  const expertise = (query.expertise as string) ?? '';
   const share = useShare();
   const { customize } = useCustomize();
   const slug = query.slug as string;
@@ -254,9 +273,9 @@ const CenterProfile = (props: any) => {
   }
 
   const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین `;
-  const documentDescription = `آدرس مطب، شماره تلفن و اطلاعات تماس ${profileData.name}، ${
-    profileData.city ? `در ${profileData.city}` : ''
-  } با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش24`;
+  const documentDescription = buildCenterDocumentDescription(profileData.name, profileData.city);
+  const centerCanonicalUrl = getCenterCanonicalUrl(slug, publicRuntimeConfig.CLINIC_BASE_URL);
+  const heroImageUrl = publicRuntimeConfig.CDN_BASE_URL + profileData.image;
 
   const centerInfoItems = [
     {
@@ -271,7 +290,7 @@ const CenterProfile = (props: any) => {
   ];
 
   const handleShare = () => {
-    const url = `${publicRuntimeConfig.CLINIC_BASE_URL}/${slug}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
+    const url = `${centerCanonicalUrl}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
     share({
       title: documentTitle,
       text: `${profileData.name} در پذیرش۲۴`,
@@ -279,91 +298,49 @@ const CenterProfile = (props: any) => {
     });
   };
 
-  const about = `<p>
-   این صفحه به عنوان وب سایت نوبت دهی اینترنتی
-   <strong>${profileData.name}</strong>
-   جهت مشاهده خدمات و دریافت نوبت آنلاین پزشکانی که در این مرکز
-   درمانی در حال ارائه خدمات درمانی هستند از طریق
-   <a href="/" class="font-bold">پذیرش ۲۴</a>
-   طراحی و ارائه شده است. البته ممکن است در حال حاضر رزرو نوبت برخی
-   از پزشکان فوق غیرفعال باشد که این موضوع وابسته به تصمیم مرکز در
-   ارائه نوبت گیری بوده است؛ با این وجود شما می توانید از قابلیت
-   <a href="/consult" class="font-bold">مشاوره آنلاین پذیرش۲۴</a>
-   استفاده کنید. بیش از 500 پزشک متخصص، آماده ارائه خدمات مشاوره
-   پزشکی به صورت تلفنی و متنی هستند. همچنین برای کاربری بهتر و راحت
-   تر مشاوره می توانید
-   <a href="/app" class="font-bold">اپلیکیشن پذیرش۲۴</a>
-   را دانلود و نصب کنید.
-</p>
-<p>
-   به طور معمول شما در این صفحه امکان مشاهده رزومه، آدرس مطب ،
-   شماره تلفن تماس، پیج اینستاگرام ادرس کانال تلگرام و سایر راه
-   های ارتباطی با دکتر که از ایشان در دسترس می باشد را خواهید داشت.
-</p>
-<p>
-   همچنین میتوانید در بخش نظرات، تجربه خود در ارتباط با خدمات ${profileData.name} را به اشتراک گذاشته و نظرات دیگر
-   کاربران را در مورد این مرکز و پزشکان آن بخوانید.
-</p>
-<p>
-   ما قدردان اعتماد شما به
-   <a class="font-bold" href="/">پذیرش۲۴</a>
-   به عنوان گسترده ترین ابزار الکترونیک ارتباط بین پزشک و بیمار
-   هستیم. لطفا در صورتی که اطلاعات ارائه شده در این صفحه نیاز به
-   اصلاح دارد با مراجعه به
-   <a class="font-bold" href="/home/support-form/">صفحه پشتیبانی</a>
-   و یا تذکر به پزشک و یا پرسنل مرکز درمانی این موضوع را به ما
-   اطلاع دهید.
-</p>`;
+  const about = buildCenterSeoAbout(profileData.name);
 
-  const getJsonlds = () => {
-    return [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'MedicalClinic',
-        'priceRange': '$$',
-        'name': profileData.name,
-        'telephone': profileData.tell,
-        'description': profileData.biography ? removeHtmlTagInString(profileData.biography) : '',
-        'image': publicRuntimeConfig.CDN_BASE_URL + profileData.image,
-        'isAcceptingNewPatients': true,
-        'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
-        'address': {
-          '@type': 'PostalAddress',
-          'addressCountry': 'IR',
-          'addressLocality': profileData.city,
-          'addressRegion': profileData.province,
-          'streetAddress': profileData.address,
-        },
-      },
-    ];
-  };
+  const jsonlds = buildCenterJsonLd({
+    profileData,
+    canonicalUrl: centerCanonicalUrl,
+    cdnBaseUrl: publicRuntimeConfig.CDN_BASE_URL,
+    baseUrl: publicRuntimeConfig.CLINIC_BASE_URL,
+    crawlDoctors,
+  });
 
   return (
     <>
       <Seo
         title={documentTitle}
         description={documentDescription}
-        jsonlds={getJsonlds()}
+        canonicalUrl={centerCanonicalUrl}
+        jsonlds={jsonlds}
         openGraph={{
           image: {
-            src: publicRuntimeConfig.CDN_BASE_URL + profileData.image,
+            src: heroImageUrl,
             alt: profileData.name,
             type: 'image/jpg',
           },
         }}
         host={host}
-      />
-      <main className="mx-auto flex w-full max-w-screen-xl flex-col items-start bg-slate-50 md:flex-row md:gap-5 md:bg-transparent md:px-0 md:py-10">
-        <section className="flex w-full flex-col space-y-3 md:basis-7/12 md:space-y-4">
+      >
+        <link rel="preload" as="image" href={heroImageUrl} />
+      </Seo>
+      <main className="mx-auto flex w-full max-w-screen-xl flex-col items-start bg-slate-50 md:flex-row md:gap-5 md:bg-transparent md:px-4 md:py-10 lg:px-0">
+        <section className="flex w-full min-w-0 flex-col space-y-3 md:basis-7/12 md:space-y-4">
           <CenterHead
             pageViewCount={profileData.number_of_visits}
             displayName={profileData.name}
-            image={publicRuntimeConfig.CDN_BASE_URL + profileData.image}
+            image={heroImageUrl}
             city={profileData.city}
             province={profileData.province}
-            expertiseCount={profileData.group_expertises?.length ?? 0}
-            activeDoctorsCount={profileData.doctors?.length ?? 0}
-            serviceList={profileData.expertises?.map((expertise: any) => expertise.alias_title)}
+            expertiseCount={profileData.group_expertises_count ?? profileData.group_expertises?.length ?? 0}
+            activeDoctorsCount={profileData.doctors_count ?? profileData.doctors?.length ?? 0}
+            serviceList={
+              profileData.expertise_labels ??
+              profileData.expertises?.map((expertise: any) => expertise.alias_title) ??
+              profileData.group_expertises?.map((expertise: any) => expertise.name)
+            }
             toolBarItems={[
               {
                 type: 'share',
@@ -385,6 +362,11 @@ const CenterProfile = (props: any) => {
             className="flex w-full flex-col space-y-3 bg-white py-4 shadow-sm md:rounded-2xl md:p-5 md:shadow-card"
           >
             <CenterSectionTitle title="لیست پزشکان" icon={<UsersIcon width={18} height={18} />} />
+            <CenterDoctorCrawlLinks
+              doctors={crawlDoctors}
+              visuallyHidden={!!doctors?.pages?.length}
+              className="px-4 md:mx-0 md:px-0"
+            />
             <div className="px-4 md:p-0">
               <ListOfDoctors
                 doctors={doctors}
@@ -433,7 +415,7 @@ const CenterProfile = (props: any) => {
           )}
           {customize.showSeoBoxs && <ProfileSeoBox about={about} />}
         </section>
-        <aside className="sticky top-5 hidden w-full flex-col space-y-3 md:flex md:basis-5/12">
+        <aside className="sticky top-5 hidden min-w-0 shrink-0 flex-col space-y-3 md:flex md:basis-5/12">
           <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-card">
             <CenterSectionTitle title="آدرس و تلفن تماس" icon={<PhoneIcon width={18} height={18} />} className="mb-4 !px-0" />
             <CentersInfo className="!p-0" centers={centerInfoItems} />
@@ -465,10 +447,7 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
           slug: slugFormatted,
         },
       ],
-      () =>
-        slugProfile({
-          slug: slugFormatted,
-        }),
+      async () => slimCenterSlugProfileResponse(await slugProfile({ slug: slugFormatted })),
     );
 
     const { result, redirect } = slugProfileResponse ?? {};
@@ -498,10 +477,26 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       return buildCenterNotFoundProps(context, slugFormatted);
     }
 
+    let crawlDoctors: CenterCrawlDoctor[] = [];
+    try {
+      const searchResponse = await searchApi({
+        route: '',
+        query: {
+          center: result.data.id,
+          result_type: 'پزشکان+بیمارستانی',
+          page: 1,
+        },
+      });
+      crawlDoctors = mapSearchResultsToCrawlDoctors(searchResponse?.search?.result);
+    } catch (searchError) {
+      console.warn(`Failed to prefetch crawl doctors for center: ${slugFormatted}`, searchError);
+    }
+
     return {
       props: sanitizeObject({
         dehydratedState: dehydrate(queryClient),
         slug: slugFormatted,
+        crawlDoctors,
       }),
     };
   } catch (error) {

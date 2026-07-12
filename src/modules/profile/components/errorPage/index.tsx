@@ -1,5 +1,6 @@
 import Button from '@/common/components/atom/button';
 import Text from '@/common/components/atom/text';
+import Seo from '@/common/components/layouts/seo';
 import { splunkInstance } from '@/common/services/splunk';
 import { useSearchStore } from '@/modules/search/store/search';
 import Link from 'next/link';
@@ -69,7 +70,16 @@ const ErrorPage = ({ statusCode, refresh, message, profileType = 'doctor' }: Err
   const isNotFound = [404, 410].includes(statusCode ?? 0);
 
   return (
-    <div className="flex flex-col items-center justify-center flex-grow min-h-[50vh] px-4 py-10">
+    <>
+      {isNotFound && (
+        <Seo
+          title={error.title ?? 'صفحه یافت نشد'}
+          description={message || error?.message}
+          noIndex
+          titleWithBrandName
+        />
+      )}
+      <div className="flex flex-col items-center justify-center flex-grow min-h-[50vh] px-4 py-10">
       <div className="flex flex-col items-center w-full max-w-lg p-8 text-center bg-white shadow-card rounded-2xl space-y-4">
         {error.status && (
           <Text as="span" className="text-6xl font-bold text-red-500 leading-none">
@@ -112,7 +122,8 @@ const ErrorPage = ({ statusCode, refresh, message, profileType = 'doctor' }: Err
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

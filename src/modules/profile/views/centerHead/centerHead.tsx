@@ -25,7 +25,7 @@ interface CenterHeadProps {
 }
 
 const StatCard = ({ label, value, icon }: { label: string; value: string | number; icon: ReactNode }) => (
-  <div className="flex min-w-[7.5rem] flex-1 items-center gap-2 rounded-xl border border-white/80 bg-white/90 px-3 py-2.5 shadow-sm backdrop-blur-sm">
+  <div className="inline-flex min-w-[7.5rem] shrink-0 items-center gap-2 rounded-xl border border-slate-100 bg-white px-3 py-2.5 shadow-sm">
     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">{icon}</div>
     <div className="flex flex-col">
       <Text fontSize="xs" className="text-slate-500">
@@ -54,21 +54,11 @@ export const CenterHead = ({
 
   return (
     <section className={classNames('overflow-hidden bg-white shadow-card md:rounded-2xl', className)}>
-      <div className="relative overflow-hidden bg-gradient-to-l from-primary/15 via-sky-50/90 to-white px-4 pb-5 pt-4 md:px-6 md:pb-6 md:pt-5">
-        <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-primary/12 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-12 right-4 h-32 w-32 rounded-full bg-secondary/12 blur-3xl" />
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.35]"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(148 163 184 / 0.15) 1px, transparent 0)',
-            backgroundSize: '24px 24px',
-          }}
-        />
-
+      <div className="relative bg-gradient-to-l from-primary/10 via-sky-50/80 to-white px-4 pb-5 pt-4 md:px-6 md:pb-6 md:pt-5">
         <div className="relative flex items-center justify-between gap-3">
           {toolBarItems && <ToolBar items={toolBarItems} />}
           {pageViewCount != null && pageViewCount > 0 && (
-            <div className="flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white/80 px-3 py-1.5 text-slate-600 shadow-sm">
+            <div className="flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white px-3 py-1.5 text-slate-600 shadow-sm">
               <EyeIcon width={18} height={18} />
               <Text fontSize="sm" fontWeight="medium">
                 {convertLongToCompactNumber(pageViewCount)} بازدید
@@ -107,7 +97,7 @@ export const CenterHead = ({
               </div>
             )}
 
-            <div className="mt-4 flex w-full max-w-md flex-wrap justify-center gap-2 md:max-w-none md:justify-start">
+            <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
               <StatCard label="تخصص پزشکی" value={expertiseCount} icon={<HospitalIcon width={18} height={18} />} />
               <StatCard label="پزشک فعال" value={activeDoctorsCount} icon={<UsersIcon width={18} height={18} />} />
             </div>
@@ -116,7 +106,7 @@ export const CenterHead = ({
       </div>
 
       {!!serviceList?.length && (
-        <div className="border-t border-slate-100 bg-gradient-to-b from-slate-50/80 to-white px-4 py-4 md:px-6">
+        <div className="border-t border-slate-100 bg-slate-50/70 px-4 py-4 md:px-6">
           <Text fontSize="xs" fontWeight="semiBold" className="mb-3 text-slate-500">
             تخصص‌های این مرکز
           </Text>
@@ -124,7 +114,7 @@ export const CenterHead = ({
             {serviceList.map(service => (
               <Chips
                 key={service}
-                className="min-w-fit w-max whitespace-nowrap !rounded-full border border-primary/20 !bg-white !px-3.5 !py-1.5 !text-sm !text-slate-700 shadow-sm transition-colors hover:!border-primary/40 hover:!bg-primary/5"
+                className="min-w-fit w-max whitespace-nowrap !rounded-full border border-primary/20 !bg-white !px-3.5 !py-1.5 !text-sm !text-slate-700 shadow-sm"
               >
                 {service}
               </Chips>

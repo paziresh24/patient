@@ -35,7 +35,7 @@ export const Avatar: React.FC<AvatarProps> = props => {
     <Component
       width={width}
       height={height}
-      fetchPriority="high"
+      fetchpriority="high"
       loading="eager"
       decoding="sync"
       alt={alt}
