@@ -19,8 +19,9 @@ import ProfileSeoBox from '@/modules/profile/views/seoBox';
 import {
   buildCenterDocumentDescription,
   buildCenterJsonLd,
-  buildCenterSeoAbout,
+  buildCenterSeoSectionData,
   CenterCrawlDoctor,
+  getCenterCanonicalPath,
   getCenterCanonicalUrl,
   mapSearchResultsToCrawlDoctors,
   slimCenterSlugProfileResponse,
@@ -140,6 +141,7 @@ const CenterProfile = (props: any) => {
     isLoading: isDoctorsLoading,
     isFetching: isDoctorsFetching,
     isError: isDoctorsError,
+    isFetched: isDoctorsFetched,
     refetch: refetchDoctors,
   } = useInfiniteQuery({
     queryKey: [
@@ -162,9 +164,11 @@ const CenterProfile = (props: any) => {
       }),
     getNextPageParam: getSearchNextPageParam,
     enabled: !!centerId,
+    retry: 1,
   });
 
-  const isDoctorsListLoading = isDoctorsLoading || (isDoctorsFetching && !doctors?.pages?.length);
+  const isDoctorsListLoading =
+    (isDoctorsLoading || (isDoctorsFetching && !doctors?.pages?.length)) && !isDoctorsError;
 
   useDebounce(
     () => {
@@ -183,6 +187,7 @@ const CenterProfile = (props: any) => {
     {
       enabled: !!centerId,
       keepPreviousData: true,
+      retry: 1,
     },
   );
 
@@ -274,7 +279,8 @@ const CenterProfile = (props: any) => {
 
   const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین `;
   const documentDescription = buildCenterDocumentDescription(profileData.name, profileData.city);
-  const centerCanonicalUrl = getCenterCanonicalUrl(slug, publicRuntimeConfig.CLINIC_BASE_URL);
+  const clinicBaseUrl = publicRuntimeConfig.CLINIC_BASE_URL || 'https://www.paziresh24.com';
+  const centerCanonicalUrl = getCenterCanonicalUrl(slug, clinicBaseUrl);
   const heroImageUrl = publicRuntimeConfig.CDN_BASE_URL + profileData.image;
 
   const centerInfoItems = [
@@ -290,21 +296,26 @@ const CenterProfile = (props: any) => {
   ];
 
   const handleShare = () => {
-    const url = `${centerCanonicalUrl}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
+    const shareUrl = `${window.location.origin}${getCenterCanonicalPath(slug)}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
     share({
       title: documentTitle,
       text: `${profileData.name} در پذیرش۲۴`,
-      url,
+      url: shareUrl,
     });
   };
 
-  const about = buildCenterSeoAbout(profileData.name);
+  const seoSection = buildCenterSeoSectionData({
+    name: profileData.name,
+    slug,
+    expertiseLabels: profileData.expertise_labels,
+    groupExpertises: profileData.group_expertises,
+  });
 
   const jsonlds = buildCenterJsonLd({
     profileData,
     canonicalUrl: centerCanonicalUrl,
     cdnBaseUrl: publicRuntimeConfig.CDN_BASE_URL,
-    baseUrl: publicRuntimeConfig.CLINIC_BASE_URL,
+    baseUrl: clinicBaseUrl,
     crawlDoctors,
   });
 
@@ -382,8 +393,8 @@ const CenterProfile = (props: any) => {
                 hasNextPage={!!hasNextPage}
                 showRateAndReviews={customize.showRateAndReviews}
                 expertiseListLoading={expertises.isLoading}
-                expertiseListError={expertises.isError}
-                doctorsError={isDoctorsError}
+                expertiseListError={expertises.isError && expertises.isFetched}
+                doctorsError={isDoctorsError && isDoctorsFetched}
                 onRetryDoctors={() => refetchDoctors()}
                 onRetryExpertises={() => expertises.refetch()}
                 loading={isDoctorsListLoading}
@@ -413,7 +424,14 @@ const CenterProfile = (props: any) => {
               <Biography content={profileData.biography} className="mx-4 rounded-xl border border-slate-100 bg-white md:mx-0" />
             </section>
           )}
-          {customize.showSeoBoxs && <ProfileSeoBox about={about} />}
+          {customize.showSeoBoxs && (
+            <ProfileSeoBox
+              profileType="center"
+              about={seoSection.about}
+              breadcrumbs={seoSection.breadcrumbs}
+              similarLinks={seoSection.similarLinks}
+            />
+          )}
         </section>
         <aside className="sticky top-5 hidden min-w-0 shrink-0 flex-col space-y-3 md:flex md:basis-5/12">
           <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-card">

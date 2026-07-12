@@ -23,6 +23,8 @@ export const getCenterCanonicalUrl = (slug: string, baseUrl: string) => `${baseU
 export const buildCenterDocumentDescription = (name: string, city?: string) =>
   `آدرس، شماره تلفن و اطلاعات تماس ${name}${city ? ` در ${city}` : ''} با امکان رزرو نوبت آنلاین در پذیرش۲۴`;
 
+const CENTER_SEARCH_PATH = `/s/ir/?result_type=${encodeURIComponent('فقط کلینیک‌ها و بیمارستان‌ها')}`;
+
 export const buildCenterSeoAbout = (name: string) => `<p>
    این صفحه به عنوان وب‌سایت نوبت‌دهی اینترنتی
    <strong>${name}</strong>
@@ -41,6 +43,42 @@ export const buildCenterSeoAbout = (name: string) => `<p>
    <a class="font-bold" href="/home/support-form/">صفحه پشتیبانی</a>
    با ما در ارتباط باشید.
 </p>`;
+
+export const buildCenterSeoSectionData = ({
+  name,
+  slug,
+  expertiseLabels,
+  groupExpertises,
+}: {
+  name: string;
+  slug: string;
+  expertiseLabels?: string[];
+  groupExpertises?: any[];
+}) => {
+  const similarLinks =
+    groupExpertises?.length
+      ? groupExpertises
+          .filter((item: any) => item?.name || item?.alias_title)
+          .slice(0, 20)
+          .map((item: any) => ({
+            name: item.name || item.alias_title,
+            url: item.url || `/s/ir/?text=${encodeURIComponent(item.name || item.alias_title || '')}`,
+          }))
+      : expertiseLabels?.slice(0, 20).map(label => ({
+          name: label,
+          url: `/s/ir/?text=${encodeURIComponent(label)}`,
+        })) ?? [];
+
+  return {
+    about: buildCenterSeoAbout(name),
+    breadcrumbs: [
+      { text: 'پذیرش۲۴', href: '/' },
+      { text: 'مراکز درمانی', href: CENTER_SEARCH_PATH },
+      { text: name, href: getCenterCanonicalPath(slug) },
+    ],
+    similarLinks,
+  };
+};
 
 const extractExpertiseLabels = (data: any): string[] => {
   const fromExpertises = data?.expertises?.map((item: any) => item?.alias_title).filter(Boolean) ?? [];

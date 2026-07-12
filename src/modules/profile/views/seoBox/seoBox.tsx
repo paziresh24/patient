@@ -15,10 +15,12 @@ interface ProfileSeoBoxProps {
     text: string;
     href: string;
   }[];
+  profileType?: 'center' | 'doctor';
 }
 
 export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
-  const { about, breadcrumbs, similarLinks } = props;
+  const { about, breadcrumbs, similarLinks, profileType = 'doctor' } = props;
+  const similarLinksTitle = profileType === 'center' ? 'تخصص‌های فعال در این مرکز' : 'تخصص های مرتبط';
   return (
     <section className="flex flex-col space-y-3 pwa:hidden">
       {breadcrumbs && (
@@ -31,7 +33,7 @@ export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
         <Opener openButtonText="مشاهده بیشتر" height={120} closeButtonText="مشاهده کمتر">
           {about && <Text fontSize="sm" as="div" className="leading-6" align="justify" dangerouslySetInnerHTML={{ __html: about }} />}
           {similarLinks && (
-            <Accordion title="تخصص های مرتبط" className="mt-2">
+            <Accordion title={similarLinksTitle} className="mt-2">
               <MenuList className="flex !flex-row flex-wrap gap-x-14">
                 {similarLinks.map(({ name, url }) => (
                   <MenuItem key={name} name={name} link={url} className="flex-[1_1_10rem] !justify-start">

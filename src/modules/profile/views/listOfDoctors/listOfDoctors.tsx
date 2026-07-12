@@ -120,7 +120,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
         </div>
       )}
       {expertiseListError && !expertiseListLoading && (
-        <ServiceErrorBanner message="بارگذاری فیلتر تخصص‌ها با خطا مواجه شد." onRetry={onRetryExpertises} />
+        <ServiceErrorBanner message="بارگذاری فیلتر تخصص‌ها با خطا مواجه شد. می‌توانید جستجو را ادامه دهید." onRetry={onRetryExpertises} />
       )}
       <div className="flex flex-col space-y-2">
         {loading && (
