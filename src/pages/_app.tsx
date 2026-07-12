@@ -5,11 +5,9 @@ import "../../.plasmic/plasmic/paziresh_24_search/plasmic.css"; // plasmic-impor
 import "../../.plasmic/plasmic/paziresh_24_booking/plasmic.css"; // plasmic-import: 8NbkXymcLwvMUC2yXeRrWk/projectcss
 import "../../.plasmic/plasmic/launcher/plasmic.css"; // plasmic-import: grxNYctbMek6PL66cujx3u/projectcss
 import "../../.plasmic/plasmic/hamdast_cywoc_24/plasmic.css"; // plasmic-import: fc2TT88raN5pz7nywm4q4q/projectcss
-import "../../.plasmic/plasmic/paziresh_24_profile/plasmic.css"; // plasmic-import: 7r312uiqyadpVPdnRoAggk/projectcss
 import "../../.plasmic/plasmic/ravi_r_r/plasmic.css"; // plasmic-import: qQzsBf58SqzNJX45iggq96/projectcss
 import "../../.plasmic/plasmic/hamdast_bimehnama/plasmic.css"; // plasmic-import: k6ZwKcaHfkxemp7yqC1vbY/projectcss
 import "../../.plasmic/plasmic/paziresh_24/plasmic.css"; // plasmic-import: iDYgiKJB9Yi7CUB81stQBK/projectcss
-import "../../.plasmic/plasmic/hamdast_risman/plasmic.css"; // plasmic-import: bN5uNsAhTefwW3S14VjvMG/projectcss
 import "../../.plasmic/plasmic/paziresh_24_factor/plasmic.css"; // plasmic-import: 85GFtqPAFvUkDYJxzFDEYS/projectcss
 import "../../.plasmic/plasmic/hamdast_hamyar/plasmic.css"; // plasmic-import: g8Bqu3xcbG5xgWev5sVtns/projectcss
 import "../../.plasmic/plasmic/hamdast_cheragh/plasmic.css"; // plasmic-import: 4fjEYDyHsDvAphaYRHZchB/projectcss

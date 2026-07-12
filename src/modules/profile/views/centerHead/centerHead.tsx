@@ -69,13 +69,14 @@ export const CenterHead = ({
 
         <div className="relative mt-4 flex flex-col gap-4 md:flex-row md:items-start">
           <div className="mx-auto shrink-0 md:mx-0">
-            <div className="rounded-2xl bg-white p-1.5 shadow-md ring-1 ring-slate-100">
+            <div className="rounded-full bg-gradient-to-br from-primary/15 via-white to-sky-50 p-1 shadow-lg ring-2 ring-white">
               <Avatar
-                width={96}
-                height={96}
-                className="rounded-xl border-2 border-white md:h-[108px] md:w-[108px]"
+                width={104}
+                height={104}
+                className="h-[104px] w-[104px] border-[3px] border-white shadow-md md:h-[120px] md:w-[120px]"
                 src={image}
                 alt={displayName}
+                name={displayName}
               />
             </div>
           </div>

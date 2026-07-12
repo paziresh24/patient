@@ -34,6 +34,7 @@ interface OnlineVisitWrapperProps {
   id: string;
   userCenterId: string;
   duration?: string;
+  groupExpertiseId?: number;
   waitingTime?: any;
   city: {
     slug: string;
@@ -43,10 +44,26 @@ interface OnlineVisitWrapperProps {
     slug: string;
     name: string;
   };
+  onTrackClick?: () => void;
 }
 
 export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
-  const { channelType, doctorId, price, title, fullName, userCenterId, slug, id, duration, city, expertise, waitingTime } = props;
+  const {
+    channelType,
+    doctorId,
+    price,
+    title,
+    fullName,
+    userCenterId,
+    slug,
+    id,
+    duration,
+    groupExpertiseId,
+    city,
+    expertise,
+    waitingTime,
+    onTrackClick,
+  } = props;
   const { handleOpen: handleOpenBookingModal, handleClose: handleCloseBoolingModal, modalProps: bookingModalProps } = useModal();
   const { handleOpen: handleOpenRecommendModal, modalProps: recommendModalProps } = useModal();
   const { profileEvent } = useProfileSplunkEvent();
@@ -118,6 +135,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
     );
   };
   const redirectBookingPage = () => {
+    onTrackClick?.();
     profileEvent('doctor profile press online visit book button');
     router.push({
       pathname: `/booking/${slug}/`,
@@ -135,6 +153,7 @@ export const OnlineVisitWrapper = (props: OnlineVisitWrapperProps) => {
         doctorId={doctorId}
         channels={without(channelType, 'phone')}
         duration={duration}
+        groupExpertiseId={groupExpertiseId}
         title={title}
         price={price}
         loading={freeTurn.isLoading}

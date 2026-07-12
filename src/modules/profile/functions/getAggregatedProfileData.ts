@@ -9,6 +9,7 @@ import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
+import { handleSsrError } from '@/common/utils/handleSsrError';
 import { splunkInstance } from '@/common/services/splunk';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
@@ -163,9 +164,7 @@ export async function getAggregatedProfileData(
       });
 
       if (isServer) {
-        return {
-          notFound: true,
-        };
+        return handleSsrError(404, slug);
       } else {
         // For client-side, we'll let the error propagate
         throw new Error(result.error);
@@ -183,7 +182,11 @@ export async function getAggregatedProfileData(
           props: {},
         };
       } else {
-        return location.replace(encodeURI(result.redirect.route));
+        const destination = encodeURI(result.redirect.route);
+        if (typeof window !== 'undefined') {
+          window.location.replace(destination);
+        }
+        throw new Error(`PROFILE_REDIRECT:${destination}`);
       }
     }
 

@@ -26,6 +26,7 @@ interface CentersInfoProps {
     } | null;
     description?: string;
     slug: string;
+    extra?: ReactNode;
   }[];
   className?: string;
   onEventPhoneNumber?: (centerId: string) => void;
@@ -47,12 +48,12 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
   };
 
   return (
-    <div className={classNames('p-3 flex flex-col space-y-2', className)}>
+    <div className={classNames('flex flex-col space-y-3 p-3', className)}>
       {centers.map((center, index) => {
         const description = removeHtmlTagInString(center.description ?? '').trim();
 
         return (
-          <div key={index} className="flex flex-col p-4 space-y-3 rounded-lg bg-slate-50">
+          <div key={index} className="flex flex-col space-y-3 rounded-xl border border-slate-100 bg-white p-4 shadow-sm">
             {center.name && (
               <div className="flex justify-between">
                 <Link href={center.slug} scroll prefetch={false}>
@@ -127,6 +128,7 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
                   )}
                 </>
               )}
+              {center.extra}
             </div>
           </div>
         );

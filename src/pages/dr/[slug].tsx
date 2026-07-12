@@ -18,16 +18,16 @@ import { getProfileServerSideProps } from '@/modules/profile/functions/getProfil
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
-import { Aside } from '@/modules/profile/views/aside';
+import { useAsideSections } from '@/modules/profile/views/aside';
+import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
+import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
+import useClientReady from '@/common/hooks/useClientReady';
 import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { growthbook } from '../_app';
-import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
-import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
-import { Fragment2 } from '@/common/fragment/fragment2';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -40,8 +40,8 @@ import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import Head from 'next/head';
-import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
-import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
+import DoctorProfileHead from '@/modules/profile/views/head/head';
+import ProfileHeadRateBadge from '@/modules/profile/views/rateReview/profileHeadRateBadge';
 import { useRate } from '@/common/apis/services/reviews/rate';
 
 const { publicRuntimeConfig } = config();
@@ -68,6 +68,8 @@ const DoctorProfile = (props: any) => {
   const trackedDoctorIdRef = useRef<string | null>(null);
 
   const currentSlug = initialSlug ?? query.slug;
+
+  const isClientReady = useClientReady();
 
   useEffect(() => {
     if (profileScriptsReadyRef.current) return;
@@ -178,6 +180,15 @@ const DoctorProfile = (props: any) => {
   const hamdastWidgetsQuery = useProfileHamdastWidgets(user_id, information?.id, isOwnProfile);
   const hamdastWidgets = (isOwnProfile && hamdastWidgetsQuery.data) ? hamdastWidgetsQuery.data.widgets : hamdastWidgetsFromProps;
   const hamdastWidgetsData = (isOwnProfile && hamdastWidgetsQuery.data) ? hamdastWidgetsQuery.data.widgetsData : hamdastWidgetsDataFromProps;
+
+  const toolBarItems = useToolBarController({
+    slug: String(slug ?? currentSlug ?? ''),
+    displayName: information?.display_name ?? '',
+    documentTitle: information?.display_name
+      ? `${information.display_name}، اطلاعات تماس و نوبت دهی آنلاین `
+      : '',
+    editable,
+  }) as ToolBarItems;
 
   useEffect(() => {
     useFeedbackDataStore.setState({ data: feedbacks?.feedbacks ?? [] });
@@ -349,6 +360,12 @@ const DoctorProfile = (props: any) => {
     user_id,
   };
 
+  const asideSections = useAsideSections({
+    ...profileData,
+    fragmentComponents,
+    hamdast: { ga: showHamdastGa },
+  });
+
   if (!finalProps?.information?.id ? shouldFetchOnClient || isLoading : false) {
     return (
       <div className="flex flex-grow justify-center items-center">
@@ -359,11 +376,11 @@ const DoctorProfile = (props: any) => {
 
   if (isError) {
     const clientErrorStatusCode = (error as any)?.response?.status ?? 500;
-    return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} />;
+    return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} profileType="doctor" />;
   }
 
   if ([404, 500, 504, 410].includes(status) && !shouldFetchOnClient) {
-    return <ErrorPage statusCode={status} refresh={refetch} />;
+    return <ErrorPage statusCode={status} refresh={refetch} profileType="doctor" />;
   }
 
   return (
@@ -405,8 +422,7 @@ const DoctorProfile = (props: any) => {
         <link rel="dns-prefetch" href="//cdn.paziresh24.com" />
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
       </Head>
-      <RaviGlobalContextsProvider>
-        <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
+      <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
           {isProfileScriptsReady &&
             hamdastWidgets
               ?.filter?.((item: any) => item?.placement?.includes?.('profile_scripts_tag') && item?.script)
@@ -417,62 +433,57 @@ const DoctorProfile = (props: any) => {
               ))}
           <main key={information?.id} className="lg:py-10 pwa:pb-24">
             <div className="lg:float-right lg:w-[670px] mb-3">
-              <ProfileGlobalContextsProvider>
-                <Fragment2
-                  Component={PlasmicProfileHead}
-                  name="ProfileHead"
-                  args={{
-                    pageViewCount: profileData.history?.count_of_page_view,
-                    serviceList: profileData.expertises?.expertises?.flatMap(({ alias_title }: any) => alias_title.split('|')) ?? [],
-                    displayName: profileData.information.display_name,
-                    title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
-                    subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                    imageUrl: doctorProfileImageUrl,
-                    slug: slug,
-                    children: (
-                      <div className="flex flex-col w-full gap-2">
-                        {hamdastWidgets
-                          ?.filter((widget: any) => widget?.placement?.includes?.('head'))
-                          ?.map((widget: any) => (
-                            <Hamdast
-                              key={widget.id}
-                              id={widget.id}
-                              app={widget?.app}
-                              backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
-                              profileData={profileData}
-                              widgetData={{
-                                placement: widget?.placement,
-                                placement_metadata: widget.placements_metadata,
-                              }}
-                            />
-                          ))}
-                        <RaviGlobalContextsProvider>
-                          <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-                            <Fragment2
-                              name="RateAndCommentCount2"
-                              Component={PlasmicRateAndCommentCount}
-                              args={{
-                                ...profileData,
-                                rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
-                                rate:
-                                  customize.showRateAndReviews &&
-                                  !dontShowRateAndReviewMessage &&
-                                  (
-                                    (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                                      +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                                      +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                                    3
-                                  ).toFixed(1),
-                                hideRates: profileData.feedbacks?.details?.hide_rates,
-                              }}
-                            />
-                          </div>
-                        </RaviGlobalContextsProvider>
-                      </div>
-                    ),
-                  }}
-                />
-              </ProfileGlobalContextsProvider>
+              <DoctorProfileHead
+                image={doctorProfileImageUrl}
+                imageAlt={information?.display_name}
+                displayName={profileData.information.display_name}
+                title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
+                subTitle={`شماره نظام پزشکی: ${profileData.information?.employee_id}`}
+                serviceList={
+                  profileData.expertises?.expertises?.flatMap(({ alias_title }: any) => alias_title.split('|')) ?? []
+                }
+                pageViewCount={profileData.history?.count_of_page_view}
+                toolBarItems={isClientReady ? toolBarItems : undefined}
+                editable={editable}
+                infoEditAction={() => handleViewAs('information')}
+                servicesEditAction={() => handleViewAs('services')}
+              >
+                <div className="flex w-full flex-col gap-2 border-t border-slate-100 px-4 py-4 md:px-6">
+                  {hamdastWidgets
+                    ?.filter((widget: any) => widget?.placement?.includes?.('head'))
+                    ?.map((widget: any) => (
+                      <Hamdast
+                        key={widget.id}
+                        id={widget.id}
+                        app={widget?.app}
+                        backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                        profileData={profileData}
+                        widgetData={{
+                          placement: widget?.placement,
+                          placement_metadata: widget.placements_metadata,
+                        }}
+                      />
+                    ))}
+                  {isClientReady && customize.showRateAndReviews && !dontShowRateAndReviewMessage && (
+                    <button
+                      type="button"
+                      className="self-center cursor-pointer border-0 bg-transparent p-0"
+                      onClick={() => scrollIntoViewWithOffset('#reviews', 90)}
+                    >
+                      <ProfileHeadRateBadge
+                        rate={(
+                          (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                            +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                            +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                          3
+                        ).toFixed(1)}
+                        rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
+                        hideRates={profileData.feedbacks?.details?.hide_rates}
+                      />
+                    </button>
+                  )}
+                </div>
+              </DoctorProfileHead>
             </div>
 
             <div className="flex flex-col space-y-3 lg:float-left lg:w-[calc(100%_-_690px)]">
@@ -484,10 +495,10 @@ const DoctorProfile = (props: any) => {
 
               {/* Continue showing page even if full profile has error */}
 
-              {Aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
+              {asideSections
                 .filter(({ isShow }: any) => Boolean(isShow))
                 .map((section: any, index: number) => (
-                  <Section key={index} {...section}>
+                  <Section key={section.id ?? index} {...section}>
                     {section.children(section?.function?.())}
                   </Section>
                 ))}
@@ -509,7 +520,6 @@ const DoctorProfile = (props: any) => {
             <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
           </Modal>
         </div>
-      </RaviGlobalContextsProvider>
       {isPageLoading && (
         <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-[99999999999999999999999]">
           <Loading width={50} />

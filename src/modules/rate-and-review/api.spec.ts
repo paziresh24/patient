@@ -1,3 +1,4 @@
+import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { apiGatewayClient, raviApisClient } from '@/common/apis/client';
 import {
   deleteFeedback,
@@ -8,6 +9,10 @@ import {
   reportFeedback,
   submitLikeRate,
 } from './api';
+
+jest.mock('@/common/apis/services/reviews/getReviews', () => ({
+  getReviews: jest.fn(),
+}));
 
 jest.mock('@/common/apis/client', () => ({
   apiGatewayClient: { get: jest.fn(), post: jest.fn() },
@@ -23,6 +28,7 @@ jest.mock('@/common/utils/formatRelativeFeedbackTime', () => ({
   enrichReviewResponseWithRelativeTime: (list: unknown[]) => list,
 }));
 
+const mockedGetReviews = getReviews as jest.Mock;
 const mockedGet = raviApisClient.get as jest.Mock;
 const mockedPost = raviApisClient.post as jest.Mock;
 const mockedPatch = raviApisClient.patch as jest.Mock;
@@ -86,12 +92,10 @@ describe('rate-and-review api', () => {
     await expect(fetchRateSummary('dr-missing')).resolves.toBeNull();
   });
 
-  it('fetchReviewPage requests feedbacks with filter params', async () => {
-    mockedGet.mockResolvedValueOnce({
-      data: {
-        data: [{ id: '1', description: 'test' }],
-        meta: { offset: 0, total: 1, hasNext: false },
-      },
+  it('fetchReviewPage requests legacy ravi-api feedbacks with filter params', async () => {
+    mockedGetReviews.mockResolvedValueOnce({
+      list: [{ id: '1', description: 'test' }],
+      pageInfo: { isLastPage: true, total: 1 },
     });
 
     const page = await fetchReviewPage('dr-test', {
@@ -101,14 +105,13 @@ describe('rate-and-review api', () => {
       centerId: 'c1',
     });
 
-    expect(mockedGet).toHaveBeenCalledWith('/ravi/v1/feedbacks/doctors/dr-test', {
-      params: {
-        filter: 'negative',
-        limit: 10,
-        offset: 0,
-        user_id: undefined,
-        center_id: 'c1',
-      },
+    expect(mockedGetReviews).toHaveBeenCalledWith({
+      slug: 'dr-test',
+      sort: 'default_order',
+      offset: 0,
+      limit: 10,
+      center_id: 'c1',
+      not_recommended: true,
     });
     expect(page.list).toHaveLength(1);
     expect(page.hasMore).toBe(false);

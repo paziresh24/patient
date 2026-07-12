@@ -38,10 +38,14 @@ export type OverwriteProfileData = {
 };
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
+  const resolvedDisplayName = [overwriteData.provider?.name ?? source?.name, overwriteData.provider?.family ?? source?.family]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+
   const information = {
     id: source?.id ?? null,
     server_id: source?.server_id ?? null,
-    display_name: source?.name + ' ' + source?.family,
     name: source?.name,
     family: source?.family,
     biography: overwriteData?.biography ?? source?.biography,
@@ -52,6 +56,11 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     city_en_slug: source?.city_en_slug ?? null,
     should_recommend_other_doctors: source?.should_recommend_other_doctors ?? null,
     ...overwriteData.provider,
+    display_name:
+      overwriteData.provider?.display_name?.trim() ||
+      resolvedDisplayName ||
+      source?.display_name?.trim() ||
+      'پزشک',
     prefix: '',
   };
 

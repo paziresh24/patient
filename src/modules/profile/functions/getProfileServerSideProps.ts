@@ -14,7 +14,8 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
 
     const { slug: rawSlug } = context.query;
     if (!rawSlug) {
-      return { notFound: true };
+      context.res.statusCode = 404;
+      return handleSsrError(404, '');
     }
     const slug = decodeURIComponent(rawSlug as string);
     const university = themeConfing?.partnerKey as string;
@@ -31,8 +32,11 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
         useNewDoctorGalleryAPI: true,
       });
 
+      if (finalProps?.props?.status) {
+        context.res.statusCode = finalProps.props.status;
+      }
+
       return {
-        ...finalProps,
         props: sanitizeObject({
           ...finalProps?.props,
           status: context.res.statusCode,

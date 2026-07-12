@@ -1,13 +1,21 @@
 import React from 'react';
+import Text from '@/common/components/atom/text/text';
 
 interface Props {
   children: React.ReactNode;
 }
 
-class ErrorBoundary extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
+interface State {
+  hasError: boolean;
+}
+
+class ErrorBoundary extends React.Component<Props, State> {
+  state: State = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
   }
+
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     if (process.env.NODE_ENV === 'production') {
       // const throttledsplunkInstance = throttle(splunkInstance('error').sendEvent, 2000);
@@ -27,6 +35,16 @@ class ErrorBoundary extends React.Component<Props> {
   }
 
   render() {
+    if (this.state.hasError) {
+      return (
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-center">
+          <Text fontSize="sm" className="text-slate-600">
+            بارگذاری این بخش با خطا مواجه شد.
+          </Text>
+        </div>
+      );
+    }
+
     return this.props.children;
   }
 }
