@@ -5,6 +5,7 @@ import {
   fetchFeedbackReply,
   fetchRateSummary,
   fetchReviewPage,
+  fetchShareCommentUrl,
   reportFeedback,
   submitLikeRate,
 } from './api';
@@ -215,5 +216,18 @@ describe('rate-and-review api', () => {
   it('fetchFeedbackReply returns null when reply has no description', async () => {
     mockedGatewayGet.mockResolvedValueOnce({ data: { list: [{ Id: 'reply-2' }] } });
     await expect(fetchFeedbackReply('dr-test', 'fb-11')).resolves.toBeNull();
+  });
+
+  it('fetchShareCommentUrl requests ravi-apis share doctors endpoint', async () => {
+    mockedGet.mockResolvedValueOnce({ data: { url: 'https://l.p4z.ir/wTAEYT' } });
+
+    await expect(fetchShareCommentUrl('dr-mdehghani', '5693691')).resolves.toBe('https://l.p4z.ir/wTAEYT');
+
+    expect(mockedGet).toHaveBeenCalledWith('/ravi/v1/share/doctors/dr-mdehghani/5693691');
+  });
+
+  it('fetchShareCommentUrl returns null when url is missing', async () => {
+    mockedGet.mockResolvedValueOnce({ data: {} });
+    await expect(fetchShareCommentUrl('dr-test', '123')).resolves.toBeNull();
   });
 });
