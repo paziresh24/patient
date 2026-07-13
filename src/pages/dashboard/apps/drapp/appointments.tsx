@@ -104,7 +104,7 @@ export const Dashboard = (props: any) => {
                 <Loading />
               </div>
             )}
-            {appsData.isSuccess && user?.id && (
+            {appsData.isSuccess && user?.id && embedSrc && (
               <iframe
                 key={embedSrc}
                 ref={iframeRef}

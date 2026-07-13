@@ -22,11 +22,11 @@ export const useHamdastGrowthBookEmbedSrc = (
     embed_src: fallbackEmbedSrc ?? '',
   });
 
-  return useMemo(() => {
-    if (!userId) return null;
+  return useMemo((): string | undefined => {
+    if (!userId) return undefined;
 
     const base = growthBookConfig?.embed_src || fallbackEmbedSrc;
-    if (!base) return null;
+    if (!base) return undefined;
 
     return appendUserIdToEmbedSrc(base, userId);
   }, [growthBookConfig?.embed_src, fallbackEmbedSrc, userId]);
