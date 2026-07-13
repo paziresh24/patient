@@ -195,3 +195,12 @@ export const editFeedbackReply = async ({ replyId, description }: { replyId: str
 
 export const deleteFeedbackReply = async (replyId: string) =>
   apiGatewayClient.delete(`/ravi/v1/feedbacks/${replyId}`, { withCredentials: true });
+
+/** GET /ravi/v1/share/doctors/{slug}/{commentId} → { url } */
+export const fetchShareCommentUrl = async (doctorSlug: string, commentId: string): Promise<string | null> => {
+  const { data } = await raviApisClient.get(
+    `/ravi/v1/share/doctors/${encodeURIComponent(doctorSlug)}/${encodeURIComponent(commentId)}`,
+  );
+  const url = (data?.url ?? data?.data?.url ?? data?.link) as string | undefined;
+  return typeof url === 'string' && url ? url : null;
+};

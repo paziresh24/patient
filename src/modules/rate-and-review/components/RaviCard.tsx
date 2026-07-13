@@ -1,4 +1,5 @@
 import ShareIcon from '@/common/components/icons/share';
+import { fetchShareCommentUrl } from '../api';
 import { RaviReview } from '../types';
 import { useReviewerName } from '../composables/useReviewerName';
 import { highlightText } from '../utils/highlightText';
@@ -36,17 +37,22 @@ export const RaviCard = ({
   });
 
   const share = async () => {
-    if (typeof navigator === 'undefined') return;
-    const url = `${window.location.href.split('#')[0]}#comment-${review.id}`;
-    if (navigator.share) {
-      navigator.share({ text: 'اشتراک‌گذاری نظر', url }).catch(() => undefined);
-      return;
-    }
+    if (typeof navigator === 'undefined' || !doctorSlug) return;
     try {
+      const url = await fetchShareCommentUrl(doctorSlug, review.id);
+      if (!url) {
+        toast.error('دریافت لینک اشتراک‌گذاری ناموفق بود.');
+        return;
+      }
+      const shareText = 'این نظر رو در پذیرش24 ببین 👇';
+      if (navigator.share) {
+        await navigator.share({ text: shareText, url }).catch(() => undefined);
+        return;
+      }
       await navigator.clipboard?.writeText(url);
       toast.success('لینک نظر کپی شد.');
     } catch {
-      toast.error('کپی لینک ناموفق بود.');
+      toast.error('اشتراک‌گذاری ناموفق بود.');
     }
   };
 
