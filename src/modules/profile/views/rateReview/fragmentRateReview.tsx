@@ -1,3 +1,4 @@
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import useClientReady from '@/common/hooks/useClientReady';
 import { enrichReviewResponseWithRelativeTime } from '@/common/utils/formatRelativeFeedbackTime';
@@ -37,11 +38,18 @@ export const FragmentRateReview = ({ profileData }: { profileData: any }) => {
   }, [profileData?.feedbacks?.feedbacks]);
 
   if (!isClientReady) {
-    return null;
+    return (
+      <ProfileSectionCard id="reviews" title="نظرات بیماران" icon={<CommentIcon width={18} height={18} />}>
+        <div className="flex flex-col space-y-3 px-4 md:px-0">
+          <Skeleton w="100%" h="6rem" rounded="lg" />
+          <Skeleton w="100%" h="12rem" rounded="lg" />
+        </div>
+      </ProfileSectionCard>
+    );
   }
 
   return (
-    <ProfileSectionCard title="نظرات بیماران" icon={<CommentIcon width={18} height={18} />}>
+    <ProfileSectionCard id="reviews" title="نظرات بیماران" icon={<CommentIcon width={18} height={18} />}>
       <div className="flex flex-col space-y-3 px-4 md:px-0">
         {shouldShowDoctorTags ? (
           <DoctorTags

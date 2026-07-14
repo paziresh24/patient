@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
+import { DOCTOR_SEARCH_PATH } from '@/modules/profile/utils/doctorProfileSsr';
+
 const CENTER_SEARCH_PATH = `/s/ir/?result_type=${encodeURIComponent('فقط کلینیک‌ها و بیمارستان‌ها')}`;
 
 type ErrorPageProps = {
@@ -35,19 +37,19 @@ const ErrorPage = ({ statusCode, refresh, message, profileType = 'doctor' }: Err
   const errors: { [key: number]: { status: number; title: string; message: string } } = {
     404: {
       status: 404,
-      title: profileType === 'center' ? 'مرکز درمانی یافت نشد' : 'صفحه یافت نشد',
+      title: profileType === 'center' ? 'مرکز درمانی یافت نشد' : 'پزشک یافت نشد',
       message:
         profileType === 'center'
           ? 'متأسفیم، مرکز درمانی که دنبال آن هستید در پذیرش۲۴ وجود ندارد یا حذف شده است.'
-          : 'متاسفیم، اما صفحه‌ای که دنبال آن هستید وجود ندارد.',
+          : 'متأسفیم، پزشکی که دنبال آن هستید در پذیرش۲۴ وجود ندارد یا حذف شده است.',
     },
     410: {
       status: 404,
-      title: profileType === 'center' ? 'مرکز درمانی یافت نشد' : 'صفحه یافت نشد',
+      title: profileType === 'center' ? 'مرکز درمانی یافت نشد' : 'پزشک یافت نشد',
       message:
         profileType === 'center'
           ? 'این مرکز درمانی دیگر در پذیرش۲۴ فعال نیست.'
-          : 'متاسفیم، اما صفحه‌ای که دنبال آن هستید وجود ندارد.',
+          : 'این پزشک دیگر در پذیرش۲۴ فعال نیست.',
     },
     500: {
       status: 500,
@@ -97,6 +99,23 @@ const ErrorPage = ({ statusCode, refresh, message, profileType = 'doctor' }: Err
             <Button className="w-full sm:w-auto" onClick={refresh}>
               تلاش مجدد
             </Button>
+          )}
+          {isNotFound && profileType === 'doctor' && (
+            <>
+              <Button
+                className="w-full sm:w-auto"
+                onClick={() => {
+                  setIsOpenSuggestion(true);
+                }}
+              >
+                جستجوی پزشک
+              </Button>
+              <Link href={DOCTOR_SEARCH_PATH} className="w-full sm:w-auto">
+                <Button variant="secondary" className="w-full">
+                  مشاهده لیست پزشکان
+                </Button>
+              </Link>
+            </>
           )}
           {isNotFound && profileType === 'center' && (
             <>

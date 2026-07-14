@@ -97,10 +97,11 @@ export const useAsideSections = (data: any) => {
     {
       id: 'risman',
       noWrapper: true,
-      isShow: !customize.partnerKey && !!fragmentComponents?.risman && isBulk,
+      isShow: !customize?.partnerKey && !!fragmentComponents?.risman && isBulk,
       children: () => <RismanCard data={fragmentComponents?.risman} slug={seo.slug} />,
     },
     {
+      id: 'hamdast-services',
       isShow: !customize?.partnerKey,
       noWrapper: true,
       children: () =>
@@ -122,13 +123,14 @@ export const useAsideSections = (data: any) => {
     },
     // Rcommend
     {
+      id: 'recommend',
       isShow: information?.should_recommend_other_doctors && centers?.[0] && expertises?.expertises?.[0],
       function: () => {
         return {
           doctorId: information.id,
           city: { name: centers?.[0]?.city, en_slug: information.city_en_slug },
           groupExpertise: expertises?.group_expertises?.[0],
-          expertises: expertises.expertises,
+          expertises: expertises?.expertises ?? [],
           clickRecommendEvent: (doctor: any, elementName?: string, elementContent?: string) => {
             splunkInstance('doctor-profile').sendEvent({
               group: 'recommend',
@@ -139,7 +141,7 @@ export const useAsideSections = (data: any) => {
                   user_agent: window.navigator.userAgent,
                   page_url: window.location.pathname,
                   referrer: document.referrer,
-                  group_expertises: expertises.group_expertises?.[0]?.name ?? 'سایر',
+                  group_expertises: expertises?.group_expertises?.[0]?.name ?? 'سایر',
                   doctor_name: information.display_name,
                   centers_types: centers.map((center: any) => center.center_type_name),
                   server_id: information.server_id,
@@ -159,9 +161,9 @@ export const useAsideSections = (data: any) => {
     {
       id: 'reviews',
       noWrapper: true,
-      isShow: customize.showRateAndReviews && fragmentComponents?.raviComponentTopOrderProfile,
+      isShow: customize.showRateAndReviews,
       children: () => (
-        <div className="md:hidden flex flex-col gap-y-3">
+        <div className="flex flex-col gap-y-3 md:hidden">
           <FragmentRateReview profileData={profileData} />
         </div>
       ),
@@ -175,45 +177,60 @@ export const useAsideSections = (data: any) => {
         const inPersonCenters = centers.filter((center: any) => center.id !== CENTERS.CONSULT);
 
         return {
-          centers: inPersonCenters.map((center: any) => ({
-            id: center.id,
-            userCenterId: center.user_center_id,
-            address: center.address,
-            city: center.city,
-            slug: center.center_type === 1 ? `/dr/${seo.slug}` : `/center/${center.slug}`,
-            description: removeHtmlTagInString(center.description ?? '').trim(),
-            phoneNumbers: center?.display_number_array,
-            name: center.center_type !== 1 ? center.name : `مطب ${information?.display_name}`,
-            location: center.map,
-            extra: hamdastWidgets?.some?.(
-              (widget: any) =>
-                widget?.placement?.includes?.('center_info') &&
-                widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
-            ) ? (
-              <div className="flex w-full flex-col gap-2 border-t border-slate-100 pt-3">
-                {hamdastWidgets
-                  ?.filter(
-                    (widget: any) =>
-                      widget?.placement?.includes?.('center_info') &&
-                      widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
-                  )
-                  ?.map((widget: any) => (
-                    <Hamdast
-                      key={widget.id}
-                      id={widget.id}
-                      app={widget?.app}
-                      backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
-                      profileData={profileData}
-                      widgetData={{
-                        placement: widget?.placement,
-                        placement_metadata: widget.placements_metadata,
-                        center_id: center.id,
-                      }}
-                    />
-                  ))}
-              </div>
-            ) : undefined,
-          })),
+          centers: inPersonCenters.map((center: any) => {
+            const resolveUserCenterId = () => {
+              const candidates = [
+                center.user_center_id,
+                ...(center.services ?? []).map((service: { user_center_id?: string | number }) => service.user_center_id),
+              ];
+              return candidates.find(value => {
+                if (value === null || value === undefined) return false;
+                const normalized = String(value).trim();
+                return Boolean(normalized) && normalized !== '-1' && normalized !== '0';
+              });
+            };
+
+            return {
+              id: center.id,
+              userCenterId: resolveUserCenterId(),
+              address: center.address,
+              city: center.city,
+              slug: center.center_type === 1 ? `/dr/${seo.slug}` : `/center/${center.slug}`,
+              description: removeHtmlTagInString(center.description ?? '').trim(),
+              phoneNumbers: center?.display_number_array,
+              name: center.center_type !== 1 ? center.name : `مطب ${information?.display_name}`,
+              location: center.map,
+              services: center.services,
+              extra: hamdastWidgets?.some?.(
+                (widget: any) =>
+                  widget?.placement?.includes?.('center_info') &&
+                  widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+              ) ? (
+                <div className="flex w-full flex-col gap-2 border-t border-slate-100 pt-3">
+                  {hamdastWidgets
+                    ?.filter(
+                      (widget: any) =>
+                        widget?.placement?.includes?.('center_info') &&
+                        widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+                    )
+                    ?.map((widget: any) => (
+                      <Hamdast
+                        key={widget.id}
+                        id={widget.id}
+                        app={widget?.app}
+                        backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                        profileData={profileData}
+                        widgetData={{
+                          placement: widget?.placement,
+                          placement_metadata: widget.placements_metadata,
+                          center_id: center.id,
+                        }}
+                      />
+                    ))}
+                </div>
+              ) : undefined,
+            };
+          }),
           onEventPhoneNumber: (centerId: any) => {
             const center = centers.find((center: any) => center.id === centerId);
             const doctorMeta = getDoctorExpertiseMeta(expertises);
@@ -290,6 +307,7 @@ export const useAsideSections = (data: any) => {
       ),
     },
     {
+      id: 'hamdast-sidebar',
       isShow: !customize?.partnerKey,
       noWrapper: true,
       children: () =>

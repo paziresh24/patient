@@ -10,6 +10,7 @@ import isEmpty from 'lodash/isEmpty';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { ReactNode, memo } from 'react';
+import CenterWorkHours from './centerWorkHours';
 const Opener = dynamic(() => import('@/common/components/atom/opener/opener'));
 
 interface CentersInfoProps {
@@ -26,6 +27,12 @@ interface CentersInfoProps {
     } | null;
     description?: string;
     slug: string;
+    services?: Array<{
+      id?: string;
+      title?: string;
+      alias_title?: string;
+      hours_of_work?: any[] | null;
+    }>;
     extra?: ReactNode;
   }[];
   className?: string;
@@ -86,6 +93,12 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
               </DescriptionWrapper>
             )}
             <div className="flex flex-col space-y-2">
+              <CenterWorkHours
+                centerId={center.id}
+                userCenterId={center.userCenterId}
+                centerName={center.name}
+                fallbackServices={center.services}
+              />
               {(center.location?.lat || !isEmpty(center.phoneNumbers)) && (
                 <>
                   {typeof center.phoneNumbers === 'string' && (

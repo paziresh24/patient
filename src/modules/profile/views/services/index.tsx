@@ -56,9 +56,14 @@ export const Services = ({
   dontShowDeactiveBox?: boolean;
 }) => {
   const router = useRouter();
-  const [servicesRef, inViewServices] = useInView({
-    initialInView: true,
+  const { isMobile } = useResponsive();
+  const isWebView = useWebView();
+  const { ref: servicesRef, inView: inViewServices, entry: servicesEntry } = useInView({
+    rootMargin: '-72px 0px 0px 0px',
+    threshold: 0,
+    skip: !isMobile,
   });
+  const showStickyBookingBar = Boolean(servicesEntry) && !inViewServices;
 
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
@@ -67,8 +72,6 @@ export const Services = ({
     { user_id: doctor.user_id, center_id: centers.map(center => center.id), slug: slug },
     { enabled: !!useAvailabilityStatusApi },
   );
-  const { isMobile } = useResponsive();
-  const isWebView = useWebView();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
   const customize = useCustomize(state => state.customize);
@@ -309,8 +312,9 @@ export const Services = ({
         )}
       </div>
 
-      {isMobile && !inViewServices && (hasOnlineVisit || hasPresence) && (
+      {isMobile && showStickyBookingBar && (hasOnlineVisit || hasPresence) && (
         <MobileBookingBar
+          visible
           displayName={doctor.display_name}
           hasOnlineVisit={hasOnlineVisit}
           hasPresence={hasPresence}

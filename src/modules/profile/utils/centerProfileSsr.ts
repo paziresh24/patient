@@ -91,21 +91,27 @@ const extractExpertiseLabels = (data: any): string[] => {
 };
 
 export const extractCenterOpeningHours = (services: any[] | undefined) => {
-  const hoursOfWork = services?.[0]?.hours_of_work;
-  if (!Array.isArray(hoursOfWork) || !hoursOfWork.length) return undefined;
+  if (!Array.isArray(services) || !services.length) return undefined;
 
   const hoursByDay: Record<string, { opens: string; closes: string }[]> = {};
 
-  hoursOfWork.forEach((hour: any) => {
-    const dayName = DAY_OF_WEEK_MAP[hour.day];
-    if (!dayName) return;
+  services.forEach((service: any) => {
+    const hoursOfWork = service?.hours_of_work;
+    if (!Array.isArray(hoursOfWork) || !hoursOfWork.length) return;
 
-    const opens = hour.from?.substring(0, 5) || '09:00';
-    const closes = hour.to?.substring(0, 5) || '18:00';
+    hoursOfWork.forEach((hour: any) => {
+      const dayName = DAY_OF_WEEK_MAP[hour.day];
+      if (!dayName) return;
 
-    hoursByDay[dayName] ??= [];
-    hoursByDay[dayName].push({ opens, closes });
+      const opens = hour.from?.substring(0, 5) || '09:00';
+      const closes = hour.to?.substring(0, 5) || '18:00';
+
+      hoursByDay[dayName] ??= [];
+      hoursByDay[dayName].push({ opens, closes });
+    });
   });
+
+  if (!Object.keys(hoursByDay).length) return undefined;
 
   return Object.entries(hoursByDay).map(([dayOfWeek, hours]) => ({
     '@type': 'OpeningHoursSpecification',

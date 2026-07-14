@@ -173,21 +173,24 @@ export async function getAggregatedProfileData(
 
     // Handle redirects from slug validation service
     if ('redirect' in result) {
+      const destination = encodeURI(result.redirect.route);
       if (isServer) {
         return {
           redirect: {
             statusCode: result.redirect.statusCode,
-            destination: encodeURI(result.redirect.route),
+            destination,
           },
           props: {},
         };
-      } else {
-        const destination = encodeURI(result.redirect.route);
-        if (typeof window !== 'undefined') {
-          window.location.replace(destination);
-        }
-        throw new Error(`PROFILE_REDIRECT:${destination}`);
       }
+
+      return {
+        redirect: {
+          statusCode: result.redirect.statusCode,
+          destination,
+        },
+        props: {},
+      };
     }
 
     // Valid slug response - use the validated slug
@@ -565,8 +568,6 @@ export async function getAggregatedProfileData(
       ),
       slug: validatedSlug,
       fragmentComponents: {
-        // Note: Flags would need to be handled differently on the client
-        raviComponentTopOrderProfile: false, // Default value for client
         risman: rismanResult.status === 'fulfilled' ? rismanResult.value?.data : null,
       },
       hamdastWidgets: widgets,

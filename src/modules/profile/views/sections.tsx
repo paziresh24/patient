@@ -9,7 +9,6 @@ import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
-import classNames from '@/common/utils/classNames';
 import Hamdast from '@/modules/hamdast/render';
 import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
@@ -56,7 +55,6 @@ export const sections = (data: any) => {
     handleViewAs,
     seo,
     onlineVisit,
-    fragmentComponents,
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
@@ -84,6 +82,7 @@ export const sections = (data: any) => {
       children: () => (
         <ProfileSectionCard
           title="درباره پزشک"
+          id="about"
           icon={<DoctorIcon width={18} height={18} />}
           action={editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />}
         >
@@ -218,17 +217,13 @@ export const sections = (data: any) => {
         <ProfileFallback isInstall={hamdastWidgets?.some((widget: any) => widget.app == 'bimehnama')} app='bimehnama' title='بیمه‌های طرف قرارداد' editLabel="ویرایش بیمه‌های طرف قرارداد" addLabel='افزودن بیمه‌های طرف قرارداد' profileData={profileData} />
       </>)
     },
-    // Reviews
+    // Reviews (desktop — mobile renders from aside at page bottom)
     {
       id: 'reviews',
       noWrapper: true,
       isShow: customize.showRateAndReviews,
-      children: (props: any) => (
-        <div
-          className={classNames('flex flex-col gap-y-3', {
-            '!hidden md:!flex': fragmentComponents?.raviComponentTopOrderProfile,
-          })}
-        >
+      children: () => (
+        <div className="hidden flex-col gap-y-3 md:flex">
           <FragmentRateReview profileData={profileData} />
         </div>
       ),
