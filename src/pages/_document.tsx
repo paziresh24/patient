@@ -7,6 +7,7 @@ import Script from 'next/script';
 const CustomDocument: NextComponentType = (props: any) => {
   const { locale } = props.__NEXT_DATA__;
   const dir = locale === 'fa' ? 'rtl' : 'ltr';
+  ''.includes;
   return (
     <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
@@ -66,7 +67,7 @@ const CustomDocument: NextComponentType = (props: any) => {
                         type: tgt.tagName,
                         current_url: window.location.href,
                         referer: window.document.referrer
-                      }));
+                      }));referrer
                     }
                   }
                 }, true);

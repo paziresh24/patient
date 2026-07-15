@@ -4,64 +4,38 @@ import StatusIcon from '@/common/components/icons/status';
 import OnlineVisitDiscountFallback from '@/modules/bamdad/components/onlineVisitDiscountFallback';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
+import isEmpty from 'lodash/isEmpty';
+import { useRouter } from 'next/router';
+import { renderToString } from 'react-dom/server';
 import ServiceCard from '../../components/serviceCard';
-import OnlineVisitHighlights from './onlineVisitHighlights';
-import { Messenger } from './channelDetailes';
-import { humanizeServiceDuration, resolveOnlineVisitMessengers } from './resolveOnlineVisitMessengers';
-
+import ChannelDetailes, { Messenger } from './channelDetailes';
 interface OnlineVisitProps {
   doctorId: string;
   title: string;
   channels?: string[];
   price?: number;
   duration?: string;
-  groupExpertiseId?: number;
   onBook: () => void;
   loading?: boolean;
   discountPercent?: number;
   isPremium?: boolean;
   buttonText: string;
-  waitingTime?: {
-    waiting_time_title?: string;
-  };
+  waitingTime?: any;
 }
 
 type channelType = {
   [key: string]: Messenger;
 };
 
-const PSYCHIATRY_GROUP_IDS = [21, 47];
-
 export const OnlineVisit = (props: OnlineVisitProps) => {
-  const {
-    doctorId,
-    title,
-    channels,
-    price,
-    buttonText,
-    duration,
-    groupExpertiseId,
-    onBook,
-    loading,
-    discountPercent,
-    isPremium,
-    waitingTime,
-  } = props;
+  const { doctorId, title, channels, price, buttonText, duration, onBook, loading, discountPercent, isPremium, waitingTime } = props;
   const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
-  const safeCallModuleInfo = useFeatureValue<{ doctors_id?: string[]; description?: string }>('online_visit_secure_call', {});
-
-  const messengers = resolveOnlineVisitMessengers(channels, channelType);
-  const humanizedDuration = humanizeServiceDuration(duration);
-  const isPsychiatryGroup = groupExpertiseId != null && PSYCHIATRY_GROUP_IDS.includes(groupExpertiseId);
-  const showThreeDaysMessage = !isPsychiatryGroup;
-  const safeCallDescription =
-    safeCallModuleInfo?.doctors_id?.includes(doctorId) && safeCallModuleInfo?.description
-      ? safeCallModuleInfo.description
-      : undefined;
+  const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
+  const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
+  const router = useRouter();
 
   return (
     <ServiceCard
-      variant="onlineVisit"
       header={{
         title,
         icon: <StatusIcon />,
@@ -97,15 +71,16 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
         }),
       }}
       body={{
-        content: (
-          <OnlineVisitHighlights
-            messengers={messengers}
-            safeCallDescription={safeCallDescription || undefined}
-            duration={isPsychiatryGroup ? humanizedDuration : null}
-            showThreeDaysMessage={showThreeDaysMessage}
-            waitingTimeTitle={waitingTime?.waiting_time_title}
-          />
-        ),
+        description: [
+          channels?.length && channelDetailes
+            ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت آنلاین در پیام رسان:" />)
+            : '',
+          safeCallModuleInfo?.doctors_id?.includes(doctorId) && safeCallModuleInfo?.description,
+          'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
+          duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
+          !duration && 'تا <strong>۳ روز</strong> می‌توانید هر سوالی دارید از پزشک بپرسید',
+          !isEmpty(waitingTime) && `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <b>${waitingTime?.waiting_time_title} </b>`,
+        ].filter(Boolean),
       }}
       footer={{
         ...(!isPremium &&

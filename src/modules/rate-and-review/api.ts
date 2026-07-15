@@ -1,5 +1,4 @@
 import { apiGatewayClient, raviApisClient } from '@/common/apis/client';
-import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { enrichReviewResponseWithRelativeTime } from '@/common/utils/formatRelativeFeedbackTime';
 import axios from 'axios';
 import { RaviFeedbackReply, RaviRateSummary, RaviReviewPage, RaviReviewQuery } from './types';
@@ -8,6 +7,19 @@ export const isRateSummaryNotFound = (error: unknown): boolean =>
   axios.isAxiosError(error) && error.response?.data?.error?.code === 'RATE_NOT_FOUND';
 
 const PAGE_SIZE = 10;
+
+interface RaviFeedbacksResponse {
+  data?: Array<Record<string, unknown>>;
+  list?: Array<Record<string, unknown>>;
+  meta?: {
+    count?: number;
+    limit?: number;
+    offset?: number;
+    total?: number;
+    hasNext?: boolean;
+  };
+  pageInfo?: RaviReviewPage['pageInfo'];
+}
 
 export const fetchRateSummary = async (doctorSlug: string): Promise<RaviRateSummary | null> => {
   try {
@@ -33,38 +45,31 @@ export const fetchRateSummary = async (doctorSlug: string): Promise<RaviRateSumm
   }
 };
 
-/** GET /ravi/v1/feedbacks — همان API پایدار پروفایل پزشک (ravi-api). */
+/** GET /ravi/v1/feedbacks/doctors/{slug} — feedbacks webservice (filter: default | newest | negative). */
 export const fetchReviewPage = async (doctorSlug: string, query: RaviReviewQuery): Promise<RaviReviewPage> => {
-  const limit = query.limit || PAGE_SIZE;
-
-  const data = await getReviews({
-    slug: doctorSlug,
-    sort: query.filter === 'newest' ? 'created_at' : 'default_order',
-    offset: query.offset,
-    limit,
-    ...(query.userId && { user_id: query.userId }),
-    ...(query.centerId && { center_id: query.centerId }),
-    ...(query.filter === 'negative' && { not_recommended: true }),
-  });
-
-  const rawList = (data as { list?: Array<Record<string, unknown>>; data?: Array<Record<string, unknown>> })?.list
-    ?? (data as { data?: Array<Record<string, unknown>> })?.data
-    ?? [];
-  const list = enrichReviewResponseWithRelativeTime(rawList);
-  const pageInfo = (data as { pageInfo?: RaviReviewPage['pageInfo'] })?.pageInfo ?? {};
-  const hasMore =
-    pageInfo.isLastPage != null ? !pageInfo.isLastPage : list.length >= limit;
-
-  return {
-    list,
-    hasMore,
-    pageInfo: {
-      ...pageInfo,
-      page: Math.floor(query.offset / limit) + 1,
-      total: pageInfo.total,
-      isLastPage: pageInfo.isLastPage,
+  const { data } = await raviApisClient.get<RaviFeedbacksResponse>(
+    `/ravi/v1/feedbacks/doctors/${encodeURIComponent(doctorSlug)}`,
+    {
+      params: {
+        filter: query.filter,
+        limit: query.limit || PAGE_SIZE,
+        offset: query.offset,
+        user_id: query.userId,
+        center_id: query.centerId,
+      },
     },
+  );
+  const rawList = data?.data ?? data?.list ?? [];
+  const list = enrichReviewResponseWithRelativeTime(rawList);
+  const pageInfo = {
+    ...data?.pageInfo,
+    page: Math.floor((data?.meta?.offset ?? query.offset) / (query.limit || PAGE_SIZE)) + 1,
+    total: data?.meta?.total ?? data?.pageInfo?.total,
+    isLastPage: data?.meta?.hasNext != null ? !data.meta.hasNext : data?.pageInfo?.isLastPage,
   };
+  const hasMore = pageInfo.isLastPage != null ? !pageInfo.isLastPage : list.length >= (query.limit || PAGE_SIZE);
+
+  return { list, hasMore, pageInfo };
 };
 
 export { PAGE_SIZE };

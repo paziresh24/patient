@@ -1,18 +1,18 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
-import DoctorIcon from '@/common/components/icons/doctor';
-import EyeIcon from '@/common/components/icons/eye';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
+import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
+import classNames from '@/common/utils/classNames';
 import Hamdast from '@/modules/hamdast/render';
+import { Fragment2 } from '@/common/fragment/fragment2';
 import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
-import ProfileSectionCard from './profileSectionCard';
 
 const { publicRuntimeConfig } = config();
 
@@ -22,7 +22,10 @@ const Biography = dynamic(() => import('./biography'), {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
   },
 });
-const OwnPage = dynamic(() => import('./ownPage'));
+const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
+const PlasmicProfileSeo = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo'));
+const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
+const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="8rem" rounded="lg" />;
@@ -55,6 +58,7 @@ export const sections = (data: any) => {
     handleViewAs,
     seo,
     onlineVisit,
+    fragmentComponents,
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
@@ -77,33 +81,24 @@ export const sections = (data: any) => {
     // About
     {
       noWrapper: true,
+      ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
       isShow: information.biography,
       isShowFallback: !information.biography && editable,
-      children: () => (
-        <ProfileSectionCard
-          title="درباره پزشک"
-          id="about"
-          icon={<DoctorIcon width={18} height={18} />}
-          action={editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />}
-        >
-          <div className="[&_*]:text-sm [&_*]:tracking-normal [&_*]:leading-normal [&_h1]:font-bold [&_h2]:font-bold [&_p]:font-normal">
-            <Biography
-              content={information.biography}
-              className="mx-4 rounded-xl border border-slate-100 bg-white md:mx-0"
-            />
+      children: (props: any) => (
+        <ProfileGlobalContextsProvider>
+          <div className="[&_*]:text-sm [&_*]:tracking-normal [&_*]:leading-normal [&_h1]:font-bold [&_h2]:font-bold [&_p]:font-normal ">
+            <Fragment2 name="ProfileAbout" Component={PlasmicProfileAbout} args={{ ...profileData }} />
           </div>
-        </ProfileSectionCard>
+        </ProfileGlobalContextsProvider>
       ),
-      fallback: () => (
-        <ProfileSectionCard title="درباره پزشک" icon={<DoctorIcon width={18} height={18} />}>
-          <div
-            onClick={() => handleViewAs('biography')}
-            className="mx-4 flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-200 p-5 text-slate-400 transition-all hover:bg-slate-50 space-s-2 md:mx-0"
-          >
-            <AddIcon className="h-5 w-5" />
-            <Text fontWeight="medium">نوشتن بیوگرافی</Text>
-          </div>
-        </ProfileSectionCard>
+      fallback: (props: any) => (
+        <div
+          onClick={() => handleViewAs('biography')}
+          className="flex items-center justify-center p-5 mx-4 transition-all border-2 border-dashed rounded-lg cursor-pointer md:mx-0 hover:bg-slate-200/30 space-s-2 text-slate-400 border-slate-200"
+        >
+          <AddIcon className="w-5 h-5" />
+          <Text fontWeight="medium">نوشتن بیوگرافی</Text>
+        </div>
       ),
     },
     {
@@ -133,7 +128,7 @@ export const sections = (data: any) => {
     },
     // Gallery
     {
-      noWrapper: true,
+      ActionButton: editable && media?.gallery?.length > 0 && <EditButton onClick={() => handleViewAs('gallery')} />,
       isShow: customize.showGalleryProfile && media?.gallery?.length > 0,
       isShowFallback: editable,
       function: () => {
@@ -143,25 +138,28 @@ export const sections = (data: any) => {
           items: reformattedItems,
         };
       },
-      children: (props: any) => (
-        <ProfileSectionCard
-          title="تصاویر"
-          icon={<EyeIcon width={18} height={18} />}
-          action={editable && media?.gallery?.length > 0 && <EditButton onClick={() => handleViewAs('gallery')} />}
+      children: (props: any) => {
+        const items = media?.gallery;
+        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+
+        return (
+          <Fragment2
+            name="ProfileGallery"
+            Component={PlasmicProfileGallery}
+            args={{
+              gallery: reformattedItems,
+            }}
+          />
+        );
+      },
+      fallback: (props: any) => (
+        <div
+          onClick={() => handleViewAs('gallery')}
+          className="flex items-center justify-center p-5 mx-4 transition-all border-2 border-dashed rounded-lg cursor-pointer md:mx-0 hover:bg-slate-200/30 space-s-2 text-slate-400 border-slate-200"
         >
-          <Gallery items={props?.items ?? []} className="mx-4 rounded-xl border border-slate-100 bg-white md:mx-0" />
-        </ProfileSectionCard>
-      ),
-      fallback: () => (
-        <ProfileSectionCard title="تصاویر" icon={<EyeIcon width={18} height={18} />}>
-          <div
-            onClick={() => handleViewAs('gallery')}
-            className="mx-4 flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-200 p-5 text-slate-400 transition-all hover:bg-slate-50 space-s-2 md:mx-0"
-          >
-            <AddIcon className="h-5 w-5" />
-            <Text fontWeight="medium">افزودن تصویر</Text>
-          </div>
-        </ProfileSectionCard>
+          <AddIcon className="w-5 h-5" />
+          <Text fontWeight="medium">افزودن تصویر</Text>
+        </div>
       ),
     },
     // Waiting Time Statistics
@@ -169,28 +167,20 @@ export const sections = (data: any) => {
       title: 'نمودار زمان انتظار بیماران ویزیت آنلاین',
       isShow:
         customize.showWaitingTimeStatistics &&
-        (feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT)?.statistics?.length ?? 0) >
-          0,
+        feedbacks?.statistics?.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT)?.statistics?.length > 0,
       function: () => {
-        const consultStatistics = feedbacks?.statistics?.find(
-          (s: { center_id: string }) => s.center_id === CENTERS.CONSULT,
-        )?.statistics;
-
         return {
           slug: seo.slug,
-          statistics: consultStatistics ?? [],
+          statistics: feedbacks?.statistics.find((s: { center_id: string }) => s.center_id === CENTERS.CONSULT).statistics,
         };
       },
       children: (props: any) => <WaitingTimeStatistics className="p-4 bg-white md:rounded-lg" {...props} />,
     },
     // Own Page
     {
-      isShow:
-        !customize?.partnerKey &&
-        centers?.length > 0 &&
-        centers.every((center: { status: number }) => center.status === 2),
+      isShow: !customize?.partnerKey && centers?.length > 0,
       noWrapper: true,
-      children: () => <OwnPage fullname={information.display_name} />,
+      children: () => <Fragment2 name="Claim" Component={PlasmicClaim} args={{ ...profileData }} />,
     },
     {
       isShow: !customize?.partnerKey,
@@ -217,13 +207,16 @@ export const sections = (data: any) => {
         <ProfileFallback isInstall={hamdastWidgets?.some((widget: any) => widget.app == 'bimehnama')} app='bimehnama' title='بیمه‌های طرف قرارداد' editLabel="ویرایش بیمه‌های طرف قرارداد" addLabel='افزودن بیمه‌های طرف قرارداد' profileData={profileData} />
       </>)
     },
-    // Reviews (desktop — mobile renders from aside at page bottom)
+    // Reviews
     {
       id: 'reviews',
-      noWrapper: true,
       isShow: customize.showRateAndReviews,
-      children: () => (
-        <div className="hidden flex-col gap-y-3 md:flex">
+      children: (props: any) => (
+        <div
+          className={classNames('flex flex-col gap-y-3', {
+            '!hidden md:!flex': fragmentComponents?.raviComponentTopOrderProfile,
+          })}
+        >
           <FragmentRateReview profileData={profileData} />
         </div>
       ),
@@ -270,14 +263,38 @@ export const sections = (data: any) => {
           breadcrumbs: seoSectionData.breadcrumbs,
         };
       },
-      children: (props: any) => (
-        <ProfileSeoBox
-          profileType="doctor"
-          about={props?.about}
-          breadcrumbs={props?.breadcrumbs}
-          similarLinks={props?.similarLinks}
-        />
-      ),
+      children: () => {
+        const countOfPageView = convertLongToCompactNumber(history?.count_of_page_view);
+        const seoSectionData = getProfileSeoSectionData({
+          information,
+          centers,
+          expertises,
+          feedbacks,
+          history,
+          similarLinks,
+          seo,
+          countOfPageView,
+        });
+
+        return (
+          <Fragment2
+            name="ProfileSeo"
+            Component={PlasmicProfileSeo}
+            args={{
+              information,
+              feedbacks,
+              center: seoSectionData.center,
+              isOnlineVisitCenter: seoSectionData.isOnlineVisitCenter,
+              doctorExpertise: seoSectionData.doctorExpertise,
+              countOfPageView,
+              bredcrumbs: seo.breadcrumbs,
+              similarLinks,
+              expertises,
+              about: seoSectionData.about,
+            }}
+          />
+        );
+      },
     },
   ] as const;
 };

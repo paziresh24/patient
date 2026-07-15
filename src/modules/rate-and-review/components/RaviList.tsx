@@ -2,7 +2,6 @@ import Button from '@/common/components/atom/button/button';
 import { useMemo } from 'react';
 import { useRaviReviews } from '../composables/useRaviReviews';
 import { RaviCenter } from '../types';
-import { RaviReviewPage } from '../types';
 import { filterReviewsBySearch } from '../utils/filterReviews';
 import { mapRawReviewToRaviReview } from '../utils/mapReview';
 import { RaviCard } from './RaviCard';
@@ -12,16 +11,9 @@ interface RaviListProps {
   doctorUserId?: string;
   userId?: string;
   centers?: RaviCenter[];
-  initialReviewPage?: Pick<RaviReviewPage, 'list' | 'hasMore' | 'pageInfo'>;
 }
 
-export const RaviList = ({
-  doctorSlug,
-  doctorUserId,
-  userId,
-  centers = [],
-  initialReviewPage,
-}: RaviListProps) => {
+export const RaviList = ({ doctorSlug, doctorUserId, userId, centers = [] }: RaviListProps) => {
   const {
     list,
     isLoading,
@@ -39,7 +31,7 @@ export const RaviList = ({
     page,
     removeReview,
     updateReviewDescription,
-  } = useRaviReviews(doctorSlug, userId, initialReviewPage);
+  } = useRaviReviews(doctorSlug, userId);
 
   const reviews = useMemo(() => list.map(mapRawReviewToRaviReview), [list]);
   const filteredReviews = useMemo(

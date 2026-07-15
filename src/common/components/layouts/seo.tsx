@@ -41,7 +41,7 @@ export const Seo = (props: SeoProps) => {
         <Head>
           <title>{titleTemplate}</title>
           <link rel="canonical" href={`https://${host}/`} />
-          <meta name="robots" content={noIndex ? 'noindex, follow' : 'index, follow'} />
+          <meta name="robots" content={noIndex ? 'noindex' : 'index, follow'} />
         </Head>
       </>
     );
@@ -52,7 +52,7 @@ export const Seo = (props: SeoProps) => {
       <title>{titleTemplate}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={canonicalUrl ?? `https://www.paziresh24.com${getPathFromUrl(asPath)}`} />
-      <meta name="robots" content={noIndex ? 'noindex, follow' : 'index, follow'} />
+      <meta name="robots" content={noIndex ? 'noindex' : 'index, follow'} />
       <meta property="og:title" content={titleTemplate} />
       <meta property="og:description" content={description} />
       <meta property="og:site_name" content={brandName} />

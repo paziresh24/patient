@@ -4,25 +4,20 @@ import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
 import Services from './services';
 import pick from 'lodash/pick';
+import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import Hamdast from '@/modules/hamdast/render';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { SamanBooking } from '@/modules/samanBooking';
+import { Fragment2 } from '@/common/fragment/fragment2';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
-import useClientReady from '@/common/hooks/useClientReady';
-import PhoneIcon from '@/common/components/icons/phone';
-import CentersInfo from './centersInfo';
-import ProfileSectionCard from './profileSectionCard';
-import RismanCard from './risman/rismanCard';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
+const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
+const PlasmicBookingAddressesCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard'));
+const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
 
-const getDoctorExpertiseMeta = (expertises: any) => ({
-  expertise: expertises?.expertises?.[0]?.alias_title ?? 'سایر',
-  groupExpertise: expertises?.group_expertises?.[0]?.name ?? 'سایر',
-});
-
-export const useAsideSections = (data: any) => {
+export const Aside = (data: any) => {
   const {
     information,
     centers,
@@ -46,9 +41,7 @@ export const useAsideSections = (data: any) => {
     user_id,
   } = data;
 
-  const isClientReady = useClientReady();
-  const isSamanBookingFlag = useFeatureIsOn('saman-booking');
-  const isSamanBookingEnabled = isClientReady && isSamanBookingFlag;
+  const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
 
   const profileData = pick(data, [
     'information',
@@ -96,12 +89,19 @@ export const useAsideSections = (data: any) => {
     },
     {
       id: 'risman',
-      noWrapper: true,
-      isShow: !customize?.partnerKey && !!fragmentComponents?.risman && isBulk,
-      children: () => <RismanCard data={fragmentComponents?.risman} slug={seo.slug} />,
+      isShow: !customize.partnerKey && !!fragmentComponents?.risman && isBulk,
+      children: (props: any) => (
+        <Fragment2
+          name="Risman"
+          Component={PlasmicRisman}
+          args={{
+            data: fragmentComponents?.risman,
+            slug: seo.slug,
+          }}
+        />
+      ),
     },
     {
-      id: 'hamdast-services',
       isShow: !customize?.partnerKey,
       noWrapper: true,
       children: () =>
@@ -123,14 +123,13 @@ export const useAsideSections = (data: any) => {
     },
     // Rcommend
     {
-      id: 'recommend',
-      isShow: information?.should_recommend_other_doctors && centers?.[0] && expertises?.expertises?.[0],
+      isShow: information?.should_recommend_other_doctors && centers[0] && expertises?.expertises?.[0],
       function: () => {
         return {
           doctorId: information.id,
-          city: { name: centers?.[0]?.city, en_slug: information.city_en_slug },
-          groupExpertise: expertises?.group_expertises?.[0],
-          expertises: expertises?.expertises ?? [],
+          city: { name: centers[0].city, en_slug: information.city_en_slug },
+          groupExpertise: expertises.group_expertises[0],
+          expertises: expertises.expertises,
           clickRecommendEvent: (doctor: any, elementName?: string, elementContent?: string) => {
             splunkInstance('doctor-profile').sendEvent({
               group: 'recommend',
@@ -141,7 +140,7 @@ export const useAsideSections = (data: any) => {
                   user_agent: window.navigator.userAgent,
                   page_url: window.location.pathname,
                   referrer: document.referrer,
-                  group_expertises: expertises?.group_expertises?.[0]?.name ?? 'سایر',
+                  group_expertises: expertises.group_expertises?.[0]?.name ?? 'سایر',
                   doctor_name: information.display_name,
                   centers_types: centers.map((center: any) => center.center_type_name),
                   server_id: information.server_id,
@@ -160,10 +159,9 @@ export const useAsideSections = (data: any) => {
     // Reviews
     {
       id: 'reviews',
-      noWrapper: true,
-      isShow: customize.showRateAndReviews,
-      children: () => (
-        <div className="flex flex-col gap-y-3 md:hidden">
+      isShow: customize.showRateAndReviews && fragmentComponents?.raviComponentTopOrderProfile,
+      children: (props: any) => (
+        <div className="md:hidden flex flex-col gap-y-3">
           <FragmentRateReview profileData={profileData} />
         </div>
       ),
@@ -171,28 +169,14 @@ export const useAsideSections = (data: any) => {
     // Centers Info
     {
       id: 'phone-and-address',
-      noWrapper: true,
       isShow: centers?.some?.((center: any) => center.id !== CENTERS.CONSULT),
       function: () => {
-        const inPersonCenters = centers.filter((center: any) => center.id !== CENTERS.CONSULT);
-
         return {
-          centers: inPersonCenters.map((center: any) => {
-            const resolveUserCenterId = () => {
-              const candidates = [
-                center.user_center_id,
-                ...(center.services ?? []).map((service: { user_center_id?: string | number }) => service.user_center_id),
-              ];
-              return candidates.find(value => {
-                if (value === null || value === undefined) return false;
-                const normalized = String(value).trim();
-                return Boolean(normalized) && normalized !== '-1' && normalized !== '0';
-              });
-            };
-
-            return {
+          centers: centers
+            .filter((center: any) => center.id !== CENTERS.CONSULT)
+            .map((center: any) => ({
               id: center.id,
-              userCenterId: resolveUserCenterId(),
+              userCenterId: center.user_center_id,
               address: center.address,
               city: center.city,
               slug: center.center_type === 1 ? `/dr/${seo.slug}` : `/center/${center.slug}`,
@@ -200,40 +184,9 @@ export const useAsideSections = (data: any) => {
               phoneNumbers: center?.display_number_array,
               name: center.center_type !== 1 ? center.name : `مطب ${information?.display_name}`,
               location: center.map,
-              services: center.services,
-              extra: hamdastWidgets?.some?.(
-                (widget: any) =>
-                  widget?.placement?.includes?.('center_info') &&
-                  widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
-              ) ? (
-                <div className="flex w-full flex-col gap-2 border-t border-slate-100 pt-3">
-                  {hamdastWidgets
-                    ?.filter(
-                      (widget: any) =>
-                        widget?.placement?.includes?.('center_info') &&
-                        widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
-                    )
-                    ?.map((widget: any) => (
-                      <Hamdast
-                        key={widget.id}
-                        id={widget.id}
-                        app={widget?.app}
-                        backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
-                        profileData={profileData}
-                        widgetData={{
-                          placement: widget?.placement,
-                          placement_metadata: widget.placements_metadata,
-                          center_id: center.id,
-                        }}
-                      />
-                    ))}
-                </div>
-              ) : undefined,
-            };
-          }),
+            })),
           onEventPhoneNumber: (centerId: any) => {
             const center = centers.find((center: any) => center.id === centerId);
-            const doctorMeta = getDoctorExpertiseMeta(expertises);
             splunkInstance('doctor-profile').sendEvent({
               group: 'doctor profile',
               type: 'see center phone',
@@ -244,8 +197,8 @@ export const useAsideSections = (data: any) => {
                     server_id: information.server_id,
                     slug: seo.slug,
                     id: information.id,
-                    expertise: doctorMeta.expertise,
-                    group_expertise: doctorMeta.groupExpertise,
+                    expertise: expertises.expertises[0].alias_title,
+                    group_expertise: expertises.group_expertises[0].name,
                   },
                   center: {
                     center_status: center?.status,
@@ -262,7 +215,6 @@ export const useAsideSections = (data: any) => {
           },
           onEventAddress: (centerId: any) => {
             const center = centers.find((center: any) => center.id === centerId);
-            const doctorMeta = getDoctorExpertiseMeta(expertises);
             splunkInstance('doctor-profile').sendEvent({
               group: 'doctor profile',
               type: 'see center map',
@@ -273,8 +225,8 @@ export const useAsideSections = (data: any) => {
                     server_id: information.server_id,
                     slug: seo.slug,
                     id: information.id,
-                    expertise: doctorMeta.expertise,
-                    group_expertise: doctorMeta.groupExpertise,
+                    expertise: expertises.expertises[0].alias_title,
+                    group_expertise: expertises.group_expertises[0].name,
                   },
                   center: {
                     center_status: center?.status,
@@ -292,22 +244,72 @@ export const useAsideSections = (data: any) => {
         };
       },
       children: (props: any) => (
-        <ProfileSectionCard
-          id="phone-and-address"
-          title="آدرس و تلفن تماس"
-          icon={<PhoneIcon width={18} height={18} />}
-        >
-          <CentersInfo
-            className="mx-4 !p-0 md:mx-0"
-            centers={props.centers}
-            onEventPhoneNumber={props.onEventPhoneNumber}
-            onEventAddress={props.onEventAddress}
+        <BookingGlobalContextsProvider>
+          <Fragment2
+            name="AddressesWrapper"
+            Component={PlasmicBookingAddressesWrapper}
+            args={{
+              ...profileData,
+              slug: seo.slug,
+              // Remove "گزارش اشتباه در اطلاعات مرکز" action in header.
+              button: { render: () => null } as any,
+              children: centers
+                .filter((center: any) => center.id !== CENTERS.CONSULT)
+                .map((center: any) => (
+                  <Fragment2
+                    key={center.id}
+                    name="AddressesCard"
+                    Component={PlasmicBookingAddressesCard}
+                    args={{
+                      ...profileData,
+                      title: center.name,
+                      map: center.map,
+                      centerId: center.id,
+                      address: center.address,
+                      city: center.city,
+                      displayNumberArray: center.display_number_array,
+                      slug: center.slug,
+                      centerType: center.center_type == 1 ? 'office' : 'hospital',
+                      description: removeHtmlTagInString(center.description ?? '').trim(),
+                      userCenterId: center.user_center_id,
+                      centerName: center.name,
+                      children: hamdastWidgets.some(
+                        (widget: any) =>
+                          widget?.placement?.includes?.('center_info') &&
+                          widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+                      ) ? (
+                        <div className="flex flex-col w-full gap-2">
+                          {hamdastWidgets
+                            ?.filter(
+                              (widget: any) =>
+                                widget?.placement?.includes?.('center_info') &&
+                                widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+                            )
+                            ?.map((widget: any) => (
+                              <Hamdast
+                                key={widget.id}
+                                id={widget.id}
+                                app={widget?.app}
+                                backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                                profileData={profileData}
+                                widgetData={{
+                                  placement: widget?.placement,
+                                  placement_metadata: widget.placements_metadata,
+                                  center_id: center.id,
+                                }}
+                              />
+                            ))}
+                        </div>
+                      ) : null,
+                    }}
+                  />
+                )),
+            }}
           />
-        </ProfileSectionCard>
+        </BookingGlobalContextsProvider>
       ),
     },
     {
-      id: 'hamdast-sidebar',
       isShow: !customize?.partnerKey,
       noWrapper: true,
       children: () =>

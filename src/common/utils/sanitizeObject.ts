@@ -1,8 +1,4 @@
 export const sanitizeObject = (obj: any): any => {
-  if (obj === undefined) {
-    return null;
-  }
-
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }

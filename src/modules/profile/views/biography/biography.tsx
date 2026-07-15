@@ -21,12 +21,11 @@ export const Biography = (props: BiographyProps) => {
   return (
     <Wrapper
       {...(needShowMore && { height: 200, openButtonText: 'مشاهده بیشتر', closeButtonText: 'مشاهده کمتر' })}
-      className={classNames('p-4 md:p-5', className)}
+      className={classNames('p-4', className)}
     >
-      <div
-        className="flex flex-col space-y-3 leading-7 text-justify text-sm text-slate-700 [&_a]:text-primary [&_a]:underline [&_h1]:text-base [&_h2]:text-base [&_p]:leading-7"
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
+      <div className="flex flex-col space-y-3">
+        <div className="flex flex-col space-y-3 leading-6 text-justify text-sm" dangerouslySetInnerHTML={{ __html: content }} />
+      </div>
     </Wrapper>
   );
 };
