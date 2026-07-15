@@ -291,11 +291,6 @@ export const FeedActionsSection = ({
 
   const resolvedPanelCenterId = panelCenterId ?? selectedCenterId;
 
-  const activePanelId = actionIds.find(actionId => sheets[actionId].open) ?? null;
-  const activePanelAction = activePanelId
-    ? SUB_ACTIONS.find(action => action.id === activePanelId) ?? null
-    : null;
-
   const openOnlineSheet = () => {
     sendDoctorHomeEvent(userId, 'online_visit_actions_open');
     onlineSheet.openSheet();
@@ -445,21 +440,22 @@ export const FeedActionsSection = ({
         <ActionSheetList onSelect={id => openAction(id, activeClinic ? String(activeClinic.id) : null)} />
       </DsDrawer>
 
-      {activePanelAction && (
+      {SUB_ACTIONS.map(action => (
         <PanelIframeDrawer
-          open={!!activePanelAction}
+          key={action.id}
+          open={sheets[action.id].open}
           onClose={() => {
-            closePanelSheets();
+            sheets[action.id].closeSheet();
             setPanelCenterId(null);
           }}
-          title={activePanelAction.label}
-          description={activePanelAction.description}
-          url={activePanelAction.url}
+          title={action.label}
+          description={action.description}
+          url={action.url}
           userId={userId}
           centerId={resolvedPanelCenterId}
-          iframeKey={activePanelAction.id}
+          iframeKey={action.id}
         />
-      )}
+      ))}
     </section>
   );
 };
