@@ -30,4 +30,7 @@ export const redirectCachedDoctorHome = () => {
 };
 
 /** Runs before React hydrates — mobile only; handles trailingSlash (/apphome/). */
-export const DOCTOR_HOME_INLINE_REDIRECT_SCRIPT = `(function(){try{var k='${DOCTOR_DEVICE_CACHE_KEY}';if(localStorage.getItem(k)!=='1')return;if(!window.matchMedia('(max-width:767px)').matches)return;var p=location.pathname.replace(/\\/$/,'')||'/';if(p==='/'||p==='/apphome')location.replace('/_/');}catch(e){}})();`;
+export const DOCTOR_HOME_INLINE_REDIRECT_SCRIPT =
+  "(function(){try{var k='" +
+  DOCTOR_DEVICE_CACHE_KEY +
+  "';if(localStorage.getItem(k)!=='1')return;if(!window.matchMedia('(max-width:767px)').matches)return;var p=location.pathname;if(p.length>1&&p.charAt(p.length-1)==='/')p=p.slice(0,-1);if(!p)p='/';if(p==='/'||p==='/apphome')location.replace('/_/');}catch(e){}})();";

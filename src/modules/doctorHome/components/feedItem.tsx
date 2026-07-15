@@ -3,7 +3,7 @@ import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { RaviCard } from '@/modules/rate-and-review';
 import moment from 'jalali-moment';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { UpcomingAppointment } from '../apis/upcomingAppointments';
 import { DsDrawer } from './DsDrawer';
 import { useSheetDrawerProps } from '../hooks/doctorHomeSheetLayout';
@@ -26,7 +26,7 @@ import {
 } from '../designSystem';
 import { DoctorHomeFeedItem, DoctorHomeFeedReview } from '../types/feed';
 import { sendDoctorHomeEvent } from '../utils/analytics';
-import { appendUserIdToUrl } from '../utils/iframeUrl';
+import { appendUserIdToUrl, buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { dsFocusRing } from '../utils/a11y';
 import { getAppointmentTimelineStatuses } from '../utils/timelineStatus';
 import { FeedActionsSection } from './feedActionsSection';
@@ -87,14 +87,28 @@ const AppointmentsFeedItem = ({
 
   const allSheet = useSheetRoute('appointments-all');
   const appointmentsDrawerProps = useSheetDrawerProps(allSheet);
-  const appointmentsSwapKey = `${selectedDate}-${selectedCenterId ?? 'all'}-${data.todayCount ?? 'x'}`;
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [patientsCenterId, setPatientsCenterId] = useState<string | undefined>(undefined);
+  const appointmentsSwapKey = `${selectedDate}-${patientsCenterId ?? selectedCenterId ?? 'all'}-${data.todayCount ?? 'x'}`;
   const schedulePanelId = 'appointments-schedule-panel';
+  const myPatientsUrl = useMemo(
+    () =>
+      buildDoctorPanelUrl(DOCTOR_PANEL_URLS.myPatients, {
+        userId,
+        date: selectedDate,
+        centerId: patientsCenterId ?? selectedCenterId,
+        bookId: selectedBookId,
+      }),
+    [userId, selectedDate, patientsCenterId, selectedCenterId, selectedBookId],
+  );
 
   useEffect(() => {
     hydrateScheduleExpanded();
   }, [hydrateScheduleExpanded]);
 
-  const openAllAppointments = () => {
+  const openAllAppointments = (options?: { bookId?: string; centerId?: string }) => {
+    setSelectedBookId(options?.bookId ?? null);
+    setPatientsCenterId(options?.centerId);
     sendDoctorHomeEvent(userId, 'appointments_see_all');
     allSheet.openSheet();
   };
@@ -123,7 +137,7 @@ const AppointmentsFeedItem = ({
           count={data.todayCount}
           isLoading={data.isTodayCountLoading && data.todayCount == null}
           userId={userId}
-          onPress={openAllAppointments}
+          onPress={() => openAllAppointments()}
           widgetShell={widgetShell}
           trailing={
             !scheduleExpanded && isScheduleHydrated ? (
@@ -158,7 +172,12 @@ const AppointmentsFeedItem = ({
                       <DsTaskCard
                         compact
                         highlighted={isToday && statuses[index] === 'current'}
-                        onClick={openAllAppointments}
+                        onClick={() =>
+                          openAllAppointments({
+                            bookId: appointment.book_id,
+                            centerId: selectedCenterId ?? appointment.center_id,
+                          })
+                        }
                         title={appointment.patient_name}
                         meta={[appointment.center_name, appointment.service_name].filter(Boolean).join(' · ')}
                         trailing={
@@ -211,7 +230,8 @@ const AppointmentsFeedItem = ({
       >
         {allSheet.open && (
           <iframe
-            src={appendUserIdToUrl(DOCTOR_PANEL_URLS.myPatients, userId)}
+            key={`${selectedDate}-${patientsCenterId ?? selectedCenterId ?? 'all'}-${selectedBookId ?? 'all'}`}
+            src={myPatientsUrl}
             title="لیست نوبت‌ها"
             className="min-h-0 w-full flex-1 border-0"
           />
