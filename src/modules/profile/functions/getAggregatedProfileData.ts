@@ -9,7 +9,6 @@ import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
-import { handleSsrError } from '@/common/utils/handleSsrError';
 import { splunkInstance } from '@/common/services/splunk';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
@@ -164,7 +163,9 @@ export async function getAggregatedProfileData(
       });
 
       if (isServer) {
-        return handleSsrError(404, slug);
+        return {
+          notFound: true,
+        };
       } else {
         // For client-side, we'll let the error propagate
         throw new Error(result.error);
@@ -173,24 +174,17 @@ export async function getAggregatedProfileData(
 
     // Handle redirects from slug validation service
     if ('redirect' in result) {
-      const destination = encodeURI(result.redirect.route);
       if (isServer) {
         return {
           redirect: {
             statusCode: result.redirect.statusCode,
-            destination,
+            destination: encodeURI(result.redirect.route),
           },
           props: {},
         };
+      } else {
+        return location.replace(encodeURI(result.redirect.route));
       }
-
-      return {
-        redirect: {
-          statusCode: result.redirect.statusCode,
-          destination,
-        },
-        props: {},
-      };
     }
 
     // Valid slug response - use the validated slug
@@ -568,6 +562,8 @@ export async function getAggregatedProfileData(
       ),
       slug: validatedSlug,
       fragmentComponents: {
+        // Note: Flags would need to be handled differently on the client
+        raviComponentTopOrderProfile: false, // Default value for client
         risman: rismanResult.status === 'fulfilled' ? rismanResult.value?.data : null,
       },
       hamdastWidgets: widgets,

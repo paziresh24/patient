@@ -6,9 +6,10 @@ import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import useModal from '@/common/hooks/useModal';
 import { CENTERS } from '@/common/types/centers';
+import classNames from '@/common/utils/classNames';
 import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
-import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
@@ -22,8 +23,8 @@ import sortBy from 'lodash/sortBy';
 import { splunkInstance } from '@/common/services/splunk';
 import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
-import OnlineVisitWrapper from './onlineVisitWrapper';
-import MobileBookingBar from './mobileBookingBar';
+import PlasmicServices from '.plasmic/plasmic/paziresh_24/PlasmicServices';
+import { Fragment2 } from '@/common/fragment/fragment2';
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -56,14 +57,9 @@ export const Services = ({
   dontShowDeactiveBox?: boolean;
 }) => {
   const router = useRouter();
-  const { isMobile } = useResponsive();
-  const isWebView = useWebView();
-  const { ref: servicesRef, inView: inViewServices, entry: servicesEntry } = useInView({
-    rootMargin: '-72px 0px 0px 0px',
-    threshold: 0,
-    skip: !isMobile,
+  const [servicesRef, inViewServices] = useInView({
+    initialInView: true,
   });
-  const showStickyBookingBar = Boolean(servicesEntry) && !inViewServices;
 
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
@@ -72,39 +68,13 @@ export const Services = ({
     { user_id: doctor.user_id, center_id: centers.map(center => center.id), slug: slug },
     { enabled: !!useAvailabilityStatusApi },
   );
+  const { isMobile } = useResponsive();
+  const isWebView = useWebView();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
   const customize = useCustomize(state => state.customize);
   const { handleOpen: handleOpenAvailabilityModal, modalProps: availabilityModalProps } = useModal();
   const [availabilityMessage, setAvailabilityMessage] = useState<string>('');
-  const onlineVisitDestination = useFeatureValue('profile:online_visit_button_destination', 'BOOKING');
-
-  const consultCenter = centers.find((center: any) => center.id === CENTERS.CONSULT);
-  const consultService = consultCenter?.services?.[0];
-  const hasOnlineVisit = Boolean(onlineVisit.enabled && consultService);
-  const hasPresence =
-    router.query.centerTarget != CENTERS.CONSULT && centers.some((center: any) => center.id !== CENTERS.CONSULT);
-
-  const handleMobileOnlineVisit = () => {
-    if (!consultService) {
-      scrollIntoViewWithOffset('#book-me', 90);
-      return;
-    }
-
-    onEvent({ centerId: CENTERS.CONSULT, serviceId: consultService.id });
-    router.push({
-      pathname: `/booking/${slug}/`,
-      query: {
-        centerId: CENTERS.CONSULT,
-        serviceId: consultService.id,
-        ...(onlineVisitDestination === 'BOOKING_SKIP_TIME_SELECT_STEP' && { skipTimeSelectStep: true }),
-      },
-    });
-  };
-
-  const handleMobilePresence = () => {
-    scrollIntoViewWithOffset('#book-me', 90);
-  };
 
   const onEvent = ({ centerId, serviceId }: { centerId: string; serviceId: string }) => {
     splunkInstance('doctor-profile').sendEvent({
@@ -236,36 +206,13 @@ export const Services = ({
         {onlineVisit.enabled &&
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
-            ?.services?.map((service: any) => (
-              <OnlineVisitWrapper
-                key={service.id}
-                channelType={onlineVisit.channels ?? []}
-                doctorId={id}
-                fullName={doctor.display_name}
-                title="ویزیت آنلاین (پذیرش۲۴)"
-                price={service.free_price}
-                slug={slug}
-                id={service.id}
-                userCenterId={service.user_center_id}
-                duration={service.duration}
-                groupExpertiseId={expertises?.group_expertises?.[0]?.id}
-                waitingTime={waitingTimeInfo?.find((item: any) => item?.center_id === CENTERS.CONSULT)}
-                city={{
-                  slug: doctor?.city_en_slug ?? 'ir',
-                  name: doctor?.city_name ?? centers.find((center: any) => center.id === CENTERS.CONSULT)?.city ?? '',
-                }}
-                expertise={{
-                  slug:
-                    expertises?.group_expertises?.[0]?.en_slug ??
-                    expertises?.group_expertises?.[0]?.slug ??
-                    expertises?.expertises?.[0]?.expertise_slug ??
-                    'سایر',
-                  name:
-                    expertises?.expertises?.[0]?.expertise_name ??
-                    expertises?.group_expertises?.[0]?.name ??
-                    'سایر',
-                }}
-                onTrackClick={() => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id })}
+            ?.services?.map((service: any, index: number) => (
+              <Fragment2
+                key={index}
+                name="Services"
+                Component={PlasmicServices}
+                args={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
+                variants={{ type: 'onlineVisit' }}
               />
             ))}
         {router.query.centerTarget != CENTERS.CONSULT && centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
@@ -312,17 +259,16 @@ export const Services = ({
         )}
       </div>
 
-      {isMobile && showStickyBookingBar && (hasOnlineVisit || hasPresence) && (
-        <MobileBookingBar
-          visible
-          displayName={doctor.display_name}
-          hasOnlineVisit={hasOnlineVisit}
-          hasPresence={hasPresence}
-          onlineVisitPrice={consultService?.free_price}
-          isWebView={isWebView}
-          onOnlineVisit={handleMobileOnlineVisit}
-          onPresence={handleMobilePresence}
-        />
+      {isMobile && !inViewServices && (
+        <div
+          className={classNames('fixed z-50 w-full p-3 bg-white border-t bottom-16 shadow-card border-slate-100', {
+            'bottom-0': isWebView,
+          })}
+        >
+          <Button onClick={() => scrollIntoViewWithOffset('#book-me', 90)} block>
+            دریافت نوبت
+          </Button>
+        </div>
       )}
 
       <Modal title="درخواست نوبت" {...availabilityModalProps} bodyClassName="space-y-3">

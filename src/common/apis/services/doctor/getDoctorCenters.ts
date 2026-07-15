@@ -11,7 +11,6 @@ export interface DoctorCentersResponse {
   status: number;
   server_id: number;
   has_bookable_services: boolean;
-  user_center_id?: string;
   city: {
     id: number;
     name: string;
@@ -33,7 +32,7 @@ export const getDoctorCenters = async (slug: string, university?: string): Promi
   const encodedSlug = encodeURIComponent(slug);
   const url = `/api/doctors/${encodedSlug}/centers`;
   const params: Record<string, string> = {
-    check_bookable_services: 'true',
+    check_bookable_services: 'true'
   };
   if (university) {
     params.university = university;
@@ -44,10 +43,14 @@ export const getDoctorCenters = async (slug: string, university?: string): Promi
       params,
     });
 
-    // Keep all centers (including non-bookable) so address/hours sections stay complete.
-    return Array.isArray(data) ? data : [];
+    // Filter centers that have bookable services
+    const filteredData = data.filter(center => center.has_bookable_services === true);
+
+
+    return filteredData;
   } catch (error) {
     console.error('Error fetching doctor centers:', error);
+
 
     // Return fallback data in case of error
     return [];

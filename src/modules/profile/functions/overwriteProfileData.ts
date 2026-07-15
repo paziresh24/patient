@@ -38,14 +38,10 @@ export type OverwriteProfileData = {
 };
 
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
-  const resolvedDisplayName = [overwriteData.provider?.name ?? source?.name, overwriteData.provider?.family ?? source?.family]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
-
   const information = {
     id: source?.id ?? null,
     server_id: source?.server_id ?? null,
+    display_name: source?.name + ' ' + source?.family,
     name: source?.name,
     family: source?.family,
     biography: overwriteData?.biography ?? source?.biography,
@@ -56,11 +52,6 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     city_en_slug: source?.city_en_slug ?? null,
     should_recommend_other_doctors: source?.should_recommend_other_doctors ?? null,
     ...overwriteData.provider,
-    display_name:
-      overwriteData.provider?.display_name?.trim() ||
-      resolvedDisplayName ||
-      source?.display_name?.trim() ||
-      'پزشک',
     prefix: '',
   };
 
@@ -79,7 +70,6 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
           ...sourceCenter, // Start with full profile data
           // Override with new API data where available
           id: newCenter.id,
-          user_center_id: newCenter.user_center_id ?? sourceCenter.user_center_id,
           name: newCenter.name,
           display_number: newCenter.display_number,
           display_number_array: newCenter.display_number, // Map display_number to display_number_array
@@ -106,7 +96,6 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
         // If no matching center in full profile, use new center data with empty services
         return {
           ...newCenter,
-          user_center_id: newCenter.user_center_id,
           display_number_array: newCenter.display_number, // Map display_number to display_number_array
           tell_array: newCenter.tell, // Map tell to tell_array
           center_type: newCenter.type_id, // Map type_id to center_type
