@@ -8,9 +8,9 @@ import Text from '@/common/components/atom/text';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
+import { useInvoiceNoticeFreeturn } from '@/modules/booking/hooks/factor/useInvoiceNoticeFreeturn';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useQuery } from '@tanstack/react-query';
-import moment from 'jalali-moment';
 import getConfig from 'next/config';
 const { publicRuntimeConfig } = getConfig();
 
@@ -28,33 +28,24 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
     },
   );
 
+  const consultCenter = profile?.data?.centers?.find((item: any) => item.id == CENTERS.CONSULT);
+  const freeturnRaw = consultCenter?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn;
+  const profileFreeturnMs =
+    typeof freeturnRaw === 'number' && Number.isFinite(freeturnRaw) ? freeturnRaw * 1000 : null;
+
+  const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({
+    slug,
+    serviceId,
+    profileFreeturnMs,
+    userCenterId: consultCenter?.user_center_id,
+    isProfileLoading: isLoading,
+  });
+
   const doctorName = `${profile?.data?.name} ${profile?.data?.family}`;
   const doctorUserId = (doctorSlugData as DoctorSlugValidationResponse | undefined)?.user_id;
   const doctorAvatar = doctorUserId
     ? picUserImageUrl(doctorUserId)
     : publicRuntimeConfig.CDN_BASE_URL + profile?.data?.image;
-
-  const convertTime = (time: number) => {
-    return moment(time)?.locale('fa')?.calendar(undefined, {
-      nextWeek: 'YYYY/MM/DD(dddd) حدود ساعت HH:mm',
-      sameElse: 'YYYY/MM/DD حدود ساعت HH:mm',
-      sameDay: 'امروز حدود ساعت HH:mm',
-      nextDay: 'فردا حدود ساعت HH:mm',
-    });
-  };
-
-  const freeturnRaw = profile?.data?.centers
-    ?.find((item: any) => item.id == CENTERS.CONSULT)
-    ?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn;
-
-  const freeturn =
-    typeof freeturnRaw === 'number' && Number.isFinite(freeturnRaw) ? freeturnRaw * 1000 : null;
-
-  const getFreeturnText = () => {
-    if (freeturn === null) return 'در اسرع وقت';
-    if (freeturn < Date.now()) return 'در کمتر از ۱۵ دقیقه آینده';
-    return convertTime(freeturn);
-  };
 
   return (
     <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
@@ -77,9 +68,13 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
           </Text>
           <Text as="p" fontSize="sm" align="justify" className="leading-6">
             پس از نهایی شدن نوبت،{' '}
-            <Text className="text-primary" fontWeight="semiBold">
-              {getFreeturnText()}
-            </Text>{' '}
+            {isFreeturnLoading ? (
+              <Skeleton w="8rem" h="1rem" className="inline-block align-middle" rounded="sm" />
+            ) : (
+              <Text className="text-primary" fontWeight="semiBold">
+                {freeturnText}
+              </Text>
+            )}{' '}
             شما را آنلاین ویزیت خواهم کرد.
           </Text>
         </div>
