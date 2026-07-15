@@ -39,5 +39,5 @@ build-docker-image:
       -d @webhook_payload.json
 
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "next"
       when: always
