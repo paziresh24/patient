@@ -1,16 +1,18 @@
-import { useIncrementPageView } from '@/common/apis/services/profile/incrementPageView';
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import Modal from '@/common/components/atom/modal/modal';
 import Section from '@/common/components/atom/section/section';
+import CommentIcon from '@/common/components/icons/comment';
+import DoctorIcon from '@/common/components/icons/doctor';
+import PhoneIcon from '@/common/components/icons/phone';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
+import { CENTERS } from '@/common/types/centers';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import useResponsive from '@/common/hooks/useResponsive';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
-import { CENTERS } from '@/common/types/centers';
-import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
@@ -18,16 +20,15 @@ import { getProfileServerSideProps } from '@/modules/profile/functions/getProfil
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
-import { Aside } from '@/modules/profile/views/aside';
+import { useAsideSections } from '@/modules/profile/views/aside';
+import { ToolBarItems } from '@/modules/profile/components/head/toolBar';
+import { useToolBarController } from '@/modules/profile/hooks/useToolBarController';
+import useClientReady from '@/common/hooks/useClientReady';
 import { sections } from '@/modules/profile/views/sections';
-import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { growthbook } from '../_app';
-import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
-import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
-import { Fragment2 } from '@/common/fragment/fragment2';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -35,39 +36,38 @@ import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
+import { DoctorProfilePageProps } from '@/modules/profile/types/doctorProfilePage';
+import { CenterMobileNav } from '@/modules/profile/views/centerHead/centerMobileNav';
 import { trackDoctorProfileViewByDoctorId } from '@/modules/hamdast/utils/profileViewFrequency';
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
 import Head from 'next/head';
-import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
-import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
+import DoctorProfileHead from '@/modules/profile/views/head/head';
+import ProfileHeadRateBadge from '@/modules/profile/views/rateReview/profileHeadRateBadge';
 import { useRate } from '@/common/apis/services/reviews/rate';
+
+import {
+  buildDoctorJsonLd,
+  getDoctorCanonicalUrl,
+  resolveDoctorProfileImageUrl,
+} from '@/modules/profile/utils/doctorProfileSsr';
 
 const { publicRuntimeConfig } = config();
 
-const NO_DOCTOR_PROFILE_IMAGE = 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png';
-
-function resolveDoctorProfileImageUrl(
-  information: { user_id?: string | null } | undefined,
-  pageUserId?: string | null,
-) {
-  const userId = information?.user_id ?? pageUserId;
-  if (userId) {
-    return `https://pic.paziresh24.com/api/image/${userId}`;
-  }
-  return NO_DOCTOR_PROFILE_IMAGE;
-}
-
-const DoctorProfile = (props: any) => {
+const DoctorProfile = (props: DoctorProfilePageProps) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
-  const { query, ...router } = useRouter();
+  const { query, replace, events: routerEvents } = useRouter();
   const [isProfileScriptsReady, setIsProfileScriptsReady] = useState(false);
   const profileScriptsReadyRef = useRef(false);
   const vicControlSentForSlugRef = useRef<string | null>(null);
   const trackedDoctorIdRef = useRef<string | null>(null);
+  const profileDataSyncedRef = useRef<string | null>(null);
+  const redirectHandledRef = useRef<string | null>(null);
 
   const currentSlug = initialSlug ?? query.slug;
+
+  const isClientReady = useClientReady();
 
   useEffect(() => {
     if (profileScriptsReadyRef.current) return;
@@ -122,10 +122,10 @@ const DoctorProfile = (props: any) => {
   } = useProfileClientFetch(currentSlug, !!shouldFetchOnClient || !props?.information);
 
   const { customize } = useCustomize();
+  const { isMobile } = useResponsive();
   const isApplication = useApplication();
   const isWebView = useWebView();
   const addPageView = usePageView();
-  const incrementPageView = useIncrementPageView();
   const { recommendEvent } = useProfileSplunkEvent();
   const { handleOpen: handleOpenViewAsModal, modalProps: viewAsModalProps } = useModal();
   const [editable, setEditable] = useState(false);
@@ -137,14 +137,21 @@ const DoctorProfile = (props: any) => {
   const { openScroll, lockScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
+  const isSamanBookingFlag = useFeatureIsOn('saman-booking');
+  const isSamanBookingEnabled = isClientReady && isSamanBookingFlag;
 
-  const finalProps = (!!shouldFetchOnClient && !props?.information) || (clientData?.props as any)?.information ? clientData?.props : props;
+  const finalProps =
+    clientData?.redirect?.destination
+      ? props
+      : (!!shouldFetchOnClient && !props?.information) || clientData?.props?.information
+        ? (clientData?.props ?? props)
+        : props;
 
   const {
     slug,
     breadcrumbs,
     information,
-    centers,
+    centers = [],
     media,
     symptomes,
     history,
@@ -154,15 +161,13 @@ const DoctorProfile = (props: any) => {
     expertises,
     feedbacks,
     waitingTimeInfo,
-    shouldUseIncrementPageView,
     fragmentComponents,
     hamdastWidgets: hamdastWidgetsFromProps,
     hamdastWidgetsData: hamdastWidgetsDataFromProps,
     user_id,
-    dontShowRateAndReviewMessage,
   } = finalProps ?? {};
 
-  const rateDebug = query.rateDebug === '1';
+  const rateDebug = process.env.NODE_ENV !== 'production' && query.rateDebug === '1';
   const rateDebugSlug = slug ?? currentSlug;
   const rateDebugProbe = useRate(
     { slug: String(rateDebugSlug ?? '') },
@@ -170,7 +175,7 @@ const DoctorProfile = (props: any) => {
   );
 
   const doctorProfileImageUrl = useMemo(
-    () => resolveDoctorProfileImageUrl(information, user_id),
+    () => resolveDoctorProfileImageUrl(information ?? undefined, user_id),
     [information?.user_id, user_id],
   );
 
@@ -178,6 +183,15 @@ const DoctorProfile = (props: any) => {
   const hamdastWidgetsQuery = useProfileHamdastWidgets(user_id, information?.id, isOwnProfile);
   const hamdastWidgets = (isOwnProfile && hamdastWidgetsQuery.data) ? hamdastWidgetsQuery.data.widgets : hamdastWidgetsFromProps;
   const hamdastWidgetsData = (isOwnProfile && hamdastWidgetsQuery.data) ? hamdastWidgetsQuery.data.widgetsData : hamdastWidgetsDataFromProps;
+
+  const toolBarItems = useToolBarController({
+    slug: String(slug ?? currentSlug ?? ''),
+    displayName: information?.display_name ?? '',
+    documentTitle: information?.display_name
+      ? `${information.display_name}، اطلاعات تماس و نوبت دهی آنلاین `
+      : '',
+    editable,
+  }) as ToolBarItems;
 
   useEffect(() => {
     useFeedbackDataStore.setState({ data: feedbacks?.feedbacks ?? [] });
@@ -198,14 +212,14 @@ const DoctorProfile = (props: any) => {
       openScroll();
     };
 
-    router.events.on('routeChangeStart', handleRouteChangeStart);
-    router.events.on('routeChangeComplete', handleRouteChangeComplete);
-    router.events.on('routeChangeError', handleRouteChangeComplete);
+    routerEvents.on('routeChangeStart', handleRouteChangeStart);
+    routerEvents.on('routeChangeComplete', handleRouteChangeComplete);
+    routerEvents.on('routeChangeError', handleRouteChangeComplete);
 
     return () => {
-      router.events.off('routeChangeStart', handleRouteChangeStart);
-      router.events.off('routeChangeComplete', handleRouteChangeComplete);
-      router.events.off('routeChangeError', handleRouteChangeComplete);
+      routerEvents.off('routeChangeStart', handleRouteChangeStart);
+      routerEvents.off('routeChangeComplete', handleRouteChangeComplete);
+      routerEvents.off('routeChangeError', handleRouteChangeComplete);
     };
   }, []);
 
@@ -235,31 +249,50 @@ const DoctorProfile = (props: any) => {
         });
       }
     }
-  }, [dontShowRateDetails, information, slug, growthbook?.getAttributes()?.slug, slug, growthbook?.ready, userPending]);
+  }, [dontShowRateDetails, information, slug, growthbook?.ready, userPending, isWebView, isApplication, isBulk, centers, expertises, history, feedbacks, hamdastWidgets, userInfo?.id]);
 
   useEffect(() => {
-    if (information) {
-      if (shouldUseIncrementPageView) {
-        incrementPageView.mutate({
-          provider_id: information.provider_id,
-        });
-      }
+    redirectHandledRef.current = null;
+    profileDataSyncedRef.current = null;
+  }, [currentSlug]);
 
-      if (vicControlSentForSlugRef.current !== slug) {
-        vicControlSentForSlugRef.current = slug;
-        addPageView.mutate({
-          ownerId: information.id,
-          serverId: information.server_id,
-          type: 'doctor',
-        });
-      }
+  useEffect(() => {
+    const destination = clientData?.redirect?.destination;
+    if (!destination || redirectHandledRef.current === destination) return;
 
-      window.doctor = { ...information, centers, expertises, isBulk, slug, history };
+    redirectHandledRef.current = destination;
+    void replace(destination);
+  }, [clientData?.redirect?.destination, replace]);
 
-      if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
-      setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
+  useEffect(() => {
+    if (!information?.id) return;
+
+    const syncKey = `${slug ?? currentSlug}:${information.id}`;
+    if (profileDataSyncedRef.current === syncKey) return;
+
+    if (vicControlSentForSlugRef.current !== slug) {
+      vicControlSentForSlugRef.current = slug ?? null;
+      addPageView.mutate({
+        ownerId: information.id,
+        serverId: information.server_id,
+        type: 'doctor',
+      });
     }
-  }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
+
+    if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
+    setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
+    profileDataSyncedRef.current = syncKey;
+  }, [information?.id, slug, currentSlug, centers, expertises, feedbacks, isBulk, history]);
+
+  useEffect(() => {
+    if (!information) return;
+
+    window.doctor = { ...information, centers, expertises, isBulk, slug, history };
+
+    return () => {
+      delete (window as Window & { doctor?: unknown }).doctor;
+    };
+  }, [information, centers, expertises, isBulk, slug, history]);
 
   useEffect(() => {
     const doctorId = information?.id ? String(information.id) : '';
@@ -349,6 +382,50 @@ const DoctorProfile = (props: any) => {
     user_id,
   };
 
+  const asideSections = useAsideSections({
+    ...profileData,
+    fragmentComponents,
+    hamdast: { ga: showHamdastGa },
+  });
+
+  const doctorMobileNavItems = useMemo(() => {
+    const items = [];
+
+    if (centers.length > 0 && !isSamanBookingEnabled) {
+      items.push({ id: 'book-me', label: 'نوبت‌دهی', icon: <DoctorIcon width={16} height={16} /> });
+    }
+    if (centers.some((center: { id?: unknown }) => center?.id !== CENTERS.CONSULT)) {
+      items.push({ id: 'phone-and-address', label: 'آدرس و تلفن', icon: <PhoneIcon width={16} height={16} /> });
+    }
+    if (information?.biography) {
+      items.push({ id: 'about', label: 'درباره پزشک', icon: <DoctorIcon width={16} height={16} /> });
+    }
+    if (customize.showRateAndReviews) {
+      items.push({ id: 'reviews', label: 'نظرات', icon: <CommentIcon width={16} height={16} /> });
+    }
+
+    return items;
+  }, [centers, customize.showRateAndReviews, information?.biography, isSamanBookingEnabled]);
+
+  const mainContentSections = sections({ ...profileData, fragmentComponents }).filter(
+    ({ isShow, isShowFallback, id }: { isShow?: boolean; isShowFallback?: boolean; id?: string }) => {
+      if (id === 'reviews' && isMobile) return false;
+      return Boolean(isShow) || Boolean(isShowFallback);
+    },
+  );
+
+  const visibleAsideSections = asideSections.filter(({ isShow }: { isShow?: boolean }) => Boolean(isShow));
+  const earlyAsideSections = visibleAsideSections.filter(section => section.id !== 'reviews');
+  const lateAsideSections = visibleAsideSections.filter(section => section.id === 'reviews');
+  const desktopAsideSections = visibleAsideSections.filter(section => section.id !== 'reviews');
+
+  const renderAsideSections = (items: typeof visibleAsideSections) =>
+    items.map((section, index) => (
+      <Section key={`aside-${section.id ?? index}`} {...section}>
+        {section.children(section?.function?.())}
+      </Section>
+    ));
+
   if (!finalProps?.information?.id ? shouldFetchOnClient || isLoading : false) {
     return (
       <div className="flex flex-grow justify-center items-center">
@@ -359,11 +436,11 @@ const DoctorProfile = (props: any) => {
 
   if (isError) {
     const clientErrorStatusCode = (error as any)?.response?.status ?? 500;
-    return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} />;
+    return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} profileType="doctor" />;
   }
 
   if ([404, 500, 504, 410].includes(status) && !shouldFetchOnClient) {
-    return <ErrorPage statusCode={status} refresh={refetch} />;
+    return <ErrorPage statusCode={status} refresh={refetch} profileType="doctor" />;
   }
 
   return (
@@ -405,8 +482,7 @@ const DoctorProfile = (props: any) => {
         <link rel="dns-prefetch" href="//cdn.paziresh24.com" />
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
       </Head>
-      <RaviGlobalContextsProvider>
-        <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
+      <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
           {isProfileScriptsReady &&
             hamdastWidgets
               ?.filter?.((item: any) => item?.placement?.includes?.('profile_scripts_tag') && item?.script)
@@ -415,103 +491,96 @@ const DoctorProfile = (props: any) => {
                   {item?.script}
                 </Script>
               ))}
-          <main key={information?.id} className="lg:py-10 pwa:pb-24">
-            <div className="lg:float-right lg:w-[670px] mb-3">
-              <ProfileGlobalContextsProvider>
-                <Fragment2
-                  Component={PlasmicProfileHead}
-                  name="ProfileHead"
-                  args={{
-                    pageViewCount: profileData.history?.count_of_page_view,
-                    serviceList: profileData.expertises?.expertises?.flatMap(({ alias_title }: any) => alias_title.split('|')) ?? [],
-                    displayName: profileData.information.display_name,
-                    title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
-                    subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                    imageUrl: doctorProfileImageUrl,
-                    slug: slug,
-                    children: (
-                      <div className="flex flex-col w-full gap-2">
-                        {hamdastWidgets
-                          ?.filter((widget: any) => widget?.placement?.includes?.('head'))
-                          ?.map((widget: any) => (
-                            <Hamdast
-                              key={widget.id}
-                              id={widget.id}
-                              app={widget?.app}
-                              backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
-                              profileData={profileData}
-                              widgetData={{
-                                placement: widget?.placement,
-                                placement_metadata: widget.placements_metadata,
-                              }}
-                            />
-                          ))}
-                        <RaviGlobalContextsProvider>
-                          <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-                            <Fragment2
-                              name="RateAndCommentCount2"
-                              Component={PlasmicRateAndCommentCount}
-                              args={{
-                                ...profileData,
-                                rateCount: profileData.feedbacks?.details?.count_of_feedbacks,
-                                rate:
-                                  customize.showRateAndReviews &&
-                                  !dontShowRateAndReviewMessage &&
-                                  (
-                                    (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                                      +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                                      +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                                    3
-                                  ).toFixed(1),
-                                hideRates: profileData.feedbacks?.details?.hide_rates,
-                              }}
-                            />
-                          </div>
-                        </RaviGlobalContextsProvider>
-                      </div>
-                    ),
-                  }}
-                />
-              </ProfileGlobalContextsProvider>
-            </div>
+          <main
+            key={information?.id}
+            className="mx-auto flex w-full max-w-screen-xl flex-col items-start bg-slate-50 pwa:pb-28 md:flex-row md:gap-5 md:bg-transparent md:px-4 md:py-10 lg:px-0"
+          >
+            <section className="flex w-full min-w-0 flex-col space-y-3 md:basis-7/12 md:space-y-4">
+              <DoctorProfileHead
+                image={doctorProfileImageUrl}
+                imageAlt={information?.display_name}
+                displayName={profileData.information.display_name}
+                title={information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined}
+                subTitle={
+                  information?.employee_id ? `شماره نظام پزشکی: ${information.employee_id}` : undefined
+                }
+                serviceList={
+                  profileData.expertises?.expertises?.flatMap(({ alias_title }: { alias_title: string }) =>
+                    alias_title.split('|'),
+                  ) ?? []
+                }
+                pageViewCount={profileData.history?.count_of_page_view}
+                toolBarItems={isClientReady ? toolBarItems : undefined}
+                editable={editable}
+                infoEditAction={() => handleViewAs('information')}
+                servicesEditAction={() => handleViewAs('services')}
+              >
+                <div className="flex w-full flex-col gap-2 border-t border-slate-100 px-4 py-4 md:px-6">
+                  {hamdastWidgets
+                    ?.filter((widget: { placement?: string[] }) => widget?.placement?.includes?.('head'))
+                    ?.map((widget: { id: string; app?: string; placement?: string[]; placements_metadata?: unknown }) => (
+                      <Hamdast
+                        key={widget.id}
+                        id={widget.id}
+                        app={widget?.app}
+                        backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                        profileData={profileData}
+                        widgetData={{
+                          placement: widget?.placement,
+                          placement_metadata: widget.placements_metadata,
+                        }}
+                      />
+                    ))}
+                  {isClientReady && customize.showRateAndReviews && (
+                    <button
+                      type="button"
+                      className="self-center cursor-pointer border-0 bg-transparent p-0"
+                      onClick={() => scrollIntoViewWithOffset('#reviews', 90)}
+                    >
+                      <ProfileHeadRateBadge
+                        rate={(
+                          (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
+                            +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
+                            +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
+                          3
+                        ).toFixed(1)}
+                        rateCount={profileData.feedbacks?.details?.count_of_feedbacks}
+                        hideRates={profileData.feedbacks?.details?.hide_rates}
+                      />
+                    </button>
+                  )}
+                </div>
+              </DoctorProfileHead>
 
-            <div className="flex flex-col space-y-3 lg:float-left lg:w-[calc(100%_-_690px)]">
-              {isLoading && shouldFetchOnClient && (
-                <div className="w-full py-20 flex justify-center items-center">
-                  <Loading />
+              {doctorMobileNavItems.length > 0 && <CenterMobileNav items={doctorMobileNavItems} />}
+
+              {earlyAsideSections.length > 0 && (
+                <div className="flex flex-col gap-3 md:hidden [&_#book-me]:scroll-mt-24 [&_section]:overflow-hidden [&_section]:rounded-2xl [&_section]:shadow-card">
+                  {renderAsideSections(earlyAsideSections)}
                 </div>
               )}
 
-              {/* Continue showing page even if full profile has error */}
+              {mainContentSections.map((section, index) => (
+                <Section key={index} {...section}>
+                  {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
+                </Section>
+              ))}
 
-              {Aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
-                .filter(({ isShow }: any) => Boolean(isShow))
-                .map((section: any, index: number) => (
-                  <Section key={index} {...section}>
-                    {section.children(section?.function?.())}
-                  </Section>
-                ))}
-            </div>
+              {lateAsideSections.length > 0 && (
+                <div className="flex flex-col gap-3 md:hidden">{renderAsideSections(lateAsideSections)}</div>
+              )}
+            </section>
 
-            <div className="lg:float-right lg:w-[670px] flex flex-col space-y-3">
-              {sections({ ...profileData, fragmentComponents })
-                .filter(({ isShow, isShowFallback }: any) => Boolean(isShow) || Boolean(isShowFallback))
-                .map((section: any, index: number) => (
-                  <Section key={index} {...section}>
-                    {section[section.isShow ? 'children' : 'fallback']?.(section?.function?.())}
-                  </Section>
-                ))}
-            </div>
-
-            <div className="clear-both"></div>
+            <aside className="hidden w-full min-w-0 flex-col space-y-3 md:sticky md:top-5 md:flex md:basis-5/12">
+              {renderAsideSections(desktopAsideSections)}
+            </aside>
           </main>
           <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
             <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
           </Modal>
         </div>
-      </RaviGlobalContextsProvider>
       {isPageLoading && (
-        <div className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-80 flex justify-center items-center z-[99999999999999999999999]">
+        <div className="fixed top-0 left-0 z-[100] flex h-full w-full items-center justify-center bg-white/80">
           <Loading width={50} />
         </div>
       )}
@@ -520,197 +589,31 @@ const DoctorProfile = (props: any) => {
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, expertises, centers = [], information, feedbacks, host, user_id } = page.props;
-  const doctorProfileImageUrl = resolveDoctorProfileImageUrl(information, user_id);
-
-  const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
-
-  const getJsonlds = () => {
-    const center = centers?.find?.((cn: any) => cn.id !== CENTERS.CONSULT);
-    const visitOnlineCenter = centers?.find?.((cn: any) => cn.id === CENTERS.CONSULT);
-    const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
-    const currentUrl = `/dr/${slug}`;
-
-    // Helper function to map day numbers to schema.org day names
-    const getDayOfWeek = (day: number): string => {
-      const dayMap: { [key: number]: string } = {
-        1: 'Sunday', // یکشنبه
-        2: 'Monday', // دوشنبه
-        3: 'Tuesday', // سه‌شنبه
-        4: 'Wednesday', // چهارشنبه
-        5: 'Thursday', // پنج‌شنبه
-        6: 'Friday', // جمعه
-        7: 'Saturday', // شنبه
-      };
-      return dayMap[day] || 'Monday';
-    };
-
-    // Extract opening hours from center services
-    const getOpeningHours = () => {
-      if (!center?.services?.[0]?.hours_of_work) return undefined;
-
-      const hoursByDay: { [key: string]: { opens: string; closes: string }[] } = {};
-
-      center.services[0].hours_of_work.forEach((hour: any) => {
-        const dayName = getDayOfWeek(hour.day);
-        const opens = hour.from?.substring(0, 5) || '09:00'; // Extract HH:MM format
-        const closes = hour.to?.substring(0, 5) || '18:00';
-
-        if (!hoursByDay[dayName]) {
-          hoursByDay[dayName] = [];
-        }
-        hoursByDay[dayName].push({ opens, closes });
-      });
-
-      // Convert to schema.org format
-      return Object.entries(hoursByDay).map(([dayOfWeek, hours]) => {
-        // If multiple time slots exist for same day, use the first one
-        const { opens, closes } = hours[0];
-        return {
-          '@type': 'OpeningHoursSpecification',
-          'dayOfWeek': dayOfWeek,
-          'opens': opens,
-          'closes': closes,
-        };
-      });
-    };
-
-    const physicianSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'Physician',
-      'name': information?.display_name,
-      'alternateName': [
-        information?.display_name,
-        expertises?.expertises?.[0]?.alias_title ? `${information?.display_name} ${expertises.expertises[0].alias_title}` : null,
-        expertises?.group_expertises?.[0]?.name ? `${information?.display_name} ${expertises.group_expertises[0].name}` : null,
-      ].filter(Boolean),
-      'gender': information?.gender === '1' ? 'Male' : information?.gender === '2' ? 'Female' : undefined,
-      'image': doctorProfileImageUrl,
-      'medicalSpecialty': {
-        '@type': 'MedicalSpecialty',
-        'name': expertises?.expertises?.[0]?.alias_title || expertises?.group_expertises?.[0]?.name || doctorExpertise,
-      },
-      'affiliation': center
-        ? {
-          '@type': 'MedicalClinic',
-          'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
-          'address': {
-            '@type': 'PostalAddress',
-            'streetAddress': center.address,
-            'addressLocality': center.city,
-            'addressRegion': center.province,
-            'addressCountry': 'IR',
-          },
-          'contactPoint': {
-            '@type': 'ContactPoint',
-            'telephone': center.display_number?.[0] || center.display_number,
-            'contactType': 'appointment',
-            'availableLanguage': ['fa'],
-          },
-          'openingHoursSpecification': getOpeningHours(),
-          'geo': center.map
-            ? {
-              '@type': 'GeoCoordinates',
-              'latitude': center.map.lat,
-              'longitude': center.map.lon,
-            }
-            : undefined,
-        }
-        : undefined,
-      'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
-      'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-      'telephone': center?.display_number?.[0] || center?.display_number,
-      'isAcceptingNewPatients': true,
-      'description': information?.biography ? removeHtmlTagInString(information?.biography) : '',
-      'hasOfferCatalog': {
-        '@type': 'OfferCatalog',
-        'name': `خدمات درمانی ${information?.display_name}`,
-        'itemListElement':
-          centers
-            ?.filter((center: any) => center.services?.length > 0)
-            ?.flatMap(
-              (center: any) =>
-                center.services?.map((service: any) => ({
-                  '@type': 'Offer',
-                  'itemOffered': {
-                    '@type': 'MedicalProcedure',
-                    'name': service.title || service.alias_title,
-                    'description': service.description || `خدمات ${service.title || service.alias_title}`,
-                    'price': service.free_price ? addCommas(service.free_price) : undefined,
-                    'priceCurrency': 'IRR',
-                    'availability': 'https://schema.org/InStock',
-                  },
-                })) ?? [],
-            ) ?? [],
-      },
-      ...(!feedbacks?.details?.hide_rates &&
-        (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 && {
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          'ratingValue': +(
-            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-            3
-          ).toFixed(1),
-          'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
-          'bestRating': 5,
-          'worstRating': 0,
-        },
-        review:
-          feedbacks?.feedbacks?.list
-            ?.filter((item: any) => !!item?.avg_rate_value)
-            ?.slice(0, 5) // Limit to 5 reviews for schema
-            ?.map?.((feedback: any) => ({
-              '@type': 'Review',
-              'author': {
-                '@type': 'Person',
-                'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
-              },
-              'reviewRating': {
-                '@type': 'Rating',
-                'ratingValue': feedback?.avg_rate_value ?? 0,
-                'bestRating': 5,
-                'worstRating': 0,
-              },
-              'reviewBody': feedback?.description,
-              'datePublished': feedback?.created_at?.split(' ')?.[0],
-            })) ?? [],
-      }),
-    };
-
-    const breadcrumbSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      'itemListElement': [
-        {
-          '@type': 'ListItem',
-          'position': 1,
-          'item': {
-            '@id': `${publicRuntimeConfig?.CLINIC_BASE_URL}/`,
-            'name': 'پذیرش۲۴',
-          },
-        },
-        {
-          '@type': 'ListItem',
-          'position': 2,
-          'item': {
-            '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-            'name': information?.display_name,
-          },
-        },
-      ],
-    };
-
-    return [physicianSchema, breadcrumbSchema].filter(Boolean);
-  };
+  const { title, description, slug, expertises, centers = [], information, feedbacks, host, user_id } =
+    page.props as DoctorProfilePageProps;
+  const clinicBaseUrl = publicRuntimeConfig.CLINIC_BASE_URL || 'https://www.paziresh24.com';
+  const doctorProfileImageUrl = resolveDoctorProfileImageUrl(information ?? undefined, user_id);
+  const doctorCanonicalUrl = slug ? getDoctorCanonicalUrl(String(slug), clinicBaseUrl) : undefined;
+  const jsonlds = buildDoctorJsonLd({
+    information,
+    expertises,
+    centers,
+    feedbacks,
+    slug: String(slug ?? ''),
+    baseUrl: clinicBaseUrl,
+    userId: user_id,
+  });
 
   return (
     <LayoutWithHeaderAndFooter showSearchSuggestionButton={true} shouldShowPromoteApp={false} {...page.props.config}>
+      <Head>
+        <link rel="preload" as="image" href={doctorProfileImageUrl} />
+      </Head>
       <Seo
         title={title}
         description={description}
-        jsonlds={centers?.length > 0 ? getJsonlds() : []}
+        canonicalUrl={doctorCanonicalUrl}
+        jsonlds={jsonlds}
         openGraph={{
           image: {
             src: doctorProfileImageUrl,

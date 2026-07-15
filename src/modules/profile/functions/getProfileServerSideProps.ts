@@ -7,6 +7,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import { handleSsrError } from '@/common/utils/handleSsrError';
 import { withCSR } from '@/common/hoc/withCsr';
+import { slimDoctorProfileProps } from '@/modules/profile/utils/doctorProfileSsr';
 
 export const getProfileServerSideProps: GetServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
@@ -14,13 +15,16 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
 
     const { slug: rawSlug } = context.query;
     if (!rawSlug) {
-      return { notFound: true };
+      context.res.statusCode = 404;
+      return handleSsrError(404, '');
     }
     const slug = decodeURIComponent(rawSlug as string);
     const university = themeConfing?.partnerKey as string;
 
     try {
-      console.log('🔍 Server-side feature flags for slug:', slug);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('🔍 Server-side feature flags for slug:', slug);
+      }
 
       const finalProps = await getAggregatedProfileData(slug, university, true, {
         useNewDoctorFullNameAPI: true,
@@ -31,16 +35,21 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
         useNewDoctorGalleryAPI: true,
       });
 
+      if (finalProps?.props?.status) {
+        context.res.statusCode = finalProps.props.status;
+      }
+
       return {
-        ...finalProps,
         props: sanitizeObject({
-          ...finalProps?.props,
+          ...slimDoctorProfileProps(finalProps?.props ?? {}),
           status: context.res.statusCode,
         }),
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log(error.response?.status);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(error.response?.status);
+        }
 
         const status = error.response?.status ?? 500;
         const statusCode = status === 404 ? 410 : error.message.includes('timeout') || status === 504 ? 504 : status;

@@ -15,10 +15,12 @@ interface ProfileSeoBoxProps {
     text: string;
     href: string;
   }[];
+  profileType?: 'center' | 'doctor';
 }
 
 export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
-  const { about, breadcrumbs, similarLinks } = props;
+  const { about, breadcrumbs, similarLinks, profileType = 'doctor' } = props;
+  const similarLinksTitle = profileType === 'center' ? 'تخصص‌های فعال در این مرکز' : 'تخصص های مرتبط';
   return (
     <section className="flex flex-col space-y-3 pwa:hidden">
       {breadcrumbs && (
@@ -27,11 +29,19 @@ export const ProfileSeoBox = (props: ProfileSeoBoxProps) => {
           items={breadcrumbs.map((item, index, items) => ({ ...item, href: index + 1 < items.length ? item.href : '' }))}
         />
       )}
-      <div className="p-4 space-y-3 transition-all bg-white md:rounded-lg">
+      <div className="mx-4 space-y-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm transition-all md:mx-0 md:p-5 md:shadow-card">
         <Opener openButtonText="مشاهده بیشتر" height={120} closeButtonText="مشاهده کمتر">
-          {about && <Text fontSize="sm" as="div" className="leading-6" align="justify" dangerouslySetInnerHTML={{ __html: about }} />}
+          {about && (
+            <Text
+              fontSize="sm"
+              as="div"
+              className="leading-7 text-slate-700 [&_a]:text-primary [&_a]:underline"
+              align="justify"
+              dangerouslySetInnerHTML={{ __html: about }}
+            />
+          )}
           {similarLinks && (
-            <Accordion title="تخصص های مرتبط" className="mt-2">
+            <Accordion title={similarLinksTitle} className="mt-2">
               <MenuList className="flex !flex-row flex-wrap gap-x-14">
                 {similarLinks.map(({ name, url }) => (
                   <MenuItem key={name} name={name} link={url} className="flex-[1_1_10rem] !justify-start">

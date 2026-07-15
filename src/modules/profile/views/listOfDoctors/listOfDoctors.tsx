@@ -5,23 +5,18 @@ import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
-import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
+import { flatten } from 'lodash';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
-import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
-import config from 'next/config';
-import { flatten } from 'lodash';
 import { InfiniteData } from '@tanstack/react-query';
-import { PlasmicSearchResults } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults';
-import { Fragment2 } from '@/common/fragment/fragment2';
-
-const { publicRuntimeConfig } = config();
 
 type ExpertiseType = {
   lable: string;
   value: string;
 };
+
 interface ListOfDoctorsProps {
   doctors: InfiniteData<any> | undefined;
   expertises: ExpertiseType[];
@@ -32,12 +27,27 @@ interface ListOfDoctorsProps {
   showRateAndReviews?: boolean;
   defaultValue?: ExpertiseType;
   expertiseListLoading?: boolean;
+  expertiseListError?: boolean;
+  doctorsError?: boolean;
+  onRetryDoctors?: () => void;
+  onRetryExpertises?: () => void;
   onChangePage: (page: number) => void;
   hasNextPage: boolean;
   isFetchingNextPage?: boolean;
-  isMainSite?: boolean;
-  center_id?: string;
 }
+
+const ServiceErrorBanner = ({ message, onRetry }: { message: string; onRetry?: () => void }) => (
+  <div className="flex flex-col items-center gap-3 p-4 text-center rounded-lg border border-orange-200 bg-orange-50">
+    <Text fontSize="sm" fontWeight="medium">
+      {message}
+    </Text>
+    {onRetry && (
+      <Button variant="secondary" onClick={onRetry}>
+        تلاش مجدد
+      </Button>
+    )}
+  </div>
+);
 
 export const ListOfDoctors = (props: ListOfDoctorsProps) => {
   const {
@@ -49,12 +59,14 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
     defaultValue,
     loading = false,
     expertiseListLoading = false,
+    expertiseListError = false,
+    doctorsError = false,
+    onRetryDoctors,
+    onRetryExpertises,
     showRateAndReviews = true,
     onChangePage,
     hasNextPage,
     isFetchingNextPage,
-    isMainSite,
-    center_id,
   } = props;
   const page = useRef<number>(1);
   const router = useRouter();
@@ -62,7 +74,6 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
     'search_result:show_first_free_time': true,
     'search_result:show_available_time': true,
   });
-  const usePlasmicSearchResult = useFeatureIsOn('center-profile::use-plasmic-search-result');
 
   const handleClickEelmentEvent = (item: any, elementName: string, elementContent?: string) => {
     splunkInstance('center-profile').sendEvent({
@@ -76,6 +87,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
       },
     });
   };
+
   const result = flatten(doctors?.pages?.map((page: any) => page?.search?.result as any[]) ?? []) ?? [];
 
   return (
@@ -107,112 +119,80 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
           />
         </div>
       )}
-      {!isMainSite && !usePlasmicSearchResult && (
-        <div className="flex flex-col space-y-2">
-          {loading && (
-            <>
-              <Skeleton h="13rem" w="100%" rounded="lg" />
-              <Skeleton h="13rem" w="100%" rounded="lg" />
-              <Skeleton h="13rem" w="100%" rounded="lg" />
-            </>
-          )}
-          {!loading && !result.length && (
-            <div className="p-4 text-center rounded-lg bg-slate-200">
-              <Text fontSize="sm" fontWeight="medium">
-                پزشکی یافت نشد.
-              </Text>
-            </div>
-          )}
-          {!loading &&
-            result.map(doctor => (
-              <SearchCard
-                key={doctor.id}
-                type="doctor"
-                baseInfo={{
-                  displayName: doctor.title,
-                  avatar: doctor.image,
-                  url: doctor.url,
-                  expertise: doctor.display_expertise,
-                  isVerify: !doctor.is_bulk,
-                  ...(showRateAndReviews && {
-                    rate: {
-                      count: doctor.rates_count,
-                      satisfaction: doctor.satisfaction,
-                    },
-                  }),
-                  viewCount: doctor.view,
-                }}
-                details={{
-                  badges: doctor.badges.filter((item: any) =>
-                    !customTheme['search_result:show_first_free_time'] ? !(item.title as string)?.includes('فعال شدن نوبت‌دهی') : true,
-                  ),
-                }}
-                actions={doctor.actions
-                  .filter((action: any) => action.title !== 'ویزیت آنلاین')
-                  ?.map((action: any) => ({
-                    text: action.title,
-                    description: customTheme['search_result:show_available_time'] ? action.top_title : '',
-                    outline: action.outline,
-                    action: () => {
-                      router.push(action.url);
-                    },
-                  }))}
-                sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(doctor, element, content)}
-              />
-            ))}
-          {hasNextPage && !loading && (
-            <Button
-              variant="secondary"
-              onClick={() => {
-                page.current += 1;
-                return onChangePage(page.current);
+      {expertiseListError && !expertiseListLoading && (
+        <ServiceErrorBanner message="بارگذاری فیلتر تخصص‌ها با خطا مواجه شد. می‌توانید جستجو را ادامه دهید." onRetry={onRetryExpertises} />
+      )}
+      <div className="flex flex-col space-y-2">
+        {loading && (
+          <>
+            <Skeleton h="13rem" w="100%" rounded="lg" />
+            <Skeleton h="13rem" w="100%" rounded="lg" />
+            <Skeleton h="13rem" w="100%" rounded="lg" />
+          </>
+        )}
+        {doctorsError && !loading && (
+          <ServiceErrorBanner message="بارگذاری لیست پزشکان با خطا مواجه شد." onRetry={onRetryDoctors} />
+        )}
+        {!loading && !doctorsError && !result.length && (
+          <div className="p-4 text-center rounded-lg bg-slate-200">
+            <Text fontSize="sm" fontWeight="medium">
+              پزشکی یافت نشد.
+            </Text>
+          </div>
+        )}
+        {!loading &&
+          !doctorsError &&
+          result.map(doctor => (
+            <SearchCard
+              key={doctor.id}
+              type="doctor"
+              baseInfo={{
+                displayName: doctor.title,
+                avatar: doctor.image,
+                url: doctor.url,
+                expertise: doctor.display_expertise,
+                isVerify: !doctor.is_bulk,
+                ...(showRateAndReviews && {
+                  rate: {
+                    count: doctor.rates_count,
+                    satisfaction: doctor.satisfaction,
+                  },
+                }),
+                viewCount: doctor.view,
               }}
-              loading={isFetchingNextPage}
-            >
-              مشاهده بیشتر
-            </Button>
-          )}
-        </div>
-      )}
-      {(isMainSite || usePlasmicSearchResult) && (
-        <div className="flex flex-col space-y-2">
-          {loading && (
-            <>
-              <Skeleton h="13rem" w="100%" rounded="lg" />
-              <Skeleton h="13rem" w="100%" rounded="lg" />
-              <Skeleton h="13rem" w="100%" rounded="lg" />
-            </>
-          )}
-          {(result.length === 0 ? !loading : true) && (
-            <SearchGlobalContextsProvider>
-              <Fragment2
-                name="SearchResults"
-                Component={PlasmicSearchResults}
-                args={{
-                  searchResultResponse: {
-                    ...doctors?.pages?.[0],
-                    search: {
-                      ...doctors?.pages?.[0]?.search,
-                      result,
-                    },
+              details={{
+                badges: (doctor.badges ?? []).filter((item: any) =>
+                  !customTheme['search_result:show_first_free_time'] ? !(item.title as string)?.includes('فعال شدن نوبت‌دهی') : true,
+                ),
+              }}
+              actions={(doctor.actions ?? [])
+                .filter((action: any) => action.title !== 'ویزیت آنلاین')
+                .map((action: any) => ({
+                  text: action.title,
+                  description: customTheme['search_result:show_available_time'] ? action.top_title : '',
+                  outline: action.outline,
+                  action: () => {
+                    router.push(action.url);
                   },
-                  nextPageTrigger: () => {
-                    page.current += 1;
-                    return onChangePage(page.current);
-                  },
-                  imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
-                  location: {},
-                  paginationLoadingStatus: isFetchingNextPage,
-                  centerId: center_id,
-                }}
-              />
-            </SearchGlobalContextsProvider>
-          )}
-        </div>
-      )}
+                }))}
+              sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(doctor, element, content)}
+            />
+          ))}
+        {hasNextPage && !loading && !doctorsError && (
+          <Button
+            variant="secondary"
+            onClick={() => {
+              page.current += 1;
+              return onChangePage(page.current);
+            }}
+            loading={isFetchingNextPage}
+          >
+            مشاهده بیشتر
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
 
 export default ListOfDoctors;
-

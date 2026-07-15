@@ -15,7 +15,13 @@ interface DoctorState {
 
 const INITIAL_FILTER: RaviReviewFilterValue = { type: 'all' };
 
-export const useRaviReviews = (doctorSlug: string, userId?: string) => {
+import { RaviReviewPage } from '../types';
+
+export const useRaviReviews = (
+  doctorSlug: string,
+  userId?: string,
+  initialPage?: Pick<RaviReviewPage, 'list' | 'hasMore' | 'pageInfo'>,
+) => {
   const stateBySlugRef = useRef<Record<string, DoctorState>>({});
   const [list, setList] = useState<RaviReviewPage['list']>([]);
   const [hasMore, setHasMore] = useState(false);
@@ -113,8 +119,27 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
       return;
     }
 
+    if (initialPage?.list?.length) {
+      const seeded: DoctorState = {
+        list: initialPage.list,
+        hasMore: initialPage.hasMore,
+        pageInfo: initialPage.pageInfo,
+        sort: 'default_order',
+        filter: INITIAL_FILTER,
+        page: 1,
+      };
+      stateBySlugRef.current[doctorSlug] = seeded;
+      setList(seeded.list);
+      setHasMore(seeded.hasMore);
+      setPageInfo(seeded.pageInfo);
+      setSort(seeded.sort);
+      setFilter(seeded.filter);
+      setPage(seeded.page);
+      return;
+    }
+
     run(1, 'default_order', INITIAL_FILTER, false);
-  }, [doctorSlug, run, applyDebouncedSearch]);
+  }, [doctorSlug, run, applyDebouncedSearch, initialPage]);
 
   const loadMore = useCallback(() => {
     if (!hasMore || isLoading) return;

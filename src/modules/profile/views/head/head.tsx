@@ -4,21 +4,11 @@ import AddIcon from '@/common/components/icons/add';
 import EyeIcon from '@/common/components/icons/eye';
 import classNames from '@/common/utils/classNames';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
-import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
-import RateBadge from '@/components/atom/badge/badge';
-import LikeIcon from '@/components/icons/like';
+import ToolBar, { ToolBarItems } from '../../components/head/toolBar';
+import EditButton from '../../components/viewAs/editButton';
 import { ReactNode } from 'react';
 import ScrollContainer from 'react-indiana-drag-scroll';
 import Info from '../../components/head/info';
-import ToolBar, { ToolBarItems } from '../../components/head/toolBar';
-import EditButton from '../../components/viewAs/editButton';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useLoginModalContext } from '@/modules/login/context/loginModal';
-import RaviGlobalContextsProvider from '../../../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
-import { Fragment2 } from '@/common/fragment/fragment2';
-import PlasmicReviewRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndCommentCount';
-import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
 
 interface HeadProps {
   image: string;
@@ -30,15 +20,10 @@ interface HeadProps {
   pageViewCount?: number;
   toolBarItems?: ToolBarItems;
   className?: string;
-  satisfaction?: string;
-  rateCount?: string;
   editable?: boolean;
   infoEditAction?: () => void;
   servicesEditAction?: () => void;
   children?: ReactNode;
-  shouldUseFragmentReviewCard?: boolean;
-  profileData?: any;
-  hideRates?: boolean;
 }
 
 export const Head = (props: HeadProps) => {
@@ -52,36 +37,27 @@ export const Head = (props: HeadProps) => {
     pageViewCount,
     toolBarItems,
     className,
-    satisfaction,
-    rateCount,
-    hideRates,
     editable,
     infoEditAction,
     servicesEditAction,
     children,
-    shouldUseFragmentReviewCard,
-    profileData,
   } = props;
 
-  const { isLogin, userInfo } = useUserInfoStore(state => ({
-    isLogin: state.isLogin,
-    userInfo: state.info,
-  }));
-  const { handleOpenLoginModal } = useLoginModalContext();
-  const newRateAndCommentCount = useFeatureIsOn('ravi_show_new_rate_count');
-
   return (
-    <section className={classNames('py-4 flex flex-col space-y-3 bg-white', className)}>
-      <div className="px-4 space-y-3">
-        <div className="flex justify-between">
+    <section className={classNames('overflow-hidden bg-white shadow-card md:rounded-2xl', className)}>
+      <div className="relative bg-gradient-to-l from-primary/10 via-sky-50/80 to-white px-4 pb-5 pt-4 md:px-6 md:pb-6 md:pt-5">
+        <div className="relative flex items-center justify-between gap-3">
           {toolBarItems && <ToolBar items={toolBarItems} />}
-          {pageViewCount && (
-            <div className="flex space-s-1">
-              <Text fontSize="sm">{convertLongToCompactNumber(pageViewCount)}</Text>
-              <EyeIcon width={20} height={20} />
+          {pageViewCount != null && pageViewCount > 0 && (
+            <div className="flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-white px-3 py-1.5 text-slate-600 shadow-sm">
+              <EyeIcon width={18} height={18} />
+              <Text fontSize="sm" fontWeight="medium">
+                {convertLongToCompactNumber(pageViewCount)} بازدید
+              </Text>
             </div>
           )}
         </div>
+
         <Info
           image={image}
           imageAlt={imageAlt}
@@ -92,71 +68,42 @@ export const Head = (props: HeadProps) => {
           editAction={infoEditAction}
         />
       </div>
+
       {serviceList?.length === 0 && editable && (
-        <div
-          onClick={servicesEditAction}
-          className="flex items-center justify-center p-4 mx-4 transition-all border-2 border-dashed rounded-lg cursor-pointer bg-slate-50 hover:bg-slate-200/40 space-s-2 text-slate-400 border-slate-200"
-        >
-          <AddIcon className="w-5 h-5" />
-          <Text fontWeight="medium">افزودن تخصص</Text>
+        <div className="border-t border-slate-100 px-4 py-4 md:px-6">
+          <div
+            onClick={servicesEditAction}
+            className="flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/80 p-4 text-slate-400 transition-all hover:bg-slate-100/80 space-s-2"
+          >
+            <AddIcon className="h-5 w-5" />
+            <Text fontWeight="medium">افزودن تخصص</Text>
+          </div>
         </div>
       )}
-      {serviceList && (
-        <ScrollContainer
-          className={classNames('flex space-s-1 px-4 items-center relative md:max-w-[46rem]', {
-            'justify-center': serviceList.length === 1,
-            'p-4 bg-slate-50 border-2 border-slate-200 justify-start border-dashed rounded-lg mx-4': editable,
-          })}
-        >
-          {editable && <EditButton className="ml-3" onClick={servicesEditAction} />}
-          {serviceList.map(service => (
-            <Chips
-              className="!bg-transparent border text-center min-w-fit w-max !rounded-xl border-slate-200 !text-slate-600 !whitespace-normal"
-              key={service}
-            >
-              {service}
-            </Chips>
-          ))}
-        </ScrollContainer>
-      )}
-      {!!satisfaction && !editable && (
-        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-          {!shouldUseFragmentReviewCard && (
-            <RateBadge
-              text={`${satisfaction}%`}
-              icon={<LikeIcon className="w-5 text-white" />}
-              parentClassName="!bg-green-600"
-              className="mt-1"
-              fontSize="sm"
-              caption={`رضایت (${rateCount} نظر)`}
-            />
-          )}
-          {shouldUseFragmentReviewCard &&
-            (newRateAndCommentCount ? (
-              <Fragment2
-                name="RateAndCommentCount2"
-                Component={PlasmicReviewRateAndCommentCount}
-                args={{
-                  ...profileData,
-                  rateCount: rateCount,
-                  rate: satisfaction,
-                  hideRates: hideRates,
-                }}
-              />
-            ) : (
-              <Fragment2
-                name="RateAndCommentCount"
-                Component={PlasmicRateAndCommentCount}
-                args={{
-                  ...profileData,
-                  rateCount: rateCount,
-                  rate: satisfaction,
-                  hideRates: hideRates,
-                }}
-              />
+
+      {!!serviceList?.length && (
+        <div className="border-t border-slate-100 bg-slate-50/70 px-4 py-4 md:px-6">
+          <Text fontSize="xs" fontWeight="semiBold" className="mb-3 text-slate-500">
+            تخصص‌ها
+          </Text>
+          <ScrollContainer
+            className={classNames('flex items-center gap-2 pb-0.5', {
+              'justify-center': serviceList.length === 1,
+            })}
+          >
+            {editable && <EditButton className="ml-1 shrink-0" onClick={servicesEditAction} />}
+            {serviceList.map(service => (
+              <Chips
+                key={service}
+                className="min-w-fit w-max whitespace-nowrap !rounded-full border border-primary/20 !bg-white !px-3.5 !py-1.5 !text-sm !text-slate-700 shadow-sm"
+              >
+                {service}
+              </Chips>
             ))}
+          </ScrollContainer>
         </div>
       )}
+
       {children}
     </section>
   );

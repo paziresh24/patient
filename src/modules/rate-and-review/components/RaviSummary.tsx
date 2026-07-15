@@ -19,7 +19,7 @@ export const RaviSummary = ({ displayName, summary }: RaviSummaryProps) => {
 
   if (summary.hideRates) {
     return (
-      <section className="w-full bg-white md:rounded-lg">
+      <section className="w-full rounded-2xl border border-slate-100 bg-white shadow-sm md:rounded-2xl">
         <div className="p-4">
           <RaviDoctorHideRatesBanner />
         </div>
@@ -32,7 +32,7 @@ export const RaviSummary = ({ displayName, summary }: RaviSummaryProps) => {
   }
 
   return (
-    <section className="w-full bg-white md:rounded-t-lg">
+    <section className="w-full rounded-2xl border border-slate-100 bg-white shadow-sm md:rounded-t-2xl">
       <h2 className="px-4 pt-4 text-base font-bold text-slate-900 md:px-4">
         نظرات درمورد {displayName ?? ''}
       </h2>

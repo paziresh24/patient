@@ -24,6 +24,7 @@ import TrashIcon from '@/common/components/icons/trash';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import useModal from '@/common/hooks/useModal';
 import useResponsive from '@/common/hooks/useResponsive';
+import useShare from '@/common/hooks/useShare';
 import { splunkInstance } from '@/common/services/splunk';
 import optimizeLogging from '@/common/utils/optimizeLogging';
 import classNames from '@/common/utils/classNames';
@@ -121,6 +122,7 @@ export const RateReview = (props: RateReviewProps) => {
     }
   }, [inViewRate]);
   const router = useRouter();
+  const share = useShare();
   const likeFeedback = useLikeFeedback();
   const likeReviews = useLikeReview();
   const replyFeedback = useReplyfeedback();
@@ -450,10 +452,9 @@ export const RateReview = (props: RateReviewProps) => {
 
   const shareCommenthandler = (id: string) => {
     rateSplunkEvent('share');
-    const url = `${location.href}#comment-${id}`;
-    navigator.share({
-      text: `اشتراک گذاری نظر`,
-      url,
+    share({
+      text: 'اشتراک گذاری نظر',
+      url: `${location.href}#comment-${id}`,
     });
   };
 

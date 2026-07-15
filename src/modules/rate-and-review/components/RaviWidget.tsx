@@ -2,7 +2,7 @@ import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useQuery } from '@tanstack/react-query';
 import { fetchRateSummary } from '../api';
-import { RaviCenter } from '../types';
+import { RaviCenter, RaviReviewPage } from '../types';
 import { RaviList } from './RaviList';
 import { RaviSummary } from './RaviSummary';
 
@@ -12,6 +12,7 @@ export interface RaviWidgetProps {
   displayName?: string;
   centers?: RaviCenter[];
   hideSummary?: boolean;
+  initialReviewPage?: Pick<RaviReviewPage, 'list' | 'hasMore' | 'pageInfo'>;
 }
 
 export const RaviWidget = ({
@@ -20,6 +21,7 @@ export const RaviWidget = ({
   displayName,
   centers = [],
   hideSummary = false,
+  initialReviewPage,
 }: RaviWidgetProps) => {
   const userId = useUserInfoStore(state => state.info?.id?.toString());
 
@@ -47,7 +49,13 @@ export const RaviWidget = ({
         ) : null
       ) : null}
       {!hideRates ? (
-        <RaviList doctorSlug={doctorSlug} doctorUserId={doctorUserId} userId={userId} centers={centers} />
+        <RaviList
+          doctorSlug={doctorSlug}
+          doctorUserId={doctorUserId}
+          userId={userId}
+          centers={centers}
+          initialReviewPage={initialReviewPage}
+        />
       ) : null}
     </div>
   );
