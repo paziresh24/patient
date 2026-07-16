@@ -76,7 +76,9 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
       },
     });
   };
-  const result = flatten(doctors?.pages?.map((page: any) => page?.search?.result as any[]) ?? []) ?? [];
+  const result = (flatten(doctors?.pages?.map((page: any) => page?.search?.result as any[]) ?? []) ?? []).filter(
+    (doctor: any) => doctor && typeof doctor === 'object',
+  );
 
   return (
     <div className="flex flex-col space-y-3">
@@ -143,13 +145,13 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                   viewCount: doctor.view,
                 }}
                 details={{
-                  badges: doctor.badges.filter((item: any) =>
+                  badges: (doctor.badges ?? []).filter((item: any) =>
                     !customTheme['search_result:show_first_free_time'] ? !(item.title as string)?.includes('فعال شدن نوبت‌دهی') : true,
                   ),
                 }}
-                actions={doctor.actions
+                actions={(doctor.actions ?? [])
                   .filter((action: any) => action.title !== 'ویزیت آنلاین')
-                  ?.map((action: any) => ({
+                  .map((action: any) => ({
                     text: action.title,
                     description: customTheme['search_result:show_available_time'] ? action.top_title : '',
                     outline: action.outline,
