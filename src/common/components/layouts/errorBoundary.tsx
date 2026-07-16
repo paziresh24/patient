@@ -2,12 +2,23 @@ import React from 'react';
 
 interface Props {
   children: React.ReactNode;
+  fallback?: React.ReactNode;
 }
 
-class ErrorBoundary extends React.Component<Props> {
+interface State {
+  hasError: boolean;
+}
+
+class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    this.state = { hasError: false };
   }
+
+  static getDerivedStateFromError(): State {
+    return { hasError: true };
+  }
+
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     if (process.env.NODE_ENV === 'production') {
       // const throttledsplunkInstance = throttle(splunkInstance('error').sendEvent, 2000);
@@ -27,6 +38,9 @@ class ErrorBoundary extends React.Component<Props> {
   }
 
   render() {
+    if (this.state.hasError) {
+      return this.props.fallback ?? null;
+    }
     return this.props.children;
   }
 }

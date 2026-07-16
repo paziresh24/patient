@@ -23,10 +23,10 @@ interface CentersInfoProps {
     phoneNumbers: string | string[];
     address: string;
     city: string;
-    location: {
+    location?: {
       lat: number;
       lon: number;
-    };
+    } | null;
     description?: string;
     slug: string;
   }[];
@@ -100,7 +100,7 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
                 }}
               />
             )}
-            {(center.location.lat || !isEmpty(center.phoneNumbers)) && (
+            {(center.location?.lat || !isEmpty(center.phoneNumbers)) && (
               <>
                 {typeof center.phoneNumbers === 'string' && (
                   <Button
@@ -128,13 +128,15 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
                       {phoneNumber}
                     </Button>
                   ))}
-                {center.location.lat && (
+                {center.location?.lat && (
                   <Button
                     variant="secondary"
                     icon={<LocationIcon width={20} height={20} />}
                     onClick={() => {
                       onEventAddress?.(center.id);
-                      openGoogleMap(center.location);
+                      if (center.location?.lat != null && center.location?.lon != null) {
+                        openGoogleMap({ lat: center.location.lat, lon: center.location.lon });
+                      }
                     }}
                   >
                     مشاهده در نقشه و مسیریابی
