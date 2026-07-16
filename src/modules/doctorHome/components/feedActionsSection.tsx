@@ -12,8 +12,8 @@ import { useSelectedCenterStore } from '../store/selectedCenter';
 import { useSelectedDateStore } from '../store/selectedDate';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { DOCTOR_PANEL_URLS } from '../utils/doctorPanelUrls';
-import { formatDoctorCenterName, getClinicCenters, shouldShowClinicSection, shouldShowOnlineVisitSection } from '../utils/centers';
-import { appendUserIdToUrl } from '../utils/iframeUrl';
+import { formatDoctorCenterName, getClinicCenters, ONLINE_VISIT_CENTER_ID, shouldShowClinicSection, shouldShowOnlineVisitSection } from '../utils/centers';
+import { buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { dsFocusRing } from '../utils/a11y';
 import {
   ChatIcon,
@@ -90,6 +90,7 @@ const PanelIframeDrawer = ({
   description,
   url,
   userId,
+  centerId,
   iframeKey,
 }: {
   open: boolean;
@@ -98,9 +99,11 @@ const PanelIframeDrawer = ({
   description: string;
   url: string;
   userId?: string | number | null;
+  centerId?: string | null;
   iframeKey: string;
 }) => {
   const isSheetHost = useDoctorHomeSheetHost();
+  const iframeSrc = buildDoctorPanelUrl(url, { userId, centerId });
 
   return (
     <DsDrawer
@@ -116,8 +119,8 @@ const PanelIframeDrawer = ({
     >
       {open && (
         <iframe
-          key={iframeKey}
-          src={appendUserIdToUrl(url, userId)}
+          key={`${iframeKey}-${centerId ?? 'all'}`}
+          src={iframeSrc}
           title={title}
           className="min-h-0 w-full flex-1 border-0"
         />
@@ -264,6 +267,8 @@ export const FeedActionsSection = ({
     }
   };
 
+  const [panelCenterId, setPanelCenterId] = useState<string | null>(null);
+
   const sheets = { workhours: workhoursSheet, vacation: vacationSheet, tariff: tariffSheet } as const;
   const actionIds = Object.keys(sheets) as ActionId[];
 
@@ -273,20 +278,18 @@ export const FeedActionsSection = ({
     });
   };
 
-  const openAction = (id: ActionId) => {
+  const openAction = (id: ActionId, centerId?: string | null) => {
     const action = SUB_ACTIONS.find(item => item.id === id);
     if (!action) return;
     sendDoctorHomeEvent(userId, action.analyticsFeature);
     onlineSheet.closeSheet();
     clinicSheet.closeSheet();
     closePanelSheets(id);
+    setPanelCenterId(centerId ?? selectedCenterId);
     sheets[id].openSheet();
   };
 
-  const activePanelId = actionIds.find(actionId => sheets[actionId].open) ?? null;
-  const activePanelAction = activePanelId
-    ? SUB_ACTIONS.find(action => action.id === activePanelId) ?? null
-    : null;
+  const resolvedPanelCenterId = panelCenterId ?? selectedCenterId;
 
   const openOnlineSheet = () => {
     sendDoctorHomeEvent(userId, 'online_visit_actions_open');
@@ -392,7 +395,7 @@ export const FeedActionsSection = ({
         title="ویزیت آنلاین"
         description="مدیریت نوبت آنلاین"
       >
-        <ActionSheetList onSelect={openAction} />
+        <ActionSheetList onSelect={id => openAction(id, ONLINE_VISIT_CENTER_ID)} />
       </DsDrawer>
 
       <DsDrawer
@@ -434,20 +437,25 @@ export const FeedActionsSection = ({
             })}
           </div>
         )}
-        <ActionSheetList onSelect={openAction} />
+        <ActionSheetList onSelect={id => openAction(id, activeClinic ? String(activeClinic.id) : null)} />
       </DsDrawer>
 
-      {activePanelAction && (
+      {SUB_ACTIONS.map(action => (
         <PanelIframeDrawer
-          open={!!activePanelAction}
-          onClose={() => closePanelSheets()}
-          title={activePanelAction.label}
-          description={activePanelAction.description}
-          url={activePanelAction.url}
+          key={action.id}
+          open={sheets[action.id].open}
+          onClose={() => {
+            sheets[action.id].closeSheet();
+            setPanelCenterId(null);
+          }}
+          title={action.label}
+          description={action.description}
+          url={action.url}
           userId={userId}
-          iframeKey={activePanelAction.id}
+          centerId={resolvedPanelCenterId}
+          iframeKey={action.id}
         />
-      )}
+      ))}
     </section>
   );
 };

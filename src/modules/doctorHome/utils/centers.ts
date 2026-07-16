@@ -1,7 +1,7 @@
 import { UserInfo } from '@/modules/login/store/userInfo';
 import type { RaviCenter } from '@/modules/rate-and-review';
 
-const ONLINE_VISIT_CENTER_ID = '5532';
+export const ONLINE_VISIT_CENTER_ID = '5532';
 
 export interface DoctorCenterOption {
   id: string | null;

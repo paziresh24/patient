@@ -34,8 +34,9 @@ export const GrowthbookGlobalContext = ({
   }, [isDoctor, user]);
 
   const syncAttributes = (extra: Record<string, unknown> = {}) => {
+    const currentAttributes = growthbook.getAttributes();
     growthbook.setAttributes({
-      ...growthbook.getAttributes(),
+      ...currentAttributes,
       ...attr,
       ...previewAttributes,
       ...extra,
@@ -43,7 +44,8 @@ export const GrowthbookGlobalContext = ({
       id: getCookie('terminal_id'),
       user_id: user?.id,
       is_doctor: isDoctor,
-      slug: user?.provider?.slug,
+      // Do not overwrite page-level `slug` (e.g. /dr/[slug] targeting). Use provider_slug for logged-in doctor.
+      provider_slug: user?.provider?.slug,
       host: window.location.host,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       doctor_specialties: getDoctorSpecialties,

@@ -105,6 +105,13 @@ const Booking = () => {
         payload: queries as any,
       };
     if (payloads.includes('centerId') && payloads.includes('serviceId')) {
+      const serviceId = queries.serviceId?.toString();
+      if (!serviceId || serviceId === '-1') {
+        return {
+          step: 'SELECT_SERVICES',
+          payload: queries as any,
+        };
+      }
       return {
         step: 'SELECT_TIME',
         payload: queries as any,

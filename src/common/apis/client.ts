@@ -105,7 +105,7 @@ export const drProfileClient = axios.create({
 });
 
 export const samanClient = axios.create({
-  baseURL: `https://saman.paziresh24.com`,
+  baseURL: publicRuntimeConfig.SAMAN_BASE_URL ?? 'https://saman.paziresh24.com',
   ...baseConfig,
 });
 
