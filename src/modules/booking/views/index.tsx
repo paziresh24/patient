@@ -67,6 +67,11 @@ import random from 'lodash/random';
 import { defaultMessengers } from '../constants/defaultMessengers';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
+import {
+  isCenterBookingAvailable,
+  mapSamanAvailabilityToCenters,
+} from '../functions/mapSamanAvailabilityToCenters';
+import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import useBooking from '../hooks/booking';
 import useFirstFreeTime from '../hooks/selectTime/useFirstFreeTime';
 import { Center } from '../types/selectCenter';
@@ -132,6 +137,17 @@ const BookingSteps = (props: BookingStepsProps) => {
   );
   const centers = data?.data?.centers;
   const profile = data?.data;
+  const useSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
+  const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
+    enabled: !!slug && useSamanAvailabilityStatus,
+  });
+  const enrichedCenters = useMemo(() => {
+    if (!centers) return centers;
+    if (useSamanAvailabilityStatus && samanAvailability.data) {
+      return mapSamanAvailabilityToCenters(centers, samanAvailability.data);
+    }
+    return centers;
+  }, [centers, samanAvailability.data, useSamanAvailabilityStatus]);
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
@@ -199,8 +215,10 @@ const BookingSteps = (props: BookingStepsProps) => {
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
   useEffect(() => {
-    if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
-      const selectedCenter = centers?.find((c: any) => c.id === defaultStep.payload.centerId);
+    if (defaultStep?.payload && enrichedCenters && step !== 'BOOK_REQUEST') {
+      const selectedCenter = enrichedCenters?.find((c: any) => c.id === defaultStep.payload.centerId);
+      if (!selectedCenter) return;
+
       const selectedService =
         (defaultStep.step === 'SELECT_TIME' || defaultStep.step === 'SELECT_USER') &&
         selectedCenter?.services.find((c: any) => c.id.toString() === defaultStep.payload?.serviceId?.toString());
@@ -222,7 +240,27 @@ const BookingSteps = (props: BookingStepsProps) => {
 
       setStep(defaultStep?.step ?? 'SELECT_CENTER');
     }
-  }, [centers, defaultStep]);
+  }, [enrichedCenters, defaultStep]);
+
+  useEffect(() => {
+    if (!useSamanAvailabilityStatus || !samanAvailability.data || !centers) return;
+
+    const centerId = defaultStep?.payload?.centerId ?? router.query.centerId?.toString();
+    if (!centerId) return;
+
+    const inList = centers.some((c: any) => c.id === centerId);
+    const available = isCenterBookingAvailable(centerId, samanAvailability.data);
+    if (!inList || !available) {
+      router.replace(`/booking/${slug}/`);
+    }
+  }, [
+    useSamanAvailabilityStatus,
+    samanAvailability.data,
+    centers,
+    defaultStep?.payload?.centerId,
+    router.query.centerId,
+    slug,
+  ]);
 
   useEffect(() => {
     growthbook.setAttributes({
@@ -559,11 +597,11 @@ const BookingSteps = (props: BookingStepsProps) => {
           Component={SelectCenter}
           data={{
             loading: isLoading && !profile,
-            centers: reformattedCentersProperty({ centers, displayName: profile?.display_name }),
+            centers: reformattedCentersProperty({ centers: enrichedCenters, displayName: profile?.display_name }),
             doctorName: profile?.display_name,
           }}
           nextStep={(center: Center) => {
-            const selectedCenter = centers.find((c: { id: string }) => c.id === center.id);
+            const selectedCenter = enrichedCenters.find((c: { id: string }) => c.id === center.id);
             sendSelectCenterEvent({
               center: selectedCenter,
               doctorInfo: reformattedDoctorInfoForEvent({ center: selectedCenter, doctor: profile }),

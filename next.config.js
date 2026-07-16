@@ -198,6 +198,7 @@ const nextConfig = {
     PLASMIC_PROJECT_TOKEN: process.env.PLASMIC_PROJECT_TOKEN,
     PLASMIC_PREVIEW: process.env.PLASMIC_PREVIEW,
     CDN_BASE_URL: process.env.CDN_BASE_URL,
+    SAMAN_BASE_URL: process.env.SAMAN_BASE_URL,
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,

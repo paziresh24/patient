@@ -14,9 +14,10 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
+import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { bookRequestAvailability } from '@/common/apis/services/booking/bookRequestAvailability';
 import moment from 'jalali-moment';
 import sortBy from 'lodash/sortBy';
@@ -25,6 +26,12 @@ import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
 import PlasmicServices from '.plasmic/plasmic/paziresh_24/PlasmicServices';
 import { Fragment2 } from '@/common/fragment/fragment2';
+import {
+  formatSamanAvailabilityTime,
+  getScopedInPersonAvailability,
+  getScopedOnlineVisitAvailability,
+  mapSamanAvailabilityToCenters,
+} from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -61,12 +68,17 @@ export const Services = ({
     initialInView: true,
   });
 
+  const useSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
+  const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
+    enabled: !!slug && useSamanAvailabilityStatus,
+  });
+
   const alabilityStatus = useAvailabilityStatus(
     { user_id: doctor.user_id, center_id: centers.map(center => center.id), slug: slug },
-    { enabled: !!useAvailabilityStatusApi },
+    { enabled: !!useAvailabilityStatusApi && !useSamanAvailabilityStatus },
   );
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
@@ -75,6 +87,75 @@ export const Services = ({
   const customize = useCustomize(state => state.customize);
   const { handleOpen: handleOpenAvailabilityModal, modalProps: availabilityModalProps } = useModal();
   const [availabilityMessage, setAvailabilityMessage] = useState<string>('');
+
+  const samanLoaded = useSamanAvailabilityStatus && !!samanAvailability.data && !samanAvailability.isError;
+  const scopedInPerson = useMemo(
+    () => getScopedInPersonAvailability(centers, samanAvailability.data),
+    [centers, samanAvailability.data],
+  );
+  const scopedOnlineVisit = useMemo(
+    () => getScopedOnlineVisitAvailability(centers, samanAvailability.data),
+    [centers, samanAvailability.data],
+  );
+
+  const hasOnlineVisit = Boolean(onlineVisit.enabled && centers.some((center: any) => center.id === CENTERS.CONSULT));
+  const hasPresence =
+    router.query.centerTarget != CENTERS.CONSULT && centers.some((center: any) => center.id !== CENTERS.CONSULT);
+
+  const showOnlineVisit = hasOnlineVisit && (!samanLoaded || scopedOnlineVisit.bookingAvailable);
+  const canBookPresence = !samanLoaded || scopedInPerson.bookingAvailable;
+
+  const legacyHasNoBooking = alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk;
+  const samanHasNoBooking = samanLoaded && !scopedInPerson.bookingAvailable && !scopedOnlineVisit.bookingAvailable;
+  const hasNoBooking = useSamanAvailabilityStatus
+    ? samanAvailability.isError
+      ? isBulk
+      : samanLoaded
+        ? samanHasNoBooking
+        : isBulk
+    : legacyHasNoBooking;
+
+  const presenceCenters = useMemo(() => {
+    const inPersonCenters = centers.filter((center: any) => center.id !== CENTERS.CONSULT);
+
+    if (samanLoaded) {
+      return mapSamanAvailabilityToCenters(inPersonCenters, samanAvailability.data).map(center => ({
+        ...center,
+        waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
+        is_book_request: (center as any).services?.some((service: any) => service.can_request == 1),
+      }));
+    }
+
+    return inPersonCenters.map(center => ({
+      ...center,
+      waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
+      ...(useAvailabilityStatusApi && {
+        is_active: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.status == 'AVAILABLE',
+        freeturn_text: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn
+          ? moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
+              ?.locale('fa')
+              .calendar(undefined, {
+                sameDay: '[امروز] ساعت HH:mm',
+                nextDay: '[فردا] ساعت HH:mm',
+                sameElse: 'jD jMMMM ساعت HH:mm',
+              })
+          : '',
+        freeturns_info: alabilityStatus.data?.data?.availability
+          ?.filter((c: any) => c.center_id === center.id)
+          ?.map((item: any) => ({
+            available_time: item?.available_time ? new Date(item?.available_time).getTime() / 1000 : Date.now(),
+            availalbe_time_text: item?.available_time
+              ? moment(item?.available_time)?.locale('fa').calendar(undefined, {
+                  sameDay: '[امروز] ساعت HH:mm',
+                  nextDay: '[فردا] ساعت HH:mm',
+                  sameElse: 'jD jMMMM ساعت HH:mm',
+                })
+              : '',
+          })),
+      }),
+      is_book_request: center.services?.some((service: any) => service.can_request == 1),
+    }));
+  }, [alabilityStatus.data, centers, samanAvailability.data, samanLoaded, useAvailabilityStatusApi, waitingTimeInfo]);
 
   const onEvent = ({ centerId, serviceId }: { centerId: string; serviceId: string }) => {
     splunkInstance('doctor-profile').sendEvent({
@@ -158,19 +239,19 @@ export const Services = ({
     router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
   };
 
-
-  if (
-    !customize?.partnerKey &&
-    dontShowDeactiveBox &&
-    (alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk)
-  ) {
+  if (!customize?.partnerKey && dontShowDeactiveBox && hasNoBooking) {
     return null;
   }
 
-  if (alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
+  // Legacy / fully unavailable: show only Bulk when nothing is bookable
+  if (hasNoBooking && !(samanLoaded && showOnlineVisit)) {
     const sortedAvalaibleTime = () => {
-      const centers = alabilityStatus.data?.data?.availability?.filter((item: any) => item?.status === 'FUTURE_AVAILABLE');
-      const availableTime = sortBy(centers, 'available_time')[0]?.available_time;
+      if (samanLoaded && scopedInPerson.nearestAvailableTime) {
+        return formatSamanAvailabilityTime(scopedInPerson.nearestAvailableTime) || undefined;
+      }
+
+      const availabilityCenters = alabilityStatus.data?.data?.availability?.filter((item: any) => item?.status === 'FUTURE_AVAILABLE');
+      const availableTime = sortBy(availabilityCenters, 'available_time')[0]?.available_time;
       if (availableTime) {
         return moment(availableTime)?.locale('fa').calendar(undefined, {
           sameDay: '[امروز] ساعت HH:mm',
@@ -191,6 +272,7 @@ export const Services = ({
     );
   }
 
+  const showPresenceBulk = samanLoaded && hasPresence && !scopedInPerson.bookingAvailable;
 
   return (
     <>
@@ -203,7 +285,7 @@ export const Services = ({
             onBook={() => location.assign('http://drnoorbala.ir/')}
           />
         )}
-        {onlineVisit.enabled &&
+        {showOnlineVisit &&
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any, index: number) => (
@@ -215,48 +297,27 @@ export const Services = ({
                 variants={{ type: 'onlineVisit' }}
               />
             ))}
-        {router.query.centerTarget != CENTERS.CONSULT && centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
-          <Presence
-            doctorId={id}
-            centers={centers
-              .filter((center: any) => center.id !== CENTERS.CONSULT)
-              .map(center => ({
-                ...center,
-                waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
-                ...(useAvailabilityStatusApi && {
-                  is_active: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.status == 'AVAILABLE',
-                  freeturn_text: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn
-                    ? moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
-                      ?.locale('fa')
-                      .calendar(undefined, {
-                        sameDay: '[امروز] ساعت HH:mm',
-                        nextDay: '[فردا] ساعت HH:mm',
-                        sameElse: 'jD jMMMM ساعت HH:mm',
-                      })
-                    : '',
-                  freeturns_info: alabilityStatus.data?.data?.availability
-                    ?.filter((c: any) => c.center_id === center.id)
-                    ?.map((item: any) => ({
-                      available_time: item?.available_time ? new Date(item?.available_time).getTime() / 1000 : Date.now(),
-                      availalbe_time_text: item?.available_time
-                        ? moment(item?.available_time)?.locale('fa').calendar(undefined, {
-                          sameDay: '[امروز] ساعت HH:mm',
-                          nextDay: '[فردا] ساعت HH:mm',
-                          sameElse: 'jD jMMMM ساعت HH:mm',
-                        })
-                        : '',
-                    })),
-                }),
-                is_book_request: center.services.some((service: any) => service.can_request == 1),
-              }))}
-            onBook={({ centerId, serviceId }) =>
-              handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
-            }
-            displayName={doctor.display_name}
-            expertises={expertises}
-            doctorCity={doctor?.city_en_slug}
-          />
-        )}
+        {hasPresence &&
+          (showPresenceBulk ? (
+            <BulkService
+              displayName={doctor.display_name}
+              expertises={expertises}
+              availableTime={formatSamanAvailabilityTime(scopedInPerson.nearestAvailableTime) || undefined}
+              dcotorCity={doctor?.city_en_slug}
+            />
+          ) : (
+            <Presence
+              doctorId={id}
+              centers={presenceCenters}
+              onBook={({ centerId, serviceId }) =>
+                handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
+              }
+              displayName={doctor.display_name}
+              expertises={expertises}
+              doctorCity={doctor?.city_en_slug}
+              bookingDisabled={samanLoaded && !canBookPresence}
+            />
+          ))}
       </div>
 
       {isMobile && !inViewServices && (
@@ -265,7 +326,7 @@ export const Services = ({
             'bottom-0': isWebView,
           })}
         >
-          <Button onClick={() => scrollIntoViewWithOffset('#book-me', 90)} block>
+          <Button onClick={() => scrollIntoViewWithOffset('#book-me', 90)} block disabled={samanLoaded && !canBookPresence}>
             دریافت نوبت
           </Button>
         </div>

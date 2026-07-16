@@ -29,10 +29,11 @@ interface PresenceProps {
   expertises?: any;
   doctorCity?: string;
   doctorId?: string;
+  bookingDisabled?: boolean;
 }
 
 export const Presence = memo((props: PresenceProps) => {
-  const { centers, waitingTime, onBook, displayName, expertises, doctorCity, doctorId } = props;
+  const { centers, waitingTime, onBook, displayName, expertises, doctorCity, doctorId, bookingDisabled } = props;
   const router = useRouter();
   const slug = router.query.slug as string;
   const { data: absentScoreData } = useAbsentScore(slug);
@@ -100,6 +101,8 @@ export const Presence = memo((props: PresenceProps) => {
       : false;
 
   const handleOnBook = () => {
+    if (bookingDisabled) return;
+
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
     sendGaEvent({ action: 'newprofile', category: 'button-book', label: displayName });
 
@@ -228,6 +231,7 @@ export const Presence = memo((props: PresenceProps) => {
             {
               text: centers.every((center: any) => center.is_book_request) ? 'ثبت درخواست نوبت' : 'دریافت نوبت',
               onClick: handleOnBook,
+              disabled: bookingDisabled,
             },
           ],
         }}
