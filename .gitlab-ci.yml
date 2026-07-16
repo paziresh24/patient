@@ -39,5 +39,48 @@ build-docker-image:
       -d @webhook_payload.json
 
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "next"
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
+
+# Next branch → mobin Zot only (patient-next). Never push to GitLab production registry.
+# Requires CI/CD variables: MOBIN_ZOT_REGISTRY_USER, MOBIN_ZOT_REGISTRY_PASSWORD
+build-docker-image-next:
+  stage: build
+  image: docker:cli
+  services:
+    - name: docker:dind
+      command: ["--registry-mirror=https://docker.devneeds.ir"]
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+    ZOT_REGISTRY: registry.paziresh24.com
+    ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
+
+  before_script:
+    - apk add --no-cache curl
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
+
+  script:
+    - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
+    - docker push "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA"
+
+    - |
+      cat <<EOF > webhook_payload.json
+      {
+        "project_name": "$CI_PROJECT_NAME",
+        "commit_sha": "$CI_COMMIT_SHORT_SHA",
+        "branch": "$CI_COMMIT_BRANCH",
+        "registry_image": "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA",
+        "status": "build_success"
+      }
+      EOF
+
+    - >
+      curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
+      -H "Content-Type: application/json"
+      -d @webhook_payload.json
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "next"
       when: always
