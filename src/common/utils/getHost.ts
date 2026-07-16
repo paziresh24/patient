@@ -15,12 +15,12 @@ const readHeader = (headers: HeaderBag, key: string): string => {
   return value ?? '';
 };
 
-export function getHost(headers: HeaderBag) {
-  const forwardedHost = readHeader(headers, 'x-forwarded-host');
-  const host =
-    forwardedHost && forwardedHost.trim() !== ''
-      ? forwardedHost.split(',')[0].trim()
-      : readHeader(headers, 'host');
+export function getHost(headers: HeaderBag): string | undefined {
+  const forwardedHost = readHeader(headers, 'x-brand-identity')?.trim();
 
-  return host;
+  if (forwardedHost) {
+    return forwardedHost.split(',')[0].trim();
+  }
+
+  return readHeader(headers, 'host');
 }
