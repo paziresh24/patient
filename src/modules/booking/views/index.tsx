@@ -162,13 +162,15 @@ const BookingSteps = (props: BookingStepsProps) => {
         ? mapSamanAvailabilityToCenters(centers, samanAvailability.data)
         : centers;
 
-    if (doctorCentersQuery.data) {
-      const bookableById = new Map(doctorCentersQuery.data.map(c => [c.id, c.has_bookable_services]));
-      list = list.filter((c: any) => bookableById.get(c.id) !== false);
+    // getDoctorCenters already returns only centers with has_bookable_services === true.
+    // Treat that list as an allowlist so centers missing from it (e.g. online with false) are removed.
+    if (doctorCentersQuery.isSuccess && Array.isArray(doctorCentersQuery.data) && doctorCentersQuery.data.length > 0) {
+      const bookableIds = new Set(doctorCentersQuery.data.map(c => String(c.id)));
+      list = list.filter((c: any) => bookableIds.has(String(c.id)));
     }
 
     return list;
-  }, [centers, samanAvailability.data, useSamanAvailabilityStatus, doctorCentersQuery.data]);
+  }, [centers, samanAvailability.data, useSamanAvailabilityStatus, doctorCentersQuery.data, doctorCentersQuery.isSuccess]);
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
@@ -705,7 +707,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           title="انتخاب مرکز درمانی"
           Component={SelectCenter}
           data={{
-            loading: isLoading && !profile,
+            loading: (isLoading && !profile) || doctorCentersQuery.isLoading,
             centers: reformattedCentersProperty({ centers: enrichedCenters, displayName: profile?.display_name }),
             doctorName: profile?.display_name,
           }}
