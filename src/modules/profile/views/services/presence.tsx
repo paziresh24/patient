@@ -24,7 +24,7 @@ import BulkService from './bulk';
 interface PresenceProps {
   centers: any[];
   waitingTime?: string;
-  onBook: ({ centerId, serviceId }: { centerId: string; serviceId: string }) => void;
+  onBook: ({ centerId, serviceId }: { centerId: string; serviceId?: string }) => void;
   displayName: string;
   expertises?: any;
   doctorCity?: string;
@@ -158,8 +158,13 @@ export const Presence = memo((props: PresenceProps) => {
       return;
     }
 
-    if (center?.services?.length === 1) return onBook({ centerId: center.id, serviceId: center.services[0].id });
-
+    if (center?.services?.length === 1) {
+      const serviceId = center.services[0]?.id;
+      if (serviceId != null && String(serviceId) !== '-1') {
+        return onBook({ centerId: center.id, serviceId });
+      }
+      return onBook({ centerId: center.id });
+    }
     profileEvent('doctor profile select center button', {
       selected_center_name: center?.name,
       freeturn_text: center?.freeturn_text,
@@ -175,7 +180,10 @@ export const Presence = memo((props: PresenceProps) => {
     });
 
     handleCloseSelectServiceModal();
-    return onBook({ centerId: selectedCenter.id, serviceId: service.id });
+    if (service?.id != null && String(service.id) !== '-1') {
+      return onBook({ centerId: selectedCenter.id, serviceId: service.id });
+    }
+    return onBook({ centerId: selectedCenter.id });
   };
 
   if (centers.length === 1 && !!centers[0].freeturns_info?.length && isShowCenterAvailableBox) {

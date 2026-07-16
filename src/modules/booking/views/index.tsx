@@ -71,7 +71,12 @@ import {
   isCenterBookingAvailable,
   mapSamanAvailabilityToCenters,
 } from '../functions/mapSamanAvailabilityToCenters';
+import { isInvalidProfileServiceId, mapDoctorCenterServices } from '../functions/mapDoctorCenterServices';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
+import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
+import { useQuery } from '@tanstack/react-query';
 import useBooking from '../hooks/booking';
 import useFirstFreeTime from '../hooks/selectTime/useFirstFreeTime';
 import { Center } from '../types/selectCenter';
@@ -141,16 +146,33 @@ const BookingSteps = (props: BookingStepsProps) => {
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
     enabled: !!slug && useSamanAvailabilityStatus,
   });
+  const doctorCentersQuery = useQuery(
+    [ServerStateKeysEnum.DoctorCenters, slug],
+    () => getDoctorCenters(slug),
+    {
+      enabled: !!slug,
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+    },
+  );
   const enrichedCenters = useMemo(() => {
     if (!centers) return centers;
-    if (useSamanAvailabilityStatus && samanAvailability.data) {
-      return mapSamanAvailabilityToCenters(centers, samanAvailability.data);
+    let list =
+      useSamanAvailabilityStatus && samanAvailability.data
+        ? mapSamanAvailabilityToCenters(centers, samanAvailability.data)
+        : centers;
+
+    if (doctorCentersQuery.data) {
+      const bookableById = new Map(doctorCentersQuery.data.map(c => [c.id, c.has_bookable_services]));
+      list = list.filter((c: any) => bookableById.get(c.id) !== false);
     }
-    return centers;
-  }, [centers, samanAvailability.data, useSamanAvailabilityStatus]);
+
+    return list;
+  }, [centers, samanAvailability.data, useSamanAvailabilityStatus, doctorCentersQuery.data]);
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
+  const defaultCenterHydratedRef = useRef<string | null>(null);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const bookEvent = useFeatureValue<{
     destination?: string;
@@ -196,7 +218,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     centerId: center?.id,
     serviceId: service?.id,
     serverId: center?.server_id || '',
-    userCenterId: center?.user_center_id,
+    userCenterId: service?.user_center_id || center?.user_center_id,
   });
   const searchData = useSearch(
     {
@@ -214,33 +236,56 @@ const BookingSteps = (props: BookingStepsProps) => {
   const { data: services } = useGetServices({ slug, center_id: center?.id }, { enabled: !!center?.id && !!service?.id });
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
-  useEffect(() => {
-    if (defaultStep?.payload && enrichedCenters && step !== 'BOOK_REQUEST') {
-      const selectedCenter = enrichedCenters?.find((c: any) => c.id === defaultStep.payload.centerId);
-      if (!selectedCenter) return;
+  const activeCenterId = center?.id ?? defaultStep?.payload?.centerId;
+  const doctorCenterServicesQuery = useDoctorCenterServices(slug, activeCenterId, {
+    enabled: !!slug && !!activeCenterId && step !== 'SELECT_CENTER',
+  });
 
-      const selectedService =
-        (defaultStep.step === 'SELECT_TIME' || defaultStep.step === 'SELECT_USER') &&
-        selectedCenter?.services.find((c: any) => c.id.toString() === defaultStep.payload?.serviceId?.toString());
-
-      setCenter(selectedCenter);
-      setService(selectedService);
-
-      if (defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId) {
-        setTimeId(defaultStep.payload.timeId);
-      }
-
-      if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
-        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, timeId: '-1' }, { replaceUrl: true });
-      }
-
-      if (defaultStep.step === 'SELECT_SERVICES' && selectedCenter.services.length === 1) {
-        return handleChangeStep(defaultStep?.step ?? 'SELECT_TIME', { serviceId: selectedCenter.services?.[0]?.id }, { replaceUrl: true });
-      }
-
-      setStep(defaultStep?.step ?? 'SELECT_CENTER');
+  const centerBookableServices = useMemo(() => {
+    if (!center) return [];
+    if (doctorCenterServicesQuery.isSuccess && doctorCenterServicesQuery.data) {
+      return mapDoctorCenterServices(doctorCenterServicesQuery.data, center.user_center_id);
     }
-  }, [enrichedCenters, defaultStep]);
+    if (doctorCenterServicesQuery.isError) {
+      return center.services ?? [];
+    }
+    return [];
+  }, [
+    center,
+    doctorCenterServicesQuery.isSuccess,
+    doctorCenterServicesQuery.isError,
+    doctorCenterServicesQuery.data,
+  ]);
+
+  const centerServicesLoading =
+    !!activeCenterId &&
+    step !== 'SELECT_CENTER' &&
+    doctorCenterServicesQuery.isLoading &&
+    !doctorCenterServicesQuery.isError;
+
+  useEffect(() => {
+    defaultCenterHydratedRef.current = null;
+  }, [defaultStep?.payload?.centerId, defaultStep?.step]);
+
+  useEffect(() => {
+    if (!defaultStep?.payload?.centerId || !enrichedCenters || step === 'BOOK_REQUEST') return;
+
+    const selectedCenter = enrichedCenters.find((c: any) => c.id === defaultStep.payload.centerId);
+    if (!selectedCenter) return;
+
+    setCenter(selectedCenter);
+
+    if (defaultStep.step === 'SELECT_USER' && (defaultStep.payload as Payloads)?.timeId) {
+      setTimeId((defaultStep.payload as Payloads).timeId);
+    }
+
+    if (defaultStep.step === 'SELECT_CENTER') {
+      setStep('SELECT_CENTER');
+      return;
+    }
+
+    setStep(defaultStep.step === 'SELECT_TIME' || defaultStep.step === 'SELECT_USER' ? defaultStep.step : 'SELECT_SERVICES');
+  }, [enrichedCenters, defaultStep?.payload?.centerId, defaultStep?.step, (defaultStep?.payload as any)?.timeId]);
 
   useEffect(() => {
     if (!useSamanAvailabilityStatus || !samanAvailability.data || !centers) return;
@@ -495,6 +540,70 @@ const BookingSteps = (props: BookingStepsProps) => {
   };
 
   useEffect(() => {
+    if (!center || centerServicesLoading) return;
+    if (step !== 'SELECT_SERVICES' && step !== 'SELECT_TIME' && step !== 'SELECT_USER') return;
+
+    const payload = defaultStep?.payload as Partial<Payloads> | undefined;
+    const hydrationKey = `${center.id}:${defaultStep?.step ?? step}:${payload?.serviceId ?? ''}`;
+    if (defaultCenterHydratedRef.current === hydrationKey) return;
+
+    const bookableServices = centerBookableServices;
+    if (!doctorCenterServicesQuery.isSuccess && !doctorCenterServicesQuery.isError) return;
+
+    const requestedServiceId = payload?.serviceId ?? service?.id;
+    const hasValidRequestedId = !isInvalidProfileServiceId(requestedServiceId);
+
+    let selectedService =
+      hasValidRequestedId && requestedServiceId
+        ? bookableServices.find((item: any) => item.id?.toString() === requestedServiceId.toString())
+        : undefined;
+
+    if (!selectedService && bookableServices.length === 1) {
+      selectedService = bookableServices[0];
+    }
+
+    if (step === 'SELECT_SERVICES' || (!selectedService && (step === 'SELECT_TIME' || step === 'SELECT_USER'))) {
+      if (bookableServices.length === 1) {
+        const onlyService = bookableServices[0];
+        defaultCenterHydratedRef.current = hydrationKey;
+        setService(onlyService);
+        if (onlyService?.can_request) {
+          handleChangeStep('SELECT_USER', { centerId: center.id, serviceId: onlyService.id, timeId: '-1' }, { replaceUrl: true });
+        } else {
+          handleChangeStep('SELECT_TIME', { centerId: center.id, serviceId: onlyService.id }, { replaceUrl: true });
+        }
+        return;
+      }
+
+      defaultCenterHydratedRef.current = hydrationKey;
+      setService(undefined);
+      if (step !== 'SELECT_SERVICES') {
+        handleChangeStep('SELECT_SERVICES', { centerId: center.id, serviceId: '' }, { replaceUrl: true });
+      }
+      return;
+    }
+
+    if (selectedService) {
+      defaultCenterHydratedRef.current = hydrationKey;
+      setService(selectedService);
+
+      if ((step === 'SELECT_TIME' || defaultStep?.step === 'SELECT_TIME') && selectedService.can_request) {
+        handleChangeStep('SELECT_USER', { serviceId: selectedService.id, timeId: '-1' }, { replaceUrl: true });
+      }
+    }
+  }, [
+    center,
+    centerBookableServices,
+    centerServicesLoading,
+    doctorCenterServicesQuery.isSuccess,
+    doctorCenterServicesQuery.isError,
+    step,
+    defaultStep?.step,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (defaultStep?.payload as any)?.serviceId,
+  ]);
+
+  useEffect(() => {
     if (step === 'SELECT_TIME') {
       clearTimeout(getTurnTimeout.current);
       getTurnTimeout.current = setTimeout(() => {
@@ -606,17 +715,9 @@ const BookingSteps = (props: BookingStepsProps) => {
               center: selectedCenter,
               doctorInfo: reformattedDoctorInfoForEvent({ center: selectedCenter, doctor: profile }),
             });
+            defaultCenterHydratedRef.current = null;
+            setService(undefined);
             setCenter(selectedCenter);
-            if (selectedCenter.services.length === 1) {
-              const service = selectedCenter.services[0];
-              const payload = {
-                centerId: center.id,
-                serviceId: service.id,
-              };
-              setService(service);
-              if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
-              return handleChangeStep('SELECT_TIME', payload);
-            }
             handleChangeStep('SELECT_SERVICES', { centerId: center.id });
           }}
         />
@@ -626,13 +727,13 @@ const BookingSteps = (props: BookingStepsProps) => {
           title="انتخاب خدمت"
           Component={SelectService}
           data={{
-            loading: isLoading || !center || !profile,
-            services: reformattedServicesProperty({ services: center?.services, center }),
+            loading: isLoading || centerServicesLoading || !center || !profile,
+            services: reformattedServicesProperty({ services: centerBookableServices, center }),
             doctorName: profile?.display_name,
             center: center,
           }}
           nextStep={(service: Service) => {
-            const selectedService = center?.services?.find((s: any) => s.id === service.id);
+            const selectedService = centerBookableServices?.find((s: any) => s.id === service.id);
             sendSelectServiceEvent(reformattedDoctorInfoForEvent({ center, service: selectedService, doctor: profile }));
             setService(selectedService);
             if (selectedService?.can_request) return handleChangeStep('SELECT_USER', { serviceId: service.id });
@@ -668,11 +769,11 @@ const BookingSteps = (props: BookingStepsProps) => {
             </>
           }
           data={{
-            loading: isLoading || !center || !service || !profile,
+            loading: isLoading || centerServicesLoading || !center || !service || !profile,
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
             serverId: center?.server_id ?? '',
-            userCenterId: service?.user_center_id,
+            userCenterId: service?.user_center_id ?? center?.user_center_id,
             showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {
               setFirstFreeTimeErrorText(errorText);

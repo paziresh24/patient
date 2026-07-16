@@ -178,14 +178,17 @@ export const Services = ({
   const handleOpenBookingPage = async (
     slug: string,
     centerId: string,
-    serviceId: string,
+    serviceId?: string,
     provider_id?: string,
     user_id?: string,
     city_name?: string,
   ) => {
-    const isBookRequest = centers
-      ?.find?.(center => center.id === centerId)
-      ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
+    const hasValidServiceId = !!serviceId && String(serviceId) !== '-1';
+    const isBookRequest =
+      hasValidServiceId &&
+      centers
+        ?.find?.(center => center.id === centerId)
+        ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
 
     // Check book request availability if feature flag is enabled and it's a book request
     if (isBookRequest && checkBookRequestAvailability) {
@@ -198,7 +201,7 @@ export const Services = ({
           const availabilityResponse = await bookRequestAvailability({
             center_id: centerId,
             user_center_id: userCenterId,
-            service_id: serviceId,
+            service_id: serviceId!,
           });
 
           if (!availabilityResponse.status && availabilityResponse.available_time) {
@@ -224,13 +227,13 @@ export const Services = ({
 
     const params = {
       centerId,
-      serviceId,
+      ...(hasValidServiceId && { serviceId }),
       cityName: city_name,
       ...(provider_id && user_id && { providerId: provider_id, userId: user_id }),
       ...(isBookRequest && { timeId: '-1' }),
     };
 
-    onEvent({ centerId, serviceId });
+    onEvent({ centerId, serviceId: serviceId ?? '' });
 
     if (isNativeWebView()) {
       if (isBookRequest) return location.assign(`/booking/${slug}?${queryStirng.stringify({ ...params, openInBrowser: 1 })}`);
