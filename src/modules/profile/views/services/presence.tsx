@@ -1,5 +1,3 @@
-import dynamic from 'next/dynamic';
-
 import Button from '@/common/components/atom/button/button';
 import Modal from '@/common/components/atom/modal/modal';
 import Text from '@/common/components/atom/text/text';
@@ -8,10 +6,11 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { sendGaEvent } from '@/common/services/sendGaEvent';
+import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { reformattedCentersProperty } from '@/modules/booking/functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '@/modules/booking/functions/reformattedServicesProperty';
+import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { memo, useState } from 'react';
-import Notification from '../../components/notification/notification';
 import ServiceCard from '../../components/serviceCard/serviceCard';
 import { useProfileSplunkEvent } from '../../hooks/useProfileEvent';
 import orderBy from 'lodash/orderBy';
@@ -20,19 +19,21 @@ import SelectCenter from '@/modules/booking/views/selectCenter';
 import { useRouter } from 'next/router';
 import { useAbsentScore } from '@/common/apis/services/ravi/absentScore';
 import BulkService from './bulk';
+import toast from 'react-hot-toast';
 
 interface PresenceProps {
   centers: any[];
   waitingTime?: string;
-  onBook: ({ centerId, serviceId }: { centerId: string; serviceId: string }) => void;
+  onBook: ({ centerId, serviceId }: { centerId: string; serviceId?: string }) => void;
   displayName: string;
   expertises?: any;
   doctorCity?: string;
   doctorId?: string;
+  bookingDisabled?: boolean;
 }
 
 export const Presence = memo((props: PresenceProps) => {
-  const { centers, waitingTime, onBook, displayName, expertises, doctorCity, doctorId } = props;
+  const { centers, waitingTime, onBook, displayName, expertises, doctorCity, doctorId, bookingDisabled } = props;
   const router = useRouter();
   const slug = router.query.slug as string;
   const { data: absentScoreData } = useAbsentScore(slug);
@@ -41,9 +42,33 @@ export const Presence = memo((props: PresenceProps) => {
   const isApplication = useApplication();
   const { profileEvent } = useProfileSplunkEvent();
   const [selectedCenter, setSelectedCenter] = useState<any>({});
+  const [isResolvingServices, setIsResolvingServices] = useState(false);
 
   const penaltyScoreItem = absentScoreData?.list?.find(item => item.penalty_score != null && item.penalty_score !== undefined);
   const penaltyScore = penaltyScoreItem?.penalty_score;
+
+  const needsDrprofileServices = (center: any) => {
+    const services = center?.services ?? [];
+    if (services.length === 0) return true;
+    return services.some((service: any) => isInvalidProfileServiceId(service?.id));
+  };
+
+  const resolveCenterServices = async (center: any) => {
+    if (!needsDrprofileServices(center) || !slug) {
+      return center.services ?? [];
+    }
+
+    try {
+      setIsResolvingServices(true);
+      const items = await getDoctorCenterServices(slug, center.id);
+      return mapDoctorCenterServices(items, center.user_center_id);
+    } catch (error) {
+      toast.error('خطا در دریافت خدمات مرکز درمانی.');
+      return center.services ?? [];
+    } finally {
+      setIsResolvingServices(false);
+    }
+  };
 
   const getAlertConfig = () => {
     if (!penaltyScore || penaltyScore === 0) {
@@ -100,6 +125,8 @@ export const Presence = memo((props: PresenceProps) => {
       : false;
 
   const handleOnBook = () => {
+    if (bookingDisabled) return;
+
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
     sendGaEvent({ action: 'newprofile', category: 'button-book', label: displayName });
 
@@ -133,7 +160,7 @@ export const Presence = memo((props: PresenceProps) => {
     handleOpenSelectCenterModal();
   };
 
-  const handleOnBookByCenter = (center: any, options?: { event: Record<string, string> }) => {
+  const handleOnBookByCenter = async (center: any, options?: { event: Record<string, string> }) => {
     profileEvent('center_selection_modal_click', {
       center_name: center.name,
       center_address: center.address,
@@ -143,25 +170,41 @@ export const Presence = memo((props: PresenceProps) => {
       center_type: center.center_type_name,
       ...options?.event,
     });
-    setSelectedCenter(center);
 
     if (center.is_center === 'mashhad') {
+      setSelectedCenter(center);
       handleOpenSelectExternalBookingModal();
       return;
     }
 
     if (center.is_only_in_app.status && !customise.partnerKey && !isWebView && !isApplication) {
+      setSelectedCenter(center);
       handleOpenSelectDownloadAppModal();
       return;
     }
 
-    if (center?.services?.length === 1) return onBook({ centerId: center.id, serviceId: center.services[0].id });
+    const resolvedServices = await resolveCenterServices(center);
+    const centerWithServices = { ...center, services: resolvedServices };
+    setSelectedCenter(centerWithServices);
+
+    if (resolvedServices.length === 1) {
+      const serviceId = resolvedServices[0]?.id;
+      if (!isInvalidProfileServiceId(serviceId)) {
+        return onBook({ centerId: center.id, serviceId });
+      }
+    }
+
+    if (resolvedServices.length === 0) {
+      toast.error('خدمتی برای این مرکز یافت نشد.');
+      return;
+    }
 
     profileEvent('doctor profile select center button', {
       selected_center_name: center?.name,
       freeturn_text: center?.freeturn_text,
     });
 
+    handleCloseSelectCenterModal();
     handleOpenSelectServiceModal();
   };
 
@@ -172,7 +215,10 @@ export const Presence = memo((props: PresenceProps) => {
     });
 
     handleCloseSelectServiceModal();
-    return onBook({ centerId: selectedCenter.id, serviceId: service.id });
+    if (service?.id != null && String(service.id) !== '-1') {
+      return onBook({ centerId: selectedCenter.id, serviceId: service.id });
+    }
+    return onBook({ centerId: selectedCenter.id });
   };
 
   if (centers.length === 1 && !!centers[0].freeturns_info?.length && isShowCenterAvailableBox) {
@@ -228,6 +274,8 @@ export const Presence = memo((props: PresenceProps) => {
             {
               text: centers.every((center: any) => center.is_book_request) ? 'ثبت درخواست نوبت' : 'دریافت نوبت',
               onClick: handleOnBook,
+              disabled: bookingDisabled || isResolvingServices,
+              loading: isResolvingServices,
             },
           ],
         }}

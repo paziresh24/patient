@@ -67,7 +67,9 @@ export const Aside = (data: any) => {
           doctorCity: information.city_en_slug,
         };
       },
-      children: (props: any) => <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} {...props} />,
+      children: (props: any) => (
+        <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} centers={centers} />
+      ),
     },
     {
       id: 'book-me',

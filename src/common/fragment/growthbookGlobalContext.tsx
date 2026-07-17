@@ -34,8 +34,9 @@ export const GrowthbookGlobalContext = ({
   }, [isDoctor, user]);
 
   const syncAttributes = (extra: Record<string, unknown> = {}) => {
+    const currentAttributes = growthbook.getAttributes();
     growthbook.setAttributes({
-      ...growthbook.getAttributes(),
+      ...currentAttributes,
       ...attr,
       ...previewAttributes,
       ...extra,

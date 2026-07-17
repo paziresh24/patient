@@ -5,5 +5,10 @@ export { getDoctorFullName, type DoctorFullNameResponse } from './getDoctorFullN
 export { getDoctorBiography, type DoctorBiographyResponse } from './getDoctorBiography';
 export { getDoctorImage, type DoctorImageResponse } from './getDoctorImage';
 export { getDoctorCenters, type DoctorCentersResponse } from './getDoctorCenters';
+export {
+  getDoctorCenterServices,
+  useDoctorCenterServices,
+  type DoctorCenterServiceResponse,
+} from './getDoctorCenterServices';
 export { getDoctorGallery, type DoctorGalleryResponse } from './getDoctorGallery';
 export { getDoctorExpertise, type DoctorExpertiseResponse } from './getDoctorExpertise';
