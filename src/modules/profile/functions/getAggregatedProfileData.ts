@@ -7,6 +7,7 @@ import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullNa
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
+import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { splunkInstance } from '@/common/services/splunk';
@@ -129,6 +130,7 @@ export async function getAggregatedProfileData(
     useNewDoctorBiographyAPI?: boolean;
     useNewDoctorCentersAPI?: boolean;
     useNewDoctorGalleryAPI?: boolean;
+    prefetchSamanAvailability?: boolean;
   },
 ) {
   const queryClient = new QueryClient();
@@ -295,18 +297,32 @@ export async function getAggregatedProfileData(
     apiCalls.push(getDoctorCenters(validatedSlug, university));
   }
 
+  const samanAvailabilityPromise =
+    isServer && options?.prefetchSamanAvailability
+      ? queryClient
+          .fetchQuery([ServerStateKeysEnum.SamanDoctorAvailabilityStatus, validatedSlug], () =>
+            samanDoctorAvailabilityStatus(validatedSlug),
+          )
+          .catch(error => {
+            console.error('Error prefetching Saman availability status:', error);
+            return null;
+          })
+      : Promise.resolve(null);
+
   const [
-    internalLinksBreadcrumbResult,
-    internalLinksRelatedResult,
-    reviewsResult,
-    averageWaitingTimeResult,
-    rismanResult,
-    doctorFullNameResult,
-    doctorExpertiseResult,
-    doctorImageResult,
-    doctorBiographyResult,
-    doctorCentersResult,
-  ] = await Promise.allSettled(apiCalls);
+    [
+      internalLinksBreadcrumbResult,
+      internalLinksRelatedResult,
+      reviewsResult,
+      averageWaitingTimeResult,
+      rismanResult,
+      doctorFullNameResult,
+      doctorExpertiseResult,
+      doctorImageResult,
+      doctorBiographyResult,
+      doctorCentersResult,
+    ],
+  ] = await Promise.all([Promise.allSettled(apiCalls), samanAvailabilityPromise]);
 
   // Extract doctor full name from API response
   const doctorFullName =
@@ -570,6 +586,8 @@ export async function getAggregatedProfileData(
       hamdastWidgetsData: widgetsData,
       user_id: userData?.user_id ?? null,
       shouldFetchOnClient: !fullProfileData?.id,
+      useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
+      ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
     },
   };
 

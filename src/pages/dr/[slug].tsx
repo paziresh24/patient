@@ -160,6 +160,7 @@ const DoctorProfile = (props: any) => {
     hamdastWidgetsData: hamdastWidgetsDataFromProps,
     user_id,
     dontShowRateAndReviewMessage,
+    useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
   } = finalProps ?? {};
 
   const rateDebug = query.rateDebug === '1';
@@ -347,6 +348,7 @@ const DoctorProfile = (props: any) => {
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
+    useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
   };
 
   if (!finalProps?.information?.id ? shouldFetchOnClient || isLoading : false) {
