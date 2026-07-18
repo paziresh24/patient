@@ -2,6 +2,7 @@ import { searchClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useQuery } from '@tanstack/react-query';
+import { normalizeSearchRoute } from './route';
 
 export interface Params {
   query?: any;
@@ -11,7 +12,7 @@ export interface Params {
 }
 
 export const search = async ({ route, query, headers, timeout }: Params) => {
-  const { data } = await searchClient.get(`/seapi/v1/search/${encodeURI(route)}`, {
+  const { data } = await searchClient.get(`/seapi/v1/search/${encodeURI(normalizeSearchRoute(route))}`, {
     params: {
       ...query,
     },
