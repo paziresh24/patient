@@ -93,6 +93,7 @@ interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
   className?: string;
+  ssrUseSamanAvailabilityStatus?: boolean;
 }
 
 type SELECT_CENTER = {
@@ -130,7 +131,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
   const { customize } = useCustomize();
   const isApplication = useApplication();
-  const { slug, defaultStep, className } = props;
+  const { slug, defaultStep, className, ssrUseSamanAvailabilityStatus = false } = props;
   const { isMobile } = useResponsive();
   const { data, isLoading } = useGetProfileData(
     {
@@ -142,7 +143,8 @@ const BookingSteps = (props: BookingStepsProps) => {
   );
   const centers = data?.data?.centers;
   const profile = data?.data;
-  const useSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
+  const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
+  const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
     enabled: !!slug && useSamanAvailabilityStatus,
   });
