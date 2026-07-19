@@ -1,12 +1,10 @@
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import { RaviWidget } from '@/modules/rate-and-review';
-import { useNewRaviWithAi } from '@/modules/rate-and-review/composables/useNewRaviWithAi';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
 
 export default function RaviReviewsPreviewPage() {
   const router = useRouter();
-  const { isEnabled: showNewRaviWithAi, isReady } = useNewRaviWithAi();
   const [slugInput, setSlugInput] = useState('');
   const [activeSlug, setActiveSlug] = useState('');
 
@@ -46,17 +44,6 @@ export default function RaviReviewsPreviewPage() {
             </button>
           </form>
         </div>
-
-        {!isReady ? (
-          <p className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-500">در حال بارگذاری تنظیمات...</p>
-        ) : null}
-
-        {isReady && !showNewRaviWithAi ? (
-          <p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-            در پروفایل واقعی، این بخش فقط برای کاربرانی که فیچر فلگ <code>new-ravi-with-ai</code> فعال است
-            نمایش داده می‌شود. در این صفحه پیش‌نمایش، ویجت بدون توجه به فلگ بارگذاری می‌شود.
-          </p>
-        ) : null}
 
         {activeSlug ? <RaviWidget doctorSlug={activeSlug} /> : null}
       </div>
