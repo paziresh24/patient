@@ -29,6 +29,7 @@ export const RaviList = ({ doctorSlug, doctorUserId, userId, centers = [] }: Rav
     onFilter,
     error,
     page,
+    retry,
     removeReview,
     updateReviewDescription,
   } = useRaviReviews(doctorSlug, userId);
@@ -66,7 +67,20 @@ export const RaviList = ({ doctorSlug, doctorUserId, userId, centers = [] }: Rav
         />
       </div>
 
-      {error ? <p className="px-4 pb-3 text-sm text-rose-600">{error}</p> : null}
+      {error ? (
+        <div className="flex flex-col items-center gap-3 px-4 pb-4">
+          <p className="text-sm text-black">{error}</p>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="!border-black !text-black hover:!bg-black/5"
+            onClick={retry}
+            loading={isLoading}
+          >
+            تلاش مجدد
+          </Button>
+        </div>
+      ) : null}
 
       {debouncedSearch && hasMore ? (
         <p className="px-4 pb-2 text-xs text-slate-500">جستجو فقط در نظرات بارگذاری‌شده انجام می‌شود.</p>
@@ -78,7 +92,7 @@ export const RaviList = ({ doctorSlug, doctorUserId, userId, centers = [] }: Rav
         </p>
       ) : null}
 
-      {!showInitialLoading && !reviews.length ? (
+      {!error && !showInitialLoading && !reviews.length ? (
         <p className="px-4 pb-4 text-sm text-slate-500">نظری ثبت نشده است.</p>
       ) : null}
 
@@ -99,7 +113,7 @@ export const RaviList = ({ doctorSlug, doctorUserId, userId, centers = [] }: Rav
         ))}
       </div>
 
-      {hasMore ? (
+      {hasMore && !error ? (
         <div className="p-4">
           <Button variant="secondary" block onClick={loadMore} loading={page > 1 && isLoading}>
             نمایش بیشتر

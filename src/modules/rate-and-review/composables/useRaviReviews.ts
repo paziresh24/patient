@@ -28,6 +28,12 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const lastRequestRef = useRef<{
+    page: number;
+    sort: RaviSort;
+    filter: RaviReviewFilterValue;
+    append: boolean;
+  } | null>(null);
 
   const toQuery = useCallback(
     (nextPage: number, nextSort: RaviSort, nextFilter: RaviReviewFilterValue): RaviReviewQuery => {
@@ -52,6 +58,7 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
     async (nextPage: number, nextSort: RaviSort, nextFilter: RaviReviewFilterValue, append: boolean) => {
       if (!doctorSlug) return;
 
+      lastRequestRef.current = { page: nextPage, sort: nextSort, filter: nextFilter, append };
       setIsLoading(true);
       setError(null);
       try {
@@ -74,14 +81,23 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
           filter: nextFilter,
           page: nextPage,
         };
-      } catch (e) {
-        setError(e instanceof Error ? e.message : 'خطا در دریافت نظرات');
+      } catch {
+        setError('خطا در دریافت نظرات');
       } finally {
         setIsLoading(false);
       }
     },
     [doctorSlug, toQuery],
   );
+
+  const retry = useCallback(() => {
+    const last = lastRequestRef.current;
+    if (!last) {
+      run(1, sort, filter, false);
+      return;
+    }
+    run(last.page, last.sort, last.filter, last.append);
+  }, [filter, run, sort]);
 
   const applyDebouncedSearch = useMemo(
     () =>
@@ -199,6 +215,7 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
     sort,
     filter,
     loadMore,
+    retry,
     onSearch,
     onSort,
     onFilter,
