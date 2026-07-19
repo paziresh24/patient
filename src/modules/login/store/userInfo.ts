@@ -1,7 +1,6 @@
 /* eslint-disable no-extra-boolean-cast */
 import { clinicClient } from '@/common/apis/client';
-import axios from 'axios';
-import { getCookie, removeCookies } from 'cookies-next';
+import { removeCookies } from 'cookies-next';
 import isEmpty from 'lodash/isEmpty';
 import { growthbook } from 'src/pages/_app';
 import { create } from 'zustand';
@@ -140,22 +139,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       isLogin: false,
       doctorProfilePending: false,
     }));
-    try {
-      axios
-        .get('https://users.paziresh24.com/webhook/logout', {
-          withCredentials: !getCookie('token'),
-          ...(getCookie('token') && {
-            headers: {
-              Authorization: 'Bearer ' + getCookie('token'),
-            },
-          }),
-        })
-        .then(() => {
-          clinicClient.get('/logout');
-        });
-    } catch (error) {
-      console.error(error);
-    }
+    clinicClient.get('/logout').catch(console.error);
     removeCookies('certificate');
     removeCookies('token');
   },
