@@ -263,8 +263,14 @@ export const Services = ({
   // Legacy / fully unavailable: show only Bulk when nothing is bookable
   if (hasNoBooking && !(samanLoaded && showOnlineVisit)) {
     const sortedAvalaibleTime = () => {
-      if (samanLoaded && scopedInPerson.nearestAvailableTime) {
-        return formatSamanAvailabilityTime(scopedInPerson.nearestAvailableTime) || undefined;
+      if (samanLoaded) {
+        const futureTimes = [scopedInPerson.nearestAvailableTime, scopedOnlineVisit.nearestAvailableTime].filter(
+          (time): time is string => !!time,
+        );
+        const earliest = futureTimes.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0];
+        if (earliest) {
+          return formatSamanAvailabilityTime(earliest) || undefined;
+        }
       }
 
       const availabilityCenters = alabilityStatus.data?.data?.availability?.filter((item: any) => item?.status === 'FUTURE_AVAILABLE');
@@ -289,7 +295,10 @@ export const Services = ({
     );
   }
 
-  const showPresenceBulk = samanLoaded && hasPresence && !scopedInPerson.bookingAvailable;
+  // Presence bulk only when in-person is unavailable AND online visit is also unavailable
+  const showPresenceBulk = samanLoaded && hasPresence && !scopedInPerson.bookingAvailable && !showOnlineVisit;
+  // When online visit is active, hide the in-person "no booking" box entirely
+  const showPresenceSection = hasPresence && !(showOnlineVisit && !scopedInPerson.bookingAvailable);
 
   return (
     <>
@@ -314,13 +323,14 @@ export const Services = ({
                 variants={{ type: 'onlineVisit' }}
               />
             ))}
-        {hasPresence &&
+        {showPresenceSection &&
           (showPresenceBulk ? (
             <BulkService
               displayName={doctor.display_name}
               expertises={expertises}
               availableTime={formatSamanAvailabilityTime(scopedInPerson.nearestAvailableTime) || undefined}
               dcotorCity={doctor?.city_en_slug}
+              showSubstituteDoctor={false}
             />
           ) : (
             <Presence
@@ -343,7 +353,11 @@ export const Services = ({
             'bottom-0': isWebView,
           })}
         >
-          <Button onClick={() => scrollIntoViewWithOffset('#book-me', 90)} block disabled={samanLoaded && !canBookPresence}>
+          <Button
+            onClick={() => scrollIntoViewWithOffset('#book-me', 90)}
+            block
+            disabled={samanLoaded && !canBookPresence && !showOnlineVisit}
+          >
             دریافت نوبت
           </Button>
         </div>

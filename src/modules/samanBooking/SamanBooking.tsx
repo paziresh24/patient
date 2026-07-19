@@ -62,8 +62,17 @@ const SamanBooking = ({
   const scopedInPerson = getScopedInPersonAvailability(scopedCenters, v1AvailabilityData);
   const scopedOnline = getScopedOnlineVisitAvailability(scopedCenters, v1AvailabilityData);
 
+  const hasFutureAvailableTime = useSamanAvailabilityStatus
+    ? !!(scopedInPerson.nearestAvailableTime || scopedOnline.nearestAvailableTime)
+    : !!legacyAvailabilityData?.nearest_available_time;
+
+  // Inactive only when nothing is bookable now and no future available_time (Saman)
   const isInactive = useSamanAvailabilityStatus
-    ? !isV1Error && !!v1AvailabilityData && !scopedInPerson.bookingAvailable && !scopedOnline.bookingAvailable
+    ? !isV1Error &&
+      !!v1AvailabilityData &&
+      !scopedInPerson.bookingAvailable &&
+      !scopedOnline.bookingAvailable &&
+      !hasFutureAvailableTime
     : !legacyAvailabilityData?.booking_available && !legacyAvailabilityData?.nearest_available_time;
 
   return (

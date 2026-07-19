@@ -228,6 +228,7 @@ export const Presence = memo((props: PresenceProps) => {
         expertises={expertises ?? { group_expertises: [], expertises: [] }}
         dcotorCity={doctorCity ?? ''}
         availableTime={centers[0].freeturns_info?.[0] && centers[0].freeturns_info?.[0]?.availalbe_time_text}
+        showSubstituteDoctor={false}
       />
     );
   }
