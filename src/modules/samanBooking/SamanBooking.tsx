@@ -62,24 +62,29 @@ const SamanBooking = ({
   const scopedInPerson = getScopedInPersonAvailability(scopedCenters, v1AvailabilityData);
   const scopedOnline = getScopedOnlineVisitAvailability(scopedCenters, v1AvailabilityData);
 
-  const hasFutureAvailableTime = useSamanAvailabilityStatus
-    ? !!(scopedInPerson.nearestAvailableTime || scopedOnline.nearestAvailableTime)
-    : !!legacyAvailabilityData?.nearest_available_time;
+  const futureAvailableTime =
+    scopedInPerson.nearestAvailableTime || scopedOnline.nearestAvailableTime || legacyAvailabilityData?.nearest_available_time || null;
 
-  // Inactive only when nothing is bookable now and no future available_time (Saman)
-  const isInactive = useSamanAvailabilityStatus
-    ? !isV1Error &&
-      !!v1AvailabilityData &&
-      !scopedInPerson.bookingAvailable &&
-      !scopedOnline.bookingAvailable &&
-      !hasFutureAvailableTime
-    : !legacyAvailabilityData?.booking_available && !legacyAvailabilityData?.nearest_available_time;
+  const hasFutureAvailableTime = !!futureAvailableTime;
+
+  const nothingBookable = useSamanAvailabilityStatus
+    ? !isV1Error && !!v1AvailabilityData && !scopedInPerson.bookingAvailable && !scopedOnline.bookingAvailable
+    : !legacyAvailabilityData?.booking_available;
+
+  // Show inactive/future box when nothing is bookable now (with or without future available_time)
+  const showUnavailableState = nothingBookable;
 
   return (
     <div className="flex flex-col space-y-3">
       <Card className="space-y-3 !rounded-none md:!rounded-lg">
-        {isInactive && (
-          <InActiveDoctor displayName={displayName} expertises={expertises} doctorCity={doctorCity} showSubstituteButton={true} />
+        {showUnavailableState && (
+          <InActiveDoctor
+            displayName={displayName}
+            expertises={expertises}
+            doctorCity={doctorCity}
+            availableTime={hasFutureAvailableTime ? futureAvailableTime : undefined}
+            showSubstituteButton={!hasFutureAvailableTime}
+          />
         )}
       </Card>
     </div>

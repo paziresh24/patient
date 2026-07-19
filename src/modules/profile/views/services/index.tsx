@@ -295,10 +295,11 @@ export const Services = ({
     );
   }
 
-  // Presence bulk only when in-person is unavailable AND online visit is also unavailable
-  const showPresenceBulk = samanLoaded && hasPresence && !scopedInPerson.bookingAvailable && !showOnlineVisit;
-  // When online visit is active, hide the in-person "no booking" box entirely
-  const showPresenceSection = hasPresence && !(showOnlineVisit && !scopedInPerson.bookingAvailable);
+  // Hide empty in-person "no booking" box when online visit is active — but keep the future available_time box
+  const hidePresenceBecauseOnlineOnly =
+    showOnlineVisit && !scopedInPerson.bookingAvailable && !scopedInPerson.nearestAvailableTime;
+  const showPresenceBulk = samanLoaded && hasPresence && !scopedInPerson.bookingAvailable && !hidePresenceBecauseOnlineOnly;
+  const showPresenceSection = hasPresence && !hidePresenceBecauseOnlineOnly;
 
   return (
     <>
