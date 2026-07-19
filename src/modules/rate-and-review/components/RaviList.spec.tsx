@@ -48,6 +48,7 @@ const baseHookState = {
   sort: 'default_order' as const,
   filter: { type: 'all' as const },
   loadMore: jest.fn(),
+  retry: jest.fn(),
   onSearch: jest.fn(),
   onSort: jest.fn(),
   onFilter: jest.fn(),
@@ -118,5 +119,23 @@ describe('RaviList user flows', () => {
     });
 
     expect(onSearch).toHaveBeenCalledWith('علی');
+  });
+
+  it('shows fixed error message and retries on button click', () => {
+    const retry = jest.fn();
+    mockedUseRaviReviews.mockReturnValue({
+      ...baseHookState,
+      list: [],
+      hasMore: false,
+      error: 'خطا در دریافت نظرات',
+      retry,
+    });
+
+    render(<RaviList doctorSlug="dr-test" />);
+
+    expect(screen.getByText('خطا در دریافت نظرات')).toBeInTheDocument();
+    expect(screen.queryByText('نظری ثبت نشده است.')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'تلاش مجدد' }));
+    expect(retry).toHaveBeenCalled();
   });
 });
