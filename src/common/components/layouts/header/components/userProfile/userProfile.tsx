@@ -32,10 +32,19 @@ import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
 import useResponsive from '@/common/hooks/useResponsive';
+
+type ProfileMenuItem = {
+  name: string;
+  icon: ReactNode;
+  link?: string;
+  badge?: ReactNode;
+  onClick?: () => void;
+  shouldShow: boolean;
+};
 
 export const UserProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -70,7 +79,7 @@ export const UserProfile = () => {
     setOpen(false);
   });
 
-  const menuItems = isShowDashboard
+  const menuItems: ProfileMenuItem[] = (isShowDashboard
     ? [
         {
           name: 'داشبورد',
@@ -107,7 +116,7 @@ export const UserProfile = () => {
           link: 'https://support.paziresh24.com',
           shouldShow: showSupportMenuButton,
         },
-      ].filter(item => item.shouldShow)
+      ]
     : [
         {
           name: t('patient/common:menu.myTurns'),
@@ -130,7 +139,8 @@ export const UserProfile = () => {
           link: '/patient/subuser',
           shouldShow: true,
         },
-      ].filter(item => item.shouldShow);
+      ]
+  ).filter(item => item.shouldShow);
 
   useEffect(() => {
     open && handleGetTurnsCount();
