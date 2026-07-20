@@ -44,8 +44,7 @@ export const GrowthbookGlobalContext = ({
       id: getCookie('terminal_id'),
       user_id: user?.id,
       is_doctor: isDoctor,
-      // Do not overwrite page-level `slug` (e.g. /dr/[slug] targeting). Use provider_slug for logged-in doctor.
-      provider_slug: user?.provider?.slug,
+      slug: user?.provider?.slug,
       host: window.location.host,
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       doctor_specialties: getDoctorSpecialties,

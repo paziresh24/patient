@@ -14,6 +14,7 @@ interface SamanBookingProps {
   expertises?: any;
   doctorCity?: string;
   centers?: { id: string }[];
+  ssrUseSamanAvailabilityStatus?: boolean;
 }
 
 interface LegacyAvailabilityResponse {
@@ -22,8 +23,16 @@ interface LegacyAvailabilityResponse {
   nearest_available_time: string | null;
 }
 
-const SamanBooking = ({ slug, displayName, expertises, doctorCity, centers = [] }: SamanBookingProps) => {
-  const useSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
+const SamanBooking = ({
+  slug,
+  displayName,
+  expertises,
+  doctorCity,
+  centers = [],
+  ssrUseSamanAvailabilityStatus = false,
+}: SamanBookingProps) => {
+  const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
+  const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
 
   const {
     data: v1AvailabilityData,
