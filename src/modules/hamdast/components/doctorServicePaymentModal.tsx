@@ -404,12 +404,6 @@ export default forwardRef(
                 </div>
               </div>
 
-              {!isLoadingBalances && !hasEnoughBalance && (
-                <Text fontSize="xs" className="text-slate-500 px-0.5">
-                  موجودی کافی نیست؛ ابتدا کیف پول شارژ می‌شود.
-                </Text>
-              )}
-
               <Button
                 variant="primary"
                 size="sm"
@@ -418,7 +412,7 @@ export default forwardRef(
                 onClick={handleCheckPayment}
                 disabled={isLoadingBalances}
               >
-                {hasEnoughBalance ? `پرداخت ${formatToman(payableAmount)}` : 'افزایش موجودی و پرداخت'}
+                {`پرداخت ${formatToman(payableAmount)}`}
               </Button>
             </div>
           )}
