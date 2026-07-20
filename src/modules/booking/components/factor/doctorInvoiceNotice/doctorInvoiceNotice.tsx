@@ -12,6 +12,7 @@ import { useInvoiceNoticeFreeturn } from '@/modules/booking/hooks/factor/useInvo
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useQuery } from '@tanstack/react-query';
 import getConfig from 'next/config';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 const { publicRuntimeConfig } = getConfig();
 
 export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; serviceId: string }) => {
@@ -45,7 +46,7 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
   const doctorUserId = (doctorSlugData as DoctorSlugValidationResponse | undefined)?.user_id;
   const doctorAvatar = doctorUserId
     ? picUserImageUrl(doctorUserId)
-    : publicRuntimeConfig.CDN_BASE_URL + profile?.data?.image;
+    : getImageUrl(profile?.data?.image, publicRuntimeConfig.CDN_BASE_URL) || undefined;
 
   return (
     <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">

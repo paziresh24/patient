@@ -7,6 +7,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import { handleSsrError } from '@/common/utils/handleSsrError';
 import { withCSR } from '@/common/hoc/withCsr';
+import { trackSsrError } from '@/common/utils/ssrErrorTracker';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { getHost, HeaderBag } from '@/common/utils/getHost';
@@ -32,12 +33,10 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
       await growthbook.loadFeatures({ timeout: 500 });
       prefetchSamanAvailability = growthbook.isOn('use-saman-availability-status');
     } catch (error) {
-      console.error('Error loading GrowthBook for Saman availability SSR:', error);
+      trackSsrError(error, { source: 'ProfileSSR', message: 'Error loading GrowthBook for Saman availability SSR', path: context.resolvedUrl });
     }
 
     try {
-      console.log('🔍 Server-side feature flags for slug:', slug);
-
       const finalProps = await getAggregatedProfileData(slug, university, true, {
         useNewDoctorFullNameAPI: true,
         useNewDoctorExpertiseAPI: true,
@@ -57,8 +56,6 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log(error.response?.status);
-
         const status = error.response?.status ?? 500;
         const statusCode = status === 404 ? 410 : error.message.includes('timeout') || status === 504 ? 504 : status;
 
@@ -107,7 +104,7 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
         return handleSsrError(context.res.statusCode, slug);
       }
 
-      console.error('A non-Axios error occurred in getProfileServerSideProps:', error);
+      trackSsrError(error, { source: 'ProfileSSR', message: 'A non-Axios error occurred in getProfileServerSideProps', path: context.resolvedUrl });
       context.res.statusCode = 500;
       return handleSsrError(context.res.statusCode, slug);
     }
