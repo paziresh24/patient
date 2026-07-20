@@ -32,13 +32,13 @@ export const HamdastAppModal = ({
       noLine={noLine}
       fullScreen={fullScreenOnDesktop && !isMobile}
       className={classNames(
-        isMobile ? '!h-[90vh] !max-h-[90vh] !min-h-0 overflow-hidden' : '!min-h-0 overflow-hidden',
+        isMobile ? '!h-[90vh] !max-h-[90vh] !min-h-0 !overflow-hidden' : '!min-h-0 !overflow-hidden',
         !isMobile && 'transition-[width] duration-300',
         !isMobile && runFullscreen && 'md:!w-[calc(100vw_-_6rem)] md:!max-w-none',
       )}
-      bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden p-0"
+      bodyClassName="flex min-h-0 flex-1 flex-col !overflow-hidden overscroll-contain p-0"
     >
-      <div className="flex h-full min-h-0 flex-1 flex-col">{children}</div>
+      <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">{children}</div>
     </Modal>
   );
 };
