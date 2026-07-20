@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react';
 import DoctorServicePaymentModal from './doctorServicePaymentModal';
 import { getProfileDoctorUserId, getProfileWidgetName } from '../stores/profileDoctorInfo';
 
-export const HamdastDoctorServicePayment = ({ app_key, app_name, icon, iframeRef }: { app_key: string; app_name: string; icon?: string; iframeRef: any }) => {
+export const HamdastDoctorServicePayment = ({ app_key, app_name, iframeRef }: { app_key: string; app_name: string; icon?: string; iframeRef: any }) => {
   const { isLogin, info } = useUserInfoStore();
   const { handleOpenLoginModal } = useLoginModalContext();
   const hashId = useRef<any>(null);
@@ -138,7 +138,6 @@ export const HamdastDoctorServicePayment = ({ app_key, app_name, icon, iframeRef
     <DoctorServicePaymentModal
       app_key={app_key}
       app_name={app_name}
-      icon={icon}
       onSuccess={handlePayment}
       onCancel={handleCancelPayment}
       onError={handleError}
