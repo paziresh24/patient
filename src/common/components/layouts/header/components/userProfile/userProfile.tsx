@@ -79,68 +79,69 @@ export const UserProfile = () => {
     setOpen(false);
   });
 
-  const menuItems: ProfileMenuItem[] = (isShowDashboard
-    ? [
-        {
-          name: 'داشبورد',
-          icon: <ElementIcon width={22} height={22} />,
-          link: isMobile ? '/_/' : '/dashboard/',
-          shouldShow: true,
-        },
-        {
-          name: t('patient/common:menu.myTurns'),
-          icon: <CalenderIcon />,
-          link: '/dashboard/appointments',
-          badge: !!turnsCount.presence && (
-            <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
-          ),
-          shouldShow: userInfo.provider?.job_title !== 'doctor',
-        },
-        {
-          name: 'مراجعین من',
-          icon: <CalenderIcon width={22} height={22} />,
-          link: '/dashboard/apps/drapp/appointments',
-          shouldShow: userInfo.provider?.job_title === 'doctor',
-        },
-        {
-          name: 'مشاهده پروفایل عمومی',
-          icon: isOpeningPublicProfile ? <Loading width={22} height={22} /> : <EyeIcon width={22} height={22} />,
-          onClick: () => {
-            void openPublicProfile();
-          },
-          shouldShow: userInfo.provider?.job_title === 'doctor',
-        },
-        {
-          name: 'پشتیبانی',
-          icon: <HeadphoneIcon width={22} height={22} />,
-          link: 'https://support.paziresh24.com',
-          shouldShow: showSupportMenuButton,
-        },
-      ]
-    : [
-        {
-          name: t('patient/common:menu.myTurns'),
-          icon: <CalenderIcon width={22} height={22} />,
-          link: '/patient/appointments',
-          badge: !!turnsCount.presence && (
-            <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
-          ),
-          shouldShow: true,
-        },
-        {
-          name: t('patient/common:menu.bookmarks'),
-          icon: <BookmarksIcon width={22} height={22} />,
-          link: '/patient/bookmarks',
-          shouldShow: customize.bookMark,
-        },
-        {
-          name: t('patient/common:menu.subuser'),
-          icon: <UsersIcon width={22} height={22} />,
-          link: '/patient/subuser',
-          shouldShow: true,
-        },
-      ]
-  ).filter(item => item.shouldShow);
+  const dashboardMenuItems: ProfileMenuItem[] = [
+    {
+      name: 'داشبورد',
+      icon: <ElementIcon width={22} height={22} />,
+      link: isMobile ? '/_/' : '/dashboard/',
+      shouldShow: true,
+    },
+    {
+      name: t('patient/common:menu.myTurns'),
+      icon: <CalenderIcon />,
+      link: '/dashboard/appointments',
+      badge: !!turnsCount.presence && (
+        <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
+      ),
+      shouldShow: userInfo.provider?.job_title !== 'doctor',
+    },
+    {
+      name: 'مراجعین من',
+      icon: <CalenderIcon width={22} height={22} />,
+      link: '/dashboard/apps/drapp/appointments',
+      shouldShow: userInfo.provider?.job_title === 'doctor',
+    },
+    {
+      name: 'مشاهده پروفایل عمومی',
+      icon: isOpeningPublicProfile ? <Loading width={22} height={22} /> : <EyeIcon width={22} height={22} />,
+      onClick: () => {
+        void openPublicProfile();
+      },
+      shouldShow: userInfo.provider?.job_title === 'doctor',
+    },
+    {
+      name: 'پشتیبانی',
+      icon: <HeadphoneIcon width={22} height={22} />,
+      link: 'https://support.paziresh24.com',
+      shouldShow: showSupportMenuButton,
+    },
+  ];
+
+  const patientMenuItems: ProfileMenuItem[] = [
+    {
+      name: t('patient/common:menu.myTurns'),
+      icon: <CalenderIcon width={22} height={22} />,
+      link: '/patient/appointments',
+      badge: !!turnsCount.presence && (
+        <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
+      ),
+      shouldShow: true,
+    },
+    {
+      name: t('patient/common:menu.bookmarks'),
+      icon: <BookmarksIcon width={22} height={22} />,
+      link: '/patient/bookmarks',
+      shouldShow: customize.bookMark,
+    },
+    {
+      name: t('patient/common:menu.subuser'),
+      icon: <UsersIcon width={22} height={22} />,
+      link: '/patient/subuser',
+      shouldShow: true,
+    },
+  ];
+
+  const menuItems = (isShowDashboard ? dashboardMenuItems : patientMenuItems).filter(item => item.shouldShow);
 
   useEffect(() => {
     open && handleGetTurnsCount();
