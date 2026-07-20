@@ -3,6 +3,7 @@ import Loading from '@/common/components/atom/loading';
 import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import ChatIcon from '@/common/components/icons/chat';
+import CloseIcon from '@/common/components/icons/close';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -25,10 +26,15 @@ type ChargeEvent =
 type Pricing = {
   unit_price_irr: number;
   packages: number[];
+  min_amount_irr?: number;
+  min_sms_count?: number;
   currency: string;
 };
 
 type Phase = 'select' | 'paying' | 'applying';
+
+/** 100 تومان = 1_000 ریال */
+const DEFAULT_MIN_CHARGE_IRR = 1_000;
 
 function formatToman(irr: number) {
   return `${Math.round(irr / 10).toLocaleString('fa-IR')} تومان`;
@@ -53,10 +59,21 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
 
   const packages = pricing?.packages?.length ? pricing.packages : [100, 500, 1000];
   const unitPrice = pricing?.unit_price_irr ?? 0;
+  const minAmountIrr = pricing?.min_amount_irr ?? DEFAULT_MIN_CHARGE_IRR;
+  const minSmsCount = useMemo(() => {
+    if (pricing?.min_sms_count && pricing.min_sms_count >= 1) {
+      return pricing.min_sms_count;
+    }
+    if (unitPrice > 0) {
+      return Math.max(1, Math.ceil(minAmountIrr / unitPrice));
+    }
+    return 1;
+  }, [pricing?.min_sms_count, unitPrice, minAmountIrr]);
   const amount = useMemo(
     () => (unitPrice > 0 && smsCount > 0 ? smsCount * unitPrice : 0),
     [smsCount, unitPrice],
   );
+  const canCheckout = amount >= minAmountIrr && smsCount >= minSmsCount;
 
   const replyToWidget = (event: ChargeEvent, data: Record<string, unknown> = {}) => {
     if (repliedRef.current) return;
@@ -98,8 +115,15 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
       const { data } = await axios.get<Pricing>(RASAN_PRICING_URL, { withCredentials: true });
       setPricing(data);
       const first = data.packages?.[0] ?? 100;
-      setSmsCount(first);
-      setCustomDraft(String(Math.max(first + 100, 200)));
+      const minCount =
+        data.min_sms_count && data.min_sms_count >= 1
+          ? data.min_sms_count
+          : Math.max(
+              1,
+              Math.ceil((data.min_amount_irr ?? DEFAULT_MIN_CHARGE_IRR) / (data.unit_price_irr || 1)),
+            );
+      setSmsCount(Math.max(first, minCount));
+      setCustomDraft(String(Math.max(first + 100, minCount, 200)));
     } catch (error) {
       const message = isAxiosError(error)
         ? error.response?.data?.error?.message ||
@@ -137,17 +161,6 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
     return () => window.removeEventListener('message', onMessage);
   }, [isLogin]);
 
-  const selectPackage = (pack: number) => {
-    setCustomMode(false);
-    setSmsCount(pack);
-  };
-
-  const enableCustom = () => {
-    setCustomMode(true);
-    const next = Math.max(1, Number(customDraft) || 1);
-    setSmsCount(next);
-  };
-
   const startCheckout = async () => {
     if (smsCount < 1) {
       toast.error('تعداد پیامک معتبر نیست');
@@ -156,7 +169,6 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
 
     setIsSubmitting(true);
     try {
-      // Server owns unit price + receipt amount — frontend only sends sms_count.
       const { data } = await axios.post(
         RASAN_PREPARE_URL,
         { sms_count: smsCount },
@@ -195,10 +207,7 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
     try {
       const { data } = await axios.post(
         RASAN_CHARGE_URL,
-        {
-          receipt_id,
-          sms_count: pending.sms_count,
-        },
+        { receipt_id, sms_count: pending.sms_count },
         { withCredentials: true },
       );
 
@@ -222,165 +231,173 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
     }
   };
 
+  const busy = isLoadingPricing || isSubmitting;
+
   return (
     <>
-      <Modal {...modalProps} title="شارژ پیامک" onClose={handleCancel} bodyClassName="!p-0">
+      <Modal
+        {...modalProps}
+        onClose={() => {
+          if (busy) return;
+          handleCancel();
+        }}
+        noHeader
+        noLine
+        bodyClassName="!p-0 overflow-hidden"
+        className="md:!w-[22rem]"
+      >
         {isLoadingPricing || !pricing ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-16">
+          <div className="flex flex-col items-center justify-center px-6 py-14">
             <Loading />
-            <Text fontSize="sm" className="text-slate-500">
-              در حال بارگذاری تعرفه…
-            </Text>
           </div>
         ) : (
-          <div className="flex flex-col">
-            <div className="bg-gradient-to-l from-primary/10 via-primary/5 to-transparent px-5 pt-5 pb-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-white shadow-sm">
-                  <ChatIcon width={22} height={22} />
-                </div>
-                <div className="min-w-0 flex-1 space-y-1">
-                  <Text fontSize="sm" fontWeight="bold" className="text-slate-900">
-                    افزایش موجودی پیامک
-                  </Text>
-                  <Text fontSize="sm" className="leading-6 text-slate-600">
-                    بسته را انتخاب کنید یا تعداد دلخواه بسازید. تعرفه از سرور اعمال می‌شود.
-                  </Text>
-                </div>
+          <div className="relative flex flex-col px-5 pt-7 pb-5">
+            <CloseIcon
+              className="absolute top-3.5 left-3.5 h-5 w-5 cursor-pointer text-slate-400 transition-colors hover:text-slate-600 active:scale-[0.97]"
+              onClick={() => !busy && handleCancel()}
+            />
+
+            <div className="mb-4 flex flex-col items-center text-center">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                <ChatIcon className="h-6 w-6" />
               </div>
+              <Text as="p" fontWeight="bold" fontSize="lg" className="text-slate-900">
+                شارژ پیامک
+              </Text>
+              <Text as="p" fontSize="sm" className="mt-1.5 max-w-[17rem] leading-6 text-slate-500">
+                تعداد پیامک مورد نیاز را انتخاب کنید.
+              </Text>
             </div>
 
-            <div className="flex flex-col gap-4 px-5 py-4">
-              <div>
-                <Text fontSize="sm" className="mb-2 block text-slate-500">
-                  بسته‌های پیشنهادی
-                </Text>
-                <div className="grid grid-cols-3 gap-2">
-                  {packages.map(pack => {
-                    const selected = !customMode && smsCount === pack;
-                    const packAmount = pack * unitPrice;
-                    return (
-                      <button
-                        key={pack}
-                        type="button"
-                        onClick={() => selectPackage(pack)}
-                        className={classNames(
-                          'rounded-2xl border px-2 py-3 text-center transition duration-150 ease-out active:scale-[0.97]',
-                          selected
-                            ? 'border-primary bg-primary text-white shadow-md shadow-primary/20'
-                            : 'border-slate-200 bg-white text-slate-800 hover:border-primary/40 hover:bg-slate-50',
-                        )}
-                      >
-                        <div className={classNames('text-base font-extrabold', selected ? 'text-white' : 'text-slate-900')}>
-                          {pack.toLocaleString('fa-IR')}
-                        </div>
-                        <div className={classNames('mt-0.5 text-[11px]', selected ? 'text-white/85' : 'text-slate-500')}>
-                          پیامک
-                        </div>
-                        <div className={classNames('mt-2 text-[11px] font-medium', selected ? 'text-white/90' : 'text-slate-600')}>
-                          {formatToman(packAmount)}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+            <div className="flex flex-col gap-2">
+              {packages.map(pack => {
+                const selected = !customMode && smsCount === pack;
+                return (
+                  <button
+                    key={pack}
+                    type="button"
+                    disabled={isSubmitting}
+                    onClick={() => {
+                      setCustomMode(false);
+                      setSmsCount(pack);
+                    }}
+                    className={classNames(
+                      'flex w-full items-center justify-between rounded-xl border px-3.5 py-3 text-right transition duration-150 ease-out active:scale-[0.99]',
+                      selected
+                        ? 'border-primary bg-primary/5 ring-1 ring-primary/25'
+                        : 'border-slate-200 bg-white hover:border-slate-300',
+                    )}
+                  >
+                    <Text as="span" fontSize="sm" fontWeight="bold" className="text-slate-900">
+                      {pack.toLocaleString('fa-IR')} پیامک
+                    </Text>
+                    <Text as="span" fontSize="sm" className={selected ? 'font-semibold text-primary' : 'text-slate-600'}>
+                      {formatToman(pack * unitPrice)}
+                    </Text>
+                  </button>
+                );
+              })}
 
-              <div>
-                <button
-                  type="button"
-                  onClick={enableCustom}
-                  className={classNames(
-                    'w-full rounded-2xl border px-4 py-3 text-right transition duration-150 ease-out active:scale-[0.99]',
-                    customMode
-                      ? 'border-primary bg-primary/5 ring-1 ring-primary/30'
-                      : 'border-dashed border-slate-300 bg-slate-50/80 hover:border-primary/40',
-                  )}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <Text fontSize="sm" fontWeight="bold" className="text-slate-800">
-                        تعداد دلخواه
-                      </Text>
-                      <Text fontSize="sm" className="mt-0.5 text-slate-500">
-                        خودتان تعداد پیامک را تنظیم کنید
-                      </Text>
-                    </div>
-                    <span
-                      className={classNames(
-                        'rounded-full px-2.5 py-1 text-[11px] font-medium',
-                        customMode ? 'bg-primary text-white' : 'bg-white text-slate-500 border border-slate-200',
-                      )}
-                    >
-                      سفارشی
-                    </span>
-                  </div>
-                </button>
-
-                {customMode && (
-                  <div className="mt-3 flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2">
-                    <button
-                      type="button"
-                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-lg font-bold text-slate-700 active:scale-95"
-                      onClick={() => {
-                        const next = Math.max(1, smsCount - 50);
-                        setSmsCount(next);
-                        setCustomDraft(String(next));
-                      }}
-                    >
-                      −
-                    </button>
-                    <input
-                      type="number"
-                      min={1}
-                      inputMode="numeric"
-                      className="min-w-0 flex-1 border-0 bg-transparent text-center text-lg font-bold text-slate-900 outline-none"
-                      value={customDraft}
-                      onChange={e => {
-                        const raw = e.target.value;
-                        setCustomDraft(raw);
-                        const n = Number(raw);
-                        if (Number.isFinite(n) && n >= 1) setSmsCount(Math.trunc(n));
-                      }}
-                    />
-                    <button
-                      type="button"
-                      className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-lg font-bold text-slate-700 active:scale-95"
-                      onClick={() => {
-                        const next = smsCount + 50;
-                        setSmsCount(next);
-                        setCustomDraft(String(next));
-                      }}
-                    >
-                      +
-                    </button>
-                  </div>
+              <button
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => {
+                  setCustomMode(true);
+                  const next = Math.max(minSmsCount, Number(customDraft) || minSmsCount);
+                  setSmsCount(next);
+                  setCustomDraft(String(next));
+                }}
+                className={classNames(
+                  'w-full rounded-xl border px-3.5 py-3 text-right transition duration-150 ease-out active:scale-[0.99]',
+                  customMode
+                    ? 'border-primary bg-primary/5 ring-1 ring-primary/25'
+                    : 'border-dashed border-slate-300 bg-slate-50 hover:border-slate-400',
                 )}
-              </div>
+              >
+                <Text as="p" fontSize="sm" fontWeight="bold" className="text-slate-900">
+                  تعداد دلخواه
+                </Text>
+              </button>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <Text fontSize="sm" className="text-slate-500">
-                      مبلغ قابل پرداخت
-                    </Text>
-                    <Text fontSize="sm" className="mt-1 text-slate-600">
-                      {smsCount.toLocaleString('fa-IR')} پیامک × {unitPrice.toLocaleString('fa-IR')} ریال
-                    </Text>
-                  </div>
-                  <Text fontSize="lg" fontWeight="bold" className="text-slate-900">
-                    {amount > 0 ? formatToman(amount) : '—'}
-                  </Text>
+              {customMode && (
+                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-1.5">
+                  <button
+                    type="button"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-lg font-bold text-slate-700 active:scale-95"
+                    onClick={() => {
+                      const next = Math.max(minSmsCount, smsCount - 50);
+                      setSmsCount(next);
+                      setCustomDraft(String(next));
+                    }}
+                  >
+                    −
+                  </button>
+                  <input
+                    type="number"
+                    min={minSmsCount}
+                    inputMode="numeric"
+                    className="min-w-0 flex-1 border-0 bg-transparent text-center text-base font-bold text-slate-900 outline-none"
+                    value={customDraft}
+                    onChange={e => {
+                      const raw = e.target.value;
+                      setCustomDraft(raw);
+                      const n = Number(raw);
+                      if (Number.isFinite(n) && n >= minSmsCount) setSmsCount(Math.trunc(n));
+                    }}
+                    onBlur={() => {
+                      const next = Math.max(
+                        minSmsCount,
+                        Math.trunc(Number(customDraft)) || minSmsCount,
+                      );
+                      setSmsCount(next);
+                      setCustomDraft(String(next));
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-lg font-bold text-slate-700 active:scale-95"
+                    onClick={() => {
+                      const next = smsCount + 50;
+                      setSmsCount(next);
+                      setCustomDraft(String(next));
+                    }}
+                  >
+                    +
+                  </button>
                 </div>
-              </div>
+              )}
             </div>
 
-            <div className="flex gap-2 border-t border-slate-100 px-5 py-4">
-              <Button variant="secondary" className="flex-1" onClick={handleCancel} disabled={isSubmitting}>
-                انصراف
-              </Button>
-              <Button className="flex-[1.4]" onClick={startCheckout} loading={isSubmitting} disabled={isSubmitting || amount <= 0}>
+            <div className="mt-4 flex items-center justify-between rounded-xl bg-slate-50 px-3.5 py-3">
+              <Text as="span" fontSize="sm" className="text-slate-500">
+                مبلغ قابل پرداخت
+              </Text>
+              <Text as="span" fontSize="sm" fontWeight="bold" className="text-slate-900">
+                {amount > 0 ? formatToman(amount) : '—'}
+              </Text>
+            </div>
+
+            <div className="mt-5 flex w-full flex-col gap-1.5">
+              <Button
+                className="w-full"
+                onClick={startCheckout}
+                loading={isSubmitting}
+                disabled={isSubmitting || !canCheckout}
+              >
                 ادامه و پرداخت
+              </Button>
+              {!canCheckout && amount > 0 && amount < minAmountIrr && (
+                <Text as="p" fontSize="xs" className="text-center text-amber-700">
+                  حداقل مبلغ شارژ ۱۰۰ تومان است.
+                </Text>
+              )}
+              <Button
+                variant="text"
+                className="w-full !text-slate-500 hover:!text-slate-700"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                انصراف
               </Button>
             </div>
           </div>
@@ -388,11 +405,11 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
       </Modal>
 
       {phase === 'applying' && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/30">
           <div className="flex flex-col items-center gap-3 rounded-2xl bg-white px-8 py-7 shadow-xl">
             <Loading />
-            <Text fontSize="sm" className="text-slate-700">
-              در حال اعمال شارژ پیامک…
+            <Text as="p" fontSize="sm" className="text-slate-600">
+              در حال اعمال شارژ…
             </Text>
           </div>
         </div>
