@@ -162,8 +162,8 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
   }, [isLogin]);
 
   const startCheckout = async () => {
-    if (smsCount < 1) {
-      toast.error('تعداد پیامک معتبر نیست');
+    if (!canCheckout) {
+      toast.error('حداقل مبلغ شارژ ۱۰۰ تومان است.');
       return;
     }
 
@@ -265,7 +265,7 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
                 شارژ پیامک
               </Text>
               <Text as="p" fontSize="sm" className="mt-1.5 max-w-[17rem] leading-6 text-slate-500">
-                تعداد پیامک مورد نیاز را انتخاب کنید.
+                بسته را انتخاب کنید و پرداخت کنید.
               </Text>
             </div>
 
@@ -298,32 +298,25 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
                 );
               })}
 
-              <button
-                type="button"
-                disabled={isSubmitting}
-                onClick={() => {
-                  setCustomMode(true);
-                  const next = Math.max(minSmsCount, Number(customDraft) || minSmsCount);
-                  setSmsCount(next);
-                  setCustomDraft(String(next));
-                }}
-                className={classNames(
-                  'w-full rounded-xl border px-3.5 py-3 text-right transition duration-150 ease-out active:scale-[0.99]',
-                  customMode
-                    ? 'border-primary bg-primary/5 ring-1 ring-primary/25'
-                    : 'border-dashed border-slate-300 bg-slate-50 hover:border-slate-400',
-                )}
-              >
-                <Text as="p" fontSize="sm" fontWeight="bold" className="text-slate-900">
+              {!customMode ? (
+                <button
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={() => {
+                    setCustomMode(true);
+                    const next = Math.max(minSmsCount, Number(customDraft) || minSmsCount);
+                    setSmsCount(next);
+                    setCustomDraft(String(next));
+                  }}
+                  className="px-1 py-1 text-center text-xs font-medium text-slate-500 transition-colors hover:text-primary"
+                >
                   تعداد دلخواه
-                </Text>
-              </button>
-
-              {customMode && (
-                <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-1.5">
+                </button>
+              ) : (
+                <div className="flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 p-1.5">
                   <button
                     type="button"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-lg font-bold text-slate-700 active:scale-95"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-lg font-bold text-slate-700 active:scale-95"
                     onClick={() => {
                       const next = Math.max(minSmsCount, smsCount - 50);
                       setSmsCount(next);
@@ -355,7 +348,7 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
                   />
                   <button
                     type="button"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-lg font-bold text-slate-700 active:scale-95"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-lg font-bold text-slate-700 active:scale-95"
                     onClick={() => {
                       const next = smsCount + 50;
                       setSmsCount(next);
@@ -368,15 +361,6 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
               )}
             </div>
 
-            <div className="mt-4 flex items-center justify-between rounded-xl bg-slate-50 px-3.5 py-3">
-              <Text as="span" fontSize="sm" className="text-slate-500">
-                مبلغ قابل پرداخت
-              </Text>
-              <Text as="span" fontSize="sm" fontWeight="bold" className="text-slate-900">
-                {amount > 0 ? formatToman(amount) : '—'}
-              </Text>
-            </div>
-
             <div className="mt-5 flex w-full flex-col gap-1.5">
               <Button
                 className="w-full"
@@ -384,7 +368,7 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
                 loading={isSubmitting}
                 disabled={isSubmitting || !canCheckout}
               >
-                ادامه و پرداخت
+                {canCheckout ? `پرداخت ${formatToman(amount)}` : 'پرداخت'}
               </Button>
               {!canCheckout && amount > 0 && amount < minAmountIrr && (
                 <Text as="p" fontSize="xs" className="text-center text-amber-700">
@@ -418,6 +402,7 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
       <Payment
         app_key={RASAN_APP_KEY}
         app_name="رسان"
+        autoPay
         ref={paymentRef}
         onSuccess={({ receipt_id }) => {
           void applyCredit(receipt_id);

@@ -28,6 +28,8 @@ export default forwardRef(
       onCancel,
       onError,
       showAutoRenew,
+      /** Skip center/receipt UI: pick richest center and pay (or topup then pay). */
+      autoPay = false,
     }: {
       app_key: string;
       app_name: string;
@@ -36,6 +38,7 @@ export default forwardRef(
       onCancel: (data: any) => void;
       onError: (data: any) => void;
       showAutoRenew?: Boolean;
+      autoPay?: boolean;
     },
     ref,
   ) => {
@@ -56,6 +59,7 @@ export default forwardRef(
     const [receiptData, setReceiptData] = useState<any>(null);
     const gatewayWindow = useRef<any>();
     const [isAutoRenew, setIsAutoRenew] = useState(true);
+    const autoPayTriggeredRef = useRef(false);
 
     const paymentCenters = useMemo(() => info?.provider?.centers ?? [], [info?.provider?.centers]);
     const showCenterSelection = paymentCenters.length > 1;
@@ -63,6 +67,8 @@ export default forwardRef(
 
     useImperativeHandle(ref, () => ({
       open: (data: any) => {
+        autoPayTriggeredRef.current = false;
+        setFullScreen(false);
         handleOpen();
         setIsLoading(true);
         openAndCreateReceipt({
@@ -202,6 +208,24 @@ export default forwardRef(
       }
     };
 
+    // Silent pay: richest center already selected via sorted balances; fire once ready.
+    useEffect(() => {
+      if (!autoPay || !modalProps.isOpen) return;
+      if (isLoading || isLoadingBalances || !receiptData?.receipt_id || !receiptData?.price) return;
+      if (autoPayTriggeredRef.current) return;
+      autoPayTriggeredRef.current = true;
+      handleCheckPayment();
+    }, [
+      autoPay,
+      modalProps.isOpen,
+      isLoading,
+      isLoadingBalances,
+      receiptData?.receipt_id,
+      receiptData?.price,
+      selectedCenter,
+      balances,
+    ]);
+
     useEffect(() => {
       if (fullScreen && isLoading) {
         intervalCloseRef.current = setInterval(() => {
@@ -291,12 +315,18 @@ export default forwardRef(
           bodyClassName="justify-center flex-col flex items-center"
           {...modalProps}
           fullScreen={fullScreen}
-          onClose={fullScreen ? () => {} : modalProps.onClose}
+          onClose={fullScreen || (autoPay && isLoadingPayment) ? () => {} : modalProps.onClose}
           title="پرداخت"
           noHeader={true}
           noLine={fullScreen}
         >
-          {isLoading && !fullScreen && <Loading />}
+          {autoPay && !fullScreen && (
+            <div className="flex flex-col gap-3 items-center justify-center py-8 px-4">
+              <Loading />
+              <span className="text-sm font-medium text-slate-700">در حال پرداخت…</span>
+            </div>
+          )}
+          {isLoading && !fullScreen && !autoPay && <Loading />}
           {isLoading && fullScreen && !isLoadingPayment && (
             <div className="flex flex-col gap-4 justify-center items-center">
               <div className="flex flex-col justify-center items-center gap-2">
@@ -331,7 +361,7 @@ export default forwardRef(
               </div>
             </div>
           )}
-          {!isLoading && (
+          {!isLoading && !autoPay && (
             <div className="w-full flex flex-col gap-3">
               <div className="flex justify-between items-center pl-3">
                 <div className="flex items-center gap-2">
