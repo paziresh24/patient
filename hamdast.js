@@ -24,6 +24,7 @@ import PlasmicHamdastKhedmatWidget, {
   PlasmicHamdastKhedmatWidget__ArgProps,
 } from '.plasmic/plasmic/hamdast_khedmat/PlasmicHamdastKhedmatWidget';
 import Etebar, { Etebar__ArgProps } from '@/modules/hamdast/widgets/etebar';
+import NoskheyarRenewal, { NoskheyarRenewal__ArgProps } from '@/modules/hamdast/widgets/noskheyarRenewal';
 
 export const Components = {
   hhhzbbsffq0nlna: {
@@ -73,5 +74,11 @@ export const Components = {
     project_id: '',
     Component: Etebar,
     props_allowed: Etebar__ArgProps,
+  },
+  '1axz97y61jkt901': {
+    component_id: '',
+    project_id: '',
+    Component: NoskheyarRenewal,
+    props_allowed: NoskheyarRenewal__ArgProps,
   },
 };
