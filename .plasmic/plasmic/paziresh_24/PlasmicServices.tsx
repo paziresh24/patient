@@ -302,7 +302,6 @@ function PlasmicServices__RenderFunc(props: {
               {(
                 hasVariant($state, 'type', 'onlineVisit')
                   ? (() => {
-                    console.log($props.onlineVisit.channels);
                     try {
                       return !$props.onlineVisit.channels.includes('whatsapp');
                     } catch (e) {
