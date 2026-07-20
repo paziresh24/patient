@@ -8,7 +8,7 @@
     "dev:debug": "cross-env NODE_OPTIONS='--inspect' node server.js",
     "build": "node scripts/remove-google-fonts.js && next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
-    "start": "next start",
+    "start": "node -r ./log-bootstrap.cjs node_modules/next/dist/bin/next start",
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",

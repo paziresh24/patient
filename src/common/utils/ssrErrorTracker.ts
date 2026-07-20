@@ -33,6 +33,15 @@ export function trackSsrError(
 ): void {
   if (typeof window !== 'undefined') return;
 
+  // Prefer process-level bootstrap tracker (node -r log-bootstrap.cjs) so digest is shared.
+  const g = globalThis as typeof globalThis & {
+    __trackSsrError?: (err: unknown, context?: { path?: string; source?: string; message?: string }) => void;
+  };
+  if (typeof g.__trackSsrError === 'function') {
+    g.__trackSsrError(err, context);
+    return;
+  }
+
   const source = context?.source || 'SSR';
   const message = context?.message || (err instanceof Error ? err.message : 'SSR request failed');
   const serialized = serializeError(err);
