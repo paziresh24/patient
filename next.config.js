@@ -21,6 +21,7 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: true,
   experimental: {
+    instrumentationHook: true,
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
     optimizePackageImports: [
       '@plasmicpkgs/antd5',

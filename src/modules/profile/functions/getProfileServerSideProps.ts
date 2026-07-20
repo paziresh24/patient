@@ -7,6 +7,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import { handleSsrError } from '@/common/utils/handleSsrError';
 import { withCSR } from '@/common/hoc/withCsr';
+import { trackSsrError } from '@/common/utils/ssrErrorTracker';
 
 export const getProfileServerSideProps: GetServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
@@ -90,7 +91,7 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
         return handleSsrError(context.res.statusCode, slug);
       }
 
-      console.error('A non-Axios error occurred in getProfileServerSideProps:', error);
+      trackSsrError(error, { source: 'ProfileSSR', message: 'A non-Axios error occurred in getProfileServerSideProps', path: context.resolvedUrl });
       context.res.statusCode = 500;
       return handleSsrError(context.res.statusCode, slug);
     }

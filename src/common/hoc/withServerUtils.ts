@@ -3,6 +3,7 @@ import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'n
 import { getServerSideGrowthBookContext } from '../helper/getServerSideGrowthBookContext';
 import { splunkInstance } from '../services/splunk';
 import { getHost } from '../utils/getHost';
+import { trackSsrError } from '../utils/ssrErrorTracker';
 
 export const withServerUtils = (next: GetServerSideProps & any) => async (ctx: GetServerSidePropsContext) => {
   const host = getHost(ctx.req.headers);
@@ -14,7 +15,11 @@ export const withServerUtils = (next: GetServerSideProps & any) => async (ctx: G
 
     themeConfing = growthbook.getFeatureValue(`theme-config:${host}`, {});
   } catch (error) {
-    console.error(error);
+    trackSsrError(error, {
+      source: 'GrowthBook',
+      message: 'Failed to load theme config features',
+      path: ctx.resolvedUrl || ctx.req.url,
+    });
   }
 
   const data: any = await next?.(ctx, themeConfing);
