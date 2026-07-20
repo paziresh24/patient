@@ -32,7 +32,7 @@ const SubstituteDoctorButton = ({
   const customize = useCustomize(state => state.customize);
   const searchData = useSearch(
     {
-      route: decodeURIComponent(doctorCity),
+      route: decodeURIComponent(doctorCity || 'ir'),
       query: {
         turn_type: 'consult',
         text: expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
