@@ -17,7 +17,6 @@ const RASAN_BALANCE_URL = 'https://hamdast.paziresh24.com/api/v1/rasan/balance';
 type BalanceResponse = {
   credit?: number;
   unit?: string;
-  local_id?: string;
 };
 
 type EnsureResponse = {
