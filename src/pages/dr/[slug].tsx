@@ -36,6 +36,12 @@ import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
 import { trackDoctorProfileViewByDoctorId } from '@/modules/hamdast/utils/profileViewFrequency';
+import {
+  clearProfileDoctorInfo,
+  getProfileDoctorInfo,
+  setProfileDoctorInfo,
+  updateProfileDoctorInfo,
+} from '@/modules/hamdast/stores/profileDoctorInfo';
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -255,12 +261,66 @@ const DoctorProfile = (props: any) => {
         });
       }
 
-      window.doctor = { ...information, centers, expertises, isBulk, slug, history };
+      const doctorUserId = information?.user_id ?? user_id ?? null;
+      window.doctor = {
+        ...information,
+        user_id: doctorUserId,
+        centers,
+        expertises,
+        isBulk,
+        slug,
+        history,
+      };
 
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
-  }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
+  }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks, user_id]);
+
+  // Cache doctor identity for hamdast doctor-service payment (only clear when user_id/slug lifecycle ends).
+  useEffect(() => {
+    const doctorUserId = information?.user_id ?? user_id;
+    if (!doctorUserId) return;
+
+    const displayName =
+      information?.display_name?.trim() ||
+      [information?.name, information?.family].filter(Boolean).join(' ').trim() ||
+      '';
+
+    const epoch = setProfileDoctorInfo({
+      userId: String(doctorUserId),
+      displayName,
+      imageUrl: doctorProfileImageUrl || null,
+      slug: typeof slug === 'string' ? slug : currentSlug ? String(currentSlug) : null,
+    });
+
+    return () => {
+      clearProfileDoctorInfo(epoch);
+    };
+  }, [information?.user_id, user_id, slug, currentSlug]);
+
+  // Keep display name / avatar fresh without clearing the cached user id.
+  useEffect(() => {
+    const cached = getProfileDoctorInfo();
+    if (!cached?.userId) return;
+
+    const displayName =
+      information?.display_name?.trim() ||
+      [information?.name, information?.family].filter(Boolean).join(' ').trim() ||
+      cached.displayName;
+
+    updateProfileDoctorInfo({
+      displayName,
+      imageUrl: doctorProfileImageUrl || cached.imageUrl || null,
+      slug: cached.slug ?? (typeof slug === 'string' ? slug : null),
+    });
+  }, [
+    information?.display_name,
+    information?.name,
+    information?.family,
+    doctorProfileImageUrl,
+    slug,
+  ]);
 
   useEffect(() => {
     const doctorId = information?.id ? String(information.id) : '';

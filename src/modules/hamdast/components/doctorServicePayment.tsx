@@ -3,10 +3,19 @@ import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useEffect, useRef } from 'react';
 import DoctorServicePaymentModal from './doctorServicePaymentModal';
-import { getProfileDoctorUserId, getProfileWidgetName } from '../stores/profileDoctorInfo';
+import { getProfileDoctorInfo, getProfileWidgetName, resolveProviderUserId } from '../stores/profileDoctorInfo';
 
-export const HamdastDoctorServicePayment = ({ app_key, app_name, iframeRef }: { app_key: string; app_name: string; icon?: string; iframeRef: any }) => {
-  const { isLogin, info } = useUserInfoStore();
+export const HamdastDoctorServicePayment = ({
+  app_key,
+  app_name,
+  iframeRef,
+}: {
+  app_key: string;
+  app_name: string;
+  icon?: string;
+  iframeRef: any;
+}) => {
+  const { isLogin } = useUserInfoStore();
   const { handleOpenLoginModal } = useLoginModalContext();
   const hashId = useRef<any>(null);
   const payment = useRef<any>(null);
@@ -17,19 +26,34 @@ export const HamdastDoctorServicePayment = ({ app_key, app_name, iframeRef }: { 
         hashId.current = messageEvent.data?.hamdast?.hash_id;
 
         const eventData = messageEvent.data?.hamdast?.data || {};
-        const doctorUserId = eventData.doctor_user_id || getProfileDoctorUserId() || '';
+        const profileDoctor = getProfileDoctorInfo();
+        const doctorUserId = resolveProviderUserId(eventData);
+        const doctorName = eventData.doctor_name || profileDoctor?.displayName || '';
+        const doctorImage = eventData.doctor_image || profileDoctor?.imageUrl || '';
         const widgetName = eventData.widget_name || getProfileWidgetName() || '';
+
+        const openPayload = {
+          amount: eventData.amount,
+          doctor_user_id: doctorUserId,
+          doctor_name: doctorName,
+          doctor_image: doctorImage,
+          widget_name: widgetName,
+          payload: eventData.payload,
+        };
+
+        if (!doctorUserId) {
+          console.error('[hamdast] doctor-service pay missing provider_user_id', {
+            eventData,
+            profileDoctor,
+            windowDoctor: typeof window !== 'undefined' ? (window as any).doctor : null,
+          });
+        }
 
         if (!isLogin) {
           return handleOpenLoginModal({
             state: true,
             postLogin() {
-              return payment?.current?.open({
-                amount: eventData.amount,
-                doctor_user_id: doctorUserId,
-                widget_name: widgetName,
-                payload: eventData.payload,
-              });
+              return payment?.current?.open(openPayload);
             },
             onClose: () => {
               iframeRef.current?.contentWindow?.postMessage(
@@ -49,12 +73,7 @@ export const HamdastDoctorServicePayment = ({ app_key, app_name, iframeRef }: { 
           });
         }
 
-        payment?.current?.open({
-          amount: eventData.amount,
-          doctor_user_id: doctorUserId,
-          widget_name: widgetName,
-          payload: eventData.payload,
-        });
+        payment?.current?.open(openPayload);
       }
     };
     window.addEventListener('message', handleEventFunction);
@@ -120,6 +139,21 @@ export const HamdastDoctorServicePayment = ({ app_key, app_name, iframeRef }: { 
   };
 
   const handleError = ({ message, receipt_id, center_id }: any) => {
+    iframeRef.current?.contentWindow?.postMessage(
+      {
+        hamdast: {
+          event: 'HAMDAST_PAYMENT_DOCTOR_SERVICE_ERROR',
+          action: 'forwardToApp',
+          data: {
+            event: 'HAMDAST_PAYMENT_DOCTOR_SERVICE_ERROR',
+            receipt_id,
+            message,
+          },
+          hash_id: hashId.current,
+        },
+      },
+      '*',
+    );
     splunkInstance('dashboard').sendEvent({
       group: 'hamdast_payment',
       type: 'error_doctor_service',

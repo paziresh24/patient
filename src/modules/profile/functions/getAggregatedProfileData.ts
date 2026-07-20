@@ -554,7 +554,7 @@ export async function getAggregatedProfileData(
       description: university ? '' : description,
       information: {
         ...information,
-        user_id: userData?.user_id ?? information?.user_id ?? null,
+        user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       },
       centers,
       expertises,
@@ -584,7 +584,7 @@ export async function getAggregatedProfileData(
       },
       hamdastWidgets: widgets,
       hamdastWidgetsData: widgetsData,
-      user_id: userData?.user_id ?? null,
+      user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       shouldFetchOnClient: !fullProfileData?.id,
       useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),

@@ -6,10 +6,12 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import { v4 as uuidV4 } from 'uuid';
+import { getProfileDoctorInfo, resolveProviderUserId } from '../stores/profileDoctorInfo';
 
 const TAX_RATE = 0.1;
 /** Must match hamdast-payments doctor-service split */
@@ -41,6 +43,12 @@ function readProviderName(data: unknown): string | null {
   return [name, family].filter(Boolean).join(' ');
 }
 
+function resolveDoctorAvatar(userId?: string, imageUrl?: string | null) {
+  if (imageUrl?.trim()) return imageUrl.trim();
+  if (userId) return `https://pic.paziresh24.com/api/image/${userId}`;
+  return undefined;
+}
+
 export default forwardRef(
   (
     {
@@ -48,6 +56,7 @@ export default forwardRef(
       app_name,
       onSuccess,
       onCancel,
+      onError,
     }: {
       app_key: string;
       app_name: string;
@@ -65,6 +74,7 @@ export default forwardRef(
     const [amount, setAmount] = useState<number>(0);
     const [doctorUserId, setDoctorUserId] = useState<string>('');
     const [doctorName, setDoctorName] = useState<string>('');
+    const [doctorImageUrl, setDoctorImageUrl] = useState<string>('');
     const receiptIdRef = useRef<string>('');
     const [walletBalance, setWalletBalance] = useState<number>(0);
     const [isLoadingBalances, setIsLoadingBalances] = useState(true);
@@ -74,7 +84,7 @@ export default forwardRef(
     const intervalCloseRef = useRef<any>();
     const gatewayWindow = useRef<any>();
 
-    const doctorAvatarSrc = doctorUserId ? `https://pic.paziresh24.com/api/image/${doctorUserId}` : undefined;
+    const doctorAvatarSrc = resolveDoctorAvatar(doctorUserId, doctorImageUrl);
     const { taxAmount, payableAmount } = useMemo(() => {
       const tax = platformVatAmount(amount);
       return { taxAmount: tax, payableAmount: amount + tax };
@@ -83,9 +93,15 @@ export default forwardRef(
 
     useImperativeHandle(ref, () => ({
       open: (data: any) => {
+        const profileDoctor = getProfileDoctorInfo();
+        const nextUserId = resolveProviderUserId(data);
+        const nextName = data?.doctor_name || profileDoctor?.displayName || '';
+        const nextImage = data?.doctor_image || profileDoctor?.imageUrl || '';
+
         setAmount(data?.amount ?? 0);
-        setDoctorUserId(data?.doctor_user_id ?? '');
-        setDoctorName('');
+        setDoctorUserId(nextUserId);
+        setDoctorName(nextName);
+        setDoctorImageUrl(nextImage);
         setWalletBalance(0);
         setIsLoading(true);
         setIsLoadingPayment(false);
@@ -94,9 +110,20 @@ export default forwardRef(
       },
     }));
 
-    // Create receipt + load doctor profile when modal opens
+    // Create receipt (+ fetch doctor name only if profile cache didn't provide it)
     useEffect(() => {
       if (!modalProps.isOpen || !amount) return;
+
+      const providerUserId = doctorUserId || resolveProviderUserId();
+      if (!providerUserId) {
+        toast.error('شناسه پزشک یافت نشد. لطفا صفحه را رفرش کنید.');
+        onError?.({ message: 'missing_provider_user_id' });
+        handleClose();
+        return;
+      }
+      if (providerUserId !== doctorUserId) {
+        setDoctorUserId(providerUserId);
+      }
 
       receiptIdRef.current = '';
       let cancelled = false;
@@ -107,17 +134,18 @@ export default forwardRef(
         `https://hamdast.paziresh24.com/api/v1/apps/${app_key}/billing/provider-service/receipts`,
         {
           amount: amount,
-          provider_user_id: doctorUserId,
+          provider_user_id: providerUserId,
         },
         { withCredentials: true },
       );
 
-      const doctorPromise = doctorUserId
-        ? axios
-            .get(`https://apigw.paziresh24.com/v1/providers?user_id=${encodeURIComponent(doctorUserId)}`)
-            .then(res => readProviderName(res.data))
-            .catch(() => null)
-        : Promise.resolve(null);
+      const doctorPromise =
+        doctorName || !providerUserId
+          ? Promise.resolve(doctorName || null)
+          : axios
+              .get(`https://apigw.paziresh24.com/v1/providers?user_id=${encodeURIComponent(providerUserId)}`)
+              .then(res => readProviderName(res.data))
+              .catch(() => null);
 
       Promise.all([receiptPromise, doctorPromise])
         .then(([receiptRes, name]) => {
@@ -127,7 +155,10 @@ export default forwardRef(
           setIsLoading(false);
         })
         .catch(() => {
-          if (!cancelled) handleClose();
+          if (!cancelled) {
+            toast.error('خطا در ایجاد رسید پرداخت');
+            handleClose();
+          }
         });
 
       return () => {
@@ -156,6 +187,18 @@ export default forwardRef(
         });
     }, [modalProps.isOpen]);
 
+    const finishAndClose = useCallback(() => {
+      gatewayWindow.current?.close();
+      if (intervalCloseRef.current) {
+        clearInterval(intervalCloseRef.current);
+        intervalCloseRef.current = undefined;
+      }
+      deleteCookie('payment_state', { path: '/' });
+      setFullScreen(false);
+      setIsLoadingPayment(false);
+      handleClose();
+    }, []);
+
     const handleDirectSuccess = useCallback(() => {
       setIsLoadingPayment(true);
       axios
@@ -167,20 +210,28 @@ export default forwardRef(
         .then(() => {
           onSuccess({ receipt_id: receiptIdRef.current });
         })
-        .catch(() => {
-          onSuccess({ receipt_id: receiptIdRef.current });
+        .catch(error => {
+          const message = isAxiosError(error)
+            ? error.response?.data?.error?.message ||
+              error.response?.data?.message ||
+              'خطا در پرداخت'
+            : 'خطا در پرداخت';
+          toast.error(message);
+          onError({
+            receipt_id: receiptIdRef.current,
+            message,
+          });
         })
         .finally(() => {
-          setIsLoadingPayment(false);
-          handleClose();
+          finishAndClose();
         });
-    }, [onSuccess, app_key]);
+    }, [onSuccess, onError, app_key, finishAndClose]);
 
     const handlePayViaGateway = useCallback(() => {
       setFullScreen(true);
       setIsLoadingPayment(false);
       gatewayWindow.current?.close();
-      deleteCookie('payment_state');
+      deleteCookie('payment_state', { path: '/' });
       const topupUuid = uuidV4();
       gatewayWindow.current = window.open(
         `https://apigw.paziresh24.com/katibe/v1/topups?amount=${payableAmount}&returnlink=${encodeURIComponent(
@@ -192,26 +243,36 @@ export default forwardRef(
       );
     }, [payableAmount, app_key]);
 
+    const handleCancelPayment = useCallback(() => {
+      onCancel({ receipt_id: receiptIdRef.current });
+      finishAndClose();
+    }, [onCancel, finishAndClose]);
+
     useEffect(() => {
-      if (fullScreen) {
-        intervalCloseRef.current = setInterval(() => {
-          if (!getCookie('payment_state')) return;
-          const status = getCookie('payment_state')?.toString().includes('success');
-          gatewayWindow.current?.close();
-          deleteCookie('payment_state');
+      if (!fullScreen) return;
 
-          if (status) {
-            handleDirectSuccess();
-          } else {
-            handleCancelPayment();
-          }
-        });
+      intervalCloseRef.current = setInterval(() => {
+        const paymentState = getCookie('payment_state');
+        if (!paymentState) return;
 
-        return () => {
+        const status = paymentState.toString().includes('success');
+        gatewayWindow.current?.close();
+        deleteCookie('payment_state', { path: '/' });
+
+        if (status) {
+          handleDirectSuccess();
+        } else {
+          handleCancelPayment();
+        }
+      }, 400);
+
+      return () => {
+        if (intervalCloseRef.current) {
           clearInterval(intervalCloseRef.current);
-        };
-      }
-    }, [fullScreen, handleDirectSuccess]);
+          intervalCloseRef.current = undefined;
+        }
+      };
+    }, [fullScreen, handleDirectSuccess, handleCancelPayment]);
 
     const handleCheckPayment = () => {
       setIsLoadingPayment(true);
@@ -221,13 +282,6 @@ export default forwardRef(
       } else {
         handlePayViaGateway();
       }
-    };
-
-    const handleCancelPayment = () => {
-      gatewayWindow.current?.close();
-      setIsLoadingPayment(false);
-      onCancel({ receipt_id: receiptIdRef.current });
-      handleClose();
     };
 
     return (

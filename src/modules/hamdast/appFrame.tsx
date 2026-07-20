@@ -26,6 +26,7 @@ import { HamdastClose } from './components/close';
 import { HamdastFlow } from './components/flow';
 import Link from 'next/link';
 import { HamdastInvite } from './components/invite';
+import { getProfileDoctorUserId } from './stores/profileDoctorInfo';
 
 export const AppFrame = ({
   appKey,
@@ -90,7 +91,17 @@ export const AppFrame = ({
 
   const embedSrc = useMemo(() => {
     const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
-    return page?.embed_src ? constructUrlWithQuery(replaceParameters, { ...queries, user_id: user.id, hamdast_embedded: true }) : null;
+    const doctorUserId = getProfileDoctorUserId();
+    return page?.embed_src
+      ? constructUrlWithQuery(replaceParameters, {
+          ...queries,
+          user_id: user.id,
+          ...(doctorUserId
+            ? { doctor_user_id: doctorUserId, provider_user_id: doctorUserId }
+            : {}),
+          hamdast_embedded: true,
+        })
+      : null;
   }, [page, params, queries, user.id]);
 
   const isMetadataLoading = !embedSrc && (getOneApp.isLoading || getOneApp.isFetching);
