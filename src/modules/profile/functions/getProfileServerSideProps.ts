@@ -37,8 +37,6 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     }
 
     try {
-      console.log('🔍 Server-side feature flags for slug:', slug);
-
       const finalProps = await getAggregatedProfileData(slug, university, true, {
         useNewDoctorFullNameAPI: true,
         useNewDoctorExpertiseAPI: true,
@@ -58,8 +56,6 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log(error.response?.status);
-
         const status = error.response?.status ?? 500;
         const statusCode = status === 404 ? 410 : error.message.includes('timeout') || status === 504 ? 504 : status;
 

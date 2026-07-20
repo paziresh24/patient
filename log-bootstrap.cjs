@@ -48,7 +48,10 @@ function ts() {
 function formatValue(value) {
   if (value === null) return 'null';
   if (value === undefined) return 'undefined';
-  if (typeof value === 'string') return JSON.stringify(value.length > 200 ? value.slice(0, 200) + '…' : value);
+  if (typeof value === 'string') {
+    const truncated = value.length > 200 ? value.slice(0, 200) + '…' : value;
+    return JSON.stringify(truncated);
+  }
   if (typeof value === 'number' || typeof value === 'boolean') return String(value);
   try {
     const s = JSON.stringify(value);
@@ -70,11 +73,11 @@ function formatFields(fields) {
 }
 
 function writeLine(level, source, message, fields) {
-  const meta = LEVEL[level];
+  const meta = LEVEL[level] || LEVEL.info;
   const time = paint(ANSI.dim, '[' + ts() + ']');
   const label = paint(meta.color + ANSI.bold, meta.label.padEnd(7, ' '));
   const src = paint(ANSI.cyan, '[' + source + ']');
-  const msg = paint(meta.color, message);
+  const msg = paint(meta.color, message || '');
   let line = time + ' ' + label + ' ' + src + ' ' + msg;
   if (fields && Object.keys(fields).length) {
     const rest = Object.assign({}, fields);
@@ -83,35 +86,16 @@ function writeLine(level, source, message, fields) {
     if (formatted) line += '  ' + paint(ANSI.dim, formatted);
   }
   const stream = level === 'error' || level === 'warn' ? process.stderr : process.stdout;
-  stream.write(line + '\n');
+  stream.write(line.trimEnd() + '\n');
 }
 
-global.__patientLogger = {
-  error: function (s, m, f) {
-    writeLine('error', s, m, f);
-  },
-  warn: function (s, m, f) {
-    writeLine('warn', s, m, f);
-  },
-  info: function (s, m, f) {
-    writeLine('info', s, m, f);
-  },
-  success: function (s, m, f) {
-    writeLine('success', s, m, f);
-  },
-};
-
-// Patch noisy Axios console.error dumps early.
-const originals = {
-  error: console.error.bind(console),
-  warn: console.warn.bind(console),
-};
 function isErrorLike(a) {
   return (
     a instanceof Error ||
     (a && typeof a === 'object' && (a.isAxiosError === true || a.name === 'AxiosError'))
   );
 }
+
 function serializeError(err) {
   if (!err || typeof err !== 'object') return { message: String(err) };
   if (err.isAxiosError || err.name === 'AxiosError') {
@@ -132,32 +116,100 @@ function serializeError(err) {
   }
   return { type: err.name || 'Error', message: err.message };
 }
+
+function stripNoise(text) {
+  return String(text)
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/[🔍⚠️❌✅]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseConsoleArgs(args) {
+  const strings = [];
+  const fields = {};
+  let dataIndex = 0;
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg == null) continue;
+    if (typeof arg === 'string') {
+      const cleaned = stripNoise(arg);
+      if (cleaned) strings.push(cleaned);
+    } else if (typeof arg === 'number' || typeof arg === 'boolean') {
+      if (strings.length === 0 && fields.value === undefined) fields.value = arg;
+      else fields['v' + dataIndex++] = arg;
+    } else if (isErrorLike(arg)) {
+      Object.assign(fields, serializeError(arg));
+    } else {
+      const key = dataIndex === 0 ? 'data' : 'data' + dataIndex;
+      fields[key] = arg;
+      dataIndex++;
+    }
+  }
+  let message = strings.join(' ').trim();
+  // Drop trailing colon leftovers like "slug:"
+  message = message.replace(/:\s*$/, '').trim();
+  if (!message) {
+    if (fields.message) message = String(fields.message);
+    else if (fields.type === 'AxiosError') message = 'Upstream API request failed';
+    else if (fields.data !== undefined) message = 'data';
+    else message = 'log';
+  }
+  return { message: message, fields: fields };
+}
+
+global.__patientLogger = {
+  error: function (s, m, f) {
+    writeLine('error', s, m, f);
+  },
+  warn: function (s, m, f) {
+    writeLine('warn', s, m, f);
+  },
+  info: function (s, m, f) {
+    writeLine('info', s, m, f);
+  },
+  debug: function (s, m, f) {
+    writeLine('debug', s, m, f);
+  },
+  success: function (s, m, f) {
+    writeLine('success', s, m, f);
+  },
+};
+
+const originals = {
+  error: console.error.bind(console),
+  warn: console.warn.bind(console),
+  log: console.log.bind(console),
+  info: console.info.bind(console),
+  debug: console.debug.bind(console),
+};
+
+let reentrancy = false;
 function wrap(method, level) {
   return function () {
-    const args = Array.prototype.slice.call(arguments);
-    if (!args.some(isErrorLike)) {
-      originals[method].apply(console, args);
+    if (reentrancy) {
+      originals[method].apply(console, arguments);
       return;
     }
-    const messageParts = [];
-    let err;
-    for (let i = 0; i < args.length; i++) {
-      const arg = args[i];
-      if (isErrorLike(arg)) err = arg;
-      else if (typeof arg === 'string') messageParts.push(arg);
+    reentrancy = true;
+    try {
+      const args = Array.prototype.slice.call(arguments);
+      // Ignore empty noise
+      if (args.length === 0) return;
+      const parsed = parseConsoleArgs(args);
+      writeLine(level, 'App', parsed.message, parsed.fields);
+    } finally {
+      reentrancy = false;
     }
-    writeLine(
-      level,
-      'Console',
-      messageParts.join(' ').trim() || (err && err.message) || 'Unhandled error',
-      err ? serializeError(err) : undefined,
-    );
   };
 }
+
 console.error = wrap('error', 'error');
 console.warn = wrap('warn', 'warn');
+console.log = wrap('log', 'info');
+console.info = wrap('info', 'info');
+console.debug = wrap('debug', 'debug');
 
-// SSR digest every 30m
 const buckets = new Map();
 let total = 0;
 let startedAt = Date.now();
@@ -247,7 +299,6 @@ writeLine('success', 'Boot', 'Patient server logging ready', {
   pod: process.env.HOSTNAME,
   via: 'log-bootstrap.cjs',
 });
-
 writeLine('info', 'SSR_Digest', 'SSR error digest started', {
   intervalMs: DIGEST_MS,
   topN: TOP_N,

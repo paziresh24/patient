@@ -23,5 +23,5 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["npm", "start"]
+CMD ["node", "-r", "./log-bootstrap.cjs", "node_modules/next/dist/bin/next", "start"]
 
