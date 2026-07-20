@@ -131,7 +131,7 @@ export const UserProfile = () => {
       name: t('patient/common:menu.bookmarks'),
       icon: <BookmarksIcon width={22} height={22} />,
       link: '/patient/bookmarks',
-      shouldShow: customize.bookMark,
+      shouldShow: !!customize.bookMark,
     },
     {
       name: t('patient/common:menu.subuser'),
