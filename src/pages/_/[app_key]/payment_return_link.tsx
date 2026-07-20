@@ -4,12 +4,34 @@ import Loading from '@/common/components/atom/loading';
 import Text from '@/common/components/atom/text';
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+/**
+ * Gateway may append its own `status` (e.g. status=true), producing
+ * `?status=success&status=true` — Next then gives query.status as string[].
+ */
+function resolvePaymentStatus(raw: string | string[] | undefined): 'success' | 'cancel' | undefined {
+  const values = (Array.isArray(raw) ? raw : raw ? [raw] : [])
+    .map(v => String(v).trim().toLowerCase())
+    .filter(Boolean);
+
+  if (values.includes('success') || values.includes('true')) return 'success';
+  if (values.includes('cancel') || values.includes('false')) return 'cancel';
+  return undefined;
+}
+
+function tryClosePopup() {
+  try {
+    window.close();
+  } catch {
+    // Browsers may block close; parent also polls the cookie.
+  }
+}
 
 export default function PaymentReturnLink() {
   const { query, isReady } = useRouter();
   const [showButton, setShowButton] = useState(false);
-  const status = typeof query?.status === 'string' ? query.status : undefined;
+  const status = useMemo(() => resolvePaymentStatus(query?.status as string | string[] | undefined), [query?.status]);
 
   useEffect(() => {
     if (!isReady || !status) return;
@@ -17,17 +39,17 @@ export default function PaymentReturnLink() {
     // Parent payment modals poll this cookie, then close the popup.
     setCookie('payment_state', status, { path: '/', sameSite: 'lax' });
 
-    // Popup opened via window.open can close itself; keep a fallback button.
-    const closeTimer = window.setTimeout(() => {
-      window.close();
-    }, 400);
+    tryClosePopup();
+    const closeTimer = window.setTimeout(tryClosePopup, 300);
+    const closeRetry = window.setTimeout(tryClosePopup, 1200);
 
     const buttonTimer = window.setTimeout(() => {
       setShowButton(true);
-    }, 3000);
+    }, 2500);
 
     return () => {
       window.clearTimeout(closeTimer);
+      window.clearTimeout(closeRetry);
       window.clearTimeout(buttonTimer);
     };
   }, [isReady, status]);
@@ -45,11 +67,11 @@ export default function PaymentReturnLink() {
             اگر هنوز منتقل نشدید، روی دکمه زیر بزنید.
           </Text>
           {status === 'success' ? (
-            <Button size="sm" block onClick={() => window.close()}>
+            <Button size="sm" block onClick={tryClosePopup}>
               پرداخت را انجام دادم
             </Button>
           ) : (
-            <Button size="sm" block onClick={() => window.close()}>
+            <Button size="sm" block onClick={tryClosePopup}>
               پرداخت را لغو کردم
             </Button>
           )}
