@@ -15,10 +15,12 @@ interface UseUserInfoStore {
   };
   pending: boolean;
   doctorProfilePending: boolean;
+  doctorSlugPending: boolean;
   setUserInfo: (info: UserInfo) => void;
   removeInfo: () => void;
   setPending: (state: boolean) => void;
   setDoctorProfilePending: (state: boolean) => void;
+  setDoctorSlugPending: (state: boolean) => void;
   setTurnsCount: (turnsCount: { presence: number }) => void;
   logout: () => void;
 }
@@ -55,6 +57,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   info: {},
   pending: true,
   doctorProfilePending: false,
+  doctorSlugPending: false,
   turnsCount: {
     presence: 0,
   },
@@ -64,13 +67,8 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         ...get().info?.provider,
         ...info?.provider,
       };
-      const isDoctor = !!(
-        mergedProvider.slug ||
-        !isEmpty(mergedProvider.centers) ||
-        mergedProvider.job_title === 'doctor' ||
-        info.is_doctor === true ||
-        get().info?.is_doctor === true
-      );
+      // Doctor identity: centers only (not v1/doctor/profile slug/job_title).
+      const isDoctor = !isEmpty(mergedProvider.centers);
 
       const infoCopy = {
         ...get().info,
@@ -78,6 +76,8 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         is_doctor: isDoctor,
         provider: {
           ...mergedProvider,
+          // Preserve slug from prior profile fetch when callers omit it.
+          slug: info?.provider?.slug ?? mergedProvider.slug,
           job_title: isDoctor ? 'doctor' : null,
         },
       };
@@ -121,6 +121,12 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       doctorProfilePending,
     }));
   },
+  setDoctorSlugPending: doctorSlugPending => {
+    set(state => ({
+      ...state,
+      doctorSlugPending,
+    }));
+  },
   setTurnsCount: turnsCount => {
     set(state => ({
       ...state,
@@ -139,6 +145,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       info: {},
       isLogin: false,
       doctorProfilePending: false,
+      doctorSlugPending: false,
     }));
     try {
       axios

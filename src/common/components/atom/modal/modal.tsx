@@ -28,7 +28,7 @@ export const Modal = (props: ModalProps) => {
         match={isOpen}
         animation="fade"
         duration={180}
-        className="fixed top-0 bottom-0 left-0 right-0 flex items-end md:pb-14 z-infinity md:pt-20 md:justify-center md:items-start bg-slate-900 bg-opacity-60"
+        className="fixed top-0 bottom-0 left-0 right-0 flex items-end md:pb-14 z-infinity pointer-events-auto md:pt-20 md:justify-center md:items-start bg-slate-900 bg-opacity-60"
         onClick={onClose}
         id="modal"
       >

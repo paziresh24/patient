@@ -10,6 +10,7 @@ import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
 import { HamdastRasanActivate } from '@/modules/hamdast/components/smsActivate';
+import { HamdastRasanCharge } from '@/modules/hamdast/components/smsCharge';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
@@ -205,6 +206,7 @@ export const AppFrame = ({
           <HamdastDoctorServicePayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastRasanActivate app_name={app.display_name?.fa} iframeRef={iframeRef} />
+          <HamdastRasanCharge iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastFlow iframeRef={iframeRef} />
         </>
@@ -215,6 +217,7 @@ export const AppFrame = ({
           <HamdastDoctorServicePayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastRasanActivate app_name={app.display_name?.fa} iframeRef={iframeRef} />
+          <HamdastRasanCharge iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} onChangeWidget={onChangeWidget} />
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />

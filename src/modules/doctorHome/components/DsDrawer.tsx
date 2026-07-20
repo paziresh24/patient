@@ -7,8 +7,11 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { Drawer } from 'vaul';
 import { ds } from '../designSystem/tokens';
 
-/** هم‌تراز با `z-infinity` در tailwind — بالاتر از هدر و ناوبری پایین */
-const DRAWER_BASE_Z = 999;
+/**
+ * بالاتر از هدر/ناوبری (z-40/50) و پایین‌تر از `z-infinity` (999) —
+ * تا مودال پرداخت و لاگین روی شیت اپ دیده شوند، نه زیر آن.
+ */
+const DRAWER_BASE_Z = 900;
 const DESKTOP_EXIT_MS = 200;
 const MOBILE_CLICK_SHIELD_MS = 500;
 

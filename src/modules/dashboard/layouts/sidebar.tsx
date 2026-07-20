@@ -1,4 +1,5 @@
 import Divider from '@/common/components/atom/divider';
+import Loading from '@/common/components/atom/loading';
 import Skeleton from '@/common/components/atom/skeleton';
 import Transition from '@/common/components/atom/transition';
 import BookmarksIcon from '@/common/components/icons/bookmarks';
@@ -11,6 +12,7 @@ import UserEditIcon from '@/common/components/icons/userEdit';
 import UsersIcon from '@/common/components/icons/users';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import { useOpenDoctorPublicProfile } from '@/common/utils/doctorPublicProfile';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -41,6 +43,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   const showSupportMenuButton = useFeatureIsOn('show-support-menu-button');
   const queryClient = useQueryClient();
   const [unreads, setUnreads] = useState({});
+  const { openPublicProfile, isOpening: isOpeningPublicProfile } = useOpenDoctorPublicProfile();
 
   useEffect(() => {
     if (!user?.id && !isUserPending) {
@@ -97,7 +100,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   };
 
   const openProfileView = () => {
-    window.open(`/dr/${user.provider?.slug}?@timestamp=${new Date().getTime()}`);
+    void openPublicProfile();
   };
 
   const currentData: any = useMemo(
@@ -184,7 +187,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
             }}
             className="p-1 transition-colors rounded-md hover:bg-slate-200/50"
           >
-            <EyeIcon width={18} height={18} />
+            {isOpeningPublicProfile ? <Loading width={18} height={18} /> : <EyeIcon width={18} height={18} />}
           </div>
         ),
       }),

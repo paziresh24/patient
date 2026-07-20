@@ -9,14 +9,12 @@ import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import { useUserInfoStore } from '../store/userInfo';
-import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
 
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const logout = useUserInfoStore(state => state.logout);
   const getMe = useGetMe();
-  const getDoctorProfile = useGetDoctorProfile();
   const university = useCustomize(state => state.customize?.partnerKey);
   const webPushNotificationUserList = useFeatureValue<{ ids: string[] }>('notification:web-push|enabled', { ids: [] });
 
@@ -59,5 +57,5 @@ export const useLogin = () => {
     }
   };
 
-  return { login: handleLogin, isLoading: loginRequest.isLoading || getMe.isLoading || getDoctorProfile.isLoading };
+  return { login: handleLogin, isLoading: loginRequest.isLoading || getMe.isLoading };
 };

@@ -14,7 +14,7 @@ import { useEffect, useRef } from 'react';
 import { growthbook } from 'src/pages/_app';
 
 export const isDoctorUser = (user: UserInfo) =>
-  user.provider?.job_title === 'doctor' || user.is_doctor === true || !!user.provider?.slug;
+  Array.isArray(user.provider?.centers) && user.provider.centers.length > 0;
 
 export const useDoctorHomeRedirect = () => {
   const router = useRouter();

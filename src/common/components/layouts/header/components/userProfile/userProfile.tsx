@@ -1,6 +1,6 @@
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
-import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
+import { getCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
 import Avatar from '@/common/components/atom/avatar';
 import Button from '@/common/components/atom/button';
 import Chips from '@/common/components/atom/chips';
@@ -20,7 +20,9 @@ import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
+import Loading from '@/common/components/atom/loading';
 import useCustomize from '@/common/hooks/useCustomize';
+import { useOpenDoctorPublicProfile } from '@/common/utils/doctorPublicProfile';
 import CreditDuration from '@/modules/bamdad/components/creditDuration';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
@@ -30,7 +32,6 @@ import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import Script from 'next/script';
 import { useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
@@ -44,6 +45,7 @@ export const UserProfile = () => {
   const userInfo = useUserInfoStore(state => state.info);
   const pending = useUserInfoStore(state => state.pending);
   const logout = useUserInfoStore(state => state.logout);
+  const { openPublicProfile, isOpening: isOpeningPublicProfile } = useOpenDoctorPublicProfile();
   const getUserActiveTurnsCount = useGetUserActiveTurnsCount();
   const setTurnsCount = useUserInfoStore(state => state.setTurnsCount);
   const turnsCount = useUserInfoStore(state => state.turnsCount);
@@ -93,8 +95,10 @@ export const UserProfile = () => {
         },
         {
           name: 'مشاهده پروفایل عمومی',
-          icon: <EyeIcon width={22} height={22} />,
-          link: `/dr/${userInfo.provider?.slug}?@timestamp=${new Date().getTime()}`,
+          icon: isOpeningPublicProfile ? <Loading width={22} height={22} /> : <EyeIcon width={22} height={22} />,
+          onClick: () => {
+            void openPublicProfile();
+          },
           shouldShow: userInfo.provider?.job_title === 'doctor',
         },
         {
@@ -143,18 +147,19 @@ export const UserProfile = () => {
   };
 
   const getMe = useGetMe();
-  const getDoctorProfile = useGetDoctorProfile();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const setPending = useUserInfoStore(state => state.setPending);
 
   const handlePostLogin = async () => {
     setPending(true);
     const userData = await getMe.mutateAsync();
-    const doctorProfileData = await getDoctorProfile.mutateAsync();
+    const centersData = userData?.id ? await getCentersByUserId(userData.id.toString()) : [];
 
     setUserInfo({
-      provider: doctorProfileData,
       ...userData,
+      provider: {
+        ...(Array.isArray(centersData) ? { centers: centersData } : { centers: [] }),
+      },
     });
 
     setPending(false);
@@ -235,7 +240,7 @@ export const UserProfile = () => {
                 )}
                 <MenuList className="space-y-1">
                   {menuItems.map(item => (
-                    <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>
+                    <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon} onClick={item.onClick}>
                       {item.badge}
                     </MenuItem>
                   ))}
