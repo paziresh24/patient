@@ -197,6 +197,16 @@ function wrap(method, level) {
       // Ignore empty noise
       if (args.length === 0) return;
       const parsed = parseConsoleArgs(args);
+      // Skip blank Next.js console.log() noise
+      if (
+        parsed.message === 'log' &&
+        (!parsed.fields || Object.keys(parsed.fields).length === 0)
+      ) {
+        return;
+      }
+      if (!parsed.message && (!parsed.fields || !Object.keys(parsed.fields).length)) {
+        return;
+      }
       writeLine(level, 'App', parsed.message, parsed.fields);
     } finally {
       reentrancy = false;
