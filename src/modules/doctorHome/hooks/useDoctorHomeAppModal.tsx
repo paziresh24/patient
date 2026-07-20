@@ -28,12 +28,16 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
   const queryClient = useQueryClient();
   const appSheet = useSheetRoute(APP_SHEET_KEY);
   const [appKey, setAppKey] = useState('');
+  const [runFullscreen, setRunFullscreen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     if (!appSheet.open) {
       clearTimeout(closeTimer.current);
-      closeTimer.current = setTimeout(() => setAppKey(''), 350);
+      closeTimer.current = setTimeout(() => {
+        setAppKey('');
+        setRunFullscreen(false);
+      }, 350);
       return;
     }
 
@@ -63,6 +67,7 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
         {...sheetDrawerProps(appSheet)}
         description="اپلیکیشن"
         fullHeight
+        expanded={runFullscreen}
         className="!p-0"
       >
         {appSheet.open && appKey ? (
@@ -75,6 +80,7 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
               dontShowNotification
               onHamdastClose={closeApp}
               closeVardastOnHamdastClose
+              onRunFullscreenChange={setRunFullscreen}
             />
           </div>
         ) : null}

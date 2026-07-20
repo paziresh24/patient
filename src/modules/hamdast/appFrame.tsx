@@ -5,9 +5,11 @@ import classNames from '@/common/utils/classNames';
 import { useOneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
 import { HamdastPayment } from '@/modules/hamdast/components/paymentModal';
+import { HamdastDoctorServicePayment } from '@/modules/hamdast/components/doctorServicePayment';
 import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
+import { HamdastSmsActivate } from '@/modules/hamdast/components/smsActivate';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
@@ -38,6 +40,7 @@ export const AppFrame = ({
   onReportSubmit,
   onHamdastClose,
   closeVardastOnHamdastClose,
+  onRunFullscreenChange,
 }: {
   appKey: string;
   params: string[];
@@ -51,6 +54,11 @@ export const AppFrame = ({
   onReportSubmit?: () => void;
   onHamdastClose?: () => void;
   closeVardastOnHamdastClose?: boolean;
+  /**
+   * وقتی اپ واقعا در حال اجراست (نه پروفایل لانچر) و صفحه‌اش layout.fullscreen دارد
+   * true می‌شود — والد (مودال/دراور) با آن حالت تقریبا تمام‌صفحهٔ دسکتاپ را فعال می‌کند.
+   */
+  onRunFullscreenChange?: (fullscreen: boolean) => void;
 }) => {
   const router = useRouter();
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
@@ -141,8 +149,17 @@ export const AppFrame = ({
     }
   }, [params?.[0]]);
 
+  /* پروفایل لانچر فول‌اسکرین نمی‌شود؛ فقط بعد از اجرا و اگر توسعه‌دهنده فعالش کرده باشد */
+  const runFullscreen = Boolean(showApp && !showTranslation && page?.layout?.fullscreen);
+  useEffect(() => {
+    onRunFullscreenChange?.(runFullscreen);
+  }, [runFullscreen, onRunFullscreenChange]);
+
   return (
-    <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden">
+    <div
+      className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden"
+      data-hamdast-run-fullscreen={runFullscreen ? 'true' : undefined}
+    >
       {!dontShowAppBar && (
 
         <AppBar
@@ -174,7 +191,9 @@ export const AppFrame = ({
       {app?.id && isEmbeddedModal && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastDoctorServicePayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastSmsActivate app_name={app.display_name?.fa} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastFlow iframeRef={iframeRef} />
         </>
@@ -182,7 +201,9 @@ export const AppFrame = ({
       {app?.id && !isEmbeddedModal && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastDoctorServicePayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastSmsActivate app_name={app.display_name?.fa} iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} onChangeWidget={onChangeWidget} />
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />

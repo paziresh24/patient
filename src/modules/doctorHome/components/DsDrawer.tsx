@@ -26,6 +26,11 @@ interface DsDrawerProps {
   fullHeight?: boolean;
   /** وقتی این شیت داخل یک شیت دیگر باز میشه (nested) — از Drawer.NestedRoot وال استفاده می‌کنه */
   nested?: boolean;
+  /**
+   * فقط دسکتاپ: پنل تقریبا تمام‌صفحه می‌شود (اجرای فول‌اسکرین ابزارک) —
+   * لبه‌ها به‌خاطر padding دور پنل دیده می‌شوند و کلیک روی پس‌زمینه می‌بندد.
+   */
+  expanded?: boolean;
 }
 
 const DesktopDrawerPanel = ({
@@ -34,6 +39,7 @@ const DesktopDrawerPanel = ({
   children,
   className,
   fullHeight,
+  expanded,
   level,
   closing,
   onClose,
@@ -43,6 +49,7 @@ const DesktopDrawerPanel = ({
   children: ReactNode;
   className?: string;
   fullHeight?: boolean;
+  expanded?: boolean;
   level: number;
   closing: boolean;
   onClose: () => void;
@@ -82,9 +89,11 @@ const DesktopDrawerPanel = ({
       >
         <div
           className={classNames(
-            'pointer-events-auto flex w-full items-start gap-3',
+            'pointer-events-auto flex w-full items-start gap-3 transition-[max-width] duration-300',
             closing ? ds.motion.sheetExit : ds.motion.sheetEnter,
-            fullHeight ? 'max-w-[min(42rem,calc(100vw-2.5rem))]' : 'max-w-md',
+            expanded ? 'max-w-[calc(100vw_-_2.5rem)]'
+            : fullHeight ? 'max-w-[min(42rem,calc(100vw_-_2.5rem))]'
+            : 'max-w-md',
           )}
           dir="rtl"
         >
@@ -107,9 +116,10 @@ const DesktopDrawerPanel = ({
             className={classNames(
               'flex min-w-0 flex-1 flex-col overflow-hidden bg-white outline-none',
               'rounded-2xl ring-1 ring-slate-200/80 shadow-[0_24px_64px_rgba(15,23,42,0.14)]',
-              fullHeight
-                ? 'h-[min(88dvh,calc(100dvh-2.5rem))]'
-                : 'max-h-[min(85vh,36rem)]',
+              'transition-[height] duration-300',
+              expanded ? 'h-[calc(100dvh_-_2.5rem)]'
+              : fullHeight ? 'h-[min(88dvh,calc(100dvh_-_2.5rem))]'
+              : 'max-h-[min(85vh,36rem)]',
             )}
           >
             <div
@@ -215,6 +225,7 @@ export const DsDrawer = ({
   level = 0,
   fullHeight = false,
   nested = false,
+  expanded = false,
 }: DsDrawerProps) => {
   const { isDesktop } = useResponsive();
   const [desktopVisible, setDesktopVisible] = useState(false);
@@ -366,6 +377,7 @@ export const DsDrawer = ({
               description={description}
               className={className}
               fullHeight={fullHeight}
+              expanded={expanded}
               level={level}
               closing={desktopClosing}
               onClose={requestClose}

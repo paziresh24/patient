@@ -8,6 +8,7 @@ import { ThemeConfig } from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
 import { oneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
+import { HamdastDoctorServicePayment } from '@/modules/hamdast/components/doctorServicePayment';
 import { HamdastFlow } from '@/modules/hamdast/components/flow';
 import { HamdastPayment } from '@/modules/hamdast/components/paymentModal';
 import { Report } from '@/modules/hamdast/components/report';
@@ -28,6 +29,7 @@ import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from '@/modules/hamdast/components/subscription-payment';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
 import { HamdastInvite } from '@/modules/hamdast/components/invite';
+import { HamdastSmsActivate } from '@/modules/hamdast/components/smsActivate';
 import Button from '@/common/components/atom/button';
 import Link from 'next/link';
 
@@ -300,9 +302,11 @@ const Page = ({ page, app }: any) => {
         </div>
       )}
       <HamdastPayment app_key={app?.key} app_name={app?.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+      <HamdastDoctorServicePayment app_key={app?.key} app_name={app?.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+      <HamdastSmsActivate app_name={app.display_name?.fa} iframeRef={iframeRef} />
       <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={app?.key} iframeRef={iframeRef} />
       <HamdastInvite app_key={app?.key} />
       <HamdastFlow iframeRef={iframeRef} />
