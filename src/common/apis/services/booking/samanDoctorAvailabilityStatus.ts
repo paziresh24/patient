@@ -33,6 +33,7 @@ export const useSamanDoctorAvailabilityStatus = (slug: string, options?: any) =>
     () => samanDoctorAvailabilityStatus(slug),
     {
       staleTime: 60_000,
+      refetchOnMount: 'always',
       refetchOnWindowFocus: false,
       ...options,
     },

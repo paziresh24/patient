@@ -9,7 +9,7 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useGrowthBook } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
@@ -50,6 +50,7 @@ export const Services = ({
   isBulk,
   enabledWidgets,
   dontShowDeactiveBox,
+  ssrUseSamanAvailabilityStatus = false,
 }: {
   id: string;
   expertises: any;
@@ -62,13 +63,17 @@ export const Services = ({
   isBulk: boolean;
   enabledWidgets?: any[];
   dontShowDeactiveBox?: boolean;
+  ssrUseSamanAvailabilityStatus?: boolean;
 }) => {
   const router = useRouter();
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
 
-  const useSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
+  const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
+  // SSR flag avoids waiting for GrowthBook client init (prevents isBulk flash)
+  const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
+  const growthbook = useGrowthBook();
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
@@ -89,6 +94,10 @@ export const Services = ({
   const [availabilityMessage, setAvailabilityMessage] = useState<string>('');
 
   const samanLoaded = useSamanAvailabilityStatus && !!samanAvailability.data && !samanAvailability.isError;
+  // Avoid flashing the red bulk box before GrowthBook/Saman resolve
+  const samanPending =
+    (useSamanAvailabilityStatus && !samanLoaded && !samanAvailability.isError) ||
+    (!growthbook?.ready && !!isBulk && !ssrUseSamanAvailabilityStatus);
   const scopedInPerson = useMemo(
     () => getScopedInPersonAvailability(centers, samanAvailability.data),
     [centers, samanAvailability.data],
@@ -107,12 +116,13 @@ export const Services = ({
 
   const legacyHasNoBooking = alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk;
   const samanHasNoBooking = samanLoaded && !scopedInPerson.bookingAvailable && !scopedOnlineVisit.bookingAvailable;
+  // While Saman is pending, do not fall back to isBulk (avoids red "no booking" flash)
   const hasNoBooking = useSamanAvailabilityStatus
     ? samanAvailability.isError
       ? isBulk
       : samanLoaded
         ? samanHasNoBooking
-        : isBulk
+        : false
     : legacyHasNoBooking;
 
   const presenceCenters = useMemo(() => {
@@ -244,6 +254,10 @@ export const Services = ({
 
   if (!customize?.partnerKey && dontShowDeactiveBox && hasNoBooking) {
     return null;
+  }
+
+  if (samanPending) {
+    return <Skeleton w="100%" h="198px" rounded="lg" />;
   }
 
   // Legacy / fully unavailable: show only Bulk when nothing is bookable
