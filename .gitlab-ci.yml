@@ -9,7 +9,8 @@ stages:
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
-  # Auto-retry flaky registry / runner failures (e.g. resumable blob upload invalid)
+    # Internal hostname hits gateway without Arvan CDN (CDN breaks large resumable uploads).
+    REGISTRY_PUSH_HOST: registry-gitlab.mobin.p24cloud.ir
   retry:
     max: 2
     when:
@@ -24,12 +25,35 @@ build-docker-image:
   stage: build
 
   before_script:
-    - apk add --no-cache curl
+    - apk add --no-cache curl jq
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    # Prefer internal push host; fall back to CI_REGISTRY if unreachable from the runner.
+    - |
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if ! curl -sk --connect-timeout 5 "https://${PUSH_HOST}/v2/" >/dev/null 2>&1; then
+        echo "Internal registry host unreachable, falling back to $CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      else
+        echo "Using push host: $PUSH_HOST"
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
+    # Serialize blob uploads — parallel resumable uploads flake through proxy/CDN.
+    - |
+      jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
+        "$HOME/.docker/config.json" > /tmp/docker-config.json \
+        && mv /tmp/docker-config.json "$HOME/.docker/config.json"
 
   script:
-    - docker build --provenance=false -t "$CI_REGISTRY_IMAGE:latest" -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      docker build --provenance=false \
+        -t "${PUSH_IMAGE}:latest" \
+        -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
+        -t "${CI_REGISTRY_IMAGE}:latest" \
+        -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
+        .
 
     - |
       push_with_retry() {
@@ -45,12 +69,15 @@ build-docker-image:
           if [ "$attempt" -eq "$max" ]; then
             return 1
           fi
-          sleep $((attempt * 5))
+          sleep $((attempt * 10))
           attempt=$((attempt + 1))
         done
       }
-      push_with_retry "$CI_REGISTRY_IMAGE:latest"
-      push_with_retry "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      # SHA first (ImageUpdater); latest second.
+      push_with_retry "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+      push_with_retry "${PUSH_IMAGE}:latest"
 
     - |
       cat <<EOF > webhook_payload.json
@@ -77,17 +104,20 @@ build-docker-image:
 build-docker-image-next:
   extends: .build-docker-common
   stage: build
-
-  before_script:
-    - apk add --no-cache curl
-    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
-
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
     ZOT_REGISTRY: registry.paziresh24.com
     ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
+
+  before_script:
+    - apk add --no-cache curl jq
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
+    - |
+      jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
+        "$HOME/.docker/config.json" > /tmp/docker-config.json \
+        && mv /tmp/docker-config.json "$HOME/.docker/config.json"
 
   script:
     - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
@@ -105,7 +135,7 @@ build-docker-image-next:
           if [ "$attempt" -eq "$max" ]; then
             return 1
           fi
-          sleep $((attempt * 5))
+          sleep $((attempt * 10))
           attempt=$((attempt + 1))
         done
       }
