@@ -24,14 +24,14 @@ type EnsureResponse = {
   credit?: number;
 };
 
-type SmsActivateEvent =
-  | 'HAMDAST_SMS_ACTIVATE_SUCCESS'
-  | 'HAMDAST_SMS_ACTIVATE_CANCEL'
-  | 'HAMDAST_SMS_ACTIVATE_ERROR';
+type RasanActivateEvent =
+  | 'HAMDAST_RASAN_ACTIVATE_SUCCESS'
+  | 'HAMDAST_RASAN_ACTIVATE_CANCEL'
+  | 'HAMDAST_RASAN_ACTIVATE_ERROR';
 
 type Phase = 'checking' | 'confirm';
 
-export const HamdastSmsActivate = ({
+export const HamdastRasanActivate = ({
   app_name,
   iframeRef,
 }: {
@@ -46,7 +46,7 @@ export const HamdastSmsActivate = ({
   const [isActivating, setIsActivating] = useState(false);
   const { handleClose, handleOpen, modalProps } = useModal();
 
-  const replyToWidget = (event: SmsActivateEvent, data: Record<string, unknown> = {}) => {
+  const replyToWidget = (event: RasanActivateEvent, data: Record<string, unknown> = {}) => {
     if (repliedRef.current) {
       return;
     }
@@ -69,7 +69,7 @@ export const HamdastSmsActivate = ({
   };
 
   const handleCancel = () => {
-    replyToWidget('HAMDAST_SMS_ACTIVATE_CANCEL');
+    replyToWidget('HAMDAST_RASAN_ACTIVATE_CANCEL');
     handleClose();
   };
 
@@ -80,7 +80,7 @@ export const HamdastSmsActivate = ({
         withCredentials: true,
       });
 
-      replyToWidget('HAMDAST_SMS_ACTIVATE_SUCCESS', {
+      replyToWidget('HAMDAST_RASAN_ACTIVATE_SUCCESS', {
         activated: true,
         credit: response.data?.credit ?? 0,
       });
@@ -101,7 +101,7 @@ export const HamdastSmsActivate = ({
           (error.response?.data?.error?.message || error.response?.data?.message)) ||
         'بررسی وضعیت پیامک انجام نشد. دوباره تلاش کنید.';
 
-      replyToWidget('HAMDAST_SMS_ACTIVATE_ERROR', {
+      replyToWidget('HAMDAST_RASAN_ACTIVATE_ERROR', {
         message: String(message),
       });
       handleClose();
@@ -120,7 +120,7 @@ export const HamdastSmsActivate = ({
 
       const payload = response.data || {};
 
-      replyToWidget('HAMDAST_SMS_ACTIVATE_SUCCESS', {
+      replyToWidget('HAMDAST_RASAN_ACTIVATE_SUCCESS', {
         activated: true,
         credit: payload.credit ?? 0,
       });
@@ -132,7 +132,7 @@ export const HamdastSmsActivate = ({
           (error.response?.data?.error?.message || error.response?.data?.message)) ||
         'فعال‌سازی انجام نشد. دوباره تلاش کنید.';
 
-      replyToWidget('HAMDAST_SMS_ACTIVATE_ERROR', {
+      replyToWidget('HAMDAST_RASAN_ACTIVATE_ERROR', {
         message: String(message),
       });
       handleClose();
@@ -144,7 +144,7 @@ export const HamdastSmsActivate = ({
 
   useEffect(() => {
     const handleEventFunction = (messageEvent: MessageEvent) => {
-      if (messageEvent.data?.hamdast?.event !== 'HAMDAST_SMS_ACTIVATE') {
+      if (messageEvent.data?.hamdast?.event !== 'HAMDAST_RASAN_ACTIVATE') {
         return;
       }
 
@@ -160,7 +160,7 @@ export const HamdastSmsActivate = ({
             void checkSmsAccount();
           },
           onClose: () => {
-            replyToWidget('HAMDAST_SMS_ACTIVATE_CANCEL');
+            replyToWidget('HAMDAST_RASAN_ACTIVATE_CANCEL');
           },
         });
       }
