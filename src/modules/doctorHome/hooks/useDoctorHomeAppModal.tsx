@@ -38,13 +38,24 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
         setAppKey('');
         setRunFullscreen(false);
       }, 350);
-      return;
+      return () => clearTimeout(closeTimer.current);
     }
 
+    // Cancel a pending clear from a recent close (quick reopen).
+    clearTimeout(closeTimer.current);
+
+    // On mobile / doctor-home swap, sheets update the URL via History API only —
+    // Next's router.query can stay on a previous app_key and overwrite the one
+    // just set in openApp. Prefer the live location search.
+    const fromLocation =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get(APP_KEY_PARAM)
+        : null;
     const fromQuery = router.query[APP_KEY_PARAM];
-    if (typeof fromQuery === 'string' && fromQuery) {
-      setAppKey(fromQuery);
-    }
+    const key =
+      fromLocation ||
+      (typeof fromQuery === 'string' && fromQuery ? fromQuery : '');
+    if (key) setAppKey(key);
   }, [appSheet.open, router.query]);
 
   const openApp = useCallback(
