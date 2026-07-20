@@ -5,12 +5,12 @@ stages:
   image: docker:cli
   services:
     - name: docker:dind
-      command: ["--registry-mirror=https://docker.devneeds.ir"]
+      command: ["--registry-mirror=https://docker.devneeds.ir", "--insecure-registry=78.39.136.53:5050"]
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
-    # Internal hostname hits gateway without Arvan CDN (CDN breaks large resumable uploads).
-    REGISTRY_PUSH_HOST: registry-gitlab.mobin.p24cloud.ir
+    # Production pull path (CDN) still ends at Omnibus :5050 — push there until Hybrid cutover is live.
+    OMNIBUS_REGISTRY: "78.39.136.53:5050"
   retry:
     max: 2
     when:
@@ -27,18 +27,10 @@ build-docker-image:
   before_script:
     - apk add --no-cache curl jq
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    # Prefer internal push host; fall back to CI_REGISTRY if unreachable from the runner.
-    - |
-      PUSH_HOST="$REGISTRY_PUSH_HOST"
-      if ! curl -sk --connect-timeout 5 "https://${PUSH_HOST}/v2/" >/dev/null 2>&1; then
-        echo "Internal registry host unreachable, falling back to $CI_REGISTRY"
-        PUSH_HOST="$CI_REGISTRY"
-      else
-        echo "Using push host: $PUSH_HOST"
-      fi
-      echo "$PUSH_HOST" > /tmp/push_host
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
-    # Serialize blob uploads — parallel resumable uploads flake through proxy/CDN.
+    # dind pushes to Omnibus IP (insecure). Hostname alias so Auth/JWT scope matches CI_REGISTRY.
+    - echo "78.39.136.53 gitlab-registry.paziresh24.com" >> /etc/hosts || true
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$OMNIBUS_REGISTRY"
     - |
       jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
         "$HOME/.docker/config.json" > /tmp/docker-config.json \
@@ -46,13 +38,12 @@ build-docker-image:
 
   script:
     - |
-      PUSH_HOST=$(cat /tmp/push_host)
-      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      # Tag for both public name (metadata) and Omnibus IP (actual TCP target via dind insecure).
       docker build --provenance=false \
-        -t "${PUSH_IMAGE}:latest" \
-        -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
         -t "${CI_REGISTRY_IMAGE}:latest" \
         -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
+        -t "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:latest" \
+        -t "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_SHORT_SHA}" \
         .
 
     - |
@@ -73,11 +64,9 @@ build-docker-image:
           attempt=$((attempt + 1))
         done
       }
-      PUSH_HOST=$(cat /tmp/push_host)
-      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
-      # SHA first (ImageUpdater); latest second.
-      push_with_retry "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}"
-      push_with_retry "${PUSH_IMAGE}:latest"
+      # Push straight to Omnibus IP — bypasses Arvan CDN and Hybrid-only internal host.
+      push_with_retry "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_SHORT_SHA}"
+      push_with_retry "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:latest"
 
     - |
       cat <<EOF > webhook_payload.json
@@ -99,8 +88,6 @@ build-docker-image:
     - if: $CI_COMMIT_BRANCH == "main"
       when: always
 
-# Next branch → mobin Zot only (patient-next). Never push to GitLab production registry.
-# Requires CI/CD variables: MOBIN_ZOT_REGISTRY_USER, MOBIN_ZOT_REGISTRY_PASSWORD
 build-docker-image-next:
   extends: .build-docker-common
   stage: build
