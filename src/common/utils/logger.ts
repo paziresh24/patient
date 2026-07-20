@@ -2,15 +2,41 @@ type LogLevel = 'error' | 'warn' | 'info' | 'debug' | 'success';
 
 type LogFields = Record<string, unknown>;
 
-const LEVEL_META: Record<LogLevel, { emoji: string; label: string }> = {
-  error: { emoji: '🔴', label: 'ERROR' },
-  warn: { emoji: '🟠', label: 'WARN' },
-  info: { emoji: '🔵', label: 'INFO' },
-  debug: { emoji: '⚪', label: 'DEBUG' },
-  success: { emoji: '🟢', label: 'SUCCESS' },
+/** ANSI colors for TTY / kubectl / Grafana Explore (most terminals). */
+const ANSI = {
+  reset: '\u001b[0m',
+  bold: '\u001b[1m',
+  dim: '\u001b[2m',
+  red: '\u001b[31m',
+  yellow: '\u001b[33m',
+  blue: '\u001b[34m',
+  cyan: '\u001b[36m',
+  green: '\u001b[32m',
+  gray: '\u001b[90m',
+  white: '\u001b[37m',
+};
+
+const LEVEL_META: Record<LogLevel, { label: string; color: string }> = {
+  error: { label: 'ERROR', color: ANSI.red },
+  warn: { label: 'WARN', color: ANSI.yellow },
+  info: { label: 'INFO', color: ANSI.blue },
+  debug: { label: 'DEBUG', color: ANSI.gray },
+  success: { label: 'SUCCESS', color: ANSI.green },
 };
 
 const isServer = typeof window === 'undefined';
+
+function colorEnabled(): boolean {
+  if (process.env.NO_COLOR != null && process.env.NO_COLOR !== '') return false;
+  if (process.env.FORCE_COLOR != null && process.env.FORCE_COLOR !== '0') return true;
+  // kubectl logs / Loki usually keep ANSI; default on for server.
+  return isServer;
+}
+
+function paint(color: string, text: string): string {
+  if (!colorEnabled()) return text;
+  return `${color}${text}${ANSI.reset}`;
+}
 
 function timeStamp(): string {
   const d = new Date();
@@ -109,21 +135,24 @@ function summarizeValue(value: unknown): unknown {
 }
 
 /**
- * Single-line format:
- * [14:22:05.123] 🔴 ERROR [SamanAPI] Upstream failed  statusCode=504 endpoint="..."
+ * Single-line format (no emoji — color carries the level):
+ * [14:22:05.123] ERROR   [SamanAPI] Upstream failed  statusCode=504 endpoint="..."
  */
 function writeLine(level: LogLevel, source: string, message: string, fields?: LogFields): void {
   const meta = LEVEL_META[level];
-  const label = meta.label.padEnd(7, ' ');
-  let line = `[${timeStamp()}] ${meta.emoji} ${label} [${source}] ${message}`;
+  const time = paint(ANSI.dim, `[${timeStamp()}]`);
+  const label = paint(`${meta.color}${ANSI.bold}`, meta.label.padEnd(7, ' '));
+  const src = paint(ANSI.cyan, `[${source}]`);
+  const msg = paint(meta.color, message);
+
+  let line = `${time} ${label} ${src} ${msg}`;
   if (fields && Object.keys(fields).length > 0) {
-    // Avoid duplicating message key when it matches the human message.
     const rest = { ...fields };
     if (typeof rest.message === 'string' && rest.message === message) {
       delete rest.message;
     }
     const formatted = formatFields(rest);
-    if (formatted) line += `  ${formatted}`;
+    if (formatted) line += `  ${paint(ANSI.dim, formatted)}`;
   }
   line += '\n';
 
