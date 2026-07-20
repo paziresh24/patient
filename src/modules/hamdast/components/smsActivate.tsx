@@ -66,7 +66,7 @@ export const HamdastSmsActivate = ({
     setIsLoading(true);
     try {
       const response = await axios.post<EnsureResponse>(
-        'https://hamdast.paziresh24.com/api/v1/rasan/account/ensure',
+        'https://apigw.paziresh24.com/open-platform/v1/rasan/account/ensure',
         undefined,
         { withCredentials: true },
       );
