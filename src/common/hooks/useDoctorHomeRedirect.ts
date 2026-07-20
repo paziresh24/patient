@@ -13,8 +13,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 import { growthbook } from 'src/pages/_app';
 
-export const isDoctorUser = (user: UserInfo) =>
-  Array.isArray(user.provider?.centers) && user.provider.centers.length > 0;
+export const isDoctorUser = (user: UserInfo) => {
+  const centers = user.provider?.centers;
+  return Array.isArray(centers) && centers.length > 0;
+};
 
 export const useDoctorHomeRedirect = () => {
   const router = useRouter();
