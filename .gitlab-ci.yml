@@ -1,8 +1,7 @@
 stages:
   - build
 
-build-docker-image:
-  stage: build
+.build-docker-common:
   image: docker:cli
   services:
     - name: docker:dind
@@ -10,6 +9,19 @@ build-docker-image:
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
+  # Auto-retry flaky registry / runner failures (e.g. resumable blob upload invalid)
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - api_failure
+      - script_failure
+      - job_execution_timeout
+
+build-docker-image:
+  extends: .build-docker-common
+  stage: build
 
   before_script:
     - apk add --no-cache curl
@@ -19,8 +31,26 @@ build-docker-image:
   script:
     - docker build --provenance=false -t "$CI_REGISTRY_IMAGE:latest" -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
 
-    - docker push "$CI_REGISTRY_IMAGE:latest"
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+    - |
+      push_with_retry() {
+        local image="$1"
+        local attempt=1
+        local max=3
+        while [ "$attempt" -le "$max" ]; do
+          echo "Pushing $image (attempt $attempt/$max)..."
+          if docker push "$image"; then
+            return 0
+          fi
+          echo "Push failed for $image (attempt $attempt/$max)"
+          if [ "$attempt" -eq "$max" ]; then
+            return 1
+          fi
+          sleep $((attempt * 5))
+          attempt=$((attempt + 1))
+        done
+      }
+      push_with_retry "$CI_REGISTRY_IMAGE:latest"
+      push_with_retry "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
 
     - |
       cat <<EOF > webhook_payload.json
@@ -45,25 +75,41 @@ build-docker-image:
 # Next branch → mobin Zot only (patient-next). Never push to GitLab production registry.
 # Requires CI/CD variables: MOBIN_ZOT_REGISTRY_USER, MOBIN_ZOT_REGISTRY_PASSWORD
 build-docker-image-next:
+  extends: .build-docker-common
   stage: build
-  image: docker:cli
-  services:
-    - name: docker:dind
-      command: ["--registry-mirror=https://docker.devneeds.ir"]
-  variables:
-    DOCKER_HOST: "tcp://docker:2375"
-    DOCKER_TLS_CERTDIR: ""
-    ZOT_REGISTRY: registry.paziresh24.com
-    ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
 
   before_script:
     - apk add --no-cache curl
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
 
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+    ZOT_REGISTRY: registry.paziresh24.com
+    ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
+
   script:
     - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
-    - docker push "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA"
+    - |
+      push_with_retry() {
+        local image="$1"
+        local attempt=1
+        local max=3
+        while [ "$attempt" -le "$max" ]; do
+          echo "Pushing $image (attempt $attempt/$max)..."
+          if docker push "$image"; then
+            return 0
+          fi
+          echo "Push failed for $image (attempt $attempt/$max)"
+          if [ "$attempt" -eq "$max" ]; then
+            return 1
+          fi
+          sleep $((attempt * 5))
+          attempt=$((attempt + 1))
+        done
+      }
+      push_with_retry "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA"
 
     - |
       cat <<EOF > webhook_payload.json
