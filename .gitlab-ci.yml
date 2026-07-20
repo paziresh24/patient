@@ -5,11 +5,12 @@ stages:
   image: docker:cli
   services:
     - name: docker:dind
-      command: ["--registry-mirror=https://docker.devneeds.ir", "--insecure-registry=78.39.136.53:5050"]
+      command:
+        - "--registry-mirror=https://docker.devneeds.ir"
+        - "--insecure-registry=78.39.136.53:5050"
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
-    # Production pull path (CDN) still ends at Omnibus :5050 — push there until Hybrid cutover is live.
     OMNIBUS_REGISTRY: "78.39.136.53:5050"
   retry:
     max: 2
@@ -27,9 +28,7 @@ build-docker-image:
   before_script:
     - apk add --no-cache curl jq
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    # dind pushes to Omnibus IP (insecure). Hostname alias so Auth/JWT scope matches CI_REGISTRY.
-    - echo "78.39.136.53 gitlab-registry.paziresh24.com" >> /etc/hosts || true
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    # Live pulls still hit Omnibus. Login/push only to :5050 (skip broken CDN hostname).
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$OMNIBUS_REGISTRY"
     - |
       jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
@@ -38,10 +37,7 @@ build-docker-image:
 
   script:
     - |
-      # Tag for both public name (metadata) and Omnibus IP (actual TCP target via dind insecure).
       docker build --provenance=false \
-        -t "${CI_REGISTRY_IMAGE}:latest" \
-        -t "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
         -t "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:latest" \
         -t "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_SHORT_SHA}" \
         .
@@ -64,7 +60,6 @@ build-docker-image:
           attempt=$((attempt + 1))
         done
       }
-      # Push straight to Omnibus IP — bypasses Arvan CDN and Hybrid-only internal host.
       push_with_retry "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_SHORT_SHA}"
       push_with_retry "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:latest"
 
@@ -74,7 +69,7 @@ build-docker-image:
         "project_name": "$CI_PROJECT_NAME",
         "commit_sha": "$CI_COMMIT_SHORT_SHA",
         "branch": "$CI_COMMIT_BRANCH",
-        "registry_image": "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA",
+        "registry_image": "gitlab-registry.paziresh24.com/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA",
         "status": "build_success"
       }
       EOF
