@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { isPWA } from '../utils/isPwa';
@@ -24,6 +24,29 @@ const baseConfig = {
       'Connection': 'keep-alive',
     },
   }),
+};
+
+
+const attachServerErrorLogger = (client: AxiosInstance, source: string) => {
+  if (!isServer) return client;
+  client.interceptors.response.use(
+    res => res,
+    err => {
+      // Skip expected auth refresh flows; still count real upstream failures.
+      const status = err?.response?.status;
+      if (status !== 401) {
+        // Lazy require keeps this module client-bundle safe.
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { trackSsrError } = require('@/common/utils/ssrErrorTracker') as typeof import('@/common/utils/ssrErrorTracker');
+        trackSsrError(err, {
+          source,
+          message: 'Upstream API request failed',
+        });
+      }
+      return Promise.reject(err);
+    },
+  );
+  return client;
 };
 
 export const paziresh24AppClient = axios.create({
@@ -108,6 +131,21 @@ export const samanClient = axios.create({
   baseURL: publicRuntimeConfig.SAMAN_BASE_URL ?? 'https://saman.paziresh24.com',
   ...baseConfig,
 });
+
+
+attachServerErrorLogger(paziresh24AppClient, 'DoctorsAPI');
+attachServerErrorLogger(feedbacksClient, 'FeedbacksAPI');
+attachServerErrorLogger(apiGatewayClient, 'API_Gateway');
+attachServerErrorLogger(katibeApiClient, 'KatibeAPI');
+attachServerErrorLogger(raviApiClient, 'RaviAPI');
+attachServerErrorLogger(raviApisClient, 'RaviAPIs');
+attachServerErrorLogger(searchClient, 'SearchAPI');
+attachServerErrorLogger(clinicClient, 'ClinicAPI');
+attachServerErrorLogger(contentClient, 'ContentAPI');
+attachServerErrorLogger(workflowClient, 'WorkflowAPI');
+attachServerErrorLogger(hamdastClient, 'HamdastAPI');
+attachServerErrorLogger(drProfileClient, 'DrProfileAPI');
+attachServerErrorLogger(samanClient, 'SamanAPI');
 
 clinicClient.interceptors.request.use(
   config => {
@@ -204,7 +242,9 @@ workflowClient.interceptors.response.use(
           return workflowClient(originalRequest);
         }
       } catch (error) {
-        console.error(error);
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { trackSsrError } = require('@/common/utils/ssrErrorTracker') as typeof import('@/common/utils/ssrErrorTracker');
+        trackSsrError(error, { source: 'WorkflowAPI', message: 'Token refresh failed' });
       }
     }
     return Promise.reject(err);

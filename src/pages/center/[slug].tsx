@@ -29,6 +29,7 @@ import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useDebounce } from 'react-use';
 import { growthbook } from '../_app';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 
 const { publicRuntimeConfig } = config();
@@ -244,7 +245,7 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
         'name': profileData.name,
         'telephone': profileData?.tell,
         'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
-        'image': publicRuntimeConfig.CDN_BASE_URL + profileData.image,
+        'image': getImageUrl(profileData.image, publicRuntimeConfig.CDN_BASE_URL),
         'isAcceptingNewPatients': true,
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
@@ -264,7 +265,7 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
         'jobTitle': 'physician',
         'name': profileData.name,
         'telephone': profileData?.tell,
-        'image': publicRuntimeConfig.CDN_BASE_URL + profileData.image,
+        'image': getImageUrl(profileData.image, publicRuntimeConfig.CDN_BASE_URL),
         'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
         'address': {
           '@type': 'PostalAddress',
@@ -300,7 +301,7 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
         jsonlds={getJsonlds()}
         openGraph={{
           image: {
-            src: publicRuntimeConfig.CDN_BASE_URL + profileData?.image,
+            src: getImageUrl(profileData?.image, publicRuntimeConfig.CDN_BASE_URL),
             alt: profileData?.name,
             type: 'image/jpg',
           },
@@ -313,7 +314,7 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
             <Head
               pageViewCount={profileData?.number_of_visits}
               displayName={profileData?.name}
-              image={publicRuntimeConfig.CDN_BASE_URL + profileData?.image}
+              image={getImageUrl(profileData?.image, publicRuntimeConfig.CDN_BASE_URL)}
               title={`${profileData?.group_expertises?.length ?? 0} تخصص پزشکی`}
               subTitle={`پزشک فعال: ${profileData?.doctors?.length ?? 0}`}
               serviceList={profileData?.expertises?.map((expertise: any) => expertise.alias_title)}

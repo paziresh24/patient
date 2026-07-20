@@ -30,6 +30,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 const { publicRuntimeConfig } = getConfig();
 
 const Booking = () => {
@@ -68,7 +69,7 @@ const Booking = () => {
       return picUserImageUrl(raw);
     }
     const img = (bookDetailsData as { doctor_image?: string }).doctor_image;
-    return img ? publicRuntimeConfig.CDN_BASE_URL + img : undefined;
+    return img ? getImageUrl(img, publicRuntimeConfig.CDN_BASE_URL) : undefined;
   }, [bookDetailsData]);
 
   const isLoading = getBookDetails.isLoading || getBookDetails?.isIdle || onlineChannelLoading;
