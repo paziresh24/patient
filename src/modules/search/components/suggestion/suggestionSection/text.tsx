@@ -3,6 +3,7 @@ import { categoryIcons } from '@/modules/search/constants/suggestion/categoryIco
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
 import classNames from '@/common/utils/classNames';
+import { safeHighlight } from '@/modules/search/functions/safeHighlight';
 import style from './section.module.css';
 
 interface TextSectionProps {
@@ -23,7 +24,9 @@ export const TextSection = (props: TextSectionProps) => {
         >
           <>
             {item.type && categoryIcons[item.type]?.()}
-            <Text fontSize="sm" className={style.title} dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
+            <Text fontSize="sm" className={style.title}>
+              {safeHighlight(item.formatted_title)}
+            </Text>
           </>
         </div>
       ))}
