@@ -10,6 +10,13 @@ import { sheetDrawerProps, useSheetRoute } from './useSheetRoute';
 
 const APP_SHEET_KEY = 'hamdast-app';
 const APP_KEY_PARAM = 'app_key';
+const TOOLBOX_SHEET_KEY = 'toolbox';
+
+function readSheetStackFromLocation(): string[] {
+  if (typeof window === 'undefined') return [];
+  const val = new URLSearchParams(window.location.search).get('sheets') ?? '';
+  return val ? val.split(',').filter(Boolean) : [];
+}
 
 type OpenDoctorHomeApp = (appKey: string) => void;
 
@@ -62,7 +69,13 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
     (key: string) => {
       void prefetchOneApp(queryClient, { appKey: key, pageKey: 'launcher' }, 0);
       setAppKey(key);
-      appSheet.openSheet({ [APP_KEY_PARAM]: key });
+      const extra = { [APP_KEY_PARAM]: key };
+      // بستن toolbox با history.back() قبل از push باعث race و باز نشدن اپ می‌شد
+      if (readSheetStackFromLocation().includes(TOOLBOX_SHEET_KEY)) {
+        appSheet.openSheetOver([TOOLBOX_SHEET_KEY], extra);
+        return;
+      }
+      appSheet.openSheet(extra);
     },
     [queryClient, appSheet],
   );

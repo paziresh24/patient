@@ -3,7 +3,10 @@
 /**
  * Eager CSS for toolbox Plasmic blocks — avoids FOUC when the sheet opens
  * and FeaturedApps mounts for the first time (CSS modules otherwise arrive with the chunk paint).
+ * Title text depends on project tokens in plasmic.module.css, not only Title.module.css.
  */
+import '@plasmicapp/react-web/lib/plasmic.css';
+import '../../../../.plasmic/plasmic/launcher/plasmic.module.css';
 import '../../../../.plasmic/plasmic/launcher/PlasmicLauncherBlocksFeaturedApps.module.css';
 import '../../../../.plasmic/plasmic/launcher/PlasmicLauncherComponentsApp.module.css';
 import '../../../../.plasmic/plasmic/launcher/PlasmicLauncherComponentsTitle.module.css';
@@ -23,19 +26,31 @@ interface ToolboxDrawerProps {
 export const ToolboxDrawer = ({ open, onOpenChange, onBeforeOpenApp }: ToolboxDrawerProps) => {
   const openDoctorHomeApp = useDoctorHomeAppModal();
   const isSheetHost = useDoctorHomeSheetHost();
-  /** Keep FeaturedApps mounted after first open so CSS/data don't flash on reopen. */
-  const [hasOpened, setHasOpened] = useState(false);
+  /** Warm-mount FeaturedApps (hidden) so Plasmic CSS is applied before the first visible open. */
+  const [warmed, setWarmed] = useState(false);
 
   useEffect(() => {
-    if (open) setHasOpened(true);
-  }, [open]);
-
-  useEffect(() => {
-    void import('.plasmic/LauncherBlocksFeaturedApps');
+    let cancelled = false;
+    const warm = () => {
+      if (!cancelled) setWarmed(true);
+    };
+    // Prefer idle so doctor-home first paint stays light; fall back on slow devices.
+    const ric = window.requestIdleCallback?.(warm, { timeout: 1200 });
+    if (ric == null) {
+      const t = window.setTimeout(warm, 0);
+      return () => {
+        cancelled = true;
+        window.clearTimeout(t);
+      };
+    }
+    return () => {
+      cancelled = true;
+      window.cancelIdleCallback?.(ric);
+    };
   }, []);
 
   const showContent = open && isSheetHost;
-  const mountContent = showContent || hasOpened;
+  const mountContent = warmed || showContent;
 
   return (
     <DsDrawer
@@ -54,8 +69,8 @@ export const ToolboxDrawer = ({ open, onOpenChange, onBeforeOpenApp }: ToolboxDr
         >
           <LauncherBlocksFeaturedApps
             openAppFrame={key => {
-              onBeforeOpenApp?.();
               openDoctorHomeApp(key);
+              onBeforeOpenApp?.();
             }}
           />
         </div>

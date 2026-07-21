@@ -178,7 +178,7 @@ export const FeedWidgetsSection = ({ widgetShell = false }: { widgetShell?: bool
 
         }}
 
-        onBeforeOpenApp={toolboxSheet.closeSheet}
+        onBeforeOpenApp={() => toolboxSheet.closeSheet('replace')}
 
       />
 
