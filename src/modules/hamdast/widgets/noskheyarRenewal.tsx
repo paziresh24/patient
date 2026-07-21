@@ -58,7 +58,7 @@ export default function NoskheyarRenewal({ profileData }: { profileData?: any })
         }}
       />
 
-      <HamdastAppModal {...modalProps} onClose={handleClose} title="تمدید نسخه" runFullscreen>
+      <HamdastAppModal {...modalProps} onClose={handleClose} title="تمدید نسخه">
         <AppFrame
           dontShowAppBar
           dontShowProfile
