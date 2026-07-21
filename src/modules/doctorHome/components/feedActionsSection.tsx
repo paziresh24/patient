@@ -12,10 +12,11 @@ import { useSelectedCenterStore } from '../store/selectedCenter';
 import { useSelectedDateStore } from '../store/selectedDate';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { DOCTOR_PANEL_URLS } from '../utils/doctorPanelUrls';
-import { formatDoctorCenterName, getClinicCenters, ONLINE_VISIT_CENTER_ID, shouldShowClinicSection, shouldShowOnlineVisitSection } from '../utils/centers';
+import { formatDoctorCenterName, getType1ClinicCenters, isType1Center, ONLINE_VISIT_CENTER_ID, shouldShowClinicSection, shouldShowOnlineVisitSection } from '../utils/centers';
 import { buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { dsFocusRing } from '../utils/a11y';
 import {
+  BookingSettingsIcon,
   ChatIcon,
   ClinicIcon,
   ClockIcon,
@@ -25,7 +26,7 @@ import {
 import { FeedStaggerItem } from './feedContentSwap';
 import { RowChevron } from './feedWidgets/widgetListRow';
 
-type ActionId = 'workhours' | 'vacation' | 'tariff';
+type ActionId = 'workhours' | 'vacation' | 'tariff' | 'bookingSettings';
 
 const SUB_ACTIONS: {
   id: ActionId;
@@ -33,7 +34,7 @@ const SUB_ACTIONS: {
   hint: string;
   description: string;
   url: string;
-  analyticsFeature: 'shortcut_workhours' | 'shortcut_vacation' | 'shortcut_tariff';
+  analyticsFeature: 'shortcut_workhours' | 'shortcut_vacation' | 'shortcut_tariff' | 'shortcut_booking_settings';
   icon: typeof ClockIcon;
 }[] = [
   {
@@ -62,6 +63,15 @@ const SUB_ACTIONS: {
     url: DOCTOR_PANEL_URLS.tariffs,
     analyticsFeature: 'shortcut_tariff',
     icon: TariffIcon,
+  },
+  {
+    id: 'bookingSettings',
+    label: 'تنظیمات نوبت‌دهی',
+    hint: 'تنظیم محدودیت‌های ثبت نوبت و ...',
+    description: 'تنظیمات نوبت‌دهی',
+    url: DOCTOR_PANEL_URLS.bookingSettings,
+    analyticsFeature: 'shortcut_booking_settings',
+    icon: BookingSettingsIcon,
   },
 ];
 
@@ -107,7 +117,7 @@ const PanelIframeDrawer = ({
 
   return (
     <DsDrawer
-      nested
+      level={1}
       open={open && isSheetHost}
       onOpenChange={o => {
         if (!o) onClose();
@@ -129,9 +139,15 @@ const PanelIframeDrawer = ({
   );
 };
 
-const ActionSheetList = ({ onSelect }: { onSelect: (id: ActionId) => void }) => (
+const ActionSheetList = ({
+  onSelect,
+  actions,
+}: {
+  onSelect: (id: ActionId) => void;
+  actions: typeof SUB_ACTIONS;
+}) => (
   <ul className="pb-6">
-    {SUB_ACTIONS.map((action, index) => {
+    {actions.map((action, index) => {
       const Icon = action.icon;
       return (
         <li key={action.id}>
@@ -143,7 +159,7 @@ const ActionSheetList = ({ onSelect }: { onSelect: (id: ActionId) => void }) => 
               'flex w-full items-center gap-3 text-start',
               ds.motion.listRow,
               ds.layout.rowPaddingWide,
-              index < SUB_ACTIONS.length - 1 && 'border-b border-slate-100',
+              index < actions.length - 1 && 'border-b border-slate-100',
             )}
           >
             <ActionIcon>
@@ -221,6 +237,7 @@ export const FeedActionsSection = ({
   const workhoursSheet = useSheetRoute('workhours');
   const vacationSheet = useSheetRoute('vacation');
   const tariffSheet = useSheetRoute('tariff');
+  const bookingSettingsSheet = useSheetRoute('bookingSettings');
   const activationDrawerProps = useSheetDrawerProps(activationSheet);
   const onlineDrawerProps = useSheetDrawerProps(onlineSheet);
   const clinicDrawerProps = useSheetDrawerProps(clinicSheet);
@@ -234,9 +251,9 @@ export const FeedActionsSection = ({
     ? 'برنامه امروز'
     : `برنامه ${selectedMoment.clone().locale('fa').format('jD jMMMM')}`;
 
-  const clinics = useMemo(() => getClinicCenters(user), [user]);
+  const clinics = useMemo(() => getType1ClinicCenters(user), [user]);
   const showOnlineVisit = shouldShowOnlineVisitSection(selectedCenterId);
-  const showClinic = shouldShowClinicSection(selectedCenterId);
+  const showClinic = shouldShowClinicSection(selectedCenterId, user);
   const activeClinic = useMemo(() => {
     if (!showClinic || clinics.length === 0) return null;
     if (selectedCenterId) {
@@ -269,24 +286,21 @@ export const FeedActionsSection = ({
 
   const [panelCenterId, setPanelCenterId] = useState<string | null>(null);
 
-  const sheets = { workhours: workhoursSheet, vacation: vacationSheet, tariff: tariffSheet } as const;
+  const sheets = {
+    workhours: workhoursSheet,
+    vacation: vacationSheet,
+    tariff: tariffSheet,
+    bookingSettings: bookingSettingsSheet,
+  } as const;
   const actionIds = Object.keys(sheets) as ActionId[];
-
-  const closePanelSheets = (except?: ActionId) => {
-    actionIds.forEach(actionId => {
-      if (actionId !== except) sheets[actionId].closeSheet();
-    });
-  };
 
   const openAction = (id: ActionId, centerId?: string | null) => {
     const action = SUB_ACTIONS.find(item => item.id === id);
     if (!action) return;
     sendDoctorHomeEvent(userId, action.analyticsFeature);
-    onlineSheet.closeSheet();
-    clinicSheet.closeSheet();
-    closePanelSheets(id);
     setPanelCenterId(centerId ?? selectedCenterId);
-    sheets[id].openSheet();
+    // منوی والد در استک می‌ماند؛ بک / بستن iframe به منو برمی‌گردد
+    sheets[id].openSheetOver(actionIds.filter(actionId => actionId !== id));
   };
 
   const resolvedPanelCenterId = panelCenterId ?? selectedCenterId;
@@ -304,6 +318,21 @@ export const FeedActionsSection = ({
     clinics.length > 1 && !selectedCenterId
       ? `${clinics.length.toLocaleString('fa-IR')} مطب`
       : clinicAddress;
+
+  const onlineActions = useMemo(
+    () =>
+      SUB_ACTIONS.filter(action => action.id !== 'bookingSettings').map(action =>
+        action.id === 'vacation' ? { ...action, hint: 'مرخصی ویزیت آنلاین' } : action,
+      ),
+    [],
+  );
+  const clinicActions = useMemo(
+    () =>
+      SUB_ACTIONS.filter(
+        action => action.id !== 'bookingSettings' || isType1Center(activeClinic),
+      ),
+    [activeClinic],
+  );
 
   if (!showOnlineVisit && !showClinicRow) return null;
 
@@ -395,7 +424,10 @@ export const FeedActionsSection = ({
         title="ویزیت آنلاین"
         description="مدیریت نوبت آنلاین"
       >
-        <ActionSheetList onSelect={id => openAction(id, ONLINE_VISIT_CENTER_ID)} />
+        <ActionSheetList
+          actions={onlineActions}
+          onSelect={id => openAction(id, ONLINE_VISIT_CENTER_ID)}
+        />
       </DsDrawer>
 
       <DsDrawer
@@ -437,7 +469,10 @@ export const FeedActionsSection = ({
             })}
           </div>
         )}
-        <ActionSheetList onSelect={id => openAction(id, activeClinic ? String(activeClinic.id) : null)} />
+        <ActionSheetList
+          actions={clinicActions}
+          onSelect={id => openAction(id, activeClinic ? String(activeClinic.id) : null)}
+        />
       </DsDrawer>
 
       {SUB_ACTIONS.map(action => (

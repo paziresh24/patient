@@ -329,7 +329,8 @@ export const DsDrawer = ({
     if (isDesktop) return;
 
     if (open) {
-      if (isClosingRef.current) return;
+      // حتی وسط انیمیشن بسته‌شدن، اگر store دوباره open شد باید باز شود
+      clearTimeout(dismissSafetyTimer.current);
       dismissPendingRef.current = false;
       isClosingRef.current = false;
       setMobileMounted(true);

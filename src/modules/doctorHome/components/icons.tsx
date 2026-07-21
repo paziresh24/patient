@@ -14,6 +14,7 @@ import {
   EyeOff,
   MessageCircle,
   RotateCcw,
+  Settings,
   ShoppingBag,
   Star,
   Wallet,
@@ -61,6 +62,7 @@ export const EyeHiddenIcon = (props: DoctorHomeIconProps) => withInheritedColor(
 export const ClockIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Clock);
 export const VacationIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, CalendarDays);
 export const TariffIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, ShoppingBag);
+export const BookingSettingsIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Settings);
 export const ClinicIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Hospital);
 export const ChatIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, MessageCircle);
 export const CalendarIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Calendar);
