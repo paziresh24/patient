@@ -5,13 +5,12 @@ stages:
   image: docker:cli
   services:
     - name: docker:dind
-      command:
-        - "--registry-mirror=https://docker.devneeds.ir"
-        - "--insecure-registry=78.39.136.53:5050"
+      command: ["--registry-mirror=https://docker.devneeds.ir"]
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
-    OMNIBUS_REGISTRY: "78.39.136.53:5050"
+    # Admin hostname → Hybrid (CDN gitlab-registry still Omnibus; cert lacks that name).
+    REGISTRY_PUSH_HOST: registry-gitlab.mobin.p24cloud.ir
   retry:
     max: 2
     when:
@@ -24,61 +23,60 @@ stages:
 build-docker-image:
   extends: .build-docker-common
   stage: build
-
   before_script:
     - apk add --no-cache curl jq
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    # Live pulls still hit Omnibus. Login/push only to :5050 (skip broken CDN hostname).
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$OMNIBUS_REGISTRY"
+    - |
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if ! curl -sk --connect-timeout 5 "https://${PUSH_HOST}/v2/" >/dev/null 2>&1; then
+        echo "Push host unreachable, falling back to $CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+      echo "Using push host: $PUSH_HOST"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
     - |
       jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
         "$HOME/.docker/config.json" > /tmp/docker-config.json \
         && mv /tmp/docker-config.json "$HOME/.docker/config.json"
-
   script:
     - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
       docker build --provenance=false \
-        -t "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:latest" \
-        -t "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_SHORT_SHA}" \
+        -t "${PUSH_IMAGE}:latest" \
+        -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
         .
-
     - |
       push_with_retry() {
-        local image="$1"
-        local attempt=1
-        local max=3
+        local image="$1" attempt=1 max=3
         while [ "$attempt" -le "$max" ]; do
           echo "Pushing $image (attempt $attempt/$max)..."
-          if docker push "$image"; then
-            return 0
-          fi
-          echo "Push failed for $image (attempt $attempt/$max)"
-          if [ "$attempt" -eq "$max" ]; then
-            return 1
-          fi
+          if docker push "$image"; then return 0; fi
+          echo "Push failed (attempt $attempt/$max)"
+          [ "$attempt" -eq "$max" ] && return 1
           sleep $((attempt * 10))
           attempt=$((attempt + 1))
         done
       }
-      push_with_retry "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:${CI_COMMIT_SHORT_SHA}"
-      push_with_retry "${OMNIBUS_REGISTRY}/${CI_PROJECT_PATH}:latest"
-
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      push_with_retry "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+      push_with_retry "${PUSH_IMAGE}:latest"
     - |
       cat <<EOF > webhook_payload.json
       {
         "project_name": "$CI_PROJECT_NAME",
         "commit_sha": "$CI_COMMIT_SHORT_SHA",
         "branch": "$CI_COMMIT_BRANCH",
-        "registry_image": "gitlab-registry.paziresh24.com/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA",
+        "registry_image": "$(cat /tmp/push_host)/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA",
         "status": "build_success"
       }
       EOF
-
     - >
       curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
       -H "Content-Type: application/json"
       -d @webhook_payload.json
-
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: always
@@ -91,7 +89,6 @@ build-docker-image-next:
     DOCKER_TLS_CERTDIR: ""
     ZOT_REGISTRY: registry.paziresh24.com
     ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
-
   before_script:
     - apk add --no-cache curl jq
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
@@ -100,29 +97,20 @@ build-docker-image-next:
       jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
         "$HOME/.docker/config.json" > /tmp/docker-config.json \
         && mv /tmp/docker-config.json "$HOME/.docker/config.json"
-
   script:
     - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
     - |
       push_with_retry() {
-        local image="$1"
-        local attempt=1
-        local max=3
+        local image="$1" attempt=1 max=3
         while [ "$attempt" -le "$max" ]; do
           echo "Pushing $image (attempt $attempt/$max)..."
-          if docker push "$image"; then
-            return 0
-          fi
-          echo "Push failed for $image (attempt $attempt/$max)"
-          if [ "$attempt" -eq "$max" ]; then
-            return 1
-          fi
+          if docker push "$image"; then return 0; fi
+          [ "$attempt" -eq "$max" ] && return 1
           sleep $((attempt * 10))
           attempt=$((attempt + 1))
         done
       }
       push_with_retry "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA"
-
     - |
       cat <<EOF > webhook_payload.json
       {
@@ -133,12 +121,10 @@ build-docker-image-next:
         "status": "build_success"
       }
       EOF
-
     - >
       curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
       -H "Content-Type: application/json"
       -d @webhook_payload.json
-
   rules:
     - if: $CI_COMMIT_BRANCH == "next"
       when: always
