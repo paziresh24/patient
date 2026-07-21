@@ -63,7 +63,8 @@ import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmi
 import { LauncherProfileActionButtons } from "@/modules/hamdast/components/launcherProfileActionButtons";
 import {
   buildHamdastWidgetsUrl,
-  createHamdastCacheBustQueryParam
+  createHamdastCacheBustQueryParam,
+  isLauncherProfileWidgetConnectMode
 } from "@/modules/hamdast/utils/launcherProfileButton";
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
@@ -95,12 +96,14 @@ export type PlasmicLauncherProfile__ArgsType = {
   appKey?: string;
   onClick?: () => void;
   onSubscribe?: (planKey: string) => void;
+  onSubscribeOnly?: (planKey?: string) => Promise<{ success?: boolean } | void>;
 };
 type ArgPropType = keyof PlasmicLauncherProfile__ArgsType;
 export const PlasmicLauncherProfile__ArgProps = new Array<ArgPropType>(
   "appKey",
   "onClick",
-  "onSubscribe"
+  "onSubscribe",
+  "onSubscribeOnly"
 );
 
 export type PlasmicLauncherProfile__OverridesType = {
@@ -123,6 +126,7 @@ export interface DefaultLauncherProfileProps {
   appKey?: string;
   onClick?: () => void;
   onSubscribe?: (planKey: string) => void;
+  onSubscribeOnly?: (planKey?: string) => Promise<{ success?: boolean } | void>;
   className?: string;
 }
 
@@ -1095,6 +1099,32 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   <LauncherProfileActionButtons
                     appKey={$props.appKey}
                     className={sty.paziresh24Button__hufy1}
+                    directPayment={(() => {
+                      try {
+                        return $state?.apiRequest?.data?.direct_payment;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()}
+                    hasActiveSubscription={(() => {
+                      try {
+                        return $state.apiRequest7.data?.has_active_subscription;
+                      } catch (e) {
+                        if (
+                          e instanceof TypeError ||
+                          e?.plasmicType === "PlasmicUndefinedDataError"
+                        ) {
+                          return false;
+                        }
+                        throw e;
+                      }
+                    })()}
                     isLoading={(() => {
                       try {
                         return $state.isLoadingButton;
@@ -1114,6 +1144,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     onMainClick={async () => {
                       await $props.onClick?.();
                     }}
+                    onSubscribeOnly={$props.onSubscribeOnly}
                     profileData={$state.apiRequest?.data}
                     userWidgets={$state.apiRequest5?.data}
                     widgetInfo={$state.apiRequest6?.data}
@@ -1212,6 +1243,37 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                       onClick={async event => {
                         const $steps = {};
 
+                        if (
+                          isLauncherProfileWidgetConnectMode(
+                            $state.apiRequest6?.data
+                          )
+                        ) {
+                          $steps["runOnSubscribeOnly"] = true
+                            ? (() => {
+                              const actionArgs = {
+                                eventRef: $props["onSubscribeOnly"]
+                              };
+                              return (({ eventRef, args }) => {
+                                return eventRef?.(...(args ?? []));
+                              })?.apply(null, [actionArgs]);
+                            })()
+                            : undefined;
+                          if (
+                            $steps["runOnSubscribeOnly"] != null &&
+                            typeof $steps["runOnSubscribeOnly"] === "object" &&
+                            typeof $steps["runOnSubscribeOnly"].then ===
+                              "function"
+                          ) {
+                            $steps["runOnSubscribeOnly"] = await $steps[
+                              "runOnSubscribeOnly"
+                            ];
+                          }
+                          if ($steps["runOnSubscribeOnly"]?.success) {
+                            await $refs["apiRequest7"]?.refresh?.();
+                          }
+                          return;
+                        }
+
                         $steps["runOnSubscribe"] = true
                           ? (() => {
                             const actionArgs = {
@@ -1254,7 +1316,33 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     <LauncherProfileActionButtons
                       appKey={$props.appKey}
                       className={sty.paziresh24Button__hufy1}
+                      directPayment={(() => {
+                        try {
+                          return $state?.apiRequest?.data?.direct_payment;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
                       forceOutline={true}
+                      hasActiveSubscription={(() => {
+                        try {
+                          return $state.apiRequest7.data?.has_active_subscription;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
                       isLoading={(() => {
                         try {
                           return $state.isLoadingButton;
@@ -1274,6 +1362,7 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                       onMainClick={async () => {
                         await $props.onClick?.();
                       }}
+                      onSubscribeOnly={$props.onSubscribeOnly}
                       profileData={$state.apiRequest?.data}
                       userWidgets={$state.apiRequest5?.data}
                       widgetInfo={$state.apiRequest6?.data}
@@ -1284,7 +1373,10 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                       return (
                         $state?.apiRequest?.data?.direct_payment &&
                         !$state.apiRequest7.data?.has_active_subscription &&
-                        ($state.apiRequest7.data?.history?.length ?? 0) === 0
+                        ($state.apiRequest7.data?.history?.length ?? 0) === 0 &&
+                        !isLauncherProfileWidgetConnectMode(
+                          $state.apiRequest6?.data
+                        )
                       );
                     } catch (e) {
                       if (
@@ -1359,7 +1451,11 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                     try {
                       return (
                         $state?.apiRequest?.data?.direct_payment &&
-                        $state.apiRequest7.data?.has_active_subscription
+                        !$state.apiRequest7.data?.has_active_subscription &&
+                        ($state.apiRequest7.data?.history?.length ?? 0) === 0 &&
+                        isLauncherProfileWidgetConnectMode(
+                          $state.apiRequest6?.data
+                        )
                       );
                     } catch (e) {
                       if (
@@ -1373,7 +1469,33 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                   })() ? (
                     <LauncherProfileActionButtons
                       appKey={$props.appKey}
-                      className={sty.paziresh24Button__tk1Pm}
+                      className={sty.paziresh24Button__xkQkp}
+                      directPayment={(() => {
+                        try {
+                          return $state?.apiRequest?.data?.direct_payment;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      hasActiveSubscription={(() => {
+                        try {
+                          return $state.apiRequest7.data?.has_active_subscription;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
                       isLoading={(() => {
                         try {
                           return $state.isLoadingButton;
@@ -1393,6 +1515,77 @@ function PlasmicLauncherProfile__RenderFunc(props: {
                       onMainClick={async () => {
                         await $props.onClick?.();
                       }}
+                      onSubscribeOnly={$props.onSubscribeOnly}
+                      profileData={$state.apiRequest?.data}
+                      userWidgets={$state.apiRequest5?.data}
+                      widgetInfo={$state.apiRequest6?.data}
+                    />
+                  ) : null}
+                  {(() => {
+                    try {
+                      return (
+                        $state?.apiRequest?.data?.direct_payment &&
+                        $state.apiRequest7.data?.has_active_subscription
+                      );
+                    } catch (e) {
+                      if (
+                        e instanceof TypeError ||
+                        e?.plasmicType === "PlasmicUndefinedDataError"
+                      ) {
+                        return false;
+                      }
+                      throw e;
+                    }
+                  })() ? (
+                    <LauncherProfileActionButtons
+                      appKey={$props.appKey}
+                      className={sty.paziresh24Button__tk1Pm}
+                      directPayment={(() => {
+                        try {
+                          return $state?.apiRequest?.data?.direct_payment;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      hasActiveSubscription={(() => {
+                        try {
+                          return $state.apiRequest7.data?.has_active_subscription;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      isLoading={(() => {
+                        try {
+                          return $state.isLoadingButton;
+                        } catch (e) {
+                          if (
+                            e instanceof TypeError ||
+                            e?.plasmicType === "PlasmicUndefinedDataError"
+                          ) {
+                            return false;
+                          }
+                          throw e;
+                        }
+                      })()}
+                      onLoadingChange={loading => {
+                        $stateSet($state, ["isLoadingButton"], loading);
+                      }}
+                      onMainClick={async () => {
+                        await $props.onClick?.();
+                      }}
+                      onSubscribeOnly={$props.onSubscribeOnly}
                       profileData={$state.apiRequest?.data}
                       userWidgets={$state.apiRequest5?.data}
                       widgetInfo={$state.apiRequest6?.data}

@@ -298,6 +298,7 @@ const Page = ({ page, app }: any) => {
                   setShowTranslation(true);
                 }
               }}
+              onSubscribeOnly={planKey => subscriptionPaymentRef.current?.open(planKey) ?? Promise.resolve({ success: false })}
             />
           </GlobalContextsProvider>
         </div>

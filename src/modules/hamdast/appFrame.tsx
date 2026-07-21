@@ -274,6 +274,7 @@ export const AppFrame = ({
                       setShowTranslation(true);
                     }
                   }}
+                  onSubscribeOnly={planKey => subscriptionPaymentRef.current?.open(planKey) ?? Promise.resolve({ success: false })}
                 />
               </GlobalContextsProvider>
             </div>
