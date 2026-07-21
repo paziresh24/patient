@@ -337,7 +337,18 @@ function PlasmicServices__RenderFunc(props: {
             </div>
           </div>
           {(
-            hasVariant($state, 'type', 'onlineVisit') && hasVariant(globalVariants, 'screen', 'mobileOnly')
+            hasVariant($state, 'type', 'onlineVisit') &&
+            (() => {
+              try {
+                return $ctx.Growthbook.features['online-visit-refund-guarantee-copy'];
+              } catch (e) {
+                if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
+                  return false;
+                }
+                throw e;
+              }
+            })() &&
+            (hasVariant($state, 'type', 'onlineVisit') && hasVariant(globalVariants, 'screen', 'mobileOnly')
               ? (() => {
                 try {
                   return !$props.seo.slug.includes('دکتر-رسول-اسماعیلی-0');
@@ -350,7 +361,7 @@ function PlasmicServices__RenderFunc(props: {
               })()
               : hasVariant($state, 'type', 'onlineVisit')
                 ? true
-                : false
+                : false)
           ) ? (
             <div
               className={classNames(projectcss.all, projectcss.__wab_text, sty.text__orRx, {
