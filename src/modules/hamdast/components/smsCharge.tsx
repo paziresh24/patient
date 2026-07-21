@@ -33,8 +33,8 @@ type Pricing = {
 
 type Phase = 'select' | 'paying' | 'applying';
 
-/** 100 تومان = 1_000 ریال */
-const DEFAULT_MIN_CHARGE_IRR = 1_000;
+/** 1000 تومان = 10_000 ریال */
+const DEFAULT_MIN_CHARGE_IRR = 10_000;
 
 function formatToman(irr: number) {
   return `${Math.round(irr / 10).toLocaleString('fa-IR')} تومان`;
@@ -163,8 +163,23 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
 
   const startCheckout = async () => {
     if (!canCheckout) {
-      toast.error('حداقل مبلغ شارژ ۱۰۰ تومان است.');
+      toast.error('حداقل مبلغ شارژ ۱۰۰۰ تومان است.');
       return;
+    }
+
+    // Open synchronously inside the click gesture so later topup navigation is not blocked.
+    const gatewayPlaceholder =
+      typeof window !== 'undefined' ? window.open('about:blank', 'hamdast_rasan_topup') : null;
+
+    if (gatewayPlaceholder) {
+      try {
+        gatewayPlaceholder.document.write(
+          '<!doctype html><html><head><meta charset="utf-8"><title>پرداخت</title></head><body style="margin:0;display:flex;align-items:center;justify-content:center;height:100vh;font-family:tahoma,sans-serif;color:#475569;background:#f8fafc">در حال آماده‌سازی پرداخت…</body></html>',
+        );
+        gatewayPlaceholder.document.close();
+      } catch {
+        // cross-origin / restricted document access — still keep the window handle
+      }
     }
 
     setIsSubmitting(true);
@@ -181,8 +196,12 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
       pendingRef.current = { sms_count: data.sms_count ?? smsCount, receipt_id };
       setPhase('paying');
       handleClose();
-      paymentRef.current?.open({ receipt_id });
+      paymentRef.current?.open({
+        receipt_id,
+        preOpenedGatewayWindow: gatewayPlaceholder,
+      });
     } catch (error) {
+      gatewayPlaceholder?.close();
       const message = isAxiosError(error)
         ? error.response?.data?.error?.message ||
           error.response?.data?.message ||
@@ -372,7 +391,7 @@ export const HamdastRasanCharge = ({ iframeRef }: { iframeRef: any }) => {
               </Button>
               {!canCheckout && amount > 0 && amount < minAmountIrr && (
                 <Text as="p" fontSize="xs" className="text-center text-amber-700">
-                  حداقل مبلغ شارژ ۱۰۰ تومان است.
+                  حداقل مبلغ شارژ ۱۰۰۰ تومان است.
                 </Text>
               )}
               <Button
