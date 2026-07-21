@@ -1,4 +1,5 @@
 import { apiGatewayClient, raviApisClient } from '@/common/apis/client';
+import { fetchDoctorRate } from '@/common/apis/services/reviews/rateDoctor';
 import { enrichReviewResponseWithRelativeTime } from '@/common/utils/formatRelativeFeedbackTime';
 import axios from 'axios';
 import { RaviFeedbackReply, RaviRateSummary, RaviReviewPage, RaviReviewQuery } from './types';
@@ -23,14 +24,11 @@ interface RaviFeedbacksResponse {
 
 export const fetchRateSummary = async (doctorSlug: string): Promise<RaviRateSummary | null> => {
   try {
-    const { data } = await raviApisClient.get<Record<string, unknown>>(
-      `/ravi/v1/rate/doctor/${encodeURIComponent(doctorSlug)}`,
-      { timeout: 12_000 },
-    );
+    const data = await fetchDoctorRate(doctorSlug);
 
     return {
       hideRates: Boolean(data?.hide_rates ?? data?.hide),
-      count: Number(data?.comments_count ?? data?.count_rates ?? 0),
+      count: Number(data?.count_rates ?? data?.comments_count ?? 0),
       items: [
         { label: 'برخورد مناسب', value: Number(data?.doctor_encounter) || 0 },
         { label: 'توضیح در هنگام ویزیت', value: Number(data?.explanation_of_issue) || 0 },
