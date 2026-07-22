@@ -184,6 +184,12 @@ const Receipt = () => {
     },
   );
 
+  const widgetDoctorUserId = useMemo(() => {
+    const uid = receiptAppointmentDoctorForPic?.user_id;
+    if (uid === undefined || uid === null || uid === '') return null;
+    return uid;
+  }, [receiptAppointmentDoctorForPic?.user_id]);
+
   const receiptDoctorAvatar = useMemo(() => {
     if (!bookDetailsData || typeof bookDetailsData !== 'object' || !bookDetailsData.doctor) return undefined;
     const uid = receiptAppointmentDoctorForPic?.user_id;
@@ -289,9 +295,7 @@ const Receipt = () => {
     if (
       !centerId ||
       !bookId ||
-      !bookDetailsData?.doctor?.id ||
-      !bookDetailsData?.doctor?.server_id ||
-      !doctorUserId ||
+      !widgetDoctorUserId ||
       hasFetchedWidgetRef.current ||
       isFetchingRef.current ||
       widgetModalProps.isOpen
@@ -305,7 +309,7 @@ const Receipt = () => {
       setIsHamdastReceiptLoading(true);
       try {
         const widgetsResponse = await hamdastClient.get(`/api/v1/widgets/`, {
-          params: { user_id: doctorUserId },
+          params: { user_id: widgetDoctorUserId },
         });
 
         const widgets = widgetsResponse.data || [];
@@ -321,7 +325,7 @@ const Receipt = () => {
               viewer_user_id: user?.id,
               appointment_id: bookId,
               center_id: centerId,
-              doctor_user_id: doctorUserId,
+              doctor_user_id: widgetDoctorUserId,
               widget_app: targetWidget.app,
             },
           });
@@ -338,7 +342,6 @@ const Receipt = () => {
           params: {
             medical_center_id: centerId,
             appointment_id: bookId,
-            doctor_id: bookDetailsData.doctor.id,
           },
         });
 
@@ -349,7 +352,7 @@ const Receipt = () => {
             viewer_user_id: user?.id,
             appointment_id: bookId,
             center_id: centerId,
-            doctor_user_id: doctorUserId,
+            doctor_user_id: widgetDoctorUserId,
             addon_apps: addonsResponse.data?.apps,
             data: addonsResponse.data
           },
@@ -374,12 +377,11 @@ const Receipt = () => {
   }, [
     centerId,
     bookId,
-    bookDetailsData?.doctor?.id,
-    bookDetailsData?.doctor?.server_id,
-    doctorUserId,
+    widgetDoctorUserId,
     handleOpenWidgetModal,
     widgetModalProps.isOpen,
     user?.id,
+    queryClient,
   ]);
 
   useEffect(() => {
@@ -459,8 +461,8 @@ const Receipt = () => {
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
 
   useEffect(() => {
-    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id && doctorUserId) {
-      const fetchKey = `${centerId}-${bookId}-${bookDetailsData.doctor.id}-${bookDetailsData.doctor.server_id}`;
+    if (centerId && bookId && widgetDoctorUserId) {
+      const fetchKey = `${centerId}-${bookId}-${widgetDoctorUserId}`;
 
       if (lastFetchedKeyRef.current !== fetchKey) {
         hasFetchedWidgetRef.current = false;
@@ -472,7 +474,7 @@ const Receipt = () => {
         fetchWidgetAndCheckAddons();
       }
     }
-  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, doctorUserId]);
+  }, [centerId, bookId, widgetDoctorUserId, fetchWidgetAndCheckAddons]);
 
   useEffect(() => {
     const serviceTypeId = bookDetailsData?.services?.[0]?.service_type_id;
@@ -1357,7 +1359,7 @@ const Receipt = () => {
                 dontShowNotification
                 appKey={widgetApp}
                 params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
-                queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_id: bookDetailsData.doctor.id, doctor_user_id: doctorUserId }}
+                queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_user_id: widgetDoctorUserId }}
                 reportOpenSignal={reportOpenSignal}
                 onReportSubmit={() => {
                   handleCloseClosePromptWidgetModal();
