@@ -1,7 +1,7 @@
 import type { DehydratedState } from '@tanstack/react-query';
 
 type InfiniteDataLike = {
-  pageParams?: unknown[];
+  pageParams: unknown[];
   pages?: unknown[];
 };
 
@@ -12,25 +12,23 @@ function isInfiniteQueryData(data: unknown): data is InfiniteDataLike {
 export function sanitizeDehydratedState(dehydratedState: DehydratedState): DehydratedState {
   const filtered: DehydratedState = {
     ...dehydratedState,
-    queries: dehydratedState.queries
-      .filter(query => !isInfiniteQueryData(query.state?.data))
-      .map(query => {
-        const data = query.state?.data;
-        if (!isInfiniteQueryData(data)) {
-          return query;
-        }
+    queries: dehydratedState.queries.map(query => {
+      const data = query.state?.data;
+      if (!isInfiniteQueryData(data)) {
+        return query;
+      }
 
-        return {
-          ...query,
-          state: {
-            ...query.state,
-            data: {
-              ...data,
-              pageParams: data.pageParams.map(param => (param === undefined ? { page: 1 } : param)),
-            },
+      return {
+        ...query,
+        state: {
+          ...query.state,
+          data: {
+            ...data,
+            pageParams: data.pageParams.map(param => (param === undefined ? { page: 1 } : param)),
           },
-        };
-      }),
+        },
+      };
+    }),
   };
 
   // Next.js cannot serialize `undefined` anywhere in getServerSideProps props.
