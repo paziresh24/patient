@@ -31,6 +31,7 @@ export const fetchRateSummary = async (doctorSlug: string): Promise<RaviRateSumm
     return {
       hideRates: Boolean(data?.hide_rates ?? data?.hide),
       count: Number(data?.comments_count ?? data?.count_rates ?? 0),
+      rateCount: Number(data?.count_rates ?? 0),
       items: [
         { label: 'برخورد مناسب', value: Number(data?.doctor_encounter) || 0 },
         { label: 'توضیح در هنگام ویزیت', value: Number(data?.explanation_of_issue) || 0 },

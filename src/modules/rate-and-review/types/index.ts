@@ -48,6 +48,7 @@ export interface RaviReviewPage {
 
 export interface RaviRateSummary {
   count: number;
+  rateCount: number;
   hideRates?: boolean;
   items: RaviRatingBreakdownItem[];
 }

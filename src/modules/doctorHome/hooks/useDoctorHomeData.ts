@@ -1,9 +1,9 @@
-import { useRate } from '@/common/apis/services/reviews/rate';
 import { useGetReview } from '@/common/apis/services/reviews/getReviews';
 import { useGetNotifications } from '@/modules/hamdast/apis/notifications';
 import { UserInfo } from '@/modules/login/store/userInfo';
 import moment from 'jalali-moment';
 import { useMemo, useRef, useEffect } from 'react';
+import { useDoctorRateStats } from '../apis/doctorRate';
 import { useDoctorPageView } from '../apis/pageView';
 import { useSanjeScore } from '../apis/sanjeScore';
 import { useUpcomingAppointments } from '../apis/upcomingAppointments';
@@ -31,27 +31,6 @@ const getDateRange = (isoDate: string) => {
   };
 };
 
-const extractRatingFromRate = (
-  rateData: { list?: Array<Record<string, unknown>> } | undefined,
-): { rating: number | null; reviewCount: number | null } => {
-  const item = rateData?.list?.[0];
-  if (!item || item.hide_rates) return { rating: null, reviewCount: null };
-
-  const avg =
-    ((Number(item.quality_of_treatment) || 0) +
-      (Number(item.doctor_encounter) || 0) +
-      (Number(item.explanation_of_issue) || 0)) /
-    3;
-
-  if (!avg) return { rating: null, reviewCount: null };
-
-  const reviewCount = Number(item.count_rates);
-  return {
-    rating: Number(avg.toFixed(1)),
-    reviewCount: Number.isFinite(reviewCount) && reviewCount > 0 ? reviewCount : null,
-  };
-};
-
 const getCountCenterId = resolveCountCenterId;
 
 export const useDoctorHomeData = (user?: UserInfo) => {
@@ -68,7 +47,7 @@ export const useDoctorHomeData = (user?: UserInfo) => {
 
   const sanjeScore = useSanjeScore(isDoctor);
   const pageView = useDoctorPageView(slug);
-  const rate = useRate({ slug: slug! }, { enabled: isDoctor && !!slug, staleTime: 5 * 60 * 1000 });
+  const rateStats = useDoctorRateStats(slug, isDoctor);
   const upcomingAppointments = useUpcomingAppointments(appointmentCenters, isDoctor, selectedDate);
   const hasLoadedAppointmentsOnce = useRef(false);
 
@@ -109,8 +88,6 @@ export const useDoctorHomeData = (user?: UserInfo) => {
     },
     { enabled: shouldUseFallbackCount },
   );
-
-  const satisfaction = useMemo(() => extractRatingFromRate(rate.data), [rate.data]);
 
   const appointmentItems = useMemo(() => {
     const items = upcomingAppointments.data?.items ?? [];
@@ -186,9 +163,9 @@ export const useDoctorHomeData = (user?: UserInfo) => {
     stats: {
       performanceScore: sanjeScore.data?.final_score ?? null,
       isPerformanceLoading: sanjeScore.isLoading,
-      satisfactionRating: satisfaction.rating,
-      satisfactionReviewCount: satisfaction.reviewCount,
-      isSatisfactionLoading: rate.isLoading,
+      satisfactionRating: rateStats.data?.rating ?? null,
+      satisfactionReviewCount: rateStats.data?.rateCount ?? null,
+      isSatisfactionLoading: rateStats.isLoading,
       todayAppointmentsCount: todayCount,
       isTodayCountLoading,
       pageViewCount: pageView.data ?? null,

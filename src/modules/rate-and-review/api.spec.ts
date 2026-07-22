@@ -42,6 +42,7 @@ describe('rate-and-review api', () => {
       data: {
         hide_rates: true,
         comments_count: 12,
+        count_rates: 15,
         doctor_encounter: 4.1,
         explanation_of_issue: 4.3,
         quality_of_treatment: 4.5,
@@ -51,6 +52,7 @@ describe('rate-and-review api', () => {
     await expect(fetchRateSummary('dr-test')).resolves.toEqual({
       hideRates: true,
       count: 12,
+      rateCount: 15,
       items: [
         { label: 'برخورد مناسب', value: 4.1 },
         { label: 'توضیح در هنگام ویزیت', value: 4.3 },
