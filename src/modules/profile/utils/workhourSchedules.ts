@@ -56,8 +56,12 @@ export async function fetchCenterServices(slug: string, centerId: string): Promi
 }
 
 export async function fetchServiceSchedules(serviceId: string): Promise<WorkhourSchedule[]> {
-  const response = await axios.get(`${SCHEDULES_API}/${encodeURIComponent(serviceId)}/schedules`);
-  return sanitizeWorkhourSchedules(response.data);
+  try {
+    const response = await axios.get(`${SCHEDULES_API}/${encodeURIComponent(serviceId)}/schedules`);
+    return sanitizeWorkhourSchedules(response.data);
+  } catch {
+    return [];
+  }
 }
 
 export function formatScheduleSlot(item: WorkhourSchedule): string {
@@ -71,4 +75,22 @@ export function formatScheduleSlot(item: WorkhourSchedule): string {
 export function formatDaySchedules(schedules: WorkhourSchedule[], dayEnglish: string): string {
   const slots = schedules.filter(item => item.day === dayEnglish).map(formatScheduleSlot);
   return slots.length ? slots.join('<br/>') : '---';
+}
+
+/** Kept for compatibility with older Plasmic wrapper overrides on main. */
+export async function reorderServicesBySchedules(data: unknown): Promise<CenterService[]> {
+  const services = sanitizeCenterServices(data);
+  if (services.length <= 1) return services;
+
+  const ranked = await Promise.all(
+    services.map(async service => ({
+      service,
+      schedules: await fetchServiceSchedules(service.id),
+    })),
+  );
+
+  const withSchedules = ranked.filter(item => item.schedules.length > 0).map(item => item.service);
+  const withoutSchedules = ranked.filter(item => item.schedules.length === 0).map(item => item.service);
+
+  return [...withSchedules, ...withoutSchedules];
 }
