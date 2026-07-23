@@ -42,13 +42,13 @@ Remotes commonly include `origin` → `gitlab.paziresh24.com/paziresh24/patient`
 
 ### Merge Request AI review (`gitlab.paziresh24.com`)
 
-On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://github.com/Nikita-Filonov/ai-review)): summary comment tagged `#ai-review-summary`. Config: `.ai-review.yaml`, prompt: `prompts/ai-review/summary.md`. Generated Plasmic under `.plasmic/plasmic/**` is ignored. Job has `allow_failure: true` (does not block merge).
+On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://github.com/Nikita-Filonov/ai-review)): summary comment tagged `#ai-review-summary`. Config: `.ai-review.yaml`, prompt: `prompts/ai-review/summary.md`. Generated Plasmic under `.plasmic/plasmic/**` is ignored. The job **fails** on missing tokens, LLM/VCS errors, or empty summary (no `allow_failure`).
 
-**CI/CD Variables** (project Settings → CI/CD → Variables on `gitlab.paziresh24.com`):
+**CI/CD Variables** (project or group Settings → CI/CD → Variables on `gitlab.paziresh24.com`):
 
 | Variable | Masked | Required | Notes |
 |---|---|---|---|
-| `OPENAI_API_KEY` | yes | yes | LLM API token for the review job |
+| `OPENAI_API_KEY` | yes | yes | LLM API token. **Not Protected** (same pitfall as below) or MR pipelines get `Bearer ` / empty key. |
 | `GITLAB_API_TOKEN` | yes | yes | Project or Personal Access Token with `api` scope (Reporter+). **Do not mark Protected** unless MR source branches are also protected — otherwise the value is empty on feature-branch pipelines (`Illegal header value b'Bearer '`). `CI_JOB_TOKEN` is not enough for `/merge_requests/:iid/changes` on this instance. |
 | `LLM_API_URL` | no | no | Default `https://api.openai.com/v1` — override for OpenRouter, Azure, proxies, etc. |
 | `LLM_MODEL` | no | no | Default `gpt-4o-mini` |

@@ -32,14 +32,29 @@ ai-review:
     PROMPT__SUMMARY_PROMPT_FILES: '["./prompts/ai-review/summary.md"]'
   script:
     - |
+      set -euo pipefail
+      missing=0
       if [ -z "${GITLAB_API_TOKEN:-}" ]; then
-        echo "ERROR: GITLAB_API_TOKEN is empty."
-        echo "Add it in Settings → CI/CD → Variables (Masked, NOT Protected),"
-        echo "or unprotect this branch if the variable must stay Protected."
+        echo "ERROR: GITLAB_API_TOKEN is empty (Masked, NOT Protected)."
+        missing=1
+      fi
+      if [ -z "${OPENAI_API_KEY:-}" ]; then
+        echo "ERROR: OPENAI_API_KEY is empty (Masked, NOT Protected)."
+        missing=1
+      fi
+      if [ "$missing" -ne 0 ]; then
         exit 1
       fi
-    - ai-review run-summary
-  allow_failure: true
+      ai-review run-summary 2>&1 | tee /tmp/ai-review.log
+      # Tool often exits 0 even after LLM/VCS failures — treat log errors as job failure.
+      if grep -E -q "ERROR \\||Illegal header value|LLM request failed|Failed to fetch|HTTPStatusError|LocalProtocolError" /tmp/ai-review.log; then
+        echo "ERROR: ai-review reported failures (see log above)."
+        exit 1
+      fi
+      if grep -E -q "LLM returned empty summary|Summary LLM output was empty" /tmp/ai-review.log; then
+        echo "ERROR: ai-review produced an empty summary."
+        exit 1
+      fi
 
 .build-docker-common:
   image: docker:cli
