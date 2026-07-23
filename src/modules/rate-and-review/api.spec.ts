@@ -55,7 +55,7 @@ describe('rate-and-review api', () => {
 
     await expect(fetchRateSummary('dr-test')).resolves.toEqual({
       hideRates: true,
-      count: 502,
+      count: 485,
       items: [
         { label: 'برخورد مناسب', value: 4.1 },
         { label: 'توضیح در هنگام ویزیت', value: 4.3 },
@@ -66,7 +66,7 @@ describe('rate-and-review api', () => {
     expect(mockedFetchDoctorRate).toHaveBeenCalledWith('dr-test');
   });
 
-  it('fetchRateSummary prefers count_rates over comments_count', async () => {
+  it('fetchRateSummary uses comments_count not count_rates', async () => {
     mockedFetchDoctorRate.mockResolvedValueOnce({
       count_rates: 502,
       comments_count: 485,
@@ -76,14 +76,14 @@ describe('rate-and-review api', () => {
     });
 
     await expect(fetchRateSummary('دکتر-زهرا-رجبلی')).resolves.toMatchObject({
-      count: 502,
+      count: 485,
     });
   });
 
   it('fetchRateSummary maps hide field when hide_rates is absent', async () => {
     mockedFetchDoctorRate.mockResolvedValueOnce({
       hide: 1,
-      count_rates: 3,
+      comments_count: 3,
       doctor_encounter: 4,
       explanation_of_issue: 4,
       quality_of_treatment: 4,
