@@ -1,16 +1,26 @@
 #!/bin/sh
 # Auto-merge low-risk MRs after a green ai-review (verdict READY).
-# Requires: curl, jq, GITLAB_API_TOKEN (api + merge permission), CI_* vars.
+# Requires: curl, jq, CI_* vars.
+# Auth: GITLAB_MERGE_TOKEN (preferred) or GITLAB_API_TOKEN — must be Maintainer + api.
 set -eu
 
 API="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}"
-AUTH="PRIVATE-TOKEN: ${GITLAB_API_TOKEN}"
+
+# Prefer a dedicated merge token (Maintainer). Fall back to the review token.
+TOKEN="${GITLAB_MERGE_TOKEN:-${GITLAB_API_TOKEN:-}}"
+AUTH="PRIVATE-TOKEN: ${TOKEN}"
 
 echo "==> Auto-merge safety checks for MR !${CI_MERGE_REQUEST_IID}"
 
-if [ -z "${GITLAB_API_TOKEN:-}" ]; then
-  echo "ERROR: GITLAB_API_TOKEN is empty."
+if [ -z "$TOKEN" ]; then
+  echo "ERROR: set GITLAB_MERGE_TOKEN (preferred) or GITLAB_API_TOKEN."
   exit 1
+fi
+
+if [ -n "${GITLAB_MERGE_TOKEN:-}" ]; then
+  echo "Using GITLAB_MERGE_TOKEN for merge API."
+else
+  echo "Using GITLAB_API_TOKEN for merge API (set GITLAB_MERGE_TOKEN for a Maintainer-only token)."
 fi
 
 # Kill switch (project/group CI variable). Default off unless explicitly true.
@@ -19,9 +29,9 @@ if [ "${AUTO_MERGE_SAFE_MRS:-false}" != "true" ]; then
   exit 0
 fi
 
-# Draft MRs never auto-merge
-DRAFT="$(curl -fsS --header "$AUTH" "$API" | jq -r '.draft // false')"
-TITLE="$(curl -fsS --header "$AUTH" "$API" | jq -r '.title // ""')"
+MR_JSON="$(curl -fsS --header "$AUTH" "$API")"
+DRAFT="$(echo "$MR_JSON" | jq -r '.draft // false')"
+TITLE="$(echo "$MR_JSON" | jq -r '.title // ""')"
 case "$DRAFT" in
   true|True) echo "Skip: MR is draft."; exit 0 ;;
 esac
@@ -59,7 +69,7 @@ if printf '%s\n' "$SUMMARY" | grep -A20 '🔴 مهم' | grep -qE 'path:|src/|\.t
   fi
 fi
 
-# Changed files + size via MR changes API
+# Changed files via MR changes API
 CHANGES_JSON="$(curl -fsS --header "$AUTH" "${API}/changes")"
 FILES="$(echo "$CHANGES_JSON" | jq -r '.changes[]?.new_path // .changes[]?.old_path // empty' | sort -u)"
 FILE_COUNT="$(printf '%s\n' "$FILES" | grep -c . || true)"
@@ -85,9 +95,11 @@ if [ -n "$RISKY" ]; then
 fi
 
 echo "==> Scheduling merge when pipeline succeeds (low-risk + READY)"
+# Form body is the most compatible shape for GitLab merge API on self-hosted.
 RESP="$(curl -sS -w '\n%{http_code}' --request PUT --header "$AUTH" \
-  --header "Content-Type: application/json" \
-  --data "{\"merge_when_pipeline_succeeds\":true,\"should_remove_source_branch\":true,\"merge_commit_message\":\"chore: auto-merge MR !${CI_MERGE_REQUEST_IID} (ai-review READY, low-risk)\"}" \
+  --data "merge_when_pipeline_succeeds=true" \
+  --data "should_remove_source_branch=true" \
+  --data-urlencode "merge_commit_message=chore: auto-merge MR !${CI_MERGE_REQUEST_IID} (ai-review READY, low-risk)" \
   "${API}/merge")"
 
 HTTP="$(printf '%s\n' "$RESP" | tail -n1)"
@@ -98,8 +110,14 @@ echo "$BODY" | jq -c '{state:.state, merge_when_pipeline_succeeds:.merge_when_pi
 
 case "$HTTP" in
   200|201|202) echo "Auto-merge armed."; exit 0 ;;
+  401|403)
+    echo "ERROR: merge unauthorized (HTTP ${HTTP})."
+    echo "Create a Project Access Token with role Maintainer and scope api,"
+    echo "store it as CI variable GITLAB_MERGE_TOKEN (Masked, NOT Protected),"
+    echo "or upgrade GITLAB_API_TOKEN to Maintainer (Reporter/Developer cannot merge)."
+    exit 1
+    ;;
   405|406|409)
-    # Already merged / not allowed / conflict — do not fail the pipeline hard if not mergeable yet
     echo "WARN: merge not accepted (HTTP ${HTTP}). Leaving for human."
     exit 0
     ;;

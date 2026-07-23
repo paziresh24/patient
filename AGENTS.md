@@ -51,7 +51,8 @@ After a green `ai-review`, job `auto-merge-safe` may schedule **merge when pipel
 | Variable | Masked | Required | Notes |
 |---|---|---|---|
 | `OPENAI_API_KEY` | yes | yes | LLM API token. **Not Protected** (same pitfall as below) or MR pipelines get `Bearer ` / empty key. |
-| `GITLAB_API_TOKEN` | yes | yes | Project or Personal Access Token with `api` scope and **permission to merge** (Maintainer). **Do not mark Protected** unless MR source branches are also protected. |
+| `GITLAB_API_TOKEN` | yes | yes | Project/Personal Access Token with `api` scope for MR notes/changes. **Not Protected**. |
+| `GITLAB_MERGE_TOKEN` | yes | for auto-merge | **Maintainer** Project Access Token with `api` scope — used to call merge API. Required if `GITLAB_API_TOKEN` is only Developer/Reporter (those get HTTP 401/403 on merge). Masked, **not Protected**. |
 | `AUTO_MERGE_SAFE_MRS` | no | for auto-merge | Set to `true` to enable safe auto-merge. Anything else = off. |
 | `AUTO_MERGE_MAX_FILES` | no | no | Default `20` |
 | `LLM_API_URL` | no | no | Default `https://api.openai.com/v1` — override for OpenRouter, Azure, proxies, etc. |
