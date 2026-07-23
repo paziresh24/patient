@@ -1,26 +1,26 @@
 #!/bin/sh
 # Auto-merge low-risk MRs after a green ai-review (verdict READY).
 # Requires: curl, jq, CI_* vars.
-# Auth: GITLAB_MERGE_TOKEN (preferred) or GITLAB_API_TOKEN — must be Maintainer + api.
+# Auth: GITLAB_MERGE_TOKEN (preferred) or GITLAB_API_TOKEN — must be @harun with merge rights.
 set -eu
 
 API="${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}"
 
-# Prefer a dedicated merge token (Maintainer). Fall back to the review token.
+# Prefer a dedicated merge token. Fall back to the review token. Both must be @harun.
 TOKEN="${GITLAB_MERGE_TOKEN:-${GITLAB_API_TOKEN:-}}"
 AUTH="PRIVATE-TOKEN: ${TOKEN}"
 
 echo "==> Auto-merge safety checks for MR !${CI_MERGE_REQUEST_IID}"
 
 if [ -z "$TOKEN" ]; then
-  echo "ERROR: set GITLAB_MERGE_TOKEN (preferred) or GITLAB_API_TOKEN."
+  echo "ERROR: set GITLAB_MERGE_TOKEN (preferred) or GITLAB_API_TOKEN for @harun."
   exit 1
 fi
 
 if [ -n "${GITLAB_MERGE_TOKEN:-}" ]; then
-  echo "Using GITLAB_MERGE_TOKEN for merge API."
+  echo "Using GITLAB_MERGE_TOKEN for merge API (@harun)."
 else
-  echo "Using GITLAB_API_TOKEN for merge API (set GITLAB_MERGE_TOKEN for a Maintainer-only token)."
+  echo "Using GITLAB_API_TOKEN for merge API (@harun)."
 fi
 
 # Kill switch (project/group CI variable). Default off unless explicitly true.
@@ -112,9 +112,8 @@ case "$HTTP" in
   200|201|202) echo "Auto-merge armed."; exit 0 ;;
   401|403)
     echo "ERROR: merge unauthorized (HTTP ${HTTP})."
-    echo "Create a Project Access Token with role Maintainer and scope api,"
-    echo "store it as CI variable GITLAB_MERGE_TOKEN (Masked, NOT Protected),"
-    echo "or upgrade GITLAB_API_TOKEN to Maintainer (Reporter/Developer cannot merge)."
+    echo "Log in as https://gitlab.paziresh24.com/harun , create a PAT with api scope"
+    echo "and Maintainer access on this project, set GITLAB_MERGE_TOKEN (Masked, NOT Protected)."
     exit 1
     ;;
   405|406|409)
