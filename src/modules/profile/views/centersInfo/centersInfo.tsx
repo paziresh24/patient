@@ -1,4 +1,4 @@
-import PlasmicBookingSchedules from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingSchedules';
+import PlasmicBookingSchedules from '.plasmic/BookingSchedules';
 import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import LocationIcon from '@/common/components/icons/location';
