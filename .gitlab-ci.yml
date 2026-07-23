@@ -1,5 +1,37 @@
 stages:
+  - review
   - build
+
+# AI summary review on Merge Requests (Nikita-Filonov/ai-review).
+# CI/CD variables: OPENAI_API_KEY (required), LLM_API_URL, LLM_MODEL
+# (optional overrides below). If posting notes returns 401, set
+# GITLAB_API_TOKEN (api scope) and point VCS__HTTP_CLIENT__API_TOKEN at it.
+ai-review:
+  stage: review
+  image: nikitafilonov/ai-review:latest
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+  variables:
+    GIT_DEPTH: "0"
+    # Defaults — override via project CI/CD Variables with the same names.
+    LLM_API_URL: "https://api.openai.com/v1"
+    LLM_MODEL: "gpt-4o-mini"
+    LLM__PROVIDER: "OPENAI"
+    LLM__META__MODEL: "$LLM_MODEL"
+    LLM__META__MAX_TOKENS: "15000"
+    LLM__META__TEMPERATURE: "0.3"
+    LLM__HTTP_CLIENT__API_URL: "$LLM_API_URL"
+    LLM__HTTP_CLIENT__API_TOKEN: "$OPENAI_API_KEY"
+    VCS__PROVIDER: "GITLAB"
+    VCS__PIPELINE__PROJECT_ID: "$CI_PROJECT_ID"
+    VCS__PIPELINE__MERGE_REQUEST_ID: "$CI_MERGE_REQUEST_IID"
+    VCS__HTTP_CLIENT__API_URL: "$CI_SERVER_URL"
+    VCS__HTTP_CLIENT__API_TOKEN: "$CI_JOB_TOKEN"
+    REVIEW__IGNORE_CHANGES: '[".plasmic/plasmic/**", "package-lock.json", "yarn.lock"]'
+    PROMPT__SUMMARY_PROMPT_FILES: '["./prompts/ai-review/summary.md"]'
+  script:
+    - ai-review run-summary
+  allow_failure: true
 
 .build-docker-common:
   image: docker:cli

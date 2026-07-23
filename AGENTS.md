@@ -38,7 +38,26 @@ Env vars are surfaced via `next.config.js`'s `publicRuntimeConfig`/`serverRuntim
 
 ## CI / remotes
 
-Three remotes: `origin` (github.com, canonical push target), `gitlab` (gitlab.paziresh24.com), `hamgit` (hamgit.ir). A GitHub Action force-syncs pushes to GitHub `main` into the GitLab mirror and triggers a GitLab pipeline there, which builds/pushes a Docker image and calls an n8n webhook. Plasmic sync runs as a separate `repository_dispatch` GitHub Action that can auto-open PRs. Know which remote you're pushing to — pushing GitHub `main` cascades into an external pipeline.
+Remotes commonly include `origin` → `gitlab.paziresh24.com/paziresh24/patient`, plus `github` (github.com/paziresh24/patient) and `hamgit` (hamgit.ir). Know which remote you push to.
+
+### Merge Request AI review (`gitlab.paziresh24.com`)
+
+On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://github.com/Nikita-Filonov/ai-review)): summary comment tagged `#ai-review-summary`. Config: `.ai-review.yaml`, prompt: `prompts/ai-review/summary.md`. Generated Plasmic under `.plasmic/plasmic/**` is ignored. Job has `allow_failure: true` (does not block merge).
+
+**CI/CD Variables** (project Settings → CI/CD → Variables on `gitlab.paziresh24.com`):
+
+| Variable | Masked | Required | Notes |
+|---|---|---|---|
+| `OPENAI_API_KEY` | yes | yes | LLM API token for the review job |
+| `LLM_API_URL` | no | no | Default `https://api.openai.com/v1` — override for OpenRouter, Azure, proxies, etc. |
+| `LLM_MODEL` | no | no | Default `gpt-4o-mini` |
+| `GITLAB_API_TOKEN` | yes | if needed | PAT/bot token with `api` scope — only if `CI_JOB_TOKEN` gets 401 when posting MR notes; then set `VCS__HTTP_CLIENT__API_TOKEN` to `$GITLAB_API_TOKEN` in `.gitlab-ci.yml` |
+
+Also enable pipelines for merge requests. To get inline comments later, change the job script from `ai-review run-summary` to `ai-review run`.
+
+### Docker deploy pipelines
+
+`.gitlab-ci.yml` still builds/pushes Docker on `main` and `next` and calls the n8n webhook. Unrelated to the MR review job. Plasmic sync may still run via GitHub `repository_dispatch` when that remote is used.
 
 ## Testing
 
