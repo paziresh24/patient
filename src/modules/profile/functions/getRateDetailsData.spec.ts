@@ -12,7 +12,7 @@ describe('getRateDetailsData', () => {
     jest.clearAllMocks();
   });
 
-  it('maps /ravi/v1/rate/doctor/{slug} and uses count_rates', async () => {
+  it('maps /ravi/v1/rate/doctor/{slug} and uses comments_count', async () => {
     mockedFetchDoctorRate.mockResolvedValueOnce({
       doctor_encounter: 4.974051896207585,
       explanation_of_issue: 4.956175298804781,
@@ -30,7 +30,7 @@ describe('getRateDetailsData', () => {
         average_explanation_of_issue: '5.0',
       },
       hide_rates: false,
-      countOfFeedbacks: 502,
+      countOfFeedbacks: 485,
     });
 
     expect(mockedFetchDoctorRate).toHaveBeenCalledWith('دکتر-زهرا-رجبلی');
