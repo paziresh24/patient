@@ -42,14 +42,19 @@ Remotes commonly include `origin` → `gitlab.paziresh24.com/paziresh24/patient`
 
 ### Merge Request AI review (`gitlab.paziresh24.com`)
 
-On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://github.com/Nikita-Filonov/ai-review)): summary comment tagged `#ai-review-summary`. Config: `.ai-review.yaml`, prompt: `prompts/ai-review/summary.md` (two axes: Standards vs Spec; severity: Important / Should fix / Nit / Pre-existing). Generated Plasmic under `.plasmic/plasmic/**` is ignored. The job **fails** on missing tokens, LLM/VCS errors, or empty summary (no `allow_failure`).
+On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://github.com/Nikita-Filonov/ai-review)): summary comment tagged `#ai-review-summary`. Config: `.ai-review.yaml`, prompt: `prompts/ai-review/summary.md` (two axes: Standards vs Spec; severity: Important / Should fix / Nit / Pre-existing; Persian + emoji). Generated Plasmic under `.plasmic/plasmic/**` is ignored. The job **fails** on missing tokens, LLM/VCS errors, or empty summary (no `allow_failure`).
+
+After a green `ai-review`, job `auto-merge-safe` may schedule **merge when pipeline succeeds** for low-risk MRs only (script: `scripts/ci-auto-merge-safe.sh`). Conditions: `AUTO_MERGE_SAFE_MRS=true`, verdict `READY`, not Draft, ≤20 files, ≤500 churn lines, no high-risk paths (auth/payment/env/middleware/ci/docker/…). Skips leave the pipeline green for human merge; only unexpected merge API errors fail the job.
 
 **CI/CD Variables** (project or group Settings → CI/CD → Variables on `gitlab.paziresh24.com`):
 
 | Variable | Masked | Required | Notes |
 |---|---|---|---|
 | `OPENAI_API_KEY` | yes | yes | LLM API token. **Not Protected** (same pitfall as below) or MR pipelines get `Bearer ` / empty key. |
-| `GITLAB_API_TOKEN` | yes | yes | Project or Personal Access Token with `api` scope (Reporter+). **Do not mark Protected** unless MR source branches are also protected — otherwise the value is empty on feature-branch pipelines (`Illegal header value b'Bearer '`). `CI_JOB_TOKEN` is not enough for `/merge_requests/:iid/changes` on this instance. |
+| `GITLAB_API_TOKEN` | yes | yes | Project or Personal Access Token with `api` scope and **permission to merge** (Maintainer). **Do not mark Protected** unless MR source branches are also protected. |
+| `AUTO_MERGE_SAFE_MRS` | no | for auto-merge | Set to `true` to enable safe auto-merge. Anything else = off. |
+| `AUTO_MERGE_MAX_FILES` | no | no | Default `20` |
+| `AUTO_MERGE_MAX_CHURN` | no | no | Default `500` (approx added+removed diff lines) |
 | `LLM_API_URL` | no | no | Default `https://api.openai.com/v1` — override for OpenRouter, Azure, proxies, etc. |
 | `LLM_MODEL` | no | no | Default `gpt-4o-mini` |
 
