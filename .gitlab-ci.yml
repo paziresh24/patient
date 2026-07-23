@@ -4,10 +4,9 @@ stages:
   - build
 
 # AI summary review on Merge Requests (Nikita-Filonov/ai-review).
-# Required CI/CD variables: OPENAI_API_KEY, GITLAB_API_TOKEN (api scope).
-# Optional: LLM_API_URL, LLM_MODEL (defaults below).
-# CI_JOB_TOKEN can read MR notes but gets 404 on /merge_requests/:iid/changes
-# on this self-hosted instance — use a Project/Personal Access Token instead.
+# Required CI/CD variables: OPENAI_API_KEY, GITLAB_API_TOKEN (PAT of @harun, api scope).
+# Optional: LLM_API_URL, LLM_MODEL, GITLAB_BOT_USERNAME (default harun).
+# Comments/merges must appear as https://gitlab.paziresh24.com/harun
 ai-review:
   stage: review
   image: nikitafilonov/ai-review:latest
@@ -15,6 +14,7 @@ ai-review:
     - if: $CI_MERGE_REQUEST_IID
   variables:
     GIT_DEPTH: "0"
+    GITLAB_BOT_USERNAME: "harun"
     # Defaults — override via project CI/CD Variables with the same names.
     LLM_API_URL: "https://api.openai.com/v1"
     LLM_MODEL: "gpt-4o-mini"
@@ -46,6 +46,7 @@ ai-review:
       if [ "$missing" -ne 0 ]; then
         exit 1
       fi
+      python3 scripts/ci-assert-gitlab-user.py "$GITLAB_API_TOKEN"
       ai-review run-summary 2>&1 | tee /tmp/ai-review.log
       # Tool often exits 0 even after LLM/VCS failures — treat log errors as job failure.
       if grep -E -q "ERROR \\||Illegal header value|LLM request failed|Failed to fetch|HTTPStatusError|LocalProtocolError" /tmp/ai-review.log; then
@@ -58,17 +59,20 @@ ai-review:
       fi
 
 # Auto-merge only when: pipeline jobs succeed, ai-review READY, low-risk diff.
-# Enable with CI variable AUTO_MERGE_SAFE_MRS=true. Token needs permission to merge.
+# Enable with CI variable AUTO_MERGE_SAFE_MRS=true. Token must be @harun Maintainer.
 auto-merge-safe:
   stage: merge
-  image: alpine:3.20
+  image: python:3.12-alpine
   needs:
     - job: ai-review
   rules:
     - if: $CI_MERGE_REQUEST_IID
+  variables:
+    GITLAB_BOT_USERNAME: "harun"
   before_script:
     - apk add --no-cache curl jq
   script:
+    - python3 scripts/ci-assert-gitlab-user.py "${GITLAB_MERGE_TOKEN:-$GITLAB_API_TOKEN}"
     - sh scripts/ci-auto-merge-safe.sh
 
 .build-docker-common:
