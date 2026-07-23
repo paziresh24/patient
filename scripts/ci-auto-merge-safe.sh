@@ -63,23 +63,13 @@ fi
 CHANGES_JSON="$(curl -fsS --header "$AUTH" "${API}/changes")"
 FILES="$(echo "$CHANGES_JSON" | jq -r '.changes[]?.new_path // .changes[]?.old_path // empty' | sort -u)"
 FILE_COUNT="$(printf '%s\n' "$FILES" | grep -c . || true)"
-ADDITIONS="$(echo "$CHANGES_JSON" | jq '[.changes[]? | (.diff // "" | split("\n") | map(select(startswith("+"))) | length)] | add // 0')"
-DELETIONS="$(echo "$CHANGES_JSON" | jq '[.changes[]? | (.diff // "" | split("\n") | map(select(startswith("-"))) | length)] | add // 0')"
-# Rough line churn (includes +++ headers noise; still useful as a cap)
-CHURN=$((ADDITIONS + DELETIONS))
 
 echo "Files changed: ${FILE_COUNT}"
-echo "Approx diff churn lines: ${CHURN}"
 
 MAX_FILES="${AUTO_MERGE_MAX_FILES:-20}"
-MAX_CHURN="${AUTO_MERGE_MAX_CHURN:-500}"
 
 if [ "$FILE_COUNT" -gt "$MAX_FILES" ]; then
   echo "Skip: too many files (${FILE_COUNT} > ${MAX_FILES})."
-  exit 0
-fi
-if [ "$CHURN" -gt "$MAX_CHURN" ]; then
-  echo "Skip: diff too large (${CHURN} > ${MAX_CHURN})."
   exit 0
 fi
 
