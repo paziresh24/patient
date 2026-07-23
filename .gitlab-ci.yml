@@ -1,5 +1,60 @@
 stages:
+  - review
   - build
+
+# AI summary review on Merge Requests (Nikita-Filonov/ai-review).
+# Required CI/CD variables: OPENAI_API_KEY, GITLAB_API_TOKEN (api scope).
+# Optional: LLM_API_URL, LLM_MODEL (defaults below).
+# CI_JOB_TOKEN can read MR notes but gets 404 on /merge_requests/:iid/changes
+# on this self-hosted instance — use a Project/Personal Access Token instead.
+ai-review:
+  stage: review
+  image: nikitafilonov/ai-review:latest
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+  variables:
+    GIT_DEPTH: "0"
+    # Defaults — override via project CI/CD Variables with the same names.
+    LLM_API_URL: "https://api.openai.com/v1"
+    LLM_MODEL: "gpt-4o-mini"
+    LLM__PROVIDER: "OPENAI"
+    LLM__META__MODEL: "$LLM_MODEL"
+    LLM__META__MAX_TOKENS: "15000"
+    LLM__META__TEMPERATURE: "0.3"
+    LLM__HTTP_CLIENT__API_URL: "$LLM_API_URL"
+    LLM__HTTP_CLIENT__API_TOKEN: "$OPENAI_API_KEY"
+    VCS__PROVIDER: "GITLAB"
+    VCS__PIPELINE__PROJECT_ID: "$CI_PROJECT_ID"
+    VCS__PIPELINE__MERGE_REQUEST_ID: "$CI_MERGE_REQUEST_IID"
+    VCS__HTTP_CLIENT__API_URL: "$CI_SERVER_URL"
+    VCS__HTTP_CLIENT__API_TOKEN: "$GITLAB_API_TOKEN"
+    REVIEW__IGNORE_CHANGES: '[".plasmic/plasmic/**", "package-lock.json", "yarn.lock"]'
+    PROMPT__SUMMARY_PROMPT_FILES: '["./prompts/ai-review/summary.md"]'
+  script:
+    - |
+      set -euo pipefail
+      missing=0
+      if [ -z "${GITLAB_API_TOKEN:-}" ]; then
+        echo "ERROR: GITLAB_API_TOKEN is empty (Masked, NOT Protected)."
+        missing=1
+      fi
+      if [ -z "${OPENAI_API_KEY:-}" ]; then
+        echo "ERROR: OPENAI_API_KEY is empty (Masked, NOT Protected)."
+        missing=1
+      fi
+      if [ "$missing" -ne 0 ]; then
+        exit 1
+      fi
+      ai-review run-summary 2>&1 | tee /tmp/ai-review.log
+      # Tool often exits 0 even after LLM/VCS failures — treat log errors as job failure.
+      if grep -E -q "ERROR \\||Illegal header value|LLM request failed|Failed to fetch|HTTPStatusError|LocalProtocolError" /tmp/ai-review.log; then
+        echo "ERROR: ai-review reported failures (see log above)."
+        exit 1
+      fi
+      if grep -E -q "LLM returned empty summary|Summary LLM output was empty" /tmp/ai-review.log; then
+        echo "ERROR: ai-review produced an empty summary."
+        exit 1
+      fi
 
 .build-docker-common:
   image: docker:cli
