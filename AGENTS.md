@@ -42,7 +42,7 @@ Remotes commonly include `origin` → `gitlab.paziresh24.com/paziresh24/patient`
 
 ### Merge Request AI review (`gitlab.paziresh24.com`)
 
-On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://github.com/Nikita-Filonov/ai-review)): summary comment tagged `#ai-review-summary`. Config: `.ai-review.yaml`, prompt: `prompts/ai-review/summary.md`. Generated Plasmic under `.plasmic/plasmic/**` is ignored. The job **fails** on missing tokens, LLM/VCS errors, or empty summary (no `allow_failure`).
+On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://github.com/Nikita-Filonov/ai-review)): summary comment tagged `#ai-review-summary`. Config: `.ai-review.yaml`, prompt: `prompts/ai-review/summary.md` (two axes: Standards vs Spec; severity: Important / Should fix / Nit / Pre-existing). Generated Plasmic under `.plasmic/plasmic/**` is ignored. The job **fails** on missing tokens, LLM/VCS errors, or empty summary (no `allow_failure`).
 
 **CI/CD Variables** (project or group Settings → CI/CD → Variables on `gitlab.paziresh24.com`):
 
