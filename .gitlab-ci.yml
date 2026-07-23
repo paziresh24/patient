@@ -31,6 +31,13 @@ ai-review:
     REVIEW__IGNORE_CHANGES: '[".plasmic/plasmic/**", "package-lock.json", "yarn.lock"]'
     PROMPT__SUMMARY_PROMPT_FILES: '["./prompts/ai-review/summary.md"]'
   script:
+    - |
+      if [ -z "${GITLAB_API_TOKEN:-}" ]; then
+        echo "ERROR: GITLAB_API_TOKEN is empty."
+        echo "Add it in Settings → CI/CD → Variables (Masked, NOT Protected),"
+        echo "or unprotect this branch if the variable must stay Protected."
+        exit 1
+      fi
     - ai-review run-summary
   allow_failure: true
 

@@ -49,7 +49,7 @@ On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://githu
 | Variable | Masked | Required | Notes |
 |---|---|---|---|
 | `OPENAI_API_KEY` | yes | yes | LLM API token for the review job |
-| `GITLAB_API_TOKEN` | yes | yes | Project or Personal Access Token with `api` scope (Reporter+). `CI_JOB_TOKEN` is not enough — `/merge_requests/:iid/changes` returns 404 on this instance. |
+| `GITLAB_API_TOKEN` | yes | yes | Project or Personal Access Token with `api` scope (Reporter+). **Do not mark Protected** unless MR source branches are also protected — otherwise the value is empty on feature-branch pipelines (`Illegal header value b'Bearer '`). `CI_JOB_TOKEN` is not enough for `/merge_requests/:iid/changes` on this instance. |
 | `LLM_API_URL` | no | no | Default `https://api.openai.com/v1` — override for OpenRouter, Azure, proxies, etc. |
 | `LLM_MODEL` | no | no | Default `gpt-4o-mini` |
 
