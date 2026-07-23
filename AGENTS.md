@@ -49,9 +49,9 @@ On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://githu
 | Variable | Masked | Required | Notes |
 |---|---|---|---|
 | `OPENAI_API_KEY` | yes | yes | LLM API token for the review job |
+| `GITLAB_API_TOKEN` | yes | yes | Project or Personal Access Token with `api` scope (Reporter+). `CI_JOB_TOKEN` is not enough — `/merge_requests/:iid/changes` returns 404 on this instance. |
 | `LLM_API_URL` | no | no | Default `https://api.openai.com/v1` — override for OpenRouter, Azure, proxies, etc. |
 | `LLM_MODEL` | no | no | Default `gpt-4o-mini` |
-| `GITLAB_API_TOKEN` | yes | if needed | PAT/bot token with `api` scope — only if `CI_JOB_TOKEN` gets 401 when posting MR notes; then set `VCS__HTTP_CLIENT__API_TOKEN` to `$GITLAB_API_TOKEN` in `.gitlab-ci.yml` |
 
 Also enable pipelines for merge requests. To get inline comments later, change the job script from `ai-review run-summary` to `ai-review run`.
 
