@@ -23,23 +23,22 @@ import { cn } from './utils';
 
 const DEFAULT_COLOR = '#1FD5F9';
 
-function hexToRgb(hexColor: string) {
-  try {
-    const rgbColor = hexColor.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/);
-
-    if (rgbColor) {
-      const [, r, g, b] = rgbColor;
-      const color = [r, g, b].map((c = '00') => parseInt(c, 16) / 255);
-
-      return color;
-    }
-  } catch (error) {
-    console.error(
-      `Invalid hex color '${hexColor}'.\nFalling back to default color '${DEFAULT_COLOR}'.`,
-    );
+function hexToRgb(hexColor: string): [number, number, number] {
+  const match = hexColor.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/);
+  if (match) {
+    const [, r, g, b] = match;
+    return [parseInt(r, 16) / 255, parseInt(g, 16) / 255, parseInt(b, 16) / 255];
   }
 
-  return hexToRgb(DEFAULT_COLOR);
+  console.error(
+    `Invalid hex color '${hexColor}'.\nFalling back to default color '${DEFAULT_COLOR}'.`,
+  );
+  const fallback = DEFAULT_COLOR.match(/^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/)!;
+  return [
+    parseInt(fallback[1], 16) / 255,
+    parseInt(fallback[2], 16) / 255,
+    parseInt(fallback[3], 16) / 255,
+  ];
 }
 
 const shaderSource = `
