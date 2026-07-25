@@ -14,6 +14,7 @@ import { useEffect, useRef, useState, type ComponentType, type MouseEvent, type 
 import { Drawer } from 'vaul';
 import { AgentAudioVisualizerAura } from '../agents-ui/agent-audio-visualizer-aura';
 import { CallAudioFx } from '../audio/callAudioFx';
+import { createVoiceSession } from '../api/createVoiceSession';
 import { buildUiContext } from '../context/uiContext';
 import { formatCallTimer } from '../hooks/useVoiceCall';
 import { useVoiceCallUiStore } from '../store/voiceCallUi';
@@ -445,17 +446,7 @@ export function CallOverlay() {
     });
     (async () => {
       try {
-        const res = await fetch('/api/voice/session/', {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ uiContext }),
-        });
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body?.message || `session_${res.status}`);
-        }
-        const data = (await res.json()) as Session;
+        const data = await createVoiceSession(uiContext);
         if (!cancelled) setSession({ url: data.url, token: data.token });
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : 'call_failed');

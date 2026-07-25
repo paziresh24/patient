@@ -1,3 +1,4 @@
+export { createVoiceSession } from './api/createVoiceSession';
 export { CallOverlay } from './components/CallOverlay';
 export { VoiceAssistantCard } from './components/VoiceAssistantCard';
 export { VoiceBottomNavButton } from './components/VoiceBottomNavButton';

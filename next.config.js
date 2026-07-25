@@ -160,10 +160,6 @@ const nextConfig = {
   serverRuntimeConfig: {
     DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
-    LIVEKIT_URL: process.env.LIVEKIT_URL,
-    LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY,
-    LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET,
-    VOICE_AGENT_NAME: process.env.VOICE_AGENT_NAME || 'doctor-secretary',
   },
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
@@ -177,6 +173,7 @@ const nextConfig = {
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
     PARTNER_LOGO_BASE_URL: process.env.PARTNER_LOGO_BASE_URL,
     DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
+    VOICE_API_BASE_URL: process.env.VOICE_API_BASE_URL || process.env.NEXT_PUBLIC_VOICE_API_BASE_URL,
     IS_FIREBASE_ENABLE: process.env.IS_FIREBASE_ENABLE,
     WORKFLOW_BASE_URL: process.env.WORKFLOW_BASE_URL,
     SENTRY_DSN: process.env.SENTRY_DSN,

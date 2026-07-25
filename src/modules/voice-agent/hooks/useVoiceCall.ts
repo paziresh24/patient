@@ -1,5 +1,6 @@
 import { Room, RoomEvent, Track } from 'livekit-client';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { createVoiceSession } from '../api/createVoiceSession';
 
 export type CallStatus =
   | 'idle'
@@ -9,12 +10,6 @@ export type CallStatus =
   | 'speaking'
   | 'error'
   | 'ended';
-
-type SessionResponse = {
-  url: string;
-  token: string;
-  roomName: string;
-};
 
 export function useVoiceCall() {
   const [status, setStatus] = useState<CallStatus>('idle');
@@ -71,16 +66,7 @@ export function useVoiceCall() {
     setStatus('connecting');
 
     try {
-      const res = await fetch('/api/voice/session/', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body?.message || `session_${res.status}`);
-      }
-      const data = (await res.json()) as SessionResponse;
+      const data = await createVoiceSession();
 
       const room = new Room({
         adaptiveStream: true,
