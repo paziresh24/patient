@@ -160,6 +160,10 @@ const nextConfig = {
   serverRuntimeConfig: {
     DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
+    LIVEKIT_URL: process.env.LIVEKIT_URL,
+    LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY,
+    LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET,
+    VOICE_AGENT_NAME: process.env.VOICE_AGENT_NAME || 'doctor-secretary',
   },
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
