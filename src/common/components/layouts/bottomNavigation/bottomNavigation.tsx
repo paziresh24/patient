@@ -186,7 +186,7 @@ export const BottomNavigation = () => {
     router.push(link);
   };
 
-  const navItems = (isDoctorShell ? doctorMenu : menus).filter(item => !item?.hide);
+  const navItems = isDoctorShell ? doctorMenu : menus;
 
   const renderNavItem = (
     { icon, fillIcon, name, link, privateRoute, pattern, exact }: (typeof navItems)[number],
