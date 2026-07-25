@@ -12,6 +12,7 @@ import useShare from '@/common/hooks/useShare';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import { splunkInstance } from '@/common/services/splunk';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import { sanitizeDehydratedState } from '@/common/utils/sanitizeDehydratedState';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import CentersInfo from '@/modules/profile/views/centersInfo';
@@ -452,11 +453,9 @@ CenterProfile.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
-  const { slug, ...query } = context.query;
+  const { slug } = context.query;
   const host = context.req.headers?.host;
   const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
-  const text = query?.text as string;
-  const expertise = query?.expertise as string;
 
   const slugFormatted = slug as string;
   try {
@@ -497,37 +496,13 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       };
     }
 
-    const filters = {
-      center: result?.data?.id,
-      result_type: 'پزشکان+بیمارستانی',
-      ...(text && { text }),
-    };
-
-    try {
-      await queryClient.fetchInfiniteQuery(
-        [
-          ServerStateKeysEnum.Search,
-          {
-            route: expertise ? `ir/exp-${expertise}/` : '',
-            query: {
-              ...filters,
-              page: 1,
-            },
-          },
-        ],
-        ({ pageParam }) =>
-          searchApi({
-            route: expertise ? `ir/exp-${expertise}/` : '',
-            query: { ...filters, page: pageParam?.page ?? 1 },
-          }),
-      );
-    } catch (searchError) {
-      console.dir(searchError);
-    }
+    // Doctors list is fetched client-side via useInfiniteQuery.
+    // Prefetching infinite queries in React Query v4 leaves pageParams[0] as undefined,
+    // which Next.js cannot serialize in getServerSideProps.
 
     return {
       props: {
-        dehydratedState: dehydrate(queryClient),
+        dehydratedState: sanitizeDehydratedState(dehydrate(queryClient)),
         slug: slugFormatted,
         isMainSite,
       },

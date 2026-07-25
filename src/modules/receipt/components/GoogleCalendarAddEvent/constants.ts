@@ -1,4 +1,4 @@
-export const ADD_EVENT_API_PATH = '/ghandon/add-event';
+export const ADD_EVENT_API_PATH = '/api/ghandon/add-event';
 export const EMAIL_STORAGE_KEY = 'p24_gcal_email';
 export const SUBMITTED_EVENTS_STORAGE_KEY = 'p24_gcal_submitted_events';
 

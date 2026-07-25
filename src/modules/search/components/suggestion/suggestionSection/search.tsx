@@ -3,6 +3,7 @@ import { categoryIcons } from '@/modules/search/constants/suggestion/categoryIco
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
 import classNames from '@/common/utils/classNames';
+import { safeHighlight } from '@/modules/search/functions/safeHighlight';
 import style from './section.module.css';
 
 interface SearchSectionProps {
@@ -22,7 +23,7 @@ export const SearchSection = (props: SearchSectionProps) => {
           onClick={() => handleItemClick(item, index)}
         >
           {categoryIcons['search-icon']()}
-          <Text className="line-clamp-1" dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' }} />
+          <Text className="line-clamp-1">{safeHighlight(item.formatted_title)}</Text>
         </div>
       ))}
     </>

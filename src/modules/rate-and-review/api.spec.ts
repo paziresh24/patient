@@ -1,4 +1,5 @@
 import { apiGatewayClient, raviApisClient } from '@/common/apis/client';
+import { fetchDoctorRate } from '@/common/apis/services/reviews/rateDoctor';
 import {
   deleteFeedback,
   editFeedback,
@@ -20,6 +21,10 @@ jest.mock('@/common/apis/client', () => ({
   },
 }));
 
+jest.mock('@/common/apis/services/reviews/rateDoctor', () => ({
+  fetchDoctorRate: jest.fn(),
+}));
+
 jest.mock('@/common/utils/formatRelativeFeedbackTime', () => ({
   enrichReviewResponseWithRelativeTime: (list: unknown[]) => list,
 }));
@@ -28,6 +33,7 @@ const mockedGet = raviApisClient.get as jest.Mock;
 const mockedPost = raviApisClient.post as jest.Mock;
 const mockedPatch = raviApisClient.patch as jest.Mock;
 const mockedDelete = raviApisClient.delete as jest.Mock;
+const mockedFetchDoctorRate = fetchDoctorRate as jest.Mock;
 
 const mockedGatewayGet = apiGatewayClient.get as jest.Mock;
 const mockedGatewayPost = apiGatewayClient.post as jest.Mock;
@@ -38,19 +44,18 @@ describe('rate-and-review api', () => {
   });
 
   it('fetchRateSummary maps doctor rate response', async () => {
-    mockedGet.mockResolvedValueOnce({
-      data: {
-        hide_rates: true,
-        comments_count: 12,
-        doctor_encounter: 4.1,
-        explanation_of_issue: 4.3,
-        quality_of_treatment: 4.5,
-      },
+    mockedFetchDoctorRate.mockResolvedValueOnce({
+      hide_rates: true,
+      count_rates: 502,
+      comments_count: 485,
+      doctor_encounter: 4.1,
+      explanation_of_issue: 4.3,
+      quality_of_treatment: 4.5,
     });
 
     await expect(fetchRateSummary('dr-test')).resolves.toEqual({
       hideRates: true,
-      count: 12,
+      count: 485,
       items: [
         { label: 'برخورد مناسب', value: 4.1 },
         { label: 'توضیح در هنگام ویزیت', value: 4.3 },
@@ -58,18 +63,30 @@ describe('rate-and-review api', () => {
       ],
     });
 
-    expect(mockedGet).toHaveBeenCalledWith('/ravi/v1/rate/doctor/dr-test', { timeout: 12_000 });
+    expect(mockedFetchDoctorRate).toHaveBeenCalledWith('dr-test');
+  });
+
+  it('fetchRateSummary uses comments_count not count_rates', async () => {
+    mockedFetchDoctorRate.mockResolvedValueOnce({
+      count_rates: 502,
+      comments_count: 485,
+      doctor_encounter: 4.9,
+      explanation_of_issue: 4.9,
+      quality_of_treatment: 4.9,
+    });
+
+    await expect(fetchRateSummary('دکتر-زهرا-رجبلی')).resolves.toMatchObject({
+      count: 485,
+    });
   });
 
   it('fetchRateSummary maps hide field when hide_rates is absent', async () => {
-    mockedGet.mockResolvedValueOnce({
-      data: {
-        hide: 1,
-        comments_count: 3,
-        doctor_encounter: 4,
-        explanation_of_issue: 4,
-        quality_of_treatment: 4,
-      },
+    mockedFetchDoctorRate.mockResolvedValueOnce({
+      hide: 1,
+      comments_count: 3,
+      doctor_encounter: 4,
+      explanation_of_issue: 4,
+      quality_of_treatment: 4,
     });
 
     await expect(fetchRateSummary('dr-hide')).resolves.toMatchObject({
@@ -79,7 +96,7 @@ describe('rate-and-review api', () => {
   });
 
   it('fetchRateSummary returns null when doctor rate summary is not found', async () => {
-    mockedGet.mockRejectedValueOnce({
+    mockedFetchDoctorRate.mockRejectedValueOnce({
       isAxiosError: true,
       response: { data: { error: { code: 'RATE_NOT_FOUND', message: 'doctor rate summary not found' } } },
     });

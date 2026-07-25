@@ -38,7 +38,34 @@ Env vars are surfaced via `next.config.js`'s `publicRuntimeConfig`/`serverRuntim
 
 ## CI / remotes
 
-Three remotes: `origin` (github.com, canonical push target), `gitlab` (gitlab.paziresh24.com), `hamgit` (hamgit.ir). A GitHub Action force-syncs pushes to GitHub `main` into the GitLab mirror and triggers a GitLab pipeline there, which builds/pushes a Docker image and calls an n8n webhook. Plasmic sync runs as a separate `repository_dispatch` GitHub Action that can auto-open PRs. Know which remote you're pushing to — pushing GitHub `main` cascades into an external pipeline.
+Remotes commonly include `origin` → `gitlab.paziresh24.com/paziresh24/patient`, plus `github` (github.com/paziresh24/patient) and `hamgit` (hamgit.ir). Know which remote you push to.
+
+### Merge Request AI review (`gitlab.paziresh24.com`)
+
+On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://github.com/Nikita-Filonov/ai-review)): summary comment tagged `#ai-review-summary`. Config: `.ai-review.yaml`, prompt: `prompts/ai-review/summary.md` (two axes: Standards vs Spec; severity: Important / Should fix / Nit / Pre-existing; Persian + emoji). Generated Plasmic under `.plasmic/plasmic/**` is ignored. The job **fails** on missing tokens, LLM/VCS errors, or empty summary (no `allow_failure`).
+
+**Identity:** review comments and merges must be performed as [@harun](https://gitlab.paziresh24.com/harun). CI asserts `GET /user` username is `harun` before review/merge (`scripts/ci-assert-gitlab-user.py`). Create PATs while logged in as that user.
+
+After a green `ai-review`, job `auto-merge-safe` may schedule **merge when pipeline succeeds** for low-risk MRs only (script: `scripts/ci-auto-merge-safe.sh`). It runs only after `ai-review` succeeds (`needs`). Conditions: `AUTO_MERGE_SAFE_MRS=true`, verdict `READY`, not Draft, ≤20 files, no high-risk paths (auth/payment/env/middleware/ci/docker/…). Skips leave the pipeline green for human merge; only unexpected merge API errors fail the job.
+
+**CI/CD Variables** (project or group Settings → CI/CD → Variables on `gitlab.paziresh24.com`):
+
+| Variable | Masked | Required | Notes |
+|---|---|---|---|
+| `OPENAI_API_KEY` | yes | yes | LLM API token. **Not Protected** (same pitfall as below) or MR pipelines get `Bearer ` / empty key. |
+| `GITLAB_API_TOKEN` | yes | yes | **Personal Access Token of [@harun](https://gitlab.paziresh24.com/harun)** with `api` scope (for MR notes/changes). Masked, **not Protected**. |
+| `GITLAB_MERGE_TOKEN` | yes | for auto-merge | Same user **@harun**, role able to merge (Maintainer on the project) + `api` scope. Can be the same PAT if it can merge. Masked, **not Protected**. |
+| `GITLAB_BOT_USERNAME` | no | no | Default `harun` — identity enforced in CI. |
+| `AUTO_MERGE_SAFE_MRS` | no | for auto-merge | Set to `true` to enable safe auto-merge. Anything else = off. |
+| `AUTO_MERGE_MAX_FILES` | no | no | Default `20` |
+| `LLM_API_URL` | no | no | Default `https://api.openai.com/v1` — override for OpenRouter, Azure, proxies, etc. |
+| `LLM_MODEL` | no | no | Default `gpt-4o-mini` |
+
+Also enable pipelines for merge requests. To get inline comments later, change the job script from `ai-review run-summary` to `ai-review run`.
+
+### Docker deploy pipelines
+
+`.gitlab-ci.yml` still builds/pushes Docker on `main` and `next` and calls the n8n webhook. Unrelated to the MR review job. Plasmic sync may still run via GitHub `repository_dispatch` when that remote is used.
 
 ## Testing
 
@@ -51,6 +78,10 @@ Jest + React Testing Library, `.spec.tsx` naming, colocated with source. Coverag
 - `legacy-peer-deps=true` in `.npmrc` — dependency tree may have version mismatches that npm won't flag.
 - `README.md`'s "Technologies Used" list is stale (omits Plasmic, Sentry, Firebase, GrowthBook, Storybook). Don't treat it as authoritative.
 - CONTRIBUTING.md has two small inaccuracies: says PRs merge into "master" (actual default branch is `main`), and cites `https://localhost:8766` (actual `server.js` default is port 443/`$PORT`).
+
+## Doctor Voice Agent
+
+Phone-call UI for doctors on `/dashboard` (`src/modules/voice-agent/`). FAB mounts from `SideBar`. Session BFF: `POST /api/voice/session` (cookie → LiveKit JWT). Worker lives in `labs/voice-agent` (LiveKit + Soniox + AvalAI). Server-only env: `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `VOICE_AGENT_NAME`.
 
 ## Persian/RTL responses (from `.cursor/rules/rtl-persian.mdc`)
 
