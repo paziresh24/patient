@@ -226,7 +226,9 @@ export default forwardRef(
     }, [autoPay, walletCenters, orgPaymentCenters.length, balances]);
 
     const showWalletSection = !autoPay && !isLoading;
-    const shouldSendCenter = (centerId?: string) => !!centerId;
+    /** Online visit (5532) uses personal p24 wallet — Katibe pay must not receive centerid. */
+    const shouldSendCenter = (centerId?: string) =>
+      !!centerId && String(centerId) !== ONLINE_VISIT_CENTER_ID;
 
     useImperativeHandle(ref, () => ({
       open: (data: any) => {
