@@ -177,7 +177,7 @@ export const Presence = memo((props: PresenceProps) => {
       return;
     }
 
-    if (center.is_only_in_app.status && !customise.partnerKey && !isWebView && !isApplication) {
+    if (center.is_only_in_app?.status && !customise.partnerKey && !isWebView && !isApplication) {
       setSelectedCenter(center);
       handleOpenSelectDownloadAppModal();
       return;
