@@ -266,6 +266,20 @@ const nextConfig = {
 
     return rules;
   },
+  async headers() {
+    return [
+      {
+        // DR-13: صفحه‌ی static «نظر شما برای ما مهم است» — long-cache روی CDN، revalidate روزانه در مرورگر
+        source: '/rate-us/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 const moduleExports = () => plugins.reduce((acc, next) => next(acc), nextConfig);
