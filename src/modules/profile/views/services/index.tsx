@@ -335,13 +335,12 @@ export const Services = ({
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any, index: number) => {
-              // Feature on: drive Plasmic "تا X ساعت می‌توانید..." via chat_lifecycle_auto_close_hours.
-              // While loading, omit it so hardcoded 3-day copy is not shown as a misleading flash.
+              // Feature on: only drive the "تا X ساعت می‌توانید..." copy. `duration` (مدت زمان گفتگو) stays untouched.
               const serviceWithLifecycleDuration = !useChatLifecycleDuration
                 ? service
                 : chatLifecycleHours != null
-                  ? { ...service, chat_lifecycle_auto_close_hours: chatLifecycleHours, duration: `${chatLifecycleHours}:00:00` }
-                  : { ...service, chat_lifecycle_loading: true, duration: undefined };
+                  ? { ...service, chat_lifecycle_auto_close_hours: chatLifecycleHours }
+                  : { ...service, chat_lifecycle_loading: true };
 
               return (
                 <div key={index} className="flex flex-col gap-2">
@@ -356,9 +355,8 @@ export const Services = ({
                     variants={{ type: 'onlineVisit' }}
                   />
                   {isChatLifecycleDurationPending && (
-                    <div className="flex items-center justify-between px-4 py-1 text-sm text-slate-500">
-                      <span>مدت زمان گفتگو</span>
-                      <Skeleton w="4.5rem" h="1rem" rounded="full" />
+                    <div className="px-4 py-1">
+                      <Skeleton w="15rem" h="1rem" rounded="full" />
                     </div>
                   )}
                 </div>
