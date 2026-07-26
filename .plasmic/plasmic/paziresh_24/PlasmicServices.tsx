@@ -463,10 +463,6 @@ function PlasmicServices__RenderFunc(props: {
             hasVariant($state, 'type', 'onlineVisit')
               ? (() => {
                 try {
-                  // Hide legacy "مدت زمان گفتگو" when lifecycle hours drive the ask-doctor copy above.
-                  if ($props.service?.chat_lifecycle_auto_close_hours != null || $props.service?.chat_lifecycle_loading) {
-                    return false;
-                  }
                   return $props.expertises.group_expertises[0].id === 21 || $props.expertises.group_expertises[0].id === 47;
                 } catch (e) {
                   if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
