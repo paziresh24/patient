@@ -1,5 +1,6 @@
 stages:
   - review
+  - perf
   - merge
   - build
 
@@ -74,6 +75,36 @@ auto-merge-safe:
   script:
     - python3 scripts/ci-assert-gitlab-user.py "${GITLAB_MERGE_TOKEN:-$GITLAB_API_TOKEN}"
     - sh scripts/ci-auto-merge-safe.sh
+
+# DR-08 (docs/dev-requests/dr-08-listing-pagespeed.md) — Lighthouse CI budget gate for the three
+# highest-traffic /s/* listing templates. See lighthouserc.js for the full rationale/thresholds.
+#
+# HONEST SCOPE (working-agreements §۱۲, not overclaiming): this job hits LIVE PRODUCTION URLs, not
+# a build of this MR's own code — there is no per-MR review-app for `patient` today, and building +
+# serving the full SSR app inside a throwaway CI job would require a working Plasmic project token,
+# Sentry/GrowthBook/Firebase secrets, and reachable internal APIs (not safe/cheap to fake here, see
+# docs/working-agreements.md §۱۳ ladder-of-least-code). So this is a **regression MONITOR** — did
+# prod get worse after the last deploy / on today's schedule — not a pre-merge blocking gate. It
+# still runs on MRs so a reviewer sees the current prod budget status inline; it does NOT feed
+# `auto-merge-safe`'s `needs:` (deliberately — expanding that gate's blocking surface is a separate,
+# owner-reviewed decision, not bundled into this DR). The real pre-merge gate needs a per-MR
+# preview environment — flagged as the outside-the-box follow-up in the DR-08 doc §۱۱, not built here.
+lighthouse-budget:
+  stage: perf
+  image: node:20-slim
+  script:
+    - npx --yes @lhci/cli@0.13.0 autorun --config=./lighthouserc.js
+  artifacts:
+    when: always
+    expire_in: 30 days
+    paths:
+      - .lighthouseci/
+  allow_failure: true # monitor, not a merge-blocker yet (see rationale above) — flip to false once a per-MR preview env lands
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "next"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
 
 .build-docker-common:
   image: docker:cli

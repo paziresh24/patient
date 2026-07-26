@@ -37,6 +37,7 @@ import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 import { shouldShowTopSuggestedConsult } from '@/modules/search/functions/shouldShowTopSuggestedConsult';
+import { getConsultBannerReservedSpace } from '@/modules/search/functions/getConsultBannerReservedSpace';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
   ssr: false,
@@ -331,7 +332,17 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
                     />
                   </div>
                 ) : (
-                  <ConsultBanner />
+                  // CLS fix (DR-08, docs/dev-requests/dr-08-listing-pagespeed.md): ConsultBanner is
+                  // loaded via dynamic(..., { ssr: false }), so nothing renders for it until its JS
+                  // chunk mounts client-side — the space it will occupy must be reserved from the
+                  // very first (server-rendered) paint, or the page jumps once it pops in. Which of
+                  // ConsultBanner's two shapes will render (plain upsell vs. richer "ویزیت آنلاین"
+                  // card with image+button) is already known here via `selectedCategory`/`isConsult`
+                  // (same data source ConsultBanner reads internally), so we size the reservation to
+                  // the shape that will actually mount instead of guessing one fixed height.
+                  <div className="md:hidden" style={{ minHeight: getConsultBannerReservedSpace({ isConsult, hasSelectedCategory: !!selectedCategory?.title }) }}>
+                    <ConsultBanner />
+                  </div>
                 ))}
               <Result />
             </div>

@@ -5,7 +5,7 @@ import {
   PlasmicPaziresh24Avatar,
   DefaultPaziresh24AvatarProps
 } from "./plasmic/paziresh_24_design_system/PlasmicPaziresh24Avatar";
-import { HTMLElementRefOf } from "@plasmicapp/react-web";
+import { HTMLElementRefOf, PlasmicImg } from "@plasmicapp/react-web";
 import { PIC_USER_IMAGE_FALLBACK_URL } from "@/common/utils/picUserImageUrl";
 
 // Your component props start with props for variants and slots you defined
@@ -21,7 +21,19 @@ import { PIC_USER_IMAGE_FALLBACK_URL } from "@/common/utils/picUserImageUrl";
 //
 // You can also stop extending from DefaultPaziresh24AvatarProps altogether and have
 // total control over the props for your component.
-export interface Paziresh24AvatarProps extends DefaultPaziresh24AvatarProps {}
+export interface Paziresh24AvatarProps extends DefaultPaziresh24AvatarProps {
+  // DR-08 perf fix (docs/dev-requests/dr-08-listing-pagespeed.md §۱۱): expose the underlying
+  // PlasmicImg override so callers can set e.g. `img={{ loading: 'eager', fetchPriority: 'high' }}`
+  // for an LCP-candidate avatar (first result card) instead of always inheriting the hardcoded
+  // `loading="lazy"` baked into the generated PlasmicPaziresh24Avatar. Previously this prop was
+  // silently dropped (see git history) because `img={{ onError: handleImageError }}` below was
+  // spread *after* `{...props}`, clobbering any `props.img` a caller passed in.
+  //
+  // Typed as a plain object (not the full generated `Flex<typeof PlasmicImg__>` union, which also
+  // allows render-prop/`{wrap,props}` shapes) so it stays safely spreadable below — this wrapper
+  // only ever needs to forward plain PlasmicImg/<img> attributes (loading, fetchPriority, ...).
+  img?: Partial<React.ComponentProps<typeof PlasmicImg>>;
+}
 
 function Paziresh24Avatar_(
   props: Paziresh24AvatarProps,
@@ -49,7 +61,7 @@ function Paziresh24Avatar_(
       root={{ ref }}
       {...props}
       src={src}
-      img={{ onError: handleImageError }}
+      img={{ onError: handleImageError, ...props.img }}
     />
   );
 }

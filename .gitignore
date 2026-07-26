@@ -62,3 +62,7 @@ scripts/generate_profile_data_map_xlsx.py
 /public/fallback-*.js*
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Lighthouse CI local run output (DR-08 budget gate produces this; CI keeps it as a job artifact,
+# not repo content)
+.lighthouseci/
