@@ -244,6 +244,11 @@ const nextConfig = {
         destination: '/faq/',
         permanent: true,
       },
+      {
+        source: '/home/contact-us/',
+        destination: '/contact-us/',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {

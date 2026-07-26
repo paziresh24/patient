@@ -12,7 +12,7 @@ type BreadcrumbItem = {
 
 type LegalPageLayoutProps = {
   breadcrumbs: BreadcrumbItem[];
-  title: ReactNode;
+  title?: ReactNode;
   headerExtra?: ReactNode;
   intro?: ReactNode;
   children: ReactNode;
@@ -37,38 +37,40 @@ export const LegalPageLayout = ({
   headerVariant = 'card',
 }: LegalPageLayoutProps) => {
   const isPlainHeader = headerVariant === 'plain';
+  const hasHeaderContent = Boolean(title || intro || headerExtra);
 
   return (
     <div className="w-full min-h-full bg-[#F2F3F5]" lang={lang} dir={dir}>
       <div className="mx-auto w-full max-w-3xl px-4 py-6 md:max-w-4xl md:px-6 md:py-8">
-        <Breadcrumbs className="mb-4 md:mb-5" items={breadcrumbs} dir={dir ?? 'rtl'} />
+        <Breadcrumbs className={classNames(hasHeaderContent ? 'mb-4 md:mb-5' : 'mb-5 md:mb-6')} items={breadcrumbs} dir={dir ?? 'rtl'} />
 
-        {isPlainHeader ? (
-          <header className="mb-5 md:mb-6">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <div className="min-w-0 space-y-3">
-                {title}
-                {intro}
-              </div>
-              {headerExtra}
-            </div>
-          </header>
-        ) : (
-          <Card className={classNames(legalCardClassName, 'mb-5 shadow-card')}>
-            <div className={legalCardBodyClassName}>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="min-w-0">{title}</div>
+        {hasHeaderContent &&
+          (isPlainHeader ? (
+            <header className="mb-5 md:mb-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0 space-y-3">
+                  {title}
+                  {intro}
+                </div>
                 {headerExtra}
               </div>
-              {intro && (
-                <>
-                  <Divider className="!my-4" />
-                  {intro}
-                </>
-              )}
-            </div>
-          </Card>
-        )}
+            </header>
+          ) : (
+            <Card className={classNames(legalCardClassName, 'mb-5 shadow-card')}>
+              <div className={legalCardBodyClassName}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">{title}</div>
+                  {headerExtra}
+                </div>
+                {intro && (
+                  <>
+                    <Divider className="!my-4" />
+                    {intro}
+                  </>
+                )}
+              </div>
+            </Card>
+          ))}
 
         <div className={legalStackClassName}>{children}</div>
       </div>
