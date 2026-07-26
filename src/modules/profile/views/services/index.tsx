@@ -14,7 +14,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
@@ -77,6 +77,16 @@ export const Services = ({
   const growthbook = useGrowthBook();
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
+
+  // Canonical profile slug (seo.slug) may differ from URL slug; GB targeting uses slug attribute.
+  useLayoutEffect(() => {
+    if (!growthbook || !slug) return;
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug,
+    });
+  }, [growthbook, slug]);
+
   const useChatLifecycleDuration = useFeatureIsOn('online-visit-chat-lifecycle-duration');
   // Profile already has doctor.user_id (information.user_id) in the normal flow → Hami directly.
   // slug is only a rare fallback when user_id is missing.
@@ -325,12 +335,13 @@ export const Services = ({
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any, index: number) => {
-              // Feature on: never show legacy duration. Loading → hide; ready → API hours or 1h fallback.
+              // Feature on: drive Plasmic "تا X ساعت می‌توانید..." via chat_lifecycle_auto_close_hours.
+              // While loading, omit it so hardcoded 3-day copy is not shown as a misleading flash.
               const serviceWithLifecycleDuration = !useChatLifecycleDuration
                 ? service
                 : chatLifecycleHours != null
-                  ? { ...service, duration: `${chatLifecycleHours}:00:00` }
-                  : { ...service, duration: undefined };
+                  ? { ...service, chat_lifecycle_auto_close_hours: chatLifecycleHours, duration: `${chatLifecycleHours}:00:00` }
+                  : { ...service, chat_lifecycle_loading: true, duration: undefined };
 
               return (
                 <div key={index} className="flex flex-col gap-2">
