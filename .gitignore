@@ -45,6 +45,10 @@ yarn-error.log*
 # local daily CEO reports (not for remote)
 .cursor/reports/
 
+# local/personal Cursor agent rules (keep shared project rules tracked)
+.cursor/rules/daily-ceo-report.mdc
+.cursor/rules/git-prerequisites.mdc
+
 # local doctor profile data-map / investigation artifacts (agent-generated)
 doctor-profile-page-data-map*.xlsx
 scripts/_*
