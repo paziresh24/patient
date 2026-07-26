@@ -45,8 +45,11 @@ yarn-error.log*
 # local daily CEO reports (not for remote)
 .cursor/reports/
 
-# local doctor profile data-map exports
+# local doctor profile data-map / investigation artifacts (agent-generated)
 doctor-profile-page-data-map*.xlsx
+scripts/_*
+scripts/enrich_excel_with_doctor_sample.py
+scripts/generate_profile_data_map_xlsx.py
 
 # PWA
 /public/precache.*.*.js*
