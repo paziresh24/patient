@@ -77,23 +77,31 @@ export const Services = ({
   const growthbook = useGrowthBook();
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
+  const featureFromHook = useFeatureIsOn('online-visit-chat-lifecycle-duration');
+  const [featureFromSlugAttr, setFeatureFromSlugAttr] = useState(false);
 
-  // Canonical profile slug (seo.slug) may differ from URL slug; GB targeting uses slug attribute.
+  // GB payload listing a slug ≠ feature on. Attribute `slug` must match exactly (e.g. …-3), and
+  // features must be ready — otherwise Hami is never called and Plasmic keeps the hardcoded 3-day line.
   useLayoutEffect(() => {
-    if (!growthbook || !slug) return;
+    if (!growthbook || !slug) {
+      setFeatureFromSlugAttr(false);
+      return;
+    }
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       slug,
     });
-  }, [growthbook, slug]);
+    setFeatureFromSlugAttr(growthbook.isOn('online-visit-chat-lifecycle-duration'));
+  }, [growthbook, slug, growthbook?.ready, featureFromHook]);
 
-  const useChatLifecycleDuration = useFeatureIsOn('online-visit-chat-lifecycle-duration');
+  const useChatLifecycleDuration = featureFromHook || featureFromSlugAttr;
   // Profile already has doctor.user_id (information.user_id) in the normal flow → Hami directly.
-  // slug is only a rare fallback when user_id is missing.
+  // Fall back to profileData.user_id when information omits it; slug only when both missing.
+  const profileDoctorUserId = doctor?.user_id ?? profileData?.user_id ?? profileData?.information?.user_id;
   const { hours: chatLifecycleHours, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
     enabled: useChatLifecycleDuration,
-    doctorUserId: doctor?.user_id,
-    doctorSlug: doctor?.user_id ? undefined : slug,
+    doctorUserId: profileDoctorUserId,
+    doctorSlug: profileDoctorUserId ? undefined : slug,
   });
 
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
@@ -335,8 +343,12 @@ export const Services = ({
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any, index: number) => {
-              // Feature on: only drive the "تا X ساعت می‌توانید..." copy. `duration` (مدت زمان گفتگو) stays untouched.
-              const serviceWithLifecycleDuration = !useChatLifecycleDuration
+              // Feature on (non-21/47): hide Plasmic hardcoded 3-day line while we render Hami hours ourselves.
+              // Expertise 21/47 keep legacy "مدت زمان گفتگو" from service.duration — do not touch.
+              const expertiseGroupId = expertises?.group_expertises?.[0]?.id;
+              const isDurationRowExpertise = expertiseGroupId === 21 || expertiseGroupId === 47;
+              const showLifecycleAskDoctorCopy = useChatLifecycleDuration && !isDurationRowExpertise;
+              const serviceWithLifecycleDuration = !showLifecycleAskDoctorCopy
                 ? service
                 : chatLifecycleHours != null
                   ? { ...service, chat_lifecycle_auto_close_hours: chatLifecycleHours }
@@ -354,7 +366,7 @@ export const Services = ({
                     }}
                     variants={{ type: 'onlineVisit' }}
                   />
-                  {isChatLifecycleDurationPending && (
+                  {showLifecycleAskDoctorCopy && isChatLifecycleDurationPending && (
                     <div className="px-4 py-1">
                       <Skeleton w="15rem" h="1rem" rounded="full" />
                     </div>

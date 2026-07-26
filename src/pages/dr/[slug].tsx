@@ -25,7 +25,7 @@ import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactElement, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { growthbook } from '../_app';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
@@ -183,20 +183,21 @@ const DoctorProfile = (props: any) => {
   );
   const resolvedKeywordTags = (Array.isArray(keywordTags) && keywordTags.length > 0 ? keywordTags : clientKeywordTags) ?? [];
 
-  useEffect(() => {
-    if (growthbook) {
+  // useLayoutEffect so slug is on GB before Services evaluates online-visit-chat-lifecycle-duration.
+  useLayoutEffect(() => {
+    if (!growthbook) return;
+    const doctorSlugForGrowthbook = (typeof slug === 'string' && slug ? slug : null) ?? currentSlug;
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      // Prefer canonical profile slug from props when available (URL slug can omit suffix like `-3`).
+      slug: doctorSlugForGrowthbook,
+    });
+    return () => {
       growthbook.setAttributes({
         ...growthbook.getAttributes(),
-        // Prefer canonical profile slug from props when available (URL slug can omit suffix like `-3`).
-        slug: (typeof slug === 'string' && slug ? slug : null) ?? currentSlug,
+        slug: undefined,
       });
-      return () => {
-        growthbook.setAttributes({
-          ...growthbook.getAttributes(),
-          slug: undefined,
-        });
-      };
-    }
+    };
   }, [currentSlug, slug, growthbook]);
 
   const rateDebug = query.rateDebug === '1';
