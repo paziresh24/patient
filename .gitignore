@@ -42,6 +42,12 @@ yarn-error.log*
 
 .idea
 
+# local daily CEO reports (not for remote)
+.cursor/reports/
+
+# local doctor profile data-map exports
+doctor-profile-page-data-map*.xlsx
+
 # PWA
 /public/precache.*.*.js*
 /public/workbox-*.js*
