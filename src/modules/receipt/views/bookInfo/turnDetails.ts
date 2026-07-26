@@ -1,4 +1,5 @@
 import Alert from '@/common/components/atom/alert';
+import Skeleton from '@/common/components/atom/skeleton';
 import InfoIcon from '@/common/components/icons/info';
 import { WarningIcon } from '@/common/components/icons/warning';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
@@ -27,6 +28,8 @@ interface TurnDetailsDataParam {
     doctorPhone?: string;
     onlineChannel?: string;
     durationConversation?: string;
+    durationConversationUnit?: 'days' | 'hours';
+    durationConversationLoading?: boolean;
     centerName: string;
     receiptLink?: string;
     centerPhone?: string;
@@ -65,6 +68,8 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     rules,
     doctorPhone,
     durationConversation,
+    durationConversationUnit = 'days',
+    durationConversationLoading,
     turnStatus,
     messengerList,
     selectedChannel,
@@ -225,8 +230,10 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     {
       id: 3,
       name: 'مدت زمان گفتگو',
-      value: `تا ${durationConversation} روز`,
-      shouldShow: centerType === CenterType.consult && durationConversation,
+      value: durationConversationLoading
+        ? createElement(Skeleton, { w: '4.5rem', h: '1rem', rounded: 'full' })
+        : `تا ${durationConversation} ${durationConversationUnit === 'hours' ? 'ساعت' : 'روز'}`,
+      shouldShow: centerType === CenterType.consult && (!!durationConversation || !!durationConversationLoading),
       type: 'Text',
       isBoldValue: true,
     },

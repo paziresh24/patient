@@ -1016,6 +1016,7 @@ const Receipt = () => {
               possibilityBeingVisited={possibilityBeingVisited}
               centerId={centerId?.toString()!}
               bookId={bookId as string}
+              doctorUserId={doctorUserId}
             />
           </div>
           {bookDetailsData?.services?.[0]?.service_type_id === 9 && !turnStatus?.deletedTurn && (
