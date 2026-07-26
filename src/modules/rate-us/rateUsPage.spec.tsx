@@ -10,7 +10,7 @@ jest.mock('next/head', () => {
 });
 
 import { render, screen } from '@testing-library/react';
-import RateUsPage from '../../pages/rate-us';
+import RateUsPage from './components/rateUsPage';
 
 describe('RateUsPage (DR-13)', () => {
   it('renders the thank-you heading', () => {
