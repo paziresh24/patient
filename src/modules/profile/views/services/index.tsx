@@ -32,6 +32,7 @@ import {
   getScopedOnlineVisitAvailability,
   mapSamanAvailabilityToCenters,
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
+import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -76,6 +77,14 @@ export const Services = ({
   const growthbook = useGrowthBook();
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
+  const useChatLifecycleDuration = useFeatureIsOn('online-visit-chat-lifecycle-duration');
+  // Profile already has doctor.user_id (information.user_id) in the normal flow → Hami directly.
+  // slug is only a rare fallback when user_id is missing.
+  const { hours: chatLifecycleHours, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
+    enabled: useChatLifecycleDuration,
+    doctorUserId: doctor?.user_id,
+    doctorSlug: doctor?.user_id ? undefined : slug,
+  });
 
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
     enabled: !!slug && useSamanAvailabilityStatus,
@@ -315,17 +324,36 @@ export const Services = ({
         {showOnlineVisit &&
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
-            ?.services?.map((service: any, index: number) => (
-              <Fragment2
-                key={index}
-                name="Services"
-                Component={PlasmicServices}
-                args={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
-                variants={{ type: 'onlineVisit' }}
-              />
-            ))}
-        {showPresenceSection &&
-          (showPresenceBulk ? (
+            ?.services?.map((service: any, index: number) => {
+              // Feature on: never show legacy duration. Loading → hide; ready → API hours or 1h fallback.
+              const serviceWithLifecycleDuration = !useChatLifecycleDuration
+                ? service
+                : chatLifecycleHours != null
+                  ? { ...service, duration: `${chatLifecycleHours}:00:00` }
+                  : { ...service, duration: undefined };
+
+              return (
+                <div key={index} className="flex flex-col gap-2">
+                  <Fragment2
+                    name="Services"
+                    Component={PlasmicServices}
+                    args={{
+                      ...profileData,
+                      service: serviceWithLifecycleDuration,
+                      onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }),
+                    }}
+                    variants={{ type: 'onlineVisit' }}
+                  />
+                  {isChatLifecycleDurationPending && (
+                    <div className="flex items-center justify-between px-4 py-1 text-sm text-slate-500">
+                      <span>مدت زمان گفتگو</span>
+                      <Skeleton w="4.5rem" h="1rem" rounded="full" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+        {showPresenceSection &&          (showPresenceBulk ? (
             <BulkService
               displayName={doctor.display_name}
               expertises={expertises}

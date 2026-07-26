@@ -1,8 +1,9 @@
+import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 import Skeleton from '@/common/components/atom/skeleton';
 import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { VisitChannels } from '../../constants/onlineVisitChannels';
 import { turnDetailsData } from './turnDetails';
 
@@ -12,16 +13,27 @@ interface PaymentDetailsProps {
   centerId: string;
   bookId?: string;
   possibilityBeingVisited?: boolean;
+  /** Doctor user_id resolved on receipt via doctor slug → drprofile. */
+  doctorUserId?: string | number | null;
 }
 
 export const BookInfo = (props: PaymentDetailsProps) => {
-  const { loading = false, turnData, centerId, bookId, possibilityBeingVisited } = props;
+  const { loading = false, turnData, centerId, bookId, possibilityBeingVisited, doctorUserId } = props;
   const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
   const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === turnData?.services?.[0]?.id);
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const messengerButtonType = useFeatureValue('receipt:messenger-button-type', 'OUTLINE');
   const isConsultReceipt = centerId === '5532';
   const { customize } = useCustomize();
+  const useChatLifecycleDuration = useFeatureIsOn('online-visit-chat-lifecycle-duration');
+  // doctorUserId on receipt is doctor-only (slug → drprofile). Prefer it; else bookId → appointment doctor; else slug.
+  const { hours: chatLifecycleHours, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
+    enabled: useChatLifecycleDuration && isConsultReceipt,
+    doctorUserId,
+    bookId,
+    doctorSlug: turnData?.doctor?.slug,
+  });
+  const shouldShowLifecycleHours = useChatLifecycleDuration && chatLifecycleHours != null;
 
   return (
     <div className="flex flex-col space-y-6">
@@ -57,7 +69,14 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               address: turnData?.center?.address,
               turnStatus: turnData?.book_status,
               isDeleted: turnData?.is_deleted,
-              durationConversation: turnData?.duration_conversation_doctor,
+              // Feature on: never show legacy "days". Loading → skeleton; ready → API hours or 1h fallback.
+              durationConversation: shouldShowLifecycleHours
+                ? String(chatLifecycleHours)
+                : useChatLifecycleDuration
+                  ? undefined
+                  : turnData?.duration_conversation_doctor,
+              durationConversationUnit: shouldShowLifecycleHours || useChatLifecycleDuration ? 'hours' : 'days',
+              durationConversationLoading: isChatLifecycleDurationPending,
               doctorName: turnData?.doctor?.display_name,
               doctorPhone: turnData.selected_online_visit_channel?.type
                 ? turnData.selected_online_visit_channel.channel
