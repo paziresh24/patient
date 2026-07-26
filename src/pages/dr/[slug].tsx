@@ -108,21 +108,6 @@ const DoctorProfile = (props: any) => {
     return cleanup;
   }, []);
 
-  useEffect(() => {
-    if (growthbook) {
-      growthbook.setAttributes({
-        ...growthbook.getAttributes(),
-        slug: currentSlug,
-      });
-      return () => {
-        growthbook.setAttributes({
-          ...growthbook.getAttributes(),
-          slug: undefined,
-        });
-      };
-    }
-  }, [currentSlug, growthbook]);
-
   const {
     data: clientData,
     isLoading,
@@ -197,6 +182,22 @@ const DoctorProfile = (props: any) => {
     },
   );
   const resolvedKeywordTags = (Array.isArray(keywordTags) && keywordTags.length > 0 ? keywordTags : clientKeywordTags) ?? [];
+
+  useEffect(() => {
+    if (growthbook) {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        // Prefer canonical profile slug from props when available (URL slug can omit suffix like `-3`).
+        slug: (typeof slug === 'string' && slug ? slug : null) ?? currentSlug,
+      });
+      return () => {
+        growthbook.setAttributes({
+          ...growthbook.getAttributes(),
+          slug: undefined,
+        });
+      };
+    }
+  }, [currentSlug, slug, growthbook]);
 
   const rateDebug = query.rateDebug === '1';
   const rateDebugSlug = slug ?? currentSlug;
