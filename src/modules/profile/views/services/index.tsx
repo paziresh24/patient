@@ -14,7 +14,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
@@ -32,6 +32,7 @@ import {
   getScopedOnlineVisitAvailability,
   mapSamanAvailabilityToCenters,
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
+import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -76,6 +77,32 @@ export const Services = ({
   const growthbook = useGrowthBook();
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
+  const featureFromHook = useFeatureIsOn('online-visit-chat-lifecycle-duration');
+  const [featureFromSlugAttr, setFeatureFromSlugAttr] = useState(false);
+
+  // GB payload listing a slug ≠ feature on. Attribute `slug` must match exactly (e.g. …-3), and
+  // features must be ready — otherwise Hami is never called and Plasmic keeps the hardcoded 3-day line.
+  useLayoutEffect(() => {
+    if (!growthbook || !slug) {
+      setFeatureFromSlugAttr(false);
+      return;
+    }
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug,
+    });
+    setFeatureFromSlugAttr(growthbook.isOn('online-visit-chat-lifecycle-duration'));
+  }, [growthbook, slug, growthbook?.ready, featureFromHook]);
+
+  const useChatLifecycleDuration = featureFromHook || featureFromSlugAttr;
+  // Profile already has doctor.user_id (information.user_id) in the normal flow → Hami directly.
+  // Fall back to profileData.user_id when information omits it; slug only when both missing.
+  const profileDoctorUserId = doctor?.user_id ?? profileData?.user_id ?? profileData?.information?.user_id;
+  const { hours: chatLifecycleHours, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
+    enabled: useChatLifecycleDuration,
+    doctorUserId: profileDoctorUserId,
+    doctorSlug: profileDoctorUserId ? undefined : slug,
+  });
 
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
     enabled: !!slug && useSamanAvailabilityStatus,
@@ -315,17 +342,39 @@ export const Services = ({
         {showOnlineVisit &&
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
-            ?.services?.map((service: any, index: number) => (
-              <Fragment2
-                key={index}
-                name="Services"
-                Component={PlasmicServices}
-                args={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
-                variants={{ type: 'onlineVisit' }}
-              />
-            ))}
-        {showPresenceSection &&
-          (showPresenceBulk ? (
+            ?.services?.map((service: any, index: number) => {
+              // Feature on (non-21/47): hide Plasmic hardcoded 3-day line while we render Hami hours ourselves.
+              // Expertise 21/47 keep legacy "مدت زمان گفتگو" from service.duration — do not touch.
+              const expertiseGroupId = expertises?.group_expertises?.[0]?.id;
+              const isDurationRowExpertise = expertiseGroupId === 21 || expertiseGroupId === 47;
+              const showLifecycleAskDoctorCopy = useChatLifecycleDuration && !isDurationRowExpertise;
+              const serviceWithLifecycleDuration = !showLifecycleAskDoctorCopy
+                ? service
+                : chatLifecycleHours != null
+                  ? { ...service, chat_lifecycle_auto_close_hours: chatLifecycleHours }
+                  : { ...service, chat_lifecycle_loading: true };
+
+              return (
+                <div key={index} className="flex flex-col gap-2">
+                  <Fragment2
+                    name="Services"
+                    Component={PlasmicServices}
+                    args={{
+                      ...profileData,
+                      service: serviceWithLifecycleDuration,
+                      onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }),
+                    }}
+                    variants={{ type: 'onlineVisit' }}
+                  />
+                  {showLifecycleAskDoctorCopy && isChatLifecycleDurationPending && (
+                    <div className="px-4 py-1">
+                      <Skeleton w="15rem" h="1rem" rounded="full" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+        {showPresenceSection &&          (showPresenceBulk ? (
             <BulkService
               displayName={doctor.display_name}
               expertises={expertises}

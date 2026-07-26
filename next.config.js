@@ -252,11 +252,36 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    return [
+    const rules = [
       { source: '/patient/api/:path*', destination: '/api/:path*' },
       {
         source: '/robots.txt',
         destination: '/api/robots',
+      },
+    ];
+
+    // Browser calls to ravi-apis are CORS-blocked from localhost / local.paziresh24.com
+    // (allowlist is only www.paziresh24.com). Proxy same-origin in local dev.
+    if (!isProduction) {
+      rules.push({
+        source: '/__dev-proxy/ravi-apis/:path*',
+        destination: 'https://ravi-apis.paziresh24.com/:path*',
+      });
+    }
+
+    return rules;
+  },
+  async headers() {
+    return [
+      {
+        // DR-13: صفحه‌ی static «نظر شما برای ما مهم است» — long-cache روی CDN، revalidate روزانه در مرورگر
+        source: '/rate-us/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800',
+          },
+        ],
       },
     ];
   },

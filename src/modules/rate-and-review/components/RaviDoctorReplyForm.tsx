@@ -27,6 +27,7 @@ export const RaviDoctorReplyToolbarButton = ({ state }: RaviDoctorReplyPartsProp
 
 export const RaviDoctorReplyPanel = ({ state }: RaviDoctorReplyPartsProps) => {
   const {
+    isDoctor,
     isLoading,
     reply,
     showForm,
@@ -43,7 +44,7 @@ export const RaviDoctorReplyPanel = ({ state }: RaviDoctorReplyPartsProps) => {
   } = state;
 
   if (!showPanel) {
-    if (isLoading) {
+    if (isDoctor && isLoading) {
       return <p className="mt-3 text-xs text-slate-400">در حال بررسی پاسخ…</p>;
     }
     return null;
@@ -57,23 +58,25 @@ export const RaviDoctorReplyPanel = ({ state }: RaviDoctorReplyPartsProps) => {
           userId={reply.userId ?? doctorUserId}
           doctorUserId={doctorUserId}
         />
-        <div className="mt-2 flex gap-3">
-          <button
-            type="button"
-            onClick={openForm}
-            className="text-xs font-bold text-primary hover:underline"
-          >
-            ویرایش
-          </button>
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={busy}
-            className="text-xs font-bold text-red-500 hover:underline disabled:opacity-50"
-          >
-            {busy ? 'در حال حذف…' : 'حذف'}
-          </button>
-        </div>
+        {isDoctor ? (
+          <div className="mt-2 flex gap-3">
+            <button
+              type="button"
+              onClick={openForm}
+              className="text-xs font-bold text-primary hover:underline"
+            >
+              ویرایش
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={busy}
+              className="text-xs font-bold text-red-500 hover:underline disabled:opacity-50"
+            >
+              {busy ? 'در حال حذف…' : 'حذف'}
+            </button>
+          </div>
+        ) : null}
       </div>
     );
   }
