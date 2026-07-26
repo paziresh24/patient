@@ -11,6 +11,7 @@ import { trackSsrError } from '@/common/utils/ssrErrorTracker';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { getHost, HeaderBag } from '@/common/utils/getHost';
+import { isExpertiseChipsLikeSearchEnabledForSlug } from '@/modules/profile/utils/expertiseChipsLikeSearchFlag';
 
 export const getProfileServerSideProps: GetServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
@@ -24,16 +25,28 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     const university = themeConfing?.partnerKey as string;
 
     let prefetchSamanAvailability = false;
+    let fetchExpertiseKeywordTags = false;
     try {
       const host = getHost(context.req.headers as HeaderBag);
       const url = `https://${host}${context.resolvedUrl}`;
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
-      growthbook.setAttributes({ url, host });
+      growthbook.setAttributes({ url, host, slug });
       await growthbook.loadFeatures({ timeout: 500 });
       prefetchSamanAvailability = growthbook.isOn('use-saman-availability-status');
     } catch (error) {
       trackSsrError(error, { source: 'ProfileSSR', message: 'Error loading GrowthBook for Saman availability SSR', path: context.resolvedUrl });
+    }
+
+    try {
+      fetchExpertiseKeywordTags = await isExpertiseChipsLikeSearchEnabledForSlug(slug);
+    } catch (error) {
+      trackSsrError(error, {
+        source: 'ProfileSSR',
+        message: 'Error resolving profile.expertise-chips-like-search',
+        path: context.resolvedUrl,
+      });
+      fetchExpertiseKeywordTags = false;
     }
 
     try {
@@ -45,12 +58,14 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
         useNewDoctorCentersAPI: true,
         useNewDoctorGalleryAPI: true,
         prefetchSamanAvailability,
+        fetchExpertiseKeywordTags,
       });
 
       return {
         ...finalProps,
         props: sanitizeObject({
           ...finalProps?.props,
+          expertiseChipsLikeSearchEnabled: fetchExpertiseKeywordTags,
           status: context.res.statusCode,
         }),
       };
