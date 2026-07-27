@@ -8,6 +8,7 @@ import classNames from '@/common/utils/classNames';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
+import { useShowPlasmicSuggestion } from '@/modules/search/hooks/useShowPlasmicSuggestion';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
 import { useRouter } from 'next/router';
@@ -35,6 +36,7 @@ export const PatientHomePage = ({ embedded = false }: PatientHomePageProps) => {
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const { setIsOpenSuggestion } = useSearchStore();
   const customize = useCustomize(state => state.customize);
+  const showPlasmicSuggestion = useShowPlasmicSuggestion();
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
   const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
 
@@ -76,7 +78,7 @@ export const PatientHomePage = ({ embedded = false }: PatientHomePageProps) => {
         )}
         <div className="flex w-full flex-col items-center gap-3">
           <Suggestion
-            showPlasmicSuggestion={!customize.partnerKey}
+            showPlasmicSuggestion={showPlasmicSuggestion}
             defaultInputValue={defaultInputValue}
             setDefaultInputValue={setDefaultInputValue}
             className={classNames('!p-0', {
