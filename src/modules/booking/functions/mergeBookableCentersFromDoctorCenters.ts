@@ -30,7 +30,7 @@ export const mergeBookableCentersFromDoctorCenters = <T extends { id: string }>(
   const existingIds = new Set(list.map(center => String(center.id)));
   for (const bookableCenter of bookableCenters) {
     if (existingIds.has(String(bookableCenter.id))) continue;
-    list = [...list, mapDoctorCenterToProfileCenter(bookableCenter) as T];
+    list = [...list, mapDoctorCenterToProfileCenter(bookableCenter) as unknown as T];
   }
 
   return list;
