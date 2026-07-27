@@ -12,6 +12,15 @@ const hamiBackClient = axios.create({
 /** Fallback when feature is on but lifecycle API fails / returns no hours — never show the legacy duration. */
 export const CHAT_LIFECYCLE_FALLBACK_HOURS = 1;
 
+/** Hami returns hours; profile/receipt show whole days (e.g. 72h → 3 روز). */
+export const chatLifecycleHoursToDisplayDays = (hours: number): number => {
+  if (!Number.isFinite(hours) || hours <= 0) {
+    return 1;
+  }
+  const days = hours / 24;
+  return Math.max(1, Math.round(days));
+};
+
 export type ChatLifecycleSettings = {
   auto_close_hours?: number;
   auto_close_idle_hours?: number;
@@ -112,9 +121,12 @@ export const useChatLifecycleAutoCloseHours = ({
           ? CHAT_LIFECYCLE_FALLBACK_HOURS
           : null;
 
+  const days = hours != null ? chatLifecycleHoursToDisplayDays(hours) : null;
+
   return {
     ...query,
     hours,
+    days,
     isPending: !!enabled && hours == null,
   };
 };

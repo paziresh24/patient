@@ -397,8 +397,8 @@ function PlasmicServices__RenderFunc(props: {
             hasVariant($state, 'type', 'onlineVisit')
               ? (() => {
                 try {
-                  // When chat-lifecycle hours are provided, always show that line (replaces hardcoded 3-day copy).
-                  if ($props.service?.chat_lifecycle_auto_close_hours != null) {
+                  // When chat-lifecycle days are provided, always show that line (replaces hardcoded 3-day copy).
+                  if ($props.service?.chat_lifecycle_auto_close_days != null) {
                     return true;
                   }
                   // While lifecycle is loading, hide the legacy 3-day sentence to avoid a misleading flash.
@@ -422,13 +422,13 @@ function PlasmicServices__RenderFunc(props: {
             >
               {(() => {
                 try {
-                  const lifecycleHours = $props.service?.chat_lifecycle_auto_close_hours;
-                  if (lifecycleHours != null) {
+                  const lifecycleDays = $props.service?.chat_lifecycle_auto_close_days;
+                  if (lifecycleDays != null) {
                     return (
                       <React.Fragment>
                         <React.Fragment>{'\u062a\u0627 '}</React.Fragment>
                         <span className={'plasmic_default__all plasmic_default__span'} style={{ fontWeight: 700 }}>
-                          {`${lifecycleHours} \u0633\u0627\u0639\u062a`}
+                          {`${lifecycleDays} \u0631\u0648\u0632`}
                         </span>
                         <React.Fragment>
                           {
