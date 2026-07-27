@@ -32,13 +32,10 @@ import {
   getScopedOnlineVisitAvailability,
   mapSamanAvailabilityToCenters,
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
-<<<<<<< HEAD
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { shouldShowProfileOnlineVisit } from '@/modules/profile/utils/onlineVisitVisibility';
-=======
 import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
->>>>>>> origin/main
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -375,56 +372,41 @@ export const Services = ({
           <Skeleton w="100%" h="120px" rounded="lg" />
         )}
         {showOnlineVisit &&
-<<<<<<< HEAD
           !(needsOnlineServices && onlineServicesQuery.isFetching) &&
-          onlineVisitServices.map((service: any, index: number) => (
-            <Fragment2
-              key={index}
-              name="Services"
-              Component={PlasmicServices}
-              args={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
-              variants={{ type: 'onlineVisit' }}
-            />
-          ))}
+          onlineVisitServices.map((service: any, index: number) => {
+            // Feature on (non-21/47): hide Plasmic hardcoded 3-day line while we render Hami hours ourselves.
+            // Expertise 21/47 keep legacy "مدت زمان گفتگو" from service.duration — do not touch.
+            const expertiseGroupId = expertises?.group_expertises?.[0]?.id;
+            const isDurationRowExpertise = expertiseGroupId === 21 || expertiseGroupId === 47;
+            const showLifecycleAskDoctorCopy = useChatLifecycleDuration && !isDurationRowExpertise;
+            const serviceWithLifecycleDuration = !showLifecycleAskDoctorCopy
+              ? service
+              : chatLifecycleHours != null
+                ? { ...service, chat_lifecycle_auto_close_hours: chatLifecycleHours }
+                : { ...service, chat_lifecycle_loading: true };
+
+            return (
+              <div key={index} className="flex flex-col gap-2">
+                <Fragment2
+                  name="Services"
+                  Component={PlasmicServices}
+                  args={{
+                    ...profileData,
+                    service: serviceWithLifecycleDuration,
+                    onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }),
+                  }}
+                  variants={{ type: 'onlineVisit' }}
+                />
+                {showLifecycleAskDoctorCopy && isChatLifecycleDurationPending && (
+                  <div className="px-4 py-1">
+                    <Skeleton w="15rem" h="1rem" rounded="full" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         {showPresenceSection &&
           (showPresenceBulk ? (
-=======
-          centers
-            .find((center: any) => center.id === CENTERS.CONSULT)
-            ?.services?.map((service: any, index: number) => {
-              // Feature on (non-21/47): hide Plasmic hardcoded 3-day line while we render Hami hours ourselves.
-              // Expertise 21/47 keep legacy "مدت زمان گفتگو" from service.duration — do not touch.
-              const expertiseGroupId = expertises?.group_expertises?.[0]?.id;
-              const isDurationRowExpertise = expertiseGroupId === 21 || expertiseGroupId === 47;
-              const showLifecycleAskDoctorCopy = useChatLifecycleDuration && !isDurationRowExpertise;
-              const serviceWithLifecycleDuration = !showLifecycleAskDoctorCopy
-                ? service
-                : chatLifecycleHours != null
-                  ? { ...service, chat_lifecycle_auto_close_hours: chatLifecycleHours }
-                  : { ...service, chat_lifecycle_loading: true };
-
-              return (
-                <div key={index} className="flex flex-col gap-2">
-                  <Fragment2
-                    name="Services"
-                    Component={PlasmicServices}
-                    args={{
-                      ...profileData,
-                      service: serviceWithLifecycleDuration,
-                      onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }),
-                    }}
-                    variants={{ type: 'onlineVisit' }}
-                  />
-                  {showLifecycleAskDoctorCopy && isChatLifecycleDurationPending && (
-                    <div className="px-4 py-1">
-                      <Skeleton w="15rem" h="1rem" rounded="full" />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-        {showPresenceSection &&          (showPresenceBulk ? (
->>>>>>> origin/main
             <BulkService
               displayName={doctor.display_name}
               expertises={expertises}
