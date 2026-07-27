@@ -14,7 +14,7 @@ export const formatSamanAvailabilityTime = (timeString?: string | null) => {
 };
 
 const findCenterAvailability = (samanData: SamanDoctorAvailabilityStatus | undefined, centerId: string) => {
-  return samanData?.centers?.find(item => item.id === centerId)?.availability_status;
+  return samanData?.centers?.find(item => String(item.id) === String(centerId))?.availability_status;
 };
 
 /**
@@ -70,7 +70,7 @@ export const getScopedInPersonAvailability = (
   profileCenters: { id: string }[],
   samanData?: SamanDoctorAvailabilityStatus,
 ) => {
-  const inPersonCenters = profileCenters.filter(center => center.id !== CENTERS.CONSULT);
+  const inPersonCenters = profileCenters.filter(center => String(center.id) !== CENTERS.CONSULT);
   if (inPersonCenters.length === 0) {
     return { bookingAvailable: false, nearestAvailableTime: null as string | null };
   }
@@ -97,11 +97,12 @@ export const getScopedOnlineVisitAvailability = (
   profileCenters: { id: string }[],
   samanData?: SamanDoctorAvailabilityStatus,
 ) => {
-  const hasConsultCenter = profileCenters.some(center => center.id === CENTERS.CONSULT);
+  const hasConsultCenter = profileCenters.some(center => String(center.id) === CENTERS.CONSULT);
   if (!hasConsultCenter || !samanData) {
     return { bookingAvailable: false, nearestTimeSlot: null as string | null, nearestAvailableTime: null as string | null };
   }
 
+  // Prefer center 5532 status; fall back to top-level online_visit_availability (same source of truth as ops checks).
   const consultAvailability =
     findCenterAvailability(samanData, CENTERS.CONSULT) ?? samanData.online_visit_availability;
 
