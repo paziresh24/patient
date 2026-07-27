@@ -32,7 +32,13 @@ import {
   getScopedOnlineVisitAvailability,
   mapSamanAvailabilityToCenters,
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
+<<<<<<< HEAD
+import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+import { shouldShowProfileOnlineVisit } from '@/modules/profile/utils/onlineVisitVisibility';
+=======
 import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
+>>>>>>> origin/main
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -134,11 +140,37 @@ export const Services = ({
     [centers, samanAvailability.data],
   );
 
-  const hasOnlineVisit = Boolean(onlineVisit.enabled && centers.some((center: any) => center.id === CENTERS.CONSULT));
+  // consult_active_booking (onlineVisit.enabled) is legacy — profile UI uses centers API (5532) + Saman.
   const hasPresence =
-    router.query.centerTarget != CENTERS.CONSULT && centers.some((center: any) => center.id !== CENTERS.CONSULT);
+    router.query.centerTarget != CENTERS.CONSULT && centers.some((center: any) => String(center.id) !== CENTERS.CONSULT);
 
-  const showOnlineVisit = hasOnlineVisit && (!samanLoaded || scopedOnlineVisit.bookingAvailable);
+  const showOnlineVisit = shouldShowProfileOnlineVisit({
+    centers,
+    onlineVisit,
+    samanLoaded,
+    samanData: samanAvailability.data,
+  });
+
+  const consultCenter = centers.find((center: any) => String(center.id) === CENTERS.CONSULT);
+  const needsOnlineServices =
+    showOnlineVisit &&
+    consultCenter &&
+    (!(consultCenter.services?.length > 0) ||
+      consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
+
+  const onlineServicesQuery = useDoctorCenterServices(slug, CENTERS.CONSULT, {
+    enabled: !!slug && needsOnlineServices,
+  });
+
+  const onlineVisitServices = useMemo(() => {
+    if (!consultCenter) return [];
+    const profileServices = consultCenter.services ?? [];
+    if (!needsOnlineServices) return profileServices;
+    if (onlineServicesQuery.isSuccess && onlineServicesQuery.data) {
+      return mapDoctorCenterServices(onlineServicesQuery.data, consultCenter.user_center_id);
+    }
+    return [];
+  }, [consultCenter, needsOnlineServices, onlineServicesQuery.isSuccess, onlineServicesQuery.data]);
   const canBookPresence = !samanLoaded || scopedInPerson.bookingAvailable;
 
   const legacyHasNoBooking = alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk;
@@ -288,7 +320,7 @@ export const Services = ({
   }
 
   // Legacy / fully unavailable: show only Bulk when nothing is bookable
-  if (hasNoBooking && !(samanLoaded && showOnlineVisit)) {
+  if (hasNoBooking && !showOnlineVisit) {
     const sortedAvalaibleTime = () => {
       if (samanLoaded) {
         const futureTimes = [scopedInPerson.nearestAvailableTime, scopedOnlineVisit.nearestAvailableTime].filter(
@@ -324,7 +356,7 @@ export const Services = ({
 
   // Hide empty in-person "no booking" box when online visit is active — but keep the future available_time box
   const hidePresenceBecauseOnlineOnly =
-    showOnlineVisit && !scopedInPerson.bookingAvailable && !scopedInPerson.nearestAvailableTime;
+    samanLoaded && showOnlineVisit && !scopedInPerson.bookingAvailable && !scopedInPerson.nearestAvailableTime;
   const showPresenceBulk = samanLoaded && hasPresence && !scopedInPerson.bookingAvailable && !hidePresenceBecauseOnlineOnly;
   const showPresenceSection = hasPresence && !hidePresenceBecauseOnlineOnly;
 
@@ -339,7 +371,24 @@ export const Services = ({
             onBook={() => location.assign('http://drnoorbala.ir/')}
           />
         )}
+        {showOnlineVisit && needsOnlineServices && onlineServicesQuery.isFetching && (
+          <Skeleton w="100%" h="120px" rounded="lg" />
+        )}
         {showOnlineVisit &&
+<<<<<<< HEAD
+          !(needsOnlineServices && onlineServicesQuery.isFetching) &&
+          onlineVisitServices.map((service: any, index: number) => (
+            <Fragment2
+              key={index}
+              name="Services"
+              Component={PlasmicServices}
+              args={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
+              variants={{ type: 'onlineVisit' }}
+            />
+          ))}
+        {showPresenceSection &&
+          (showPresenceBulk ? (
+=======
           centers
             .find((center: any) => center.id === CENTERS.CONSULT)
             ?.services?.map((service: any, index: number) => {
@@ -375,6 +424,7 @@ export const Services = ({
               );
             })}
         {showPresenceSection &&          (showPresenceBulk ? (
+>>>>>>> origin/main
             <BulkService
               displayName={doctor.display_name}
               expertises={expertises}

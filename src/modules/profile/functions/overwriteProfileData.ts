@@ -192,8 +192,10 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const similarLinks = source?.similar_links ?? null;
 
   const onlineVisit = {
+    // Legacy full-profile gate — still mapped for activity widgets; profile booking uses centers API + Saman.
     enabled: source?.consult_active_booking ?? null,
-    channels: source?.online_visit_channel_types ?? null,
+    // Plasmic Services calls channels.includes(...) — never pass null.
+    channels: source?.online_visit_channel_types ?? [],
   };
 
   const waitingTimeInfo = overwriteData?.feedbacks?.waiting_time_info?.filter((items: any) => !!items?.waiting_time_title) ?? null;

@@ -2,6 +2,7 @@ import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
@@ -9,12 +10,14 @@ import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
+import { CENTERS } from '@/common/types/centers';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { splunkInstance } from '@/common/services/splunk';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getProfile } from './getProfileData';
@@ -506,7 +509,7 @@ export async function getAggregatedProfileData(
   }
 
   const {
-    centers,
+    centers: initialCenters,
     expertises,
     feedbacks,
     history,
@@ -523,6 +526,35 @@ export async function getAggregatedProfileData(
     name: finalName,
     family: finalFamily,
   });
+
+  // When centers API adds 5532 but full-profile has no/invalid services, hydrate from center services API
+  // so profile SSR can render the online-visit card (e.g. Doodangeh).
+  let centers = initialCenters;
+  const consultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
+  const needsOnlineServices =
+    !!consultCenter &&
+    (!(consultCenter.services?.length > 0) ||
+      consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
+
+  if (needsOnlineServices) {
+    try {
+      const onlineServices = await getDoctorCenterServices(validatedSlug, CENTERS.CONSULT);
+      if (onlineServices?.length) {
+        const mapped = mapDoctorCenterServices(onlineServices, consultCenter.user_center_id);
+        centers = centers.map((center: any) =>
+          String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center,
+        );
+        if (isServer) {
+          queryClient.setQueryData(
+            [ServerStateKeysEnum.DoctorCenterServices, validatedSlug, CENTERS.CONSULT],
+            onlineServices,
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error hydrating online visit center services:', error);
+    }
+  }
 
   // Prefer internal-links based items for "تخصص های مرتبط" when available
   let similarLinks = rawSimilarLinks;
