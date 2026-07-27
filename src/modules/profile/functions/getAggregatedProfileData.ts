@@ -7,6 +7,7 @@ import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExper
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
+import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { CENTERS } from '@/common/types/centers';
@@ -134,6 +135,7 @@ export async function getAggregatedProfileData(
     useNewDoctorCentersAPI?: boolean;
     useNewDoctorGalleryAPI?: boolean;
     prefetchSamanAvailability?: boolean;
+    fetchExpertiseKeywordTags?: boolean;
   },
 ) {
   const queryClient = new QueryClient();
@@ -312,6 +314,20 @@ export async function getAggregatedProfileData(
           })
       : Promise.resolve(null);
 
+  const keywordSearchText = [fullProfileData?.name, fullProfileData?.family].filter(Boolean).join(' ').trim();
+  // Prefer an in-person center city (skip consult 5532) so tags match the same search surface.
+  const keywordCitySlug =
+    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city_en_slug)?.city_en_slug ||
+    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug ||
+    'ir';
+  const keywordTagsPromise = options?.fetchExpertiseKeywordTags
+    ? getDoctorKeywordTags({
+        slug: validatedSlug,
+        searchText: keywordSearchText || undefined,
+        cityEnSlug: typeof keywordCitySlug === 'string' ? keywordCitySlug : 'ir',
+      }).catch(() => [])
+    : Promise.resolve([]);
+
   const [
     [
       internalLinksBreadcrumbResult,
@@ -325,7 +341,9 @@ export async function getAggregatedProfileData(
       doctorBiographyResult,
       doctorCentersResult,
     ],
-  ] = await Promise.all([Promise.allSettled(apiCalls), samanAvailabilityPromise]);
+    ,
+    keywordTags,
+  ] = await Promise.all([Promise.allSettled(apiCalls), samanAvailabilityPromise, keywordTagsPromise]);
 
   // Extract doctor full name from API response
   const doctorFullName =
@@ -367,14 +385,12 @@ export async function getAggregatedProfileData(
     }
   }
 
-  // Transform expertise data to match expected format
+  // Keep nested degree/expertise so overwriteProfileData can read *.name fields.
   const transformedExpertise =
     doctorExpertise?.map((exp: any) => ({
-      id: exp.expertise.id,
-      name: exp.expertise.name,
-      slug: exp.expertise.slug,
       alias_title: exp.alias_title,
       degree: exp.degree,
+      expertise: exp.expertise,
       groups: exp.groups,
       graduation_date: exp.graduation_date ?? null,
     })) ?? [];
@@ -616,6 +632,8 @@ export async function getAggregatedProfileData(
       },
       hamdastWidgets: widgets,
       hamdastWidgetsData: widgetsData,
+      keywordTags: Array.isArray(keywordTags) ? keywordTags : [],
+      expertiseChipsLikeSearchEnabled: !!options?.fetchExpertiseKeywordTags,
       user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       shouldFetchOnClient: !fullProfileData?.id,
       useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,

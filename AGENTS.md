@@ -46,7 +46,7 @@ On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://githu
 
 **Identity:** review comments and merges must be performed as [@harun](https://gitlab.paziresh24.com/harun). CI asserts `GET /user` username is `harun` before review/merge (`scripts/ci-assert-gitlab-user.py`). Create PATs while logged in as that user.
 
-After a green `ai-review`, job `auto-merge-safe` may schedule **merge when pipeline succeeds** for low-risk MRs only (script: `scripts/ci-auto-merge-safe.sh`). It runs only after `ai-review` succeeds (`needs`). Conditions: `AUTO_MERGE_SAFE_MRS=true`, verdict `READY`, not Draft, ≤20 files, no high-risk paths (auth/payment/env/middleware/ci/docker/…). Skips leave the pipeline green for human merge; only unexpected merge API errors fail the job.
+After a green `ai-review`, job `auto-merge-safe` may schedule **merge when pipeline succeeds** (script: `scripts/ci-auto-merge-safe.sh`). It runs only after `ai-review` succeeds (`needs`). **Only gates:** `AUTO_MERGE_SAFE_MRS=true`, latest `#ai-review-summary` verdict is `READY`, MR is not Draft. The prompt defaults to `READY` / auto-merge unless there is a concrete security/data/auth/payment risk or Important bug — not for missing tests or uncertainty alone.
 
 **CI/CD Variables** (project or group Settings → CI/CD → Variables on `gitlab.paziresh24.com`):
 
@@ -56,8 +56,7 @@ After a green `ai-review`, job `auto-merge-safe` may schedule **merge when pipel
 | `GITLAB_API_TOKEN` | yes | yes | **Personal Access Token of [@harun](https://gitlab.paziresh24.com/harun)** with `api` scope (for MR notes/changes). Masked, **not Protected**. |
 | `GITLAB_MERGE_TOKEN` | yes | for auto-merge | Same user **@harun**, role able to merge (Maintainer on the project) + `api` scope. Can be the same PAT if it can merge. Masked, **not Protected**. |
 | `GITLAB_BOT_USERNAME` | no | no | Default `harun` — identity enforced in CI. |
-| `AUTO_MERGE_SAFE_MRS` | no | for auto-merge | Set to `true` to enable safe auto-merge. Anything else = off. |
-| `AUTO_MERGE_MAX_FILES` | no | no | Default `20` |
+| `AUTO_MERGE_SAFE_MRS` | no | for auto-merge | Set to `true` to enable auto-merge on `READY`. Anything else = off. |
 | `LLM_API_URL` | no | no | Default `https://api.openai.com/v1` — override for OpenRouter, Azure, proxies, etc. |
 | `LLM_MODEL` | no | no | Default `gpt-4o-mini` |
 

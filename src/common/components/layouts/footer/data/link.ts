@@ -37,7 +37,7 @@ export const footerPaziresh24 = {
   links: [
     {
       title: 'تماس با ما',
-      link: '/home/contact-us/',
+      link: '/contact-us/',
     },
     {
       title: 'توسعه دهندگان',

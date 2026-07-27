@@ -1,0 +1,274 @@
+.rateUsPage,
+.rateUsPage * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.rateUsPage {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  direction: rtl;
+}
+
+.rateUsContainer {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.rateUsContainer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #4caf50, #2196f3, #ff9800);
+}
+
+.rateUsIcon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 30px;
+  font-size: 40px;
+  color: white;
+  box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+}
+
+.rateUsContainer h1 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.rateUsSubtitle {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.rateUsThankYouMessage {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 25px;
+  margin-bottom: 35px;
+  border-right: 4px solid #4caf50;
+}
+
+.rateUsThankYouMessage p {
+  color: #555;
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.rateUsInvitationText {
+  color: #444;
+  font-size: 16px;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.rateUsStoreButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.rateUsStoreBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.rateUsStoreBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.rateUsStoreBtn:hover::before {
+  left: 100%;
+}
+
+.rateUsGooglePlay {
+  background: linear-gradient(135deg, #4285f4, #34a853);
+  color: white;
+  box-shadow: 0 8px 20px rgba(66, 133, 244, 0.3);
+}
+
+.rateUsGooglePlay:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(66, 133, 244, 0.4);
+}
+
+.rateUsCafeBazaar {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
+  box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+}
+
+.rateUsCafeBazaar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(255, 107, 53, 0.4);
+}
+
+.rateUsMyket {
+  background: linear-gradient(135deg, #00bcd4, #0097a7);
+  color: white;
+  box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+}
+
+.rateUsMyket:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(0, 188, 212, 0.4);
+}
+
+.rateUsStoreBtn :global(i) {
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.rateUsSocialSection {
+  border-top: 1px solid #eee;
+  padding-top: 25px;
+}
+
+.rateUsSocialTitle {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.rateUsSocialButtons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.rateUsSocialBtn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.rateUsSocialBtn:hover {
+  transform: translateY(-3px);
+}
+
+.rateUsFacebook {
+  background: #1877f2;
+}
+.rateUsInstagram {
+  background: linear-gradient(45deg, #e4405f, #f77737, #fcaf45);
+}
+.rateUsTwitter {
+  background: #1da1f2;
+}
+.rateUsWhatsapp {
+  background: #25d366;
+}
+.rateUsTelegram {
+  background: #0088cc;
+}
+.rateUsLinkedin {
+  background: #0077b5;
+}
+
+.rateUsFacebook:hover {
+  box-shadow: 0 8px 20px rgba(24, 119, 242, 0.3);
+}
+.rateUsInstagram:hover {
+  box-shadow: 0 8px 20px rgba(228, 64, 95, 0.3);
+}
+.rateUsTwitter:hover {
+  box-shadow: 0 8px 20px rgba(29, 161, 242, 0.3);
+}
+.rateUsWhatsapp:hover {
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+}
+.rateUsTelegram:hover {
+  box-shadow: 0 8px 20px rgba(0, 136, 204, 0.3);
+}
+.rateUsLinkedin:hover {
+  box-shadow: 0 8px 20px rgba(0, 119, 181, 0.3);
+}
+
+@media (max-width: 768px) {
+  .rateUsContainer {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+
+  .rateUsContainer h1 {
+    font-size: 24px;
+  }
+
+  .rateUsStoreButtons {
+    gap: 12px;
+  }
+
+  .rateUsStoreBtn {
+    padding: 12px 20px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rateUsContainer {
+    padding: 25px 15px;
+  }
+
+  .rateUsContainer h1 {
+    font-size: 22px;
+  }
+
+  .rateUsIcon {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+  }
+}

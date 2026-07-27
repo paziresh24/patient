@@ -25,7 +25,7 @@ const mapDoctorRateToStats = (data: Record<string, unknown>): DoctorRateStats =>
     return { rating: null, rateCount: null };
   }
 
-  const rateCount = Number(data.count_rates);
+  const rateCount = Number(data.comments_count);
   return {
     rating: Number(avg.toFixed(1)),
     rateCount: Number.isFinite(rateCount) && rateCount > 0 ? rateCount : null,
