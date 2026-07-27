@@ -32,13 +32,13 @@ export const BookInfo = (props: PaymentDetailsProps) => {
   const { customize } = useCustomize();
   const useChatLifecycleDuration = useFeatureIsOn('online-visit-chat-lifecycle-duration');
   // Prefer page-resolved doctor user_id; else bookId → appointment doctor; else slug (may be non-canonical).
-  const { hours: chatLifecycleHours, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
+  const { days: chatLifecycleDays, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
     enabled: useChatLifecycleDuration && isConsultReceipt,
     doctorUserId,
     bookId,
     doctorSlug: turnData?.doctor?.slug,
   });
-  const shouldShowLifecycleHours = useChatLifecycleDuration && chatLifecycleHours != null;
+  const shouldShowLifecycleDays = useChatLifecycleDuration && chatLifecycleDays != null;
   // While canonical slug is resolving, feature may still be off (wrong short slug) — don't flash legacy days.
   const hideLegacyDurationWhileResolving = isConsultReceipt && !!doctorProfilePending && !useChatLifecycleDuration;
 
@@ -76,14 +76,14 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               address: turnData?.center?.address,
               turnStatus: turnData?.book_status,
               isDeleted: turnData?.is_deleted,
-              // Feature on: never show legacy "days". Loading → skeleton; ready → API hours or 1h fallback.
+              // Feature on: never show legacy "days". Loading → skeleton; ready → API days (from hours ÷ 24) or 1-day fallback.
               // While resolving canonical slug, hide legacy days so GB targeting can catch up.
-              durationConversation: shouldShowLifecycleHours
-                ? String(chatLifecycleHours)
+              durationConversation: shouldShowLifecycleDays
+                ? String(chatLifecycleDays)
                 : useChatLifecycleDuration || hideLegacyDurationWhileResolving
                   ? undefined
                   : turnData?.duration_conversation_doctor,
-              durationConversationUnit: shouldShowLifecycleHours || useChatLifecycleDuration ? 'hours' : 'days',
+              durationConversationUnit: 'days',
               durationConversationLoading: isChatLifecycleDurationPending || hideLegacyDurationWhileResolving,
               doctorName: turnData?.doctor?.display_name,
               doctorPhone: turnData.selected_online_visit_channel?.type

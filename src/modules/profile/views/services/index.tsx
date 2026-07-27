@@ -104,11 +104,12 @@ export const Services = ({
   // Profile already has doctor.user_id (information.user_id) in the normal flow → Hami directly.
   // Fall back to profileData.user_id when information omits it; slug only when both missing.
   const profileDoctorUserId = doctor?.user_id ?? profileData?.user_id ?? profileData?.information?.user_id;
-  const { hours: chatLifecycleHours, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
-    enabled: useChatLifecycleDuration,
-    doctorUserId: profileDoctorUserId,
-    doctorSlug: profileDoctorUserId ? undefined : slug,
-  });
+  const { hours: chatLifecycleHours, days: chatLifecycleDays, isPending: isChatLifecycleDurationPending } =
+    useChatLifecycleAutoCloseHours({
+      enabled: useChatLifecycleDuration,
+      doctorUserId: profileDoctorUserId,
+      doctorSlug: profileDoctorUserId ? undefined : slug,
+    });
 
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
     enabled: !!slug && useSamanAvailabilityStatus,
@@ -399,8 +400,8 @@ export const Services = ({
               const showLifecycleAskDoctorCopy = useChatLifecycleDuration && !isDurationRowExpertise;
               const serviceWithLifecycleDuration = !showLifecycleAskDoctorCopy
                 ? service
-                : chatLifecycleHours != null
-                  ? { ...service, chat_lifecycle_auto_close_hours: chatLifecycleHours }
+                : chatLifecycleDays != null
+                  ? { ...service, chat_lifecycle_auto_close_days: chatLifecycleDays }
                   : { ...service, chat_lifecycle_loading: true };
 
               return (
