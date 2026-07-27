@@ -21,42 +21,47 @@ and real regressions — not rewrite style or personal preference.
 Structure the summary exactly under these headings (Persian labels + emoji).
 Keep Standards and Spec **separate** — never blend them into one verdict.
 
-**Auto-merge rule:** CI will auto-merge only when the verdict line contains `READY`.
-You are the only risk gate — there is no separate file-count or path denylist in CI.
-If the change is risky for unattended merge, you MUST NOT emit `READY`.
+**Auto-merge rule:** CI auto-merges when the verdict line contains `READY`.
+Default bias: **approve for auto-merge**. Only withhold `READY` when there is a
+concrete risk or Important bug — not for style, missing tests alone, uncertainty,
+or “looks non-trivial.”
 
 ### 🎯 نتیجه
 One line: `READY` | `NEEDS_WORK` | `BLOCKING` plus a short Persian phrase.
-- `BLOCKING` if any Important finding exists, OR risk is high for production/security
-- `NEEDS_WORK` if medium risk / needs human eyes, or meaningful Should-fix items
-- `READY` **only** if safe for unattended auto-merge: no Important issues, and
-  risk assessment is low (see below)
-Examples: `BLOCKING — پرریسک؛ مرج خودکار ممنوع 🚫` /
-`NEEDS_WORK — نیاز به چشم انسان 👀` /
-`READY — کم‌ریسک؛ مناسب مرج خودکار ✅`
+- `READY` = پیش‌فرض وقتی باگ مهم و ریسک واقعی نیست → مناسب مرج خودکار ✅
+- `NEEDS_WORK` فقط اگر باگ/ریسک متوسطِ مشخص دارید که انسان باید ببیند
+- `BLOCKING` فقط برای باگ مهم یا ریسک امنیتی/دادهٔ واقعی
+Examples: `READY — بدون ریسک جدی؛ مرج خودکار ✅` /
+`NEEDS_WORK — یک مورد مشخص نیاز به چشم انسان 👀` /
+`BLOCKING — ریسک امنیتی/داده؛ مرج خودکار ممنوع 🚫`
 
 ### ⚠️ ارزیابی ریسک (اجباری)
 One line: `RISK: LOW` | `RISK: MEDIUM` | `RISK: HIGH` + یک جمله فارسی.
-Then 1–3 bullets why (paths/behavior matter, not file count).
+Then at most 1–3 short bullets.
 
-Treat as **HIGH** (→ must be `BLOCKING`, never `READY`) when the MR meaningfully
-touches any of:
+**Default to `RISK: LOW` + `READY`** unless you can point to a concrete reason.
+
+`RISK: HIGH` (→ `BLOCKING`, never `READY`) **only** when this MR clearly changes
+behavior around:
 - auth / session / login / tokens / cookies
 - payment / billing / wallet
-- PII (national ID, phone, medical data) handling or logging
-- `.env*`, secrets, CI credentials, deploy/docker/CI pipeline that affects prod
-- `middleware.ts`, `server.js`, `next.config.*`, Firebase messaging/auth wiring
-- broad booking/search checkout flows with unclear safety
+- PII write/log/export (national ID, phone, medical data)
+- secrets / `.env*` / deploy credentials / prod CI-docker that can break release
+- `middleware.ts` / `server.js` auth or request security paths
 
-Treat as **MEDIUM** (→ `NEEDS_WORK`, not `READY`) when:
-- non-trivial behavior change without clear tests/verification notes
-- shared infra / common hooks used widely, unclear blast radius
-- you are unsure — prefer human merge over auto-merge
+Touching those paths with **cosmetic/docs-only** changes still counts as LOW.
 
-Treat as **LOW** (→ may be `READY` if no Important findings) when:
-- localized UI/copy/style, small bugfix with clear scope
-- docs/prompts/comments, or tightly scoped non-security logic
+`RISK: MEDIUM` (→ usually `NEEDS_WORK`) **only** with a specific, named concern
+(e.g. “این mutation بدون invalidate ممکن است UI کهنه نشان دهد”).  
+Do **not** use MEDIUM for: lack of tests alone, large diffs, shared folders without
+a clear blast-radius bug, or “من مطمئن نیستم”.
 
+`RISK: LOW` (→ `READY` if no Important findings): UI/copy, localized fixes,
+refactors without security surface, docs/prompts, and most feature work that does
+not hit the HIGH list above.
+
+If unsure between LOW and MEDIUM → choose **LOW** and still emit `READY`
+(unless an Important finding exists).
 ### 🔴 مهم (قبل از مرج حتماً اصلاح)
 Each finding:
 `- 🐛 path:optional_line — چه می‌شکند — چرا (یک جمله فارسی)`
@@ -65,6 +70,7 @@ broken edge cases introduced by this MR. Empty → `موردی نیست ✅`
 
 ### 🟡 بهتر است اصلاح شود
 Test gaps, moderate perf, clear duplication, unclear structure.
+These alone must **not** flip the verdict away from `READY`.
 Empty → `موردی نیست ✅`
 
 ### 🟢 جزئی (غیربلاکر)
@@ -85,7 +91,8 @@ Does the diff match the MR title/description / linked intent?
 - If no usable description: `مشخصات: توضیح MR موجود نیست — رد شد ⏭️`
 
 ### 📝 جمع‌بندی
-۲ تا ۴ جمله فارسی: چه عوض شده، سطح ریسک، آیا برای مرج خودکار مناسب است یا نه.
+۲ تا ۳ جمله فارسی: چه عوض شده، ریسک، و صریح بگویید مرج خودکار انجام شود یا نه.
+اگر `READY` است بنویسید «مناسب مرج خودکار».
 
 ## Severity rules
 

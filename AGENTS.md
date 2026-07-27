@@ -46,7 +46,7 @@ On MRs, GitLab CI runs job `ai-review` ([Nikita-Filonov/ai-review](https://githu
 
 **Identity:** review comments and merges must be performed as [@harun](https://gitlab.paziresh24.com/harun). CI asserts `GET /user` username is `harun` before review/merge (`scripts/ci-assert-gitlab-user.py`). Create PATs while logged in as that user.
 
-After a green `ai-review`, job `auto-merge-safe` may schedule **merge when pipeline succeeds** (script: `scripts/ci-auto-merge-safe.sh`). It runs only after `ai-review` succeeds (`needs`). **Only gates:** `AUTO_MERGE_SAFE_MRS=true`, latest `#ai-review-summary` verdict is `READY`, MR is not Draft. Risk judgment (auth/payment/PII/infra/etc.) is entirely inside the ai-review prompt — there is no CI file-count or path denylist. Skips leave the pipeline green for human merge; only unexpected merge API errors fail the job.
+After a green `ai-review`, job `auto-merge-safe` may schedule **merge when pipeline succeeds** (script: `scripts/ci-auto-merge-safe.sh`). It runs only after `ai-review` succeeds (`needs`). **Only gates:** `AUTO_MERGE_SAFE_MRS=true`, latest `#ai-review-summary` verdict is `READY`, MR is not Draft. The prompt defaults to `READY` / auto-merge unless there is a concrete security/data/auth/payment risk or Important bug — not for missing tests or uncertainty alone.
 
 **CI/CD Variables** (project or group Settings → CI/CD → Variables on `gitlab.paziresh24.com`):
 
