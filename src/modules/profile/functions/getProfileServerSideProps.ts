@@ -6,15 +6,36 @@ import axios from 'axios';
 import { splunkInstance } from '@/common/services/splunk';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import { handleSsrError } from '@/common/utils/handleSsrError';
-import { withCSR } from '@/common/hoc/withCsr';
 import { trackSsrError } from '@/common/utils/ssrErrorTracker';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { getHost, HeaderBag } from '@/common/utils/getHost';
 import { isExpertiseChipsLikeSearchEnabledForSlug } from '@/modules/profile/utils/expertiseChipsLikeSearchFlag';
 
-export const getProfileServerSideProps: GetServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
+const clientFetchFallbackProps = (slug: string) =>
+  sanitizeObject({
+    slug,
+    shouldFetchOnClient: true,
+    status: 200,
+    title: 'درحال بارگذاری اطلاعات پزشک...',
+    description: '',
+    information: null,
+    centers: [],
+    expertises: {},
+    feedbacks: {},
+    media: {},
+    symptomes: {},
+    history: {},
+    onlineVisit: {},
+    similarLinks: [],
+    fragmentComponents: {},
+    hamdastWidgets: [],
+    hamdastWidgetsData: {},
+    user_id: null,
+  });
+
+export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
+  async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
     context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
     const { slug: rawSlug } = context.query;
@@ -23,6 +44,12 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
     }
     const slug = decodeURIComponent(rawSlug as string);
     const university = themeConfing?.partnerKey as string;
+
+    // Client navigations hit /_next/data — skip heavy SSR but keep slug + loading title for the tab.
+    // (Global withCSR returned props:{} which made Seo render "| پذیرش24".)
+    if (context.req.url?.startsWith('/_next')) {
+      return { props: clientFetchFallbackProps(slug) };
+    }
 
     let prefetchSamanAvailability = false;
     let fetchExpertiseKeywordTags = false;
@@ -91,26 +118,7 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
         if ([500, 502, 504].includes(statusCode)) {
           console.warn(`SSR Timeout/Error for slug: ${slug}. Falling back to client-side rendering.`);
           return {
-            props: sanitizeObject({
-              slug,
-              shouldFetchOnClient: true,
-              status: 200,
-              title: `درحال بارگذاری اطلاعات پزشک...`,
-              description: '',
-              information: null,
-              centers: [],
-              expertises: {},
-              feedbacks: {},
-              media: {},
-              symptomes: {},
-              history: {},
-              onlineVisit: {},
-              similarLinks: [],
-              fragmentComponents: {},
-              hamdastWidgets: [],
-              hamdastWidgetsData: {},
-              user_id: null,
-            }),
+            props: clientFetchFallbackProps(slug),
           };
         }
 
@@ -123,5 +131,5 @@ export const getProfileServerSideProps: GetServerSideProps = withCSR(
       context.res.statusCode = 500;
       return handleSsrError(context.res.statusCode, slug);
     }
-  }),
+  },
 );
