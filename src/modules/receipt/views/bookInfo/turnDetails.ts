@@ -30,6 +30,8 @@ interface TurnDetailsDataParam {
     durationConversation?: string;
     durationConversationUnit?: 'days' | 'hours';
     durationConversationLoading?: boolean;
+    /** When true, label is «مدت همراهی پزشک» instead of «مدت زمان گفتگو». */
+    useDoctorAccompanimentLabel?: boolean;
     centerName: string;
     receiptLink?: string;
     centerPhone?: string;
@@ -70,6 +72,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     durationConversation,
     durationConversationUnit = 'days',
     durationConversationLoading,
+    useDoctorAccompanimentLabel,
     turnStatus,
     messengerList,
     selectedChannel,
@@ -229,7 +232,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     },
     {
       id: 3,
-      name: 'مدت زمان گفتگو',
+      name: useDoctorAccompanimentLabel ? 'مدت همراهی پزشک' : 'مدت زمان گفتگو',
       value: durationConversationLoading
         ? createElement(Skeleton, { w: '4.5rem', h: '1rem', rounded: 'full' })
         : `تا ${durationConversation} ${durationConversationUnit === 'hours' ? 'ساعت' : 'روز'}`,
