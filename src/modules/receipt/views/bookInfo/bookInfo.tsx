@@ -85,6 +85,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
                   : turnData?.duration_conversation_doctor,
               durationConversationUnit: 'days',
               durationConversationLoading: isChatLifecycleDurationPending || hideLegacyDurationWhileResolving,
+              useDoctorAccompanimentLabel: useChatLifecycleDuration,
               doctorName: turnData?.doctor?.display_name,
               doctorPhone: turnData.selected_online_visit_channel?.type
                 ? turnData.selected_online_visit_channel.channel

@@ -432,7 +432,7 @@ function PlasmicServices__RenderFunc(props: {
                         </span>
                         <React.Fragment>
                           {
-                            ' \u067e\u0633 \u0627\u0632 \u0648\u06cc\u0632\u06cc\u062a\u060c \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0633\u0648\u0627\u0644\u0627\u062a \u062e\u0648\u062f \u0631\u0627 \u0627\u0632 \u067e\u0632\u0634\u06a9 \u0628\u067e\u0631\u0633\u06cc\u062f'
+                            ' \u067e\u0633 \u0627\u0632 \u0648\u06cc\u0632\u06cc\u062a\u060c \u067e\u0632\u0634\u06a9 \u0634\u0645\u0627 \u0631\u0627 \u0647\u0645\u0631\u0627\u0647\u06cc \u062e\u0648\u0627\u0647\u062f \u06a9\u0631\u062f'
                           }
                         </React.Fragment>
                       </React.Fragment>
