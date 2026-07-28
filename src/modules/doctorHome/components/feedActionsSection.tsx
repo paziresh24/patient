@@ -321,9 +321,11 @@ export const FeedActionsSection = ({
 
   const onlineActions = useMemo(
     () =>
-      SUB_ACTIONS.filter(action => action.id !== 'bookingSettings').map(action =>
-        action.id === 'vacation' ? { ...action, hint: 'مرخصی ویزیت آنلاین' } : action,
-      ),
+      SUB_ACTIONS.map(action => {
+        if (action.id === 'vacation') return { ...action, hint: 'مرخصی ویزیت آنلاین' };
+        if (action.id === 'bookingSettings') return { ...action, hint: 'تنظیم محدودیت‌های گفت‌وگو' };
+        return action;
+      }),
     [],
   );
   const clinicActions = useMemo(
