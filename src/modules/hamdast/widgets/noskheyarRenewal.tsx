@@ -34,17 +34,16 @@ export default function NoskheyarRenewal({ profileData }: { profileData?: any })
         }}
         body={{
           description: [
-            'نسخه قبلی‌تان را بدون تماس تمدید کنید',
             doctorName
-              ? `نام داروهای مصرفی خود را برای <strong>${doctorName}</strong> ارسال کنید تا درخواست شما بررسی شود.`
-              : 'نام داروهای مصرفی خود را برای پزشک ارسال کنید تا درخواست شما بررسی شود.',
+              ? `نام داروهای مصرفی خود در نسخه قبلی‌تان را برای <strong>${doctorName}</strong> ارسال کنید تا درخواست شما بررسی شود.`
+              : 'نام داروهای مصرفی خود در نسخه قبلی‌تان را برای پزشک ارسال کنید تا درخواست شما بررسی شود.',
           ],
         }}
         alert={
           <div className="flex items-center space-s-2 text-primary">
             <CheckIcon className="w-4 h-4 shrink-0" />
             <Text fontSize="sm" fontWeight="medium" className="text-primary">
-              ثبت سریع درخواست و دریافت پاسخ پزشک در نسخه‌یار
+              ثبت سریع درخواست و دریافت پاسخ پزشک
             </Text>
           </div>
         }

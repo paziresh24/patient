@@ -16,6 +16,8 @@ import { getProfileDoctorInfo, resolveProviderUserId } from '../stores/profileDo
 const TAX_RATE = 0.1;
 /** Must match hamdast-payments doctor-service split */
 const PLATFORM_PERCENT = 0.3;
+/** Online-visit center — required in payment metadata for doctor-service payments. */
+const DOCTOR_SERVICE_CENTER_ID = '5532';
 
 function formatToman(rial: number) {
   return `${new Intl.NumberFormat('fa-IR').format(Math.round(rial / 10))} تومان`;
@@ -208,7 +210,7 @@ export default forwardRef(
           { withCredentials: true },
         )
         .then(() => {
-          onSuccess({ receipt_id: receiptIdRef.current });
+          onSuccess({ receipt_id: receiptIdRef.current, center_id: DOCTOR_SERVICE_CENTER_ID });
         })
         .catch(error => {
           const message = isAxiosError(error)
@@ -219,6 +221,7 @@ export default forwardRef(
           toast.error(message);
           onError({
             receipt_id: receiptIdRef.current,
+            center_id: DOCTOR_SERVICE_CENTER_ID,
             message,
           });
         })
@@ -244,7 +247,7 @@ export default forwardRef(
     }, [payableAmount, app_key]);
 
     const handleCancelPayment = useCallback(() => {
-      onCancel({ receipt_id: receiptIdRef.current });
+      onCancel({ receipt_id: receiptIdRef.current, center_id: DOCTOR_SERVICE_CENTER_ID });
       finishAndClose();
     }, [onCancel, finishAndClose]);
 
