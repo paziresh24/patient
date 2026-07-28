@@ -117,7 +117,7 @@ const $$ = {};
 function useNextRouter() {
   try {
     return useRouter();
-  } catch {}
+  } catch { }
   return undefined;
 }
 
@@ -176,11 +176,11 @@ function PlasmicCard__RenderFunc(props: {
 
         $steps["runOnClick"] = true
           ? (() => {
-              const actionArgs = { eventRef: $props["onClick"] };
-              return (({ eventRef, args }) => {
-                return eventRef?.(...(args ?? []));
-              })?.apply(null, [actionArgs]);
-            })()
+            const actionArgs = { eventRef: $props["onClick"] };
+            return (({ eventRef, args }) => {
+              return eventRef?.(...(args ?? []));
+            })?.apply(null, [actionArgs]);
+          })()
           : undefined;
         if (
           $steps["runOnClick"] != null &&
@@ -349,7 +349,7 @@ function PlasmicCard__RenderFunc(props: {
         </div>
         <div className={classNames("all", sty.freeBox__mg4Fq)}>
           <div className={classNames("all", "__wab_text", sty.text___6Oeo6)}>
-            {"\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a"}
+            {args.buttonText ?? "\u062f\u0631\u06cc\u0627\u0641\u062a \u0646\u0648\u0628\u062a"}
           </div>
           <Icon5Icon
             className={classNames("all", sty.svg__sx0Ov)}
@@ -414,20 +414,20 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicCard__ArgsType;
     overrides?: NodeOverridesType<T>;
   } &
-    // Specify variants directly as props
-    Omit<PlasmicCard__VariantsArgs, ReservedPropsType> &
-    // Specify args directly as props
-    Omit<PlasmicCard__ArgsType, ReservedPropsType> &
-    // Specify overrides for each element directly as props
-    Omit<
-      NodeOverridesType<T>,
-      ReservedPropsType | VariantPropType | ArgPropType
-    > &
-    // Specify props for the root element
-    Omit<
-      Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
-      ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
-    >;
+  // Specify variants directly as props
+  Omit<PlasmicCard__VariantsArgs, ReservedPropsType> &
+  // Specify args directly as props
+  Omit<PlasmicCard__ArgsType, ReservedPropsType> &
+  // Specify overrides for each element directly as props
+  Omit<
+    NodeOverridesType<T>,
+    ReservedPropsType | VariantPropType | ArgPropType
+  > &
+  // Specify props for the root element
+  Omit<
+    Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
+    ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
+  >;
 
 function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
   type PropsType = NodeComponentProps<NodeName> & { key?: React.Key };
@@ -444,6 +444,9 @@ function makeNodeComponent<NodeName extends NodeNameType>(nodeName: NodeName) {
         }),
       [props, nodeName]
     );
+    if ((props as any).buttonText !== undefined) {
+      args.buttonText = (props as any).buttonText;
+    }
     return PlasmicCard__RenderFunc({
       variants,
       args,
