@@ -10,6 +10,8 @@ import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
+import { buildDoctorExpertiseChips } from '@/common/utils/buildDoctorExpertiseChips';
+import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -23,19 +25,27 @@ import { sections } from '@/modules/profile/views/sections';
 import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactElement, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { growthbook } from '../_app';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import { useSearchStore } from '@/modules/search/store/search';
 import useLockScroll from '@/common/hooks/useLockScroll';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
+import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import ErrorPage from '@/modules/profile/components/errorPage';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
 import { trackDoctorProfileViewByDoctorId } from '@/modules/hamdast/utils/profileViewFrequency';
+import {
+  clearProfileDoctorInfo,
+  getProfileDoctorInfo,
+  setProfileDoctorInfo,
+  updateProfileDoctorInfo,
+} from '@/modules/hamdast/stores/profileDoctorInfo';
 import Loading from '@/common/components/atom/loading';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
@@ -98,21 +108,6 @@ const DoctorProfile = (props: any) => {
     return cleanup;
   }, []);
 
-  useEffect(() => {
-    if (growthbook) {
-      growthbook.setAttributes({
-        ...growthbook.getAttributes(),
-        slug: currentSlug,
-      });
-      return () => {
-        growthbook.setAttributes({
-          ...growthbook.getAttributes(),
-          slug: undefined,
-        });
-      };
-    }
-  }, [currentSlug, growthbook]);
-
   const {
     data: clientData,
     isLoading,
@@ -137,6 +132,7 @@ const DoctorProfile = (props: any) => {
   const { openScroll, lockScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
+  const expertiseChipsConfig = useFeatureValue<{ slugs?: string[] }>('profile.expertise-chips-like-search', { slugs: [] });
 
   const finalProps = (!!shouldFetchOnClient && !props?.information) || (clientData?.props as any)?.information ? clientData?.props : props;
 
@@ -158,9 +154,51 @@ const DoctorProfile = (props: any) => {
     fragmentComponents,
     hamdastWidgets: hamdastWidgetsFromProps,
     hamdastWidgetsData: hamdastWidgetsDataFromProps,
+    keywordTags,
+    expertiseChipsLikeSearchEnabled: ssrExpertiseChipsLikeSearchEnabled,
     user_id,
     dontShowRateAndReviewMessage,
+    useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
   } = finalProps ?? {};
+
+  const clientExpertiseChipsLikeSearch = newApiFeatureFlaggingCondition(
+    expertiseChipsConfig?.slugs ?? [],
+    String(slug ?? currentSlug ?? ''),
+  );
+  const useExpertiseChipsLikeSearch = Boolean(ssrExpertiseChipsLikeSearchEnabled) || clientExpertiseChipsLikeSearch;
+
+  const doctorSlugForTags = String(slug ?? currentSlug ?? '');
+  const { data: clientKeywordTags = [] } = useQuery(
+    ['profileExpertiseKeywordTags', doctorSlugForTags],
+    () =>
+      getDoctorKeywordTags({
+        slug: doctorSlugForTags,
+        searchText: [information?.name, information?.family].filter(Boolean).join(' ') || undefined,
+      }),
+    {
+      enabled: useExpertiseChipsLikeSearch && !!doctorSlugForTags && !(Array.isArray(keywordTags) && keywordTags.length > 0),
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+    },
+  );
+  const resolvedKeywordTags = (Array.isArray(keywordTags) && keywordTags.length > 0 ? keywordTags : clientKeywordTags) ?? [];
+
+  // useLayoutEffect so slug is on GB before Services evaluates online-visit-chat-lifecycle-duration.
+  useLayoutEffect(() => {
+    if (!growthbook) return;
+    const doctorSlugForGrowthbook = (typeof slug === 'string' && slug ? slug : null) ?? currentSlug;
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      // Prefer canonical profile slug from props when available (URL slug can omit suffix like `-3`).
+      slug: doctorSlugForGrowthbook,
+    });
+    return () => {
+      growthbook.setAttributes({
+        ...growthbook.getAttributes(),
+        slug: undefined,
+      });
+    };
+  }, [currentSlug, slug, growthbook]);
 
   const rateDebug = query.rateDebug === '1';
   const rateDebugSlug = slug ?? currentSlug;
@@ -254,12 +292,66 @@ const DoctorProfile = (props: any) => {
         });
       }
 
-      window.doctor = { ...information, centers, expertises, isBulk, slug, history };
+      const doctorUserId = information?.user_id ?? user_id ?? null;
+      window.doctor = {
+        ...information,
+        user_id: doctorUserId,
+        centers,
+        expertises,
+        isBulk,
+        slug,
+        history,
+      };
 
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
-  }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks]);
+  }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks, user_id]);
+
+  // Cache doctor identity for hamdast doctor-service payment (only clear when user_id/slug lifecycle ends).
+  useEffect(() => {
+    const doctorUserId = information?.user_id ?? user_id;
+    if (!doctorUserId) return;
+
+    const displayName =
+      information?.display_name?.trim() ||
+      [information?.name, information?.family].filter(Boolean).join(' ').trim() ||
+      '';
+
+    const epoch = setProfileDoctorInfo({
+      userId: String(doctorUserId),
+      displayName,
+      imageUrl: doctorProfileImageUrl || null,
+      slug: typeof slug === 'string' ? slug : currentSlug ? String(currentSlug) : null,
+    });
+
+    return () => {
+      clearProfileDoctorInfo(epoch);
+    };
+  }, [information?.user_id, user_id, slug, currentSlug]);
+
+  // Keep display name / avatar fresh without clearing the cached user id.
+  useEffect(() => {
+    const cached = getProfileDoctorInfo();
+    if (!cached?.userId) return;
+
+    const displayName =
+      information?.display_name?.trim() ||
+      [information?.name, information?.family].filter(Boolean).join(' ').trim() ||
+      cached.displayName;
+
+    updateProfileDoctorInfo({
+      displayName,
+      imageUrl: doctorProfileImageUrl || cached.imageUrl || null,
+      slug: cached.slug ?? (typeof slug === 'string' ? slug : null),
+    });
+  }, [
+    information?.display_name,
+    information?.name,
+    information?.family,
+    doctorProfileImageUrl,
+    slug,
+  ]);
 
   useEffect(() => {
     const doctorId = information?.id ? String(information.id) : '';
@@ -346,7 +438,9 @@ const DoctorProfile = (props: any) => {
     seo: { breadcrumbs, slug },
     hamdastWidgetsData,
     hamdastWidgets,
+    keywordTags: resolvedKeywordTags,
     user_id,
+    useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
   };
 
   if (!finalProps?.information?.id ? shouldFetchOnClient || isLoading : false) {
@@ -423,7 +517,16 @@ const DoctorProfile = (props: any) => {
                   name="ProfileHead"
                   args={{
                     pageViewCount: profileData.history?.count_of_page_view,
-                    serviceList: profileData.expertises?.expertises?.flatMap(({ alias_title }: any) => alias_title.split('|')) ?? [],
+                    serviceList: useExpertiseChipsLikeSearch
+                      ? buildDoctorExpertiseChips(profileData.expertises?.expertises, {
+                          keywordTags: profileData.keywordTags,
+                        })
+                      : profileData.expertises?.expertises?.flatMap(({ alias_title }: any) =>
+                          String(alias_title ?? '')
+                            .split('|')
+                            .map((part: string) => part.trim())
+                            .filter(Boolean),
+                        ) ?? [],
                     displayName: profileData.information.display_name,
                     title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
                     subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,

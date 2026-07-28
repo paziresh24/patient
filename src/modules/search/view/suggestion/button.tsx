@@ -4,6 +4,7 @@ import { useSearchStore } from '../../store/search';
 import { useEffect } from 'react';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import useCustomize from '@/common/hooks/useCustomize';
+import { useShowPlasmicSuggestion } from '../../hooks/useShowPlasmicSuggestion';
 const Suggestion = dynamic(() => import('./suggestion'));
 
 export const ButtonSuggestion = () => {
@@ -11,6 +12,7 @@ export const ButtonSuggestion = () => {
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
   const { openScroll } = useLockScroll();
   const customize = useCustomize(state => state.customize);
+  const showPlasmicSuggestion = useShowPlasmicSuggestion();
 
   useEffect(() => {
     setIsOpenSuggestion(false);
@@ -22,7 +24,7 @@ export const ButtonSuggestion = () => {
       <SearchIcon className="cursor-pointer" onClick={() => setIsOpenSuggestion(true)} />
       {isOpenSuggestion && (
         <div className="fixed left-0 right-0 flex items-center justify-center md:top-36 z-infinity">
-          <Suggestion showPlasmicSuggestion={!customize.partnerKey} overlay autoFocus defaultOpen />
+          <Suggestion showPlasmicSuggestion={showPlasmicSuggestion} overlay autoFocus defaultOpen />
         </div>
       )}
     </>

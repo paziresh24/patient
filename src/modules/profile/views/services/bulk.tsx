@@ -11,10 +11,20 @@ interface BulkServiceProps {
   expertises: any;
   availableTime?: string;
   dcotorCity: string;
+  /** Only show substitute when doctor has no bookable channel at all (online or in-person). Hidden when availableTime is set. */
+  showSubstituteDoctor?: boolean;
 }
 
-export const BulkService = ({ displayName, expertises, availableTime, dcotorCity }: BulkServiceProps) => {
+export const BulkService = ({
+  displayName,
+  expertises,
+  availableTime,
+  dcotorCity,
+  showSubstituteDoctor = true,
+}: BulkServiceProps) => {
   const customize = useCustomize(state => state.customize);
+  // Modal/button only when doctor has no booking now and no future available_time
+  const shouldShowSubstitute = showSubstituteDoctor && !availableTime;
 
   return (
     <Card className="space-y-3 !rounded-none md:!rounded-lg">
@@ -34,7 +44,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
           </Text>
         </div>
       )}
-      {!customize.partnerKey && (
+      {shouldShowSubstitute && !customize.partnerKey && (
         <SubstituteDoctorButton
           displayName={displayName}
           expertises={expertises}
@@ -43,7 +53,7 @@ export const BulkService = ({ displayName, expertises, availableTime, dcotorCity
           autoOpenDelay={6000}
         />
       )}
-      {customize.partnerKey && (
+      {shouldShowSubstitute && customize.partnerKey && (
         <PartnerSubstituteDoctorButton
           displayName={displayName}
           expertises={expertises}

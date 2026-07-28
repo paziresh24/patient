@@ -46,6 +46,18 @@ export function getLauncherProfileConnectButtonEndpoint(widgetInfo: WidgetInfo |
   return button?.connect_endpoint || button?.endpoint || undefined;
 }
 
+export function isLauncherProfileWidgetConnectMode(widgetInfo: WidgetInfo | undefined | null): boolean {
+  return Boolean(getLauncherProfileConnectButtonEndpoint(widgetInfo));
+}
+
+export function shouldRequireSubscriptionBeforeConnect(
+  directPayment: boolean | undefined,
+  hasActiveSubscription: boolean | undefined,
+  widgetInfo: WidgetInfo | undefined | null,
+): boolean {
+  return Boolean(directPayment && !hasActiveSubscription && isLauncherProfileWidgetConnectMode(widgetInfo));
+}
+
 export function getLauncherProfileDisconnectButtonEndpoint(widgetInfo: WidgetInfo | undefined | null): string | undefined {
   const button = getWidgetButton(widgetInfo);
   return button?.disconnect_endpoint || button?.endpoint || undefined;

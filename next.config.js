@@ -21,6 +21,7 @@ const nextConfig = {
   },
   productionBrowserSourceMaps: true,
   experimental: {
+    instrumentationHook: true,
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
     optimizePackageImports: [
       '@plasmicpkgs/antd5',
@@ -172,6 +173,7 @@ const nextConfig = {
     SEARCH_BASE_URL: process.env.SEARCH_BASE_URL,
     PARTNER_LOGO_BASE_URL: process.env.PARTNER_LOGO_BASE_URL,
     DOCTOR_APP_BASE_URL: process.env.DOCTOR_APP_BASE_URL,
+    VOICE_API_BASE_URL: process.env.VOICE_API_BASE_URL || process.env.NEXT_PUBLIC_VOICE_API_BASE_URL,
     IS_FIREBASE_ENABLE: process.env.IS_FIREBASE_ENABLE,
     WORKFLOW_BASE_URL: process.env.WORKFLOW_BASE_URL,
     SENTRY_DSN: process.env.SENTRY_DSN,
@@ -198,6 +200,7 @@ const nextConfig = {
     PLASMIC_PROJECT_TOKEN: process.env.PLASMIC_PROJECT_TOKEN,
     PLASMIC_PREVIEW: process.env.PLASMIC_PREVIEW,
     CDN_BASE_URL: process.env.CDN_BASE_URL,
+    SAMAN_BASE_URL: process.env.SAMAN_BASE_URL,
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
@@ -241,14 +244,44 @@ const nextConfig = {
         destination: '/faq/',
         permanent: true,
       },
+      {
+        source: '/home/contact-us/',
+        destination: '/contact-us/',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
-    return [
+    const rules = [
       { source: '/patient/api/:path*', destination: '/api/:path*' },
       {
         source: '/robots.txt',
         destination: '/api/robots',
+      },
+    ];
+
+    // Browser calls to ravi-apis are CORS-blocked from localhost / local.paziresh24.com
+    // (allowlist is only www.paziresh24.com). Proxy same-origin in local dev.
+    if (!isProduction) {
+      rules.push({
+        source: '/__dev-proxy/ravi-apis/:path*',
+        destination: 'https://ravi-apis.paziresh24.com/:path*',
+      });
+    }
+
+    return rules;
+  },
+  async headers() {
+    return [
+      {
+        // DR-13: صفحه‌ی static «نظر شما برای ما مهم است» — long-cache روی CDN، revalidate روزانه در مرورگر
+        source: '/rate-us/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800',
+          },
+        ],
       },
     ];
   },

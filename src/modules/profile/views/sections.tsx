@@ -13,6 +13,7 @@ import Hamdast from '@/modules/hamdast/render';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 
 const { publicRuntimeConfig } = config();
 
@@ -133,14 +134,14 @@ export const sections = (data: any) => {
       isShowFallback: editable,
       function: () => {
         const items = media?.gallery;
-        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+        const reformattedItems = items?.map((item: any) => getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)) ?? [];
         return {
           items: reformattedItems,
         };
       },
       children: (props: any) => {
         const items = media?.gallery;
-        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+        const reformattedItems = items?.map((item: any) => getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)) ?? [];
 
         return (
           <Fragment2

@@ -10,6 +10,13 @@ import { sheetDrawerProps, useSheetRoute } from './useSheetRoute';
 
 const APP_SHEET_KEY = 'hamdast-app';
 const APP_KEY_PARAM = 'app_key';
+const TOOLBOX_SHEET_KEY = 'toolbox';
+
+function readSheetStackFromLocation(): string[] {
+  if (typeof window === 'undefined') return [];
+  const val = new URLSearchParams(window.location.search).get('sheets') ?? '';
+  return val ? val.split(',').filter(Boolean) : [];
+}
 
 type OpenDoctorHomeApp = (appKey: string) => void;
 
@@ -28,26 +35,47 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
   const queryClient = useQueryClient();
   const appSheet = useSheetRoute(APP_SHEET_KEY);
   const [appKey, setAppKey] = useState('');
+  const [runFullscreen, setRunFullscreen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     if (!appSheet.open) {
       clearTimeout(closeTimer.current);
-      closeTimer.current = setTimeout(() => setAppKey(''), 350);
-      return;
+      closeTimer.current = setTimeout(() => {
+        setAppKey('');
+        setRunFullscreen(false);
+      }, 350);
+      return () => clearTimeout(closeTimer.current);
     }
 
+    // Cancel a pending clear from a recent close (quick reopen).
+    clearTimeout(closeTimer.current);
+
+    // On mobile / doctor-home swap, sheets update the URL via History API only —
+    // Next's router.query can stay on a previous app_key and overwrite the one
+    // just set in openApp. Prefer the live location search.
+    const fromLocation =
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get(APP_KEY_PARAM)
+        : null;
     const fromQuery = router.query[APP_KEY_PARAM];
-    if (typeof fromQuery === 'string' && fromQuery) {
-      setAppKey(fromQuery);
-    }
+    const key =
+      fromLocation ||
+      (typeof fromQuery === 'string' && fromQuery ? fromQuery : '');
+    if (key) setAppKey(key);
   }, [appSheet.open, router.query]);
 
   const openApp = useCallback(
     (key: string) => {
       void prefetchOneApp(queryClient, { appKey: key, pageKey: 'launcher' }, 0);
       setAppKey(key);
-      appSheet.openSheet({ [APP_KEY_PARAM]: key });
+      const extra = { [APP_KEY_PARAM]: key };
+      // بستن toolbox با history.back() قبل از push باعث race و باز نشدن اپ می‌شد
+      if (readSheetStackFromLocation().includes(TOOLBOX_SHEET_KEY)) {
+        appSheet.openSheetOver([TOOLBOX_SHEET_KEY], extra);
+        return;
+      }
+      appSheet.openSheet(extra);
     },
     [queryClient, appSheet],
   );
@@ -63,6 +91,7 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
         {...sheetDrawerProps(appSheet)}
         description="اپلیکیشن"
         fullHeight
+        expanded={runFullscreen}
         className="!p-0"
       >
         {appSheet.open && appKey ? (
@@ -75,6 +104,7 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
               dontShowNotification
               onHamdastClose={closeApp}
               closeVardastOnHamdastClose
+              onRunFullscreenChange={setRunFullscreen}
             />
           </div>
         ) : null}

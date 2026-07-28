@@ -10,9 +10,13 @@ import classNames from '@/common/utils/classNames';
 import { useApps } from '@/modules/dashboard/apis/apps';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
+import { useHamdastGrowthBookEmbedSrc } from '@/modules/hamdast/utils/useHamdastGrowthBookEmbedSrc';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useRef, useState } from 'react';
+
+const DRAPP_APPOINTMENTS_FEATURE = 'hamdast::drapp-appointments';
+const DEFAULT_APPOINTMENTS_EMBED_SRC = 'https://opium-dashboard.paziresh24.com/book-list/';
 
 export const Dashboard = (props: any) => {
   const user = useUserInfoStore(state => state.info);
@@ -21,6 +25,11 @@ export const Dashboard = (props: any) => {
   const sessionStartTime = useRef<any>(null);
   const appsData = useApps();
   const { isMobile } = useResponsive();
+  const embedSrc = useHamdastGrowthBookEmbedSrc(
+    DRAPP_APPOINTMENTS_FEATURE,
+    DEFAULT_APPOINTMENTS_EMBED_SRC,
+    user?.id,
+  );
 
   useEffect(() => {
     sessionStartTime.current = Date.now();
@@ -95,12 +104,13 @@ export const Dashboard = (props: any) => {
                 <Loading />
               </div>
             )}
-            {appsData.isSuccess && user?.id && (
+            {appsData.isSuccess && user?.id && embedSrc && (
               <iframe
+                key={embedSrc}
                 ref={iframeRef}
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
-                src={`https://opium-dashboard.paziresh24.com/book-list/?user_id=${user.id}`}
+                src={embedSrc}
                 allow="microphone; camera; fullscreen; clipboard-write;"
                 sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />

@@ -2,6 +2,7 @@ import Text from '@/common/components/atom/text';
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
 import classNames from '@/common/utils/classNames';
+import { safeHighlight } from '@/modules/search/functions/safeHighlight';
 import style from './section.module.css';
 
 interface TreeSectionProps {
@@ -31,8 +32,9 @@ export const TreeSection = (props: TreeSectionProps) => {
                   style.title,
                   'before:content before:absolute before:right-2 before:top-[.85rem] before:rounded-sm  before:w-3 before:h-3 before:bg-slate-300',
                 )}
-                dangerouslySetInnerHTML={{ __html: item.formatted_title }}
-              />
+              >
+                {safeHighlight(item.formatted_title)}
+              </Text>
             )}
             {item.sub_title && (
               <div className="mt-2 bg-slate-100 p-1 px-2 rounded-md">
@@ -54,8 +56,9 @@ export const TreeSection = (props: TreeSectionProps) => {
                   style.title,
                   'relative !line-clamp-none !overflow-visible cursor-pointer text-slate-500 before:w-3 before:h-[1px] before:bg-slate-300 before:content before:absolute before:top-2 before:-right-[18px]',
                 )}
-                dangerouslySetInnerHTML={{ __html: subItem.formatted_title ?? '' }}
-              />
+              >
+                {safeHighlight(subItem.formatted_title)}
+              </Text>
             ))}
           </div>
         </div>

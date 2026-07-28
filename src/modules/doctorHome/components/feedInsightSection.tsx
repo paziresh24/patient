@@ -6,8 +6,8 @@ import { DsInsightCarousel, ds } from '../designSystem';
 import { useDoctorWalletBalance } from '../apis/walletBalance';
 import { DoctorHomeFeedStats } from '../types/feed';
 import { sendDoctorHomeEvent } from '../utils/analytics';
-import { appendUserIdToUrl } from '../utils/iframeUrl';
-import { RAVI_DOCSIDE_URL } from '../utils/doctorPanelUrls';
+import { appendUserIdToUrl, buildDoctorPanelUrl } from '../utils/iframeUrl';
+import { DOCTOR_PANEL_URLS, RAVI_DOCSIDE_URL } from '../utils/doctorPanelUrls';
 import { useWalletBalanceVisibilityStore } from '../store/walletBalanceVisibility';
 import { useSelectedCenterStore } from '../store/selectedCenter';
 import { DsDrawer } from './DsDrawer';
@@ -149,7 +149,8 @@ export const FeedInsightSection = ({
       <DsDrawer {...walletDrawerProps} title="کتیبه" description="مدیریت امور مالی" fullHeight className="!p-0">
         {walletSheet.open && (
           <iframe
-            src={appendUserIdToUrl('https://katibe.paziresh24.com/transactions-search/?', userId)}
+            key={`wallet-${selectedCenterId ?? 'all'}`}
+            src={buildDoctorPanelUrl(DOCTOR_PANEL_URLS.bills, { userId, centerId: selectedCenterId })}
             title="کتیبه، مدیریت امور مالی"
             className="min-h-0 w-full flex-1 border-0"
           />

@@ -19,7 +19,8 @@ type DoctorHomeFeature =
   | 'view_mode_switch'
   | 'shortcut_workhours'
   | 'shortcut_vacation'
-  | 'shortcut_tariff';
+  | 'shortcut_tariff'
+  | 'shortcut_booking_settings';
 
 export const sendDoctorHomeEvent = (
   userId: string | undefined,

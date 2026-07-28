@@ -2,7 +2,7 @@ import Text from '@/common/components/atom/text/text';
 import DiamondIcon from '@/common/components/icons/diamond';
 import StatusIcon from '@/common/components/icons/status';
 import OnlineVisitDiscountFallback from '@/modules/bamdad/components/onlineVisitDiscountFallback';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { addCommas } from '@persian-tools/persian-tools';
 import isEmpty from 'lodash/isEmpty';
 import { useRouter } from 'next/router';
@@ -31,6 +31,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
   const { doctorId, title, channels, price, buttonText, duration, onBook, loading, discountPercent, isPremium, waitingTime } = props;
   const channelType = useFeatureValue<channelType>('onlinevisitchanneltype', {});
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
+  const showRefundGuarantee = useFeatureIsOn('online-visit-refund-guarantee-copy');
   const channelDetailes = channels?.length && channels.map((key: string) => channelType[key]);
   const router = useRouter();
 
@@ -76,7 +77,7 @@ export const OnlineVisit = (props: OnlineVisitProps) => {
             ? renderToString(<ChannelDetailes messengers={channelDetailes} title="ویزیت آنلاین در پیام رسان:" />)
             : '',
           safeCallModuleInfo?.doctors_id?.includes(doctorId) && safeCallModuleInfo?.description,
-          'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
+          ...(showRefundGuarantee ? ['تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی'] : []),
           duration && `مدت زمان گفتگو: <strong>${duration}</strong>`,
           !duration && 'تا <strong>۳ روز</strong> می‌توانید هر سوالی دارید از پزشک بپرسید',
           !isEmpty(waitingTime) && `طبق نظر بیماران قبلی، میانگین زمان انتظار ویزیت: <b>${waitingTime?.waiting_time_title} </b>`,

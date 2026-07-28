@@ -9,14 +9,15 @@ import { CENTERS } from '@/common/types/centers';
 import classNames from '@/common/utils/classNames';
 import { isNativeWebView } from '@/common/utils/isNativeWebView';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useGrowthBook } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
-import { useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
+import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { bookRequestAvailability } from '@/common/apis/services/booking/bookRequestAvailability';
 import moment from 'jalali-moment';
 import sortBy from 'lodash/sortBy';
@@ -25,6 +26,16 @@ import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
 import PlasmicServices from '.plasmic/plasmic/paziresh_24/PlasmicServices';
 import { Fragment2 } from '@/common/fragment/fragment2';
+import {
+  formatSamanAvailabilityTime,
+  getScopedInPersonAvailability,
+  getScopedOnlineVisitAvailability,
+  mapSamanAvailabilityToCenters,
+} from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
+import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+import { shouldShowProfileOnlineVisit } from '@/modules/profile/utils/onlineVisitVisibility';
+import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -43,6 +54,7 @@ export const Services = ({
   isBulk,
   enabledWidgets,
   dontShowDeactiveBox,
+  ssrUseSamanAvailabilityStatus = false,
 }: {
   id: string;
   expertises: any;
@@ -55,18 +67,54 @@ export const Services = ({
   isBulk: boolean;
   enabledWidgets?: any[];
   dontShowDeactiveBox?: boolean;
+  ssrUseSamanAvailabilityStatus?: boolean;
 }) => {
   const router = useRouter();
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
 
+  const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
+  // SSR flag avoids waiting for GrowthBook client init (prevents isBulk flash)
+  const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
+  const growthbook = useGrowthBook();
   const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
+  const featureFromHook = useFeatureIsOn('online-visit-chat-lifecycle-duration');
+  const [featureFromSlugAttr, setFeatureFromSlugAttr] = useState(false);
+
+  // GB payload listing a slug ≠ feature on. Attribute `slug` must match exactly (e.g. …-3), and
+  // features must be ready — otherwise Hami is never called and Plasmic keeps the hardcoded 3-day line.
+  useLayoutEffect(() => {
+    if (!growthbook || !slug) {
+      setFeatureFromSlugAttr(false);
+      return;
+    }
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug,
+    });
+    setFeatureFromSlugAttr(growthbook.isOn('online-visit-chat-lifecycle-duration'));
+  }, [growthbook, slug, growthbook?.ready, featureFromHook]);
+
+  const useChatLifecycleDuration = featureFromHook || featureFromSlugAttr;
+  // Profile already has doctor.user_id (information.user_id) in the normal flow → Hami directly.
+  // Fall back to profileData.user_id when information omits it; slug only when both missing.
+  const profileDoctorUserId = doctor?.user_id ?? profileData?.user_id ?? profileData?.information?.user_id;
+  const { days: chatLifecycleDays, isPending: isChatLifecycleDurationPending } =
+    useChatLifecycleAutoCloseHours({
+      enabled: useChatLifecycleDuration,
+      doctorUserId: profileDoctorUserId,
+      doctorSlug: profileDoctorUserId ? undefined : slug,
+    });
+
+  const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
+    enabled: !!slug && useSamanAvailabilityStatus,
+  });
 
   const alabilityStatus = useAvailabilityStatus(
     { user_id: doctor.user_id, center_id: centers.map(center => center.id), slug: slug },
-    { enabled: !!useAvailabilityStatusApi },
+    { enabled: !!useAvailabilityStatusApi && !useSamanAvailabilityStatus },
   );
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
@@ -75,6 +123,106 @@ export const Services = ({
   const customize = useCustomize(state => state.customize);
   const { handleOpen: handleOpenAvailabilityModal, modalProps: availabilityModalProps } = useModal();
   const [availabilityMessage, setAvailabilityMessage] = useState<string>('');
+
+  const samanLoaded = useSamanAvailabilityStatus && !!samanAvailability.data && !samanAvailability.isError;
+  // Avoid flashing the red bulk box before GrowthBook/Saman resolve
+  const samanPending =
+    (useSamanAvailabilityStatus && !samanLoaded && !samanAvailability.isError) ||
+    (!growthbook?.ready && !!isBulk && !ssrUseSamanAvailabilityStatus);
+  const scopedInPerson = useMemo(
+    () => getScopedInPersonAvailability(centers, samanAvailability.data),
+    [centers, samanAvailability.data],
+  );
+  const scopedOnlineVisit = useMemo(
+    () => getScopedOnlineVisitAvailability(centers, samanAvailability.data),
+    [centers, samanAvailability.data],
+  );
+
+  // consult_active_booking (onlineVisit.enabled) is legacy — profile UI uses centers API (5532) + Saman.
+  const hasPresence =
+    router.query.centerTarget != CENTERS.CONSULT && centers.some((center: any) => String(center.id) !== CENTERS.CONSULT);
+
+  const showOnlineVisit = shouldShowProfileOnlineVisit({
+    centers,
+    onlineVisit,
+    samanLoaded,
+    samanData: samanAvailability.data,
+  });
+
+  const consultCenter = centers.find((center: any) => String(center.id) === CENTERS.CONSULT);
+  const needsOnlineServices =
+    showOnlineVisit &&
+    consultCenter &&
+    (!(consultCenter.services?.length > 0) ||
+      consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
+
+  const onlineServicesQuery = useDoctorCenterServices(slug, CENTERS.CONSULT, {
+    enabled: !!slug && needsOnlineServices,
+  });
+
+  const onlineVisitServices = useMemo(() => {
+    if (!consultCenter) return [];
+    const profileServices = consultCenter.services ?? [];
+    if (!needsOnlineServices) return profileServices;
+    if (onlineServicesQuery.isSuccess && onlineServicesQuery.data) {
+      return mapDoctorCenterServices(onlineServicesQuery.data, consultCenter.user_center_id);
+    }
+    return [];
+  }, [consultCenter, needsOnlineServices, onlineServicesQuery.isSuccess, onlineServicesQuery.data]);
+  const canBookPresence = !samanLoaded || scopedInPerson.bookingAvailable;
+
+  const legacyHasNoBooking = alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk;
+  const samanHasNoBooking = samanLoaded && !scopedInPerson.bookingAvailable && !scopedOnlineVisit.bookingAvailable;
+  // While Saman is pending, do not fall back to isBulk (avoids red "no booking" flash)
+  const hasNoBooking = useSamanAvailabilityStatus
+    ? samanAvailability.isError
+      ? isBulk
+      : samanLoaded
+        ? samanHasNoBooking
+        : false
+    : legacyHasNoBooking;
+
+  const presenceCenters = useMemo(() => {
+    const inPersonCenters = centers.filter((center: any) => center.id !== CENTERS.CONSULT);
+
+    if (samanLoaded) {
+      return mapSamanAvailabilityToCenters(inPersonCenters, samanAvailability.data).map(center => ({
+        ...center,
+        waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
+        is_book_request: (center as any).services?.some((service: any) => service.can_request == 1),
+      }));
+    }
+
+    return inPersonCenters.map(center => ({
+      ...center,
+      waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
+      ...(useAvailabilityStatusApi && {
+        is_active: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.status == 'AVAILABLE',
+        freeturn_text: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn
+          ? moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
+              ?.locale('fa')
+              .calendar(undefined, {
+                sameDay: '[امروز] ساعت HH:mm',
+                nextDay: '[فردا] ساعت HH:mm',
+                sameElse: 'jD jMMMM ساعت HH:mm',
+              })
+          : '',
+        freeturns_info: alabilityStatus.data?.data?.availability
+          ?.filter((c: any) => c.center_id === center.id)
+          ?.map((item: any) => ({
+            available_time: item?.available_time ? new Date(item?.available_time).getTime() / 1000 : Date.now(),
+            availalbe_time_text: item?.available_time
+              ? moment(item?.available_time)?.locale('fa').calendar(undefined, {
+                  sameDay: '[امروز] ساعت HH:mm',
+                  nextDay: '[فردا] ساعت HH:mm',
+                  sameElse: 'jD jMMMM ساعت HH:mm',
+                })
+              : '',
+          })),
+      }),
+      is_book_request: center.services?.some((service: any) => service.can_request == 1),
+    }));
+  }, [alabilityStatus.data, centers, samanAvailability.data, samanLoaded, useAvailabilityStatusApi, waitingTimeInfo]);
 
   const onEvent = ({ centerId, serviceId }: { centerId: string; serviceId: string }) => {
     splunkInstance('doctor-profile').sendEvent({
@@ -97,14 +245,17 @@ export const Services = ({
   const handleOpenBookingPage = async (
     slug: string,
     centerId: string,
-    serviceId: string,
+    serviceId?: string,
     provider_id?: string,
     user_id?: string,
     city_name?: string,
   ) => {
-    const isBookRequest = centers
-      ?.find?.(center => center.id === centerId)
-      ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
+    const hasValidServiceId = !!serviceId && String(serviceId) !== '-1';
+    const isBookRequest =
+      hasValidServiceId &&
+      centers
+        ?.find?.(center => center.id === centerId)
+        ?.services?.find?.((service: { id: string }) => service.id === serviceId)?.can_request;
 
     // Check book request availability if feature flag is enabled and it's a book request
     if (isBookRequest && checkBookRequestAvailability) {
@@ -117,7 +268,7 @@ export const Services = ({
           const availabilityResponse = await bookRequestAvailability({
             center_id: centerId,
             user_center_id: userCenterId,
-            service_id: serviceId,
+            service_id: serviceId!,
           });
 
           if (!availabilityResponse.status && availabilityResponse.available_time) {
@@ -143,13 +294,13 @@ export const Services = ({
 
     const params = {
       centerId,
-      serviceId,
+      ...(hasValidServiceId && { serviceId }),
       cityName: city_name,
       ...(provider_id && user_id && { providerId: provider_id, userId: user_id }),
       ...(isBookRequest && { timeId: '-1' }),
     };
 
-    onEvent({ centerId, serviceId });
+    onEvent({ centerId, serviceId: serviceId ?? '' });
 
     if (isNativeWebView()) {
       if (isBookRequest) return location.assign(`/booking/${slug}?${queryStirng.stringify({ ...params, openInBrowser: 1 })}`);
@@ -158,19 +309,29 @@ export const Services = ({
     router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
   };
 
-
-  if (
-    !customize?.partnerKey &&
-    dontShowDeactiveBox &&
-    (alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk)
-  ) {
+  if (!customize?.partnerKey && dontShowDeactiveBox && hasNoBooking) {
     return null;
   }
 
-  if (alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk) {
+  if (samanPending) {
+    return <Skeleton w="100%" h="198px" rounded="lg" />;
+  }
+
+  // Legacy / fully unavailable: show only Bulk when nothing is bookable
+  if (hasNoBooking && !showOnlineVisit) {
     const sortedAvalaibleTime = () => {
-      const centers = alabilityStatus.data?.data?.availability?.filter((item: any) => item?.status === 'FUTURE_AVAILABLE');
-      const availableTime = sortBy(centers, 'available_time')[0]?.available_time;
+      if (samanLoaded) {
+        const futureTimes = [scopedInPerson.nearestAvailableTime, scopedOnlineVisit.nearestAvailableTime].filter(
+          (time): time is string => !!time,
+        );
+        const earliest = futureTimes.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0];
+        if (earliest) {
+          return formatSamanAvailabilityTime(earliest) || undefined;
+        }
+      }
+
+      const availabilityCenters = alabilityStatus.data?.data?.availability?.filter((item: any) => item?.status === 'FUTURE_AVAILABLE');
+      const availableTime = sortBy(availabilityCenters, 'available_time')[0]?.available_time;
       if (availableTime) {
         return moment(availableTime)?.locale('fa').calendar(undefined, {
           sameDay: '[امروز] ساعت HH:mm',
@@ -191,6 +352,11 @@ export const Services = ({
     );
   }
 
+  // Hide empty in-person "no booking" box when online visit is active — but keep the future available_time box
+  const hidePresenceBecauseOnlineOnly =
+    samanLoaded && showOnlineVisit && !scopedInPerson.bookingAvailable && !scopedInPerson.nearestAvailableTime;
+  const showPresenceBulk = samanLoaded && hasPresence && !scopedInPerson.bookingAvailable && !hidePresenceBecauseOnlineOnly;
+  const showPresenceSection = hasPresence && !hidePresenceBecauseOnlineOnly;
 
   return (
     <>
@@ -203,60 +369,65 @@ export const Services = ({
             onBook={() => location.assign('http://drnoorbala.ir/')}
           />
         )}
-        {onlineVisit.enabled &&
-          centers
-            .find((center: any) => center.id === CENTERS.CONSULT)
-            ?.services?.map((service: any, index: number) => (
-              <Fragment2
-                key={index}
-                name="Services"
-                Component={PlasmicServices}
-                args={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
-                variants={{ type: 'onlineVisit' }}
-              />
-            ))}
-        {router.query.centerTarget != CENTERS.CONSULT && centers?.some((center: any) => center.id !== CENTERS.CONSULT) && (
-          <Presence
-            doctorId={id}
-            centers={centers
-              .filter((center: any) => center.id !== CENTERS.CONSULT)
-              .map(center => ({
-                ...center,
-                waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
-                ...(useAvailabilityStatusApi && {
-                  is_active: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.status == 'AVAILABLE',
-                  freeturn_text: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn
-                    ? moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
-                      ?.locale('fa')
-                      .calendar(undefined, {
-                        sameDay: '[امروز] ساعت HH:mm',
-                        nextDay: '[فردا] ساعت HH:mm',
-                        sameElse: 'jD jMMMM ساعت HH:mm',
-                      })
-                    : '',
-                  freeturns_info: alabilityStatus.data?.data?.availability
-                    ?.filter((c: any) => c.center_id === center.id)
-                    ?.map((item: any) => ({
-                      available_time: item?.available_time ? new Date(item?.available_time).getTime() / 1000 : Date.now(),
-                      availalbe_time_text: item?.available_time
-                        ? moment(item?.available_time)?.locale('fa').calendar(undefined, {
-                          sameDay: '[امروز] ساعت HH:mm',
-                          nextDay: '[فردا] ساعت HH:mm',
-                          sameElse: 'jD jMMMM ساعت HH:mm',
-                        })
-                        : '',
-                    })),
-                }),
-                is_book_request: center.services.some((service: any) => service.can_request == 1),
-              }))}
-            onBook={({ centerId, serviceId }) =>
-              handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
-            }
-            displayName={doctor.display_name}
-            expertises={expertises}
-            doctorCity={doctor?.city_en_slug}
-          />
+        {showOnlineVisit && needsOnlineServices && onlineServicesQuery.isFetching && (
+          <Skeleton w="100%" h="120px" rounded="lg" />
         )}
+        {showOnlineVisit &&
+          !(needsOnlineServices && onlineServicesQuery.isFetching) &&
+          onlineVisitServices.map((service: any, index: number) => {
+            // Feature on (non-21/47): hide Plasmic hardcoded 3-day line while we render Hami hours ourselves.
+            // Expertise 21/47 keep legacy "مدت زمان گفتگو" from service.duration — do not touch.
+            const expertiseGroupId = expertises?.group_expertises?.[0]?.id;
+            const isDurationRowExpertise = expertiseGroupId === 21 || expertiseGroupId === 47;
+            const showLifecycleAskDoctorCopy = useChatLifecycleDuration && !isDurationRowExpertise;
+            const serviceWithLifecycleDuration = !showLifecycleAskDoctorCopy
+              ? service
+              : chatLifecycleDays != null
+                ? { ...service, chat_lifecycle_auto_close_days: chatLifecycleDays }
+                : { ...service, chat_lifecycle_loading: true };
+
+            return (
+              <div key={index} className="flex flex-col gap-2">
+                <Fragment2
+                  name="Services"
+                  Component={PlasmicServices}
+                  args={{
+                    ...profileData,
+                    service: serviceWithLifecycleDuration,
+                    onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }),
+                  }}
+                  variants={{ type: 'onlineVisit' }}
+                />
+                {showLifecycleAskDoctorCopy && isChatLifecycleDurationPending && (
+                  <div className="px-4 py-1">
+                    <Skeleton w="15rem" h="1rem" rounded="full" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        {showPresenceSection &&
+          (showPresenceBulk ? (
+            <BulkService
+              displayName={doctor.display_name}
+              expertises={expertises}
+              availableTime={formatSamanAvailabilityTime(scopedInPerson.nearestAvailableTime) || undefined}
+              dcotorCity={doctor?.city_en_slug}
+              showSubstituteDoctor={false}
+            />
+          ) : (
+            <Presence
+              doctorId={id}
+              centers={presenceCenters}
+              onBook={({ centerId, serviceId }) =>
+                handleOpenBookingPage(slug, centerId, serviceId, doctor.provider_id, doctor.user_id, doctor.city_en_slug)
+              }
+              displayName={doctor.display_name}
+              expertises={expertises}
+              doctorCity={doctor?.city_en_slug}
+              bookingDisabled={samanLoaded && !canBookPresence}
+            />
+          ))}
       </div>
 
       {isMobile && !inViewServices && (
@@ -265,7 +436,11 @@ export const Services = ({
             'bottom-0': isWebView,
           })}
         >
-          <Button onClick={() => scrollIntoViewWithOffset('#book-me', 90)} block>
+          <Button
+            onClick={() => scrollIntoViewWithOffset('#book-me', 90)}
+            block
+            disabled={samanLoaded && !canBookPresence && !showOnlineVisit}
+          >
             دریافت نوبت
           </Button>
         </div>

@@ -107,6 +107,8 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
     },
   });
 
+  const [appRunFullscreen, setAppRunFullscreen] = useState(false);
+
   const {
     handleClose: handleCloseAppModal,
     handleOpen: handleOpenAppModal,
@@ -115,6 +117,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
     onClose: () => {
       setActiveApp(null);
       setActiveAppOptions(undefined);
+      setAppRunFullscreen(false);
     },
   });
 
@@ -303,8 +306,9 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
       </Modal>
 
       {activeApp && (
-        <HamdastAppModal {...appModalProps} onClose={handleCloseAppModal} title={activeApp.title}>
+        <HamdastAppModal {...appModalProps} onClose={handleCloseAppModal} title={activeApp.title} runFullscreen={appRunFullscreen}>
           <AppFrame
+            key={activeApp.app_key}
             dontShowNotification
             dontShowAppBar
             appKey={activeApp.app_key}
@@ -316,6 +320,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
             }}
             onHamdastClose={handleCloseAppModal}
             closeVardastOnHamdastClose
+            onRunFullscreenChange={setAppRunFullscreen}
           />
         </HamdastAppModal>
       )}

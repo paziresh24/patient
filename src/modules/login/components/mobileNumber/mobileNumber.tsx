@@ -143,18 +143,17 @@ export const MobileNumber = (props: MobileNumberProps) => {
                   type: 'login-with-oidc',
                 });
                 setOidcOauthLoading(true);
-                location.assign(
-                  `https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/shahrah${
-                    university ? '?university=true' : ''
-                  }&response_type=code&scope=openid&kc_idp_hint=oidc&state=` +
-                    encodeURI(
-                      `${window.location?.origin}/login?redirect_url=${
-                        router.query?.redirect_url
-                          ? encodeURI(router.query?.redirect_url as string)
-                          : encodeURI(`${window.location.pathname}${window.location.search}`)
-                      }`,
-                    ),
-                );
+
+                const origin = window.location.origin;
+                const redirectUrl = router.query?.redirect_url
+                  ? (router.query?.redirect_url as string)
+                  : `${window.location.pathname}${window.location.search}`;
+
+                const authServiceUrl = `https://user.paziresh24.com/auth/gov?origin=${encodeURIComponent(
+                  origin,
+                )}&redirect_url=${encodeURIComponent(redirectUrl)}`;
+
+                location.assign(authServiceUrl);
               }}
             >
               ورود از طریق دولت من

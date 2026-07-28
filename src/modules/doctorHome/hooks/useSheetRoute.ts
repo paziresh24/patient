@@ -165,11 +165,14 @@ function syncSheetFromBrowserNavigation(key: string) {
   }
 }
 
+export type CloseSheetHistory = 'auto' | 'back' | 'replace';
+
 /**
  * UI state (store) و URL مستقل ولی هماهنگ:
  * - باز/بسته شدن UI از store
  * - URL با History API (موبایل) یا shallow router (دسکتاپ)
  * - sync از URL فقط در mount و popstate
+ * - بستن شیت بالای استک با history.back تا بک منوی زیرین را برگرداند
  */
 export function useSheetRoute(key: string) {
   const router = useRouter();
@@ -217,31 +220,85 @@ export function useSheetRoute(key: string) {
     [router, key, useHistoryUrl],
   );
 
-  const closeSheet = useCallback(() => {
-    const entry = getEntry(key);
-    if (!entry.open) return;
+  /**
+   * شیت‌های هم‌سطح را از استک برمی‌دارد و این شیت را روی والدین باز می‌کند.
+   * - اگر بالای استک یک شیت هم‌سطح بود → replace (تعویض، بدون ورود تاریخچه اضافه)
+   * - اگر بالای استک منوی والد بود → push (بک برمی‌گردد به منو)
+   */
+  const openSheetOver = useCallback(
+    (keysToClose: string[], extraParams?: Record<string, string>) => {
+      if (isOpenSuppressed(key)) return;
 
-    const extraParamsToRemove = { ...entry.lastExtraParams };
+      const closeSet = new Set(keysToClose.filter(sheetKey => sheetKey !== key));
+      const currentStack = readStack();
+      const previousTop = currentStack[currentStack.length - 1];
 
-    patchSheet(key, {
-      lastClosedAt: Date.now(),
-      open: false,
-      lastExtraParams: {},
-    });
+      closeSet.forEach(sheetKey => {
+        const entry = getEntry(sheetKey);
+        if (!entry.open) return;
+        patchSheet(sheetKey, {
+          lastClosedAt: Date.now(),
+          open: false,
+          lastExtraParams: {},
+        });
+      });
 
-    const currentStack = readStack();
-    if (!currentStack.includes(key)) return;
+      patchSheet(key, {
+        lastExtraParams: extraParams ?? {},
+        open: true,
+      });
 
-    const newStack = currentStack.filter(sheetKey => sheetKey !== key);
-    const baseQuery = queryFromLocation();
-    Object.keys(extraParamsToRemove).forEach(param => {
-      delete baseQuery[param];
-    });
+      const newStack = [...currentStack.filter(sheetKey => sheetKey !== key && !closeSet.has(sheetKey)), key];
+      const swappingSibling = !!previousTop && (previousTop === key || closeSet.has(previousTop));
+      commitStackToUrl(
+        router,
+        useHistoryUrl,
+        newStack,
+        extraParams ?? {},
+        swappingSibling ? 'replace' : 'push',
+      );
+    },
+    [router, key, useHistoryUrl],
+  );
 
-    commitStackToUrl(router, useHistoryUrl, newStack, {}, 'replace');
-  }, [router, key, useHistoryUrl]);
+  const closeSheet = useCallback(
+    (historyMode: CloseSheetHistory = 'auto') => {
+      const entry = getEntry(key);
+      if (!entry.open) return;
 
-  return { open, openSheet, closeSheet };
+      const extraParamsToRemove = { ...entry.lastExtraParams };
+
+      patchSheet(key, {
+        lastClosedAt: Date.now(),
+        open: false,
+        lastExtraParams: {},
+      });
+
+      const currentStack = readStack();
+      if (!currentStack.includes(key)) return;
+
+      const isTop = currentStack[currentStack.length - 1] === key;
+      const useBack =
+        historyMode === 'back' || (historyMode === 'auto' && isTop && typeof window !== 'undefined');
+
+      if (useBack) {
+        // ورود قبلی استک بدون این شیت را دارد (open با push آمده) — بک منوی زیرین را نشان می‌دهد
+        window.history.back();
+        return;
+      }
+
+      const newStack = currentStack.filter(sheetKey => sheetKey !== key);
+      const baseQuery = queryFromLocation();
+      Object.keys(extraParamsToRemove).forEach(param => {
+        delete baseQuery[param];
+      });
+
+      commitStackToUrl(router, useHistoryUrl, newStack, {}, 'replace');
+    },
+    [router, key, useHistoryUrl],
+  );
+
+  return { open, openSheet, openSheetOver, closeSheet };
 }
 
 /** @deprecated از `useSheetDrawerProps` استفاده کنید */

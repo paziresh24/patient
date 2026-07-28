@@ -61,6 +61,7 @@ export const Factor = (props: FactorProps) => {
   const { handleOpen, modalProps } = useModal();
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
+  const showRefundGuarantee = useFeatureIsOn('online-visit-refund-guarantee-copy');
   const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
   const isKatibePaymentMethodsEnabled = useFeatureIsOn('katibe-paymentmethods');
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -174,7 +175,7 @@ export const Factor = (props: FactorProps) => {
           payment_description_html={payment_description_html || ''}
           loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor || isKatibePaymentMethodsEnabled ? balanceLoading : false)}
         />
-        {centerId === CENTERS.CONSULT && !refundTermsBadge && (
+        {centerId === CENTERS.CONSULT && showRefundGuarantee && !refundTermsBadge && (
           <Chips
             className="self-center !py-2 text-slate-800"
             icon={
@@ -191,7 +192,7 @@ export const Factor = (props: FactorProps) => {
             ضمانت %100 بازگشت وجه در صورت نارضایتی
           </Chips>
         )}
-        {centerId === CENTERS.CONSULT && refundTermsBadge && (
+        {centerId === CENTERS.CONSULT && showRefundGuarantee && refundTermsBadge && (
           <Chips
             className="self-center !py-2 text-slate-800"
             icon={

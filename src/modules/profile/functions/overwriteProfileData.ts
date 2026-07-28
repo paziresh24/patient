@@ -120,18 +120,26 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
       ? source?.group_expertises ?? []
       : group_expertises.map((item: any) => item && { id: item.id, en_slug: item.slug, icon: item.icon, name: item.title }),
     expertises:
-      (overwriteData?.expertises ?? source?.expertises)?.map?.((item: any) => ({
-        alias_title: getDisplayDoctorExpertise({
-          aliasTitle: item.alias_title,
-          degree: item.degree?.name,
-          expertise: item.expertise?.name,
-        }),
-        expertise_id: item.expertise?.id,
-        degree_id: item.degree?.id,
-        degree_name: item?.degree?.name ?? '',
-        expertise_name: item.expertise?.name ?? '',
-        ...((item.expertise?.slug ?? item.slug) && { slug: item.expertise?.slug ?? item.slug }),
-      })) ?? [],
+      (overwriteData?.expertises ?? source?.expertises)?.map?.((item: any) => {
+        // New expertise API may flatten to { name, id, slug }; full-profile keeps { expertise: { name } }.
+        const expertiseName = item.expertise?.name ?? item.name ?? '';
+        const expertiseId = item.expertise?.id ?? item.id;
+        const expertiseSlug = item.expertise?.slug ?? item.slug;
+        const degreeName = item.degree?.name ?? '';
+
+        return {
+          alias_title: getDisplayDoctorExpertise({
+            aliasTitle: item.alias_title,
+            degree: degreeName,
+            expertise: expertiseName,
+          }),
+          expertise_id: expertiseId,
+          degree_id: item.degree?.id,
+          degree_name: degreeName,
+          expertise_name: expertiseName,
+          ...(expertiseSlug && { slug: expertiseSlug }),
+        };
+      }) ?? [],
   };
 
   const feedbacks = {
@@ -184,8 +192,10 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const similarLinks = source?.similar_links ?? null;
 
   const onlineVisit = {
+    // Legacy full-profile gate — still mapped for activity widgets; profile booking uses centers API + Saman.
     enabled: source?.consult_active_booking ?? null,
-    channels: source?.online_visit_channel_types ?? null,
+    // Plasmic Services calls channels.includes(...) — never pass null.
+    channels: source?.online_visit_channel_types ?? [],
   };
 
   const waitingTimeInfo = overwriteData?.feedbacks?.waiting_time_info?.filter((items: any) => !!items?.waiting_time_title) ?? null;

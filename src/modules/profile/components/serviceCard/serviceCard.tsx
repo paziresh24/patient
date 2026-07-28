@@ -20,6 +20,7 @@ interface ServiceCardProps {
       text: string;
       onClick: () => void;
       loading?: boolean;
+      disabled?: boolean;
       hint?: string;
       icon?: ReactNode;
       className?: string;
@@ -63,6 +64,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
               block
               key={index}
               loading={action.loading}
+              disabled={action.disabled}
               {...(action.icon && { icon: action.icon })}
               onClick={action.onClick}
               className={action.className ?? ''}

@@ -13,6 +13,7 @@ import getConfig from 'next/config';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 const { publicRuntimeConfig } = getConfig();
 
 export const BookmarksList = () => {
@@ -68,7 +69,7 @@ export const BookmarksList = () => {
               <DoctorInfo
                 firstName={item.name}
                 lastName={item.family}
-                avatar={publicRuntimeConfig.CDN_BASE_URL + item.image}
+                avatar={getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)}
                 expertise={getDisplayDoctorExpertise({
                   aliasTitle: item.expertises?.[0]?.alias_title ?? '',
                   degree: item.expertises?.[0]?.degree?.name ?? '',

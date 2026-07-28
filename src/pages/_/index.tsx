@@ -45,6 +45,7 @@ const Page = () => {
   const queryClient = useQueryClient();
   const { handleOpen, handleClose, modalProps } = useModal();
   const [app, setApp] = useState<string>('');
+  const [appRunFullscreen, setAppRunFullscreen] = useState(false);
   const swapActive = useDoctorViewSwapActive();
   const doctorLauncherLoading = useIsNewDoctorLauncherLoading();
   const { isResolving, shouldShowLauncher } = useLauncherPageAccess();
@@ -72,8 +73,14 @@ const Page = () => {
     <>
       <Seo title="خدمات" noIndex />
 
-      <HamdastAppModal {...modalProps} title="اپلیکیشن">
-        <AppFrame appKey={app} params={['launcher']} onHamdastClose={handleClose} />
+      <HamdastAppModal {...modalProps} title="اپلیکیشن" runFullscreen={appRunFullscreen}>
+        <AppFrame
+          key={app}
+          appKey={app}
+          params={['launcher']}
+          onHamdastClose={handleClose}
+          onRunFullscreenChange={setAppRunFullscreen}
+        />
       </HamdastAppModal>
       <NotificationPermissionModal
         isOpen={showModal}

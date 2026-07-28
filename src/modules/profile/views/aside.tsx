@@ -39,6 +39,7 @@ export const Aside = (data: any) => {
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
+    useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
   } = data;
 
   const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
@@ -65,9 +66,12 @@ export const Aside = (data: any) => {
         return {
           expertises,
           doctorCity: information.city_en_slug,
+          ssrUseSamanAvailabilityStatus: !!ssrUseSamanAvailabilityStatus,
         };
       },
-      children: (props: any) => <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} {...props} />,
+      children: (props: any) => (
+        <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} centers={centers} />
+      ),
     },
     {
       id: 'book-me',
@@ -83,6 +87,7 @@ export const Aside = (data: any) => {
           slug: seo.slug,
           profileData,
           isBulk,
+          ssrUseSamanAvailabilityStatus: !!ssrUseSamanAvailabilityStatus,
         };
       },
       children: (props: any) => <Services {...props} enabledWidgets={hamdastWidgets} dontShowDeactiveBox={!!fragmentComponents?.risman} />,
