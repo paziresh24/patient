@@ -136,11 +136,29 @@ function authHeaders(): Record<string, string> {
   return typeof token === 'string' && token ? { authorization: `Bearer ${token}` } : {};
 }
 
+/**
+ * 🔴 `credentials: 'include'` is not belt-and-braces here — it is the primary path.
+ *
+ * Measured on production 2026-07-30: every turn from a logged-in user reached the
+ * orchestrator **anonymous**, and its counters said exactly why — `verified: 0,
+ * rejected: 0, errors: 0` means no credential arrived at all, not that one was
+ * refused. `getCookie('token')` returns nothing in the live session, so
+ * `authHeaders()` was contributing an empty object on every call.
+ *
+ * So instead of depending on the cookie being readable from JavaScript, we let the
+ * browser attach it. khesht now echoes the paziresh24 origin and sets
+ * `Allow-Credentials` (a wildcard origin is forbidden with credentials), and reads
+ * the `token` cookie server-side. The explicit header stays as the first choice for
+ * callers where it *is* readable.
+ */
+const CREDENTIALS: RequestCredentials = 'include';
+
 /** Never throws: a null return means "act as if chat does not exist". */
 export async function postTurn(req: TurnRequest): Promise<TurnResponse | null> {
   try {
     const res = await fetch(`${API_BASE}/api/khesht/chat/turn`, {
       method: 'POST',
+      credentials: CREDENTIALS,
       headers: { 'content-type': 'application/json', ...authHeaders() },
       body: JSON.stringify({
         text: req.text,
@@ -171,7 +189,7 @@ export async function postTurn(req: TurnRequest): Promise<TurnResponse | null> {
 
 export async function listConversations(): Promise<ConversationSummary[]> {
   try {
-    const res = await fetch(`${API_BASE}/api/khesht/chat/conversations?limit=30`, { headers: authHeaders() });
+    const res = await fetch(`${API_BASE}/api/khesht/chat/conversations?limit=30`, { headers: authHeaders(), credentials: CREDENTIALS });
     if (!res.ok) return [];
     return ((await res.json())?.conversations ?? []) as ConversationSummary[];
   } catch {
@@ -185,6 +203,7 @@ export async function getConversation(
   try {
     const res = await fetch(`${API_BASE}/api/khesht/chat/conversations/${encodeURIComponent(id)}`, {
       headers: authHeaders(),
+      credentials: CREDENTIALS,
     });
     if (!res.ok) return null;
     return await res.json();
@@ -198,6 +217,7 @@ export async function deleteConversation(id: string): Promise<boolean> {
     const res = await fetch(`${API_BASE}/api/khesht/chat/conversations/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: authHeaders(),
+      credentials: CREDENTIALS,
     });
     return res.ok;
   } catch {
@@ -210,6 +230,7 @@ export async function restoreConversation(id: string): Promise<boolean> {
     const res = await fetch(`${API_BASE}/api/khesht/chat/conversations/${encodeURIComponent(id)}/restore`, {
       method: 'POST',
       headers: authHeaders(),
+      credentials: CREDENTIALS,
     });
     return res.ok;
   } catch {
