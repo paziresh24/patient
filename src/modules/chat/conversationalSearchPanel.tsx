@@ -46,6 +46,12 @@ import { useChatGate } from './useChatGate';
 
 const ENTRY_POINT = 'search_box' as const;
 
+const ChatIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+  </svg>
+);
+
 /** How many provider cards the expanded box shows. See the note at the render site. */
 const MAX_CARDS = 3;
 
@@ -112,12 +118,32 @@ export const ConversationalSearchPanel = () => {
     if (!queryText || queryText === askedFor.current) return;
     if (!looksConversational(queryText)) return;
     askedFor.current = queryText;
-    conversationId.current = '';
-    setTurns([{ user: queryText }]);
+    // 🔴 Do NOT reset the thread. The first version cleared `turns` and the
+    // conversation id on every search from the box, so the owner's report was
+    // exactly right: "each time I ask, the previous question and answer are gone."
+    // A second sentence typed into the search box is the same conversation
+    // continuing — keeping the id is also what lets the orchestrator use context.
+    setTurns(current => [...current, { user: queryText }]);
     void ask(queryText);
   }, [queryText, gate.allowed, dismissed, ask]);
 
-  if (!gate.allowed || dismissed || turns.length === 0) return null;
+  // Closed by the user: leave a way back in. A dead end is not a kill-switch —
+  // without this the only way to see the panel again was to re-run the search.
+  if (gate.allowed && dismissed && turns.length > 0) {
+    return (
+      <button
+        type="button"
+        dir="rtl"
+        className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-2 text-xs text-slate-600 hover:bg-slate-50"
+        onClick={() => setDismissed(false)}
+      >
+        <ChatIcon />
+        نمایش دوباره‌ی راهنمای انتخاب پزشک ({turns.filter(t => t.assistant).length} پاسخ)
+      </button>
+    );
+  }
+
+  if (!gate.allowed || turns.length === 0) return null;
 
   const submitFollowUp = () => {
     const text = followUp.trim();
@@ -150,7 +176,10 @@ export const ConversationalSearchPanel = () => {
 
       {turns.map((turn, i) => (
         <div key={i} className="flex flex-col gap-2">
-          {i > 0 && <p className="self-end rounded-2xl bg-primary/10 px-3 py-2 text-xs">{turn.user}</p>}
+          {/* Every question, including the first. The first one is also visible in
+              the search box, but once the thread has more than one turn the box only
+              shows the latest — so hiding it here lost the history. */}
+          <p className="self-end rounded-2xl bg-primary/10 px-3 py-2 text-xs">{turn.user}</p>
 
           {turn.assistant?.emergency && (
             <p className="rounded-xl border border-solid border-red-300 bg-red-50 p-3 text-xs font-bold leading-6 text-red-700">
