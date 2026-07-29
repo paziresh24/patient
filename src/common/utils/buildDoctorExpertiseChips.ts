@@ -34,14 +34,20 @@ export const buildDoctorExpertiseChips = (
     const main = normalizeLabel([exp.degree_name, exp.expertise_name].filter(Boolean).join(' '));
     const alias = normalizeLabel(exp.alias_title);
 
-    // Search uses display_expertise (degree + expertise), not alias service dumps.
+    // Prefer degree + expertise (matches search display_expertise) regardless of alias_title.
     if (main && exp.expertise_name) {
       push(main);
       continue;
     }
 
+    // degree_name only (no expertise_name) — use it with alias as fallback.
+    if (exp.degree_name && !exp.expertise_name) {
+      push(main || alias.split('|')[0]);
+      continue;
+    }
+
     if (alias.includes('|')) {
-      // No usable degree+expertise: take first segment only (never the full pipe list).
+      // No degree+expertise at all: take first non-empty segment of the pipe list.
       const first = alias
         .split('|')
         .map(part => normalizeLabel(part))
