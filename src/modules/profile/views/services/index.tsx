@@ -34,14 +34,9 @@ import {
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
-<<<<<<< HEAD
 import { getProfileOnlineVisitVisibility } from '@/modules/profile/utils/onlineVisitVisibility';
 import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
-=======
-import { shouldShowProfileOnlineVisit } from '@/modules/profile/utils/onlineVisitVisibility';
-import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
->>>>>>> origin/main
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;

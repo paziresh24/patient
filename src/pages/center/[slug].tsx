@@ -2,6 +2,7 @@ import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slugProfile';
 import { search as searchApi } from '@/common/apis/services/search/search';
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
+import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text';
 import ErrorBoundary from '@/common/components/layouts/errorBoundary';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
@@ -11,6 +12,7 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import { sendCenterProfileEvent, sendCenterProfileEventServer } from '@/modules/profile/events/nightBatEvents';
+import { sanitizeCenterSearchResultPage } from '@/modules/profile/utils/sanitizeCenterSearchDoctors';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { sanitizeDehydratedState } from '@/common/utils/sanitizeDehydratedState';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
@@ -87,6 +89,7 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     isFetchingNextPage,
     isLoading,
     isError: isDoctorsError,
+    refetch: refetchDoctors,
     remove,
   } = useInfiniteQuery({
     queryKey: [
@@ -99,14 +102,16 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
         },
       },
     ],
-    queryFn: ({ pageParam }) =>
-      searchApi({
+    queryFn: async ({ pageParam }) => {
+      const page = await searchApi({
         route: selectedExpertise ?? '',
         query: {
           page: pageParam?.page ?? 1,
           ...filters,
         },
-      }),
+      });
+      return sanitizeCenterSearchResultPage(page);
+    },
     getNextPageParam: lastPage => {
       const pagination = lastPage?.search?.pagination;
       const total = lastPage?.search?.total;
@@ -115,6 +120,7 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     },
     enabled: !!centerId,
     refetchOnMount: false,
+    useErrorBoundary: false,
   });
 
   const expertises = useSearchSuggestion(
@@ -390,7 +396,9 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
               image={getImageUrl(profileData?.image, publicRuntimeConfig.CDN_BASE_URL)}
               title={`${profileData?.group_expertises?.length ?? 0} تخصص پزشکی`}
               subTitle={`پزشک فعال: ${profileData?.doctors?.length ?? 0}`}
-              serviceList={profileData?.expertises?.map((expertise: any) => expertise.alias_title)}
+              serviceList={(profileData?.expertises ?? [])
+                .map((expertise: any) => expertise?.alias_title)
+                .filter(Boolean)}
               toolBarItems={[
                 {
                   type: 'share',
@@ -441,21 +449,32 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
               </li>
             </ul>
           </nav>
-          {!isDoctorsError && (
-            <section id="doctors-list" className="flex flex-col w-full space-y-3">
-              <Text fontWeight="bold" className="px-4 md:px-0">
-                لیست پزشکان
-              </Text>
-              <div className="px-4 md:p-0">
+          <section id="doctors-list" className="flex flex-col w-full space-y-3">
+            <Text fontWeight="bold" className="px-4 md:px-0">
+              لیست پزشکان
+            </Text>
+            <div className="px-4 md:p-0">
+              {isDoctorsError ? (
+                <div className="flex flex-col items-center gap-3 p-4 text-center rounded-lg bg-slate-200">
+                  <Text fontSize="sm" fontWeight="medium">
+                    خطا در بارگذاری لیست پزشکان. بقیهٔ اطلاعات مرکز در دسترس است.
+                  </Text>
+                  <Button variant="secondary" onClick={() => refetchDoctors()}>
+                    تلاش مجدد
+                  </Button>
+                </div>
+              ) : (
                 <ErrorBoundary>
                   <ListOfDoctors
                     isMainSite={isMainSite}
                     doctors={doctors}
                     expertises={
-                      expertises.data?.[0]?.items?.[0]?.sub_items?.map((expertise: any) => ({
-                        label: expertise.name,
-                        value: expertise.url,
-                      })) ?? []
+                      expertises.data?.[0]?.items?.[0]?.sub_items
+                        ?.filter((expertise: any) => expertise?.name && expertise?.url)
+                        ?.map((expertise: any) => ({
+                          label: expertise.name,
+                          value: expertise.url,
+                        })) ?? []
                     }
                     onChangePage={page => {
                       fetchNextPage({ pageParam: { page } });
@@ -476,9 +495,9 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
                     center_id={profileData?.id}
                   />
                 </ErrorBoundary>
-              </div>
-            </section>
-          )}
+              )}
+            </div>
+          </section>
           <ErrorBoundary>
             <section id="phone-and-address" className="flex flex-col w-full space-y-3 md:hidden">
               <Text fontWeight="bold" className="px-4 md:px-0">
