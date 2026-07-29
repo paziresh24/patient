@@ -36,6 +36,7 @@ import useLockScroll from '@/common/hooks/useLockScroll';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import ErrorPage from '@/modules/profile/components/errorPage';
+import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
@@ -278,6 +279,21 @@ const DoctorProfile = (props: any) => {
     }
   }, [dontShowRateDetails, information, slug, growthbook?.getAttributes()?.slug, slug, growthbook?.ready, userPending]);
 
+  const renderResultSentRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!information?.id) return;
+    const key = `${slug}:${information.id}`;
+    if (renderResultSentRef.current === key) return;
+    renderResultSentRef.current = key;
+    sendDoctorProfileEvent('profile_render_result', 'success', {
+      slug,
+      doctor_id: information.id,
+      should_fetch_on_client: !!shouldFetchOnClient,
+      centers_count: centers?.length ?? 0,
+      is_bulk: !!isBulk,
+    });
+  }, [information?.id, slug, shouldFetchOnClient, centers?.length, isBulk]);
+
   useEffect(() => {
     if (information) {
       if (shouldUseIncrementPageView) {
@@ -456,11 +472,11 @@ const DoctorProfile = (props: any) => {
 
   if (isError) {
     const clientErrorStatusCode = (error as any)?.response?.status ?? 500;
-    return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} />;
+    return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} slug={currentSlug} />;
   }
 
   if ([404, 500, 504, 410].includes(status) && !shouldFetchOnClient) {
-    return <ErrorPage statusCode={status} refresh={refetch} />;
+    return <ErrorPage statusCode={status} refresh={refetch} slug={slug ?? currentSlug} />;
   }
 
   const brandName = customize?.partnerTitle || 'پذیرش24';

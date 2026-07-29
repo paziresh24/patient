@@ -1,5 +1,6 @@
 import { CENTERS } from '@/common/types/centers';
 import {
+  getProfileOnlineVisitVisibility,
   hasBookableOnlineVisitCenter,
   isLegacyConsultActiveBookingEnabled,
   shouldShowProfileOnlineVisit,
@@ -117,5 +118,39 @@ describe('onlineVisitVisibility', () => {
         samanData: undefined,
       }),
     ).toBe(false);
+  });
+
+  it('exposes visibility reason for Splunk', () => {
+    expect(
+      getProfileOnlineVisitVisibility({
+        centers: [],
+        samanLoaded: false,
+        samanData: undefined,
+      }).reason,
+    ).toBe('no_bookable_5532');
+
+    expect(
+      getProfileOnlineVisitVisibility({
+        centers: [{ id: CENTERS.CONSULT }],
+        samanLoaded: false,
+        samanData: undefined,
+      }).reason,
+    ).toBe('shown_pending_saman');
+
+    expect(
+      getProfileOnlineVisitVisibility({
+        centers: [{ id: CENTERS.CONSULT }],
+        samanLoaded: true,
+        samanData: samanOnlineUnavailable,
+      }).reason,
+    ).toBe('saman_unavailable');
+
+    expect(
+      getProfileOnlineVisitVisibility({
+        centers: [{ id: CENTERS.CONSULT }],
+        samanLoaded: true,
+        samanData: samanOnlineAvailable,
+      }).reason,
+    ).toBe('shown');
   });
 });
