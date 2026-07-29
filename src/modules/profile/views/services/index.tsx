@@ -14,7 +14,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import BulkService from './bulk';
 import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
@@ -32,13 +32,11 @@ import {
   getScopedOnlineVisitAvailability,
   mapSamanAvailabilityToCenters,
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
-<<<<<<< HEAD
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
-import { shouldShowProfileOnlineVisit } from '@/modules/profile/utils/onlineVisitVisibility';
-=======
+import { getProfileOnlineVisitVisibility } from '@/modules/profile/utils/onlineVisitVisibility';
 import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
->>>>>>> origin/main
+import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -145,12 +143,41 @@ export const Services = ({
   const hasPresence =
     router.query.centerTarget != CENTERS.CONSULT && centers.some((center: any) => String(center.id) !== CENTERS.CONSULT);
 
-  const showOnlineVisit = shouldShowProfileOnlineVisit({
+  const onlineVisitVisibility = getProfileOnlineVisitVisibility({
     centers,
     onlineVisit,
     samanLoaded,
     samanData: samanAvailability.data,
   });
+  const showOnlineVisit = onlineVisitVisibility.show;
+  const onlineVisitVisibilitySentRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!slug || !useSamanAvailabilityStatus) return;
+    // Wait until Saman settled (or errored) so reason is meaningful; still log pending once if never settles.
+    if (!samanLoaded && !samanAvailability.isError) return;
+    const key = `${slug}:${onlineVisitVisibility.reason}:${showOnlineVisit}`;
+    if (onlineVisitVisibilitySentRef.current === key) return;
+    onlineVisitVisibilitySentRef.current = key;
+    sendDoctorProfileEvent('online_visit_visibility', 'gate_evaluated', {
+      slug,
+      doctor_id: id,
+      show: showOnlineVisit,
+      reason: onlineVisitVisibility.reason,
+      has_bookable_5532: centers?.some((c: any) => String(c.id) === CENTERS.CONSULT) ?? false,
+      saman_loaded: samanLoaded,
+      saman_error: samanAvailability.isError,
+    });
+  }, [
+    slug,
+    id,
+    useSamanAvailabilityStatus,
+    samanLoaded,
+    samanAvailability.isError,
+    showOnlineVisit,
+    onlineVisitVisibility.reason,
+    centers,
+  ]);
 
   const consultCenter = centers.find((center: any) => String(center.id) === CENTERS.CONSULT);
   const needsOnlineServices =
@@ -376,56 +403,41 @@ export const Services = ({
           <Skeleton w="100%" h="120px" rounded="lg" />
         )}
         {showOnlineVisit &&
-<<<<<<< HEAD
           !(needsOnlineServices && onlineServicesQuery.isFetching) &&
-          onlineVisitServices.map((service: any, index: number) => (
-            <Fragment2
-              key={index}
-              name="Services"
-              Component={PlasmicServices}
-              args={{ ...profileData, service, onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }) }}
-              variants={{ type: 'onlineVisit' }}
-            />
-          ))}
+          onlineVisitServices.map((service: any, index: number) => {
+            // Feature on (non-21/47): hide Plasmic hardcoded 3-day line while we render Hami hours ourselves.
+            // Expertise 21/47 keep legacy "مدت زمان گفتگو" from service.duration — do not touch.
+            const expertiseGroupId = expertises?.group_expertises?.[0]?.id;
+            const isDurationRowExpertise = expertiseGroupId === 21 || expertiseGroupId === 47;
+            const showLifecycleAskDoctorCopy = useChatLifecycleDuration && !isDurationRowExpertise;
+            const serviceWithLifecycleDuration = !showLifecycleAskDoctorCopy
+              ? service
+              : chatLifecycleDays != null
+                ? { ...service, chat_lifecycle_auto_close_days: chatLifecycleDays }
+                : { ...service, chat_lifecycle_loading: true };
+
+            return (
+              <div key={index} className="flex flex-col gap-2">
+                <Fragment2
+                  name="Services"
+                  Component={PlasmicServices}
+                  args={{
+                    ...profileData,
+                    service: serviceWithLifecycleDuration,
+                    onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }),
+                  }}
+                  variants={{ type: 'onlineVisit' }}
+                />
+                {showLifecycleAskDoctorCopy && isChatLifecycleDurationPending && (
+                  <div className="px-4 py-1">
+                    <Skeleton w="15rem" h="1rem" rounded="full" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         {showPresenceSection &&
           (showPresenceBulk ? (
-=======
-          centers
-            .find((center: any) => center.id === CENTERS.CONSULT)
-            ?.services?.map((service: any, index: number) => {
-              // Feature on (non-21/47): hide Plasmic hardcoded 3-day line while we render Hami hours ourselves.
-              // Expertise 21/47 keep legacy "مدت زمان گفتگو" from service.duration — do not touch.
-              const expertiseGroupId = expertises?.group_expertises?.[0]?.id;
-              const isDurationRowExpertise = expertiseGroupId === 21 || expertiseGroupId === 47;
-              const showLifecycleAskDoctorCopy = useChatLifecycleDuration && !isDurationRowExpertise;
-              const serviceWithLifecycleDuration = !showLifecycleAskDoctorCopy
-                ? service
-                : chatLifecycleDays != null
-                  ? { ...service, chat_lifecycle_auto_close_days: chatLifecycleDays }
-                  : { ...service, chat_lifecycle_loading: true };
-
-              return (
-                <div key={index} className="flex flex-col gap-2">
-                  <Fragment2
-                    name="Services"
-                    Component={PlasmicServices}
-                    args={{
-                      ...profileData,
-                      service: serviceWithLifecycleDuration,
-                      onEvent: () => onEvent({ centerId: CENTERS.CONSULT, serviceId: service.id }),
-                    }}
-                    variants={{ type: 'onlineVisit' }}
-                  />
-                  {showLifecycleAskDoctorCopy && isChatLifecycleDurationPending && (
-                    <div className="px-4 py-1">
-                      <Skeleton w="15rem" h="1rem" rounded="full" />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-        {showPresenceSection &&          (showPresenceBulk ? (
->>>>>>> origin/main
             <BulkService
               displayName={doctor.display_name}
               expertises={expertises}

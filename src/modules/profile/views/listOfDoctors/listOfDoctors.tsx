@@ -69,9 +69,13 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
       group: 'center_profile',
       type: 'doctor_card_click',
       event: {
+        page_type: 'center',
         element_name: elementName,
         element_content: elementContent,
         title: item?.title,
+        doctor_url: item?.url ?? item?.absolute_link ?? null,
+        center_id,
+        slug: typeof router.query.slug === 'string' ? router.query.slug : null,
         terminal_id: getCookie('terminal_id'),
       },
     });
