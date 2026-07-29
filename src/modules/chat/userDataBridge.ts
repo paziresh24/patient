@@ -120,6 +120,38 @@ export function resolveBooking(
   return null;
 }
 
+export type ClientActionPlan =
+  /** Show the appointment list; nothing else happens. */
+  | { kind: 'show_list' }
+  /** Ask the user to confirm cancelling this exact appointment. */
+  | { kind: 'confirm_cancel'; booking: BookingSummary }
+  /** The action asks for confirmation and we have no dialog for it ⇒ do nothing. */
+  | { kind: 'refuse'; reason: 'no_confirmation_ui' };
+
+/**
+ * What should happen for a `client_action` — decided here, as a pure function, so
+ * the rule is testable instead of living inside a component effect.
+ *
+ * 🔴 The `requires_confirmation` branch exists because of a real gap found by
+ * inspecting the shipped bundle (2026-07-30): the flag was not read anywhere on the
+ * client, and confirmation was implied by `kind === 'cancel_booking'`. That is
+ * correct for today's only mutating action and a trap for the next one. Now an
+ * action that declares it needs confirmation, but has no confirmation UI here, is
+ * **refused** — the unknown case fails closed rather than executing silently.
+ */
+export function planClientAction(
+  action: { kind: string; requires_confirmation?: boolean; params?: Record<string, string> },
+  bookings: BookingSummary[]
+): ClientActionPlan {
+  if (action.kind === 'cancel_booking') {
+    const booking = resolveBooking(action.params, bookings);
+    // No confident match ⇒ show the list and let the user point at one.
+    return booking ? { kind: 'confirm_cancel', booking } : { kind: 'show_list' };
+  }
+  if (action.requires_confirmation) return { kind: 'refuse', reason: 'no_confirmation_ui' };
+  return { kind: 'show_list' };
+}
+
 /**
  * Cancel one appointment — only ever called after the user has tapped confirm on a
  * dialog showing this exact appointment (owner: «حتماً دبل‌چک بگیریم ازش»).

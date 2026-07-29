@@ -9,7 +9,7 @@ jest.mock('@/common/apis/services/booking/getBooks', () => ({ getBooks: jest.fn(
 jest.mock('@/common/apis/services/booking/removeBook', () => ({ removeBook: jest.fn() }));
 
 import { getBooks } from '@/common/apis/services/booking/getBooks';
-import { fetchMyBookings, resolveBooking, toChatContext, type BookingSummary } from './userDataBridge';
+import { fetchMyBookings, planClientAction, resolveBooking, toChatContext, type BookingSummary } from './userDataBridge';
 
 const booking = (over: Partial<BookingSummary> = {}): BookingSummary => ({
   bookId: 'B-1',
@@ -119,5 +119,36 @@ describe('fetchMyBookings', () => {
   it('drops a row with no book_id rather than rendering a booking that cannot be acted on', async () => {
     mocked.mockResolvedValue({ data: [{ from: 1, center: {}, doctor_info: {}, patient_info: {} }] });
     expect(await fetchMyBookings()).toEqual([]);
+  });
+});
+
+describe('planClientAction — the confirmation flag is load-bearing', () => {
+  const list = [booking({ bookId: 'B-1' })];
+
+  it('proposes a confirmation for a resolvable cancellation, never performs it', () => {
+    const plan = planClientAction({ kind: 'cancel_booking', requires_confirmation: true, params: { book_id: 'B-1' } }, list);
+    expect(plan).toEqual({ kind: 'confirm_cancel', booking: list[0] });
+  });
+
+  it('falls back to showing the list when the id cannot be resolved', () => {
+    const plan = planClientAction({ kind: 'cancel_booking', requires_confirmation: true, params: { book_id: 'nope' } }, list);
+    expect(plan).toEqual({ kind: 'show_list' });
+  });
+
+  it('just shows the list for a read-only action', () => {
+    expect(planClientAction({ kind: 'fetch_my_bookings', requires_confirmation: false }, list)).toEqual({
+      kind: 'show_list',
+    });
+  });
+
+  it('REFUSES an unknown action that demands confirmation, instead of performing it', () => {
+    // The gap this catches, found by inspecting the shipped bundle: confirmation
+    // used to be implied by `kind === 'cancel_booking'`, so a future action marked
+    // requires_confirmation would have run with no dialog at all.
+    // verify-the-verifier: drop the flag check and this expectation goes red.
+    expect(planClientAction({ kind: 'some_future_mutation', requires_confirmation: true }, list)).toEqual({
+      kind: 'refuse',
+      reason: 'no_confirmation_ui',
+    });
   });
 });
