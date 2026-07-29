@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../support/fixtures';
 import { LISTING_TEMPLATES } from '../fixtures/test-data';
 import { BookingPage } from '../pages/booking.page';
 import { DoctorProfilePage } from '../pages/doctor-profile.page';

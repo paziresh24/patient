@@ -22,6 +22,25 @@ const baseURL = process.env.E2E_BASE_URL ?? 'https://www.paziresh24.com';
  */
 const CHANNEL = process.env.E2E_BROWSER_CHANNEL ?? 'chrome';
 
+/**
+ * روی هدفِ **غیر-production** (لوکال/استیجینگ) اسکریپت‌های third-party بلاک می‌شوند.
+ *
+ * چرا (یافته‌ی اندازه‌گیری‌شده 2026-07-30): همان تست‌هایی که علیه production سبزند، علیه یک
+ * buildِ لوکال قرمز می‌شدند — علتش کد نبود: اسکریپت‌های تحلیلی روی localhost با ۴۰۰/۵۰۳ برمی‌گردند
+ * و یک `ReferenceError: referrer is not defined` پرتاب می‌کنند که **hydration را نصفه می‌گذارد**؛
+ * نتیجه‌اش صفحه‌ای است که HTMLش هست ولی دکمه‌هایش رولِ درست نمی‌گیرند. کنترلِ اثبات‌کننده: با
+ * بلاک‌کردنِ همین دامنه‌ها، همان تست روی همان build سبز شد.
+ * پس این بلاک «پنهان‌کردنِ باگ» نیست؛ حذفِ نویزِ محیطی است تا تست دربارهٔ **کدِ ما** قضاوت کند.
+ */
+export const THIRD_PARTY_BLOCKLIST = [
+  '**googletagmanager.com/**',
+  '**clarity.ms/**',
+  '**najva.com/**',
+  '**google-analytics.com/**',
+  '**doubleclick.net/**',
+  '**yektanet.com/**',
+];
+
 export default defineConfig({
   testDir: './e2e/specs',
   // فلوهای بوکینگ چند مرحله‌ی شبکه‌ای دارند و روی محیطِ واقعی کند می‌شوند.

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from '../support/fixtures';
 import { LISTING_TEMPLATES, SEARCH_QUERIES } from '../fixtures/test-data';
 import { SearchPage } from '../pages/search.page';
 

@@ -35,6 +35,30 @@ export class DoctorProfilePage {
     await expect(this.scheduleButton).toBeVisible();
   }
 
+  /**
+   * همان بررسیِ بالا، ولی بدونِ throw — برای حلقه‌زدن روی چند پزشک.
+   *
+   * ⚠️ درسِ اجرای واقعی: «برنامه کاری» و بخشِ نظرات **داده-وابسته‌اند** (هر پزشکی برنامه/نظر
+   * ندارد). assert کردنشان روی «اولین پزشکِ نتایج» تستی می‌سازد که با عوض‌شدنِ نتایج به‌دروغ
+   * قرمز می‌شود. invariantِ درست: «این صفحه برای **حداقل یک** پزشکِ واقعی کامل رندر می‌شود».
+   */
+  async isFullyRendered(): Promise<boolean> {
+    // ⚠️ `isVisible()` لحظه‌ای است و انتظار نمی‌کشد؛ بخشِ نظرات سمتِ کلاینت می‌آید، پس باید
+    // صریح `waitFor` بزنیم وگرنه همیشه false می‌گیریم.
+    const visible = async (locator: Locator, timeout: number) => {
+      try {
+        await locator.waitFor({ state: 'visible', timeout });
+        return true;
+      } catch {
+        return false;
+      }
+    };
+    if (!(await visible(this.name, 20_000))) return false;
+    if (!(await visible(this.bookingButton, 20_000))) return false;
+    if (!(await visible(this.scheduleButton, 15_000))) return false;
+    return visible(this.reviewsHeading, 20_000);
+  }
+
   /** بخشِ نظرات باید محتوا داشته باشد (عنوانِ «نظرات درمورد …»). */
   async expectReviewsSection() {
     await expect(this.reviewsHeading).toBeVisible({ timeout: 30_000 });

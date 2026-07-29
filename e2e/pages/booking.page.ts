@@ -24,6 +24,23 @@ export class BookingPage {
     this.loginPrompt = page.getByRole('button', { name: /ورود|ثبت‌نام/ }).first();
   }
 
+  /**
+   * آیا این پزشک واقعاً به مرحله‌ی انتخابِ زمان با زمانِ خالی رسید؟ (بدونِ throw، برای حلقه)
+   *
+   * ⚠️ تله‌ای که این‌جا گرفتارش شدم: `locator.isVisible({ timeout })` **انتظار نمی‌کشد** —
+   * ‏Playwright آن را یک بررسیِ لحظه‌ای می‌داند و timeout را نادیده می‌گیرد. نتیجه‌اش تستی بود که
+   * روی production هم قرمز می‌شد چون محتوای وابسته به API هنوز نرسیده بود. راهِ درست `waitFor` است.
+   */
+  async hasTimeStep(timeout = 25_000): Promise<boolean> {
+    try {
+      await this.timeSection.waitFor({ state: 'visible', timeout });
+      await this.earliestSlot.waitFor({ state: 'visible', timeout: 10_000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   /** صفحه‌ی انتخابِ زمان باید با یک زمانِ خالیِ واقعی رندر شده باشد. */
   async expectTimeStep() {
     await expect(this.timeSection).toBeVisible({ timeout: 45_000 });
