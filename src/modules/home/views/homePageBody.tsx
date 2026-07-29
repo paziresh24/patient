@@ -9,6 +9,7 @@ import { Fragment2 } from '@/common/fragment/fragment2';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
+import { useShowPlasmicSuggestion } from '@/modules/search/hooks/useShowPlasmicSuggestion';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
@@ -40,6 +41,7 @@ const HomePageBody = ({
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const { setIsOpenSuggestion } = useSearchStore();
   const customize = useCustomize(state => state.customize);
+  const showPlasmicSuggestion = useShowPlasmicSuggestion();
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
   const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
 
@@ -93,7 +95,7 @@ const HomePageBody = ({
         )}
         <div className="flex flex-col items-center w-full gap-3">
           <Suggestion
-            showPlasmicSuggestion={!customize.partnerKey}
+            showPlasmicSuggestion={showPlasmicSuggestion}
             plasmicSearchComponent={plasmicSearchComponent}
             defaultInputValue={defaultInputValue}
             setDefaultInputValue={setDefaultInputValue}

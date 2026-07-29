@@ -34,9 +34,14 @@ import {
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+<<<<<<< HEAD
 import { getProfileOnlineVisitVisibility } from '@/modules/profile/utils/onlineVisitVisibility';
 import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
+=======
+import { shouldShowProfileOnlineVisit } from '@/modules/profile/utils/onlineVisitVisibility';
+import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
+>>>>>>> origin/main
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
@@ -102,7 +107,7 @@ export const Services = ({
   // Profile already has doctor.user_id (information.user_id) in the normal flow → Hami directly.
   // Fall back to profileData.user_id when information omits it; slug only when both missing.
   const profileDoctorUserId = doctor?.user_id ?? profileData?.user_id ?? profileData?.information?.user_id;
-  const { hours: chatLifecycleHours, days: chatLifecycleDays, isPending: isChatLifecycleDurationPending } =
+  const { days: chatLifecycleDays, isPending: isChatLifecycleDurationPending } =
     useChatLifecycleAutoCloseHours({
       enabled: useChatLifecycleDuration,
       doctorUserId: profileDoctorUserId,

@@ -135,7 +135,9 @@ const DoctorProfile = (props: any) => {
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
   const expertiseChipsConfig = useFeatureValue<{ slugs?: string[] }>('profile.expertise-chips-like-search', { slugs: [] });
 
-  const finalProps = (!!shouldFetchOnClient && !props?.information) || (clientData?.props as any)?.information ? clientData?.props : props;
+  const preferClientProps =
+    (!!shouldFetchOnClient && !props?.information) || !!(clientData?.props as any)?.information;
+  const finalProps = (preferClientProps && clientData?.props ? clientData.props : props) ?? props;
 
   const {
     slug,
@@ -160,6 +162,7 @@ const DoctorProfile = (props: any) => {
     user_id,
     dontShowRateAndReviewMessage,
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
+    title: documentTitleFromProps,
   } = finalProps ?? {};
 
   const clientExpertiseChipsLikeSearch = newApiFeatureFlaggingCondition(
@@ -476,6 +479,17 @@ const DoctorProfile = (props: any) => {
     return <ErrorPage statusCode={status} refresh={refetch} slug={slug ?? currentSlug} />;
   }
 
+  const brandName = customize?.partnerTitle || 'پذیرش24';
+  const resolvedDocumentTitle =
+    (typeof documentTitleFromProps === 'string' && documentTitleFromProps.trim()) ||
+    information?.display_name?.trim() ||
+    '';
+  const browserTitle = resolvedDocumentTitle
+    ? resolvedDocumentTitle.includes('|')
+      ? resolvedDocumentTitle
+      : `${resolvedDocumentTitle} | ${brandName}`
+    : '';
+
   return (
     <>
       {rateDebug && (
@@ -512,6 +526,7 @@ const DoctorProfile = (props: any) => {
         </div>
       )}
       <Head>
+        {browserTitle ? <title>{browserTitle}</title> : null}
         <link rel="dns-prefetch" href="//cdn.paziresh24.com" />
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
       </Head>
