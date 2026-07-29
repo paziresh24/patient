@@ -127,29 +127,33 @@ lighthouse-budget:
 # برخلافِ `lighthouse-budget` (که علیهِ productionِ زنده اجرا می‌شود و monitor است، نه gate)، این
 # job **کدِ خودِ همین MR را build می‌کند** و کاملاً deterministic است ⇒ blocking (بدونِ
 # allow_failure). برای کنترلِ هزینه فقط وقتی اجرا می‌شود که فایلی از مسیرهای پرخطر عوض شده باشد.
+# چرا از دوکر build می‌گیریم و نه مستقیم `npm run build` در یک jobِ node (تاریخچه‌ی سه اجرای قرمز):
+#   • pipeline 3461 — با `NODE_ENV: production` روی کلِ job، ‏npm ‏devDependencies را نصب نکرد و
+#     `next build` روی type-check ترکید (در buildِ Docker دیده نمی‌شد، چون آن‌جا Next خودش
+#     devDependencies را auto-install می‌کند؛ داخلِ CI با `CI=true` آن auto-install غیرفعال است).
+#   • pipeline 3466 و 3469 — بعد از رفعِ آن، ‏build با `exit 137 (OOMKilled)` کشته شد. اندازه‌گیری:
+#     این runner ‏`nproc=96` دارد و buildِ Next مصرفِ حافظه‌اش را با CPU مقیاس می‌دهد؛ حتی با
+#     `--max-old-space-size=2048` و `experimental.cpus=2` هم همان‌جا («Creating an optimized
+#     production build») می‌مرد ⇒ سقفِ حافظه‌ی containerِ jobهای معمولی برای این build کافی نیست.
+# ولی `build-docker-image` هر روز روی همین CI با موفقیت همین build را می‌گیرد (~۸ دقیقه) — پس
+# به‌جای اختراعِ یک مسیرِ buildِ دوم و شکننده، از همان مسیرِ اثبات‌شده استفاده می‌کنیم و فقط
+# گارد را داخلِ image اجرا می‌کنیم. push هم نمی‌کنیم؛ این job فقط بررسی است.
 initial-chunks:
+  extends: .build-docker-common
   stage: perf
-  image: node:18.17.0
-  variables:
-    # buildِ Next به‌ازای هر CPU یک workerِ جدا با heapِ خودش می‌سازد؛ روی runnerِ اشتراکی همین
-    # باعثِ OOMKill (exit 137) شد. سقفِ heap + محدودکردنِ موازی‌سازی، مصرف را زیرِ سقفِ container
-    # نگه می‌دارد. (اگر باز OOM شد، عدد را پایین‌تر بیاور یا گارد را به buildِ Docker منتقل کن.)
-    NODE_OPTIONS: "--max-old-space-size=2048"
-    # اندازه‌گیریِ pipeline 3467: `nproc=96` روی این runner. Next به‌ازای هر CPU یک workerِ build با
-    # heapِ مستقل می‌سازد ⇒ مجموع از سقفِ حافظه‌ی container رد می‌شد و job با exit 137 کشته می‌شد.
-    # این متغیر فقط در همین job خوانده می‌شود (next.config.js)، پس buildِ production تغییری نمی‌کند.
-    NEXT_BUILD_CPUS: "2"
+  before_script:
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
   script:
-    - 'echo "runner: nproc=$(nproc)"'
-    - npm config set registry https://npm.devneeds.ir/
-    # ⚠️ عمداً `NODE_ENV=production` روی کلِ job ست نمی‌شود: npm در آن حالت devDependencies را
-    # نصب نمی‌کند و `typescript`/`@types/react` (که type-checkِ next build لازمشان دارد) نمی‌آیند.
-    # در buildِ Docker این تله دیده نمی‌شود چون Next آن‌جا خودش devDependencies را auto-install
-    # می‌کند؛ داخلِ CI (که `CI=true` است) این auto-install عمداً غیرفعال است و build می‌ترکد.
-    # (این دقیقاً چیزی است که در pipeline 3461 اتفاق افتاد.)
-    - npm install --force
-    - NODE_ENV=production npm run build
-    - node scripts/check-initial-chunks.js
+    - docker build --provenance=false -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
+    - docker run --rm patient-initial-chunks:$CI_COMMIT_SHORT_SHA node scripts/check-initial-chunks.js
+  # `.build-docker-common` روی `script_failure` هم retry می‌کند — برای pushِ ناپایدارِ registry منطقی
+  # است، ولی این‌جا یعنی یک نقضِ واقعیِ گارد دو بارِ دیگر هم ۸ دقیقه build شود. فقط خطای زیرساخت retry.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
