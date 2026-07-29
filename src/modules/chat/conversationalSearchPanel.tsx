@@ -46,6 +46,9 @@ import { useChatGate } from './useChatGate';
 
 const ENTRY_POINT = 'search_box' as const;
 
+/** How many provider cards the expanded box shows. See the note at the render site. */
+const MAX_CARDS = 3;
+
 interface Turn {
   user: string;
   assistant?: TurnResponse;
@@ -71,11 +74,15 @@ export const ConversationalSearchPanel = () => {
 
 
   const ask = useCallback(
-    async (text: string) => {
+    async (text: string, explicit = false) => {
       setBusy(true);
       const res = await postTurn({
         text,
-        explicit: false,
+        // The first turn is a *guess* from the search box, so the orchestrator's
+        // gate decides. A follow-up the user typed into this panel is a deliberate
+        // act, so it is explicit — belt and braces alongside the server-side
+        // follow-up rule (a fragment like «در تهران باشد» must not be re-gated).
+        explicit,
         conversationId: conversationId.current || undefined,
         terminalId,
       });
@@ -117,7 +124,7 @@ export const ConversationalSearchPanel = () => {
     if (!text || busy) return;
     setFollowUp('');
     setTurns(current => [...current, { user: text }]);
-    void ask(text);
+    void ask(text, true);
   };
 
   return (
@@ -167,7 +174,11 @@ export const ConversationalSearchPanel = () => {
             </a>
           )}
 
-          {turn.assistant?.results?.map((card: ChatCard) => (
+          {/* Only the top few. Measured on production: rendering all 10 pushed the
+              classic results below the fold, and the owner asked for the box to
+              expand «یه مقدار» — not to become the page. The full list is one click
+              away in the classic results underneath. */}
+          {turn.assistant?.results?.slice(0, MAX_CARDS).map((card: ChatCard) => (
             <a
               key={card.id}
               href={card.url}
