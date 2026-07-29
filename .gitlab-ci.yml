@@ -130,7 +130,13 @@ lighthouse-budget:
 initial-chunks:
   stage: perf
   image: node:18.17.0
+  variables:
+    # buildِ Next به‌ازای هر CPU یک workerِ جدا با heapِ خودش می‌سازد؛ روی runnerِ اشتراکی همین
+    # باعثِ OOMKill (exit 137) شد. سقفِ heap + محدودکردنِ موازی‌سازی، مصرف را زیرِ سقفِ container
+    # نگه می‌دارد. (اگر باز OOM شد، عدد را پایین‌تر بیاور یا گارد را به buildِ Docker منتقل کن.)
+    NODE_OPTIONS: "--max-old-space-size=2048"
   script:
+    - 'echo "runner: nproc=$(nproc) mem_limit=$(cat /sys/fs/cgroup/memory.max 2>/dev/null || cat /sys/fs/cgroup/memory/memory.limit_in_bytes 2>/dev/null)"'
     - npm config set registry https://npm.devneeds.ir/
     # ⚠️ عمداً `NODE_ENV=production` روی کلِ job ست نمی‌شود: npm در آن حالت devDependencies را
     # نصب نمی‌کند و `typescript`/`@types/react` (که type-checkِ next build لازمشان دارد) نمی‌آیند.
