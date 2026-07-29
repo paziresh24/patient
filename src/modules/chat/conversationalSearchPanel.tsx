@@ -48,7 +48,7 @@ import { BookingList, ConfirmCancel, HistoryDrawer, ProviderCard } from './chatS
 import {
   cancelBooking,
   fetchMyBookings,
-  resolveBooking,
+  planClientAction,
   toChatContext,
   type BookingSummary,
 } from './userDataBridge';
@@ -123,12 +123,12 @@ export const ConversationalSearchPanel = () => {
   const runClientAction = useCallback(
     async (action: NonNullable<TurnResponse['client_action']>) => {
       const rows = await loadBookings();
+      // The rule itself lives in `planClientAction` (pure, tested). An action that
+      // asks for confirmation and has no dialog here is refused, not performed.
+      const plan = planClientAction(action, rows);
+      if (plan.kind === 'refuse') return;
       setShowBookings(true);
-      if (action.kind !== 'cancel_booking') return;
-      const target = resolveBooking(action.params, rows);
-      // No confident match ⇒ show the list and let the user point at one. Guessing
-      // here is how the wrong appointment gets cancelled.
-      if (target) setPendingCancel(target);
+      if (plan.kind === 'confirm_cancel') setPendingCancel(plan.booking);
     },
     [loadBookings]
   );
