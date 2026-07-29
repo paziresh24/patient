@@ -204,6 +204,15 @@ const nextConfig = {
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
+    // DR-11 conversational layer. These MUST live here and not as `NEXT_PUBLIC_*`
+    // read from client code: the Dockerfile runs `npm run build` with no build
+    // args, so a NEXT_PUBLIC_* value inlines as `undefined` in the production
+    // bundle — the flag could never be turned on and there would be no
+    // seconds-level kill-switch. publicRuntimeConfig is read from the process env
+    // at server start, so flipping it is a pod restart, not a rebuild.
+    CHAT_MVP_ENABLED: process.env.CHAT_MVP_ENABLED,
+    CHAT_MVP_PREVIEW_KEY: process.env.CHAT_MVP_PREVIEW_KEY,
+    CHAT_API_BASE: process.env.CHAT_API_BASE,
   },
   images: {
     formats: ['image/avif', 'image/webp'],
