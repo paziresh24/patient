@@ -34,6 +34,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getCookie } from 'cookies-next';
 import {
+  getConversation,
   postTurn,
   sendChatClick,
   sendChatExit,
@@ -43,6 +44,14 @@ import {
 } from './chatApi';
 import { looksConversational } from './chatEligibility';
 import { useChatGate } from './useChatGate';
+import { BookingList, ConfirmCancel, HistoryDrawer, ProviderCard } from './chatSurfaces';
+import {
+  cancelBooking,
+  fetchMyBookings,
+  resolveBooking,
+  toChatContext,
+  type BookingSummary,
+} from './userDataBridge';
 
 const ENTRY_POINT = 'search_box' as const;
 
@@ -58,6 +67,8 @@ const MAX_CARDS = 3;
 interface Turn {
   user: string;
   assistant?: TurnResponse;
+  /** Restored from the archive: text only, no live payload to re-render. */
+  archivedAnswer?: string;
 }
 
 export const ConversationalSearchPanel = () => {
@@ -75,13 +86,57 @@ export const ConversationalSearchPanel = () => {
   /** Guards against re-asking the same query on every re-render / route event. */
   const askedFor = useRef('');
 
+  /* ---- the user's own data, fetched by this browser and nowhere else ---- */
+  const [bookings, setBookings] = useState<BookingSummary[]>([]);
+  const [bookingsBusy, setBookingsBusy] = useState(false);
+  const [showBookings, setShowBookings] = useState(false);
+  const [pendingCancel, setPendingCancel] = useState<BookingSummary | null>(null);
+  const [cancelBusy, setCancelBusy] = useState(false);
+  const [notice, setNotice] = useState('');
+  const [showHistory, setShowHistory] = useState(false);
+  /** Kept in a ref as well so `ask` does not have to be re-created on every fetch. */
+  const bookingsRef = useRef<BookingSummary[]>([]);
+
   const queryText = typeof router.query.text === 'string' ? router.query.text : '';
   const terminalId = useMemo(() => String(getCookie('terminal_id') ?? ''), []);
 
+  const loadBookings = useCallback(async (): Promise<BookingSummary[]> => {
+    if (bookingsRef.current.length > 0) return bookingsRef.current;
+    setBookingsBusy(true);
+    const rows = await fetchMyBookings();
+    bookingsRef.current = rows;
+    setBookings(rows);
+    setBookingsBusy(false);
+    return rows;
+  }, []);
+
+  /**
+   * Carry out a `client_action`. Two rules make this safe rather than convenient:
+   *
+   *  1. the fetch happens **here**, with the user's own session — khesht never sees
+   *     the data;
+   *  2. a cancellation is only ever *proposed*. `resolveBooking` refuses any id that
+   *     is not in the list this browser fetched, and even a resolved one goes to a
+   *     confirmation showing the appointment's details. Nothing is cancelled by a
+   *     model deciding it should be.
+   */
+  const runClientAction = useCallback(
+    async (action: NonNullable<TurnResponse['client_action']>) => {
+      const rows = await loadBookings();
+      setShowBookings(true);
+      if (action.kind !== 'cancel_booking') return;
+      const target = resolveBooking(action.params, rows);
+      // No confident match ⇒ show the list and let the user point at one. Guessing
+      // here is how the wrong appointment gets cancelled.
+      if (target) setPendingCancel(target);
+    },
+    [loadBookings]
+  );
 
   const ask = useCallback(
     async (text: string, explicit = false) => {
       setBusy(true);
+      setNotice('');
       const res = await postTurn({
         text,
         // The first turn is a *guess* from the search box, so the orchestrator's
@@ -91,6 +146,10 @@ export const ConversationalSearchPanel = () => {
         explicit,
         conversationId: conversationId.current || undefined,
         terminalId,
+        // Only what the browser already holds, and only so a follow-up like
+        // «دومی را لغو کن» can name a booking. khesht gates it further: it reaches
+        // the model only when the message is actually about appointments.
+        ...(bookingsRef.current.length ? { bookings: toChatContext(bookingsRef.current) } : {}),
       });
       setBusy(false);
       // No answer, or the orchestrator declined: show nothing. The classic
@@ -108,9 +167,45 @@ export const ConversationalSearchPanel = () => {
         else next.push({ user: text, assistant: res });
         return next;
       });
+      if (res.client_action) void runClientAction(res.client_action);
     },
-    [terminalId]
+    [terminalId, runClientAction]
   );
+
+  const confirmCancel = useCallback(async () => {
+    if (!pendingCancel) return;
+    setCancelBusy(true);
+    const out = await cancelBooking(pendingCancel);
+    setCancelBusy(false);
+    setPendingCancel(null);
+    setNotice(out.message);
+    if (out.ok) {
+      // Re-read rather than patch the local list: the source of truth is the
+      // platform, and a locally "removed" booking that did not actually cancel is
+      // the worst possible outcome to show someone.
+      bookingsRef.current = [];
+      void loadBookings();
+    }
+  }, [pendingCancel, loadBookings]);
+
+  /** Open an earlier conversation and continue it — «سوییچ بین چت‌ها». */
+  const openConversation = useCallback(async (id: string) => {
+    const found = await getConversation(id);
+    if (!found) return;
+    conversationId.current = id;
+    setShowHistory(false);
+    setShowBookings(false);
+    setDismissed(false);
+    const restored: Turn[] = [];
+    for (const m of found.messages) {
+      if (m.role === 'user') restored.push({ user: m.text });
+      else if (restored.length) restored[restored.length - 1].archivedAnswer = m.text;
+    }
+    setTurns(restored);
+    // The search box did not produce this thread, so the auto-trigger must not
+    // immediately append the box's current query on top of it.
+    askedFor.current = queryText;
+  }, [queryText]);
 
   // The trigger: the patient searched something sentence-shaped.
   useEffect(() => {
@@ -161,6 +256,10 @@ export const ConversationalSearchPanel = () => {
     >
       <header className="flex items-center justify-between gap-2">
         <span className="text-xs font-bold text-slate-700">راهنمای انتخاب پزشک (آزمایشی)</span>
+        <div className="flex items-center gap-3">
+        <button type="button" className="text-xs text-slate-500 underline" onClick={() => setShowHistory(v => !v)}>
+          گفتگوهای من
+        </button>
         <button
           type="button"
           className="text-xs text-slate-500 underline"
@@ -172,7 +271,12 @@ export const ConversationalSearchPanel = () => {
         >
           بستن و نتایج معمولی
         </button>
+        </div>
       </header>
+
+      {showHistory && (
+        <HistoryDrawer activeId={conversationId.current} onPick={openConversation} onClose={() => setShowHistory(false)} />
+      )}
 
       {turns.map((turn, i) => (
         <div key={i} className="flex flex-col gap-2">
@@ -187,11 +291,13 @@ export const ConversationalSearchPanel = () => {
             </p>
           )}
 
-          {(turn.assistant?.message || turn.assistant?.clarifying_question) && (
-            <p className="rounded-2xl bg-slate-100 px-3 py-2 text-xs leading-6">
-              {turn.assistant.message || turn.assistant.clarifying_question}
+          {(turn.assistant?.message || turn.assistant?.clarifying_question || turn.archivedAnswer) && (
+            <p className="whitespace-pre-line rounded-2xl bg-slate-100 px-3 py-2 text-xs leading-6">
+              {turn.assistant?.message || turn.assistant?.clarifying_question || turn.archivedAnswer}
             </p>
           )}
+
+          {turn.assistant?.provider && <ProviderCard provider={turn.assistant.provider} />}
 
           {turn.assistant?.guide && (
             <a
@@ -236,6 +342,28 @@ export const ConversationalSearchPanel = () => {
           )}
         </div>
       ))}
+
+      {/* The user's own appointments, in place. Rendered once below the thread
+          rather than per turn: it is live data, and two copies of it in the same
+          panel would disagree the moment one is cancelled. */}
+      {showBookings && (
+        <BookingList
+          bookings={bookings}
+          loading={bookingsBusy}
+          onCancel={booking => setPendingCancel(booking)}
+        />
+      )}
+
+      {pendingCancel && (
+        <ConfirmCancel
+          booking={pendingCancel}
+          busy={cancelBusy}
+          onConfirm={confirmCancel}
+          onDismiss={() => setPendingCancel(null)}
+        />
+      )}
+
+      {notice && <p className="rounded-xl bg-slate-100 px-3 py-2 text-xs leading-6">{notice}</p>}
 
       {busy && <p className="text-xs text-slate-400">در حال بررسی…</p>}
 

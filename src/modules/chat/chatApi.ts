@@ -12,6 +12,7 @@
  * analytics never needs it and therefore never receives it.
  */
 import getConfig from 'next/config';
+import { getCookie } from 'cookies-next';
 import { splunkInstance } from '@/common/services/splunk';
 
 // publicRuntimeConfig, not NEXT_PUBLIC_*: the image is built without build args,
@@ -49,6 +50,61 @@ export interface TurnResponse {
    * table, never from the model, so it is safe to render as a link.
    */
   guide?: { topic: string; url: string; cta: string };
+  /**
+   * "Do this here, with the user's own session." A key from a closed enum plus
+   * scalar params — never a URL. `requires_confirmation` is a property of the
+   * action itself, so a cancellation can never arrive as a one-tap operation.
+   * Executed by `userDataBridge.ts`, which is also where the model-supplied
+   * `book_id` is validated against the list the browser actually fetched.
+   */
+  client_action?: {
+    kind: 'fetch_my_bookings' | 'cancel_booking' | 'open_booking';
+    title: string;
+    requires_confirmation: boolean;
+    params: Record<string, string>;
+  };
+  /** Read-only detail card for one named provider — address / phone / availability. */
+  provider?: {
+    matched: boolean;
+    focus: string;
+    name: string;
+    expertise: string;
+    url: string;
+    image: string;
+    satisfaction: number | null;
+    rates_count: number | null;
+    waiting_time: string;
+    insurances: string[];
+    online_visit: boolean;
+    in_person_booking: boolean;
+    centers: Array<{ name: string; address: string; phones: string[]; city: string }>;
+    actions: Array<{ title: string; url: string }>;
+  };
+}
+
+/** One appointment, as summarised by the browser for a follow-up turn. */
+export interface BookingContextItem {
+  ref: string;
+  doctor: string;
+  date: string;
+  type: string;
+  center?: string;
+}
+
+export interface ConversationSummary {
+  conversation_id: string;
+  title: string;
+  created_at: string;
+  last_message_at: string;
+  turn_count: number;
+}
+
+export interface ArchivedMessage {
+  conversation_id: string;
+  turn_index: number;
+  role: 'user' | 'assistant';
+  text: string;
+  created_at: string;
 }
 
 export interface TurnRequest {
@@ -61,6 +117,23 @@ export interface TurnRequest {
    * gate is authoritative either way; the front end never decides to trigger.
    */
   explicit: boolean;
+  /**
+   * Sent only when the panel has already loaded the user's appointments AND the
+   * message is about them — see the gate in khesht's orchestrator. It is what lets
+   * «دومی را لغو کن» resolve to a specific booking.
+   */
+  bookings?: BookingContextItem[];
+}
+
+/**
+ * The user's own bearer token, exactly as every other authenticated call in this app
+ * sends it (`client.ts` interceptors). khesht uses it for **one** thing: asking the
+ * platform who the caller is, so a stored conversation can belong to them. It is
+ * never used to fetch or change the user's data — that stays in this browser.
+ */
+function authHeaders(): Record<string, string> {
+  const token = getCookie('token');
+  return typeof token === 'string' && token ? { authorization: `Bearer ${token}` } : {};
 }
 
 /** Never throws: a null return means "act as if chat does not exist". */
@@ -68,18 +141,79 @@ export async function postTurn(req: TurnRequest): Promise<TurnResponse | null> {
   try {
     const res = await fetch(`${API_BASE}/api/khesht/chat/turn`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: { 'content-type': 'application/json', ...authHeaders() },
       body: JSON.stringify({
         text: req.text,
         explicit: req.explicit,
         ...(req.conversationId ? { conversation_id: req.conversationId } : {}),
-        context: { city: req.city ?? 'ir', terminal_id: req.terminalId ?? '' },
+        context: {
+          city: req.city ?? 'ir',
+          terminal_id: req.terminalId ?? '',
+          ...(req.bookings?.length ? { bookings: req.bookings } : {}),
+        },
       }),
     });
     if (!res.ok) return null;
     return (await res.json()) as TurnResponse;
   } catch {
     return null;
+  }
+}
+
+/* ------------------------------------------------- conversation history
+ *
+ * The patient's own transcript. Every one of these is authenticated with the
+ * caller's token and scoped server-side to that user; there is no parameter for
+ * "whose". Deletion here is **logical** — the API has no physical delete at all
+ * (owner decision 2026-07-30), so «حذف کردم» is always reversible from
+ * `restoreConversation`.
+ */
+
+export async function listConversations(): Promise<ConversationSummary[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/khesht/chat/conversations?limit=30`, { headers: authHeaders() });
+    if (!res.ok) return [];
+    return ((await res.json())?.conversations ?? []) as ConversationSummary[];
+  } catch {
+    return [];
+  }
+}
+
+export async function getConversation(
+  id: string
+): Promise<{ conversation: ConversationSummary; messages: ArchivedMessage[] } | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/khesht/chat/conversations/${encodeURIComponent(id)}`, {
+      headers: authHeaders(),
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function deleteConversation(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/khesht/chat/conversations/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: authHeaders(),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+export async function restoreConversation(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/khesht/chat/conversations/${encodeURIComponent(id)}/restore`, {
+      method: 'POST',
+      headers: authHeaders(),
+    });
+    return res.ok;
+  } catch {
+    return false;
   }
 }
 
