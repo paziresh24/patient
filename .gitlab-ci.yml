@@ -130,12 +130,15 @@ lighthouse-budget:
 initial-chunks:
   stage: perf
   image: node:18.17.0
-  variables:
-    NODE_ENV: production
   script:
     - npm config set registry https://npm.devneeds.ir/
+    # ⚠️ عمداً `NODE_ENV=production` روی کلِ job ست نمی‌شود: npm در آن حالت devDependencies را
+    # نصب نمی‌کند و `typescript`/`@types/react` (که type-checkِ next build لازمشان دارد) نمی‌آیند.
+    # در buildِ Docker این تله دیده نمی‌شود چون Next آن‌جا خودش devDependencies را auto-install
+    # می‌کند؛ داخلِ CI (که `CI=true` است) این auto-install عمداً غیرفعال است و build می‌ترکد.
+    # (این دقیقاً چیزی است که در pipeline 3461 اتفاق افتاد.)
     - npm install --force
-    - npm run build
+    - NODE_ENV=production npm run build
     - node scripts/check-initial-chunks.js
   rules:
     - if: $CI_MERGE_REQUEST_IID
