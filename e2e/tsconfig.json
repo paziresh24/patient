@@ -1,0 +1,17 @@
+{
+  // tsconfigِ جدا برای تست‌ها.
+  //
+  // چرا لازم است: `next build` کلِ فایل‌های ts/tsx را type-check می‌کند. تا وقتی `e2e` داخلِ
+  // tsconfigِ اپ بود، **buildِ اپ** به وابستگیِ تست (`@playwright/test`) گره می‌خورد و اگر آن
+  // نصب نبود، build می‌ترکید — یعنی هارنسِ تست می‌توانست انتشارِ محصول را بشکند. حالا `e2e` از
+  // tsconfigِ اپ exclude شده و تایپ‌های خودش را از همین فایل می‌گیرد.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "@playwright/test"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": true
+  },
+  "include": ["**/*.ts", "../playwright.config.ts"],
+  "exclude": []
+}
