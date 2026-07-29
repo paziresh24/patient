@@ -116,11 +116,40 @@ const nextConfig = {
             priority: 25,
             reuseExistingChunk: true,
           },
+          // DR-08 §۱۲ (ghane/docs/dev-requests/dr-08-listing-pagespeed.md) — firebase فقط از پشتِ یک
+          // dynamic import مصرف می‌شود (src/firebase/analytics.ts، گیتِ isPWA()/IS_FIREBASE_ENABLE).
+          // این گروه با chunks:'async' تضمین می‌کند هرگز داخلِ chunkِ initial ننشیند.
+          firebase: {
+            test: /[\\/]node_modules[\\/](firebase|@firebase)[\\/]/,
+            name: 'firebase',
+            chunks: 'async',
+            priority: 60,
+            reuseExistingChunk: true,
+          },
+          // DR-08 §۱۲ — چرا name دیگر ثابت نیست:
+          // یک cacheGroupِ با نامِ ثابتِ `lib` + `chunks: 'all'` همه‌ی node_modulesها را — چه آن‌هایی که
+          // کدِ initial لازم دارد و چه آن‌هایی که فقط از پشتِ یک dynamic import قابل‌دسترس‌اند — در
+          // **یک** chunk ادغام می‌کند. کافی است یک ماژولِ آن chunk برای رندرِ اولیه لازم باشد تا مرورگر
+          // کلِ آن را eager دانلود/parse کند. اندازه‌گیریِ زنده‌ی 2026-07-28 روی production:
+          // `lib-*.js` = ۶۳۱KB transfer / ۲.۱MB خام، `<script defer>`ِ صفحه‌ی `/s/*`، **۹.۱ ثانیه
+          // script-time**، ۴۳۹KB unused — و `@firebase/analytics@0.10.0` با این‌که پس از فیکسِ قبلیِ
+          // DR-08 دیگر هرگز execute نمی‌شد، همچنان داخلش حمل می‌شد (هزینه‌ی دانلود/parse سرِ جایش بود).
+          // نام‌گذاریِ per-package (همان الگویی که خودِ Next برای کتابخانه‌های بزرگ دارد) این ادغام را
+          // می‌شکند: هر پکیج chunkِ خودش را می‌گیرد، پس فقط پکیج‌هایی initial می‌مانند که واقعاً از
+          // مسیرِ initial رفرنس شده‌اند.
+          // مرزِ اعتبار: پکیج‌های کوچک‌تر از minSize همچنان split نمی‌شوند و در chunkِ والد/`commons`
+          // می‌مانند — عمدی، تا تعدادِ درخواستِ initial منفجر نشود (maxInitialRequests: 25).
           lib: {
             test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet|recharts|react-hook-form|jalali-moment)/,
-            name: 'lib',
+            name(module) {
+              const context = module.context || module.resource || '';
+              const matched = context.match(/[\\/]node_modules[\\/](@[^\\/]+[\\/][^\\/]+|[^\\/]+)/);
+              const packageName = matched ? matched[1].replace(/[\\/]/g, '-').replace(/^@/, '') : 'vendor';
+              return `lib-${packageName}`;
+            },
             chunks: 'all',
             priority: 10,
+            reuseExistingChunk: true,
           },
           lodash: {
             test: /[\\/]node_modules[\\/]lodash/,

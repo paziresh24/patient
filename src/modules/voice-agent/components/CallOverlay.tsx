@@ -513,3 +513,6 @@ export function CallOverlay() {
     </LKRoom>
   );
 }
+
+/** DR-08 §۱۲ — default export تا `next/dynamic` بتواند این کامپوننت را lazy کند (VoiceCallHost). */
+export default CallOverlay;

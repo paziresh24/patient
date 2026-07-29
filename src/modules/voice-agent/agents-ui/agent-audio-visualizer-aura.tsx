@@ -445,3 +445,6 @@ export function AgentAudioVisualizerAura({
     />
   );
 }
+
+/** DR-08 §۱۲ — default export تا `next/dynamic` بتواند این کامپوننت را lazy کند. */
+export default AgentAudioVisualizerAura;

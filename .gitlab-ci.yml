@@ -117,6 +117,46 @@ lighthouse-budget:
     - if: $CI_COMMIT_BRANCH == "next"
     - if: $CI_PIPELINE_SOURCE == "schedule"
 
+# DR-08 §۱۲ — گاردِ «کدِ سنگین در chunkِ initial».
+#
+# چرا لازم شد: دو بار پشتِ سر هم یک کلاسِ باگ رخ داد (Firebase، بعد LiveKit) که در code review
+# نامرئی است: گیتِ runtime دورِ *استفاده* گذاشته می‌شود ولی *import* استاتیک می‌ماند، پس webpack
+# کتابخانه را در گرافِ initialِ هر صفحه نگه می‌دارد. تنها جایی که این باگ دیده می‌شود خروجیِ
+# واقعیِ build است — نه دیف، نه unit test.
+#
+# برخلافِ `lighthouse-budget` (که علیهِ productionِ زنده اجرا می‌شود و monitor است، نه gate)، این
+# job **کدِ خودِ همین MR را build می‌کند** و کاملاً deterministic است ⇒ blocking (بدونِ
+# allow_failure). برای کنترلِ هزینه فقط وقتی اجرا می‌شود که فایلی از مسیرهای پرخطر عوض شده باشد.
+initial-chunks:
+  stage: perf
+  image: node:18.17.0
+  variables:
+    NODE_ENV: production
+  script:
+    - npm config set registry https://npm.devneeds.ir/
+    - npm install --force
+    - npm run build
+    - node scripts/check-initial-chunks.js
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/modules/voice-agent/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/modules/voice-agent/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+
 .build-docker-common:
   image: docker:cli
   services:

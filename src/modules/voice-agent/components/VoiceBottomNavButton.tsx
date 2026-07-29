@@ -2,9 +2,21 @@ import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
-import { AgentAudioVisualizerAura } from '../agents-ui/agent-audio-visualizer-aura';
+import dynamic from 'next/dynamic';
 import { ARASH_VOICE_AGENT_FEATURE } from '../constants';
 import { useVoiceCallUiStore } from '../store/voiceCallUi';
+
+/**
+ * PERF (DR-08, ghane/docs/dev-requests/dr-08-listing-pagespeed.md §۱۲) — این دکمه در
+ * `bottomNavigation` (یعنی گرافِ initialِ هر صفحه) است ولی فقط برای کاربرِ **دکترِ لاگین‌کرده با
+ * فلگِ روشن** رندر می‌شود. importِ استاتیکِ آورا آن گیت را دور می‌زد: آورا از هوکِ
+ * `useTrackVolume` استفاده می‌کند، پس `@livekit/components-react` + `livekit-client` (~۴۸۶KB خام)
+ * در گرافِ initialِ صفحاتِ لیستینگ می‌نشست. با `next/dynamic` فقط وقتی می‌آید که واقعاً رندر شود.
+ * گاردِ خودکار: `scripts/check-initial-chunks.js`.
+ */
+const AgentAudioVisualizerAura = dynamic(() => import('../agents-ui/agent-audio-visualizer-aura'), {
+  ssr: false,
+});
 
 /** Brand primary — matches Tailwind `primary` / Paziresh24 blue. */
 const BRAND_AURA = '#3861fb';
