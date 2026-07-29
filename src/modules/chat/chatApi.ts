@@ -249,6 +249,15 @@ function send(type: string, event: Record<string, unknown>): void {
 /** `entry_point` separates the in-search-box surface from the standalone route. */
 export function sendChatView(res: TurnResponse, entryPoint: 'search_box' | 'chat_route'): void {
   send('search_view', {
+    /**
+     * Could this browser read the `token` cookie when it made the call?
+     *
+     * A **boolean**, never the token. It exists because on 2026-07-30 every
+     * logged-in turn reached the orchestrator with no credential, and the reason
+     * lived entirely on the client — invisible from the server, which can only
+     * report "nothing arrived". One field turns that into a measurable fact.
+     */
+    has_token: Boolean(getCookie('token')),
     // Same field names and meaning as the classic funnel (DR-10 M-5).
     filters: { text: res.search_query ?? '' },
     result_count: res.result_count ?? 0,
