@@ -117,6 +117,63 @@ lighthouse-budget:
     - if: $CI_COMMIT_BRANCH == "next"
     - if: $CI_PIPELINE_SOURCE == "schedule"
 
+# DR-08 §۱۲ — گاردِ «کدِ سنگین در chunkِ initial».
+#
+# چرا لازم شد: دو بار پشتِ سر هم یک کلاسِ باگ رخ داد (Firebase، بعد LiveKit) که در code review
+# نامرئی است: گیتِ runtime دورِ *استفاده* گذاشته می‌شود ولی *import* استاتیک می‌ماند، پس webpack
+# کتابخانه را در گرافِ initialِ هر صفحه نگه می‌دارد. تنها جایی که این باگ دیده می‌شود خروجیِ
+# واقعیِ build است — نه دیف، نه unit test.
+#
+# برخلافِ `lighthouse-budget` (که علیهِ productionِ زنده اجرا می‌شود و monitor است، نه gate)، این
+# job **کدِ خودِ همین MR را build می‌کند** و کاملاً deterministic است ⇒ blocking (بدونِ
+# allow_failure). برای کنترلِ هزینه فقط وقتی اجرا می‌شود که فایلی از مسیرهای پرخطر عوض شده باشد.
+# چرا از دوکر build می‌گیریم و نه مستقیم `npm run build` در یک jobِ node (تاریخچه‌ی سه اجرای قرمز):
+#   • pipeline 3461 — با `NODE_ENV: production` روی کلِ job، ‏npm ‏devDependencies را نصب نکرد و
+#     `next build` روی type-check ترکید (در buildِ Docker دیده نمی‌شد، چون آن‌جا Next خودش
+#     devDependencies را auto-install می‌کند؛ داخلِ CI با `CI=true` آن auto-install غیرفعال است).
+#   • pipeline 3466 و 3469 — بعد از رفعِ آن، ‏build با `exit 137 (OOMKilled)` کشته شد. اندازه‌گیری:
+#     این runner ‏`nproc=96` دارد و buildِ Next مصرفِ حافظه‌اش را با CPU مقیاس می‌دهد؛ حتی با
+#     `--max-old-space-size=2048` و `experimental.cpus=2` هم همان‌جا («Creating an optimized
+#     production build») می‌مرد ⇒ سقفِ حافظه‌ی containerِ jobهای معمولی برای این build کافی نیست.
+# ولی `build-docker-image` هر روز روی همین CI با موفقیت همین build را می‌گیرد (~۸ دقیقه) — پس
+# به‌جای اختراعِ یک مسیرِ buildِ دوم و شکننده، از همان مسیرِ اثبات‌شده استفاده می‌کنیم و فقط
+# گارد را داخلِ image اجرا می‌کنیم. push هم نمی‌کنیم؛ این job فقط بررسی است.
+initial-chunks:
+  extends: .build-docker-common
+  stage: perf
+  before_script:
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+  script:
+    - docker build --provenance=false -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
+    - docker run --rm patient-initial-chunks:$CI_COMMIT_SHORT_SHA node scripts/check-initial-chunks.js
+  # `.build-docker-common` روی `script_failure` هم retry می‌کند — برای pushِ ناپایدارِ registry منطقی
+  # است، ولی این‌جا یعنی یک نقضِ واقعیِ گارد دو بارِ دیگر هم ۸ دقیقه build شود. فقط خطای زیرساخت retry.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/modules/voice-agent/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/modules/voice-agent/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+
 .build-docker-common:
   image: docker:cli
   services:
