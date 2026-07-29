@@ -22,6 +22,11 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   experimental: {
     instrumentationHook: true,
+    // DR-08 §۱۲ — opt-in، فقط برای CI. Next تعدادِ workerهای buildش را از تعدادِ CPU برمی‌دارد؛
+    // روی runnerِ اشتراکیِ ما `nproc=96` است ولی سقفِ حافظه‌ی container خیلی کمتر ⇒ buildِ jobِ
+    // `initial-chunks` با OOMKill (exit 137) کشته می‌شد. با ست‌کردنِ `NEXT_BUILD_CPUS` در همان job
+    // موازی‌سازی محدود می‌شود. بدونِ این متغیر (یعنی buildِ production/Docker) رفتار دست‌نخورده است.
+    ...(process.env.NEXT_BUILD_CPUS ? { cpus: Number(process.env.NEXT_BUILD_CPUS) } : {}),
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
     optimizePackageImports: [
       '@plasmicpkgs/antd5',

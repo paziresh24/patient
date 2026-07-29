@@ -135,8 +135,12 @@ initial-chunks:
     # باعثِ OOMKill (exit 137) شد. سقفِ heap + محدودکردنِ موازی‌سازی، مصرف را زیرِ سقفِ container
     # نگه می‌دارد. (اگر باز OOM شد، عدد را پایین‌تر بیاور یا گارد را به buildِ Docker منتقل کن.)
     NODE_OPTIONS: "--max-old-space-size=2048"
+    # اندازه‌گیریِ pipeline 3467: `nproc=96` روی این runner. Next به‌ازای هر CPU یک workerِ build با
+    # heapِ مستقل می‌سازد ⇒ مجموع از سقفِ حافظه‌ی container رد می‌شد و job با exit 137 کشته می‌شد.
+    # این متغیر فقط در همین job خوانده می‌شود (next.config.js)، پس buildِ production تغییری نمی‌کند.
+    NEXT_BUILD_CPUS: "2"
   script:
-    - 'echo "runner: nproc=$(nproc) mem_limit=$(cat /sys/fs/cgroup/memory.max 2>/dev/null || cat /sys/fs/cgroup/memory/memory.limit_in_bytes 2>/dev/null)"'
+    - 'echo "runner: nproc=$(nproc)"'
     - npm config set registry https://npm.devneeds.ir/
     # ⚠️ عمداً `NODE_ENV=production` روی کلِ job ست نمی‌شود: npm در آن حالت devDependencies را
     # نصب نمی‌کند و `typescript`/`@types/react` (که type-checkِ next build لازمشان دارد) نمی‌آیند.
