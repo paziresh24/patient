@@ -5,7 +5,11 @@
 @supports (font-variation-settings: normal) {
   @font-face {
     font-family: 'IRANSansXV';
-    src: url('../../public/fonts/IRANSansXV.woff2') format('woff2-variations'), url('../../public/fonts/IRANSansXV.woff2') format('woff2');
+    /* Served straight from public/ rather than imported through webpack, so this URL is identical
+       to the <link rel="preload"> in _document.tsx. A webpack-hashed URL cannot be preloaded from
+       _document (the hash is not known there), and a preload whose URL differs by even one
+       character is not a preload — it is a second download. See DR-08 §۱۹. */
+    src: url('/fonts/IRANSansXV.woff2') format('woff2-variations'), url('/fonts/IRANSansXV.woff2') format('woff2');
     font-weight: 100 900;
     font-display: swap;
   }
