@@ -1,3 +1,4 @@
+import { GrowthBook, setPolyfills } from '@growthbook/growthbook-react';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import getConfig from 'next/config';
 
@@ -17,17 +18,22 @@ const fetchExpertiseChipsConfig = async (): Promise<ExpertiseChipsConfig> => {
   const clientKey = publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
   if (!apiHost || !clientKey) return DEFAULT_CONFIG;
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 2500);
-
   try {
-    const response = await fetch(`${apiHost}/api/features/${clientKey}`, {
-      signal: controller.signal,
+    // Use GrowthBook SDK (not raw REST) so rule-based values are evaluated correctly.
+    setPolyfills({
+      fetch: require('node-fetch'),
+      EventSource: require('eventsource'),
+      SubtleCrypto: require('node:crypto')?.webcrypto?.subtle,
     });
-    if (!response.ok) return DEFAULT_CONFIG;
-    const data = await response.json();
-    const feature = data?.features?.['profile.expertise-chips-like-search'];
-    const value = feature?.defaultValue;
+
+    const gb = new GrowthBook({ apiHost, clientKey });
+    await gb.loadFeatures({ timeout: 2500 });
+
+    const value = gb.getFeatureValue<ExpertiseChipsConfig>(
+      'profile.expertise-chips-like-search',
+      DEFAULT_CONFIG,
+    );
+
     if (value && Array.isArray(value.slugs)) {
       return { slugs: value.slugs.map((slug: unknown) => String(slug)) };
     }
@@ -35,8 +41,6 @@ const fetchExpertiseChipsConfig = async (): Promise<ExpertiseChipsConfig> => {
   } catch (error) {
     console.error('Error fetching profile.expertise-chips-like-search from GrowthBook:', error);
     return DEFAULT_CONFIG;
-  } finally {
-    clearTimeout(timeout);
   }
 };
 

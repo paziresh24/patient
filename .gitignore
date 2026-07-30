@@ -71,3 +71,9 @@ scripts/generate_*.py
 # Lighthouse CI local run output (DR-08 budget gate produces this; CI keeps it as a job artifact,
 # not repo content)
 .lighthouseci/
+
+# E2E (Playwright) — DR-08 test harness
+e2e/.auth/
+e2e/.report/
+e2e/.artifacts/
+test-results/

@@ -55,7 +55,7 @@ export const splunkInstance = (index: Index) => {
         baseUrl: 'https://profile-splunk-hec.paziresh24.com',
         token: '4de2b795-9991-4629-acf3-04857ff8523e',
         constant: {
-          current_url: window.location.href,
+          current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
           is_application: isPWA(),
         },
