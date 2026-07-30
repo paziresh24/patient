@@ -24,7 +24,14 @@ export const Splunk = ({ children, defaultApiHost, defaultApiKey }: SplunkProps)
               },
             }),
           });
-          return response.json();
+          // HEC sometimes returns HTML error pages; never let response.json() throw unhandled.
+          const text = await response.text();
+          if (!response.ok || !text) return undefined;
+          try {
+            return JSON.parse(text);
+          } catch {
+            return undefined;
+          }
         } catch (error) {
           return undefined;
         }
@@ -46,7 +53,13 @@ export const Splunk = ({ children, defaultApiHost, defaultApiKey }: SplunkProps)
               })),
             ),
           });
-          return response.json();
+          const text = await response.text();
+          if (!response.ok || !text) return undefined;
+          try {
+            return JSON.parse(text);
+          } catch {
+            return undefined;
+          }
         } catch (error) {
           return undefined;
         }
