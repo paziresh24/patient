@@ -16,8 +16,20 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://growthbook-api.paziresh24.com" />
-        <link rel="preload" href="/fonts/IRANSansXFaNum-Medium.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/IRANSansXFaNum-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/*
+          DR-08 §۱۹: preload the font the page ACTUALLY renders with.
+          globals.css declares two families behind feature queries: `IRANSansXV` (variable) inside
+          `@supports (font-variation-settings: normal)`, and the static `IRANSansX` FaNum weights
+          inside `@supports not (...)`. Every browser with variable-font support — i.e. effectively
+          all of them — renders with IRANSansXV. The two preloads that used to live here pointed at
+          the *legacy* family, so every modern visitor eagerly downloaded 61KB it would never use,
+          while IRANSansXV was left to be discovered from CSS: measured on production it started at
+          5758ms and landed at 8073ms, and the resulting swap moved the layout at ~8.7s — which both
+          produced a CLS event and re-fired LCP with a second, larger entry (DR-08 §۱۸.۶).
+          The URL must match the one in globals.css byte-for-byte or the preload buys nothing and
+          the file is fetched twice; both now point at the unhashed /fonts/ path under public/.
+        */}
+        <link rel="preload" href="/fonts/IRANSansXV.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="mobile-web-app-capable" content="yes" />
