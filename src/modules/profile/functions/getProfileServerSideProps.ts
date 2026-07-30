@@ -190,7 +190,6 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
       }
 
       trackSsrError(error, { source: 'ProfileSSR', message: 'A non-Axios error occurred in getProfileServerSideProps', path: context.resolvedUrl });
-      context.res.statusCode = 500;
 
       await sendDoctorProfileEventServer(
         'profile_error',
@@ -202,26 +201,30 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
           handle_error_status: 500,
           http_status: 500,
           duration_ms: durationMs,
-          csr_fallback: false,
+          csr_fallback: true,
         },
         userAgent,
       );
 
       void sendDoctorProfileEventServer(
         'profile_ssr',
-        'error',
+        'csr_fallback',
         {
           slug,
           path: context.resolvedUrl,
           duration_ms: durationMs,
           http_status: 500,
-          csr_fallback: false,
+          csr_fallback: true,
           message: error instanceof Error ? error.message : String(error),
         },
         userAgent,
       );
 
-      return handleSsrError(context.res.statusCode, slug);
+      // Soft-fail: keep the page up via CSR instead of a hard 500.
+      console.warn(`SSR non-Axios error for slug: ${slug}. Falling back to client-side rendering.`);
+      return {
+        props: clientFetchFallbackProps(slug),
+      };
     }
   },
 );
