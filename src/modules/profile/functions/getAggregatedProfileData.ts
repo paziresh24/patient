@@ -154,8 +154,17 @@ export async function getAggregatedProfileData(
   }
 
   if (useMicroservice) {
-    const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
-    return getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+    try {
+      const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
+      return await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+    } catch (error) {
+      // Never hard-500 the page when the private profile API is unreachable/broken.
+      // Fall back to the legacy path so production stays up while API networking is fixed.
+      console.error('[profile] microservice aggregation failed; falling back to legacy', {
+        slug,
+        message: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 
   const queryClient = new QueryClient();
