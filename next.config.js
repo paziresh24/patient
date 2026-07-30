@@ -25,7 +25,11 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   experimental: {
     instrumentationHook: true,
-    webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+    // INP was missing here, so `reportWebVitals` delivered INP with no attribution at all and the RUM
+    // pipeline (docs/dev-requests/dr-08-listing-pagespeed.md §۱۷) stored `attribution: null` for it —
+    // the metric that is currently *worst* on mobile listing pages (p75 613ms) was the one we had no
+    // interactionTarget/inputDelay/processingDuration breakdown for.
+    webVitalsAttribution: ['CLS', 'LCP', 'INP', 'FID', 'FCP', 'TTFB'],
     optimizePackageImports: [
       '@plasmicpkgs/antd5',
       '@plasmicpkgs/plasmic-basic-components',
