@@ -152,9 +152,14 @@ const Page = ({ page, app }: any) => {
   useEffect(() => {
     if (app?.key && page?.key && !userPending) {
       splunkInstance('dashboard').sendEvent({
+        // `data` was never a field the Splunk client read — neither the old @paziresh24/splunk-event
+        // package nor the hand-written client that replaced it in !118 looks at anything but `event`,
+        // so app_key/page_key/user_id have been silently dropped on every one of these events. The
+        // old package was untyped JS, which is why nothing ever complained; !118 added types and
+        // turned the latent data loss into a build error on main.
         group: 'hamdast-insight',
         type: 'pages',
-        data: {
+        event: {
           app_key: app?.key,
           page_key: page?.key,
           user_id: user.id,
