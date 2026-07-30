@@ -71,12 +71,17 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
       await growthbook.loadFeatures({ timeout: 500 });
       prefetchSamanAvailability = growthbook.isOn('use-saman-availability-status');
 
-      const { baseURL } = getProfileMicroserviceConfig();
+      const { baseURL, envSlugs } = getProfileMicroserviceConfig();
       if (baseURL) {
         const apiSource = growthbook.getFeatureValue<{ slugs?: string[] }>(PROFILE_API_SOURCE_FEATURE_KEY, {
           slugs: [],
         });
-        useProfileMicroservice = isSlugInProfileApiSourceAllowlist(apiSource?.slugs, slug);
+        const gbSlugs = apiSource?.slugs ?? [];
+        // Prefer GrowthBook allowlist; env is local fallback when GB is empty.
+        useProfileMicroservice = isSlugInProfileApiSourceAllowlist(
+          gbSlugs.length > 0 ? gbSlugs : envSlugs,
+          slug,
+        );
       }
     } catch (error) {
       trackSsrError(error, { source: 'ProfileSSR', message: 'Error loading GrowthBook for Saman availability SSR', path: context.resolvedUrl });

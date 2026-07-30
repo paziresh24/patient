@@ -1,7 +1,5 @@
 import axios from 'axios';
 import getConfig from 'next/config';
-import http from 'http';
-import https from 'https';
 
 const isServer = typeof window === 'undefined';
 
@@ -37,6 +35,17 @@ export function createProfileMicroserviceClient() {
     throw new Error('PROFILE_API_BASE_URL is not configured');
   }
 
+  // Avoid top-level `http`/`https` imports — this module is reachable from the client graph.
+  const agents =
+    isServer
+      ? {
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          httpAgent: new (require('http').Agent)({ keepAlive: true, timeout: 15_000 }),
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          httpsAgent: new (require('https').Agent)({ keepAlive: true, timeout: 15_000 }),
+        }
+      : {};
+
   return axios.create({
     baseURL,
     timeout: 8000,
@@ -45,8 +54,7 @@ export function createProfileMicroserviceClient() {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(isServer ? { 'Accept-Encoding': 'gzip, deflate', Connection: 'keep-alive' } : {}),
     },
-    httpAgent: new http.Agent({ keepAlive: true, timeout: 15_000 }),
-    httpsAgent: new https.Agent({ keepAlive: true, timeout: 15_000 }),
+    ...agents,
     validateStatus: status => status >= 200 && status < 300,
   });
 }

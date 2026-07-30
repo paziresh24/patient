@@ -21,7 +21,6 @@ import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/pro
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
-import { getAggregatedProfileDataFromMicroservice } from './getAggregatedProfileDataFromMicroservice';
 import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
@@ -142,18 +141,20 @@ export async function getAggregatedProfileData(
     fetchExpertiseKeywordTags?: boolean;
   },
 ) {
-  // Only ابوالفضل ساجدی (and other GB allowlisted slugs) leave legacy.
-  // When SSR already decided `false`, do NOT re-check — zero path change for everyone else.
+  // Only allowlisted slugs leave legacy. Callers should pass an explicit boolean
+  // (SSR from GrowthBook, CSR from useFeatureValue) so this module stays client-safe.
   let useMicroservice = false;
   if (options?.useProfileMicroservice === true) {
     useMicroservice = true;
   } else if (options?.useProfileMicroservice === false) {
     useMicroservice = false;
   } else {
-    useMicroservice = await isProfileMicroserviceEnabledForSlug(slug).catch(() => false);
+    // Fallback: env allowlist only (no GrowthBook / no node:crypto in this graph).
+    useMicroservice = isProfileMicroserviceEnabledForSlug(slug);
   }
 
   if (useMicroservice) {
+    const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
     return getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
   }
 
