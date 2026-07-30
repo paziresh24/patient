@@ -6,7 +6,7 @@
     "dev": "cross-env node server.js",
     "dev:turbo": "cross-env TURBO=1 node server.js",
     "dev:debug": "cross-env NODE_OPTIONS='--inspect' node server.js",
-    "build": "node scripts/remove-google-fonts.js && next build",
+    "build": "node scripts/remove-google-fonts.js && node scripts/generate-fragment-arg-props.js && next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
     "start": "node -r ./log-bootstrap.cjs node_modules/next/dist/bin/next start",
     "lint": "next lint",
