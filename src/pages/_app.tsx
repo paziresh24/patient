@@ -44,6 +44,7 @@ import RouteProgress from "@/common/components/layouts/RouteProgress";
 import { RismanSurveyScript } from "@/common/components/layouts/RismanSurveyScript";
 import { RoutedExternalScripts } from "@/common/components/layouts/RoutedExternalScripts";
 import { useNotificationPermission } from "@/common/hooks/useNotificationPermission";
+import { sendWebVital } from "@/common/services/rum/webVitals";
 const { publicRuntimeConfig } = getConfig();
 const isEnabledGrowthbook =
   !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
@@ -254,5 +255,8 @@ function MyApp(props: AppProps) {
 }
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   if (metric.label === "custom" || !publicRuntimeConfig.IS_PRODUCTION) return;
+  // DR-08 §۱۷ — تا امروز این تابع خالی بود و متریک‌های CWVِ کاربرانِ واقعی دور ریخته می‌شد.
+  // مقصد و صفحاتِ مجاز در `webVitals.ts` تعریف شده (فعلاً فقط صفحاتِ جستجو).
+  sendWebVital(metric);
 }
 export default MyApp;
