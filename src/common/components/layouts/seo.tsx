@@ -32,7 +32,12 @@ export const Seo = (props: SeoProps) => {
 
   const brandName = customize?.partnerTitle ? customize?.partnerTitle : 'پذیرش24';
 
-  const titleTemplate = `${title ?? ''}${titleWithBrandName ? ` | ${brandName}` : ''}`;
+  const trimmedTitle = typeof title === 'string' ? title.trim() : '';
+  const titleTemplate = trimmedTitle
+    ? titleWithBrandName
+      ? `${trimmedTitle} | ${brandName}`
+      : trimmedTitle
+    : brandName;
 
   // َUniversity Site
   if (customize?.partnerTitle)

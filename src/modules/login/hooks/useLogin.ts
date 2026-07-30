@@ -1,11 +1,8 @@
 import { useLogin as useLoginRequest } from '@/common/apis/services/auth/login';
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
-import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
-import useCustomize from '@/common/hooks/useCustomize';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import { getErrorMessage } from '@/common/utils/errorHandler';
-import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
 import { setCookie } from 'cookies-next';
 import { useUserInfoStore } from '../store/userInfo';
@@ -13,10 +10,7 @@ import { useUserInfoStore } from '../store/userInfo';
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
-  const logout = useUserInfoStore(state => state.logout);
   const getMe = useGetMe();
-  const university = useCustomize(state => state.customize?.partnerKey);
-  const webPushNotificationUserList = useFeatureValue<{ ids: string[] }>('notification:web-push|enabled', { ids: [] });
 
   const handleLogin = async ({ username, password, force }: { username: string; password: string; force?: boolean }) => {
     try {
@@ -27,11 +21,12 @@ export const useLogin = () => {
       });
 
       if (data.status === ClinicStatus.SUCCESS) {
-        if (university)
+        if (data.token) {
           setCookie('token', data.token, {
             path: '/',
             maxAge: dayToSecond(365),
           });
+        }
 
         const userData = await getMe.mutateAsync();
 

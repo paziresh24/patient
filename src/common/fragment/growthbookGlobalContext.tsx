@@ -2,8 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
 import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
 import { getCookie } from 'cookies-next';
+import getConfig from 'next/config';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { growthbook } from 'src/pages/_app';
+
+const { publicRuntimeConfig } = getConfig();
+const isEnabledGrowthbook =
+  !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
+  !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
 
 interface GrowthbookGlobalContextProps {
   previewAttributes?: Record<string, string>;
@@ -53,13 +59,15 @@ export const GrowthbookGlobalContext = ({
 
   useEffect(() => {
     syncAttributes();
-    if (growthbook.ready) {
+    if (isEnabledGrowthbook && growthbook.ready) {
       growthbook.refreshFeatures?.();
     }
     setFeaturesVersion(version => version + 1);
   }, [user, isDoctor, getDoctorSpecialties, previewAttributes, attr]);
 
   useEffect(() => {
+    if (!isEnabledGrowthbook) return;
+
     setIsReady(growthbook.ready);
 
     const unsubscribe = growthbook.subscribe(() => {
@@ -79,13 +87,13 @@ export const GrowthbookGlobalContext = ({
       setAttributes: (attributes: Record<string, any>) => {
         setAttr(attributes);
         syncAttributes(attributes);
-        growthbook.refreshFeatures?.();
+        if (isEnabledGrowthbook) growthbook.refreshFeatures?.();
         setFeaturesVersion(version => version + 1);
       },
       setAttributeOverrides: (attributes: Record<string, any>) => {
         setAttr(prev => ({ ...prev, ...attributes }));
         syncAttributes(attributes);
-        growthbook.refreshFeatures?.();
+        if (isEnabledGrowthbook) growthbook.refreshFeatures?.();
         setFeaturesVersion(version => version + 1);
       },
     }),

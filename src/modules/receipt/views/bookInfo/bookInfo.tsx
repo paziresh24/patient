@@ -1,8 +1,9 @@
+import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 import Skeleton from '@/common/components/atom/skeleton';
 import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
-import { useFeatureValue } from '@growthbook/growthbook-react';
+import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { VisitChannels } from '../../constants/onlineVisitChannels';
 import { turnDetailsData } from './turnDetails';
 
@@ -12,16 +13,34 @@ interface PaymentDetailsProps {
   centerId: string;
   bookId?: string;
   possibilityBeingVisited?: boolean;
+  /** Doctor user_id resolved on receipt via doctor slug → drprofile (or appointment doctor). */
+  doctorUserId?: string | number | null;
+  /**
+   * True while receipt is still resolving the canonical doctor slug.
+   * Hides legacy "days" so targeted doctors don't flash "تا ۳ روز" before GB turns on.
+   */
+  doctorProfilePending?: boolean;
 }
 
 export const BookInfo = (props: PaymentDetailsProps) => {
-  const { loading = false, turnData, centerId, bookId, possibilityBeingVisited } = props;
+  const { loading = false, turnData, centerId, bookId, possibilityBeingVisited, doctorUserId, doctorProfilePending } = props;
   const specialDoctorList = useFeatureValue<any[]>('rocketchat_doctor_list', []);
   const specialServiceInfo = specialDoctorList.find((service: any) => service.service_id === turnData?.services?.[0]?.id);
   const messengers = useFeatureValue<any>('onlinevisitchanneltype', {});
   const messengerButtonType = useFeatureValue('receipt:messenger-button-type', 'OUTLINE');
   const isConsultReceipt = centerId === '5532';
   const { customize } = useCustomize();
+  const useChatLifecycleDuration = useFeatureIsOn('online-visit-chat-lifecycle-duration');
+  // Prefer page-resolved doctor user_id; else bookId → appointment doctor; else slug (may be non-canonical).
+  const { days: chatLifecycleDays, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
+    enabled: useChatLifecycleDuration && isConsultReceipt,
+    doctorUserId,
+    bookId,
+    doctorSlug: turnData?.doctor?.slug,
+  });
+  const shouldShowLifecycleDays = useChatLifecycleDuration && chatLifecycleDays != null;
+  // While canonical slug is resolving, feature may still be off (wrong short slug) — don't flash legacy days.
+  const hideLegacyDurationWhileResolving = isConsultReceipt && !!doctorProfilePending && !useChatLifecycleDuration;
 
   return (
     <div className="flex flex-col space-y-6">
@@ -57,7 +76,16 @@ export const BookInfo = (props: PaymentDetailsProps) => {
               address: turnData?.center?.address,
               turnStatus: turnData?.book_status,
               isDeleted: turnData?.is_deleted,
-              durationConversation: turnData?.duration_conversation_doctor,
+              // Feature on: never show legacy "days". Loading → skeleton; ready → API days (from hours ÷ 24) or 1-day fallback.
+              // While resolving canonical slug, hide legacy days so GB targeting can catch up.
+              durationConversation: shouldShowLifecycleDays
+                ? String(chatLifecycleDays)
+                : useChatLifecycleDuration || hideLegacyDurationWhileResolving
+                  ? undefined
+                  : turnData?.duration_conversation_doctor,
+              durationConversationUnit: 'days',
+              durationConversationLoading: isChatLifecycleDurationPending || hideLegacyDurationWhileResolving,
+              useDoctorAccompanimentLabel: useChatLifecycleDuration,
               doctorName: turnData?.doctor?.display_name,
               doctorPhone: turnData.selected_online_visit_channel?.type
                 ? turnData.selected_online_visit_channel.channel

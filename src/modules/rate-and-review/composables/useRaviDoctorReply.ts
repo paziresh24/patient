@@ -94,7 +94,8 @@ export const useRaviDoctorReply = ({ feedbackId, doctorSlug, doctorUserId }: Use
   };
 
   const showReplyButton = isDoctor && !!doctorSlug && !isLoading && !reply && !showForm;
-  const showPanel = isDoctor && !!doctorSlug && (Boolean(reply) || showForm);
+  // Existing replies are public; compose/edit form is doctor-only.
+  const showPanel = !!doctorSlug && (Boolean(reply) || (isDoctor && showForm));
 
   return {
     isDoctor,

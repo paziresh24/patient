@@ -2,12 +2,15 @@ import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
+import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
+import { CENTERS } from '@/common/types/centers';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { splunkInstance } from '@/common/services/splunk';
@@ -15,6 +18,7 @@ import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
+import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getAggregatedProfileDataFromMicroservice } from './getAggregatedProfileDataFromMicroservice';
@@ -135,6 +139,7 @@ export async function getAggregatedProfileData(
     prefetchSamanAvailability?: boolean;
     /** Explicit SSR decision: true = microservice, false = legacy, undefined = resolve (CSR). */
     useProfileMicroservice?: boolean;
+    fetchExpertiseKeywordTags?: boolean;
   },
 ) {
   // Only ابوالفضل ساجدی (and other GB allowlisted slugs) leave legacy.
@@ -328,6 +333,20 @@ export async function getAggregatedProfileData(
           })
       : Promise.resolve(null);
 
+  const keywordSearchText = [fullProfileData?.name, fullProfileData?.family].filter(Boolean).join(' ').trim();
+  // Prefer an in-person center city (skip consult 5532) so tags match the same search surface.
+  const keywordCitySlug =
+    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city_en_slug)?.city_en_slug ||
+    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug ||
+    'ir';
+  const keywordTagsPromise = options?.fetchExpertiseKeywordTags
+    ? getDoctorKeywordTags({
+        slug: validatedSlug,
+        searchText: keywordSearchText || undefined,
+        cityEnSlug: typeof keywordCitySlug === 'string' ? keywordCitySlug : 'ir',
+      }).catch(() => [])
+    : Promise.resolve([]);
+
   const [
     [
       internalLinksBreadcrumbResult,
@@ -341,7 +360,9 @@ export async function getAggregatedProfileData(
       doctorBiographyResult,
       doctorCentersResult,
     ],
-  ] = await Promise.all([Promise.allSettled(apiCalls), samanAvailabilityPromise]);
+    ,
+    keywordTags,
+  ] = await Promise.all([Promise.allSettled(apiCalls), samanAvailabilityPromise, keywordTagsPromise]);
 
   // Extract doctor full name from API response
   const doctorFullName =
@@ -383,14 +404,12 @@ export async function getAggregatedProfileData(
     }
   }
 
-  // Transform expertise data to match expected format
+  // Keep nested degree/expertise so overwriteProfileData can read *.name fields.
   const transformedExpertise =
     doctorExpertise?.map((exp: any) => ({
-      id: exp.expertise.id,
-      name: exp.expertise.name,
-      slug: exp.expertise.slug,
       alias_title: exp.alias_title,
       degree: exp.degree,
+      expertise: exp.expertise,
       groups: exp.groups,
       graduation_date: exp.graduation_date ?? null,
     })) ?? [];
@@ -509,7 +528,7 @@ export async function getAggregatedProfileData(
   }
 
   const {
-    centers,
+    centers: initialCenters,
     expertises,
     feedbacks,
     history,
@@ -526,6 +545,35 @@ export async function getAggregatedProfileData(
     name: finalName,
     family: finalFamily,
   });
+
+  // When centers API adds 5532 but full-profile has no/invalid services, hydrate from center services API
+  // so profile SSR can render the online-visit card (e.g. Doodangeh).
+  let centers = initialCenters;
+  const consultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
+  const needsOnlineServices =
+    !!consultCenter &&
+    (!(consultCenter.services?.length > 0) ||
+      consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
+
+  if (needsOnlineServices) {
+    try {
+      const onlineServices = await getDoctorCenterServices(validatedSlug, CENTERS.CONSULT);
+      if (onlineServices?.length) {
+        const mapped = mapDoctorCenterServices(onlineServices, consultCenter.user_center_id);
+        centers = centers.map((center: any) =>
+          String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center,
+        );
+        if (isServer) {
+          queryClient.setQueryData(
+            [ServerStateKeysEnum.DoctorCenterServices, validatedSlug, CENTERS.CONSULT],
+            onlineServices,
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error hydrating online visit center services:', error);
+    }
+  }
 
   // Prefer internal-links based items for "تخصص های مرتبط" when available
   let similarLinks = rawSimilarLinks;
@@ -603,6 +651,8 @@ export async function getAggregatedProfileData(
       },
       hamdastWidgets: widgets,
       hamdastWidgetsData: widgetsData,
+      keywordTags: Array.isArray(keywordTags) ? keywordTags : [],
+      expertiseChipsLikeSearchEnabled: !!options?.fetchExpertiseKeywordTags,
       user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       shouldFetchOnClient: !fullProfileData?.id,
       useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,

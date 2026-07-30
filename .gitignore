@@ -42,6 +42,24 @@ yarn-error.log*
 
 .idea
 
+# local daily CEO reports (not for remote)
+.cursor/reports/
+
+# local/personal Cursor agent rules (keep shared project rules tracked)
+.cursor/rules/daily-ceo-report.mdc
+.cursor/rules/git-prerequisites.mdc
+.cursor/rules/auto-git-commands.mdc
+.cursor/rules/never-commit-local-artifacts.mdc
+
+# local doctor profile data-map / investigation artifacts (agent-generated)
+doctor-profile-page-data-map*.xlsx
+scripts/_*
+scripts/check_slugs.py
+scripts/compare_*.py
+scripts/enrich_excel_with_doctor_sample.py
+scripts/generate_profile_data_map_xlsx.py
+scripts/generate_*.py
+
 # PWA
 /public/precache.*.*.js*
 /public/workbox-*.js*
@@ -49,3 +67,7 @@ yarn-error.log*
 /public/fallback-*.js*
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Lighthouse CI local run output (DR-08 budget gate produces this; CI keeps it as a job artifact,
+# not repo content)
+.lighthouseci/

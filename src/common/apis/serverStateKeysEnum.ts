@@ -32,4 +32,5 @@ export enum ServerStateKeysEnum {
   GetCancellationPolicyStatus = 'getCancellationPolicyStatus',
   PaymentMethods = 'paymentMethods',
   GhandonPreference = 'ghandonPreference',
+  ChatLifecycleAutoCloseHours = 'chatLifecycleAutoCloseHours',
 }

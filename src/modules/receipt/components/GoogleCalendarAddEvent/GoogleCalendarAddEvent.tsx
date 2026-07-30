@@ -35,16 +35,18 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const { data: preference } = useGhandonPreference(isLogin);
   const savePreference = useSaveGhandonPreference();
 
-  
   const [localBackup, setLocalBackup] = useState<{ autoSync: boolean; email: string } | null>(null);
-
- 
   const [sessionPref, setSessionPref] = useState<{ autoSync: boolean; email: string } | null>(null);
 
   useEffect(() => {
     if (user_id && typeof window !== 'undefined') {
       const storedSync = localStorage.getItem(`ghandon_auto_sync_${user_id}`);
       const storedEmail = localStorage.getItem(`ghandon_email_${user_id}`);
+
+      console.info(`[Ghandon-Front] Loading localStorage backup for User ID [${user_id}]:`, {
+        storedSync,
+        storedEmail,
+      });
 
       if (storedSync !== null) {
         setLocalBackup({
@@ -58,15 +60,13 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const serverAutoSync = Boolean(preference?.auto_sync && preference.email);
   const serverEmail = preference?.email?.trim() ?? '';
 
-  
   const activeAutoSyncEnabled = sessionPref?.autoSync ?? localBackup?.autoSync ?? serverAutoSync;
   const activePreferenceEmail = sessionPref?.email ?? localBackup?.email ?? serverEmail;
 
   const [iconStatus, setIconStatus] = useState<IconStatus>(() => {
-    if (getSubmittedEmail(normalizedCenterId, normalizedBookId)) {
-      return 'success';
-    }
-    return 'idle';
+    const isSubmitted = getSubmittedEmail(normalizedCenterId, normalizedBookId);
+    console.info(`[Ghandon-Front] Initializing button state for Book ID [${normalizedBookId}]. Submitted Email: ${isSubmitted || 'None'}`);
+    return isSubmitted ? 'success' : 'idle';
   });
 
   const [email, setEmail] = useState('');
@@ -76,6 +76,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const [submittedEmail, setSubmittedEmail] = useState(() => getSubmittedEmail(normalizedCenterId, normalizedBookId));
 
   const handleModalClose = useCallback(() => {
+    console.info(`[Ghandon-Front] Closing Modal for Book ID [${normalizedBookId}]. Reverting temporary states.`);
     const savedSubmittedEmail = getSubmittedEmail(normalizedCenterId, normalizedBookId);
 
     if (savedSubmittedEmail || activeAutoSyncEnabled) {
@@ -91,12 +92,15 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
 
   useEffect(() => {
     isActiveRef.current = true;
+    console.info(`[Ghandon-Front] Component Mounted for Book ID: ${normalizedBookId}`);
     return () => {
       isActiveRef.current = false;
+      console.info(`[Ghandon-Front] Component Unmounted for Book ID: ${normalizedBookId}`);
     };
-  }, []);
+  }, [normalizedBookId]);
 
   useEffect(() => {
+    console.info(`[Ghandon-Front] Book changed to [${normalizedBookId}]. Refreshing local states.`);
     autoSyncAttemptedRef.current = false;
     const savedSubmittedEmail = getSubmittedEmail(normalizedCenterId, normalizedBookId);
 
@@ -112,6 +116,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
       return;
     }
 
+    console.info(`[Ghandon-Front] Auto-Sync preference detected active for email: ${activePreferenceEmail}`);
     setAutoSync(true);
     setInitialAutoSync(true);
 
@@ -127,6 +132,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
 
     const shouldFocus = !submittedEmail || isEditing;
     const focusTimer = shouldFocus ? window.setTimeout(() => inputRef.current?.focus(), 80) : undefined;
+
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         handleModalClose();
@@ -146,21 +152,37 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const sendToCalendar = useCallback(
     async (targetEmail: string, options?: { silent?: boolean }) => {
       if (!normalizedBookId || !normalizedCenterId || !isValidEmail(targetEmail)) {
+        console.warn(`[Ghandon-Front] Aborting sendToCalendar. Validation failed:`, {
+          bookId: normalizedBookId,
+          centerId: normalizedCenterId,
+          email: targetEmail,
+        });
         return;
       }
 
+      console.info(
+        `[Ghandon-Front] Dispatching 'create_event' request to backend for Email: ${targetEmail} (Silent: ${Boolean(options?.silent)})`,
+      );
       setIconStatus('loading');
 
       try {
-        await apiGatewayClient.post(ADD_EVENT_API_PATH, {
+        const payload = {
           action: 'create_event',
           user_id: user_id,
           email: targetEmail.trim(),
           book_id: normalizedBookId,
           center_id: normalizedCenterId,
+        };
+
+        const response = await apiGatewayClient.post(ADD_EVENT_API_PATH, payload, {
+          baseURL: process.env.NEXT_PUBLIC_GHANDON_API_BASE_URL,
+          withCredentials: true,
         });
 
+        console.info(`[Ghandon-Front] Backend response for 'create_event' received successfully:`, response.data);
+
         if (!isActiveRef.current) {
+          console.warn(`[Ghandon-Front] Component unmounted before request finished. Dropping state update.`);
           return;
         }
 
@@ -173,7 +195,9 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
         if (!options?.silent) {
           toast.success('نوبت به Google Calendar اضافه شد');
         }
-      } catch {
+      } catch (error: any) {
+        console.error(`[Ghandon-Front] Error encountered in sendToCalendar:`, error);
+
         if (!isActiveRef.current) {
           return;
         }
@@ -186,7 +210,9 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
         setIconStatus(wasSubmitted ? 'success' : 'idle');
 
         if (!options?.silent) {
-          toast.error('افزودن به تقویم انجام نشد. لطفا دوباره تلاش کنید');
+          const backendErrorMessage = error?.response?.data?.message || 'افزودن به تقویم انجام نشد. لطفا دوباره تلاش کنید';
+          console.error(`[Ghandon-Front] Extracted backend error message: ${backendErrorMessage}`);
+          toast.error(backendErrorMessage);
         }
       }
     },
@@ -202,6 +228,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
       return;
     }
 
+    console.info(`[Ghandon-Front] Triggering automated background sync for Book ID: ${normalizedBookId}`);
     autoSyncAttemptedRef.current = true;
     sendToCalendar(activePreferenceEmail, { silent: true });
   }, [activeAutoSyncEnabled, normalizedBookId, normalizedCenterId, activePreferenceEmail, sendToCalendar]);
@@ -209,6 +236,8 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const handleIconClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
+
+    console.info(`[Ghandon-Front] Calendar icon clicked. Status: ${iconStatus}`);
 
     if (iconStatus === 'loading') {
       return;
@@ -218,6 +247,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     setSubmittedEmail(savedSubmittedEmail);
 
     const initialEmail = savedSubmittedEmail || activePreferenceEmail || getLastUsedEmail(userEmail);
+    console.info(`[Ghandon-Front] Opening Modal form with initial email prefill: ${initialEmail}`);
     setEmail(initialEmail);
 
     setIsEditing(!savedSubmittedEmail);
@@ -237,16 +267,24 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
 
     const trimmedEmail = email.trim();
     if (!isValidEmail(trimmedEmail)) {
+      console.warn(`[Ghandon-Front] Form submit aborted. Invalid email formatting: "${trimmedEmail}"`);
       inputRef.current?.focus();
       return;
     }
 
     const savedBookEmail = getSubmittedEmail(normalizedCenterId, normalizedBookId);
-    const isLocked = Boolean(submittedEmail) && !isEditing;
+    const isLockedComponent = Boolean(submittedEmail) && !isEditing;
 
     const hasPreferenceChanges = autoSync !== initialAutoSync || trimmedEmail !== activePreferenceEmail;
     const shouldSavePreference = isLogin && hasPreferenceChanges;
-    const shouldAddEvent = !isLocked && (!savedBookEmail || trimmedEmail !== savedBookEmail);
+    const shouldAddEvent = !isLockedComponent && (!savedBookEmail || trimmedEmail !== savedBookEmail);
+
+    console.info(`[Ghandon-Front] Form submitted. Evaluation:`, {
+      email: trimmedEmail,
+      isLocked: isLockedComponent,
+      shouldSavePreference,
+      shouldAddEvent,
+    });
 
     isSubmittingRef.current = true;
     setIsSaving(true);
@@ -254,23 +292,34 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
 
     try {
       if (shouldSavePreference) {
+        console.info(`[Ghandon-Front] Preference change detected. Saving 'save_settings' on backend.`);
         try {
-          await apiGatewayClient.post(ADD_EVENT_API_PATH, {
-            action: 'save_settings',
-            user_id: user_id,
-            email: trimmedEmail,
-          });
+          await Promise.all([
+            apiGatewayClient.post(
+              ADD_EVENT_API_PATH,
+              {
+                action: 'save_settings',
+                user_id: user_id,
+                email: trimmedEmail,
+              },
+              {
+                baseURL: process.env.NEXT_PUBLIC_GHANDON_API_BASE_URL,
+                withCredentials: true,
+              },
+            ),
+            savePreference
+              .mutateAsync({
+                email: trimmedEmail,
+                auto_sync: autoSync,
+              })
+              .then(() => {
+                console.info(`[Ghandon-Front] Paziresh24 core preference sync completed successfully.`);
+              })
+              .catch(prefError => {
+                console.warn('[Ghandon-Front] Paziresh24 core preference save failed, skipping local error:', prefError);
+              }),
+          ]);
 
-          try {
-            await savePreference.mutateAsync({
-              email: trimmedEmail,
-              auto_sync: autoSync,
-            });
-          } catch (prefError) {
-            console.warn('Paziresh24 core preference save failed, skipping local error:', prefError);
-          }
-
-          // ذخیره ایمن در LocalStorage
           if (user_id) {
             localStorage.setItem(`ghandon_auto_sync_${user_id}`, String(autoSync));
             localStorage.setItem(`ghandon_email_${user_id}`, trimmedEmail);
@@ -285,8 +334,10 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
           } else if (!autoSync && initialAutoSync) {
             toast.success('افزودن خودکار به تقویم غیرفعال شد');
           }
-        } catch {
-          toast.error('ذخیره تنظیمات انجام نشد. لطفا دوباره تلاش کنید');
+        } catch (error: any) {
+          console.error(`[Ghandon-Front] Backend error during 'save_settings':`, error);
+          const settingsErrorMessage = error?.response?.data?.message || 'ذخیره تنظیمات انجام نشد. لطفا دوباره تلاش کنید';
+          toast.error(settingsErrorMessage);
           return;
         }
       }
@@ -304,6 +355,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   };
 
   const handleEdit = useCallback(() => {
+    console.info(`[Ghandon-Front] Manual email edit mode activated.`);
     setIsEditing(true);
     window.setTimeout(() => {
       inputRef.current?.focus();

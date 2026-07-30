@@ -10,8 +10,9 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import useLockScroll from '@/common/hooks/useLockScroll';
-import { splunkInstance } from '@/common/services/splunk';
+import { sendCenterProfileEvent, sendCenterProfileEventServer } from '@/modules/profile/events/nightBatEvents';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import { sanitizeDehydratedState } from '@/common/utils/sanitizeDehydratedState';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { usePageView } from '@/common/apis/services/profile/pageView';
 import CentersInfo from '@/modules/profile/views/centersInfo';
@@ -158,18 +159,25 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
   }, [slug]);
 
   useEffect(() => {
+    if (profile.isError) {
+      sendCenterProfileEvent('center_profile_error', 'client_load_error', {
+        slug,
+        message: (profile.error as any)?.message ?? 'center profile load failed',
+        http_status: (profile.error as any)?.response?.status ?? null,
+      });
+    }
+  }, [profile.isError, profile.error, slug]);
+
+  useEffect(() => {
     if (profileData) {
-      splunkInstance('center-profile').sendEvent({
-        group: 'center_profile',
-        type: 'load_center_profile',
-        event: {
-          data: {
-            id: profileData?.id,
-            server_id: profileData?.server_id,
-            name: profileData.name,
-            terminal_id: getCookie('terminal_id'),
-          },
-        },
+      sendCenterProfileEvent('center_profile', 'load_center_profile', {
+        center_id: profileData?.id,
+        server_id: profileData?.server_id,
+        name: profileData.name,
+        slug,
+        city: profileData?.city ?? null,
+        doctors_count_hint: profileData?.doctors?.length ?? null,
+        terminal_id: getCookie('terminal_id'),
       });
       if (vicControlSentForSlugRef.current !== slug) {
         vicControlSentForSlugRef.current = slug;
@@ -182,6 +190,50 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     }
   }, [profileData, slug]);
 
+  const doctorsListSentRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!centerId || isLoading) return;
+    if (isDoctorsError) {
+      const errorKey = `${slug}:${centerId}:error`;
+      if (doctorsListSentRef.current === errorKey) return;
+      doctorsListSentRef.current = errorKey;
+      sendCenterProfileEvent('center_doctors_list', 'error', {
+        slug,
+        center_id: centerId,
+        search_used: Boolean(debouncedSearchTerm),
+        expertise_filter: selectedExpertise || null,
+        message: 'doctors list query failed',
+      });
+      return;
+    }
+    const pages = doctors?.pages ?? [];
+    const resultCount = pages.reduce((sum, page: any) => sum + (page?.search?.result?.length ?? 0), 0);
+    const total = pages[0]?.search?.total ?? resultCount;
+    const key = `${slug}:${centerId}:${debouncedSearchTerm}:${selectedExpertise}:${resultCount}`;
+    if (doctorsListSentRef.current === key) return;
+    doctorsListSentRef.current = key;
+    sendCenterProfileEvent('center_doctors_list', resultCount === 0 ? 'empty' : 'loaded', {
+      slug,
+      center_id: centerId,
+      doctors_count: resultCount,
+      total,
+      empty: resultCount === 0,
+      search_used: Boolean(debouncedSearchTerm),
+      search_query: debouncedSearchTerm || null,
+      expertise_filter: selectedExpertise || null,
+      has_next_page: !!hasNextPage,
+    });
+  }, [
+    centerId,
+    isLoading,
+    isDoctorsError,
+    doctors,
+    debouncedSearchTerm,
+    selectedExpertise,
+    slug,
+    hasNextPage,
+  ]);
+
   if (!profileData) {
     return null;
   }
@@ -193,10 +245,31 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
 
   const handleShare = () => {
     const url = `${publicRuntimeConfig.CLINIC_BASE_URL}/${slug}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
+    sendCenterProfileEvent('center_profile', 'share_click', {
+      slug,
+      center_id: profileData?.id,
+      name: profileData?.name,
+    });
     share({
       title: documentTitle,
       text: `${profileData.name} در پذیرش۲۴`,
       url,
+    });
+  };
+
+  const handleCenterPhoneClick = (centerId: string) => {
+    sendCenterProfileEvent('center_profile', 'see_center_phone', {
+      slug,
+      center_id: centerId,
+      name: profileData?.name,
+    });
+  };
+
+  const handleCenterMapClick = (centerId: string) => {
+    sendCenterProfileEvent('center_profile', 'see_center_map', {
+      slug,
+      center_id: centerId,
+      name: profileData?.name,
     });
   };
 
@@ -411,7 +484,12 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
               <Text fontWeight="bold" className="px-4 md:px-0">
                 آدرس و تلفن تماس
               </Text>
-              <CentersInfo className="bg-white md:rounded-lg" centers={centersInfoData} />
+              <CentersInfo
+                className="bg-white md:rounded-lg"
+                centers={centersInfoData}
+                onEventPhoneNumber={handleCenterPhoneClick}
+                onEventAddress={handleCenterMapClick}
+              />
             </section>
           </ErrorBoundary>
           {profileData.biography && (
@@ -435,7 +513,12 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
             <Text fontWeight="bold" className="px-4 md:px-0">
               آدرس و تلفن تماس
             </Text>
-            <CentersInfo className="bg-white md:rounded-lg" centers={centersInfoData} />
+            <CentersInfo
+              className="bg-white md:rounded-lg"
+              centers={centersInfoData}
+              onEventPhoneNumber={handleCenterPhoneClick}
+              onEventAddress={handleCenterMapClick}
+            />
           </ErrorBoundary>
         </aside>
       </main>
@@ -452,11 +535,11 @@ CenterProfile.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps = withServerUtils(async (context: GetServerSidePropsContext) => {
-  const { slug, ...query } = context.query;
+  const { slug } = context.query;
   const host = context.req.headers?.host;
   const isMainSite = host === 'www.paziresh24.com' || host === 'p24-patient.darkube.app';
-  const text = query?.text as string;
-  const expertise = query?.expertise as string;
+  const userAgent = context.req.headers['user-agent'] ?? null;
+  const ssrStartedAt = Date.now();
 
   const slugFormatted = slug as string;
   try {
@@ -485,6 +568,16 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
 
     if (redirect?.statusCode || result?.redirect?.statusCode) {
       if (redirect?.statusCode == 404 || result?.redirect?.statusCode == 404) {
+        void sendCenterProfileEventServer(
+          'center_profile_error',
+          'ssr_not_found',
+          {
+            slug: slugFormatted,
+            http_status: 404,
+            duration_ms: Date.now() - ssrStartedAt,
+          },
+          userAgent,
+        );
         return {
           notFound: true,
         };
@@ -497,37 +590,25 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       };
     }
 
-    const filters = {
-      center: result?.data?.id,
-      result_type: 'پزشکان+بیمارستانی',
-      ...(text && { text }),
-    };
+    // Doctors list is fetched client-side via useInfiniteQuery.
+    // Prefetching infinite queries in React Query v4 leaves pageParams[0] as undefined,
+    // which Next.js cannot serialize in getServerSideProps.
 
-    try {
-      await queryClient.fetchInfiniteQuery(
-        [
-          ServerStateKeysEnum.Search,
-          {
-            route: expertise ? `ir/exp-${expertise}/` : '',
-            query: {
-              ...filters,
-              page: 1,
-            },
-          },
-        ],
-        ({ pageParam }) =>
-          searchApi({
-            route: expertise ? `ir/exp-${expertise}/` : '',
-            query: { ...filters, page: pageParam?.page ?? 1 },
-          }),
-      );
-    } catch (searchError) {
-      console.dir(searchError);
-    }
+    void sendCenterProfileEventServer(
+      'center_ssr',
+      'success',
+      {
+        slug: slugFormatted,
+        duration_ms: Date.now() - ssrStartedAt,
+        http_status: 200,
+        center_id: result?.data?.id ?? null,
+      },
+      userAgent,
+    );
 
     return {
       props: {
-        dehydratedState: dehydrate(queryClient),
+        dehydratedState: sanitizeDehydratedState(dehydrate(queryClient)),
         slug: slugFormatted,
         isMainSite,
       },
@@ -535,10 +616,34 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
   } catch (error) {
     console.dir(error);
     if (axios.isAxiosError(error)) {
+      void sendCenterProfileEventServer(
+        'center_profile_error',
+        'ssr_error',
+        {
+          slug: slugFormatted,
+          http_status: error.response?.status ?? 500,
+          message: error.message,
+          endpoint: error.config?.url,
+          duration_ms: Date.now() - ssrStartedAt,
+        },
+        userAgent,
+      );
       if (error.response?.status == 404)
         return {
           notFound: true,
         };
+    } else {
+      void sendCenterProfileEventServer(
+        'center_profile_error',
+        'ssr_error_non_axios',
+        {
+          slug: slugFormatted,
+          http_status: 500,
+          message: error instanceof Error ? error.message : String(error),
+          duration_ms: Date.now() - ssrStartedAt,
+        },
+        userAgent,
+      );
     }
     throw new TypeError(JSON.stringify(error));
   }

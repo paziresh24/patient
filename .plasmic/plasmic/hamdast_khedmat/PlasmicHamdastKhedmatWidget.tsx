@@ -60,6 +60,7 @@ import {
   useGlobalActions
 } from "@plasmicapp/react-web/lib/host";
 
+import { getCookie } from "cookies-next";
 import Card from "../../Card"; // plasmic-import: KIALDnHqraz9/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
@@ -253,12 +254,14 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
           ).map((__plasmic_item_0, __plasmic_idx_0) => {
             const currentItem = __plasmic_item_0;
             const currentIndex = __plasmic_idx_0;
+            const isFreeConsultation = currentItem.consultation === true || currentItem.consultation === "true" || currentItem.consultalion === true || currentItem.consultalion === "true";
             return (
               <Card
                 data-plasmic-name={"card"}
                 data-plasmic-override={overrides.card}
                 attributes={currentItem.attributes}
                 className={classNames("__wab_instance", sty.card)}
+                buttonText={isFreeConsultation ? "\u062f\u0631\u06cc\u0627\u0641\u062a \u0645\u0634\u0627\u0648\u0631\u0647 \u0631\u0627\u06cc\u06af\u0627\u0646 \u0627\u0632 \u062f\u06a9\u062a\u0631" : undefined}
                 imageLink={(() => {
                   try {
                     return currentItem.image_link;
@@ -274,6 +277,29 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                 })()}
                 key={currentIndex}
                 onClick={async () => {
+                  if (isFreeConsultation && currentItem.chat_url) {
+                    try {
+                      await $globalActions["Fragment.apiRequest"]?.apply(null, [
+                        "POST",
+                        "https://n8n.hosseinzr.ir/webhook/log-webhook",
+                        undefined,
+                        {
+                          event_group: "khedmat_click_consultation",
+                          doctor_user_id: $props.profileData.user_id,
+                          doctor_slug: $props.profileData.seo.slug,
+                          user_id: $ctx.auth?.info?.id,
+                          service: currentItem.service,
+                          sevice: currentItem.service,
+                          id: currentItem.id,
+                          terminal_id: getCookie("terminal_id")
+                        }
+                      ]);
+                    } catch (e) {
+                      console.error("Failed to log consultation click:", e);
+                    }
+                    window.location.assign(currentItem.chat_url);
+                    return;
+                  }
                   const $steps = {};
 
                   $steps["goToPage"] = true
@@ -328,7 +354,8 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
                               doctor_slug: $props.profileData.seo.slug,
                               user_id: $ctx.auth?.info?.id,
                               sevice: currentItem.service,
-                              id: currentItem.id
+                              id: currentItem.id,
+                              terminal_id: getCookie("terminal_id")
                             }
                           ]
                         };

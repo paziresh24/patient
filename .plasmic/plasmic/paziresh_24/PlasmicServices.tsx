@@ -397,6 +397,14 @@ function PlasmicServices__RenderFunc(props: {
             hasVariant($state, 'type', 'onlineVisit')
               ? (() => {
                 try {
+                  // When chat-lifecycle days are provided, always show that line (replaces hardcoded 3-day copy).
+                  if ($props.service?.chat_lifecycle_auto_close_days != null) {
+                    return true;
+                  }
+                  // While lifecycle is loading, hide the legacy 3-day sentence to avoid a misleading flash.
+                  if ($props.service?.chat_lifecycle_loading) {
+                    return false;
+                  }
                   return $props.expertises.group_expertises[0].id !== 21 && $props.expertises.group_expertises[0].id !== 47;
                 } catch (e) {
                   if (e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError') {
@@ -412,17 +420,43 @@ function PlasmicServices__RenderFunc(props: {
                 [sty.texttype_onlineVisit___7Hl7X7QAlK]: hasVariant($state, 'type', 'onlineVisit'),
               })}
             >
-              <React.Fragment>
-                <React.Fragment>{'\u062a\u0627 '}</React.Fragment>
-                <span className={'plasmic_default__all plasmic_default__span'} style={{ fontWeight: 700 }}>
-                  {'\u06f3 \u0631\u0648\u0632'}
-                </span>
-                <React.Fragment>
-                  {
-                    ' \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0647\u0631 \u0633\u0648\u0627\u0644\u06cc \u062f\u0627\u0631\u06cc\u062f \u0627\u0632 \u067e\u0632\u0634\u06a9 \u0628\u067e\u0631\u0633\u06cc\u062f'
+              {(() => {
+                try {
+                  const lifecycleDays = $props.service?.chat_lifecycle_auto_close_days;
+                  if (lifecycleDays != null) {
+                    return (
+                      <React.Fragment>
+                        <React.Fragment>{'\u062a\u0627 '}</React.Fragment>
+                        <span className={'plasmic_default__all plasmic_default__span'} style={{ fontWeight: 700 }}>
+                          {`${lifecycleDays} \u0631\u0648\u0632`}
+                        </span>
+                        <React.Fragment>
+                          {
+                            ' \u067e\u0633 \u0627\u0632 \u0648\u06cc\u0632\u06cc\u062a\u060c \u067e\u0632\u0634\u06a9 \u0634\u0645\u0627 \u0631\u0627 \u0647\u0645\u0631\u0627\u0647\u06cc \u062e\u0648\u0627\u0647\u062f \u06a9\u0631\u062f'
+                          }
+                        </React.Fragment>
+                      </React.Fragment>
+                    );
                   }
-                </React.Fragment>
-              </React.Fragment>
+                } catch (e) {
+                  if (!(e instanceof TypeError || e?.plasmicType === 'PlasmicUndefinedDataError')) {
+                    throw e;
+                  }
+                }
+                return (
+                  <React.Fragment>
+                    <React.Fragment>{'\u062a\u0627 '}</React.Fragment>
+                    <span className={'plasmic_default__all plasmic_default__span'} style={{ fontWeight: 700 }}>
+                      {'\u06f3 \u0631\u0648\u0632'}
+                    </span>
+                    <React.Fragment>
+                      {
+                        ' \u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0647\u0631 \u0633\u0648\u0627\u0644\u06cc \u062f\u0627\u0631\u06cc\u062f \u0627\u0632 \u067e\u0632\u0634\u06a9 \u0628\u067e\u0631\u0633\u06cc\u062f'
+                      }
+                    </React.Fragment>
+                  </React.Fragment>
+                );
+              })()}
             </div>
           ) : null}
           {(

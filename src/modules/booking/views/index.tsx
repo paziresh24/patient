@@ -71,6 +71,7 @@ import {
   isCenterBookingAvailable,
   mapSamanAvailabilityToCenters,
 } from '../functions/mapSamanAvailabilityToCenters';
+import { mergeBookableCentersFromDoctorCenters } from '../functions/mergeBookableCentersFromDoctorCenters';
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '../functions/mapDoctorCenterServices';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
@@ -165,10 +166,9 @@ const BookingSteps = (props: BookingStepsProps) => {
         : centers;
 
     // getDoctorCenters already returns only centers with has_bookable_services === true.
-    // Treat that list as an allowlist so centers missing from it (e.g. online with false) are removed.
+    // Allowlist profile centers and add bookable centers missing from full-profile (e.g. online 5532).
     if (doctorCentersQuery.isSuccess && Array.isArray(doctorCentersQuery.data) && doctorCentersQuery.data.length > 0) {
-      const bookableIds = new Set(doctorCentersQuery.data.map(c => String(c.id)));
-      list = list.filter((c: any) => bookableIds.has(String(c.id)));
+      list = mergeBookableCentersFromDoctorCenters(list, doctorCentersQuery.data);
     }
 
     return list;
@@ -292,12 +292,12 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [enrichedCenters, defaultStep?.payload?.centerId, defaultStep?.step, (defaultStep?.payload as any)?.timeId]);
 
   useEffect(() => {
-    if (!useSamanAvailabilityStatus || !samanAvailability.data || !centers) return;
+    if (!useSamanAvailabilityStatus || !samanAvailability.data || !enrichedCenters) return;
 
     const centerId = defaultStep?.payload?.centerId ?? router.query.centerId?.toString();
     if (!centerId) return;
 
-    const inList = centers.some((c: any) => c.id === centerId);
+    const inList = enrichedCenters.some((c: any) => c.id === centerId);
     const available = isCenterBookingAvailable(centerId, samanAvailability.data);
     if (!inList || !available) {
       router.replace(`/booking/${slug}/`);
@@ -305,7 +305,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [
     useSamanAvailabilityStatus,
     samanAvailability.data,
-    centers,
+    enrichedCenters,
     defaultStep?.payload?.centerId,
     router.query.centerId,
     slug,

@@ -1,20 +1,36 @@
 import Button from '@/common/components/atom/button';
-import { splunkInstance } from '@/common/services/splunk';
+import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-const ErrorPage = ({ statusCode, refresh, message }: { message?: string; statusCode?: number; refresh: () => void }) => {
+const ErrorPage = ({
+  statusCode,
+  refresh,
+  message,
+  slug,
+}: {
+  message?: string;
+  statusCode?: number;
+  refresh: () => void;
+  slug?: string;
+}) => {
   const router = useRouter();
+  const resolvedSlug = slug ?? (typeof router.query.slug === 'string' ? decodeURIComponent(router.query.slug) : undefined);
 
   useEffect(() => {
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'profile_error',
-      type: 'profile_error_client_side',
-      event: {
-        handle_error_status: statusCode,
-      },
+    sendDoctorProfileEvent('profile_error', 'profile_error_client_side', {
+      handle_error_status: statusCode ?? null,
+      http_status: statusCode ?? null,
+      slug: resolvedSlug ?? null,
+      path: router.asPath,
+      message: message ?? null,
     });
-  }, []);
+    sendDoctorProfileEvent('profile_render_result', 'error', {
+      slug: resolvedSlug ?? null,
+      http_status: statusCode ?? null,
+      source: 'error_page',
+    });
+  }, [statusCode, resolvedSlug, router.asPath, message]);
 
   const errors: { [key: number]: { status: number; title: string; message: string } } = {
     404: {
