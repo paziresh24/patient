@@ -38,14 +38,21 @@ import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
 import { shouldShowTopSuggestedConsult } from '@/modules/search/functions/shouldShowTopSuggestedConsult';
-import { getConsultBannerReservedSpace } from '@/modules/search/functions/getConsultBannerReservedSpace';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
   ssr: false,
 });
+// LCP fix (DR-08 §۱۸, docs/dev-requests/dr-08-listing-pagespeed.md): this banner used to be
+// `ssr: false`, which meant the server sent nothing for it and its own text could not paint until
+// the chunk was downloaded and mounted. RUM (index=p24_web_vitals) showed that on 20% of mobile
+// `listing_specialty_city` views this banner's text *is* the LCP element, with a p75
+// `elementRenderDelay` of 3.8s — i.e. the largest paint on the page was waiting on a client-only
+// component. Nothing in it needs the browser: both of its shapes are derived from `selectedCategory`
+// /`isConsult`, which are already resolved server-side, and the substitute-doctor request it makes is
+// gated behind `enabled: modalProps.isOpen`. `dynamic()` is kept (without `ssr: false`) so the chunk
+// still stays out of the initial JS bundle for TBT — only the *markup* moves to the server.
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'), {
   loading: () => <Skeleton w="100%" h="4rem" />,
-  ssr: false,
 });
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
@@ -333,15 +340,13 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
                     />
                   </div>
                 ) : (
-                  // CLS fix (DR-08, docs/dev-requests/dr-08-listing-pagespeed.md): ConsultBanner is
-                  // loaded via dynamic(..., { ssr: false }), so nothing renders for it until its JS
-                  // chunk mounts client-side — the space it will occupy must be reserved from the
-                  // very first (server-rendered) paint, or the page jumps once it pops in. Which of
-                  // ConsultBanner's two shapes will render (plain upsell vs. richer "ویزیت آنلاین"
-                  // card with image+button) is already known here via `selectedCategory`/`isConsult`
-                  // (same data source ConsultBanner reads internally), so we size the reservation to
-                  // the shape that will actually mount instead of guessing one fixed height.
-                  <div className="md:hidden" style={{ minHeight: getConsultBannerReservedSpace({ isConsult, hasSelectedCategory: !!selectedCategory?.title }) }}>
+                  // This wrapper used to carry a `min-height` estimate (getConsultBannerReservedSpace)
+                  // because ConsultBanner was `ssr: false` and popped in after its chunk mounted. Now
+                  // that it is server-rendered (see the `dynamic()` call above) the real card is part
+                  // of the first paint, so an estimate can only be wrong: measured on the production
+                  // build, the reserved 5rem exceeded the real 4.06rem card on the city-root shape,
+                  // i.e. the estimate had turned into permanent dead space rather than a CLS guard.
+                  <div className="md:hidden">
                     <ConsultBanner />
                   </div>
                 ))}
