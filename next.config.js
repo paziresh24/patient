@@ -4,6 +4,9 @@ const nextTranslate = require('next-translate');
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
+const defaultProfileApiBaseUrl = 'http://172.16.104.65:8080';
+const defaultProfileApiToken = 'test';
+const defaultProfileApiSourceSlugs = 'دکتر-ابوالفضل-ساجدی-10';
 
 const plugins = [nextTranslate];
 
@@ -190,9 +193,9 @@ const nextConfig = {
     DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
     // Profile microservice (GrowthBook profile.api-source-by-slug → these APIs)
-    PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || '',
-    PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || '',
-    PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || '',
+    PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || defaultProfileApiBaseUrl,
+    PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || defaultProfileApiToken,
+    PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || defaultProfileApiSourceSlugs,
   },
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
@@ -237,9 +240,9 @@ const nextConfig = {
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
-    PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || '',
-    PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || '',
-    PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || '',
+    PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || defaultProfileApiBaseUrl,
+    PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || defaultProfileApiToken,
+    PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || defaultProfileApiSourceSlugs,
     // DR-11 conversational layer. These MUST live here and not as `NEXT_PUBLIC_*`
     // read from client code: the Dockerfile runs `npm run build` with no build
     // args, so a NEXT_PUBLIC_* value inlines as `undefined` in the production
