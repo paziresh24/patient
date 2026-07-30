@@ -94,8 +94,10 @@ export async function getAggregatedProfileDataFromMicroservice(
   ]);
 
   overwrite.feedbacks = {
-    ...overwrite.feedbacks,
-    ...rateDetailsResult,
+    averageRates: rateDetailsResult?.averageRates ?? overwrite.feedbacks.averageRates,
+    countOfFeedbacks: rateDetailsResult?.countOfFeedbacks ?? overwrite.feedbacks.countOfFeedbacks ?? undefined,
+    satisfactionPercent: overwrite.feedbacks.satisfactionPercent,
+    waiting_time_statistics: overwrite.feedbacks.waiting_time_statistics,
     hideRates: rateDetailsResult?.hide_rates,
     reviews: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
     waiting_time_info: averageWaitingTimeResult.status === 'fulfilled' ? (averageWaitingTimeResult.value as any) : [],
