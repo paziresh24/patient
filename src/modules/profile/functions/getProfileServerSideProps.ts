@@ -9,6 +9,11 @@ import { trackSsrError } from '@/common/utils/ssrErrorTracker';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { getHost, HeaderBag } from '@/common/utils/getHost';
+import { getProfileMicroserviceConfig } from '@/common/apis/clients/profileMicroserviceClient';
+import {
+  isSlugInProfileApiSourceAllowlist,
+  PROFILE_API_SOURCE_FEATURE_KEY,
+} from '@/modules/profile/utils/profileApiSourceBySlugFlag';
 import { isExpertiseChipsLikeSearchEnabledForSlug } from '@/modules/profile/utils/expertiseChipsLikeSearchFlag';
 import { sendDoctorProfileEventServer } from '@/modules/profile/events/nightBatEvents';
 
@@ -54,6 +59,8 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
     }
 
     let prefetchSamanAvailability = false;
+    // Explicit false = legacy for this request (no second GB check in aggregator).
+    let useProfileMicroservice = false;
     let fetchExpertiseKeywordTags = false;
     try {
       const host = getHost(context.req.headers as HeaderBag);
@@ -63,6 +70,19 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
       growthbook.setAttributes({ url, host, slug });
       await growthbook.loadFeatures({ timeout: 500 });
       prefetchSamanAvailability = growthbook.isOn('use-saman-availability-status');
+
+      const { baseURL, envSlugs } = getProfileMicroserviceConfig();
+      if (baseURL) {
+        const apiSource = growthbook.getFeatureValue<{ slugs?: string[] }>(PROFILE_API_SOURCE_FEATURE_KEY, {
+          slugs: [],
+        });
+        const gbSlugs = apiSource?.slugs ?? [];
+        // Prefer GrowthBook allowlist; env is local fallback when GB is empty.
+        useProfileMicroservice = isSlugInProfileApiSourceAllowlist(
+          gbSlugs.length > 0 ? gbSlugs : envSlugs,
+          slug,
+        );
+      }
     } catch (error) {
       trackSsrError(error, { source: 'ProfileSSR', message: 'Error loading GrowthBook for Saman availability SSR', path: context.resolvedUrl });
     }
@@ -87,6 +107,7 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
         useNewDoctorCentersAPI: true,
         useNewDoctorGalleryAPI: true,
         prefetchSamanAvailability,
+        useProfileMicroservice,
         fetchExpertiseKeywordTags,
       });
 

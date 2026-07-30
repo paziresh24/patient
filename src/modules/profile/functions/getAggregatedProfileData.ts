@@ -17,6 +17,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
@@ -135,9 +136,28 @@ export async function getAggregatedProfileData(
     useNewDoctorCentersAPI?: boolean;
     useNewDoctorGalleryAPI?: boolean;
     prefetchSamanAvailability?: boolean;
+    /** Explicit SSR decision: true = microservice, false = legacy, undefined = resolve (CSR). */
+    useProfileMicroservice?: boolean;
     fetchExpertiseKeywordTags?: boolean;
   },
 ) {
+  // Only allowlisted slugs leave legacy. Callers should pass an explicit boolean
+  // (SSR from GrowthBook, CSR from useFeatureValue) so this module stays client-safe.
+  let useMicroservice = false;
+  if (options?.useProfileMicroservice === true) {
+    useMicroservice = true;
+  } else if (options?.useProfileMicroservice === false) {
+    useMicroservice = false;
+  } else {
+    // Fallback: env allowlist only (no GrowthBook / no node:crypto in this graph).
+    useMicroservice = isProfileMicroserviceEnabledForSlug(slug);
+  }
+
+  if (useMicroservice) {
+    const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
+    return getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+  }
+
   const queryClient = new QueryClient();
 
   let slugInfo = null;
