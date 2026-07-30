@@ -14,8 +14,10 @@ import { splunkInstance } from '@/common/services/splunk';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
+import { getAggregatedProfileDataFromMicroservice } from './getAggregatedProfileDataFromMicroservice';
 import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
@@ -131,8 +133,25 @@ export async function getAggregatedProfileData(
     useNewDoctorCentersAPI?: boolean;
     useNewDoctorGalleryAPI?: boolean;
     prefetchSamanAvailability?: boolean;
+    /** Explicit SSR decision: true = microservice, false = legacy, undefined = resolve (CSR). */
+    useProfileMicroservice?: boolean;
   },
 ) {
+  // Only ابوالفضل ساجدی (and other GB allowlisted slugs) leave legacy.
+  // When SSR already decided `false`, do NOT re-check — zero path change for everyone else.
+  let useMicroservice = false;
+  if (options?.useProfileMicroservice === true) {
+    useMicroservice = true;
+  } else if (options?.useProfileMicroservice === false) {
+    useMicroservice = false;
+  } else {
+    useMicroservice = await isProfileMicroserviceEnabledForSlug(slug).catch(() => false);
+  }
+
+  if (useMicroservice) {
+    return getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+  }
+
   const queryClient = new QueryClient();
 
   let slugInfo = null;

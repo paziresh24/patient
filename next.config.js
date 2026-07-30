@@ -160,6 +160,10 @@ const nextConfig = {
   serverRuntimeConfig: {
     DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
+    // Profile microservice (GrowthBook profile.api-source-by-slug → these APIs)
+    PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || '',
+    PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || '',
+    PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || '',
   },
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
@@ -203,6 +207,9 @@ const nextConfig = {
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
+    PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || '',
+    PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || '',
+    PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || '',
   },
   images: {
     formats: ['image/avif', 'image/webp'],
