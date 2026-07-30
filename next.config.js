@@ -237,11 +237,9 @@ const nextConfig = {
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
-<<<<<<< HEAD
     PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || '',
     PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || '',
     PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || '',
-=======
     // DR-11 conversational layer. These MUST live here and not as `NEXT_PUBLIC_*`
     // read from client code: the Dockerfile runs `npm run build` with no build
     // args, so a NEXT_PUBLIC_* value inlines as `undefined` in the production
@@ -251,7 +249,6 @@ const nextConfig = {
     CHAT_MVP_ENABLED: process.env.CHAT_MVP_ENABLED,
     CHAT_MVP_PREVIEW_KEY: process.env.CHAT_MVP_PREVIEW_KEY,
     CHAT_API_BASE: process.env.CHAT_API_BASE,
->>>>>>> origin/main
   },
   images: {
     formats: ['image/avif', 'image/webp'],
