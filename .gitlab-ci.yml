@@ -357,7 +357,7 @@ search-e2e:
     - |
       # Playwright از داخلِ imageِ رسمی. repo با `docker cp` منتقل می‌شود چون workspaceِ jobِ
       # container روی فایل‌سیستمِ dind وجود ندارد (bind-mount این‌جا بی‌صدا خالی می‌شود).
-      docker create --name e2e-runner --network e2e-net         -e E2E_BASE_URL=http://app:3000 -e E2E_BROWSER_CHANNEL= -e CI=true -e E2E_UPDATE_SNAPSHOTS="$E2E_UPDATE_SNAPSHOTS"         -w /work "$E2E_IMAGE"         sh -lc "npm i --no-save --registry=https://npm.devneeds.ir/ @playwright/test@1.49.1 && npx playwright test --project=mobile e2e/specs/search.spec.ts e2e/specs/ssr-critical-markup.spec.ts e2e/specs/ssr-style-dedupe.spec.ts e2e/specs/dialog-city-select.spec.ts e2e/specs/card-content.spec.ts e2e/specs/card-visual.spec.ts ${E2E_UPDATE_SNAPSHOTS:+--update-snapshots}"
+      docker create --name e2e-runner --network e2e-net         -e E2E_BASE_URL=http://app:3000 -e E2E_BROWSER_CHANNEL= -e CI=true -e E2E_UPDATE_SNAPSHOTS="$E2E_UPDATE_SNAPSHOTS"         -w /work "$E2E_IMAGE"         sh -lc "npm i --no-save --registry=https://npm.devneeds.ir/ @playwright/test@1.49.1 && npx playwright test --project=mobile e2e/specs/search.spec.ts e2e/specs/ssr-critical-markup.spec.ts e2e/specs/ssr-style-dedupe.spec.ts e2e/specs/dialog-city-select.spec.ts e2e/specs/card-content.spec.ts e2e/specs/card-visual.spec.ts e2e/specs/card-instrumentation.spec.ts ${E2E_UPDATE_SNAPSHOTS:+--update-snapshots}"
     - docker cp . e2e-runner:/work
     - docker start -a e2e-runner
   after_script:
