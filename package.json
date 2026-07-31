@@ -6,8 +6,6 @@
     "dev": "cross-env node server.js",
     "dev:turbo": "cross-env TURBO=1 node server.js",
     "dev:debug": "cross-env NODE_OPTIONS='--inspect' node server.js",
-    "predev": "node scripts/patch-radix-basestyles.js",
-    "prebuild": "node scripts/patch-radix-basestyles.js",
     "build": "node scripts/remove-google-fonts.js && next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
     "start": "node -r ./log-bootstrap.cjs node_modules/next/dist/bin/next start",

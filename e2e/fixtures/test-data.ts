@@ -7,6 +7,9 @@
 
 export const CITY = 'tehran';
 
+/** نامِ فارسیِ همان شهر — چیپِ شهر کنارِ کادرِ جستجو همین را نشان می‌دهد (سلکتورِ متن-محور). */
+export const CITY_FA = 'تهران';
+
 /** کوئری‌های سرچ که هر کدام یک شاخه‌ی متفاوتِ pipeline را می‌زنند (ghane: search-traffic-flow). */
 export const SEARCH_QUERIES = {
   /** تخصص — مسیرِ اصلیِ ترافیکِ گوگل */
@@ -18,6 +21,8 @@ export const SEARCH_QUERIES = {
 /** لندینگ‌های پرترافیک (همان سه قالبِ DR-08 §۱). */
 export const LISTING_TEMPLATES = {
   cityRoot: '/s/',
+  /** لندینگِ خودِ شهر — جایی که چیپِ شهر نامِ همان شهر را نشان می‌دهد. */
+  cityLanding: `/s/${CITY}/`,
   specialtyInCity: `/s/${CITY}/dermatology/`,
   consultLanding: '/s/ir/psychology/?turn_type=consult',
 };
