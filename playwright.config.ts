@@ -20,7 +20,10 @@ const baseURL = process.env.E2E_BASE_URL ?? 'https://www.paziresh24.com';
  * اگر روی ماشینی بودی که `npx playwright install chromium` جواب می‌دهد، می‌توانی این خط را
  * بردار — بقیه‌ی هارنس تغییری نمی‌کند.
  */
-const CHANNEL = process.env.E2E_BROWSER_CHANNEL ?? 'chrome';
+// در CI (imageِ رسمیِ Playwright) اصلاً Chromeِ برندشده نصب نیست و فقط chromiumِ همراهِ
+// Playwright هست. آن‌جا `E2E_BROWSER_CHANNEL=` (خالی) ست می‌شود؛ پس رشته‌ی خالی باید به
+// `undefined` تبدیل شود، نه این‌که به‌عنوانِ نامِ channel پاس داده شود (`??` این را نمی‌گیرد).
+const CHANNEL = process.env.E2E_BROWSER_CHANNEL === undefined ? 'chrome' : process.env.E2E_BROWSER_CHANNEL || undefined;
 
 /**
  * روی هدفِ **غیر-production** (لوکال/استیجینگ) اسکریپت‌های third-party بلاک می‌شوند.
