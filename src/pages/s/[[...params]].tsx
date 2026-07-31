@@ -37,7 +37,6 @@ import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
-import { shouldShowTopSuggestedConsult } from '@/modules/search/functions/shouldShowTopSuggestedConsult';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
   ssr: false,
@@ -392,7 +391,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     let showPlasmicResult: boolean = false;
     let showPlasmicSort: boolean = false;
     let showPlasmicConsultBanner: boolean = false;
-    let showSuggestedDoctor: any = {};
 
     const host = getHost(context.req.headers as unknown as HeaderBag);
     const path = context.resolvedUrl;
@@ -408,7 +406,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
       showPlasmicResult = growthbook.isOn('search_plasmic_result');
       showPlasmicSort = growthbook.isOn('search_plasmic_sort');
       showPlasmicConsultBanner = growthbook.isOn('search_plasmic_consult_banner');
-      showSuggestedDoctor = growthbook.getFeatureValue('fragment::top-suggested-card-feature', { enable: true });
     } catch (error) {
       console.error(error);
     }
@@ -439,49 +436,10 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           }),
       );
 
-      const resultType = searchData?.selected_filters?.result_type;
-      const resultTypeValue = Array.isArray(resultType) ? resultType[0] : resultType;
-      const isResultTypeExcluded =
-        !resultTypeValue ||
-        (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
-      const canShowTopSuggestedConsult = shouldShowTopSuggestedConsult(searchData?.query_attributes);
-
-      if (
-        !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
-        (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
-        isResultTypeExcluded &&
-        (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
-        !searchData?.search?.is_landing &&
-        canShowTopSuggestedConsult &&
-        showSuggestedDoctor?.enable
-      ) {
-        try {
-          await queryClient.fetchQuery(
-            [
-              ServerStateKeysEnum.SearchConsult,
-              {
-                route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-                query: {
-                  ...query,
-                  turn_type: 'consult',
-                  limit: 2,
-                },
-              },
-            ],
-            () =>
-              searchApi({
-                route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-                query: {
-                  ...query,
-                  turn_type: 'consult',
-                  limit: 2,
-                },
-              }),
-          );
-        } catch (error) {
-          console.error(error);
-        }
-      }
+      // DR-07 (ghane docs/dev-requests/dr-07-online-visit-suggestion-to-backend.md §13 condition 1):
+      // the "should we suggest an online-visit doctor" decision + the second consult search that used
+      // to live here are now made entirely server-side (search-service) and arrive as the
+      // `promoted_online_visit` sibling key inside `searchData` itself — no second SSR fetch needed.
 
       return {
         props: {
