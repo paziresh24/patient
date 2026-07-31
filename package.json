@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "cross-env node server.js",
+    "free-dev-port": "node scripts/free-dev-port.js",
+    "predev": "node scripts/free-dev-port.js",
     "dev:turbo": "cross-env TURBO=1 node server.js",
     "dev:debug": "cross-env NODE_OPTIONS='--inspect' node server.js",
     "build": "node scripts/remove-google-fonts.js && next build",

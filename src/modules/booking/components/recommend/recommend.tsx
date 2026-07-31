@@ -3,7 +3,7 @@ import { useSearch } from '@/common/apis/services/search/search';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { HTMLAttributes } from 'react';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import RecommendCard from './card/card';
 
 interface RecommendProps extends HTMLAttributes<HTMLDivElement> {

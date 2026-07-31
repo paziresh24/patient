@@ -46,6 +46,8 @@ function useAnimatedValue(initialValue: number) {
 export function useAgentAudioVisualizerAura(
   state: AgentState | undefined,
   audioTrack?: LocalAudioTrack | RemoteAudioTrack | TrackReferenceOrPlaceholder,
+  /** PCM/session volume 0..1 when no LiveKit track (WebSocket voice). */
+  externalVolume = 0,
 ) {
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const {
@@ -57,10 +59,14 @@ export function useAgentAudioVisualizerAura(
   const { value: frequency, animate: animateFrequency } = useAnimatedValue(DEFAULT_FREQUENCY);
   const { value: brightness, animate: animateBrightness } = useAnimatedValue(DEFAULT_BRIGHTNESS);
 
-  const volume = useTrackVolume(audioTrack as TrackReference, {
-    fftSize: 512,
-    smoothingTimeConstant: 0.55,
-  });
+  const volume = useTrackVolume(
+    (audioTrack ?? undefined) as TrackReference,
+    {
+      fftSize: 512,
+      smoothingTimeConstant: 0.55,
+    },
+  );
+  const safeVolume = audioTrack ? volume : Math.max(0, Math.min(1, externalVolume));
 
   useEffect(() => {
     switch (state) {
@@ -101,12 +107,12 @@ export function useAgentAudioVisualizerAura(
   }, [state, animateScale, animateAmplitude, animateFrequency, animateBrightness]);
 
   useEffect(() => {
-    if (state === 'speaking' && volume > 0 && !scaleMotionValue.isAnimating()) {
-      animateScale(0.2 + 0.2 * volume, { duration: 0 });
+    if (state === 'speaking' && safeVolume > 0 && !scaleMotionValue.isAnimating()) {
+      animateScale(0.2 + 0.2 * safeVolume, { duration: 0 });
     }
   }, [
     state,
-    volume,
+    safeVolume,
     scaleMotionValue,
     animateScale,
     animateAmplitude,

@@ -106,7 +106,7 @@ export function useVoiceCall() {
         setStatus(prev => (prev === 'ended' ? prev : 'ended'));
       });
 
-      await room.connect(data.url, data.token);
+      await room.connect(data.url, data.token ?? '');
       // Keep mic closed until agent greets — avoids cancelling the opening line.
       await room.localParticipant.setMicrophoneEnabled(false);
 

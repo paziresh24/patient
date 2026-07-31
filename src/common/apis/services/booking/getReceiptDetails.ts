@@ -1,7 +1,7 @@
 import { paziresh24AppClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
 import { ServerStateKeysEnum } from '../../serverStateKeysEnum';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 interface Params {
   center_id: string;

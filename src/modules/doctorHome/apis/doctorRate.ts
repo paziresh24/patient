@@ -1,6 +1,7 @@
 import { fetchDoctorRate } from '@/common/apis/services/reviews/rateDoctor';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { doctorHomeQueryDefaults } from '../utils/doctorHomeQuery';
 
 export interface DoctorRateStats {
   rating: number | null;
@@ -46,6 +47,6 @@ export const getDoctorRateStats = async (slug: string): Promise<DoctorRateStats>
 export const useDoctorRateStats = (slug?: string, enabled = true) =>
   useQuery(['doctorHome', 'rateSummary', slug], () => getDoctorRateStats(slug!), {
     enabled: enabled && !!slug,
-    staleTime: 5 * 60 * 1000,
+    ...doctorHomeQueryDefaults,
     retry: 1,
   });

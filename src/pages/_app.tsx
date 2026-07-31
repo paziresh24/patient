@@ -22,7 +22,8 @@ import { useNetworkStatus } from "@/common/hooks/useNetworkStatus";
 import useServerQuery from "@/common/hooks/useServerQuery";
 import { splunkInstance } from "@/common/services/splunk";
 import Provider from "@/components/layouts/provider";
-import { GrowthBook, GrowthBookProvider, configureCache } from "@growthbook/growthbook-react";
+import { GrowthBookProvider } from "@growthbook/growthbook-react";
+import { growthbook, isEnabledGrowthbook } from "@/common/growthbook/client";
 import { PlasmicRootProvider } from "@plasmicapp/react-web";
 import { Hydrate } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
@@ -44,24 +45,11 @@ import RouteProgress from "@/common/components/layouts/RouteProgress";
 import { RismanSurveyScript } from "@/common/components/layouts/RismanSurveyScript";
 import { RoutedExternalScripts } from "@/common/components/layouts/RoutedExternalScripts";
 import { useNotificationPermission } from "@/common/hooks/useNotificationPermission";
+
+/** @deprecated Import from `@/common/growthbook/client` — re-export kept for gradual migration. */
+export { growthbook } from "@/common/growthbook/client";
+
 const { publicRuntimeConfig } = getConfig();
-const isEnabledGrowthbook =
-  !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
-  !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
-
-if (isEnabledGrowthbook) {
-  configureCache({
-    staleTTL: 30 * 1000,
-  });
-}
-
-export const growthbook = new GrowthBook({
-  enabled: isEnabledGrowthbook,
-  apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
-  clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
-  backgroundSync: true,
-  realtimeInterval: 10000
-});
 function updateGrowthBookURL() {
   growthbook.setURL(window.location.href);
 }

@@ -3,7 +3,7 @@ import { formData } from '@/common/utils/formData';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 interface Params {
   center_id: string;

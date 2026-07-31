@@ -26,7 +26,9 @@ export const useDoctorHomeRedirectLoading = () => {
 
   const isDoctor = isCachedDoctor || (isLogin && isDoctorUser(userInfo));
 
+  // Cached doctors: show loading while auth/profile settles before hard redirect.
   if ((pending || doctorProfilePending) && isCachedDoctor) return true;
 
+  // Confirmed doctors ready to redirect — keep shell loading (avoid patient home flash).
   return !pending && !doctorProfilePending && isDoctor;
 };

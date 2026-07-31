@@ -29,7 +29,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { useDebounce } from 'react-use';
-import { growthbook } from '../_app';
+import { growthbook } from '@/common/growthbook/client';
 import { getImageUrl } from '@/common/utils/getImageUrl';
 const Biography = dynamic(() => import('@/modules/profile/views/biography'));
 

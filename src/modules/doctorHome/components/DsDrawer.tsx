@@ -6,6 +6,7 @@ import { X } from 'lucide-react';
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { Drawer } from 'vaul';
 import { ds } from '../designSystem/tokens';
+import { captureDoctorHomeScroll, restoreDoctorHomeScroll } from '../utils/doctorHomeScroll';
 
 /**
  * بالاتر از هدر/ناوبری (z-40/50) و پایین‌تر از `z-infinity` (999) —
@@ -66,12 +67,20 @@ const DesktopDrawerPanel = ({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
     };
+    captureDoctorHomeScroll();
     const previousOverflow = document.body.style.overflow;
+    const previousPaddingRight = document.body.style.paddingRight;
+    const scrollbarGap = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = 'hidden';
+    if (scrollbarGap > 0) {
+      document.body.style.paddingRight = `${scrollbarGap}px`;
+    }
     document.addEventListener('keydown', onKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.body.style.paddingRight = previousPaddingRight;
       document.removeEventListener('keydown', onKeyDown);
+      restoreDoctorHomeScroll();
     };
   }, [onClose]);
 
@@ -176,10 +185,15 @@ const MobileDrawerPanel = ({
     <Root
       open={mobileOpen}
       onOpenChange={onMobileOpenChange}
-      onAnimationEnd={onAnimationEnd}
+      onAnimationEnd={openState => {
+        if (!openState) restoreDoctorHomeScroll();
+        onAnimationEnd(openState);
+      }}
       handleOnly={false}
       modal
       repositionInputs={false}
+      // Keep our scroll restore when history.back() changes the URL mid-close.
+      preventScrollRestoration={false}
     >
       {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
       <Drawer.Portal>
@@ -257,6 +271,7 @@ export const DsDrawer = ({
     dismissPendingRef.current = false;
     isClosingRef.current = false;
     clearTimeout(dismissSafetyTimer.current);
+    restoreDoctorHomeScroll();
     if (shouldNotifyParent) {
       activateClickShield();
       onOpenChange?.(false);
@@ -333,6 +348,7 @@ export const DsDrawer = ({
       clearTimeout(dismissSafetyTimer.current);
       dismissPendingRef.current = false;
       isClosingRef.current = false;
+      captureDoctorHomeScroll();
       setMobileMounted(true);
       setMobileOpen(true);
       return;

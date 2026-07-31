@@ -47,7 +47,7 @@ const formatAppointmentTime = (appointment: UpcomingAppointment) =>
     ? moment.unix(appointment.from).format('HH:mm')
     : appointment.book_time_string || '—';
 
-const AppointmentsFeedItem = ({
+export const AppointmentsFeedItem = ({
   data,
   scheduleExpanded = false,
   widgetShell = false,
@@ -78,12 +78,11 @@ const AppointmentsFeedItem = ({
   const hasItems = data.items.length > 0;
   const expanded = scheduleExpanded || isExpanded;
   const isAppointmentsInitialLoading = data.isAppointmentsLoading ?? false;
-  const isAppointmentsFetching = data.isAppointmentsFetching ?? false;
-  const showTimeline = isScheduleHydrated && expanded && hasItems && !isAppointmentsFetching;
+  const showTimeline = isScheduleHydrated && expanded && hasItems;
   const showTimelineLoading =
-    isScheduleHydrated && expanded && !hasItems && (isAppointmentsInitialLoading || isAppointmentsFetching);
+    isScheduleHydrated && expanded && !hasItems && isAppointmentsInitialLoading;
   const showEmptyState =
-    isScheduleHydrated && expanded && !hasItems && !isAppointmentsInitialLoading && !isAppointmentsFetching;
+    isScheduleHydrated && expanded && !hasItems && !isAppointmentsInitialLoading;
 
   const allSheet = useSheetRoute('appointments-all');
   const appointmentsDrawerProps = useSheetDrawerProps(allSheet);
@@ -241,7 +240,7 @@ const AppointmentsFeedItem = ({
   );
 };
 
-const ReviewsFeedItem = ({
+export const ReviewsFeedItem = ({
   data,
 }: {
   data: { items: DoctorHomeFeedReview[]; slug?: string; doctorUserId?: string };
@@ -314,10 +313,10 @@ export const FeedItem = ({ item, scheduleExpanded, widgetShell, hideSectionHeade
       return null;
 
     case 'actions':
-      return <FeedActionsSection onlineVisit={item.data.onlineVisit} widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
+      return <FeedActionsSection widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
 
     case 'online_visit':
-      return <FeedActionsSection onlineVisit={item.data} widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
+      return <FeedActionsSection widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
 
     case 'alert':
     case 'alerts':

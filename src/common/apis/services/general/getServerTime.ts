@@ -1,7 +1,7 @@
 import { paziresh24AppClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 export const getServerTime = () => {
   const endpoints = growthbook.getFeatureValue<Record<string, string>>('booking:api-endpoints', {});

@@ -1,5 +1,6 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
+import { doctorHomeListQueryDefaults } from '../utils/doctorHomeQuery';
 
 const ONLINE_CENTER_ID = '5532';
 const ALLBOOKS_URL = '/v1/n8n-nelson/webhook/v6/allbooks';
@@ -177,7 +178,7 @@ export const useUpcomingAppointments = (centers: AllBooksCenter[], enabled = tru
       }),
     {
       enabled: enabled && centers.length > 0,
-      staleTime: 60 * 1000,
+      ...doctorHomeListQueryDefaults,
       retry: 1,
     },
   );

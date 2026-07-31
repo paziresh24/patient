@@ -1,7 +1,7 @@
 import { paziresh24AppClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 interface Params {
   return_type: 'book' | 'book_request' | 'online_visit';

@@ -40,7 +40,7 @@ import Queue from '../../queue';
 import { SecureCallButton } from '../../secureCallButton/secureCallButton';
 import { OnlineVisitChannel } from '../turnType';
 import axios from 'axios';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import { useGetCancellationPolicyStatus } from '@/common/apis/services/booking/cancellationPolicy';
 const { publicRuntimeConfig } = getConfig();
 

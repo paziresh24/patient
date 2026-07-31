@@ -1,5 +1,6 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
+import { doctorHomeQueryDefaults } from '../utils/doctorHomeQuery';
 
 export interface SanjeScoreResponse {
   final_score?: number;
@@ -15,6 +16,6 @@ export const getSanjeScore = async () => {
 export const useSanjeScore = (enabled = true) =>
   useQuery(['doctorHome', 'sanjeScore'], getSanjeScore, {
     enabled,
-    staleTime: 5 * 60 * 1000,
+    ...doctorHomeQueryDefaults,
     retry: 1,
   });

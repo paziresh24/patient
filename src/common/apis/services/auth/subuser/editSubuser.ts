@@ -1,7 +1,7 @@
 import { clinicClient } from '@/common/apis/client';
 import formData from '@/common/utils/formData';
 import { useMutation } from '@tanstack/react-query';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 interface Params {
   name: string;

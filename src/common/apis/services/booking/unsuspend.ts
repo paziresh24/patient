@@ -3,7 +3,7 @@ import { formData } from '@/common/utils/formData';
 import { getCookie } from 'cookies-next';
 import { useMutation } from '@tanstack/react-query';
 import { setTerminal } from '../auth/setTerminal';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 interface Params {
   center_id: string;

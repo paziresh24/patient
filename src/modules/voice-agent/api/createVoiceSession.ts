@@ -1,11 +1,11 @@
 import getConfig from 'next/config';
-import { getCookie } from 'cookies-next';
-import type { UiContext } from '../context/uiContext';
+import { resolveVoiceWsUrl } from '../transport/wsVoiceSession';
 
 export type VoiceSession = {
+  /** WebSocket URL for PCM voice (wss://…). */
   url: string;
-  token: string;
-  roomName?: string;
+  /** LiveKit JWT when using LK transport; omitted for WSS Arash. */
+  token?: string;
 };
 
 function voiceApiBaseUrl(): string {
@@ -17,38 +17,8 @@ function voiceApiBaseUrl(): string {
   return base;
 }
 
-/** Mint a LiveKit join token from the voice-agent session service (no secrets in patient). */
-export async function createVoiceSession(uiContext?: UiContext): Promise<VoiceSession> {
-  const token = getCookie('token');
-  if (!token || typeof token !== 'string') {
-    throw new Error('unauthorized');
-  }
-
-  const hamiToken = getCookie('hami-token');
-  const gozargahToken = getCookie('gozargah_token');
-
-  const res = await fetch(`${voiceApiBaseUrl()}/session`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      uiContext,
-      ...(typeof hamiToken === 'string' && hamiToken ? { hamiToken } : {}),
-      ...(typeof gozargahToken === 'string' && gozargahToken ? { gozargahToken } : {}),
-    }),
-  });
-
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    const detail = body?.detail;
-    const message =
-      (typeof detail === 'string' && detail) ||
-      (typeof body?.message === 'string' && body.message) ||
-      `session_${res.status}`;
-    throw new Error(message);
-  }
-
-  return (await res.json()) as VoiceSession;
+/** Resolve Arash voice WebSocket URL (no LiveKit token). */
+export async function createVoiceSession(): Promise<VoiceSession> {
+  voiceApiBaseUrl(); // throws if unset
+  return { url: resolveVoiceWsUrl() };
 }

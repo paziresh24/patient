@@ -27,7 +27,7 @@ import { getCookie } from 'cookies-next';
 import config from 'next/config';
 import { ReactElement, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { growthbook } from '../_app';
+import { growthbook } from '@/common/growthbook/client';
 import RaviGlobalContextsProvider from '../../../.plasmic/plasmic/ravi_r_r/PlasmicGlobalContextsProvider';
 import ProfileGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import { Fragment2 } from '@/common/fragment/fragment2';

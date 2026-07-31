@@ -1,6 +1,7 @@
 import { apiGatewayClient, raviApisClient } from '@/common/apis/client';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { doctorHomeQueryDefaults } from '../utils/doctorHomeQuery';
 
 /**
  * این endpointها دقیقاً از کامپوننت فعلیِ ریویوی پروفایل پزشک گرفته شده‌اند
@@ -148,7 +149,7 @@ export const useShareCommentUrl = (slug?: string, feedbackId?: string, enabled =
 export const useAnsweredFeedbackIds = (slug?: string) =>
   useQuery(
     ['doctorHome', 'answeredFeedbackIds', slug ?? ''],
-    async (): Promise<Set<string>> => {
+    async (): Promise<string[]> => {
       const where =
         `(doctor_slug,eq,${slug})` +
         `~and(reply_to_feedback_id,isnot,null)` +
@@ -157,14 +158,14 @@ export const useAnsweredFeedbackIds = (slug?: string) =>
         params: { where, limit: 200, offset: 0, sort: '-created_at' },
       });
       const list = (data?.list as Array<Record<string, unknown>> | undefined) ?? [];
-      const set = new Set<string>();
+      const ids: string[] = [];
       list.forEach(it => {
         const id = it.reply_to_feedback_id;
-        if (id != null && id !== '') set.add(String(id));
+        if (id != null && id !== '') ids.push(String(id));
       });
-      return set;
+      return ids;
     },
-    { enabled: !!slug, staleTime: 60 * 1000, retry: 0 },
+    { enabled: !!slug, ...doctorHomeQueryDefaults, retry: 0 },
   );
 
 const REVIEWS_PAGE_SIZE = 10;

@@ -7,8 +7,13 @@ type AgentUiSurfaceState = {
   clearPrompt: () => void;
 };
 
-export const useAgentUiSurfaceStore = create<AgentUiSurfaceState>(set => ({
+export const useAgentUiSurfaceStore = create<AgentUiSurfaceState>((set, get) => ({
   prompt: null,
-  setPrompt: prompt => set({ prompt }),
+  setPrompt: prompt => {
+    const prev = get().prompt;
+    // Ignore no-op replaces (same id) to avoid remount flicker.
+    if (prev?.id && prompt?.id && prev.id === prompt.id) return;
+    set({ prompt });
+  },
   clearPrompt: () => set({ prompt: null }),
 }));

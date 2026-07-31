@@ -1,5 +1,6 @@
 import { drProfileClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
+import { doctorHomeQueryDefaults } from '../utils/doctorHomeQuery';
 
 const extractPageViewCount = (data: Record<string, unknown> | undefined): number | null => {
   if (!data) return null;
@@ -34,6 +35,6 @@ export const getDoctorPageView = async (slug: string) => {
 export const useDoctorPageView = (slug?: string) =>
   useQuery(['doctorHome', 'pageView', slug], () => getDoctorPageView(slug!), {
     enabled: !!slug,
-    staleTime: 10 * 60 * 1000,
+    ...doctorHomeQueryDefaults,
     retry: 1,
   });

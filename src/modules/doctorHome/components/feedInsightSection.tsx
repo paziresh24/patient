@@ -4,7 +4,8 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useEffect } from 'react';
 import { DsInsightCarousel, ds } from '../designSystem';
 import { useDoctorWalletBalance } from '../apis/walletBalance';
-import { DoctorHomeFeedStats } from '../types/feed';
+import { isQueryInitialLoading } from '../utils/doctorHomeQuery';
+import { useDoctorHomeStats } from '../hooks/useDoctorHomeStats';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { appendUserIdToUrl, buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { DOCTOR_PANEL_URLS, RAVI_DOCSIDE_URL } from '../utils/doctorPanelUrls';
@@ -39,22 +40,24 @@ const MetricDrawerContent = ({
 );
 
 export const FeedInsightSection = ({
-  stats,
   className,
   variant = 'responsive',
 }: {
-  stats?: DoctorHomeFeedStats;
   className?: string;
   variant?: 'responsive' | 'grid' | 'stack' | 'carousel';
 }) => {
   const user = useUserInfoStore(state => state.info);
+  const { stats } = useDoctorHomeStats(user);
   const userId = user?.id;
   const selectedCenterId = useSelectedCenterStore(s => s.selectedCenterId);
-  const { data: walletBalance, isLoading: isWalletLoading } = useDoctorWalletBalance(user, !!user?.id, selectedCenterId);
+  const { data: walletBalance, isLoading: isWalletQueryLoading } = useDoctorWalletBalance(user, !!user?.id, selectedCenterId);
   const isWalletVisible = useWalletBalanceVisibilityStore(state => state.isVisible);
   const isWalletHydrated = useWalletBalanceVisibilityStore(state => state.hydrated);
   const toggleWalletVisibility = useWalletBalanceVisibilityStore(state => state.toggle);
   const hydrateWalletVisibility = useWalletBalanceVisibilityStore(state => state.hydrate);
+  const isWalletInitialLoading = isWalletHydrated
+    ? isQueryInitialLoading({ isLoading: isWalletQueryLoading, data: walletBalance })
+    : true;
 
   useEffect(() => {
     hydrateWalletVisibility();
@@ -102,7 +105,7 @@ export const FeedInsightSection = ({
           description: '',
           value: isWalletHydrated ? (walletBalance != null ? Math.round(walletBalance / 10).toLocaleString('fa-IR') : null) : null,
           hiddenValue: '••••••',
-          isLoading: isWalletLoading || !isWalletHydrated,
+          isLoading: isWalletInitialLoading,
           onPress: () => {
             sendDoctorHomeEvent(userId, 'stat_wallet', { balance: walletBalance });
             walletSheet.openSheet();

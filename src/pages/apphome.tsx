@@ -1,56 +1,35 @@
-import Logo from '@/common/components/atom/logo';
 import Loading from '@/common/components/atom/loading';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
-import { Fragment } from '@/common/fragment';
-import { Fragment2 } from '@/common/fragment/fragment2';
-import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { withCSR } from '@/common/hoc/withCsr';
-import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
-import useCustomize from '@/common/hooks/useCustomize';
 import { useDoctorHomeRedirectLoading } from '@/common/hooks/useDoctorHomeRedirectLoading';
-import {
-  DoctorViewSwitcher,
-  useDoctorViewRouteGuard,
-  useDoctorViewSwapActive,
-  useIsNewDoctorLauncherLoading,
-} from '@/modules/doctorHome';
-import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote';
-import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
-import { useSearchStore } from '@/modules/search/store/search';
-import RecentSearch from '@/modules/search/view/recentSearch';
-import Suggestion from '@/modules/search/view/suggestion';
-import { GrowthBook, useFeatureIsOn } from '@growthbook/growthbook-react';
-import { useRouter } from 'next/router';
-import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
-import { ReactElement, useEffect, useState } from 'react';
-import SearchGlobalContextsProvider from '../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
-import PlasmicOnlineVisit from '../../.plasmic/plasmic/paziresh_24_search/PlasmicOnlineVisit';
-import classNames from '@/common/utils/classNames';
-import useResponsive from '@/common/hooks/useResponsive';
-import Button from '@/common/components/atom/button';
-import ChevronIcon from '@/common/components/icons/chevron';
+import { shouldRedirectCachedDoctorHome } from '@/common/utils/doctorDeviceCache';
 import { splunkInstance } from '@/common/services/splunk';
-import { getHost, HeaderBag } from '@/common/utils/getHost';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import { GetServerSidePropsContext } from 'next/types';
+import { ReactElement, useEffect, useState } from 'react';
 
-const Home = ({ fragmentComponents }: any) => {
+const pageLoading = (
+  <div data-doctor-boot-loading className="flex min-h-[50vh] flex-grow items-center justify-center">
+    <Loading />
+  </div>
+);
+
+const ApphomePatientContent = dynamic(() => import('@/modules/home/views/apphomePatientContent'), {
+  loading: () => pageLoading,
+});
+
+const Home = () => {
   const isApplication = useApplication();
-  const swapActive = useDoctorViewSwapActive();
-  const doctorLauncherLoading = useIsNewDoctorLauncherLoading();
-  const showRedirectLoading = useDoctorHomeRedirectLoading();
   const { query, isReady, ...router } = useRouter();
-  const { recent } = useRecentSearch();
-  const [defaultInputValue, setDefaultInputValue] = useState('');
-  const { setIsOpenSuggestion } = useSearchStore();
-  const customize = useCustomize(state => state.customize);
-  const showPlasmicSuggestion = useFeatureIsOn('search_plasmic_suggestion');
-  const showPlasmicRecentSearch = useFeatureIsOn('search_plasmic_recent_search');
-  const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
   const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
-
-  const { isMobile } = useResponsive();
-  useDoctorViewRouteGuard();
+  const [cachedDoctorBoot] = useState(() =>
+    typeof window !== 'undefined' ? shouldRedirectCachedDoctorHome() : false,
+  );
+  const showBootLoading = cachedDoctorBoot || useDoctorHomeRedirectLoading();
 
   useEffect(() => {
     if (isReady && isApplication) {
@@ -62,6 +41,8 @@ const Home = ({ fragmentComponents }: any) => {
   }, [isReady, query, isApplication]);
 
   useEffect(() => {
+    if (showBootLoading) return;
+
     splunkInstance('homepage').sendEvent({
       group: 'home-page-load',
       type: 'home-page-load',
@@ -71,95 +52,22 @@ const Home = ({ fragmentComponents }: any) => {
         },
       },
     });
-    // Prefetch the search page
     router.prefetch('/s/[[...params]]');
-  }, []);
+  }, [showBootLoading, router, showHealthAssistantsButton]);
 
-  const showSwitcher = swapActive || doctorLauncherLoading;
+  if (showBootLoading) {
+    return (
+      <>
+        <Seo title="اپلیکیشن پذیرش24" noIndex />
+        {pageLoading}
+      </>
+    );
+  }
 
   return (
     <>
       <Seo title="اپلیکیشن پذیرش24" noIndex />
-      {showSwitcher && (
-        <div className="bg-white">
-          <DoctorViewSwitcher className="px-0 pb-1 pt-3" />
-        </div>
-      )}
-      {showRedirectLoading ? (
-        <div className="flex min-h-[50vh] flex-grow items-center justify-center">
-          <Loading />
-        </div>
-      ) : (
-        <>
-      <Fragment name="LocationSelectionScript" />
-      <main className="flex flex-col items-center justify-center flex-grow w-full p-4 mx-auto space-y-6 bg-white md:w-96">
-        <Logo as="h1" className="text-2xl md:text-3xl" width={55} home />
-
-        <div className="flex flex-col items-center w-full gap-3">
-          <Suggestion
-            showPlasmicSuggestion={fragmentComponents?.showPlasmicSuggestion || showPlasmicSuggestion}
-            defaultInputValue={defaultInputValue}
-            setDefaultInputValue={setDefaultInputValue}
-            className={classNames('!p-0', {
-              '[&>div]:border-2 [&>div]:rounded-lg [&>div>div>div]:rounded-lg  [&>div>div>div>div>div>div]:rounded-none [&>div>div>div]:border-0  [&>div]:border-primary':
-                isMobile,
-            })}
-          />
-          {(fragmentComponents?.showPlasmicRecentSearch || showPlasmicRecentSearch) && (
-            <div className="lg:w-[50rem] w-full">
-              <Fragment
-                name="RecentSearch"
-                props={{
-                  onClick: (value: any) => {
-                    setDefaultInputValue(value?.name || value || '');
-                    setIsOpenSuggestion(true);
-                  },
-                }}
-              />
-            </div>
-          )}
-
-          {recent.length > 0 && !fragmentComponents?.showPlasmicRecentSearch && !showPlasmicRecentSearch && (
-            <div className="lg:w-[50rem] w-full">
-              <RecentSearch />
-            </div>
-          )}
-          {showHealthAssistantsButton && (
-            <div className="flex flex-col gap-3 w-full lg:w-[50rem]">
-              <div className="flex items-center gap-5 w-full">
-                <div className="h-px bg-[#386BFC]/15 w-full" />
-              </div>
-              <Button
-                variant="secondary"
-                className="border-[#BECEFD] h-16 bg-[#F1F4FF] shadow-sm justify-between font-semibold shadow-[#3262EB]/10"
-                onClick={() => router.push('/s/?result_type=ابزارک%E2%80%8Cهای+سلامتی&text=ابزارک&ref=HomePageIcon')}
-              >
-                <div className="flex gap-1 items-center">
-                  <div className="flex flex-col items-start">
-                    <span>دستیارهای سلامتی</span>
-                    <span className="font-normal text-xs">تشخیص کمبود آهن، تفسیر آزمایش و ...</span>
-                  </div>
-                </div>
-                <ChevronIcon dir="left" />
-              </Button>
-            </div>
-          )}
-        </div>
-
-        {customize.showConsultServices &&
-          (fragmentComponents?.showPlasmicOnlineVisit || showPlasmicOnlineVisit ? (
-            <div>
-              <Fragment2 Component={PlasmicOnlineVisit} name="OnlineVisit" />
-            </div>
-          ) : (
-            <OnlineVisitPromote />
-          ))}
-        <SearchGlobalContextsProvider>
-          <Fragment name="HomePageShortcuts" />
-        </SearchGlobalContextsProvider>
-      </main>
-        </>
-      )}
+      <ApphomePatientContent />
     </>
   );
 };
@@ -172,39 +80,12 @@ Home.getLayout = function getLayout(page: ReactElement) {
   );
 };
 
-export const getServerSideProps = withCSR(
-  withServerUtils(async (context: GetServerSidePropsContext) => {
-    let showPlasmicSuggestion: boolean = false;
-    let showPlasmicRecentSearch: boolean = false;
-    let showPlasmicOnlineVisit: boolean = false;
-    try {
-      const host = getHost(context.req.headers as unknown as HeaderBag);
-      const path = context.resolvedUrl;
-
-      const url = `https://${host}${path}`;
-      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-      const growthbook = new GrowthBook(growthbookContext);
-      growthbook.setAttributes({ url });
-      await growthbook.loadFeatures({ timeout: 500 });
-
-      // Plasmic
-      showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
-      showPlasmicRecentSearch = growthbook.isOn('search_plasmic_recent_search');
-      showPlasmicOnlineVisit = growthbook.isOn('search_plasmic_online_visit');
-    } catch (error) {
-      console.error(error);
-    }
-    return {
-      props: {
-        query: context.query,
-        fragmentComponents: {
-          showPlasmicSuggestion,
-          showPlasmicRecentSearch,
-          showPlasmicOnlineVisit,
-        },
-      },
-    };
-  }),
-);
+/**
+ * Keep a data-fetching export so next-translate preserves page statics like getLayout.
+ * Intentionally does NOT call GrowthBook (CDN-friendly / fast TTFB).
+ */
+export const getServerSideProps = withCSR(async (_context: GetServerSidePropsContext) => {
+  return { props: {} };
+});
 
 export default Home;

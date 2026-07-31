@@ -4,7 +4,7 @@ import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
 import { getCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 const { publicRuntimeConfig } = getConfig();
 const isEnabledGrowthbook =

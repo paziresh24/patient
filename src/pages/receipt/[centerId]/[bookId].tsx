@@ -56,7 +56,7 @@ import { GetServerSidePropsContext } from 'next/types';
 import { useQuery } from '@tanstack/react-query';
 import { ReactElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import axios from 'axios';
 import WarningIcon from '@/common/components/icons/warning';
 import Loading from '@/common/components/atom/loading/loading';

@@ -1,5 +1,6 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
+import { doctorHomeQueryDefaults } from '../utils/doctorHomeQuery';
 
 export interface HolidayEvent {
   description: string;
@@ -37,4 +38,5 @@ export const HOLIDAY_YEAR_END = new Date(new Date().getFullYear(), 11, 31).toISO
 export const useHolidays = (startDate: string, endDate: string) =>
   useQuery(['holidays', startDate, endDate], () => getHolidays(startDate, endDate), {
     staleTime: 24 * 60 * 60 * 1000,
+    cacheTime: doctorHomeQueryDefaults.cacheTime,
   });

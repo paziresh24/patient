@@ -82,7 +82,7 @@ import useBooking from '../hooks/booking';
 import useFirstFreeTime from '../hooks/selectTime/useFirstFreeTime';
 import { Center } from '../types/selectCenter';
 import { Service } from '../types/selectService';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import { template, templateSettings } from 'lodash';
 import { useGetServices } from '@/common/apis/services/profile/services';
 import { toastActionble } from '@/common/utils/toastActionble';

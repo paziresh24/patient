@@ -32,7 +32,7 @@ import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'n
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { ReactElement, useEffect, useState, useMemo, useCallback } from 'react';
-import { growthbook } from '../_app';
+import { growthbook } from '@/common/growthbook/client';
 import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';

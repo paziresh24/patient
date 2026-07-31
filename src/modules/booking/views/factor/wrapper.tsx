@@ -17,7 +17,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import useFirstFreeTime from '../../hooks/selectTime/useFirstFreeTime';
 import useBooking from '../../hooks/booking';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import { useDiscountInquiry } from '@/common/apis/services/factor/discountInquiry';
 
 interface FactorWrapperProps {

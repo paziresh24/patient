@@ -1,4 +1,5 @@
 import { hamdastClient } from '@/common/apis/client';
+import { doctorHomeQueryDefaults } from '@/modules/doctorHome/utils/doctorHomeQuery';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
@@ -40,8 +41,7 @@ export const useActiveWidgetAppKeys = (userId?: string | number, options?: { ena
     { user_id: String(userId) },
     {
       enabled: !!userId && (options?.enabled ?? true),
-      staleTime: 30_000,
-      refetchOnWindowFocus: false,
+      ...doctorHomeQueryDefaults,
     },
   );
 

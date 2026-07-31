@@ -391,6 +391,10 @@ export interface AgentAudioVisualizerAuraProps {
    * The audio track to visualize. Can be a local/remote audio track or a track reference.
    */
   audioTrack?: LocalAudioTrack | RemoteAudioTrack | TrackReferenceOrPlaceholder;
+  /**
+   * Volume 0..1 when there is no LiveKit track (e.g. WebSocket PCM playback).
+   */
+  volume?: number;
 }
 
 /**
@@ -415,6 +419,7 @@ export function AgentAudioVisualizerAura({
   color = DEFAULT_COLOR,
   colorShift = 0.05,
   audioTrack,
+  volume = 0,
   themeMode,
   className,
   ref,
@@ -425,6 +430,7 @@ export function AgentAudioVisualizerAura({
   const { speed, scale, amplitude, frequency, brightness } = useAgentAudioVisualizerAura(
     state,
     audioTrack,
+    volume,
   );
 
   return (

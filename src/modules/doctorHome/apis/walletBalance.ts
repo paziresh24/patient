@@ -1,6 +1,7 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { UserInfo } from '@/modules/login/store/userInfo';
 import { useQuery } from '@tanstack/react-query';
+import { doctorHomeQueryDefaults } from '../utils/doctorHomeQuery';
 
 type WalletCenter = { id?: string; type_id?: number };
 
@@ -40,7 +41,7 @@ export const useDoctorWalletBalance = (user?: UserInfo, enabled = true, centerId
     () => getDoctorWalletBalance(user, centerId),
     {
       enabled: enabled && !!user?.id,
-      staleTime: 60 * 1000,
+      ...doctorHomeQueryDefaults,
       retry: 1,
     },
   );

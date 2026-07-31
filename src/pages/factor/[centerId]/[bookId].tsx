@@ -22,7 +22,7 @@ import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useQuery } from '@tanstack/react-query';
 import { ReactElement, useEffect, useMemo } from 'react';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import { PIC_USER_IMAGE_FALLBACK_URL, picUserImageUrl } from '@/common/utils/picUserImageUrl';
 
 const Factor = () => {

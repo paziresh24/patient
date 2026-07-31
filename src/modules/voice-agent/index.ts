@@ -1,7 +1,7 @@
 export { createVoiceSession } from './api/createVoiceSession';
+export { ArashFloatingAuraButton } from './components/ArashFloatingAuraButton';
 export { CallOverlay } from './components/CallOverlay';
 export { VoiceAssistantCard } from './components/VoiceAssistantCard';
-export { VoiceBottomNavButton } from './components/VoiceBottomNavButton';
 export { VoiceCallHeaderButton } from './components/VoiceCallHeaderButton';
 export { VoiceCallHost } from './components/VoiceCallHost';
 export { ARASH_VOICE_AGENT_FEATURE } from './constants';

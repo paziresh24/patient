@@ -4,6 +4,7 @@ import moment from 'jalali-moment';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { matchesSelectedCenter } from '../utils/centers';
 import type { VacationCenterTarget } from '../utils/centers';
+import { doctorHomeListQueryDefaults } from '../utils/doctorHomeQuery';
 
 interface VacationRaw {
   from?: number | string;
@@ -242,6 +243,8 @@ export const useDoctorVacations = (
         ranges.map(range => ({
           queryKey: ['vacations', apiId, centerId, range.key],
           queryFn: () => getVacations(apiId, centerId, range.from, range.to),
+          ...doctorHomeListQueryDefaults,
+          // Vacations change rarely; prefer instant paint from cache / persist.
           staleTime: 10 * 60 * 1000,
           enabled: !!apiId && !!centerId,
         })),
@@ -255,7 +258,8 @@ export const useDoctorVacations = (
     const vacations = dedupeVacations(results.flatMap(r => r.data ?? []));
     const scoped = scopeVacations(vacations, selectedCenterId);
     const { fullDaySet, anyDaySet } = buildVacationDaySets(scoped, ranges);
-    return { vacations: scoped, fullDaySet, anyDaySet };
+    const isInitialLoading = results.some(r => r.isLoading && r.data == null);
+    return { vacations: scoped, fullDaySet, anyDaySet, isInitialLoading };
   }, [results, ranges, selectedCenterId]);
 };
 

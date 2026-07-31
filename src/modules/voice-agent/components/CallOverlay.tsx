@@ -1,44 +1,18 @@
-import '@livekit/components-styles';
-
 import classNames from '@/common/utils/classNames';
-import {
-  LiveKitRoom,
-  RoomAudioRenderer,
-  StartAudio,
-  useLocalParticipant,
-  useRoomContext,
-  useVoiceAssistant,
-} from '@livekit/components-react';
 import { Mic, MicOff, PhoneOff } from 'lucide-react';
-import { useEffect, useRef, useState, type ComponentType, type MouseEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Drawer } from 'vaul';
 import { AgentAudioVisualizerAura } from '../agents-ui/agent-audio-visualizer-aura';
 import { CallAudioFx } from '../audio/callAudioFx';
-import { createVoiceSession } from '../api/createVoiceSession';
-import { buildUiContext } from '../context/uiContext';
 import { formatCallTimer } from '../hooks/useVoiceCall';
+import { useAgentUiSurfaceStore } from '../store/agentUiSurface';
 import { useVoiceCallUiStore } from '../store/voiceCallUi';
-import { UiContextBridge } from './UiContextBridge';
+import {
+  WsVoiceSession,
+  type WsVoiceStatus,
+} from '../transport/wsVoiceSession';
+import type { AgentUiPrompt, AgentUiReply } from '../ui-surface/types';
 import { AgentUiSurfaceHost } from './AgentUiSurfaceHost';
-import { AgentHangupHost } from './AgentHangupHost';
-import { useRouter } from 'next/router';
-
-const LKRoom = LiveKitRoom as unknown as ComponentType<{
-  serverUrl: string;
-  token: string;
-  connect?: boolean;
-  audio?: boolean;
-  video?: boolean;
-  onDisconnected?: () => void;
-  className?: string;
-  children?: ReactNode;
-}>;
-const LKStartAudio = StartAudio as unknown as ComponentType<{
-  label?: string;
-  className?: string;
-}>;
-
-type Session = { url: string; token: string };
 
 function CallControl({
   label,
@@ -74,42 +48,52 @@ function CallControl({
 function useCallTimer(running: boolean) {
   const [elapsedSec, setElapsedSec] = useState(0);
   useEffect(() => {
-    if (!running) return;
-    const id = setInterval(() => setElapsedSec(s => s + 1), 1000);
+    if (!running) {
+      setElapsedSec(0);
+      return;
+    }
+    setElapsedSec(0);
+    const startedAt = Date.now();
+    const id = setInterval(() => {
+      setElapsedSec(Math.floor((Date.now() - startedAt) / 1000));
+    }, 250);
     return () => clearInterval(id);
   }, [running]);
   return elapsedSec;
+}
+
+function statusToAura(status: WsVoiceStatus): 'connecting' | 'listening' | 'speaking' | 'thinking' | 'disconnected' {
+  if (status === 'speaking') return 'speaking';
+  if (status === 'listening') return 'listening';
+  if (status === 'thinking') return 'thinking';
+  if (status === 'connecting') return 'connecting';
+  return 'disconnected';
 }
 
 function CallSheetBody({
   onEnd,
   elapsedSec,
   connected,
+  muted,
+  onToggleMute,
+  auraState,
+  agentVolume,
+  onUiReply,
 }: {
   onEnd: () => void;
   elapsedSec: number;
   connected: boolean;
+  muted: boolean;
+  onToggleMute: () => void;
+  auraState: ReturnType<typeof statusToAura>;
+  agentVolume: number;
+  onUiReply: (reply: AgentUiReply) => void;
 }) {
-  const { state, audioTrack } = useVoiceAssistant();
-  const { localParticipant, isMicrophoneEnabled } = useLocalParticipant();
-  const room = useRoomContext();
-
-  const toggleMute = () => {
-    void localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
-  };
-
-  const endCall = async () => {
-    try {
-      await room.disconnect();
-    } catch {
-      // ignore
-    }
-    onEnd();
-  };
+  const hasPrompt = useAgentUiSurfaceStore(s => Boolean(s.prompt));
 
   return (
     <div className="flex h-full flex-col px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-1">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex shrink-0 items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200/80">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -124,7 +108,7 @@ function CallSheetBody({
           <p className="text-[16px] font-semibold leading-tight text-slate-900">آرش</p>
         </div>
         {connected ? (
-          <p className="tabular-nums text-[15px] font-medium tracking-wide text-slate-500">
+          <p className="tabular-nums text-[15px] font-medium tracking-wide text-slate-500" dir="ltr">
             {formatCallTimer(elapsedSec)}
           </p>
         ) : (
@@ -132,124 +116,37 @@ function CallSheetBody({
         )}
       </div>
 
-      <div className="flex min-h-0 flex-1 items-center justify-center py-4">
-        <AgentAudioVisualizerAura
-          size="lg"
-          color="#60A5FA"
-          colorShift={0.12}
-          state={state}
-          themeMode="light"
-          audioTrack={audioTrack}
-          className="mx-auto"
-        />
-      </div>
+      {hasPrompt ? (
+        <div className="mt-3 flex min-h-0 flex-1 flex-col">
+          <AgentUiSurfaceHost onReply={onUiReply} />
+        </div>
+      ) : (
+        <div className="flex min-h-0 flex-1 items-center justify-center py-4">
+          <AgentAudioVisualizerAura
+            size="lg"
+            color="#60A5FA"
+            colorShift={0.12}
+            state={auraState}
+            themeMode="light"
+            audioTrack={undefined}
+            volume={auraState === 'speaking' ? agentVolume : 0}
+            className="mx-auto"
+          />
+        </div>
+      )}
 
-      <div className="flex items-center justify-center gap-10 pb-1 pt-2">
+      <div className="flex shrink-0 items-center justify-center gap-10 pb-1 pt-2">
         <CallControl
-          label={isMicrophoneEnabled ? 'بی‌صدا' : 'صدا باز'}
-          onClick={toggleMute}
-          active={!isMicrophoneEnabled}
+          label={muted ? 'صدا باز' : 'بی‌صدا'}
+          onClick={onToggleMute}
+          active={muted}
         >
-          {isMicrophoneEnabled ? (
-            <Mic size={22} strokeWidth={1.75} />
-          ) : (
-            <MicOff size={22} strokeWidth={1.75} />
-          )}
+          {muted ? <MicOff size={22} strokeWidth={1.75} /> : <Mic size={22} strokeWidth={1.75} />}
         </CallControl>
-        <CallControl label="قطع" onClick={endCall} tone="danger">
+        <CallControl label="قطع" onClick={onEnd} tone="danger">
           <PhoneOff size={22} strokeWidth={1.75} className="translate-y-px" />
         </CallControl>
       </div>
-    </div>
-  );
-}
-
-/** Compact bar while the sheet is dismissed but the call is still live. */
-function MinimizedCallPill({
-  elapsedSec,
-  connected,
-  onExpand,
-  onEnd,
-}: {
-  elapsedSec: number;
-  connected: boolean;
-  onExpand: () => void;
-  onEnd: () => void;
-}) {
-  const room = useRoomContext();
-  const { localParticipant, isMicrophoneEnabled } = useLocalParticipant();
-
-  const hangUp = async (e: MouseEvent) => {
-    e.stopPropagation();
-    try {
-      await room.disconnect();
-    } catch {
-      // ignore
-    }
-    onEnd();
-  };
-
-  const toggleMute = (e: MouseEvent) => {
-    e.stopPropagation();
-    void localParticipant.setMicrophoneEnabled(!isMicrophoneEnabled);
-  };
-
-  return (
-    <div
-      className="fixed inset-x-0 z-[101] flex justify-center px-4"
-      style={{ bottom: 'max(5.5rem, calc(env(safe-area-inset-bottom) + 4.5rem))' }}
-    >
-      <button
-        type="button"
-        onClick={onExpand}
-        aria-label="باز کردن تماس با آرش"
-        className="flex w-full max-w-sm items-center gap-3 rounded-full bg-white px-3 py-2.5 shadow-[0_8px_32px_rgba(15,23,42,0.14)] ring-1 ring-slate-200/80"
-        dir="rtl"
-      >
-        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-slate-100">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/voice-agent/arash.png?v=9"
-            alt=""
-            className="h-full w-full object-cover"
-            style={{ objectPosition: '50% 12%' }}
-            draggable={false}
-          />
-        </div>
-        <div className="min-w-0 flex-1 text-right">
-          <p className="text-[14px] font-semibold text-slate-900">آرش</p>
-          {connected && (
-            <p className="tabular-nums text-[12px] text-slate-400">{formatCallTimer(elapsedSec)}</p>
-          )}
-        </div>
-        <span
-          role="button"
-          tabIndex={0}
-          aria-label={isMicrophoneEnabled ? 'بی‌صدا' : 'صدا باز'}
-          onClick={toggleMute}
-          onKeyDown={e => {
-            if (e.key === 'Enter' || e.key === ' ') toggleMute(e as unknown as MouseEvent);
-          }}
-          className={classNames(
-            'flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
-            isMicrophoneEnabled ? 'bg-slate-100 text-slate-700' : 'bg-slate-900 text-white',
-          )}
-        >
-          {isMicrophoneEnabled ? <Mic size={16} strokeWidth={1.75} /> : <MicOff size={16} strokeWidth={1.75} />}
-        </span>
-        <span
-          role="button"
-          tabIndex={0}
-          aria-label="قطع"
-          onClick={hangUp}
-          onKeyDown={e => {
-            if (e.key === 'Enter' || e.key === ' ') hangUp(e as unknown as MouseEvent);
-          }}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ef4444] text-white"
-        >
-          <PhoneOff size={16} strokeWidth={1.75} />
-        </span>
-      </button>
     </div>
   );
 }
@@ -269,86 +166,6 @@ function CallEndedBody() {
       </div>
       <p className="text-[18px] font-semibold text-slate-900">تماس پایان یافت</p>
     </div>
-  );
-}
-
-function CallRoomChrome({
-  fx,
-  expanded,
-  onMinimize,
-  onExpand,
-  onEnd,
-}: {
-  fx: CallAudioFx | null;
-  expanded: boolean;
-  onMinimize: () => void;
-  onExpand: () => void;
-  onEnd: () => void;
-}) {
-  const { state } = useVoiceAssistant();
-  const ending = useVoiceCallUiStore(s => s.ending);
-  const connected = state !== 'connecting' && state !== 'disconnected' && state !== 'initializing';
-  const elapsedSec = useCallTimer(connected && !ending);
-
-  useEffect(() => {
-    if (connected && !ending) fx?.playConnected();
-  }, [connected, ending, fx]);
-
-  useEffect(() => {
-    if (ending) fx?.playDisconnectedIfConnected();
-  }, [ending, fx]);
-
-  const sheetOpen = expanded || ending;
-
-  return (
-    <>
-      <UiContextBridge />
-      <AgentUiSurfaceHost />
-      <AgentHangupHost />
-      <RoomAudioRenderer />
-      {sheetOpen ? (
-        <Drawer.Root
-          open
-          onOpenChange={next => {
-            if (!next && !ending) onMinimize();
-          }}
-          modal
-          dismissible={!ending}
-        >
-          <Drawer.Portal>
-            <Drawer.Overlay className="fixed inset-0 z-[100] bg-black/40" />
-            <Drawer.Content
-              className="fixed inset-x-0 bottom-0 z-[101] flex h-[50dvh] max-h-[50dvh] flex-col rounded-t-[24px] bg-white outline-none"
-              dir="rtl"
-            >
-              <div className="flex shrink-0 justify-center pt-3 pb-1">
-                <Drawer.Handle className="!h-1 !w-10 !rounded-full !bg-slate-200" />
-              </div>
-              <Drawer.Title className="sr-only">تماس با آرش</Drawer.Title>
-              <Drawer.Description className="sr-only">دستیار صوتی پذیرش۲۴</Drawer.Description>
-              {ending ? (
-                <CallEndedBody />
-              ) : (
-                <>
-                  <CallSheetBody onEnd={onEnd} elapsedSec={elapsedSec} connected={connected} />
-                  <LKStartAudio
-                    label="برای شنیدن صدا ضربه بزنید"
-                    className="absolute inset-x-0 bottom-24 mx-auto w-max rounded-full bg-white px-4 py-2 text-[13px] text-slate-700 ring-1 ring-slate-200"
-                  />
-                </>
-              )}
-            </Drawer.Content>
-          </Drawer.Portal>
-        </Drawer.Root>
-      ) : (
-        <MinimizedCallPill
-          elapsedSec={elapsedSec}
-          connected={connected}
-          onExpand={onExpand}
-          onEnd={onEnd}
-        />
-      )}
-    </>
   );
 }
 
@@ -375,7 +192,22 @@ function ConnectingBody({
       </div>
       <div>
         <p className="text-[18px] font-semibold text-slate-900">آرش</p>
-        {error ? <p className="mt-1 text-[14px] text-red-500">تماس برقرار نشد</p> : null}
+        {error ? (
+          <p className="mt-1 text-[14px] text-red-500">
+            {error === 'unauthorized'
+              ? 'وارد حساب کاربری شوید و دوباره تلاش کنید'
+              : error === 'Failed to fetch' || error.includes('fetch') || error.includes('ارتباط')
+                ? 'ارتباط با سرویس تماس برقرار نشد'
+                : 'تماس برقرار نشد'}
+          </p>
+        ) : (
+          <p className="mt-1 text-[14px] text-slate-500">در حال برقراری تماس…</p>
+        )}
+        {error && error !== 'unauthorized' && !error.includes('fetch') && !error.includes('ارتباط') ? (
+          <p className="mt-1 max-w-[16rem] text-[12px] text-slate-400 break-all" dir="ltr">
+            {error}
+          </p>
+        ) : null}
       </div>
       {error && (
         <div className="mt-2 flex items-center gap-3">
@@ -400,21 +232,47 @@ function ConnectingBody({
 }
 
 /**
- * Call UI: half-sheet while expanded, floating pill while minimized.
- * Dismissing the sheet minimizes; only hang-up ends the LiveKit session.
+ * Call UI over WebSocket PCM (no LiveKit).
+ * Dismissing the sheet minimizes; only hang-up ends the session.
  */
 export function CallOverlay() {
-  const router = useRouter();
   const active = useVoiceCallUiStore(s => s.active);
   const expanded = useVoiceCallUiStore(s => s.expanded);
+  const ending = useVoiceCallUiStore(s => s.ending);
   const expandCall = useVoiceCallUiStore(s => s.expandCall);
   const minimizeCall = useVoiceCallUiStore(s => s.minimizeCall);
+  const beginEnding = useVoiceCallUiStore(s => s.beginEnding);
   const endCall = useVoiceCallUiStore(s => s.endCall);
+  const setSessionStatus = useVoiceCallUiStore(s => s.setSessionStatus);
+  const setStoreAgentVolume = useVoiceCallUiStore(s => s.setAgentVolume);
 
-  const [session, setSession] = useState<Session | null>(null);
+  const [status, setStatus] = useState<WsVoiceStatus>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [muted, setMuted] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  const [agentVolume, setAgentVolume] = useState(0);
+  const sessionRef = useRef<WsVoiceSession | null>(null);
   const fxRef = useRef<CallAudioFx | null>(null);
+  const beginEndingRef = useRef(beginEnding);
+  const endCallRef = useRef(endCall);
+  beginEndingRef.current = beginEnding;
+  endCallRef.current = endCall;
+
+  const connected = status === 'listening' || status === 'speaking' || status === 'thinking';
+  const elapsedSec = useCallTimer(connected && !ending);
+  const hasPrompt = useAgentUiSurfaceStore(s => Boolean(s.prompt));
+
+  useEffect(() => {
+    setSessionStatus(status);
+  }, [status, setSessionStatus]);
+
+  useEffect(() => {
+    setStoreAgentVolume(agentVolume);
+  }, [agentVolume, setStoreAgentVolume]);
+
+  useEffect(() => {
+    if (hasPrompt && active && !expanded && !ending) expandCall();
+  }, [hasPrompt, active, expanded, ending, expandCall]);
 
   useEffect(() => {
     if (!active) return;
@@ -423,51 +281,114 @@ export function CallOverlay() {
     return () => {
       if (fxRef.current !== fx) return;
       fxRef.current = null;
-      // Soft hang-up chime only if the agent had actually joined.
       fx.playDisconnectedIfConnected();
       window.setTimeout(() => fx.dispose(), 800);
     };
   }, [active]);
 
   useEffect(() => {
+    if (connected && !ending) fxRef.current?.playConnected();
+  }, [connected, ending]);
+
+  useEffect(() => {
+    if (ending) fxRef.current?.playDisconnectedIfConnected();
+  }, [ending]);
+
+  useEffect(() => {
     if (!active) {
-      setSession(null);
+      sessionRef.current?.disconnect({ notifyClosed: false });
+      sessionRef.current = null;
+      setStatus('idle');
       setError(null);
+      setMuted(false);
+      setAgentVolume(0);
+      setSessionStatus('idle');
+      setStoreAgentVolume(0);
       return;
     }
+
     let cancelled = false;
     setError(null);
-    setSession(null);
-    // Snapshot at call start only — live updates go over the data channel.
-    const uiContext = buildUiContext({
-      asPath: router.asPath,
-      pathname: router.pathname,
-      query: router.query as Record<string, string | string[] | undefined>,
+    setStatus('connecting');
+    setSessionStatus('connecting');
+    setMuted(false);
+    setAgentVolume(0);
+    setStoreAgentVolume(0);
+
+    const session = new WsVoiceSession({
+      onStatus: next => {
+        if (cancelled) return;
+        if (next === 'closed') {
+          beginEndingRef.current();
+          window.setTimeout(() => endCallRef.current(), 1400);
+          return;
+        }
+        setStatus(next);
+      },
+      onError: message => {
+        if (cancelled) return;
+        setError(message);
+        setStatus('error');
+      },
+      onShowUi: prompt => {
+        if (cancelled || !prompt || typeof prompt !== 'object') return;
+        useAgentUiSurfaceStore.getState().setPrompt(prompt as AgentUiPrompt);
+      },
+      onHideUi: () => {
+        if (cancelled) return;
+        useAgentUiSurfaceStore.getState().clearPrompt();
+      },
+      onAgentVolume: vol => {
+        if (cancelled) return;
+        setAgentVolume(vol);
+      },
     });
-    (async () => {
-      try {
-        const data = await createVoiceSession(uiContext);
-        if (!cancelled) setSession({ url: data.url, token: data.token });
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : 'call_failed');
-      }
-    })();
+    sessionRef.current = session;
+    void session.connect();
+
     return () => {
       cancelled = true;
+      // Don't notify closed on React cleanup (Strict Mode / Fast Refresh) —
+      // only intentional hangup or real socket death should end the call UI.
+      session.disconnect({ notifyClosed: false });
+      if (sessionRef.current === session) sessionRef.current = null;
     };
-    // intentionally omit router.* — must not reconnect on navigation
+    // intentionally omit beginEnding/endCall — use refs so store identity
+    // changes don't tear down the live WebSocket.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, attempt]);
 
+  const hangUp = () => {
+    beginEnding();
+    sessionRef.current?.disconnect({ notifyClosed: false });
+    sessionRef.current = null;
+    window.setTimeout(() => endCall(), 1400);
+  };
+
+  const toggleMute = () => {
+    const session = sessionRef.current;
+    if (!session) return;
+    const next = !muted;
+    session.setMuted(next);
+    setMuted(next);
+  };
+
+  const onUiReply = (reply: AgentUiReply) => {
+    sessionRef.current?.sendUiReply(reply);
+  };
+
   if (!active) return null;
 
-  // Connecting / error: only as an expanded sheet (nothing to minimize yet).
-  if (!session) {
+  const showConnecting = !connected && !ending && (status === 'connecting' || status === 'error' || status === 'idle');
+
+  if (showConnecting) {
     return (
       <Drawer.Root
         open={expanded}
         onOpenChange={next => {
-          if (!next) endCall();
+          if (!next) {
+            hangUp();
+          }
         }}
         modal
         dismissible
@@ -485,7 +406,7 @@ export function CallOverlay() {
             <ConnectingBody
               error={error}
               onRetry={() => setAttempt(a => a + 1)}
-              onClose={endCall}
+              onClose={hangUp}
             />
           </Drawer.Content>
         </Drawer.Portal>
@@ -493,23 +414,52 @@ export function CallOverlay() {
     );
   }
 
+  const sheetOpen = expanded || ending;
+  const auraState = statusToAura(status);
+
+  // Sheet closed while call lives — FAB is minimized chrome; keep session via effects.
+  if (!sheetOpen) return null;
+
   return (
-    <LKRoom
-      serverUrl={session.url}
-      token={session.token}
-      connect
-      audio
-      video={false}
-      onDisconnected={endCall}
-      className="contents"
+    <Drawer.Root
+      open
+      onOpenChange={next => {
+        // Keep sheet open while a prompt is visible — dismissing would hide choices.
+        if (!next && !ending && !hasPrompt) minimizeCall();
+      }}
+      modal
+      dismissible={!ending && !hasPrompt}
     >
-      <CallRoomChrome
-        fx={fxRef.current}
-        expanded={expanded}
-        onMinimize={minimizeCall}
-        onExpand={expandCall}
-        onEnd={endCall}
-      />
-    </LKRoom>
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 z-[100] bg-black/40" />
+        <Drawer.Content
+          className={classNames(
+            'fixed inset-x-0 bottom-0 z-[101] flex flex-col rounded-t-[24px] bg-white outline-none',
+            hasPrompt ? 'h-[min(72dvh,36rem)] max-h-[72dvh]' : 'h-[50dvh] max-h-[50dvh]',
+          )}
+          dir="rtl"
+        >
+          <div className="flex shrink-0 justify-center pt-3 pb-1">
+            <Drawer.Handle className="!h-1 !w-10 !rounded-full !bg-slate-200" />
+          </div>
+          <Drawer.Title className="sr-only">تماس با آرش</Drawer.Title>
+          <Drawer.Description className="sr-only">دستیار صوتی پذیرش۲۴</Drawer.Description>
+          {ending ? (
+            <CallEndedBody />
+          ) : (
+            <CallSheetBody
+              onEnd={hangUp}
+              elapsedSec={elapsedSec}
+              connected={connected}
+              muted={muted}
+              onToggleMute={toggleMute}
+              auraState={auraState}
+              agentVolume={agentVolume}
+              onUiReply={onUiReply}
+            />
+          )}
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 }

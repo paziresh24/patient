@@ -1,6 +1,6 @@
 import { ComponentType } from 'react';
 import ErrorBoundary from '../components/layouts/errorBoundary';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import { getFeatures } from './features';
 
 type ComponentMeta = {

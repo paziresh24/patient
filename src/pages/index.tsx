@@ -13,6 +13,7 @@ import {
   useDoctorViewSwapActive,
   useIsNewDoctorLauncherLoading,
 } from '@/modules/doctorHome';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
@@ -22,7 +23,7 @@ import { useSearchStore } from '@/modules/search/store/search';
 
 const HomePageBody = dynamic(() => import('@/modules/home/views/homePageBody'), {
   loading: () => (
-    <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+    <div data-doctor-boot-loading className="flex min-h-[50vh] flex-grow items-center justify-center">
       <Loading />
     </div>
   ),
@@ -31,6 +32,7 @@ const HomePageBody = dynamic(() => import('@/modules/home/views/homePageBody'), 
 const Home = ({ fragmentComponents }: any) => {
   const swapActive = useDoctorViewSwapActive();
   const doctorLauncherLoading = useIsNewDoctorLauncherLoading();
+  const deviceCached = useDoctorDeviceCached();
   const showRedirectLoading = useDoctorHomeRedirectLoading();
   const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
 
@@ -40,8 +42,8 @@ const Home = ({ fragmentComponents }: any) => {
     setIsOpenSuggestion(false);
   }, [setIsOpenSuggestion]);
 
-  // New-design rollout doctors always get the view switcher on home.
-  const showSwitcher = swapActive || doctorLauncherLoading;
+  // Keep switcher mounted across / ↔ /_/ (device cache survives remount before centers/flag settle).
+  const showSwitcher = swapActive || doctorLauncherLoading || deviceCached;
 
   return (
     <>
@@ -51,7 +53,7 @@ const Home = ({ fragmentComponents }: any) => {
         </div>
       )}
       {showRedirectLoading ? (
-        <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+        <div data-doctor-boot-loading className="flex min-h-[50vh] flex-grow items-center justify-center">
           <Loading />
         </div>
       ) : (

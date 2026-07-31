@@ -1,4 +1,4 @@
-import { DOCTOR_HOME_INLINE_REDIRECT_SCRIPT } from '@/common/utils/doctorDeviceCache';
+import { DOCTOR_HOME_INLINE_DEVICE_MARK_SCRIPT, DOCTOR_HOME_INLINE_REDIRECT_SCRIPT } from '@/common/utils/doctorDeviceCache';
 import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
@@ -11,7 +11,9 @@ const CustomDocument: NextComponentType = (props: any) => {
   return (
     <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
+        <script dangerouslySetInnerHTML={{ __html: DOCTOR_HOME_INLINE_DEVICE_MARK_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: DOCTOR_HOME_INLINE_REDIRECT_SCRIPT }} />
+        <link rel="manifest" href="/manifest.json" />
         <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
@@ -72,20 +74,6 @@ const CustomDocument: NextComponentType = (props: any) => {
                   }
                 }, true);
               `,
-          }}
-        />
-        <Script
-          id="add-manifest-link"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('load', function () {
-                var manifest = document.createElement('link');
-                manifest.rel = 'manifest';
-                manifest.href = '/manifest.json';
-                document.head.appendChild(manifest);
-              });
-            `,
           }}
         />
       </Head>

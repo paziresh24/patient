@@ -1,6 +1,6 @@
 import { clinicClient } from '@/common/apis/client';
 import { useMutation } from '@tanstack/react-query';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 export const getSubuser = async () => {
   const endpoints = growthbook.getFeatureValue<Record<string, string>>('subuser:api-endpoints', {});

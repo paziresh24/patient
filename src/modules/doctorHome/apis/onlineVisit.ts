@@ -1,5 +1,6 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { doctorHomeQueryDefaults } from '../utils/doctorHomeQuery';
 
 export interface UserCenterService {
   user_center_id: string;
@@ -26,7 +27,7 @@ export const useOnlineVisitServices = (userCenterId?: string) =>
     () => getUserCenterServices({ user_center_id: userCenterId!, server_id: 1 }),
     {
       enabled: !!userCenterId,
-      staleTime: 60 * 1000,
+      ...doctorHomeQueryDefaults,
     },
   );
 

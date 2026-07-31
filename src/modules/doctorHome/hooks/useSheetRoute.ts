@@ -1,6 +1,7 @@
 import { isMobileViewport } from '@/common/hooks/useResponsive';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
+import { captureDoctorHomeScroll, restoreDoctorHomeScroll } from '../utils/doctorHomeScroll';
 import { useDoctorViewSwapActive } from './useDoctorViewSwapActive';
 
 const STACK_KEY = 'sheets';
@@ -199,7 +200,13 @@ export function useSheetRoute(key: string) {
   useEffect(() => {
     if (!router.isReady) return;
 
-    const onPopState = () => syncSheetFromBrowserNavigation(key);
+    const onPopState = () => {
+      // history.back() from sheet close — keep page where the user was.
+      restoreDoctorHomeScroll();
+      syncSheetFromBrowserNavigation(key);
+      // Next.js may scroll-to-top on popstate after our sync; re-apply.
+      restoreDoctorHomeScroll();
+    };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, [router.isReady, key]);
@@ -208,6 +215,7 @@ export function useSheetRoute(key: string) {
     (extraParams?: Record<string, string>) => {
       if (isOpenSuppressed(key)) return;
 
+      captureDoctorHomeScroll();
       patchSheet(key, {
         lastExtraParams: extraParams ?? {},
         open: true,
@@ -229,6 +237,7 @@ export function useSheetRoute(key: string) {
     (keysToClose: string[], extraParams?: Record<string, string>) => {
       if (isOpenSuppressed(key)) return;
 
+      captureDoctorHomeScroll();
       const closeSet = new Set(keysToClose.filter(sheetKey => sheetKey !== key));
       const currentStack = readStack();
       const previousTop = currentStack[currentStack.length - 1];
@@ -275,7 +284,10 @@ export function useSheetRoute(key: string) {
       });
 
       const currentStack = readStack();
-      if (!currentStack.includes(key)) return;
+      if (!currentStack.includes(key)) {
+        restoreDoctorHomeScroll();
+        return;
+      }
 
       const isTop = currentStack[currentStack.length - 1] === key;
       const useBack =
@@ -284,6 +296,7 @@ export function useSheetRoute(key: string) {
       if (useBack) {
         // ورود قبلی استک بدون این شیت را دارد (open با push آمده) — بک منوی زیرین را نشان می‌دهد
         window.history.back();
+        restoreDoctorHomeScroll();
         return;
       }
 
@@ -294,6 +307,7 @@ export function useSheetRoute(key: string) {
       });
 
       commitStackToUrl(router, useHistoryUrl, newStack, {}, 'replace');
+      restoreDoctorHomeScroll();
     },
     [router, key, useHistoryUrl],
   );

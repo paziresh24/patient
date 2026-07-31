@@ -20,6 +20,8 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   productionBrowserSourceMaps: true,
+  // Some pages pull heavy client graphs; avoid SSG worker SIGTERM on slow machines.
+  staticPageGenerationTimeout: 180,
   experimental: {
     instrumentationHook: true,
     webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],

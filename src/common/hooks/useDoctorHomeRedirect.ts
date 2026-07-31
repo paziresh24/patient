@@ -11,7 +11,7 @@ import { isSpaPatientView, useSpaPatientViewStore } from '@/modules/doctorHome/u
 import { useUserInfoStore, UserInfo } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 
 export const isDoctorUser = (user: UserInfo) => {
   const centers = user.provider?.centers;
@@ -24,7 +24,6 @@ export const useDoctorHomeRedirect = () => {
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const pending = useUserInfoStore(state => state.pending);
-  const doctorProfilePending = useUserInfoStore(state => state.doctorProfilePending);
   const spaPatientView = useSpaPatientViewStore(state => state.active);
   const hasRedirected = useRef(false);
 
@@ -37,7 +36,6 @@ export const useDoctorHomeRedirect = () => {
   const shouldRedirect =
     mounted &&
     !pending &&
-    !doctorProfilePending &&
     isDoctorHomeRedirectPath(router.pathname) &&
     isDoctor &&
     isMobileViewport() &&

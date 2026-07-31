@@ -1,4 +1,4 @@
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import ErrorBoundary from '../components/layouts/errorBoundary';
 import { Components } from './components';
 import { getFeatures } from './features';
