@@ -66,6 +66,11 @@ auto-merge-safe:
   image: python:3.12-alpine
   needs:
     - job: ai-review
+    # DR-08 §۲۷.۴.۱ — گیتِ scoped: اگر `search-e2e` در این pipeline اجرا شده باشد باید سبز باشد،
+    # وگرنه merge نمی‌شود. `optional: true` یعنی MRهایی که مسیرهای search/e2e را دست نزده‌اند
+    # (یعنی کارِ بقیه‌ی تیم‌ها روی این کدبیسِ مشترک) اصلاً تحتِ تأثیر قرار نمی‌گیرند.
+    - job: search-e2e
+      optional: true
   rules:
     - if: $CI_MERGE_REQUEST_IID
   variables:
@@ -302,39 +307,83 @@ build-docker-image-next:
     - if: $CI_COMMIT_BRANCH == "next"
       when: always
 
-# DR-08 §۲۷.۴ — پروبِ محیط (موقت، بعد از تصمیم حذف می‌شود).
+# DR-08 §۲۷.۴ — گیتِ e2eِ **scoped** روی buildِ همان MR.
 #
-# چرا: برای گیتِ e2eِ pre-merge باید تست‌ها علیهِ **buildِ همان MR** اجرا شوند (نه production).
-# سه مجهولِ محیطی هست که فقط داخلِ خودِ CI جواب دارند و حدس‌زدنشان یعنی طراحیِ jobِ گران روی
-# فرضِ اثبات‌نشده:
-#   A) آیا runner می‌تواند imageِ رسمیِ Playwright را از mcr بکشد؟ (`--registry-mirror` فقط
-#      docker.io را آینه می‌کند، پس mcr مستقیم است.)
-#   B) اگر نه، آیا دانلودِ باینریِ chromium توسطِ خودِ Playwright از داخلِ CI کار می‌کند؟
-#      (روی لپ‌تاپِ ایران کار نمی‌کند — playwright.config.ts به همین دلیل `channel: 'chrome'` دارد.)
-#   C) آیا کانتینرِ اپ که در dind بالا می‌آید از jobِ container با نامِ `docker:3000` دیده می‌شود؟
-# هر سه با echoِ صریحِ exit code گزارش می‌شوند؛ jobِ واقعی بر اساسِ نتیجه طراحی می‌شود.
-e2e-env-probe:
+# چرا این job وجود دارد (open-debt #۲۲): تا امروز هیچ jobaی در این pipeline تست اجرا نمی‌کرد و
+# `auto-merge-safe` فقط به `ai-review` نگاه می‌کرد ⇒ یک رگرسیونِ رفتاری (نمونه‌ی واقعی: مودالِ
+# انتخابِ شهر، MR !124) بدونِ هیچ قرمزی merge و deploy شد. تستِ e2e داشتیم؛ چیزی که نداشتیم
+# «تستی که deploy را متوقف کند» بود.
+#
+# چرا علیهِ **کانتینرِ همین MR** و نه production (تفاوتِ اصلی با `lighthouse-budget`):
+# گیتِ pre-merge باید دربارهٔ کدِ *این* MR قضاوت کند. `patient` per-MR preview-env ندارد، پس
+# محیط را همین‌جا می‌سازیم: همان Dockerfileِ اثبات‌شده build می‌شود، کانتینر در dind بالا می‌آید،
+# و Playwright از داخلِ imageِ رسمی علیهِ آن اجرا می‌شود. env از `.env.example` می‌آید که فقط
+# URLهایِ عمومی است (هیچ secretی) — و چون این‌ها `publicRuntimeConfig`اند، در زمانِ **start**
+# خوانده می‌شوند نه build.
+#
+# ⚠ دامنه عمداً محدود است (کدبیسِ مشترکِ همه‌ی تیم‌هاست): فقط وقتی اجرا می‌شود که مسیرهایِ
+# search/e2e عوض شده باشند. در `auto-merge-safe` هم با `optional: true` می‌آید ⇒ MRaی که این
+# مسیرها را دست نزند اصلاً این job را نمی‌بیند و گیتش معطل نمی‌شود. گسترشِ دامنه به بقیه‌ی
+# تیم‌ها فقط بعد از ~۲ هفته داده‌ی flake-rate پیشنهاد می‌شود (ghane dr-08 §۲۷.۴.۱).
+#
+# مجهولاتِ محیطی قبل از نوشتن با jobِ موقتِ `e2e-env-probe` اندازه‌گیری شد (pipeline 3728):
+# pullِ `mcr.microsoft.com/playwright` از این runner کار می‌کند (A_EXIT=0) و دانلودِ chromium هم
+# (B_EXIT=0) — پس طراحی روی حدس بنا نشده است.
+search-e2e:
   extends: .build-docker-common
   stage: perf
-  allow_failure: true
-  retry:
-    max: 0
+  timeout: 45m
+  variables:
+    E2E_IMAGE: mcr.microsoft.com/playwright:v1.49.1-jammy
+    APP_IMAGE: patient-e2e:$CI_COMMIT_SHORT_SHA
   before_script:
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
   script:
-    - set +e
-    - echo "===== A) docker pull mcr playwright ====="
-    - docker pull mcr.microsoft.com/playwright:v1.49.1-jammy > /dev/null 2>&1; echo "A_EXIT=$?"
-    - echo "===== B) playwright chromium download inside node:18.17.0 ====="
-    - docker run --rm node:18.17.0 sh -c "npm i -g @playwright/test@1.49.1 >/dev/null 2>&1 && npx playwright install chromium > /dev/null 2>&1"; echo "B_EXIT=$?"
-    - echo "===== C) app container reachable at docker:3000 ====="
-    - docker rm -f probe-web > /dev/null 2>&1
-    - docker run -d --name probe-web -p 3000:3000 nginx:alpine > /dev/null 2>&1; echo "C_RUN_EXIT=$?"
-    - sleep 5
-    - wget -q -O - http://docker:3000 | head -c 60; echo ""; echo "C_EXIT=$?"
-    - docker rm -f probe-web > /dev/null 2>&1
-    - echo "===== probe done ====="
+    - docker build --provenance=false -t "$APP_IMAGE" .
+    - docker network create e2e-net
+    - >
+      docker run -d --name e2e-app --network e2e-net --network-alias app
+      --env-file .env.example -e NODE_ENV=production -e PORT=3000 "$APP_IMAGE"
+    - |
+      # آمادگیِ واقعی، نه `sleep`: تا وقتی خودِ صفحه‌ی لیستینگ ۲۰۰ ندهد تست شروع نمی‌شود.
+      ok=0
+      for i in $(seq 1 60); do
+        if docker run --rm --network e2e-net curlimages/curl:8.10.1 -sf -o /dev/null "http://app:3000/s/tehran/dermatology/"; then ok=1; break; fi
+        sleep 3
+      done
+      if [ "$ok" -ne 1 ]; then echo "ERROR: app container never became ready"; docker logs e2e-app | tail -80; exit 1; fi
+    - |
+      # Playwright از داخلِ imageِ رسمی. repo با `docker cp` منتقل می‌شود چون workspaceِ jobِ
+      # container روی فایل‌سیستمِ dind وجود ندارد (bind-mount این‌جا بی‌صدا خالی می‌شود).
+      docker create --name e2e-runner --network e2e-net         -e E2E_BASE_URL=http://app:3000 -e E2E_BROWSER_CHANNEL= -e CI=true         -w /work "$E2E_IMAGE"         sh -lc "npm i --no-save --registry=https://npm.devneeds.ir/ @playwright/test@1.49.1 && npx playwright test --project=mobile e2e/specs/search.spec.ts e2e/specs/ssr-critical-markup.spec.ts e2e/specs/ssr-style-dedupe.spec.ts e2e/specs/dialog-city-select.spec.ts"
+    - docker cp . e2e-runner:/work
+    - docker start -a e2e-runner
+  after_script:
+    - docker cp e2e-runner:/work/e2e/.report e2e/.report > /dev/null 2>&1 || true
+    - docker logs e2e-app > app.log 2>&1 || true
+    - docker rm -f e2e-app e2e-runner > /dev/null 2>&1 || true
+    - docker network rm e2e-net > /dev/null 2>&1 || true
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - e2e/.report
+      - app.log
+  # `.build-docker-common` روی `script_failure` هم retry می‌کند — این‌جا یعنی یک شکستِ **واقعیِ
+  # تست** دوباره اجرا شود و flakiness را پنهان کند. فقط خطای زیرساخت retry می‌شود.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
+        - src/modules/search/**/*
+        - .plasmic/plasmic/paziresh_24_search/**/*
+        - src/pages/_document.tsx
+        - src/styles/plasmicRadixBaseCss.ts
+        - e2e/**/*
+        - playwright.config.ts
         - .gitlab-ci.yml
