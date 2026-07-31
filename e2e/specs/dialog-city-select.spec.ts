@@ -79,3 +79,128 @@ for (const [label, path] of [
     expect(box.height, 'overlay ارتفاعِ صفر دارد').toBeGreaterThan(0);
   });
 }
+
+/**
+ * تستِ ناوبریِ client-side (DR-08 §۲۵.۴، چک‌لیستِ re-land، بندِ ۲).
+ *
+ * چرا این تست لازم است: re-landِ درست (بلوکِ CSSِ پایه‌ی Radix در انتهای `<body>` از طریقِ
+ * `_document.tsx`) روی این فرضِ **تئوریک** تکیه دارد که «cascade با موقعیتِ عنصر در سند تعیین
+ * می‌شود، نه زمانِ درج» — پس حتی وقتی sheetِ CSS-moduleِ یک chunkِ lazy در **runtime** به `head`
+ * اضافه می‌شود (که دقیقاً در یک ناوبریِ دوم اتفاق می‌افتد، نه در لودِ اول)، styleِ ما همچنان باید
+ * برنده بماند. این فرض باید **تجربی** هم اثبات شود، نه فقط با استدلال — دقیقاً همان چیزی که چک‌لیست
+ * (بندِ ۲) می‌خواهد.
+ *
+ * اثباتِ «واقعاً client-side بود، نه full reload»: قبل از کلیک یک probe روی `window` می‌گذاریم.
+ * یک full page load این متغیر را پاک می‌کند؛ ناوبریِ SPAیِ next/router (این چیپ از طریقِ
+ * `useSearchRouting().changeRoute` → `router.push({...}, undefined, {shallow:true})` می‌رود —
+ * `src/modules/search/hooks/useSearchRouting.ts`) آن را دست‌نخورده نگه می‌دارد.
+ *
+ * ⚠️ این چیپِ ناوبری («پزشکان متخصص {شهر}») فقط وقتی رندر می‌شود که فلگِ GrowthBookِ
+ * `search::desktop-filters-row` **خاموش** باشد (`src/pages/s/[[...params]].tsx`:
+ * `showDesktopFiltersRow ? <MobileToolbar/> : <MobileRowFilter/>`؛ چیپ از دومی می‌آید). اگر آن
+ * فلگ روشن شد این تست skip می‌شود با پیامِ صریح — این پیش‌نیازِ رسیدن به صحنه است، نه خودِ
+ * regressionِ cascade، پس نباید با قرمزیِ گمراه‌کننده اشتباه گرفته شود.
+ *
+ * ⚠️ محلی‌بودن vs. production (یافته‌ی تجربی، هنگامِ اجرا علیهِ `next start`ِ محلی): نامِ شهر روی
+ * `{شهر}` یک فراخوانیِ سمتِ کلاینت به `getbaseinfo` نیاز دارد که از `localhost` با CORS بلاک
+ * می‌شود (همان کلاسِ محدودیتِ مستندشده در `e2e/support/capabilities.ts` برایِ فلوهای پروفایل/نوبت،
+ * منتها این‌جا هیچ گاردی برایش نبود). نتیجه: چیپ و شهرِ پیش‌فرض به‌جایِ نامِ واقعی («تهران») مقدارِ
+ * fallbackِ استور (`src/modules/search/store/search.ts`: «همه شهرها» → cityName محاسبه‌شده
+ * «ایران») را نشان می‌دهند. **خودِ دیالوگ و مکانیزمِ Radix/`.pl__*` عوض نمی‌شود** — با کلیک روی
+ * چیپِ fallback هم همان دیالوگ با `data-state="open"` و کلاس‌هایِ `.pl__*` باز می‌شود (تأییدِ دستی).
+ * پس به‌جایِ گره‌زدنِ سخت به `CITY_FA`، این تست با یک الگوی متنیِ عمومی هم به چیپِ ناوبری هم به
+ * چیپِ شهر می‌رسد — روی production (نامِ واقعیِ شهر) و روی لوکال (fallback) هر دو کار می‌کند، و
+ * چیزی که assert می‌شود (باز شدنِ واقعیِ دیالوگ، در viewport، position:fixed) دست‌نخورده می‌ماند.
+ */
+test.describe('ناوبریِ client-side + دیالوگِ شهر (چک‌لیستِ re-land، بندِ ۲)', () => {
+  // چیپِ ناوبری `md:hidden` است — ویوپورتِ موبایل را صریح تحمیل می‌کنیم تا صرفِ نظر از پروژه
+  // (mobile/desktop) قابل‌مشاهده باشد.
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('بعد از ناوبریِ client-side به لندینگِ دیگر، دیالوگِ شهر هنوز داخلِ viewport باز می‌شود', async ({ page }) => {
+    await page.goto(LISTING_TEMPLATES.cityLanding, { waitUntil: 'domcontentloaded' });
+
+    // «پزشکان متخصص {نامِ شهر یا fallback}» — نامِ دقیق بسته به این‌که getbaseinfo از این هدف
+    // در دسترس است یا نه فرق می‌کند (بالا توضیح داده شد)؛ الگو هر دو حالت را می‌گیرد.
+    const navChip = page.getByText(/^پزشکان متخصص /).first();
+    const chipVisible = await navChip.isVisible({ timeout: 8_000 }).catch(() => false);
+    test.skip(
+      !chipVisible,
+      'چیپِ ناوبریِ «پزشکان متخصص ...» دیده نشد — احتمالاً فلگِ GrowthBookِ search::desktop-filters-row ' +
+        'روشن است و به‌جای MobileRowFilter کامپوننتِ MobileToolbar رندر شده (src/pages/s/[[...params]].tsx). ' +
+        'این پیش‌نیازِ رسیدن به صحنه است، نه خودِ regressionِ cascade.',
+    );
+
+    // probe: مقداری که فقط یک full page reload آن را پاک می‌کند.
+    await page.evaluate(() => {
+      (window as any).__navProbe = 1;
+    });
+
+    await navChip.click();
+    // مقصد `/s/{city-or-ir}/doctor` است — روی production همان اسلاگِ شهرِ فعلی (`tehran`) حفظ
+    // می‌شود، روی لوکال (fallbackِ `en_slug=ir`) به `/s/ir/doctor` می‌رود؛ هر دو یک لندینگِ
+    // «دسته‌بندی‌شده»ی متفاوت از مبدأ‌اند — که تمامِ چیزی است که این تست لازم دارد.
+    // ⚠️ عمداً `page.waitForFunction` روی `location.pathname` است نه `page.waitForURL`: این یک
+    // ناوبریِ shallow (`router.push(..., {shallow:true})`) است، بدونِ eventِ `load`ِ واقعیِ مرورگر
+    // که `waitForURL` پیش‌فرض منتظرش می‌ماند — در عمل flaky از آب درآمد.
+    await page.waitForFunction(() => /\/s\/[^/]+\/doctor\/?(\?|$)/.test(window.location.pathname + window.location.search), {
+      timeout: 15_000,
+    });
+
+    const probeSurvived = await page.evaluate(() => (window as any).__navProbe);
+    expect(
+      probeSurvived,
+      'window.__navProbe پاک شده — یعنی ناوبری واقعاً client-side نبود (full page reload رخ داد) و این تست فرضِ لازمش را نمی‌سنجد',
+    ).toBe(1);
+
+    // حالا، بعد از این ناوبریِ دوم (که chunk/CSS-moduleِ جدید ممکن است به head اضافه کرده باشد)،
+    // دقیقاً همان دو لایه‌ی ادعایِ تستِ اصلی را تکرار می‌کنیم — منتها با همان چیپِ عمومی (بالا).
+    const chip = page.getByText(new RegExp(`^(${CITY_FA}|همه شهرها|اطراف من)$`)).first();
+    await expect(chip, 'چیپِ شهر بعد از ناوبریِ client-side پیدا نشد').toBeVisible({ timeout: 30_000 });
+    await chip.click();
+
+    const title = page.getByText(DIALOG_TITLE, { exact: true }).first();
+    await expect(title, 'دیالوگ در DOM نیامد').toBeVisible({ timeout: 15_000 });
+    await expect(
+      title,
+      'دیالوگ بعد از ناوبریِ client-side بیرونِ viewport رندر شده — یعنی sheetِ CSS-moduleِ لودشده در ' +
+        'ناوبریِ دوم در cascade بعد از styleِ انتهایِ body نشسته (فرضِ نظریِ چک‌لیست شکسته)',
+    ).toBeInViewport();
+
+    const overlay = page.locator('[data-state="open"]').first();
+    const position = await overlay.evaluate(el => getComputedStyle(el).position);
+    expect(position, `overlayِ دیالوگ بعد از ناوبریِ client-side position=${position} دارد نه fixed`).toBe('fixed');
+  });
+});
+
+/**
+ * best-effort (DR-08 §۲۵.۴ بندِ ۳): دیالوگِ «فیلترها» روی یک لندینگِ غیرِ landing.
+ *
+ * ⚠️ این مودال از `src/common/components/atom/modal` می‌آید (react-spring)، نه Radixِ Plasmic —
+ * طبقِ خودِ bug-ticket این کامپوننت اصلاً درگیرِ رگرسیونِ cascadeِ `.pl__*` نیست (positionِ آن از
+ * یک کلاسِ Tailwindِ ثابت می‌آید، نه از `.pl__fixed`). پس این تست regressionِ اصلی را دوباره
+ * ثابت نمی‌کند؛ صرفاً یک پوششِ اضافیِ ارزان برای دیالوگِ رایجِ دیگری در همین صفحات است.
+ */
+test.describe('دیالوگِ فیلترها (best-effort، پوششِ اضافی)', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('دیالوگِ «فیلترها» روی نتایجِ دسته‌بندی‌شده داخلِ viewport باز می‌شود', async ({ page }) => {
+    await page.goto('/s/tehran/doctor', { waitUntil: 'domcontentloaded' });
+
+    const trigger = page.getByText('فیلترها', { exact: true }).first();
+    const triggerVisible = await trigger.isVisible({ timeout: 8_000 }).catch(() => false);
+    test.skip(
+      !triggerVisible,
+      'چیپِ «فیلترها» دیده نشد — یا فلگِ search::desktop-filters-row روشن است (MobileToolbar جایگزینِ ' +
+        'MobileRowFilter شده) یا صفحه landing تشخیص داده شده (این چیپ فقط در حالتِ !isLanding رندر می‌شود).',
+    );
+    await trigger.click();
+
+    // بعد از باز شدن، دو عنصر با متنِ «فیلترها» در DOM هست: خودِ چیپِ trigger و عنوانِ مودال —
+    // مودال از طریقِ ClientOnlyPortal به انتهایِ body پورتال می‌شود، پس در ترتیبِ سند بعد از
+    // چیپ می‌آید ⇒ آخرین match عنوانِ مودالِ باز شده است.
+    const modalTitle = page.getByText('فیلترها', { exact: true }).last();
+    await expect(modalTitle, 'عنوانِ مودالِ فیلترها دیده نشد').toBeVisible({ timeout: 15_000 });
+    await expect(modalTitle, 'مودالِ فیلترها باز شد ولی بیرونِ viewport است').toBeInViewport();
+  });
+});
