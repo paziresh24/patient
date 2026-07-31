@@ -36,6 +36,7 @@ import { useEffect, useRef, useState } from "react";
 import "react-photo-view/dist/react-photo-view.css";
 import "../styles/globals.css";
 import "../styles/nprogress.css";
+import "../styles/plasmic-radix-base.css";
 import GlobalContextsProvider from "../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider";
 import { VoiceCallHost } from "@/modules/voice-agent";
 import { useUserInfoStore } from "@/modules/login/store/userInfo";
