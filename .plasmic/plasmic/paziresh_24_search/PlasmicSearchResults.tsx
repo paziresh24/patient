@@ -876,10 +876,17 @@ function PlasmicSearchResults__RenderFunc(props: {
             (() => {
               try {
                 return (() => {
+                  // DR-07 §13 condition 3/M-8: insert position now comes from the backend
+                  // (`promoted_online_visit.display_index`, carried through as
+                  // `searchConsultResponse.display_index`) instead of a hardcoded 3, so it can be
+                  // tuned server-side without an app deploy. Falls back to 3 (today's behavior) when
+                  // absent, so old backends/flag-off responses render byte-identical.
+                  const __displayIndex =
+                    $props?.searchConsultResponse?.display_index ?? 3;
                   const result = [
                     ...$props?.searchResultResponse?.search?.result?.slice(
                       0,
-                      3
+                      __displayIndex
                     ),
                     $props?.searchConsultResponse?.search?.result?.[1]
                       ? {
@@ -888,7 +895,9 @@ function PlasmicSearchResults__RenderFunc(props: {
                             $props.topSuggestedCardFeature
                         }
                       : null,
-                    ...$props?.searchResultResponse?.search?.result?.slice(3)
+                    ...$props?.searchResultResponse?.search?.result?.slice(
+                      __displayIndex
+                    )
                   ]?.filter(Boolean);
                   const firstMatchIndex = result.findIndex(item =>
                     item?.topSuggestedCardFeature?.enable ||
@@ -1269,7 +1278,13 @@ function PlasmicSearchResults__RenderFunc(props: {
                   eventTrigger={async (elementName, elementContent) => {
                     const $steps = {};
 
-                    $steps["sendSplunkClickEvent"] = true
+                    // DR-07 §13/M-5 (docs/dev-requests/dr-07-online-visit-suggestion-to-backend.md):
+                    // the injected index-3 card (`currentItem.is_promoted`, stamped by
+                    // src/modules/search/hooks/useSearch.ts off `promoted_online_visit.is_promoted`)
+                    // must NOT fire `search_click_position` — it is not an organic result and its
+                    // `position` field is meaningless for this item. It fires the dedicated
+                    // `search_top_suggested_card_click` event below instead (own step).
+                    $steps["sendSplunkClickEvent"] = !currentItem?.is_promoted
                       ? (() => {
                           const actionArgs = {
                             args: [
@@ -1402,6 +1417,84 @@ function PlasmicSearchResults__RenderFunc(props: {
                     ) {
                       $steps["sendSplunkClickEvent"] =
                         await $steps["sendSplunkClickEvent"];
+                    }
+
+                    // DR-07 §13/Q-B/M-5: dedicated click event for the promoted card, same
+                    // group/type/payload shape as the banner's clickEvent above (:566-641) so the two
+                    // "promoted-card click" surfaces stay consistent for Splunk analysis.
+                    $steps["sendPromotedCardClickEvent"] = currentItem?.is_promoted
+                      ? (() => {
+                          const actionArgs = {
+                            args: [
+                              (() => {
+                                try {
+                                  return {
+                                    group: "search_metrics",
+                                    type: "search_top_suggested_card_click",
+                                    data: {
+                                      card_data: {
+                                        action:
+                                          currentItem?.actions?.map?.(
+                                            item =>
+                                              JSON.stringify({
+                                                outline: item.outline,
+                                                title: item.title,
+                                                top_title: item.top_title.replace(
+                                                  /(<([^>]+)>)/gi,
+                                                  ""
+                                                )
+                                              })
+                                          ),
+                                        _id: currentItem?._id,
+                                        server_id: currentItem?.server_id,
+                                        title: currentItem?.title,
+                                        type: currentItem?.type,
+                                        url: currentItem?.url,
+                                        rates_count: currentItem?.rates_count,
+                                        satisfaction: currentItem?.satisfaction
+                                      },
+                                      filters:
+                                        $props.searchResultResponse
+                                          .selected_filters,
+                                      result_count:
+                                        $props.searchResultResponse?.search
+                                          ?.result?.length,
+                                      location: $props.location.city_name,
+                                      city_id: $props.location.city_id,
+                                      lat: $props.location.lat,
+                                      lon: $props.location.lon,
+                                      query_id:
+                                        $props.searchResultResponse.search
+                                          .query_id
+                                    }
+                                  };
+                                } catch (e) {
+                                  if (
+                                    e instanceof TypeError ||
+                                    e?.plasmicType ===
+                                      "PlasmicUndefinedDataError"
+                                  ) {
+                                    return undefined;
+                                  }
+                                  throw e;
+                                }
+                              })()
+                            ]
+                          };
+                          return $globalActions["Splunk.sendLog"]?.apply(null, [
+                            ...actionArgs.args
+                          ]);
+                        })()
+                      : undefined;
+                    if (
+                      $steps["sendPromotedCardClickEvent"] != null &&
+                      typeof $steps["sendPromotedCardClickEvent"] ===
+                        "object" &&
+                      typeof $steps["sendPromotedCardClickEvent"].then ===
+                        "function"
+                    ) {
+                      $steps["sendPromotedCardClickEvent"] =
+                        await $steps["sendPromotedCardClickEvent"];
                     }
 
                     $steps["runCodeSv2CtrRequest"] = false
