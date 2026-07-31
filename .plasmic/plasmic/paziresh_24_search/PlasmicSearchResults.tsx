@@ -2155,12 +2155,18 @@ function PlasmicSearchResults__RenderFunc(props: {
               await $steps["sendClarityCustomTagsEventRunCode"];
           }
 
-          $steps["topSuggestedCardViewSplunkEvent"] = false
+          $steps["topSuggestedCardViewSplunkEvent"] = true
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
                     return setTimeout(() => {
-                      if (document.querySelector(".top-suggested-card")) {
+                      if (
+                        $props.searchConsultResponse?.search?.result?.[0]
+                          ?.title?.length >= 3 &&
+                        $props.searchConsultResponse.search.result[0].title !==
+                          $props.searchResultResponse?.search?.result?.[0]
+                            ?.title
+                      ) {
                         $$.splunkEvent({
                           token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
                           group: "search_metrics",
