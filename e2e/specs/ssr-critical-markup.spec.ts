@@ -48,4 +48,35 @@ test.describe('SSR — markupهایی که باید در HTMLِ سرور باش�
       expect(body, `«${item.marker}» در HTMLِ سرور نیست ⇒ این عنصر client-only شده است`).toContain(item.marker);
     });
   }
+
+  /**
+   * گاردِ «assetهایِ same-originِ ارجاع‌شده در SSR باید واقعاً 200 بدهند» (DR-08).
+   *
+   * چرا: markup می‌تواند سرِ جایش باشد ولی خودِ فایل 404 بدهد و هیچ تستی قرمز نشود — دقیقاً همان
+   * اتفاقی که برای تصویرِ بنرِ مشاوره افتاد: `/images/search/doctor-group.webp` در public/ بود ولی
+   * مسیرِ `/images/*` روی www اصلاً به این اپ نمی‌رسد (یک originِ قدیمی 404یِ ۱.۳MB می‌دهد) و
+   * تصویر یک روزِ کامل روی production شکسته بود. این تست کلاسِ عیب را می‌بندد: هر `<img src="/…">`ِ
+   * نسبی در HTMLِ سرور باید همین‌جا fetch شود و 200 + content-type تصویری بدهد.
+   * (فقط same-origin — هاست‌های دیگر مثل cdn مسئولیتِ این repo نیستند.)
+   */
+  test('همه‌ی <img>هایِ same-originِ HTMLِ سرور باید 200 بدهند', async ({ request, baseURL }) => {
+    const res = await request.get(new URL(LISTING_TEMPLATES.specialtyInCity, baseURL).toString(), {
+      headers: {
+        'user-agent':
+          'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1',
+      },
+    });
+    expect(res.status()).toBe(200);
+    const body = (await res.text()).split('<script id="__NEXT_DATA__"')[0];
+    const srcs = [...body.matchAll(/<img[^>]+src="(\/[^"]+)"/g)].map(m => m[1]);
+    const unique = [...new Set(srcs)];
+    expect(unique.length, 'هیچ imgِ same-originی در SSR پیدا نشد — خودِ تست مشکوک است').toBeGreaterThan(0);
+
+    for (const src of unique) {
+      const asset = await request.get(new URL(src, baseURL).toString());
+      expect(asset.status(), `assetِ ارجاع‌شده در SSR شکسته است: ${src}`).toBe(200);
+      const type = asset.headers()['content-type'] ?? '';
+      expect(type.startsWith('image/'), `content-typeِ غیرتصویری برای ${src}: «${type}»`).toBe(true);
+    }
+  });
 });

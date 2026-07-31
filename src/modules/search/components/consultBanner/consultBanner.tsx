@@ -12,6 +12,9 @@ import { useMemo } from 'react';
 import { useSearch as useSearchUtils } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import SearchCard from '../card/card';
+// import استاتیک (مثل marker.png در atom/map) تا زیر /_next/static/media سرو شود؛
+// مسیر /images/* روی www به اپ Next نمی‌رسد (به یک origin قدیمی می‌رود و 404 می‌دهد) — DR-08.
+import doctorGroupImage from './doctor-group.webp';
 
 export const ConsultBanner = () => {
   const { selectedCategory, selectedSubCategory, isConsult, searchCity } = useSearchUtils();
@@ -191,12 +194,14 @@ export const ConsultBanner = () => {
           into a 144×44 box. Measured on production it started downloading at ~600ms, i.e. it sat in
           the critical path competing with the render-blocking CSS and the webfont; on a 1.6Mbps
           connection 1.2MB alone is several seconds of the user's bandwidth.
-          Replaced by a 3x raster of the exact same artwork (432×132 WebP, 21KB — 98% smaller),
-          served from public/ so it is same-origin and cacheable with the rest of the app.
+          Replaced by a 3x raster of the exact same artwork (432×132 WebP, 21KB — 98% smaller).
+          ⚠️ NOT in public/: requests to /images/* on www never reach this Next app (an Arvan/legacy
+          static origin answers them with a 404), so the file is bundled via static import and served
+          from /_next/static/media/… which provably routes to the app and is edge-cached.
           `decoding="async"` keeps the decode off the main thread, which already has ~9s of work.
         */}
         <img
-          src="/images/search/doctor-group.webp"
+          src={doctorGroupImage.src}
           alt="ویزیت آنلاین"
           height={44}
           width={144}
