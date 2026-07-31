@@ -301,3 +301,40 @@ build-docker-image-next:
   rules:
     - if: $CI_COMMIT_BRANCH == "next"
       when: always
+
+# DR-08 §۲۷.۴ — پروبِ محیط (موقت، بعد از تصمیم حذف می‌شود).
+#
+# چرا: برای گیتِ e2eِ pre-merge باید تست‌ها علیهِ **buildِ همان MR** اجرا شوند (نه production).
+# سه مجهولِ محیطی هست که فقط داخلِ خودِ CI جواب دارند و حدس‌زدنشان یعنی طراحیِ jobِ گران روی
+# فرضِ اثبات‌نشده:
+#   A) آیا runner می‌تواند imageِ رسمیِ Playwright را از mcr بکشد؟ (`--registry-mirror` فقط
+#      docker.io را آینه می‌کند، پس mcr مستقیم است.)
+#   B) اگر نه، آیا دانلودِ باینریِ chromium توسطِ خودِ Playwright از داخلِ CI کار می‌کند؟
+#      (روی لپ‌تاپِ ایران کار نمی‌کند — playwright.config.ts به همین دلیل `channel: 'chrome'` دارد.)
+#   C) آیا کانتینرِ اپ که در dind بالا می‌آید از jobِ container با نامِ `docker:3000` دیده می‌شود؟
+# هر سه با echoِ صریحِ exit code گزارش می‌شوند؛ jobِ واقعی بر اساسِ نتیجه طراحی می‌شود.
+e2e-env-probe:
+  extends: .build-docker-common
+  stage: perf
+  allow_failure: true
+  retry:
+    max: 0
+  before_script:
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+  script:
+    - set +e
+    - echo "===== A) docker pull mcr playwright ====="
+    - docker pull mcr.microsoft.com/playwright:v1.49.1-jammy > /dev/null 2>&1; echo "A_EXIT=$?"
+    - echo "===== B) playwright chromium download inside node:18.17.0 ====="
+    - docker run --rm node:18.17.0 sh -c "npm i -g @playwright/test@1.49.1 >/dev/null 2>&1 && npx playwright install chromium > /dev/null 2>&1"; echo "B_EXIT=$?"
+    - echo "===== C) app container reachable at docker:3000 ====="
+    - docker rm -f probe-web > /dev/null 2>&1
+    - docker run -d --name probe-web -p 3000:3000 nginx:alpine > /dev/null 2>&1; echo "C_RUN_EXIT=$?"
+    - sleep 5
+    - wget -q -O - http://docker:3000 | head -c 60; echo ""; echo "C_EXIT=$?"
+    - docker rm -f probe-web > /dev/null 2>&1
+    - echo "===== probe done ====="
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - .gitlab-ci.yml
