@@ -355,11 +355,15 @@ search-e2e:
     - |
       # Playwright از داخلِ imageِ رسمی. repo با `docker cp` منتقل می‌شود چون workspaceِ jobِ
       # container روی فایل‌سیستمِ dind وجود ندارد (bind-mount این‌جا بی‌صدا خالی می‌شود).
-      docker create --name e2e-runner --network e2e-net         -e E2E_BASE_URL=http://app:3000 -e E2E_BROWSER_CHANNEL= -e CI=true         -w /work "$E2E_IMAGE"         sh -lc "npm i --no-save --registry=https://npm.devneeds.ir/ @playwright/test@1.49.1 && npx playwright test --project=mobile e2e/specs/search.spec.ts e2e/specs/ssr-critical-markup.spec.ts e2e/specs/ssr-style-dedupe.spec.ts e2e/specs/dialog-city-select.spec.ts"
+      docker create --name e2e-runner --network e2e-net         -e E2E_BASE_URL=http://app:3000 -e E2E_BROWSER_CHANNEL= -e CI=true -e E2E_UPDATE_SNAPSHOTS="$E2E_UPDATE_SNAPSHOTS"         -w /work "$E2E_IMAGE"         sh -lc "npm i --no-save --registry=https://npm.devneeds.ir/ @playwright/test@1.49.1 && npx playwright test --project=mobile e2e/specs/search.spec.ts e2e/specs/ssr-critical-markup.spec.ts e2e/specs/ssr-style-dedupe.spec.ts e2e/specs/dialog-city-select.spec.ts e2e/specs/card-content.spec.ts e2e/specs/card-visual.spec.ts ${E2E_UPDATE_SNAPSHOTS:+--update-snapshots}"
     - docker cp . e2e-runner:/work
     - docker start -a e2e-runner
   after_script:
     - docker cp e2e-runner:/work/e2e/.report e2e/.report > /dev/null 2>&1 || true
+    # baselineهای بصری platform-specificاند (پسوندِ OS در نامِ فایل). baselineِ لوکالِ win32 در
+    # containerِ linuxِ CI بی‌مصرف است؛ با `E2E_UPDATE_SNAPSHOTS=1` یک‌بار تولید و از همین
+    # artifact برداشته و commit می‌شود.
+    - docker cp e2e-runner:/work/e2e/specs/card-visual.spec.ts-snapshots ci-snapshots > /dev/null 2>&1 || true
     - docker logs e2e-app > app.log 2>&1 || true
     - docker rm -f e2e-app e2e-runner > /dev/null 2>&1 || true
     - docker network rm e2e-net > /dev/null 2>&1 || true
@@ -369,6 +373,7 @@ search-e2e:
     paths:
       - e2e/.report
       - app.log
+      - ci-snapshots
   # `.build-docker-common` روی `script_failure` هم retry می‌کند — این‌جا یعنی یک شکستِ **واقعیِ
   # تست** دوباره اجرا شود و flakiness را پنهان کند. فقط خطای زیرساخت retry می‌شود.
   retry:
