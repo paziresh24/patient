@@ -100,6 +100,17 @@ for (const [label, path] of [
  * `showDesktopFiltersRow ? <MobileToolbar/> : <MobileRowFilter/>`؛ چیپ از دومی می‌آید). اگر آن
  * فلگ روشن شد این تست skip می‌شود با پیامِ صریح — این پیش‌نیازِ رسیدن به صحنه است، نه خودِ
  * regressionِ cascade، پس نباید با قرمزیِ گمراه‌کننده اشتباه گرفته شود.
+ *
+ * ⚠️ محلی‌بودن vs. production (یافته‌ی تجربی، هنگامِ اجرا علیهِ `next start`ِ محلی): نامِ شهر روی
+ * `{شهر}` یک فراخوانیِ سمتِ کلاینت به `getbaseinfo` نیاز دارد که از `localhost` با CORS بلاک
+ * می‌شود (همان کلاسِ محدودیتِ مستندشده در `e2e/support/capabilities.ts` برایِ فلوهای پروفایل/نوبت،
+ * منتها این‌جا هیچ گاردی برایش نبود). نتیجه: چیپ و شهرِ پیش‌فرض به‌جایِ نامِ واقعی («تهران») مقدارِ
+ * fallbackِ استور (`src/modules/search/store/search.ts`: «همه شهرها» → cityName محاسبه‌شده
+ * «ایران») را نشان می‌دهند. **خودِ دیالوگ و مکانیزمِ Radix/`.pl__*` عوض نمی‌شود** — با کلیک روی
+ * چیپِ fallback هم همان دیالوگ با `data-state="open"` و کلاس‌هایِ `.pl__*` باز می‌شود (تأییدِ دستی).
+ * پس به‌جایِ گره‌زدنِ سخت به `CITY_FA`، این تست با یک الگوی متنیِ عمومی هم به چیپِ ناوبری هم به
+ * چیپِ شهر می‌رسد — روی production (نامِ واقعیِ شهر) و روی لوکال (fallback) هر دو کار می‌کند، و
+ * چیزی که assert می‌شود (باز شدنِ واقعیِ دیالوگ، در viewport، position:fixed) دست‌نخورده می‌ماند.
  */
 test.describe('ناوبریِ client-side + دیالوگِ شهر (چک‌لیستِ re-land، بندِ ۲)', () => {
   // چیپِ ناوبری `md:hidden` است — ویوپورتِ موبایل را صریح تحمیل می‌کنیم تا صرفِ نظر از پروژه
@@ -109,7 +120,9 @@ test.describe('ناوبریِ client-side + دیالوگِ شهر (چک‌لیس
   test('بعد از ناوبریِ client-side به لندینگِ دیگر، دیالوگِ شهر هنوز داخلِ viewport باز می‌شود', async ({ page }) => {
     await page.goto(LISTING_TEMPLATES.cityLanding, { waitUntil: 'domcontentloaded' });
 
-    const navChip = page.getByText(`پزشکان متخصص ${CITY_FA}`, { exact: true }).first();
+    // «پزشکان متخصص {نامِ شهر یا fallback}» — نامِ دقیق بسته به این‌که getbaseinfo از این هدف
+    // در دسترس است یا نه فرق می‌کند (بالا توضیح داده شد)؛ الگو هر دو حالت را می‌گیرد.
+    const navChip = page.getByText(/^پزشکان متخصص /).first();
     const chipVisible = await navChip.isVisible({ timeout: 8_000 }).catch(() => false);
     test.skip(
       !chipVisible,
@@ -124,7 +137,15 @@ test.describe('ناوبریِ client-side + دیالوگِ شهر (چک‌لیس
     });
 
     await navChip.click();
-    await page.waitForURL(/\/s\/tehran\/doctor(\?|$)/, { timeout: 15_000 });
+    // مقصد `/s/{city-or-ir}/doctor` است — روی production همان اسلاگِ شهرِ فعلی (`tehran`) حفظ
+    // می‌شود، روی لوکال (fallbackِ `en_slug=ir`) به `/s/ir/doctor` می‌رود؛ هر دو یک لندینگِ
+    // «دسته‌بندی‌شده»ی متفاوت از مبدأ‌اند — که تمامِ چیزی است که این تست لازم دارد.
+    // ⚠️ عمداً `page.waitForFunction` روی `location.pathname` است نه `page.waitForURL`: این یک
+    // ناوبریِ shallow (`router.push(..., {shallow:true})`) است، بدونِ eventِ `load`ِ واقعیِ مرورگر
+    // که `waitForURL` پیش‌فرض منتظرش می‌ماند — در عمل flaky از آب درآمد.
+    await page.waitForFunction(() => /\/s\/[^/]+\/doctor\/?(\?|$)/.test(window.location.pathname + window.location.search), {
+      timeout: 15_000,
+    });
 
     const probeSurvived = await page.evaluate(() => (window as any).__navProbe);
     expect(
@@ -133,8 +154,8 @@ test.describe('ناوبریِ client-side + دیالوگِ شهر (چک‌لیس
     ).toBe(1);
 
     // حالا، بعد از این ناوبریِ دوم (که chunk/CSS-moduleِ جدید ممکن است به head اضافه کرده باشد)،
-    // دقیقاً همان دو لایه‌ی ادعایِ تستِ اصلی را تکرار می‌کنیم.
-    const chip = cityChip(page);
+    // دقیقاً همان دو لایه‌ی ادعایِ تستِ اصلی را تکرار می‌کنیم — منتها با همان چیپِ عمومی (بالا).
+    const chip = page.getByText(new RegExp(`^(${CITY_FA}|همه شهرها|اطراف من)$`)).first();
     await expect(chip, 'چیپِ شهر بعد از ناوبریِ client-side پیدا نشد').toBeVisible({ timeout: 30_000 });
     await chip.click();
 
