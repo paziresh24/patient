@@ -1,4 +1,5 @@
 import { expect, test } from '../support/fixtures';
+import { shouldRunFullFlows } from '../support/capabilities';
 import { LISTING_TEMPLATES } from '../fixtures/test-data';
 import { SearchPage } from '../pages/search.page';
 
@@ -51,7 +52,7 @@ async function tagCards(page: import('@playwright/test').Page) {
 }
 
 test.describe('محتوایِ کارتِ نتیجه (گاردِ قبل از رفکتورِ PlasmicProductCard)', () => {
-  test('هر کارت لینکِ پروفایل، آواتارِ سالم، و نامِ غیرخالی دارد', async ({ page }) => {
+  test('هر کارت لینکِ پروفایل، آواتارِ سالم، و نامِ غیرخالی دارد', async ({ page, baseURL }) => {
     const search = new SearchPage(page);
     await search.gotoListing(LISTING_TEMPLATES.specialtyInCity);
     await search.expectHealthyResults();
@@ -108,10 +109,17 @@ test.describe('محتوایِ کارتِ نتیجه (گاردِ قبل از رف
       if (/\d(\.\d)?\s*\(\s*\d+\s*نظر\)/.test(cardText)) ratingCount += 1;
     }
 
-    expect(
-      priceCount,
-      `از ${n} کارتِ بررسی‌شده، هیچ‌کدام قیمتِ ویزیت نداشت — اگر این فیلد در همه جا حذف شده باشد رگرسیون است`,
-    ).toBeGreaterThan(0);
+    // قیمتِ ویزیت روی هدفِ غیر-production **پایدار سرو نمی‌شود** (اندازه‌گیری‌شده در CI،
+    // pipeline 3743: همان تست علیه production سبز، داخلِ کانتینر قرمز — چون این فیلد از یک
+    // فراخوانیِ سمتِ کلاینت می‌آید که از originِ غیرواقعی برنمی‌گردد). طبقِ همان قاعده‌ی
+    // `e2e/support/capabilities.ts`، چیزی که محیط سرو نمی‌کند را «رگرسیون» اعلام نمی‌کنیم؛
+    // این assert فقط روی هدفی که فلوهای کامل را سرو می‌کند اجرا می‌شود.
+    if (shouldRunFullFlows(baseURL)) {
+      expect(
+        priceCount,
+        `از ${n} کارتِ بررسی‌شده، هیچ‌کدام قیمتِ ویزیت نداشت — اگر این فیلد در همه جا حذف شده باشد رگرسیون است`,
+      ).toBeGreaterThan(0);
+    }
     expect(
       ratingCount,
       `از ${n} کارتِ بررسی‌شده، هیچ‌کدام امتیاز/نظر نداشت — اگر این فیلد در همه جا حذف شده باشد رگرسیون است`,
