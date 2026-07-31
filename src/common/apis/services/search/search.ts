@@ -40,6 +40,21 @@ export const useSearch = ({ route, query }: Params, option?: any) => {
   });
 };
 
+export const useConsultSearch = ({ route, query, timeout }: Params, option?: any) => {
+  const searchParams = {
+    route,
+    query: {
+      ...query,
+    },
+  };
+
+  return useQuery([ServerStateKeysEnum.SearchConsult, searchParams], () => search({ ...searchParams, timeout }), {
+    keepPreviousData: true,
+    refetchOnMount: false,
+    ...option,
+  });
+};
+
 export interface PartnerSubstituteParams {
   city_en_slug: string;
   university: string;
