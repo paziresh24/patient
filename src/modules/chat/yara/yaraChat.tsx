@@ -183,6 +183,12 @@ export const YaraChat = () => {
         )) ?? null;
       setBusy(false);
 
+      // یک استثنای عامدانه، خوانده‌شده قبل از باریک‌شدنِ type: پاسخِ classic
+      // می‌تواند حاملِ `emergency` باشد (red-flag + LLM مرده/بودجه‌ی صفر — گاردِ ۱ِ
+      // safety سمتِ سرور). آن هشدار نباید همراهِ پاسخِ غیرقابل‌رندر دور ریخته شود؛
+      // کنارِ درِ فرار می‌نشیند.
+      const emergency = res?.emergency?.trim() || undefined;
+
       if (!renderableAnswer(res)) {
         // Network error, timeout, `mode: "classic"`, or a 200 with nothing in it.
         // All four are the same thing to the patient, so they get the same door.
@@ -191,8 +197,8 @@ export const YaraChat = () => {
         setTurns(current => {
           const next = [...current];
           const last = next[next.length - 1];
-          if (last && !last.assistant) next[next.length - 1] = { ...last, failed: true };
-          else next.push({ user: text, failed: true });
+          if (last && !last.assistant) next[next.length - 1] = { ...last, failed: true, emergency };
+          else next.push({ user: text, failed: true, emergency });
           return next;
         });
         return;
@@ -329,9 +335,9 @@ export const YaraChat = () => {
               {turn.user}
             </p>
 
-            {turn.assistant?.emergency && (
+            {(turn.assistant?.emergency || turn.emergency) && (
               <p className="rounded-xl border border-solid border-red-300 bg-red-50 p-3 text-sm font-bold leading-7 text-red-700">
-                {turn.assistant.emergency}
+                {turn.assistant?.emergency || turn.emergency}
               </p>
             )}
 

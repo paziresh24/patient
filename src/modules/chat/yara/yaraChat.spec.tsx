@@ -79,6 +79,23 @@ describe('مسیرِ شکست — هیچ‌وقت بن‌بست، هیچ‌وق�
     expect(sendChatView).not.toHaveBeenCalled();
   });
 
+  it('اورژانس روی پاسخِ classic (LLM مرده/بودجه صفر) گم نمی‌شود — corpus emergency-001', async () => {
+    // khesht روی red-flag حتی در fallback هم `emergency` می‌فرستد؛ این صفحه نباید
+    // آن را پشتِ درِ فرار دور بریزد. هر دو باید هم‌زمان دیده شوند.
+    mockPostTurn.mockResolvedValue({
+      mode: 'classic',
+      conversation_id: 'c-1',
+      emergency: 'اگر درد قفسه سینه شدید است همین حالا با ۱۱۵ تماس بگیرید.',
+    } as TurnResponse);
+    render(<YaraChat />);
+
+    await userEvent.type(screen.getByLabelText('پیام شما به یارا'), 'درد شدید قفسه سینه دارم');
+    await userEvent.click(screen.getByRole('button', { name: 'ارسال' }));
+
+    expect(await screen.findByText(/۱۱۵/)).toBeInTheDocument();
+    expect(screen.getByTestId('yara-failure')).toBeInTheDocument();
+  });
+
   it('پاسخِ chat ولی کاملاً خالی ⇒ باز هم مسیرِ شکست، نه حبابِ خالی', async () => {
     mockPostTurn.mockResolvedValue({ mode: 'chat', conversation_id: 'c-1', query_id: 'q', turn_index: 0 } as TurnResponse);
     render(<YaraChat />);

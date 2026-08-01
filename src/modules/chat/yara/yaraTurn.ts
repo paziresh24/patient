@@ -90,6 +90,13 @@ export interface YaraTurn {
   archivedAnswer?: string;
   /** The turn ended without a usable answer ⇒ render the escape hatch. */
   failed?: boolean;
+  /**
+   * هشدارِ اورژانسی که روی یک پاسخِ **غیرقابل‌رندر** آمده (mode:'classic' وقتی
+   * LLM مرده یا بودجه تمام است — khesht آن را عمداً به fallback هم می‌چسباند).
+   * جدا از `assistant` نگه داشته می‌شود چون آن پاسخ رندرشدنی نیست ولی این هشدار
+   * باید باشد: گم‌شدنِ پیامِ ۱۱۵ پشتِ درِ فرار، بدترین باختِ ممکنِ این صفحه است.
+   */
+  emergency?: string;
 }
 
 /**
