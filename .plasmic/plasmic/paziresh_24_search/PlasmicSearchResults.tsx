@@ -76,6 +76,10 @@ import ChevronRightIcon from "../fragment_icons/icons/PlasmicIcon__ChevronRight"
 import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; // plasmic-import: r9Upp9NbiZkf/icon
 
 import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-import: splunkEvent/customFunction
+// DR-07: impression predicate lives in src/ so it is unit-testable and reviewable.
+// NOTE: this import is hand-added and a Plasmic re-sync will drop it — if the
+// `search_top_suggested_card_view` event goes silent again, re-add it first.
+import { shouldSendTopSuggestedCardView } from "@/common/services/topSuggestedCardView";
 import { uniq as __lib_lodash__uniq } from "lodash";
 
 createPlasmicElementProxy;
@@ -2155,12 +2159,17 @@ function PlasmicSearchResults__RenderFunc(props: {
               await $steps["sendClarityCustomTagsEventRunCode"];
           }
 
-          $steps["topSuggestedCardViewSplunkEvent"] = false
+          $steps["topSuggestedCardViewSplunkEvent"] = true
             ? (() => {
                 const actionArgs = {
                   customFunction: async () => {
                     return setTimeout(() => {
-                      if (document.querySelector(".top-suggested-card")) {
+                      if (
+                        shouldSendTopSuggestedCardView(
+                          $props.searchConsultResponse,
+                          $props.searchResultResponse
+                        )
+                      ) {
                         $$.splunkEvent({
                           token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
                           group: "search_metrics",
