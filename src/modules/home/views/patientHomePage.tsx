@@ -8,6 +8,9 @@ import classNames from '@/common/utils/classNames';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
+import dynamic from 'next/dynamic';
+// دعوتِ کم‌صدای یارا — dynamic و ssr:false تا خطای احتمالیِ ماژولِ چت هرگز هوم‌پیج را نگیرد.
+const YaraInvite = dynamic(() => import('@/modules/chat/yara/yaraInvite'), { ssr: false });
 import { useShowPlasmicSuggestion } from '@/modules/search/hooks/useShowPlasmicSuggestion';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
@@ -86,6 +89,7 @@ export const PatientHomePage = ({ embedded = false }: PatientHomePageProps) => {
                 isMobile,
             })}
           />
+          <YaraInvite />
           {!customize.partnerKey && (
             <div className="w-full lg:w-[50rem]">
               <Fragment2

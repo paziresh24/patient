@@ -261,6 +261,19 @@ function send(type: string, event: Record<string, unknown>): void {
  */
 export type ChatEntryPoint = 'search_box' | 'chat_route' | 'yara';
 
+/**
+ * دعوتِ کم‌صدای هوم‌پیج (DR-11 §۱۳-۴). CTRِ همین دو رویداد، عددِ کلیدیِ M-8 است —
+ * بدونِ view، click قابلِ تفسیر نیست (نمی‌دانیم چند نفر دعوت را دیدند).
+ */
+export function sendYaraInvite(action: 'view' | 'click'): void {
+  send('conversational_invite', {
+    action,
+    entry_point: 'homepage',
+    is_conversational: true,
+    has_token: Boolean(getCookie('token')),
+  });
+}
+
 export function sendChatView(res: TurnResponse, entryPoint: ChatEntryPoint): void {
   send('search_view', {
     /**
