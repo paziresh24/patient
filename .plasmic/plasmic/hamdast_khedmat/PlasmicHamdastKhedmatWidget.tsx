@@ -201,6 +201,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
 
   const isMobile = hasVariant(globalVariants, "screen", "mobileOnly");
   const ScrollContainerComponent = isMobile ? "div" : ScrollContainer;
+  const hasScrolledRef = React.useRef(false);
 
   return (
     <div
@@ -236,6 +237,26 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         <ScrollContainerComponent
           className={classNames("all", sty.freeBox__q8Pqw, isMobile ? "no-scroll" : "")}
           {...(!isMobile && { hideScrollbars: false })}
+          onScroll={async () => {
+            if (hasScrolledRef.current) return;
+            hasScrolledRef.current = true;
+            try {
+              await $globalActions["Fragment.apiRequest"]?.apply(null, [
+                "POST",
+                "https://n8n.hosseinzr.ir/webhook/log-webhook",
+                undefined,
+                {
+                  event_group: "khedmat_scroll",
+                  doctor_user_id: $props.profileData?.user_id,
+                  doctor_slug: $props.profileData?.seo?.slug,
+                  user_id: $ctx.auth?.info?.id,
+                  terminal_id: getCookie("terminal_id")
+                }
+              ]);
+            } catch (e) {
+              console.error("Failed to log khedmat_scroll event:", e);
+            }
+          }}
         >
           {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
             (() => {
