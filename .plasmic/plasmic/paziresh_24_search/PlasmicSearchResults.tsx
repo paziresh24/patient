@@ -79,7 +79,10 @@ import __fn_splunkEvent from "@/common/services/plasmicSplunkEvent"; // plasmic-
 // DR-07: impression predicate lives in src/ so it is unit-testable and reviewable.
 // NOTE: this import is hand-added and a Plasmic re-sync will drop it — if the
 // `search_top_suggested_card_view` event goes silent again, re-add it first.
-import { shouldSendTopSuggestedCardView } from "@/common/services/topSuggestedCardView";
+import {
+  buildTopSuggestedCardViewEvent,
+  shouldSendTopSuggestedCardView
+} from "@/common/services/topSuggestedCardView";
 import { uniq as __lib_lodash__uniq } from "lodash";
 
 createPlasmicElementProxy;
@@ -2170,21 +2173,19 @@ function PlasmicSearchResults__RenderFunc(props: {
                           $props.searchResultResponse
                         )
                       ) {
-                        $$.splunkEvent({
-                          token: "7c4a4dbb-0abc-4d1f-8e65-fbd7e52debbd",
-                          group: "search_metrics",
-                          type: "search_top_suggested_card_view",
-                          data: {
-                            filters:
-                              $props.searchResultResponse.selected_filters,
-                            result_count: $props.searchResultResponse.length,
-                            location: $props.location.city_name,
-                            city_id: $props.location.city_id,
-                            lat: $props.location.lat,
-                            lon: $props.location.lon,
-                            query: "..."
-                          }
-                        });
+                        // Must go through the SAME channel as the click event
+                        // (`Splunk.sendLog`, :641). The `$$.splunkEvent` helper
+                        // defaults to https://p24splk.paziresh24.com with token
+                        // 7c4a4dbb…, which never lands in `p24_search_events_b` —
+                        // that is why the sibling click emitter at :654 is
+                        // permanently gated `false`. Using it here made the view
+                        // event fire client-side but never arrive.
+                        $globalActions["Splunk.sendLog"]?.(
+                          buildTopSuggestedCardViewEvent(
+                            $props.searchResultResponse,
+                            $props.location
+                          )
+                        );
                       }
                     }, 2000);
                   }
