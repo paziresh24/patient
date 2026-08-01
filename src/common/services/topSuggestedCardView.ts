@@ -48,4 +48,29 @@ export const shouldSendTopSuggestedCardView = (
   return promotedTitle !== topTitle(resultResponse);
 };
 
+type LocationLike = { city_name?: string; city_id?: string | number; lat?: number; lon?: number } | null | undefined;
+
+type ResultResponseLike = SearchLikeResponse & { selected_filters?: unknown };
+
+/**
+ * Payload for the `search_top_suggested_card_view` event.
+ *
+ * `result_count` deliberately reads `search.result.length`. The first version of
+ * this event read `searchResultResponse.length` — the length of the *response
+ * object*, which is always `undefined` — so the field would have been dead on
+ * arrival even once delivery was fixed.
+ */
+export const buildTopSuggestedCardViewEvent = (resultResponse: ResultResponseLike, location: LocationLike) => ({
+  group: 'search_metrics',
+  type: 'search_top_suggested_card_view',
+  data: {
+    filters: resultResponse?.selected_filters,
+    result_count: resultResponse?.search?.result?.length,
+    location: location?.city_name,
+    city_id: location?.city_id,
+    lat: location?.lat,
+    lon: location?.lon,
+  },
+});
+
 export default shouldSendTopSuggestedCardView;
