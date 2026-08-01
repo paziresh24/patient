@@ -29,3 +29,4 @@ const Yara: NextPage = () => (
 );
 
 export default Yara;
+

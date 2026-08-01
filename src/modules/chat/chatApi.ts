@@ -321,3 +321,4 @@ export function sendChatClick(
 export function sendChatExit(conversationId: string, reason: string, entryPoint: ChatEntryPoint): void {
   send('conversational_exit', { conversation_id: conversationId, exit_reason: reason, entry_point: entryPoint });
 }
+

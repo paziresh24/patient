@@ -32,7 +32,7 @@
 const ALLOWED_HOSTS = new Set(['paziresh24.com', 'www.paziresh24.com']);
 
 /** Non-production hosts, allowed only when the build is not production. */
-const DEV_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0']);
+const DEV_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0', 'local.paziresh24.com']);
 
 export function isChatAllowedHost(rawHost: string | undefined | null, isProduction = process.env.NODE_ENV === 'production'): boolean {
   const host = String(rawHost ?? '')

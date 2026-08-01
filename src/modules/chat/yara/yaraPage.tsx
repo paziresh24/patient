@@ -48,7 +48,8 @@ export const YaraPage = () => {
   if (!mounted || gate.reason === 'auth_pending') {
     return (
       <Shell>
-        <p data-testid="yara-loading" className="text-sm text-slate-400">
+        {/* data-reason: تشخیصِ یک‌نگاهی اینکه کدام گیت نگه داشته (debuggability). */}
+        <p data-testid="yara-loading" data-reason={gate.reason ?? 'not_mounted'} className="text-sm text-slate-400">
           در حال آماده‌سازی…
         </p>
       </Shell>
@@ -100,3 +101,4 @@ export const YaraPage = () => {
 };
 
 export default YaraPage;
+
