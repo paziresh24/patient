@@ -34,7 +34,7 @@ import getConfig from 'next/config';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { chatIneligibleReason, type ChatIneligibleReason } from './chatEligibility';
+import { chatIneligibleReason, devFakeLogin, type ChatIneligibleReason } from './chatEligibility';
 export { chatRouteAllowed } from './chatEligibility';
 
 /** Lazy + defensive: `getConfig()` returns undefined outside a Next runtime (tests). */
@@ -63,6 +63,7 @@ export function useChatGate(): ChatGate {
   const previewKey = String(cfg.CHAT_MVP_PREVIEW_KEY ?? '');
   const isPreview = Boolean(previewKey) && router.query.chatPreview === previewKey;
   const masterOn = String(cfg.CHAT_MVP_ENABLED ?? '') === 'true';
+  const fakeLogin = devFakeLogin(cfg);
 
   return useMemo(() => {
     const reason = chatIneligibleReason({
@@ -70,10 +71,10 @@ export function useChatGate(): ChatGate {
       // yet", never "eligible" — the panel is a client-only enhancement.
       host: typeof window === 'undefined' ? '' : window.location.host,
       partnerKey,
-      isLogin,
-      isAuthPending,
+      isLogin: isLogin || fakeLogin,
+      isAuthPending: isAuthPending && !fakeLogin,
       featureEnabled: masterOn && (rolloutOn || isPreview),
     });
     return { allowed: reason === null, reason, isPreview };
-  }, [partnerKey, isLogin, isAuthPending, masterOn, rolloutOn, isPreview]);
+  }, [partnerKey, isLogin, isAuthPending, masterOn, rolloutOn, isPreview, fakeLogin]);
 }
