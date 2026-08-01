@@ -28,6 +28,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { getCookie } from 'cookies-next';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import {
   getConversation,
   postTurn,
@@ -50,6 +51,7 @@ import {
   FAILURE_TEXT,
   MAX_CARDS,
   STANDING_DISCLAIMER,
+  welcomeText,
   STARTER_CHIPS,
   WELCOME_TEXT,
   YARA_ENTRY_POINT,
@@ -122,6 +124,20 @@ export const YaraChat = () => {
   const bookingsRef = useRef<BookingSummary[]>([]);
 
   const terminalId = useMemo(() => String(getCookie('terminal_id') ?? ''), []);
+  /**
+   * شخصی‌سازی (dr-11 §۱۳.۸): نامِ کوچک فقط برای خوش‌آمدِ کلاینت‌ساید — هرگز به
+   * khesht/provider نمی‌رود. شهر از همان کوکیِ `new-city` که کادرِ جستجو می‌خواند،
+   * تا یارا بدونِ پرسشِ بدیهی («کدام شهر؟») همان شهرِ کاربر را بگردد.
+   */
+  const userFirstName = useUserInfoStore(state => state.info?.name);
+  const city = useMemo(() => {
+    try {
+      const parsed = JSON.parse(String(getCookie('new-city') ?? '')) as { en_slug?: string };
+      return parsed?.en_slug || 'ir';
+    } catch {
+      return 'ir';
+    }
+  }, []);
 
   const threadEnd = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -178,6 +194,7 @@ export const YaraChat = () => {
             explicit: true,
             conversationId: conversationId.current || undefined,
             terminalId,
+            city,
             ...(bookingsRef.current.length ? { bookings: toChatContext(bookingsRef.current) } : {}),
           })
         )) ?? null;
@@ -216,7 +233,7 @@ export const YaraChat = () => {
       });
       if (res.client_action) void runClientAction(res.client_action);
     },
-    [terminalId, runClientAction]
+    [terminalId, city, runClientAction]
   );
 
   /** The one way a turn starts — chips, suggestions and the composer all go here. */
@@ -260,6 +277,9 @@ export const YaraChat = () => {
     }
     setTurns(restored);
   }, []);
+
+  /** اولین turnِ پاسخ‌دار — لنگرِ نمایشِ تک‌بارِ سلبِ مسئولیت (§۱۳.۸). */
+  const firstAnsweredIndex = turns.findIndex(t => t.assistant);
 
   return (
     <div dir="rtl" className="mx-auto flex min-h-screen w-full max-w-2xl flex-col bg-white">
@@ -312,7 +332,7 @@ export const YaraChat = () => {
         {turns.length === 0 && (
           <>
             <p className="whitespace-pre-line rounded-2xl bg-slate-100 px-4 py-3 text-sm leading-7 text-slate-700">
-              {WELCOME_TEXT}
+              {welcomeText(userFirstName)}
             </p>
             <div className="flex flex-wrap gap-2">
               {STARTER_CHIPS.map(chip => (
@@ -389,7 +409,10 @@ export const YaraChat = () => {
               </a>
             ))}
 
-            {turn.assistant?.disclaimer && (
+            {/* سلبِ مسئولیت فقط روی اولین پاسخ — تکرارش زیرِ هر پیام همان
+                «محافظه‌کاریِ رباتیک»ی است که owner نخواست (§۱۳.۸)؛ خطِ ثابتِ
+                زیرِ composer همیشه حاضر است، پس M-7 هم پابرجاست. */}
+            {turn.assistant?.disclaimer && i === firstAnsweredIndex && (
               <p className="text-[0.625rem] leading-5 text-slate-400">{turn.assistant.disclaimer}</p>
             )}
 

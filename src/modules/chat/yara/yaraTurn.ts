@@ -26,6 +26,18 @@ export const MAX_CARDS = 3;
 export const WELCOME_TEXT =
   'سلام! من یارا هستم، همراه سلامت شما. از پیدا کردن پزشک تا نوبت‌گیری کنارتان هستم. چه کمکی از من برمی‌آید؟';
 
+/**
+ * شخصی‌سازیِ خوش‌آمد با نامِ کوچک (چشم‌اندازِ owner، dr-11 §۱۳.۸): «بیمار را به
+ * اسم صدا بزند». عمداً **فقط سمتِ کلاینت** — نام هرگز به khesht/providerِ LLM
+ * نمی‌رود: هم PIIِ کمتر، هم اینکه پاسخِ cacheشده‌ی مدل (کلیدِ cache نام ندارد)
+ * می‌توانست نامِ یک کاربر را به کاربرِ بعدی نشان دهد.
+ */
+export function welcomeText(firstName?: string | null): string {
+  const name = String(firstName ?? '').trim().split(/\s+/)[0];
+  if (!name || name.length > 30) return WELCOME_TEXT;
+  return `سلام ${name} عزیز! من یارا هستم، همراه سلامت شما. از پیدا کردن پزشک تا نوبت‌گیری کنارتان هستم. چه کمکی از من برمی‌آید؟`;
+}
+
 export const STARTER_CHIPS = [
   'حالم خوب نیست، کمکم کنید',
   'از پزشک مشخصی نوبت می‌خواهم',

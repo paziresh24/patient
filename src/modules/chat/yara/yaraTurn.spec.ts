@@ -52,3 +52,21 @@ describe('withTimeout — «در حال بررسی…» سقف دارد', () => 
     await expect(withTimeout(new Promise(() => undefined), 10)).resolves.toBeNull();
   });
 });
+
+describe('welcomeText — شخصی‌سازیِ فقط-کلاینت (§۱۳.۸)', () => {
+  const { welcomeText, WELCOME_TEXT } = require('./yaraTurn');
+
+  it('نامِ کوچک ⇒ خوش‌آمدِ شخصی', () => {
+    expect(welcomeText('علی')).toContain('سلام علی عزیز');
+  });
+
+  it('نامِ چندبخشی ⇒ فقط بخشِ اول', () => {
+    expect(welcomeText('سید محمدحافظ نوروزی')).toContain('سلام سید عزیز');
+  });
+
+  it('خالی/null/خیلی بلند ⇒ متنِ عمومی', () => {
+    expect(welcomeText('')).toBe(WELCOME_TEXT);
+    expect(welcomeText(null)).toBe(WELCOME_TEXT);
+    expect(welcomeText('x'.repeat(40))).toBe(WELCOME_TEXT);
+  });
+});

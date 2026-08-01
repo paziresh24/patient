@@ -9,6 +9,10 @@ jest.mock('@/common/apis/services/booking/getBooks', () => ({ getBooks: jest.fn(
 jest.mock('@/common/apis/services/booking/removeBook', () => ({ removeBook: jest.fn() }));
 jest.mock('cookies-next', () => ({ getCookie: jest.fn().mockReturnValue('terminal-1') }));
 jest.mock('next/router', () => ({ useRouter: () => ({ asPath: '/yara', query: {} }) }));
+// storeِ واقعی زنجیره‌اش به getConfig می‌رسد؛ mockِ selector-خور (zustand-style).
+jest.mock('@/modules/login/store/userInfo', () => ({
+  useUserInfoStore: (selector: (s: unknown) => unknown) => selector({ info: { name: '' }, isLogin: true, pending: false }),
+}));
 jest.mock('../chatApi', () => ({
   postTurn: jest.fn(),
   getConversation: jest.fn(),
