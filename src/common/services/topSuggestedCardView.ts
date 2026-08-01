@@ -50,7 +50,7 @@ export const shouldSendTopSuggestedCardView = (
 
 type LocationLike = { city_name?: string; city_id?: string | number; lat?: number; lon?: number } | null | undefined;
 
-type ResultResponseLike = SearchLikeResponse & { selected_filters?: unknown };
+type ResultResponseLike = (NonNullable<SearchLikeResponse> & { selected_filters?: unknown }) | null | undefined;
 
 /**
  * Payload for the `search_top_suggested_card_view` event.
