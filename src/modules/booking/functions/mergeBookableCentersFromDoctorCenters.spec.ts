@@ -14,6 +14,7 @@ describe('mergeBookableCentersFromDoctorCenters', () => {
         type_id: 3,
         status: 1,
         server_id: 1,
+        user_center_id: 'ucid-5532',
         has_bookable_services: true,
         city: { id: 1, name: 'Tehran', slug: 'tehran', province: { id: 1, name: 'Tehran', slug: 'tehran' } },
         location: { lat: 0, lon: 0 },
@@ -27,6 +28,7 @@ describe('mergeBookableCentersFromDoctorCenters', () => {
         type_id: 1,
         status: 1,
         server_id: 1,
+        user_center_id: 'ucid-office',
         has_bookable_services: true,
         city: { id: 1, name: 'Tehran', slug: 'tehran', province: { id: 1, name: 'Tehran', slug: 'tehran' } },
         location: { lat: 0, lon: 0 },
@@ -38,6 +40,7 @@ describe('mergeBookableCentersFromDoctorCenters', () => {
     expect(merged.map(center => center.id)).toEqual(['office-1', CENTERS.CONSULT]);
     expect(merged[0].services).toEqual([{ id: 's1' }]);
     expect(merged[1].services).toEqual([]);
+    expect((merged[1] as any).user_center_id).toBe('ucid-5532');
   });
 
   it('removes centers not in bookable allowlist', () => {
