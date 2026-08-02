@@ -37,21 +37,32 @@ export type OverwriteProfileData = {
   gallery?: any;
 };
 
+const pickNonEmptyBiography = (...candidates: unknown[]): string | null => {
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim()) {
+      return candidate;
+    }
+  }
+  return null;
+};
+
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
+  // Pull biography out of provider so an empty/undefined provider.biography cannot wipe a valid bio.
+  const { biography: providerBiography, ...providerRest } = overwriteData.provider ?? {};
   const information = {
     id: source?.id ?? null,
     server_id: source?.server_id ?? null,
     display_name: source?.name + ' ' + source?.family,
     name: source?.name,
     family: source?.family,
-    biography: overwriteData?.biography ?? source?.biography,
+    biography: pickNonEmptyBiography(overwriteData?.biography, providerBiography, source?.biography),
     employee_id: source?.medical_code,
     experience: source?.experience ?? null,
     gender: source?.gender ?? null,
     image: overwriteData?.image ?? source?.image ?? null,
     city_en_slug: source?.city_en_slug ?? null,
     should_recommend_other_doctors: source?.should_recommend_other_doctors ?? null,
-    ...overwriteData.provider,
+    ...providerRest,
     prefix: '',
   };
 
