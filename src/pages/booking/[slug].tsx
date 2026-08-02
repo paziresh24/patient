@@ -1,5 +1,3 @@
-import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
-import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import Loading from '@/common/components/atom/loading/loading';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
@@ -9,17 +7,16 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { CENTERS } from '@/common/types/centers';
-import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
+import { useBookingProfileData } from '@/modules/booking/hooks/useBookingProfileData';
 import BookingSteps from '@/modules/booking/views';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
-import { useDoctorFullName } from '@/common/hooks/useDoctorFullName';
 import { useAbsentScore } from '@/common/apis/services/ravi/absentScore';
 import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
-import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
+import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { ReactElement, useCallback, useEffect, useMemo } from 'react';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
@@ -31,49 +28,30 @@ const Booking = ({ useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus = f
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
 
+  const slug = router.query?.slug?.toString();
   const {
     data,
-    isLoading: fullProfileLoading,
+    profile: profileData,
+    isLoading: bookingProfileLoading,
     isSuccess,
     status,
-  } = useGetProfileData(
-    {
-      slug: router.query?.slug?.toString() ?? '/',
-    },
-    {
-      enabled: !!router.isReady,
-    },
-  );
+  } = useBookingProfileData(slug, {
+    enabled: !!router.isReady && !!slug,
+  });
 
-  const profileData = data?.data;
-
-  const slug = router.query?.slug?.toString();
-  const { data: doctorSlugForImage } = useQuery(
-    ['bookingDoctorSlugForImage', slug],
-    () => validateDoctorSlug(slug!),
-    {
-      enabled: !!router.isReady && !!slug,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      staleTime: 5 * 60 * 1000,
-      retry: 2,
-    },
-  );
   const doctorAvatarFromPic = useMemo(() => {
-    const res = doctorSlugForImage;
-    if (!res || 'error' in res || 'redirect' in res) return undefined;
-    if (res.user_id == null) return undefined;
-    return picUserImageUrl(res.user_id);
-  }, [doctorSlugForImage]);
+    const userId = profileData?.user_id;
+    if (userId == null) return undefined;
+    return picUserImageUrl(userId);
+  }, [profileData?.user_id]);
 
-  const { data: doctorFullNameData } = useDoctorFullName(slug, !!router.isReady);
   const { data: absentScoreData } = useAbsentScore(slug, !!router.isReady);
 
   const doctorName = useMemo(() => {
-    const fromHook = `${doctorFullNameData?.name ?? ''} ${doctorFullNameData?.family ?? ''}`.trim();
-    if (fromHook) return fromHook;
-    return '';
-  }, [doctorFullNameData]);
+    const fromProfile = `${profileData?.name ?? ''} ${profileData?.family ?? ''}`.trim();
+    if (fromProfile) return fromProfile;
+    return profileData?.display_name ?? '';
+  }, [profileData?.name, profileData?.family, profileData?.display_name]);
 
   useEffect(() => {
     if (data?.redirect) {
@@ -82,12 +60,13 @@ const Booking = ({ useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus = f
   }, [data?.redirect]);
 
   useEffect(() => {
+    if (!router.query?.centerId) return;
     if (profileData && !profileData?.centers?.some((item: any) => item.id === router.query?.centerId)) {
       router.replace(`/booking/${router.query?.slug?.toString()}`);
     }
   }, [profileData]);
 
-  const isLoading = fullProfileLoading;
+  const isLoading = bookingProfileLoading;
 
   const queryHandler = useCallback((queries: any) => {
     const payloads = Object.keys(queries);
@@ -135,10 +114,10 @@ const Booking = ({ useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus = f
   }, []);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && profileData) {
       setProfileData(profileData);
     }
-  }, [status]);
+  }, [isSuccess, profileData, status]);
 
   useEffect(() => {
     // Prefetch the factor page
@@ -231,7 +210,7 @@ const Booking = ({ useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus = f
               {isSuccess && (
                 <Text fontSize="sm" fontWeight="medium">
                   {router.query.centerId === CENTERS.CONSULT
-                    ? `ویزیت آنلاین ${profileData?.online_visit_channel_types?.length > 0 ? 'در پیام رسان' : ''}`
+                    ? `ویزیت آنلاین ${profileData?.online_visit_channel_types?.length ? 'در پیام رسان' : ''}`
                     : centerName}
                 </Text>
               )}
