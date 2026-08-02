@@ -137,7 +137,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   const { data, profile, isLoading } = useBookingProfileData(slug, {
     enabled: !!slug,
   });
-  const centers = profile?.centers ?? data?.data?.centers;
+  const centers = profile?.centers ?? (data && 'data' in data ? data.data?.centers : undefined);
   const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
   const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
