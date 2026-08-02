@@ -4,7 +4,9 @@ const nextTranslate = require('next-translate');
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
-const defaultProfileApiBaseUrl = 'http://172.16.104.65:8080';
+// Public profiles-api host (replaces private LAN http://172.16.104.65:8080).
+// Health: https://profile.p24cloud.ir/api/health — app calls {base}/v1/profiles/...
+const defaultProfileApiBaseUrl = 'https://profile.p24cloud.ir';
 const defaultProfileApiToken = 'test';
 const defaultProfileApiSourceSlugs = 'دکتر-ابوالفضل-ساجدی-10';
 
