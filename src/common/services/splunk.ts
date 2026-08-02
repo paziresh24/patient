@@ -20,16 +20,24 @@ type SplunkOptions = {
   constant?: Record<string, unknown>;
 };
 
+type SplunkEventFields = Record<string, any>;
+
 type SendEventPayload = {
   group: string;
   type: string;
-  event?: Record<string, unknown>;
+  /** Canonical payload field used across most call sites. */
+  event?: SplunkEventFields;
+  /**
+   * Legacy alias used by some callers (e.g. hamdast pages).
+   * Treated the same as `event` when posting to HEC.
+   */
+  data?: SplunkEventFields;
 };
 
 type SendBatchEventPayload = {
   group: string;
   type: string;
-  events: Record<string, unknown>[];
+  events: SplunkEventFields[];
 };
 
 type SplunkClient = {
@@ -69,27 +77,28 @@ const postCollector = async (baseUrl: string, token: string, body: unknown): Pro
 };
 
 const createSafeSplunk = ({ baseUrl, token, constant = {} }: SplunkOptions): SplunkClient => ({
-  sendEvent: async ({ group, type, event = {} }) =>
+  sendEvent: async ({ group, type, event, data }) =>
     postCollector(baseUrl, token, {
       sourcetype: '_json',
       event: {
         event_group: group,
         event_type: type,
         ...constant,
-        ...event,
+        ...(event ?? {}),
+        ...(data ?? {}),
       },
     }),
   sendBatchEvent: async ({ group, type, events }) =>
     postCollector(
       baseUrl,
       token,
-      events.map(event => ({
+      events.map(item => ({
         sourcetype: '_json',
         event: {
           event_group: group,
           event_type: type,
           ...constant,
-          ...event,
+          ...item,
         },
       })),
     ),
