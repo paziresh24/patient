@@ -156,10 +156,16 @@ export async function getAggregatedProfileData(
   if (useMicroservice) {
     try {
       const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
-      return await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+      const microserviceResult = await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+      // If MS explicitly returns notFound, still try legacy (slug may only exist there).
+      if (microserviceResult && typeof microserviceResult === 'object' && 'notFound' in microserviceResult && (microserviceResult as { notFound?: boolean }).notFound) {
+        console.warn('[profile] microservice profile missing; falling back to legacy', { slug });
+      } else {
+        return microserviceResult;
+      }
     } catch (error) {
-      // Never hard-500 the page when the private profile API is unreachable/broken.
-      // Fall back to the legacy path so production stays up while API networking is fixed.
+      // Never hard-500/404 the page when profiles-api is unreachable, unauthorized, or missing the slug.
+      // Fall back to the legacy path so production stays up while API data is incomplete.
       const status = (error as any)?.response?.status ?? (error as any)?.status;
       console.error('[profile] microservice aggregation failed; falling back to legacy', {
         slug,
@@ -168,7 +174,9 @@ export async function getAggregatedProfileData(
         hint:
           status === 401
             ? 'Bearer rejected. For test use API_AUTH_DRIVER=static on profiles-api (token=test|write|admin), or create a db API key.'
-            : undefined,
+            : status === 404
+              ? 'Slug not in profiles-api DB; using legacy full-profile.'
+              : undefined,
       });
     }
   }
