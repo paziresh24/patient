@@ -52,16 +52,19 @@ export const Seo = (props: SeoProps) => {
     );
 
   // Main Site
+  const pathOnly = getPathFromUrl(asPath);
+  const pageUrl = `https://www.paziresh24.com${pathOnly}`;
+
   return (
     <Head>
       <title>{titleTemplate}</title>
       <meta name="description" content={description} />
-      <link rel="canonical" href={canonicalUrl ?? `https://www.paziresh24.com${getPathFromUrl(asPath)}`} />
+      <link rel="canonical" href={canonicalUrl ?? pageUrl} />
       <meta name="robots" content={noIndex ? 'noindex' : 'index, follow'} />
       <meta property="og:title" content={titleTemplate} />
       <meta property="og:description" content={description} />
       <meta property="og:site_name" content={brandName} />
-      <meta property="og:url" content={`https://www.paziresh24.com${asPath}`} />
+      <meta property="og:url" content={pageUrl} />
       <meta property="og:type" content="website" />
       <meta property="og:locale" content="fa_IR" />
       <meta property="og:image" content={openGraph?.image?.src ?? `https://www.paziresh24.com/logos/icon_x192.png`} />
@@ -72,7 +75,7 @@ export const Seo = (props: SeoProps) => {
       <meta property="twitter:description" content={description} />
       <meta property="twitter:creator" content={brandName} />
       <meta property="twitter:site" content={brandName} />
-      <meta property="twitter:url" content={`https://www.paziresh24.com${asPath}`} />
+      <meta property="twitter:url" content={pageUrl} />
       <meta property="twitter:image" content={openGraph?.image?.src ?? `https://www.paziresh24.com/logos/icon_x192.png`} />
       <meta property="twitter:image:alt" content={openGraph?.image?.alt ?? brandName} />
       <meta property="twitter:card" content="summary" />

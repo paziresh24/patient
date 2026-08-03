@@ -229,9 +229,10 @@ const DoctorProfile = (props: any) => {
         information,
         expertises,
         feedbacks,
+        breadcrumbs,
         doctorProfileImageUrl,
       }),
-    [slug, centers, information, expertises, feedbacks, doctorProfileImageUrl],
+    [slug, centers, information, expertises, feedbacks, breadcrumbs, doctorProfileImageUrl],
   );
 
   const isOwnProfile = !!user_id && !!userInfo?.id && String(user_id) === String(userInfo?.id);
@@ -706,6 +707,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
     feedbacks,
     host,
     user_id,
+    breadcrumbs,
     shouldFetchOnClient,
     noIndex: noIndexFromProps,
   } = page.props;
@@ -723,6 +725,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           information,
           expertises,
           feedbacks,
+          breadcrumbs,
           doctorProfileImageUrl,
         }) : []}
         openGraph={{
