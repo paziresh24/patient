@@ -7,7 +7,6 @@ import pick from 'lodash/pick';
 import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import Hamdast from '@/modules/hamdast/render';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { SamanBooking } from '@/modules/samanBooking';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
@@ -40,9 +39,9 @@ export const Aside = (data: any) => {
     hamdastWidgets,
     user_id,
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
+    // Passed from the page so Aside stays a plain function (no hooks after early returns).
+    isSamanBookingEnabled = false,
   } = data;
-
-  const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
 
   const profileData = pick(data, [
     'information',

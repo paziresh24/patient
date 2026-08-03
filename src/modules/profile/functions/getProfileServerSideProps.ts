@@ -21,8 +21,10 @@ const clientFetchFallbackProps = (slug: string) =>
   sanitizeObject({
     slug,
     shouldFetchOnClient: true,
+    // Soft shell only — never indexable; real title/description arrive after client fetch.
+    noIndex: true,
     status: 200,
-    title: 'درحال بارگذاری اطلاعات پزشک...',
+    title: '',
     description: '',
     information: null,
     centers: [],
