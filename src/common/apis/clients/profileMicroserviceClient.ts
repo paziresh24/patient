@@ -1,7 +1,10 @@
 import axios from 'axios';
 import getConfig from 'next/config';
+import { normalizeProfileApiBearerToken } from './normalizeProfileApiBearerToken';
 
 const isServer = typeof window === 'undefined';
+
+export { normalizeProfileApiBearerToken } from './normalizeProfileApiBearerToken';
 
 export function getProfileMicroserviceConfig() {
   const { publicRuntimeConfig, serverRuntimeConfig } = getConfig() ?? {};
@@ -10,10 +13,17 @@ export function getProfileMicroserviceConfig() {
       publicRuntimeConfig?.PROFILE_API_BASE_URL ??
       process.env.PROFILE_API_BASE_URL ??
       '',
-  ).trim();
-  const token = String(
-    serverRuntimeConfig?.PROFILE_API_TOKEN ?? publicRuntimeConfig?.PROFILE_API_TOKEN ?? process.env.PROFILE_API_TOKEN ?? '',
-  ).trim();
+  )
+    .trim()
+    .replace(/\/$/, '');
+  const token = normalizeProfileApiBearerToken(
+    String(
+      serverRuntimeConfig?.PROFILE_API_TOKEN ??
+        publicRuntimeConfig?.PROFILE_API_TOKEN ??
+        process.env.PROFILE_API_TOKEN ??
+        '',
+    ),
+  );
 
   // Local/dev allowlist override (comma-separated). Prefer GrowthBook in prod.
   const envSlugs = String(
@@ -34,6 +44,11 @@ export function createProfileMicroserviceClient() {
   if (!baseURL) {
     throw new Error('PROFILE_API_BASE_URL is not configured');
   }
+  if (!token) {
+    throw new Error(
+      'PROFILE_API_TOKEN is not configured. For API_AUTH_DRIVER=static use test|write|admin; for db mode use a key from php artisan apikey:create.',
+    );
+  }
 
   // Avoid top-level `http`/`https` imports — this module is reachable from the client graph.
   const agents =
@@ -51,7 +66,7 @@ export function createProfileMicroserviceClient() {
     timeout: 8000,
     headers: {
       Accept: 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      Authorization: `Bearer ${token}`,
       ...(isServer ? { 'Accept-Encoding': 'gzip, deflate', Connection: 'keep-alive' } : {}),
     },
     ...agents,

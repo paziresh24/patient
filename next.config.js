@@ -4,7 +4,13 @@ const nextTranslate = require('next-translate');
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
-const defaultProfileApiBaseUrl = 'http://172.16.104.65:8080';
+// Public profiles-api host (health: https://profile.p24cloud.ir/api/health).
+// App calls {base}/v1/profiles/... — do NOT append /api to baseURL.
+const defaultProfileApiBaseUrl = 'https://profile.p24cloud.ir';
+// Auth depends on API_AUTH_DRIVER on the profiles-api side:
+// - static → literal tokens: test (read) | write | admin
+// - db (profile.p24cloud.ir) → API key from `php artisan apikey:create` (Bearer test → 401)
+// Temporary default for static-driver testing: `test` (read-only). Override via PROFILE_API_TOKEN.
 const defaultProfileApiToken = 'test';
 const defaultProfileApiSourceSlugs = 'دکتر-ابوالفضل-ساجدی-10';
 
