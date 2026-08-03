@@ -10,6 +10,10 @@ export interface DoctorCentersResponse {
   type_id: number;
   status: number;
   server_id: number;
+  /** Clinic booking id — required by getFreeTurn / book */
+  user_center_id?: string;
+  active_booking?: boolean;
+  description?: string;
   has_bookable_services: boolean;
   city: {
     id: number;

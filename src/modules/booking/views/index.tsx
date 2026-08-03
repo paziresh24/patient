@@ -3,13 +3,13 @@ import { toast } from 'react-hot-toast';
 
 // Apis
 import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
-import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { uniqMessengers } from '../functions/uniqMessengers';
+import { useBookingProfileData } from '../hooks/useBookingProfileData';
 
 // Components
 import Autocomplete from '@/common/components/atom/autocomplete';
@@ -134,16 +134,10 @@ const BookingSteps = (props: BookingStepsProps) => {
   const isApplication = useApplication();
   const { slug, defaultStep, className, ssrUseSamanAvailabilityStatus = false } = props;
   const { isMobile } = useResponsive();
-  const { data, isLoading } = useGetProfileData(
-    {
-      slug,
-    },
-    {
-      enabled: !!slug,
-    },
-  );
-  const centers = data?.data?.centers;
-  const profile = data?.data;
+  const { data, profile, isLoading } = useBookingProfileData(slug, {
+    enabled: !!slug,
+  });
+  const centers = profile?.centers ?? (data && 'data' in data ? data.data?.centers : undefined);
   const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
   const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
@@ -647,7 +641,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       params: {
         city: 'ir',
-        category: profile.expertises[0]?.expertise_groups[0].en_slug,
+        category: profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug,
       },
       previousQueries: false,
     });
@@ -678,7 +672,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       event: {
         slug: url.replace('/dr/', ''),
         doctor_name: profile?.display_name,
-        doctor_expertice: profile?.expertises[0]?.expertise_groups[0]?.name,
+        doctor_expertice: profile?.expertises?.[0]?.expertise_groups?.[0]?.name,
         center_id: center?.id,
         service_id: service?.id,
       },
@@ -751,7 +745,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           Component={SelectTimeWrapper}
           TopComponent={
             <>
-              {profile?.feedback_visit?.two_weeks_data.some((data: any) => data.center_id === center?.id && data.total_non_personal > 2) &&
+              {profile?.feedback_visit?.two_weeks_data?.some((data: any) => data.center_id === center?.id && data.total_non_personal > 2) &&
                 customize.showRateAndReviews && (
                   <>
                     <Text fontSize="sm" fontWeight="medium" className="text-orange-700">
@@ -784,7 +778,7 @@ const BookingSteps = (props: BookingStepsProps) => {
               sendGaEvent({
                 action: 'load-errormodal',
                 category: `${center.city}`,
-                label: `${profile?.expertises?.[0]?.expertise_groups[0].name ?? ''}`,
+                label: `${profile?.expertises?.[0]?.expertise_groups?.[0]?.name ?? ''}`,
               });
               handleOpenRecommendModal();
             },
@@ -1204,14 +1198,14 @@ const BookingSteps = (props: BookingStepsProps) => {
                         )}
                       </div>
                       <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
-                        مشاهده سایر سرویس دهندگان آنلاین {profile.expertises[0]?.expertise_groups[0].name}
+                        مشاهده سایر سرویس دهندگان آنلاین {profile?.expertises?.[0]?.expertise_groups?.[0]?.name}
                       </Button>
                     </div>
                   ) : (
                     <Recommend
-                      doctorId={profile.id}
-                      city={profile.city_en_slug}
-                      category={profile.expertises[0].expertise.name}
+                      doctorId={profile?.id}
+                      city={profile?.city_en_slug}
+                      category={profile?.expertises?.[0]?.expertise?.name}
                       centerId={center?.id}
                       limit={3}
                     />

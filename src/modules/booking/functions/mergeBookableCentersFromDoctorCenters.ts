@@ -14,6 +14,16 @@ export const mapDoctorCenterToProfileCenter = (newCenter: DoctorCentersResponse)
         lon: newCenter.location.lon,
       }
     : null,
+  user_center_id: newCenter.user_center_id ?? null,
+  server_id: newCenter.server_id,
+  is_active: newCenter.active_booking ?? true,
+  // Filled from full-profile when available; null when full-profile soft-fails
+  settings: null as Record<string, unknown> | null,
+  insurances: null as unknown[] | null,
+  user_center_desk: null as string | null,
+  freeturn: null as number | null,
+  freeturn_text: null as string | null,
+  freeturns_info: null as unknown[] | null,
   services: [] as unknown[],
 });
 

@@ -392,8 +392,18 @@ export async function getAggregatedProfileData(
   const doctorImage = options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
 
   // Extract doctor biography from API response
-  const doctorBiography =
+  let doctorBiography =
     options?.useNewDoctorBiographyAPI && doctorBiographyResult?.status === 'fulfilled' ? doctorBiographyResult.value : null;
+
+  // Parallel fan-out to drprofile can drop biography on prod (timeout/connection reset) while
+  // image/expertise succeed. If bio is still empty, do one dedicated follow-up outside the pool.
+  if (options?.useNewDoctorBiographyAPI) {
+    const hasBiography =
+      typeof doctorBiography?.biography === 'string' && doctorBiography.biography.trim().length > 0;
+    if (!hasBiography) {
+      doctorBiography = await getDoctorBiography(validatedSlug);
+    }
+  }
 
   // Extract doctor centers from API response
   const doctorCenters = options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
@@ -465,9 +475,10 @@ export async function getAggregatedProfileData(
       doctorImage?.image && {
         image: doctorImage.image,
       }),
-    // Add biography to overwriteData if new API is used and successful
+    // Add biography to overwriteData if new API returned a non-empty string
     ...(options?.useNewDoctorBiographyAPI &&
-      doctorBiography?.biography && {
+      typeof doctorBiography?.biography === 'string' &&
+      doctorBiography.biography.trim().length > 0 && {
         biography: doctorBiography.biography,
       }),
     // Add centers to overwriteData if new API is used and successful

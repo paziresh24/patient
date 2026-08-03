@@ -10,24 +10,19 @@ export type CenterSearchDoctor = Record<string, any> & {
 
 const asArray = <T>(value: unknown): T[] => (Array.isArray(value) ? value : []);
 
+const asTrimmedString = (value: unknown): string => (typeof value === 'string' && value.trim() ? value.trim() : '');
+
 /**
- * Drops malformed search rows so one bad doctor cannot break center profile render.
- * Requires a stable id (_id fallback) and a display title.
+ * Normalizes a search row so a half-empty document (all fields null) renders as an empty card
+ * instead of crashing the page or silently disappearing from the list.
+ * Only non-object rows are dropped; missing id/title degrade to empty strings.
  */
 export function sanitizeCenterSearchDoctor(raw: unknown): CenterSearchDoctor | null {
-  if (!raw || typeof raw !== 'object') return null;
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
 
   const doctor = raw as Record<string, any>;
   const id = doctor.id ?? doctor._id;
-  if (id == null || id === '') return null;
-
-  const title =
-    typeof doctor.title === 'string' && doctor.title.trim()
-      ? doctor.title.trim()
-      : typeof doctor.display_name === 'string' && doctor.display_name.trim()
-        ? doctor.display_name.trim()
-        : null;
-  if (!title) return null;
+  const title = asTrimmedString(doctor.title) || asTrimmedString(doctor.display_name);
 
   const badges = asArray<any>(doctor.badges).filter(item => item && typeof item === 'object');
   const actions = asArray<any>(doctor.actions).filter(
@@ -36,8 +31,8 @@ export function sanitizeCenterSearchDoctor(raw: unknown): CenterSearchDoctor | n
 
   return {
     ...doctor,
-    id: String(id),
-    _id: doctor._id ?? id,
+    id: id == null ? '' : String(id),
+    _id: doctor._id ?? id ?? '',
     title,
     badges,
     actions,
