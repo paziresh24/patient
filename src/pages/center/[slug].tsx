@@ -3,6 +3,7 @@ import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slug
 import { search as searchApi } from '@/common/apis/services/search/search';
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import Button from '@/common/components/atom/button/button';
+import Loading from '@/common/components/atom/loading';
 import Text from '@/common/components/atom/text';
 import ErrorBoundary from '@/common/components/layouts/errorBoundary';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
@@ -12,6 +13,7 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useShare from '@/common/hooks/useShare';
 import useLockScroll from '@/common/hooks/useLockScroll';
 import { sendCenterProfileEvent, sendCenterProfileEventServer } from '@/modules/profile/events/nightBatEvents';
+import ErrorPage from '@/modules/profile/components/errorPage';
 import { sanitizeCenterSearchResultPage } from '@/modules/profile/utils/sanitizeCenterSearchDoctors';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { sanitizeDehydratedState } from '@/common/utils/sanitizeDehydratedState';
@@ -77,10 +79,12 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
     () => ({
       center: centerId,
       result_type: 'پزشکان+بیمارستانی',
-      ...(debouncedSearchTerm && { text: debouncedSearchTerm, page: 1 }),
+      ...(debouncedSearchTerm && { text: debouncedSearchTerm }),
     }),
     [debouncedSearchTerm, centerId],
   );
+
+  const doctorsListResetKey = `${centerId ?? ''}:${debouncedSearchTerm}:${selectedExpertise}`;
 
   const {
     data: doctors,
@@ -97,7 +101,6 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
       {
         route: selectedExpertise ?? '',
         query: {
-          page: 1,
           ...filters,
         },
       },
@@ -106,8 +109,9 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
       const page = await searchApi({
         route: selectedExpertise ?? '',
         query: {
-          page: pageParam?.page ?? 1,
           ...filters,
+          // page must win over any filter field so "load more" advances during search
+          page: pageParam?.page ?? 1,
         },
       });
       return sanitizeCenterSearchResultPage(page);
@@ -241,7 +245,22 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
   ]);
 
   if (!profileData) {
-    return null;
+    if (profile.isError) {
+      const statusCode = (profile.error as any)?.response?.status ?? 500;
+      return (
+        <ErrorPage
+          statusCode={statusCode}
+          refresh={() => profile.refetch()}
+          message="خطا در بارگذاری اطلاعات مرکز. لطفاً دوباره تلاش کنید."
+        />
+      );
+    }
+
+    return (
+      <div className="flex items-center justify-center flex-grow py-20">
+        <Loading width={50} />
+      </div>
+    );
   }
 
   const documentTitle = `${profileData.name}، اطلاعات تماس و نوبت دهی آنلاین `;
@@ -250,7 +269,7 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
   } با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش24`;
 
   const handleShare = () => {
-    const url = `${publicRuntimeConfig.CLINIC_BASE_URL}/${slug}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
+    const url = `${publicRuntimeConfig.CLINIC_BASE_URL}/center/${slug}?utm_source=profilecenter-share-button&utm_medium=profilecenter&utm_campaign=profilecenter`;
     sendCenterProfileEvent('center_profile', 'share_click', {
       slug,
       center_id: profileData?.id,
@@ -316,48 +335,36 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
 </p>`;
 
   const getJsonlds = () => {
-    return [
-      {
-        '@context': 'http://www.schema.org',
-        '@type': 'Physician',
-        'priceRange': '$$',
-        'name': profileData.name,
-        'telephone': profileData?.tell,
-        'description': profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
-        'image': getImageUrl(profileData.image, publicRuntimeConfig.CDN_BASE_URL),
-        'isAcceptingNewPatients': true,
-        'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
-        'address': {
-          '@type': 'PostalAddress',
-          'addressCountry': {
-            '@type': 'Country',
-            'name': 'IRN',
-          },
-          'addressLocality': profileData?.city,
-          'addressRegion': profileData?.province,
-          'streetAddress': profileData?.address,
+    const pagePath = (router.asPath ?? `/center/${slug}`).split(/[?#]/)[0];
+    const schema: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'MedicalClinic',
+      name: profileData.name,
+      telephone: profileData?.tell,
+      description: profileData?.biography ? removeHtmlTagInString(profileData.biography) : '',
+      image: getImageUrl(profileData.image, publicRuntimeConfig.CDN_BASE_URL),
+      url: `${publicRuntimeConfig.CLINIC_BASE_URL}${pagePath}`,
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: {
+          '@type': 'Country',
+          name: 'IRN',
         },
+        addressLocality: profileData?.city,
+        addressRegion: profileData?.province,
+        streetAddress: profileData?.address,
       },
-      {
-        '@context': 'http://www.schema.org',
-        '@type': 'Person',
-        'jobTitle': 'physician',
-        'name': profileData.name,
-        'telephone': profileData?.tell,
-        'image': getImageUrl(profileData.image, publicRuntimeConfig.CDN_BASE_URL),
-        'url': publicRuntimeConfig.CLINIC_BASE_URL + router.asPath,
-        'address': {
-          '@type': 'PostalAddress',
-          'addressCountry': {
-            '@type': 'Country',
-            'name': 'IRN',
-          },
-          'addressLocality': profileData?.city,
-          'addressRegion': profileData?.province,
-          'streetAddress': profileData?.address,
-        },
-      },
-    ];
+    };
+
+    if (profileData?.map?.lat != null && profileData?.map?.lon != null) {
+      schema.geo = {
+        '@type': 'GeoCoordinates',
+        latitude: profileData.map.lat,
+        longitude: profileData.map.lon,
+      };
+    }
+
+    return [schema];
   };
 
   const centersInfoData = [
@@ -476,14 +483,15 @@ const CenterProfile = ({ query: { text, expertise }, host, isMainSite }: any) =>
                           value: expertise.url,
                         })) ?? []
                     }
-                    onChangePage={page => {
-                      fetchNextPage({ pageParam: { page } });
+                    onChangePage={() => {
+                      fetchNextPage();
                     }}
                     hasNextPage={hasNextPage ?? false}
                     showRateAndReviews={customize.showRateAndReviews}
                     expertiseListLoading={expertises.isLoading}
                     loading={isLoading}
                     isFetchingNextPage={isFetchingNextPage}
+                    paginationResetKey={doctorsListResetKey}
                     onSelectExpertise={expertise => {
                       setSelectedExpertise(expertise.replace('/s/', ''));
                     }}
