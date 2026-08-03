@@ -24,7 +24,7 @@ const Biography = dynamic(() => import('./biography'), {
   },
 });
 const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
-const PlasmicProfileSeo = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo'));
+const ProfileSeo = dynamic(() => import('.plasmic/ProfileSeo'));
 const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
@@ -280,7 +280,7 @@ export const sections = (data: any) => {
         return (
           <Fragment2
             name="ProfileSeo"
-            Component={PlasmicProfileSeo}
+            Component={ProfileSeo}
             args={{
               information,
               feedbacks,
@@ -288,7 +288,7 @@ export const sections = (data: any) => {
               isOnlineVisitCenter: seoSectionData.isOnlineVisitCenter,
               doctorExpertise: seoSectionData.doctorExpertise,
               countOfPageView,
-              bredcrumbs: seo.breadcrumbs,
+              breadcrumbs: seoSectionData.breadcrumbs,
               similarLinks,
               expertises,
               about: seoSectionData.about,
