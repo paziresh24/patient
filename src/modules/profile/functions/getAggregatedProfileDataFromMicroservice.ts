@@ -1,12 +1,18 @@
 import { apiGatewayClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
+import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { getProfileMicroserviceBundle } from '@/common/apis/services/profile-microservice/getProfileMicroserviceBundle';
 import { mapMicroserviceToLegacy } from '@/common/apis/services/profile-microservice/mapMicroserviceToLegacy';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
+import { CENTERS } from '@/common/types/centers';
+import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import isEmpty from 'lodash/isEmpty';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
+import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { overwriteProfileData } from './overwriteProfileData';
 
@@ -59,8 +65,10 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 };
 
 /**
- * Profile page aggregation when GrowthBook `profile.api-source-by-slug` includes the slug.
- * Identity/content from PROFILE_API_BASE_URL; Ravi / waiting-time / Hamdast stay on legacy.
+ * Hybrid aggregation for allowlisted slugs:
+ * - Identity/content (name, bio, gallery, SEO, …) from PROFILE_API_BASE_URL
+ * - Centers / services / booking from legacy full-profile + centers API + Saman
+ *   (profiles-api locations do not yet carry bookable service/freeturn parity)
  */
 export async function getAggregatedProfileDataFromMicroservice(
   slug: string,
@@ -73,7 +81,9 @@ export async function getAggregatedProfileDataFromMicroservice(
 
   if ('error' in bundle) {
     if (isServer && bundle.status === 404) return { notFound: true };
-    throw new Error(bundle.error);
+    const err = new Error(bundle.error) as Error & { status?: number };
+    err.status = bundle.status;
+    throw err;
   }
 
   const { slugInfo, fullProfileLike, overwrite, seo, displayName: mappedDisplayName } = mapMicroserviceToLegacy(bundle);
@@ -83,15 +93,60 @@ export async function getAggregatedProfileDataFromMicroservice(
   const rateDetailsResult = await getRateDetailsData({ slug: validatedSlug }).catch(() => null);
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
 
-  const [reviewsResult, averageWaitingTimeResult] = await Promise.allSettled([
+  const samanAvailabilityPromise =
+    isServer && options?.prefetchSamanAvailability
+      ? queryClient
+          .fetchQuery([ServerStateKeysEnum.SamanDoctorAvailabilityStatus, validatedSlug], () =>
+            samanDoctorAvailabilityStatus(validatedSlug),
+          )
+          .catch(error => {
+            console.error('Error prefetching Saman availability (microservice path):', error);
+            return null;
+          })
+      : Promise.resolve(null);
+
+  const [reviewsResult, averageWaitingTimeResult, doctorCentersResult, legacyProfileResult] = await Promise.all([
     shouldFetchReviews
-      ? queryClient.fetchQuery(
-          [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }],
-          () => getReviews({ slug: validatedSlug, sort: 'default_order' }),
-        )
-      : Promise.resolve(null),
-    getAverageWaitingTime({ slug: validatedSlug }),
+      ? queryClient
+          .fetchQuery([ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }], () =>
+            getReviews({ slug: validatedSlug, sort: 'default_order' }),
+          )
+          .then(value => ({ status: 'fulfilled' as const, value }))
+          .catch(reason => ({ status: 'rejected' as const, reason }))
+      : Promise.resolve({ status: 'fulfilled' as const, value: null }),
+    getAverageWaitingTime({ slug: validatedSlug })
+      .then(value => ({ status: 'fulfilled' as const, value }))
+      .catch(reason => ({ status: 'rejected' as const, reason })),
+    getDoctorCenters(validatedSlug, university)
+      .then(value => ({ status: 'fulfilled' as const, value }))
+      .catch(reason => {
+        console.error('Error fetching legacy centers for microservice booking hydrate:', reason);
+        return { status: 'rejected' as const, reason };
+      }),
+    getProfile({ slug: validatedSlug, university, isServer })
+      .then(value => ({ status: 'fulfilled' as const, value }))
+      .catch(reason => {
+        console.error('Error fetching legacy full-profile for microservice booking hydrate:', reason);
+        return { status: 'rejected' as const, reason };
+      }),
   ]);
+
+  await samanAvailabilityPromise;
+
+  const legacyCenters =
+    legacyProfileResult.status === 'fulfilled' ? legacyProfileResult.value?.fullProfileData?.centers : null;
+  const doctorCenters =
+    doctorCentersResult.status === 'fulfilled' && Array.isArray(doctorCentersResult.value) ? doctorCentersResult.value : null;
+
+  // Services/freeturn live on legacy full-profile centers; bookable filter from centers API.
+  if (Array.isArray(legacyCenters) && legacyCenters.length > 0) {
+    fullProfileLike.centers = legacyCenters;
+  }
+  if (doctorCenters && doctorCenters.length > 0) {
+    overwrite.centers = doctorCenters as any;
+  } else if (Array.isArray(legacyCenters) && legacyCenters.length > 0) {
+    overwrite.centers = legacyCenters;
+  }
 
   overwrite.feedbacks = {
     averageRates: rateDetailsResult?.averageRates ?? overwrite.feedbacks.averageRates,
@@ -103,8 +158,39 @@ export async function getAggregatedProfileDataFromMicroservice(
     waiting_time_info: averageWaitingTimeResult.status === 'fulfilled' ? (averageWaitingTimeResult.value as any) : [],
   };
 
-  const { centers, expertises, feedbacks, history, information, media, onlineVisit, similarLinks, symptomes, waitingTimeInfo } =
-    overwriteProfileData(overwrite, fullProfileLike);
+  const {
+    centers: initialCenters,
+    expertises,
+    feedbacks,
+    history,
+    information,
+    media,
+    onlineVisit,
+    similarLinks,
+    symptomes,
+    waitingTimeInfo,
+  } = overwriteProfileData(overwrite, fullProfileLike);
+
+  let centers = initialCenters;
+  const consultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
+  const needsOnlineServices =
+    !!consultCenter &&
+    (!(consultCenter.services?.length > 0) || consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
+
+  if (needsOnlineServices) {
+    try {
+      const onlineServices = await getDoctorCenterServices(validatedSlug, CENTERS.CONSULT);
+      if (onlineServices?.length) {
+        const mapped = mapDoctorCenterServices(onlineServices, consultCenter.user_center_id);
+        centers = centers.map((center: any) => (String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center));
+        if (isServer) {
+          queryClient.setQueryData([ServerStateKeysEnum.DoctorCenterServices, validatedSlug, CENTERS.CONSULT], onlineServices);
+        }
+      }
+    } catch (error) {
+      console.error('Error hydrating online visit center services (microservice path):', error);
+    }
+  }
 
   const doctorCityNames = formatDoctorCitiesForTitle(centers);
   const displayName = information?.display_name || mappedDisplayName || validatedSlug;

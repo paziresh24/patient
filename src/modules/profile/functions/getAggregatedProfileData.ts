@@ -160,9 +160,15 @@ export async function getAggregatedProfileData(
     } catch (error) {
       // Never hard-500 the page when the private profile API is unreachable/broken.
       // Fall back to the legacy path so production stays up while API networking is fixed.
+      const status = (error as any)?.response?.status ?? (error as any)?.status;
       console.error('[profile] microservice aggregation failed; falling back to legacy', {
         slug,
+        status,
         message: error instanceof Error ? error.message : String(error),
+        hint:
+          status === 401
+            ? 'Bearer rejected. For test use API_AUTH_DRIVER=static on profiles-api (token=test|write|admin), or create a db API key.'
+            : undefined,
       });
     }
   }
