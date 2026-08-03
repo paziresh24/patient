@@ -94,10 +94,10 @@ export const buildProfileSeoAboutHtml = ({
         ${freeturnBlock}
         <p>اگر زمان کافی برای مراجعه حضوری به پزشک مورد نظر خود را ندارید، به پروفایل پزشک در <a href="/" class="text-primary">پذیرش۲۴</a> سری بزنید و در صورت فعال بودن خدمات ویزیت آنلاین ایشان، نوبت ویزیت آنلاین خود را دریافت کنید؛ در غیر این‌صورت می‌توانید از سایر پزشکان ${expertiseLabel} <a href="/consult" class="text-primary"> ویزیت آنلاین (تلفنی و متنی)</a> نوبت بگیرید.</p>
         <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${displayName}</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
-        <ui>
+        <ul>
         ${buildAddressListItems(displayName, inPersonCenters)}
         <li>تخصص ${displayName}: ${expertiseList}</li>
-        </ui>
+        </ul>
         `;
 };
 
