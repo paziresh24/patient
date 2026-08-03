@@ -14,6 +14,8 @@ interface GalleryProps {
   eagerFirst?: boolean;
   /** Widget-profile phone-strip gallery + lightbox (plain <img>). Opt-in only. */
   naturalSizing?: boolean;
+  /** Accessible image label prefix. */
+  imageAltPrefix?: string;
 }
 
 function normalizeItems(items: unknown): string[] {
@@ -54,11 +56,13 @@ function PhoneStripGallery({
   className,
   imageClassName,
   eagerFirst = true,
+  imageAltPrefix = 'تصویر گالری',
 }: {
   items: string[];
   className?: string;
   imageClassName?: string;
   eagerFirst?: boolean;
+  imageAltPrefix?: string;
 }) {
   const visibleCount = Math.min(items.length, PHONE_PREVIEW_MAX);
   const previewItems = items.slice(0, visibleCount);
@@ -117,7 +121,7 @@ function PhoneStripGallery({
               >
                 <img
                   src={item}
-                  alt=""
+                  alt={`${imageAltPrefix} ${apiIndex + 1}`}
                   fetchPriority={isEager ? 'high' : 'auto'}
                   loading={isEager ? 'eager' : 'lazy'}
                   className={classNames(
@@ -166,6 +170,7 @@ export const Gallery = (props: GalleryProps) => {
     imageHeight = 120,
     eagerFirst = true,
     naturalSizing = false,
+    imageAltPrefix = 'تصویر گالری پزشک',
   } = props;
 
   const items = normalizeItems(props.items);
@@ -177,6 +182,7 @@ export const Gallery = (props: GalleryProps) => {
         className={className}
         imageClassName={imageClassName}
         eagerFirst={eagerFirst}
+        imageAltPrefix={imageAltPrefix}
       />
     );
   }
@@ -195,7 +201,7 @@ export const Gallery = (props: GalleryProps) => {
                   fetchPriority={isEager ? 'high' : 'auto'}
                   width={imageWidth}
                   height={imageHeight}
-                  alt=""
+                  alt={`${imageAltPrefix} ${index + 1}`}
                   className={classNames('cursor-pointer rounded-md', imageClassName)}
                   priority={isEager}
                   loading={isEager ? 'eager' : 'lazy'}
@@ -241,6 +247,10 @@ export const galleryMeta: CodeComponentMeta<GalleryProps> = {
     naturalSizing: {
       type: 'boolean',
       defaultValue: false,
+    },
+    imageAltPrefix: {
+      type: 'string',
+      defaultValue: 'تصویر گالری پزشک',
     },
   },
   classNameProp: 'className',

@@ -14,6 +14,7 @@ import { Fragment2 } from '@/common/fragment/fragment2';
 import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
 import { getImageUrl } from '@/common/utils/getImageUrl';
+import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
 
 const { publicRuntimeConfig } = config();
 
@@ -125,7 +126,17 @@ export const sections = (data: any) => {
     // Video
     {
       isShow: media?.aparat && media?.aparat !== '0',
-      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media?.aparat }} />,
+      children: () => (
+        <div
+          className="overflow-hidden md:rounded-lg"
+          dangerouslySetInnerHTML={{
+            __html: ensureIframeTitle(
+              media?.aparat,
+              `ویدیو معرفی ${information?.display_name ?? 'پزشک'}`,
+            ),
+          }}
+        />
+      ),
     },
     // Gallery
     {

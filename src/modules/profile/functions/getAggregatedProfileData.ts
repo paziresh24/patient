@@ -24,6 +24,8 @@ import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
+import { computeExperienceYearsFromGraduationDate } from '@/modules/profile/utils/computeExperienceYears';
+import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -448,17 +450,9 @@ export async function getAggregatedProfileData(
       graduation_date: exp.graduation_date ?? null,
     })) ?? [];
 
-  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص)
+  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص) — جلالی/میلادی
   const firstGraduationDate = doctorExpertise?.[0]?.graduation_date;
-  const experienceYears =
-    firstGraduationDate &&
-    (() => {
-      const year = parseInt(firstGraduationDate.slice(0, 4), 10);
-      if (Number.isNaN(year)) return null;
-      const currentYear = new Date().getFullYear();
-      const years = currentYear - year;
-      return years >= 0 ? String(years) : null;
-    })();
+  const experienceYears = computeExperienceYearsFromGraduationDate(firstGraduationDate);
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
@@ -647,7 +641,11 @@ export async function getAggregatedProfileData(
 
   // Step 5: Construct the final props object
   const doctorCitiesLabel = formatDoctorCitiesForTitle(centers);
-  const title = `${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${doctorCitiesLabel} نوبت دهی آنلاین و شماره تلفن`;
+  const title = buildDoctorProfileDocumentTitle({
+    displayName: information?.display_name,
+    expertiseTitle: expertises?.expertises?.[0]?.alias_title,
+    doctorCitiesLabel,
+  });
   const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const finalProps = {

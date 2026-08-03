@@ -15,6 +15,7 @@ import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { overwriteProfileData } from './overwriteProfileData';
+import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
 
@@ -212,9 +213,11 @@ export async function getAggregatedProfileDataFromMicroservice(
 
   const title =
     seoTitleHint ||
-    `${displayName}${expertises?.expertises?.[0]?.alias_title ? `، ${expertises.expertises[0].alias_title}` : ''}${
-      doctorCityNames ? ` ${doctorCityNames}` : ''
-    } نوبت دهی آنلاین و شماره تلفن`;
+    buildDoctorProfileDocumentTitle({
+      displayName,
+      expertiseTitle: expertises?.expertises?.[0]?.alias_title,
+      doctorCitiesLabel: doctorCityNames,
+    });
   const description =
     seoDescriptionHint ||
     `نوبت دهی اینترنتی ${displayName}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
