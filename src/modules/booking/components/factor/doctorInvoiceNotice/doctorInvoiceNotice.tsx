@@ -1,22 +1,26 @@
-import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import {
   validateDoctorSlug,
   DoctorSlugValidationResponse,
 } from '@/common/apis/services/doctor/validateDoctorSlug';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
-import { CENTERS } from '@/common/types/centers';
+import { useDoctorExpertise } from '@/common/hooks/useDoctorExpertise';
+import { useDoctorFullName } from '@/common/hooks/useDoctorFullName';
+import { useDoctorImage } from '@/common/hooks/useDoctorImage';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import { useInvoiceNoticeFreeturn } from '@/modules/booking/hooks/factor/useInvoiceNoticeFreeturn';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useQuery } from '@tanstack/react-query';
 import getConfig from 'next/config';
-import { getImageUrl } from '@/common/utils/getImageUrl';
+
 const { publicRuntimeConfig } = getConfig();
 
-export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; serviceId: string }) => {
-  const { isLoading, data: profile } = useGetProfileData({ slug: slug as string });
+export const DoctorInvoiceNotice = ({ slug, serviceId: _serviceId }: { slug: string; serviceId: string }) => {
+  const { data: fullName, isLoading: isFullNameLoading } = useDoctorFullName(slug);
+  const { data: expertises, isLoading: isExpertiseLoading } = useDoctorExpertise(slug);
+  const { data: doctorImage } = useDoctorImage(slug);
   const { data: doctorSlugData } = useQuery(
     ['doctorSlugForFactorImage', slug],
     () => validateDoctorSlug(slug),
@@ -29,24 +33,23 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
     },
   );
 
-  const consultCenter = profile?.data?.centers?.find((item: any) => item.id == CENTERS.CONSULT);
-  const freeturnRaw = consultCenter?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn;
-  const profileFreeturnMs =
-    typeof freeturnRaw === 'number' && Number.isFinite(freeturnRaw) ? freeturnRaw * 1000 : null;
+  const isLoading = isFullNameLoading || isExpertiseLoading;
+  const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({ slug });
 
-  const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({
-    slug,
-    serviceId,
-    profileFreeturnMs,
-    userCenterId: consultCenter?.user_center_id,
-    isProfileLoading: isLoading,
-  });
-
-  const doctorName = `${profile?.data?.name} ${profile?.data?.family}`;
+  const doctorName = [fullName?.name, fullName?.family].filter(Boolean).join(' ');
   const doctorUserId = (doctorSlugData as DoctorSlugValidationResponse | undefined)?.user_id;
   const doctorAvatar = doctorUserId
     ? picUserImageUrl(doctorUserId)
-    : getImageUrl(profile?.data?.image, publicRuntimeConfig.CDN_BASE_URL) || undefined;
+    : getImageUrl(doctorImage?.image, publicRuntimeConfig.CDN_BASE_URL) || undefined;
+
+  const primaryExpertise = expertises?.[0];
+  const expertiseLabel = primaryExpertise
+    ? getDisplayDoctorExpertise({
+        aliasTitle: primaryExpertise.alias_title ?? '',
+        degree: primaryExpertise.degree?.name ?? '',
+        expertise: primaryExpertise.expertise?.name ?? '',
+      })
+    : '';
 
   return (
     <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
@@ -54,11 +57,7 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
         className="p-4 rounded-lg bg-slate-100"
         avatar={doctorAvatar}
         fullName={doctorName}
-        expertise={getDisplayDoctorExpertise({
-          aliasTitle: profile?.data?.expertises?.[0]?.alias_title,
-          degree: profile?.data?.expertises?.[0]?.degree?.name,
-          expertise: profile?.data?.expertises?.[0]?.expertise?.name,
-        })}
+        expertise={expertiseLabel}
         isLoading={isLoading}
       />
       {isLoading && <Skeleton w="100%" h="5em" className="!mt-2" rounded="md" />}
