@@ -9,20 +9,18 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import useWebView from '@/common/hooks/useWebView';
 import { splunkInstance } from '@/common/services/splunk';
-import { CENTERS } from '@/common/types/centers';
 import { buildDoctorExpertiseChips } from '@/common/utils/buildDoctorExpertiseChips';
 import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
-import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { getProfileServerSideProps } from '@/modules/profile/functions/getProfileServerSideProps';
+import { buildDoctorProfileJsonLds } from '@/modules/profile/functions/buildDoctorProfileJsonLds';
 import { useProfileSplunkEvent } from '@/modules/profile/hooks/useProfileEvent';
 import { useFeedbackDataStore } from '@/modules/profile/store/feedbackData';
 import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { Aside } from '@/modules/profile/views/aside';
 import { sections } from '@/modules/profile/views/sections';
-import { addCommas } from '@persian-tools/persian-tools';
 import { getCookie } from 'cookies-next';
 import config from 'next/config';
 import { ReactElement, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -133,7 +131,12 @@ const DoctorProfile = (props: any) => {
   const { openScroll, lockScroll } = useLockScroll();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
   const showHamdastGa = useFeatureIsOn('hamdast::ga');
+  // Must stay above early returns — Aside is a plain function and receives this flag.
+  const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
   const expertiseChipsConfig = useFeatureValue<{ slugs?: string[] }>('profile.expertise-chips-like-search', { slugs: [] });
+
+  // Initial page props only (stable for this mount) — layout SEO may be a CSR shell.
+  const layoutWasCsrFallback = !!props?.shouldFetchOnClient;
 
   const preferClientProps =
     (!!shouldFetchOnClient && !props?.information) || !!(clientData?.props as any)?.information;
@@ -163,6 +166,8 @@ const DoctorProfile = (props: any) => {
     dontShowRateAndReviewMessage,
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
     title: documentTitleFromProps,
+    description: documentDescriptionFromProps,
+    host: documentHostFromProps,
   } = finalProps ?? {};
 
   const clientExpertiseChipsLikeSearch = newApiFeatureFlaggingCondition(
@@ -214,6 +219,19 @@ const DoctorProfile = (props: any) => {
   const doctorProfileImageUrl = useMemo(
     () => resolveDoctorProfileImageUrl(information, user_id),
     [information?.user_id, user_id],
+  );
+
+  const clientSeoJsonLds = useMemo(
+    () =>
+      buildDoctorProfileJsonLds({
+        slug,
+        centers,
+        information,
+        expertises,
+        feedbacks,
+        doctorProfileImageUrl,
+      }),
+    [slug, centers, information, expertises, feedbacks, doctorProfileImageUrl],
   );
 
   const isOwnProfile = !!user_id && !!userInfo?.id && String(user_id) === String(userInfo?.id);
@@ -490,8 +508,32 @@ const DoctorProfile = (props: any) => {
       : `${resolvedDocumentTitle} | ${brandName}`
     : '';
 
+  const shouldHydrateClientSeo = layoutWasCsrFallback && !!information?.id;
+
   return (
     <>
+      {shouldHydrateClientSeo && (
+        <Seo
+          title={
+            (typeof documentTitleFromProps === 'string' && documentTitleFromProps.trim()) ||
+            information?.display_name ||
+            ''
+          }
+          description={
+            (typeof documentDescriptionFromProps === 'string' && documentDescriptionFromProps) || ''
+          }
+          jsonlds={clientSeoJsonLds}
+          openGraph={{
+            image: {
+              src: doctorProfileImageUrl,
+              alt: `${information?.display_name ?? ''}`,
+              type: 'image/jpg',
+            },
+          }}
+          host={documentHostFromProps}
+          noIndex={false}
+        />
+      )}
       {rateDebug && (
         <div
           className="fixed top-14 right-2 z-[10000] max-w-md rounded-md border border-amber-300 bg-amber-50/95 p-2 text-[11px] leading-relaxed text-amber-950 font-mono shadow-md backdrop-blur-sm"
@@ -618,7 +660,7 @@ const DoctorProfile = (props: any) => {
 
               {/* Continue showing page even if full profile has error */}
 
-              {Aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa } })
+              {Aside({ ...profileData, fragmentComponents, hamdast: { ga: showHamdastGa }, isSamanBookingEnabled })
                 .filter(({ isShow }: any) => Boolean(isShow))
                 .map((section: any, index: number) => (
                   <Section key={index} {...section}>
@@ -654,205 +696,44 @@ const DoctorProfile = (props: any) => {
 };
 
 DoctorProfile.getLayout = function getLayout(page: ReactElement) {
-  const { title, description, slug, expertises, centers = [], information, feedbacks, host, user_id } = page.props;
+  const {
+    title,
+    description,
+    slug,
+    expertises,
+    centers = [],
+    information,
+    feedbacks,
+    host,
+    user_id,
+    shouldFetchOnClient,
+    noIndex: noIndexFromProps,
+  } = page.props;
   const doctorProfileImageUrl = resolveDoctorProfileImageUrl(information, user_id);
-
-  const doctorExpertise = expertises?.expertises?.[0]?.alias_title;
-
-  const getJsonlds = () => {
-    const center = centers?.find?.((cn: any) => cn.id !== CENTERS.CONSULT);
-    const visitOnlineCenter = centers?.find?.((cn: any) => cn.id === CENTERS.CONSULT);
-    const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
-    const currentUrl = `/dr/${slug}`;
-
-    // Helper function to map day numbers to schema.org day names
-    const getDayOfWeek = (day: number): string => {
-      const dayMap: { [key: number]: string } = {
-        1: 'Sunday', // یکشنبه
-        2: 'Monday', // دوشنبه
-        3: 'Tuesday', // سه‌شنبه
-        4: 'Wednesday', // چهارشنبه
-        5: 'Thursday', // پنج‌شنبه
-        6: 'Friday', // جمعه
-        7: 'Saturday', // شنبه
-      };
-      return dayMap[day] || 'Monday';
-    };
-
-    // Extract opening hours from center services
-    const getOpeningHours = () => {
-      if (!center?.services?.[0]?.hours_of_work) return undefined;
-
-      const hoursByDay: { [key: string]: { opens: string; closes: string }[] } = {};
-
-      center.services[0].hours_of_work.forEach((hour: any) => {
-        const dayName = getDayOfWeek(hour.day);
-        const opens = hour.from?.substring(0, 5) || '09:00'; // Extract HH:MM format
-        const closes = hour.to?.substring(0, 5) || '18:00';
-
-        if (!hoursByDay[dayName]) {
-          hoursByDay[dayName] = [];
-        }
-        hoursByDay[dayName].push({ opens, closes });
-      });
-
-      // Convert to schema.org format
-      return Object.entries(hoursByDay).map(([dayOfWeek, hours]) => {
-        // If multiple time slots exist for same day, use the first one
-        const { opens, closes } = hours[0];
-        return {
-          '@type': 'OpeningHoursSpecification',
-          'dayOfWeek': dayOfWeek,
-          'opens': opens,
-          'closes': closes,
-        };
-      });
-    };
-
-    const physicianSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'Physician',
-      'name': information?.display_name,
-      'alternateName': [
-        information?.display_name,
-        expertises?.expertises?.[0]?.alias_title ? `${information?.display_name} ${expertises.expertises[0].alias_title}` : null,
-        expertises?.group_expertises?.[0]?.name ? `${information?.display_name} ${expertises.group_expertises[0].name}` : null,
-      ].filter(Boolean),
-      'gender': information?.gender === '1' ? 'Male' : information?.gender === '2' ? 'Female' : undefined,
-      'image': doctorProfileImageUrl,
-      'medicalSpecialty': {
-        '@type': 'MedicalSpecialty',
-        'name': expertises?.expertises?.[0]?.alias_title || expertises?.group_expertises?.[0]?.name || doctorExpertise,
-      },
-      'affiliation': center
-        ? {
-          '@type': 'MedicalClinic',
-          'name': center.center_type === 1 ? `مطب ${information?.display_name}` : center.name,
-          'address': {
-            '@type': 'PostalAddress',
-            'streetAddress': center.address,
-            'addressLocality': center.city,
-            'addressRegion': center.province,
-            'addressCountry': 'IR',
-          },
-          'contactPoint': {
-            '@type': 'ContactPoint',
-            'telephone': center.display_number?.[0] || center.display_number,
-            'contactType': 'appointment',
-            'availableLanguage': ['fa'],
-          },
-          'openingHoursSpecification': getOpeningHours(),
-          'geo': center.map
-            ? {
-              '@type': 'GeoCoordinates',
-              'latitude': center.map.lat,
-              'longitude': center.map.lon,
-            }
-            : undefined,
-        }
-        : undefined,
-      'priceRange': visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
-      'url': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-      'telephone': center?.display_number?.[0] || center?.display_number,
-      'isAcceptingNewPatients': true,
-      'description': information?.biography ? removeHtmlTagInString(information?.biography) : '',
-      'hasOfferCatalog': {
-        '@type': 'OfferCatalog',
-        'name': `خدمات درمانی ${information?.display_name}`,
-        'itemListElement':
-          centers
-            ?.filter((center: any) => center.services?.length > 0)
-            ?.flatMap(
-              (center: any) =>
-                center.services?.map((service: any) => ({
-                  '@type': 'Offer',
-                  'itemOffered': {
-                    '@type': 'MedicalProcedure',
-                    'name': service.title || service.alias_title,
-                    'description': service.description || `خدمات ${service.title || service.alias_title}`,
-                    'price': service.free_price ? addCommas(service.free_price) : undefined,
-                    'priceCurrency': 'IRR',
-                    'availability': 'https://schema.org/InStock',
-                  },
-                })) ?? [],
-            ) ?? [],
-      },
-      ...(!feedbacks?.details?.hide_rates &&
-        (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 && {
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          'ratingValue': +(
-            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-            3
-          ).toFixed(1),
-          'reviewCount': feedbacks?.details?.count_of_feedbacks ?? 0,
-          'bestRating': 5,
-          'worstRating': 0,
-        },
-        review:
-          feedbacks?.feedbacks?.list
-            ?.filter((item: any) => !!item?.avg_rate_value)
-            ?.slice(0, 5) // Limit to 5 reviews for schema
-            ?.map?.((feedback: any) => ({
-              '@type': 'Review',
-              'author': {
-                '@type': 'Person',
-                'name': feedback?.user_display_name?.split?.(' ')?.[0] ?? 'کاربر پذیرش24',
-              },
-              'reviewRating': {
-                '@type': 'Rating',
-                'ratingValue': feedback?.avg_rate_value ?? 0,
-                'bestRating': 5,
-                'worstRating': 0,
-              },
-              'reviewBody': feedback?.description,
-              'datePublished': feedback?.created_at?.split(' ')?.[0],
-            })) ?? [],
-      }),
-    };
-
-    const breadcrumbSchema = {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      'itemListElement': [
-        {
-          '@type': 'ListItem',
-          'position': 1,
-          'item': {
-            '@id': `${publicRuntimeConfig?.CLINIC_BASE_URL}/`,
-            'name': 'پذیرش۲۴',
-          },
-        },
-        {
-          '@type': 'ListItem',
-          'position': 2,
-          'item': {
-            '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-            'name': information?.display_name,
-          },
-        },
-      ],
-    };
-
-    return [physicianSchema, breadcrumbSchema].filter(Boolean);
-  };
+  const isCsrShell = !!shouldFetchOnClient || !!noIndexFromProps;
 
   return (
     <LayoutWithHeaderAndFooter showSearchSuggestionButton={true} shouldShowPromoteApp={false} {...page.props.config}>
       <Seo
-        title={title}
-        description={description}
-        jsonlds={centers?.length > 0 ? getJsonlds() : []}
+        title={isCsrShell ? '' : title}
+        description={isCsrShell ? '' : description}
+        jsonlds={isCsrShell ? [] : centers?.length > 0 ? buildDoctorProfileJsonLds({
+          slug,
+          centers,
+          information,
+          expertises,
+          feedbacks,
+          doctorProfileImageUrl,
+        }) : []}
         openGraph={{
           image: {
             src: doctorProfileImageUrl,
-            alt: `${information?.display_name}`,
+            alt: `${information?.display_name ?? ''}`,
             type: 'image/jpg',
           },
         }}
         host={host}
+        noIndex={isCsrShell}
       />
       {page}
     </LayoutWithHeaderAndFooter>
