@@ -10,11 +10,11 @@ import Hamdast from '@/modules/hamdast/render';
 import { SamanBooking } from '@/modules/samanBooking';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import RismanAsideSection from './rismanAside';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
 const PlasmicBookingAddressesCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard'));
-const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
 
 export const Aside = (data: any) => {
   const {
@@ -93,15 +93,14 @@ export const Aside = (data: any) => {
     },
     {
       id: 'risman',
-      isShow: !customize.partnerKey && !!fragmentComponents?.risman && isBulk,
-      children: (props: any) => (
-        <Fragment2
-          name="Risman"
-          Component={PlasmicRisman}
-          args={{
-            data: fragmentComponents?.risman,
-            slug: seo.slug,
-          }}
+      isShow: !customize.partnerKey && !!fragmentComponents?.risman,
+      children: () => (
+        <RismanAsideSection
+          risman={fragmentComponents?.risman}
+          slug={seo.slug}
+          centers={centers ?? []}
+          partnerKey={customize?.partnerKey}
+          ssrUseSamanAvailabilityStatus={!!ssrUseSamanAvailabilityStatus}
         />
       ),
     },
