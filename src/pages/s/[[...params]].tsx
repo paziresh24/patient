@@ -31,21 +31,27 @@ import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState, useMemo, useCallback } from 'react';
+import { ReactElement, useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
 import classNames from '@/common/utils/classNames';
 import getConfig from 'next/config';
-import { shouldShowTopSuggestedConsult } from '@/modules/search/functions/shouldShowTopSuggestedConsult';
-import { getConsultBannerReservedSpace } from '@/modules/search/functions/getConsultBannerReservedSpace';
 const Sort = dynamic(() => import('@/modules/search/components/filters/sort'), {
   loading: () => <Skeleton w="100%" h="3rem" />,
   ssr: false,
 });
+// LCP fix (DR-08 §۱۸, docs/dev-requests/dr-08-listing-pagespeed.md): this banner used to be
+// `ssr: false`, which meant the server sent nothing for it and its own text could not paint until
+// the chunk was downloaded and mounted. RUM (index=p24_web_vitals) showed that on 20% of mobile
+// `listing_specialty_city` views this banner's text *is* the LCP element, with a p75
+// `elementRenderDelay` of 3.8s — i.e. the largest paint on the page was waiting on a client-only
+// component. Nothing in it needs the browser: both of its shapes are derived from `selectedCategory`
+// /`isConsult`, which are already resolved server-side, and the substitute-doctor request it makes is
+// gated behind `enabled: modalProps.isOpen`. `dynamic()` is kept (without `ssr: false`) so the chunk
+// still stays out of the initial JS bundle for TBT — only the *markup* moves to the server.
 const ConsultBanner = dynamic(() => import('@/modules/search/components/consultBanner'), {
   loading: () => <Skeleton w="100%" h="4rem" />,
-  ssr: false,
 });
 const { publicRuntimeConfig } = getConfig();
 import SearchGlobalContextsProvider from '../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
@@ -129,6 +135,17 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
     }
   }, [params, city, isLoading]);
 
+  // ctr-false-drop-after-dr07 (ghane docs/bug-tickets): on SSR-hydrated loads this effect fires
+  // twice for ONE search — commit 641616a0 changed useSearch's initial isLoading to
+  // `searchRequest.isLoading` (false when the query is hydrated), so the mount flush passes the
+  // guard and emits once with the initial `result`, then useSearch's own [asPath]/[search] effects
+  // replace `result`'s identity ([] → [...search.result]) and re-fire the effect for a second,
+  // byte-identical emission with the SAME query_id. It is race-conditional on `growthbook.ready`
+  // being true at mount, which is why live traffic inflated ~11-17% (not +100%) and a 2-load
+  // browser probe saw single emissions. Dedupe on (query_id + result_count): a genuinely new
+  // search always has a fresh query_id, and pagination grows result.length, so both still emit.
+  const lastSearchViewEmitKey = useRef<string | null>(null);
+
   useEffect(() => {
     if (growthbook.ready && !userPending && !isLoading) {
       // Check if this is a listing page (e.g., /s/city/doctor/)
@@ -138,6 +155,9 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
+        const emitKey = `${search.query_id}:${result.length}`;
+        if (lastSearchViewEmitKey.current === emitKey) return;
+        lastSearchViewEmitKey.current = emitKey;
         if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
           splunkInstance('search').sendEvent({
             group: 'search_metrics',
@@ -333,15 +353,13 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
                     />
                   </div>
                 ) : (
-                  // CLS fix (DR-08, docs/dev-requests/dr-08-listing-pagespeed.md): ConsultBanner is
-                  // loaded via dynamic(..., { ssr: false }), so nothing renders for it until its JS
-                  // chunk mounts client-side — the space it will occupy must be reserved from the
-                  // very first (server-rendered) paint, or the page jumps once it pops in. Which of
-                  // ConsultBanner's two shapes will render (plain upsell vs. richer "ویزیت آنلاین"
-                  // card with image+button) is already known here via `selectedCategory`/`isConsult`
-                  // (same data source ConsultBanner reads internally), so we size the reservation to
-                  // the shape that will actually mount instead of guessing one fixed height.
-                  <div className="md:hidden" style={{ minHeight: getConsultBannerReservedSpace({ isConsult, hasSelectedCategory: !!selectedCategory?.title }) }}>
+                  // This wrapper used to carry a `min-height` estimate (getConsultBannerReservedSpace)
+                  // because ConsultBanner was `ssr: false` and popped in after its chunk mounted. Now
+                  // that it is server-rendered (see the `dynamic()` call above) the real card is part
+                  // of the first paint, so an estimate can only be wrong: measured on the production
+                  // build, the reserved 5rem exceeded the real 4.06rem card on the city-root shape,
+                  // i.e. the estimate had turned into permanent dead space rather than a CLS guard.
+                  <div className="md:hidden">
                     <ConsultBanner />
                   </div>
                 ))}
@@ -387,7 +405,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
     let showPlasmicResult: boolean = false;
     let showPlasmicSort: boolean = false;
     let showPlasmicConsultBanner: boolean = false;
-    let showSuggestedDoctor: any = {};
 
     const host = getHost(context.req.headers as unknown as HeaderBag);
     const path = context.resolvedUrl;
@@ -403,7 +420,6 @@ export const getServerSideProps: GetServerSideProps = withCSR(
       showPlasmicResult = growthbook.isOn('search_plasmic_result');
       showPlasmicSort = growthbook.isOn('search_plasmic_sort');
       showPlasmicConsultBanner = growthbook.isOn('search_plasmic_consult_banner');
-      showSuggestedDoctor = growthbook.getFeatureValue('fragment::top-suggested-card-feature', { enable: true });
     } catch (error) {
       console.error(error);
     }
@@ -434,49 +450,10 @@ export const getServerSideProps: GetServerSideProps = withCSR(
           }),
       );
 
-      const resultType = searchData?.selected_filters?.result_type;
-      const resultTypeValue = Array.isArray(resultType) ? resultType[0] : resultType;
-      const isResultTypeExcluded =
-        !resultTypeValue ||
-        (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
-      const canShowTopSuggestedConsult = shouldShowTopSuggestedConsult(searchData?.query_attributes);
-
-      if (
-        !searchData.search.result[0]?.actions?.find?.((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
-        (!searchData?.selected_filters?.turn_type || searchData?.selected_filters?.turn_type !== 'consult') &&
-        isResultTypeExcluded &&
-        (!searchData.search.pagination?.page || searchData?.search?.pagination?.page === 1) &&
-        !searchData?.search?.is_landing &&
-        canShowTopSuggestedConsult &&
-        showSuggestedDoctor?.enable
-      ) {
-        try {
-          await queryClient.fetchQuery(
-            [
-              ServerStateKeysEnum.SearchConsult,
-              {
-                route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-                query: {
-                  ...query,
-                  turn_type: 'consult',
-                  limit: 2,
-                },
-              },
-            ],
-            () =>
-              searchApi({
-                route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-                query: {
-                  ...query,
-                  turn_type: 'consult',
-                  limit: 2,
-                },
-              }),
-          );
-        } catch (error) {
-          console.error(error);
-        }
-      }
+      // DR-07 (ghane docs/dev-requests/dr-07-online-visit-suggestion-to-backend.md §13 condition 1):
+      // the "should we suggest an online-visit doctor" decision + the second consult search that used
+      // to live here are now made entirely server-side (search-service) and arrive as the
+      // `promoted_online_visit` sibling key inside `searchData` itself — no second SSR fetch needed.
 
       return {
         props: {

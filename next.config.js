@@ -4,6 +4,15 @@ const nextTranslate = require('next-translate');
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const isProduction = process.env.NODE_ENV === 'production';
+// Public profiles-api host (health: https://profile.p24cloud.ir/api/health).
+// App calls {base}/v1/profiles/... — do NOT append /api to baseURL.
+const defaultProfileApiBaseUrl = 'https://profile.p24cloud.ir';
+// Auth depends on API_AUTH_DRIVER on the profiles-api side:
+// - static → literal tokens: test (read) | write | admin
+// - db (profile.p24cloud.ir) → API key from `php artisan apikey:create` (Bearer test → 401)
+// Temporary default for static-driver testing: `test` (read-only). Override via PROFILE_API_TOKEN.
+const defaultProfileApiToken = 'test';
+const defaultProfileApiSourceSlugs = 'دکتر-ابوالفضل-ساجدی-10';
 
 const plugins = [nextTranslate];
 
@@ -22,7 +31,11 @@ const nextConfig = {
   productionBrowserSourceMaps: true,
   experimental: {
     instrumentationHook: true,
-    webVitalsAttribution: ['CLS', 'LCP', 'FID', 'FCP', 'TTFB'],
+    // INP was missing here, so `reportWebVitals` delivered INP with no attribution at all and the RUM
+    // pipeline (docs/dev-requests/dr-08-listing-pagespeed.md §۱۷) stored `attribution: null` for it —
+    // the metric that is currently *worst* on mobile listing pages (p75 613ms) was the one we had no
+    // interactionTarget/inputDelay/processingDuration breakdown for.
+    webVitalsAttribution: ['CLS', 'LCP', 'INP', 'FID', 'FCP', 'TTFB'],
     optimizePackageImports: [
       '@plasmicpkgs/antd5',
       '@plasmicpkgs/plasmic-basic-components',
@@ -116,11 +129,40 @@ const nextConfig = {
             priority: 25,
             reuseExistingChunk: true,
           },
+          // DR-08 §۱۲ (ghane/docs/dev-requests/dr-08-listing-pagespeed.md) — firebase فقط از پشتِ یک
+          // dynamic import مصرف می‌شود (src/firebase/analytics.ts، گیتِ isPWA()/IS_FIREBASE_ENABLE).
+          // این گروه با chunks:'async' تضمین می‌کند هرگز داخلِ chunkِ initial ننشیند.
+          firebase: {
+            test: /[\\/]node_modules[\\/](firebase|@firebase)[\\/]/,
+            name: 'firebase',
+            chunks: 'async',
+            priority: 60,
+            reuseExistingChunk: true,
+          },
+          // DR-08 §۱۲ — چرا name دیگر ثابت نیست:
+          // یک cacheGroupِ با نامِ ثابتِ `lib` + `chunks: 'all'` همه‌ی node_modulesها را — چه آن‌هایی که
+          // کدِ initial لازم دارد و چه آن‌هایی که فقط از پشتِ یک dynamic import قابل‌دسترس‌اند — در
+          // **یک** chunk ادغام می‌کند. کافی است یک ماژولِ آن chunk برای رندرِ اولیه لازم باشد تا مرورگر
+          // کلِ آن را eager دانلود/parse کند. اندازه‌گیریِ زنده‌ی 2026-07-28 روی production:
+          // `lib-*.js` = ۶۳۱KB transfer / ۲.۱MB خام، `<script defer>`ِ صفحه‌ی `/s/*`، **۹.۱ ثانیه
+          // script-time**، ۴۳۹KB unused — و `@firebase/analytics@0.10.0` با این‌که پس از فیکسِ قبلیِ
+          // DR-08 دیگر هرگز execute نمی‌شد، همچنان داخلش حمل می‌شد (هزینه‌ی دانلود/parse سرِ جایش بود).
+          // نام‌گذاریِ per-package (همان الگویی که خودِ Next برای کتابخانه‌های بزرگ دارد) این ادغام را
+          // می‌شکند: هر پکیج chunkِ خودش را می‌گیرد، پس فقط پکیج‌هایی initial می‌مانند که واقعاً از
+          // مسیرِ initial رفرنس شده‌اند.
+          // مرزِ اعتبار: پکیج‌های کوچک‌تر از minSize همچنان split نمی‌شوند و در chunkِ والد/`commons`
+          // می‌مانند — عمدی، تا تعدادِ درخواستِ initial منفجر نشود (maxInitialRequests: 25).
           lib: {
             test: /[\\/]node_modules[\\/](?!html2pdf\.js|html2canvas|jspdf|leaflet|react-leaflet|recharts|react-hook-form|jalali-moment)/,
-            name: 'lib',
+            name(module) {
+              const context = module.context || module.resource || '';
+              const matched = context.match(/[\\/]node_modules[\\/](@[^\\/]+[\\/][^\\/]+|[^\\/]+)/);
+              const packageName = matched ? matched[1].replace(/[\\/]/g, '-').replace(/^@/, '') : 'vendor';
+              return `lib-${packageName}`;
+            },
             chunks: 'all',
             priority: 10,
+            reuseExistingChunk: true,
           },
           lodash: {
             test: /[\\/]node_modules[\\/]lodash/,
@@ -160,6 +202,10 @@ const nextConfig = {
   serverRuntimeConfig: {
     DOCTORS_BASE_URL: process.env.DOCTORS_BASE_URL,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
+    // Profile microservice (GrowthBook profile.api-source-by-slug → these APIs)
+    PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || defaultProfileApiBaseUrl,
+    PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || defaultProfileApiToken,
+    PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || defaultProfileApiSourceSlugs,
   },
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
@@ -204,6 +250,18 @@ const nextConfig = {
     NO_INDEX: process.env.NO_INDEX,
     DESABLED_GTM: process.env.DESABLED_GTM,
     FULL_PROFILE_API_URL: process.env.FULL_PROFILE_API_URL,
+    PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || defaultProfileApiBaseUrl,
+    PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || defaultProfileApiToken,
+    PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || defaultProfileApiSourceSlugs,
+    // DR-11 conversational layer. These MUST live here and not as `NEXT_PUBLIC_*`
+    // read from client code: the Dockerfile runs `npm run build` with no build
+    // args, so a NEXT_PUBLIC_* value inlines as `undefined` in the production
+    // bundle — the flag could never be turned on and there would be no
+    // seconds-level kill-switch. publicRuntimeConfig is read from the process env
+    // at server start, so flipping it is a pod restart, not a rebuild.
+    CHAT_MVP_ENABLED: process.env.CHAT_MVP_ENABLED,
+    CHAT_MVP_PREVIEW_KEY: process.env.CHAT_MVP_PREVIEW_KEY,
+    CHAT_API_BASE: process.env.CHAT_API_BASE,
   },
   images: {
     formats: ['image/avif', 'image/webp'],

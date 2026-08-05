@@ -17,12 +17,15 @@ import { splunkInstance } from '@/common/services/splunk';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
+import { computeExperienceYearsFromGraduationDate } from '@/modules/profile/utils/computeExperienceYears';
+import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -135,9 +138,51 @@ export async function getAggregatedProfileData(
     useNewDoctorCentersAPI?: boolean;
     useNewDoctorGalleryAPI?: boolean;
     prefetchSamanAvailability?: boolean;
+    /** Explicit SSR decision: true = microservice, false = legacy, undefined = resolve (CSR). */
+    useProfileMicroservice?: boolean;
     fetchExpertiseKeywordTags?: boolean;
   },
 ) {
+  // Only allowlisted slugs leave legacy. Callers should pass an explicit boolean
+  // (SSR from GrowthBook, CSR from useFeatureValue) so this module stays client-safe.
+  let useMicroservice = false;
+  if (options?.useProfileMicroservice === true) {
+    useMicroservice = true;
+  } else if (options?.useProfileMicroservice === false) {
+    useMicroservice = false;
+  } else {
+    // Fallback: env allowlist only (no GrowthBook / no node:crypto in this graph).
+    useMicroservice = isProfileMicroserviceEnabledForSlug(slug);
+  }
+
+  if (useMicroservice) {
+    try {
+      const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
+      const microserviceResult = await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+      // If MS explicitly returns notFound, still try legacy (slug may only exist there).
+      if (microserviceResult && typeof microserviceResult === 'object' && 'notFound' in microserviceResult && (microserviceResult as { notFound?: boolean }).notFound) {
+        console.warn('[profile] microservice profile missing; falling back to legacy', { slug });
+      } else {
+        return microserviceResult;
+      }
+    } catch (error) {
+      // Never hard-500/404 the page when profiles-api is unreachable, unauthorized, or missing the slug.
+      // Fall back to the legacy path so production stays up while API data is incomplete.
+      const status = (error as any)?.response?.status ?? (error as any)?.status;
+      console.error('[profile] microservice aggregation failed; falling back to legacy', {
+        slug,
+        status,
+        message: error instanceof Error ? error.message : String(error),
+        hint:
+          status === 401
+            ? 'Bearer rejected. For test use API_AUTH_DRIVER=static on profiles-api (token=test|write|admin), or create a db API key.'
+            : status === 404
+              ? 'Slug not in profiles-api DB; using legacy full-profile.'
+              : undefined,
+      });
+    }
+  }
+
   const queryClient = new QueryClient();
 
   let slugInfo = null;
@@ -357,8 +402,18 @@ export async function getAggregatedProfileData(
   const doctorImage = options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
 
   // Extract doctor biography from API response
-  const doctorBiography =
+  let doctorBiography =
     options?.useNewDoctorBiographyAPI && doctorBiographyResult?.status === 'fulfilled' ? doctorBiographyResult.value : null;
+
+  // Parallel fan-out to drprofile can drop biography on prod (timeout/connection reset) while
+  // image/expertise succeed. If bio is still empty, do one dedicated follow-up outside the pool.
+  if (options?.useNewDoctorBiographyAPI) {
+    const hasBiography =
+      typeof doctorBiography?.biography === 'string' && doctorBiography.biography.trim().length > 0;
+    if (!hasBiography) {
+      doctorBiography = await getDoctorBiography(validatedSlug);
+    }
+  }
 
   // Extract doctor centers from API response
   const doctorCenters = options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
@@ -395,17 +450,9 @@ export async function getAggregatedProfileData(
       graduation_date: exp.graduation_date ?? null,
     })) ?? [];
 
-  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص)
+  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص) — جلالی/میلادی
   const firstGraduationDate = doctorExpertise?.[0]?.graduation_date;
-  const experienceYears =
-    firstGraduationDate &&
-    (() => {
-      const year = parseInt(firstGraduationDate.slice(0, 4), 10);
-      if (Number.isNaN(year)) return null;
-      const currentYear = new Date().getFullYear();
-      const years = currentYear - year;
-      return years >= 0 ? String(years) : null;
-    })();
+  const experienceYears = computeExperienceYearsFromGraduationDate(firstGraduationDate);
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
@@ -430,9 +477,10 @@ export async function getAggregatedProfileData(
       doctorImage?.image && {
         image: doctorImage.image,
       }),
-    // Add biography to overwriteData if new API is used and successful
+    // Add biography to overwriteData if new API returned a non-empty string
     ...(options?.useNewDoctorBiographyAPI &&
-      doctorBiography?.biography && {
+      typeof doctorBiography?.biography === 'string' &&
+      doctorBiography.biography.trim().length > 0 && {
         biography: doctorBiography.biography,
       }),
     // Add centers to overwriteData if new API is used and successful
@@ -593,7 +641,11 @@ export async function getAggregatedProfileData(
 
   // Step 5: Construct the final props object
   const doctorCitiesLabel = formatDoctorCitiesForTitle(centers);
-  const title = `${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${doctorCitiesLabel} نوبت دهی آنلاین و شماره تلفن`;
+  const title = buildDoctorProfileDocumentTitle({
+    displayName: information?.display_name,
+    expertiseTitle: expertises?.expertises?.[0]?.alias_title,
+    doctorCitiesLabel,
+  });
   const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const finalProps = {

@@ -3,15 +3,16 @@ import Button from '@/common/components/atom/button/button';
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Text from '@/common/components/atom/text/text';
 import TextField from '@/common/components/atom/textField/textField';
+import ErrorBoundary from '@/common/components/layouts/errorBoundary';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
+import { flattenCenterSearchDoctors } from '@/modules/profile/utils/sanitizeCenterSearchDoctors';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import config from 'next/config';
-import { flatten } from 'lodash';
 import { InfiniteData } from '@tanstack/react-query';
 import { PlasmicSearchResults } from '.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults';
 import { Fragment2 } from '@/common/fragment/fragment2';
@@ -32,11 +33,13 @@ interface ListOfDoctorsProps {
   showRateAndReviews?: boolean;
   defaultValue?: ExpertiseType;
   expertiseListLoading?: boolean;
-  onChangePage: (page: number) => void;
+  onChangePage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage?: boolean;
   isMainSite?: boolean;
   center_id?: string;
+  /** When search/expertise/center changes, local page counter resets so load-more stays in sync. */
+  paginationResetKey?: string;
 }
 
 export const ListOfDoctors = (props: ListOfDoctorsProps) => {
@@ -55,9 +58,15 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
     isFetchingNextPage,
     isMainSite,
     center_id,
+    paginationResetKey,
   } = props;
   const page = useRef<number>(1);
   const router = useRouter();
+
+  useEffect(() => {
+    page.current = 1;
+  }, [paginationResetKey]);
+
   const customTheme = useFeatureValue('them-config', {
     'search_result:show_first_free_time': true,
     'search_result:show_available_time': true,
@@ -69,16 +78,18 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
       group: 'center_profile',
       type: 'doctor_card_click',
       event: {
+        page_type: 'center',
         element_name: elementName,
         element_content: elementContent,
         title: item?.title,
+        doctor_url: item?.url ?? item?.absolute_link ?? null,
+        center_id,
+        slug: typeof router.query.slug === 'string' ? router.query.slug : null,
         terminal_id: getCookie('terminal_id'),
       },
     });
   };
-  const result = (flatten(doctors?.pages?.map((page: any) => page?.search?.result as any[]) ?? []) ?? []).filter(
-    (doctor: any) => doctor && typeof doctor === 'object',
-  );
+  const result = flattenCenterSearchDoctors(doctors?.pages);
 
   return (
     <div className="flex flex-col space-y-3">
@@ -126,48 +137,49 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
             </div>
           )}
           {!loading &&
-            result.map(doctor => (
-              <SearchCard
-                key={doctor.id}
-                type="doctor"
-                baseInfo={{
-                  displayName: doctor.title,
-                  avatar: doctor.image,
-                  url: doctor.url,
-                  expertise: doctor.display_expertise,
-                  isVerify: !doctor.is_bulk,
-                  ...(showRateAndReviews && {
-                    rate: {
-                      count: doctor.rates_count,
-                      satisfaction: doctor.satisfaction,
-                    },
-                  }),
-                  viewCount: doctor.view,
-                }}
-                details={{
-                  badges: (doctor.badges ?? []).filter((item: any) =>
-                    !customTheme['search_result:show_first_free_time'] ? !(item.title as string)?.includes('فعال شدن نوبت‌دهی') : true,
-                  ),
-                }}
-                actions={(doctor.actions ?? [])
-                  .filter((action: any) => action.title !== 'ویزیت آنلاین')
-                  .map((action: any) => ({
-                    text: action.title,
-                    description: customTheme['search_result:show_available_time'] ? action.top_title : '',
-                    outline: action.outline,
-                    action: () => {
-                      router.push(action.url);
-                    },
-                  }))}
-                sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(doctor, element, content)}
-              />
+            result.map((doctor, index) => (
+              <ErrorBoundary key={doctor._id ?? doctor.id ?? `doctor-${index}`}>
+                <SearchCard
+                  type="doctor"
+                  baseInfo={{
+                    displayName: doctor.title,
+                    avatar: doctor.image,
+                    url: doctor.url,
+                    expertise: doctor.display_expertise,
+                    isVerify: !doctor.is_bulk,
+                    ...(showRateAndReviews && {
+                      rate: {
+                        count: doctor.rates_count,
+                        satisfaction: doctor.satisfaction,
+                      },
+                    }),
+                    viewCount: doctor.view,
+                  }}
+                  details={{
+                    badges: (doctor.badges ?? []).filter((item: any) =>
+                      !customTheme['search_result:show_first_free_time'] ? !(item?.title as string)?.includes('فعال شدن نوبت‌دهی') : true,
+                    ),
+                  }}
+                  actions={(doctor.actions ?? [])
+                    .filter((action: any) => action?.title && action?.title !== 'ویزیت آنلاین' && action?.url)
+                    .map((action: any) => ({
+                      text: action.title,
+                      description: customTheme['search_result:show_available_time'] ? action.top_title : '',
+                      outline: action.outline,
+                      action: () => {
+                        router.push(action.url);
+                      },
+                    }))}
+                  sendEventWhenClick={({ element, content }) => handleClickEelmentEvent(doctor, element, content)}
+                />
+              </ErrorBoundary>
             ))}
           {hasNextPage && !loading && (
             <Button
               variant="secondary"
               onClick={() => {
                 page.current += 1;
-                return onChangePage(page.current);
+                return onChangePage();
               }}
               loading={isFetchingNextPage}
             >
@@ -186,29 +198,31 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
             </>
           )}
           {(result.length === 0 ? !loading : true) && (
-            <SearchGlobalContextsProvider>
-              <Fragment2
-                name="SearchResults"
-                Component={PlasmicSearchResults}
-                args={{
-                  searchResultResponse: {
-                    ...doctors?.pages?.[0],
-                    search: {
-                      ...doctors?.pages?.[0]?.search,
-                      result,
+            <ErrorBoundary>
+              <SearchGlobalContextsProvider>
+                <Fragment2
+                  name="SearchResults"
+                  Component={PlasmicSearchResults}
+                  args={{
+                    searchResultResponse: {
+                      ...doctors?.pages?.[0],
+                      search: {
+                        ...doctors?.pages?.[0]?.search,
+                        result,
+                      },
                     },
-                  },
-                  nextPageTrigger: () => {
-                    page.current += 1;
-                    return onChangePage(page.current);
-                  },
-                  imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
-                  location: {},
-                  paginationLoadingStatus: isFetchingNextPage,
-                  centerId: center_id,
-                }}
-              />
-            </SearchGlobalContextsProvider>
+                    nextPageTrigger: () => {
+                      page.current += 1;
+                      return onChangePage();
+                    },
+                    imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
+                    location: {},
+                    paginationLoadingStatus: isFetchingNextPage,
+                    centerId: center_id,
+                  }}
+                />
+              </SearchGlobalContextsProvider>
+            </ErrorBoundary>
           )}
         </div>
       )}

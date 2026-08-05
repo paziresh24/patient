@@ -77,6 +77,8 @@
     "**/*.stories.ts",
     "**/*.stories.js",
     "**/*.stories.jsx",
-    "**/*.stories.tsx"
+    "**/*.stories.tsx",
+    "e2e",
+    "playwright.config.ts"
   ]
 }

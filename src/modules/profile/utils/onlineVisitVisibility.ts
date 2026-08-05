@@ -25,7 +25,13 @@ export const hasBookableOnlineVisitCenter = (centers?: { id: string }[]) =>
  *
  * `onlineVisit.enabled` / consult_active_booking is intentionally ignored (legacy, kept for rollback).
  */
-export const shouldShowProfileOnlineVisit = ({
+export type OnlineVisitVisibilityReason =
+  | 'no_bookable_5532'
+  | 'shown_pending_saman'
+  | 'saman_unavailable'
+  | 'shown';
+
+export const getProfileOnlineVisitVisibility = ({
   centers,
   samanLoaded,
   samanData,
@@ -35,9 +41,23 @@ export const shouldShowProfileOnlineVisit = ({
   onlineVisit?: OnlineVisitProfileGate;
   samanLoaded: boolean;
   samanData?: SamanDoctorAvailabilityStatus;
-}) => {
-  if (!hasBookableOnlineVisitCenter(centers)) return false;
-  if (!samanLoaded) return true;
-
-  return getScopedOnlineVisitAvailability(centers ?? [], samanData).bookingAvailable;
+}): { show: boolean; reason: OnlineVisitVisibilityReason } => {
+  if (!hasBookableOnlineVisitCenter(centers)) {
+    return { show: false, reason: 'no_bookable_5532' };
+  }
+  if (!samanLoaded) {
+    return { show: true, reason: 'shown_pending_saman' };
+  }
+  const available = getScopedOnlineVisitAvailability(centers ?? [], samanData).bookingAvailable;
+  return {
+    show: available,
+    reason: available ? 'shown' : 'saman_unavailable',
+  };
 };
+
+export const shouldShowProfileOnlineVisit = (args: {
+  centers?: { id: string }[];
+  onlineVisit?: OnlineVisitProfileGate;
+  samanLoaded: boolean;
+  samanData?: SamanDoctorAvailabilityStatus;
+}) => getProfileOnlineVisitVisibility(args).show;

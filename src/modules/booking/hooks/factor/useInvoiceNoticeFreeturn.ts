@@ -2,9 +2,15 @@ import {
   getFirstAvailableBooking,
   mapFirstAvailableFreeturnMs,
 } from '@/common/apis/services/booking/getFirstAvailableBooking';
+// Previous (main): Saman availability for freeturn text — restore if needed.
+// import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 // Previous GrowthBook rollout gate — restore if we need to fall back to profile freeturns_info.
 // import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import { CENTERS } from '@/common/types/centers';
+// import {
+//   formatSamanAvailabilityTime,
+//   getScopedOnlineVisitAvailability,
+// } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
 import { getFreeturnDisplayText } from '@/modules/booking/utils/getFreeturnDisplayText';
 // import { useFeatureValue } from '@growthbook/growthbook-react';
 import { useQuery } from '@tanstack/react-query';
@@ -14,7 +20,7 @@ import axios from 'axios';
 // export const INVOICE_NOTICE_FREETURN_API_DOCTORS = 'factor:invoice-notice-freeturn-api|doctor-list';
 
 interface UseInvoiceNoticeFreeturnParams {
-  // slug: string; // needed again if GrowthBook doctor-list gate is restored
+  // slug: string; // needed again if Saman or GrowthBook doctor-list gate is restored
   serviceId: string;
   // profileFreeturnMs: number | null; // fallback when doctor was not in the GB list
   userCenterId?: string;
@@ -28,7 +34,18 @@ export const useInvoiceNoticeFreeturn = ({
   userCenterId,
   isProfileLoading,
 }: UseInvoiceNoticeFreeturnParams) => {
-  // Previous: only call first-available when slug matched GrowthBook doctor-list (incl. '*').
+  // Previous (main): freeturn from Saman doctor availability by slug.
+  // const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
+  //   enabled: !!slug,
+  // });
+  // const onlineAvailability = getScopedOnlineVisitAvailability([{ id: CENTERS.CONSULT }], samanAvailability.data);
+  // const formatted = formatSamanAvailabilityTime(onlineAvailability.nearestTimeSlot);
+  // return {
+  //   freeturnText: formatted || getFreeturnDisplayText(null),
+  //   isFreeturnLoading: !!slug && samanAvailability.isLoading,
+  // };
+
+  // Previous GrowthBook: only call first-available when slug matched doctor-list (incl. '*').
   // const doctorList = useFeatureValue<{ slugs: string[] }>(INVOICE_NOTICE_FREETURN_API_DOCTORS, { slugs: [] });
   // const useNewApi = newApiFeatureFlaggingCondition(doctorList?.slugs ?? [], slug);
   const hasRequiredParams = Boolean(serviceId && userCenterId);
@@ -41,7 +58,7 @@ export const useInvoiceNoticeFreeturn = ({
         service_id: serviceId,
         user_center_id: userCenterId!,
       }),
-    // Previous: enabled: useNewApi && hasRequiredParams,
+    // Previous GrowthBook: enabled: useNewApi && hasRequiredParams,
     enabled: hasRequiredParams,
     staleTime: 0,
     cacheTime: 0,
@@ -50,10 +67,10 @@ export const useInvoiceNoticeFreeturn = ({
     refetchOnReconnect: false,
   });
 
-  // Previous: freeturnMs = useNewApi ? mapFirstAvailableFreeturnMs(...) : profileFreeturnMs
+  // Previous GrowthBook: freeturnMs = useNewApi ? mapFirstAvailableFreeturnMs(...) : profileFreeturnMs
   const freeturnMs = mapFirstAvailableFreeturnMs(firstAvailableQuery.data);
 
-  // Previous: isFreeturnLoading = useNewApi && (isProfileLoading || (hasRequiredParams && firstAvailableQuery.isLoading))
+  // Previous GrowthBook: isFreeturnLoading = useNewApi && (isProfileLoading || ...)
   const isFreeturnLoading = isProfileLoading || (hasRequiredParams && firstAvailableQuery.isLoading);
 
   return {

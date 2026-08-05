@@ -1,11 +1,9 @@
 import { useGetBaseInfo } from '@/common/apis/services/config/baseInfo';
-import { useConsultSearch, useSearch as useSearchRequest } from '@/common/apis/services/search/search';
+import { useSearch as useSearchRequest } from '@/common/apis/services/search/search';
 import { Center } from '@/common/types/doctorParams';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchStore } from '../store/search';
-import { useFeatureValue } from '@growthbook/growthbook-react';
-import { shouldShowTopSuggestedConsult } from '../functions/shouldShowTopSuggestedConsult';
 
 type Filter = {
   items: {
@@ -74,6 +72,16 @@ export type Badge = {
   description?: string;
 };
 
+// DR-07 (ghane docs/dev-requests/dr-07-online-visit-suggestion-to-backend.md §13): backend-computed
+// sibling key next to `search` — absent entirely when there is no suggestion (Q-1/Q-3/M-5). `banner`
+// and `card` are shaped exactly like `search.result[]` items (SearchV1Resource::shapePromotedOnlineVisit).
+export type PromotedOnlineVisit = {
+  banner: Result;
+  card?: Result;
+  display_index: number;
+  is_promoted: boolean;
+};
+
 type SeoInfo = {
   title: string;
   heading: string;
@@ -101,7 +109,6 @@ export const useSearch = () => {
     asPath,
   } = useRouter();
   const geoLocation = useSearchStore(state => state.geoLocation);
-  const showSuggestedDoctor = useFeatureValue('fragment::top-suggested-card-feature', { enable: true });
 
   const baseInfo = useGetBaseInfo({ table: ['city', 'province'] });
   const searchRequest = useSearchRequest({
@@ -114,39 +121,6 @@ export const useSearch = () => {
     },
   });
 
-  const resultType = searchRequest?.data?.selected_filters?.result_type;
-  const resultTypeValue = Array.isArray(resultType) ? resultType[0] : resultType;
-  const isResultTypeExcluded =
-    !resultTypeValue ||
-    (resultTypeValue !== 'فقط کلینیک‌ها و بیمارستان‌ها' && resultTypeValue !== 'ابزارک‌های سلامتی');
-  const canShowTopSuggestedConsult = shouldShowTopSuggestedConsult(searchRequest?.data?.query_attributes);
-
-  const searchConsultEnabled =
-    !!searchRequest?.data &&
-    !searchRequest?.data?.search.result[0]?.actions?.find((action: any) => action.top_title.includes('آنلاین و آماده مشاوره')) === true &&
-    (!searchRequest?.data?.selected_filters?.turn_type || searchRequest?.data?.selected_filters?.turn_type !== 'consult') &&
-    isResultTypeExcluded &&
-    (!searchRequest?.data?.search?.pagination?.page || searchRequest?.data?.search?.pagination?.page === 1) &&
-    !searchRequest?.data?.search.is_landing &&
-    canShowTopSuggestedConsult &&
-    (params?.length !== 1 || Object.keys(query).length > 0) &&
-    showSuggestedDoctor?.enable;
-
-  const searchConsultRequest = useConsultSearch(
-    {
-      route: ['ir', (params as string[])?.[1] ?? '']?.join('/') ?? '',
-      query: {
-        ...query,
-        turn_type: 'consult',
-        limit: 2,
-      },
-      timeout: 700,
-    },
-    {
-      enabled: searchConsultEnabled,
-    },
-  );
-
   const {
     search = { result: [], is_landing: false, pagination: { limit: 20, page: 1 }, total: 0, query_id: '' },
     filters = [],
@@ -155,6 +129,7 @@ export const useSearch = () => {
     selected_filters: selectedFilters = {},
     seo_info: seoInfo = undefined,
     footers = undefined,
+    promoted_online_visit: promotedOnlineVisit = undefined,
   }: {
     search: Search | undefined;
     filters: Filter[];
@@ -163,12 +138,32 @@ export const useSearch = () => {
     selected_filters: Record<string, string | string[]>;
     seo_info: SeoInfo | undefined;
     footers: Footers | undefined;
+    promoted_online_visit?: PromotedOnlineVisit;
   } = useMemo(() => {
     return searchRequest.data ?? {};
   }, [searchRequest.data]);
 
+  // DR-07 §13 condition 2: derived synchronously from the same `searchRequest.data` object that
+  // `search` above comes from (plain useMemo, no useState/useEffect of its own) — so it lands in the
+  // exact same render as `search`/`result` and never lags a tick behind them. `banner`/`card` are
+  // mapped onto the old `.search.result[0]`/`.search.result[1]` positions so the untouched Plasmic
+  // markup (which still reads `searchConsultResponse.search.result[...]`) keeps rendering byte-identical
+  // output. `is_promoted` is stamped onto the card item itself so the generic result-card repeater can
+  // branch its click analytics off `currentItem.is_promoted` without any new prop plumbing.
+  const searchConsultResponseData = useMemo(() => {
+    if (!promotedOnlineVisit) return {};
+    const items = [
+      promotedOnlineVisit.banner,
+      promotedOnlineVisit.card ? { ...promotedOnlineVisit.card, is_promoted: promotedOnlineVisit.is_promoted } : undefined,
+    ].filter(Boolean);
+    return {
+      search: { result: items },
+      display_index: promotedOnlineVisit.display_index,
+    };
+  }, [promotedOnlineVisit]);
+
   const [result, setResult] = useState(search?.result ?? []);
-  const [isLoading, setIsLoading] = useState(searchRequest.isLoading || searchConsultRequest.isLoading);
+  const [isLoading, setIsLoading] = useState(searchRequest.isLoading);
 
   useEffect(() => {
     setIsLoading(true);
@@ -235,7 +230,6 @@ export const useSearch = () => {
     isConsult,
     search,
     responseData: searchRequest?.data ?? {},
-    searchConsultResponseData:
-      searchConsultEnabled && !searchConsultRequest?.data?.search?.is_landing ? searchConsultRequest?.data ?? {} : {},
+    searchConsultResponseData,
   };
 };

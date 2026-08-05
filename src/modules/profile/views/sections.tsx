@@ -3,6 +3,7 @@ import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
+import { hasBioCredentials } from '@/common/apis/services/profile-microservice/normalizeBioCredentials';
 import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
@@ -14,6 +15,8 @@ import { Fragment2 } from '@/common/fragment/fragment2';
 import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
 import { getImageUrl } from '@/common/utils/getImageUrl';
+import { isSajediProfileSlug } from '@/modules/profile/constants/sajediProfile';
+import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
 
 const { publicRuntimeConfig } = config();
 
@@ -23,8 +26,13 @@ const Biography = dynamic(() => import('./biography'), {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
   },
 });
+const Credentials = dynamic(() => import('./credentials'), {
+  loading() {
+    return <Skeleton w="100%" h="12rem" rounded="lg" />;
+  },
+});
 const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
-const PlasmicProfileSeo = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo'));
+const ProfileSeo = dynamic(() => import('.plasmic/ProfileSeo'));
 const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
@@ -65,6 +73,9 @@ export const sections = (data: any) => {
     user_id,
   } = data;
 
+  const credentials = information?.credentials;
+  const showSajediCredentials = isSajediProfileSlug(seo?.slug) && hasBioCredentials(credentials);
+
   const profileData = pick(data, [
     'information',
     'centers',
@@ -102,6 +113,18 @@ export const sections = (data: any) => {
         </div>
       ),
     },
+    // Credentials / honors / experience — Sajedi only
+    {
+      title: 'سوابق و افتخارات',
+      isShow: showSajediCredentials,
+      children: () => (
+        <Credentials
+          degrees={credentials?.degrees ?? []}
+          honors={credentials?.honors ?? []}
+          experiences={credentials?.experiences ?? []}
+        />
+      ),
+    },
     {
       isShow: !customize?.partnerKey,
       noWrapper: true,
@@ -125,7 +148,17 @@ export const sections = (data: any) => {
     // Video
     {
       isShow: media?.aparat && media?.aparat !== '0',
-      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media?.aparat }} />,
+      children: () => (
+        <div
+          className="overflow-hidden md:rounded-lg"
+          dangerouslySetInnerHTML={{
+            __html: ensureIframeTitle(
+              media?.aparat,
+              `ویدیو معرفی ${information?.display_name ?? 'پزشک'}`,
+            ),
+          }}
+        />
+      ),
     },
     // Gallery
     {
@@ -280,7 +313,7 @@ export const sections = (data: any) => {
         return (
           <Fragment2
             name="ProfileSeo"
-            Component={PlasmicProfileSeo}
+            Component={ProfileSeo}
             args={{
               information,
               feedbacks,
@@ -288,7 +321,7 @@ export const sections = (data: any) => {
               isOnlineVisitCenter: seoSectionData.isOnlineVisitCenter,
               doctorExpertise: seoSectionData.doctorExpertise,
               countOfPageView,
-              bredcrumbs: seo.breadcrumbs,
+              breadcrumbs: seoSectionData.breadcrumbs,
               similarLinks,
               expertises,
               about: seoSectionData.about,

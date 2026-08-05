@@ -30,7 +30,17 @@ export const Invoice = (props: InvoiceProps) => {
   } = props;
   const formattedPrice = price ? addCommas(Math.round(+price / 10)) : null;
   const formattedTax = tax ? addCommas(Math.round(+tax / 10)) : null;
-  const formattedTotalPrice = totalPrice ? addCommas(Math.max(0, Math.round((+totalPrice - +(walletAmount ?? 0)) / 10))) : null;
+  // مبلغ قابل پرداخت:
+  // - موجودی جزئی (۰ < کیف < مبلغ): ماندهٔ درگاه = فاکتور − کیف (مورد ۲ هنوز انتخاب جایگزین ندارد)
+  // - کیف کافی یا صفر: همان مبلغ فاکتور (بعد از تخفیف) — وقتی کافی است صفر نشان نده
+  const totalPriceRial = totalPrice != null && totalPrice !== '' ? Number(totalPrice) : NaN;
+  const walletRial = typeof walletAmount === 'number' && !Number.isNaN(walletAmount) ? walletAmount : 0;
+  const payableRial = Number.isFinite(totalPriceRial)
+    ? walletRial > 0 && walletRial < totalPriceRial
+      ? Math.max(0, totalPriceRial - walletRial)
+      : Math.max(0, totalPriceRial)
+    : NaN;
+  const formattedTotalPrice = Number.isFinite(payableRial) ? addCommas(Math.round(payableRial / 10)) : null;
   const formattedWalletAmount =
     (walletAmount == 0 || walletAmount) && typeof walletAmount === 'number' ? addCommas(Math.round(+walletAmount / 10)) : null;
   const formattedDiscount = discount ? addCommas(Math.round(+discount / 10)) : null;
@@ -98,7 +108,7 @@ export const Invoice = (props: InvoiceProps) => {
           {!loading && !!formattedWalletAmount && (
             <div className="flex justify-between">
               <Text fontWeight="medium" fontSize="sm">
-                شارژ کیف پول:
+                موجودی کیف پول:
               </Text>
               <Text fontWeight="medium" fontSize="sm">
                 {formattedWalletAmount} تومان

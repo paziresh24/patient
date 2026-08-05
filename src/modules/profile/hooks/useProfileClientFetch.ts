@@ -20,6 +20,8 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
         useNewDoctorCentersAPI: true,
         useNewDoctorGalleryAPI: true,
         fetchExpertiseKeywordTags,
+        // PROFILE_API is SSR-only (private LAN). Browser CSR always uses legacy.
+        useProfileMicroservice: false,
       }),
     {
       enabled: enabled,
