@@ -105,6 +105,16 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
   const gallery = Array.isArray(bundle.gallery) ? bundle.gallery : [];
   const statistics = bundle.statistics ?? {};
   const seo = bundle.seo ?? {};
+  // Relation keys to legacy paziresh systems (kept on profiles-api as external_ids).
+  const externalIds = (profile.external_ids ?? shenasname.external_ids ?? {}) as Record<string, unknown>;
+
+  const pickId = (...candidates: unknown[]) => {
+    for (const value of candidates) {
+      if (value == null || value === '') continue;
+      return String(value);
+    }
+    return null;
+  };
 
   const firstName = shenasname.first_name ?? '';
   const lastName = shenasname.last_name ?? '';
@@ -113,10 +123,10 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
   const avatar = shenasname.avatar_url || profile.avatar_url || null;
   const biography = bio.about || bio.summary || shenasname['bio.about'] || shenasname['bio.summary'] || '';
   const credentials = normalizeBioCredentials(bio);
-  const employeeId = shenasname.employee_id != null ? String(shenasname.employee_id) : null;
-  const userId = shenasname.paziresh_user_id != null ? String(shenasname.paziresh_user_id) : null;
-  const ownerId = shenasname.paziresh_id != null ? String(shenasname.paziresh_id) : String(profile.id ?? '');
-  const serverId = shenasname.paziresh_server_id != null ? String(shenasname.paziresh_server_id) : null;
+  const employeeId = pickId(externalIds.employee_id, shenasname.employee_id, shenasname.medical_code);
+  const userId = pickId(externalIds.user_id, shenasname.paziresh_user_id, shenasname.user_id);
+  const ownerId = pickId(externalIds.paziresh_id, shenasname.paziresh_id, profile.id) ?? '';
+  const serverId = pickId(externalIds.server_id, shenasname.paziresh_server_id, shenasname.server_id);
 
   const centers = mapLocationsToCenters(locations);
   const expertises = mapSpecialtiesToExpertises(specialties);

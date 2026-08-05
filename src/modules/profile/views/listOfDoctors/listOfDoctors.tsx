@@ -10,7 +10,7 @@ import { flattenCenterSearchDoctors } from '@/modules/profile/utils/sanitizeCent
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import config from 'next/config';
 import { InfiniteData } from '@tanstack/react-query';
@@ -33,11 +33,13 @@ interface ListOfDoctorsProps {
   showRateAndReviews?: boolean;
   defaultValue?: ExpertiseType;
   expertiseListLoading?: boolean;
-  onChangePage: (page: number) => void;
+  onChangePage: () => void;
   hasNextPage: boolean;
   isFetchingNextPage?: boolean;
   isMainSite?: boolean;
   center_id?: string;
+  /** When search/expertise/center changes, local page counter resets so load-more stays in sync. */
+  paginationResetKey?: string;
 }
 
 export const ListOfDoctors = (props: ListOfDoctorsProps) => {
@@ -56,9 +58,15 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
     isFetchingNextPage,
     isMainSite,
     center_id,
+    paginationResetKey,
   } = props;
   const page = useRef<number>(1);
   const router = useRouter();
+
+  useEffect(() => {
+    page.current = 1;
+  }, [paginationResetKey]);
+
   const customTheme = useFeatureValue('them-config', {
     'search_result:show_first_free_time': true,
     'search_result:show_available_time': true,
@@ -171,7 +179,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
               variant="secondary"
               onClick={() => {
                 page.current += 1;
-                return onChangePage(page.current);
+                return onChangePage();
               }}
               loading={isFetchingNextPage}
             >
@@ -205,7 +213,7 @@ export const ListOfDoctors = (props: ListOfDoctorsProps) => {
                     },
                     nextPageTrigger: () => {
                       page.current += 1;
-                      return onChangePage(page.current);
+                      return onChangePage();
                     },
                     imageSrcPrefix: publicRuntimeConfig.CDN_BASE_URL,
                     location: {},

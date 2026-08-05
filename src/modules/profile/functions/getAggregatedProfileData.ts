@@ -24,6 +24,8 @@ import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
+import { computeExperienceYearsFromGraduationDate } from '@/modules/profile/utils/computeExperienceYears';
+import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -156,10 +158,16 @@ export async function getAggregatedProfileData(
   if (useMicroservice) {
     try {
       const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
-      return await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+      const microserviceResult = await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+      // If MS explicitly returns notFound, still try legacy (slug may only exist there).
+      if (microserviceResult && typeof microserviceResult === 'object' && 'notFound' in microserviceResult && (microserviceResult as { notFound?: boolean }).notFound) {
+        console.warn('[profile] microservice profile missing; falling back to legacy', { slug });
+      } else {
+        return microserviceResult;
+      }
     } catch (error) {
-      // Never hard-500 the page when the private profile API is unreachable/broken.
-      // Fall back to the legacy path so production stays up while API networking is fixed.
+      // Never hard-500/404 the page when profiles-api is unreachable, unauthorized, or missing the slug.
+      // Fall back to the legacy path so production stays up while API data is incomplete.
       const status = (error as any)?.response?.status ?? (error as any)?.status;
       console.error('[profile] microservice aggregation failed; falling back to legacy', {
         slug,
@@ -168,7 +176,9 @@ export async function getAggregatedProfileData(
         hint:
           status === 401
             ? 'Bearer rejected. For test use API_AUTH_DRIVER=static on profiles-api (token=test|write|admin), or create a db API key.'
-            : undefined,
+            : status === 404
+              ? 'Slug not in profiles-api DB; using legacy full-profile.'
+              : undefined,
       });
     }
   }
@@ -440,17 +450,9 @@ export async function getAggregatedProfileData(
       graduation_date: exp.graduation_date ?? null,
     })) ?? [];
 
-  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص)
+  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص) — جلالی/میلادی
   const firstGraduationDate = doctorExpertise?.[0]?.graduation_date;
-  const experienceYears =
-    firstGraduationDate &&
-    (() => {
-      const year = parseInt(firstGraduationDate.slice(0, 4), 10);
-      if (Number.isNaN(year)) return null;
-      const currentYear = new Date().getFullYear();
-      const years = currentYear - year;
-      return years >= 0 ? String(years) : null;
-    })();
+  const experienceYears = computeExperienceYearsFromGraduationDate(firstGraduationDate);
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
@@ -639,7 +641,11 @@ export async function getAggregatedProfileData(
 
   // Step 5: Construct the final props object
   const doctorCitiesLabel = formatDoctorCitiesForTitle(centers);
-  const title = `${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${doctorCitiesLabel} نوبت دهی آنلاین و شماره تلفن`;
+  const title = buildDoctorProfileDocumentTitle({
+    displayName: information?.display_name,
+    expertiseTitle: expertises?.expertises?.[0]?.alias_title,
+    doctorCitiesLabel,
+  });
   const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const finalProps = {

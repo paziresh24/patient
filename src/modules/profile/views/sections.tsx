@@ -16,6 +16,7 @@ import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
 import { getImageUrl } from '@/common/utils/getImageUrl';
 import { isSajediProfileSlug } from '@/modules/profile/constants/sajediProfile';
+import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
 
 const { publicRuntimeConfig } = config();
 
@@ -31,7 +32,7 @@ const Credentials = dynamic(() => import('./credentials'), {
   },
 });
 const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
-const PlasmicProfileSeo = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo'));
+const ProfileSeo = dynamic(() => import('.plasmic/ProfileSeo'));
 const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
@@ -147,7 +148,17 @@ export const sections = (data: any) => {
     // Video
     {
       isShow: media?.aparat && media?.aparat !== '0',
-      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media?.aparat }} />,
+      children: () => (
+        <div
+          className="overflow-hidden md:rounded-lg"
+          dangerouslySetInnerHTML={{
+            __html: ensureIframeTitle(
+              media?.aparat,
+              `ویدیو معرفی ${information?.display_name ?? 'پزشک'}`,
+            ),
+          }}
+        />
+      ),
     },
     // Gallery
     {
@@ -302,7 +313,7 @@ export const sections = (data: any) => {
         return (
           <Fragment2
             name="ProfileSeo"
-            Component={PlasmicProfileSeo}
+            Component={ProfileSeo}
             args={{
               information,
               feedbacks,
@@ -310,7 +321,7 @@ export const sections = (data: any) => {
               isOnlineVisitCenter: seoSectionData.isOnlineVisitCenter,
               doctorExpertise: seoSectionData.doctorExpertise,
               countOfPageView,
-              bredcrumbs: seo.breadcrumbs,
+              breadcrumbs: seoSectionData.breadcrumbs,
               similarLinks,
               expertises,
               about: seoSectionData.about,

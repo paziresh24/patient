@@ -58,12 +58,19 @@ const { publicRuntimeConfig } = config();
 const NO_DOCTOR_PROFILE_IMAGE = 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png';
 
 function resolveDoctorProfileImageUrl(
-  information: { user_id?: string | null } | undefined,
+  information: { user_id?: string | null; image?: string | null } | undefined,
   pageUserId?: string | null,
 ) {
   const userId = information?.user_id ?? pageUserId;
+  // Prefer pic CDN when we have paziresh user id.
   if (userId) {
     return `https://pic.paziresh24.com/api/image/${userId}`;
+  }
+  // Fallback: microservice avatar_url mapped into information.image
+  const image = typeof information?.image === 'string' ? information.image.trim() : '';
+  if (image) {
+    if (/^https?:\/\//i.test(image)) return image;
+    return `https://www.paziresh24.com${image.startsWith('/') ? '' : '/'}${image}`;
   }
   return NO_DOCTOR_PROFILE_IMAGE;
 }
@@ -218,7 +225,7 @@ const DoctorProfile = (props: any) => {
 
   const doctorProfileImageUrl = useMemo(
     () => resolveDoctorProfileImageUrl(information, user_id),
-    [information?.user_id, user_id],
+    [information?.user_id, information?.image, user_id],
   );
 
   const clientSeoJsonLds = useMemo(
@@ -229,9 +236,10 @@ const DoctorProfile = (props: any) => {
         information,
         expertises,
         feedbacks,
+        breadcrumbs,
         doctorProfileImageUrl,
       }),
-    [slug, centers, information, expertises, feedbacks, doctorProfileImageUrl],
+    [slug, centers, information, expertises, feedbacks, breadcrumbs, doctorProfileImageUrl],
   );
 
   const isOwnProfile = !!user_id && !!userInfo?.id && String(user_id) === String(userInfo?.id);
@@ -706,6 +714,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
     feedbacks,
     host,
     user_id,
+    breadcrumbs,
     shouldFetchOnClient,
     noIndex: noIndexFromProps,
   } = page.props;
@@ -723,6 +732,7 @@ DoctorProfile.getLayout = function getLayout(page: ReactElement) {
           information,
           expertises,
           feedbacks,
+          breadcrumbs,
           doctorProfileImageUrl,
         }) : []}
         openGraph={{

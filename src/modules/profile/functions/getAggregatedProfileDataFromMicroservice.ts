@@ -15,6 +15,7 @@ import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { overwriteProfileData } from './overwriteProfileData';
+import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
 
@@ -80,9 +81,10 @@ export async function getAggregatedProfileDataFromMicroservice(
   const bundle = await getProfileMicroserviceBundle(slug);
 
   if ('error' in bundle) {
-    if (isServer && bundle.status === 404) return { notFound: true };
-    const err = new Error(bundle.error) as Error & { status?: number };
-    err.status = bundle.status;
+    // Missing/broken in profiles-api → throw so the caller falls back to legacy.
+    // Do NOT return { notFound: true } here: allowlisted slugs may exist only on legacy.
+    const err = new Error(bundle.error || 'Profile not found in microservice') as Error & { status?: number };
+    err.status = bundle.status ?? 404;
     throw err;
   }
 
@@ -211,9 +213,11 @@ export async function getAggregatedProfileDataFromMicroservice(
 
   const title =
     seoTitleHint ||
-    `${displayName}${expertises?.expertises?.[0]?.alias_title ? `، ${expertises.expertises[0].alias_title}` : ''}${
-      doctorCityNames ? ` ${doctorCityNames}` : ''
-    } نوبت دهی آنلاین و شماره تلفن`;
+    buildDoctorProfileDocumentTitle({
+      displayName,
+      expertiseTitle: expertises?.expertises?.[0]?.alias_title,
+      doctorCitiesLabel: doctorCityNames,
+    });
   const description =
     seoDescriptionHint ||
     `نوبت دهی اینترنتی ${displayName}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;

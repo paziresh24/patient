@@ -5,14 +5,37 @@ import config from 'next/config';
 
 const { publicRuntimeConfig } = config();
 
+type BreadcrumbItem = { href?: string; text?: string };
+
 type BuildDoctorProfileJsonLdsParams = {
   slug?: string;
   centers?: any[];
   information?: any;
   expertises?: any;
   feedbacks?: any;
+  breadcrumbs?: BreadcrumbItem[];
   doctorProfileImageUrl: string;
 };
+
+function resolveSchemaGender(gender: unknown): 'Male' | 'Female' | undefined {
+  if (gender == null || gender === '') return undefined;
+  const asNumber = Number(gender);
+  if (asNumber === 1) return 'Male';
+  if (asNumber === 2) return 'Female';
+  if (typeof gender === 'string') {
+    const normalized = gender.trim().toLowerCase();
+    if (normalized === 'male' || normalized === 'm') return 'Male';
+    if (normalized === 'female' || normalized === 'f') return 'Female';
+  }
+  return undefined;
+}
+
+function toAbsoluteClinicUrl(pathOrUrl: string | undefined, baseUrl: string, fallbackPath: string) {
+  const raw = (pathOrUrl || fallbackPath || '/').trim();
+  if (/^https?:\/\//i.test(raw)) return raw;
+  const path = raw.startsWith('/') ? raw : `/${raw}`;
+  return `${baseUrl}${path === '/' ? '/' : path}`;
+}
 
 export function buildDoctorProfileJsonLds({
   slug,
@@ -20,6 +43,7 @@ export function buildDoctorProfileJsonLds({
   information,
   expertises,
   feedbacks,
+  breadcrumbs,
   doctorProfileImageUrl,
 }: BuildDoctorProfileJsonLdsParams) {
   if (!centers?.length || !information) return [];
@@ -29,6 +53,7 @@ export function buildDoctorProfileJsonLds({
   const visitOnlineCenter = centers?.find?.((cn: any) => cn.id === CENTERS.CONSULT);
   const visitOnlinePrice = visitOnlineCenter?.services?.[0]?.free_price ?? 0;
   const currentUrl = `/dr/${slug}`;
+  const clinicBaseUrl = publicRuntimeConfig?.CLINIC_BASE_URL ?? 'https://www.paziresh24.com';
 
   const getDayOfWeek = (day: number): string => {
     const dayMap: { [key: number]: string } = {
@@ -83,7 +108,7 @@ export function buildDoctorProfileJsonLds({
         ? `${information?.display_name} ${expertises.group_expertises[0].name}`
         : null,
     ].filter(Boolean),
-    gender: information?.gender === '1' ? 'Male' : information?.gender === '2' ? 'Female' : undefined,
+    gender: resolveSchemaGender(information?.gender),
     image: doctorProfileImageUrl,
     medicalSpecialty: {
       '@type': 'MedicalSpecialty',
@@ -117,7 +142,7 @@ export function buildDoctorProfileJsonLds({
         }
       : undefined,
     priceRange: visitOnlinePrice > 0 ? `IRR ${addCommas(visitOnlinePrice)}` : '$$',
-    url: publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
+    url: clinicBaseUrl + currentUrl,
     telephone: center?.display_number?.[0] || center?.display_number,
     isAcceptingNewPatients: true,
     description: information?.biography ? removeHtmlTagInString(information?.biography) : '',
@@ -178,27 +203,24 @@ export function buildDoctorProfileJsonLds({
       }),
   };
 
+  const fallbackBreadcrumbItems: BreadcrumbItem[] = [
+    { href: '/', text: 'پذیرش۲۴' },
+    { href: currentUrl, text: information?.display_name },
+  ];
+  const breadcrumbItems =
+    Array.isArray(breadcrumbs) && breadcrumbs.length > 0 ? breadcrumbs : fallbackBreadcrumbItems;
+
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    itemListElement: [
-      {
-        '@type': 'ListItem',
-        position: 1,
-        item: {
-          '@id': `${publicRuntimeConfig?.CLINIC_BASE_URL}/`,
-          name: 'پذیرش۲۴',
-        },
+    itemListElement: breadcrumbItems.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@id': toAbsoluteClinicUrl(item?.href, clinicBaseUrl, currentUrl),
+        name: item?.text,
       },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        item: {
-          '@id': publicRuntimeConfig.CLINIC_BASE_URL + currentUrl,
-          name: information?.display_name,
-        },
-      },
-    ],
+    })),
   };
 
   return [physicianSchema, breadcrumbSchema].filter(Boolean);
