@@ -606,19 +606,7 @@ function PlasmicSearch__RenderFunc(props: {
                                     $props.selectedCity.en_slug != "ir"
                                       ? $props.selectedCity.en_slug + "/"
                                       : "";
-                                  const semanticSearchParam =
-                                    $ctx.Growthbook &&
-                                    $ctx.Growthbook.isReady &&
-                                    $ctx.Growthbook.features[
-                                      "search-semantic-search"
-                                    ]
-                                      ? "true"
-                                      : "false";
                                   params.delete("semantic_search");
-                                  params.append(
-                                    "semantic_search",
-                                    semanticSearchParam
-                                  );
                                   params.delete("page");
                                   return `/s/${citySlug}?${params.toString()}`;
                                 }

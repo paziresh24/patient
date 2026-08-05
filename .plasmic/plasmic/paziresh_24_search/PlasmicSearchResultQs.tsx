@@ -326,7 +326,7 @@ function PlasmicSearchResultQs__RenderFunc(props: {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `/s/${$props.citySlug ? $props.citySlug + "/" : ""}?text=${value}&ref=search_suggestion_box_qs&semantic_search=${$ctx.Growthbook && $ctx.Growthbook.isReady && $ctx.Growthbook.features["search-semantic-search"] ? "true" : "false"}`;
+                        return `/s/${$props.citySlug ? $props.citySlug + "/" : ""}?text=${value}&ref=search_suggestion_box_qs`;
                       } catch (e) {
                         if (
                           e instanceof TypeError ||

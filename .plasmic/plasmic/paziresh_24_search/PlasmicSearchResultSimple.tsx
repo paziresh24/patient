@@ -262,13 +262,7 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
             href={(() => {
               try {
                 return (() => {
-                  const semanticSearchParam =
-                    $ctx.Growthbook &&
-                    $ctx.Growthbook?.isReady &&
-                    $ctx.Growthbook?.features?.["search-semantic-search"]
-                      ? "true"
-                      : "false";
-                  return `/s/?text=${$props.inputValue}&ref=search_suggestion_box&semantic_search=${semanticSearchParam}`;
+                  return `/s/?text=${$props.inputValue}&ref=search_suggestion_box`;
                 })();
               } catch (e) {
                 if (
@@ -372,8 +366,7 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
                 href={(() => {
                   try {
                     return (() => {
-                      const semanticSearchParam = "true";
-                      return `/s/?text=${$props.inputValue}&ref=search_suggestion_box&semantic_search=${semanticSearchParam}`;
+                      return `/s/?text=${$props.inputValue}&ref=search_suggestion_box`;
                     })();
                   } catch (e) {
                     if (

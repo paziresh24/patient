@@ -404,17 +404,7 @@ function PlasmicSearchInput__RenderFunc(props: {
                             params.append("text", $state.textInput.value);
                             params.delete("ref");
                             params.append("ref", "search_suggestion_box");
-                            const semanticSearchParam =
-                              $ctx.Growthbook &&
-                              $ctx.Growthbook.isReady &&
-                              $ctx.Growthbook.features["search-semantic-search"]
-                                ? "true"
-                                : "false";
                             params.delete("semantic_search");
-                            params.append(
-                              "semantic_search",
-                              semanticSearchParam
-                            );
                             params.delete("page");
                             return params.toString();
                           })();
