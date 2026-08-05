@@ -30,14 +30,15 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
   );
 
   const consultCenter = profile?.data?.centers?.find((item: any) => item.id == CENTERS.CONSULT);
-  const freeturnRaw = consultCenter?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn;
-  const profileFreeturnMs =
-    typeof freeturnRaw === 'number' && Number.isFinite(freeturnRaw) ? freeturnRaw * 1000 : null;
+  // Previous fallback when GrowthBook doctor-list gate was off: use profile freeturns_info.
+  // const freeturnRaw = consultCenter?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn;
+  // const profileFreeturnMs =
+  //   typeof freeturnRaw === 'number' && Number.isFinite(freeturnRaw) ? freeturnRaw * 1000 : null;
 
   const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({
-    slug,
+    // slug, // restore with GrowthBook gate in useInvoiceNoticeFreeturn
     serviceId,
-    profileFreeturnMs,
+    // profileFreeturnMs, // restore with GrowthBook gate in useInvoiceNoticeFreeturn
     userCenterId: consultCenter?.user_center_id,
     isProfileLoading: isLoading,
   });
