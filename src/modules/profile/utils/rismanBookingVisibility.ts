@@ -4,34 +4,31 @@ import {
   getScopedOnlineVisitAvailability,
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
 
-/** True when Saman (or legacy isBulk fallback) says Paziresh24 can take a booking. */
+/** True only when Saman reports a bookable Paziresh24 slot (in-person or online). */
 export function hasNativePaziresh24Booking(
   centers: { id: string }[],
-  samanData?: SamanDoctorAvailabilityStatus,
-  isBulk?: boolean,
+  samanData?: SamanDoctorAvailabilityStatus | null,
 ): boolean {
-  if (samanData) {
-    const inPerson = getScopedInPersonAvailability(centers, samanData);
-    const online = getScopedOnlineVisitAvailability(centers, samanData);
-    return inPerson.bookingAvailable || online.bookingAvailable;
-  }
-  return !isBulk;
+  if (!samanData) return false;
+  const inPerson = getScopedInPersonAvailability(centers, samanData);
+  const online = getScopedOnlineVisitAvailability(centers, samanData);
+  return inPerson.bookingAvailable || online.bookingAvailable;
 }
 
 /**
- * Show Risman external booking only when Paziresh24 has no native bookable slot.
- * Before Saman resolves, fall back to legacy isBulk to limit Risman flash on known-native doctors.
+ * Show Risman only when Saman has settled and Paziresh24 has no native bookable slot.
+ * Decision source is Saman only — never Full-profile isBulk / hours_of_work.
+ * While Saman is pending: hide Risman (avoids wrong flash on native-bookable doctors).
+ * On Saman error: treat as no native booking so external Risman can still surface.
  */
 export function shouldShowRismanExternalBooking(
   rismanData: unknown,
   centers: { id: string }[],
   samanData: SamanDoctorAvailabilityStatus | undefined,
-  isBulk: boolean,
-  samanResolved: boolean,
+  samanStatus: 'pending' | 'success' | 'error',
 ): boolean {
   if (!rismanData) return false;
-  if (samanResolved) {
-    return !hasNativePaziresh24Booking(centers, samanData, isBulk);
-  }
-  return !!isBulk;
+  if (samanStatus === 'pending') return false;
+  if (samanStatus === 'error') return true;
+  return !hasNativePaziresh24Booking(centers, samanData);
 }

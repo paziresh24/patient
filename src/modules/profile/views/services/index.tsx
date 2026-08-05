@@ -130,15 +130,21 @@ export const Services = ({
   // Avoid flashing the red bulk box before GrowthBook/Saman resolve
   const samanPending =
     (useSamanAvailabilityStatus && !samanLoaded && !samanAvailability.isError) ||
-    (!growthbook?.ready && !!isBulk && !ssrUseSamanAvailabilityStatus);
-  const samanResolved = !useSamanAvailabilityStatus || samanLoaded || samanAvailability.isError;
+    (!growthbook?.ready && !ssrUseSamanAvailabilityStatus && !!isBulk);
+  const samanStatus: 'pending' | 'success' | 'error' = !useSamanAvailabilityStatus
+    ? 'error'
+    : samanAvailability.isError
+      ? 'error'
+      : samanAvailability.data
+        ? 'success'
+        : 'pending';
   // dontShowDeactiveBox means Risman payload exists — hide native Bulk when Risman should own the CTA.
+  // Decision source: Saman only (never Full-profile isBulk).
   const showRismanExternalBooking = shouldShowRismanExternalBooking(
     dontShowDeactiveBox ? true : null,
     centers,
     samanAvailability.data,
-    isBulk,
-    samanResolved,
+    samanStatus,
   );
   const scopedInPerson = useMemo(
     () => getScopedInPersonAvailability(centers, samanAvailability.data),
@@ -213,10 +219,10 @@ export const Services = ({
 
   const legacyHasNoBooking = alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk;
   const samanHasNoBooking = samanLoaded && !scopedInPerson.bookingAvailable && !scopedOnlineVisit.bookingAvailable;
-  // While Saman is pending, do not fall back to isBulk (avoids red "no booking" flash)
+  // Saman is the booking decision source. Pending → not "no booking" yet (skeleton). Error → no native booking.
   const hasNoBooking = useSamanAvailabilityStatus
     ? samanAvailability.isError
-      ? isBulk
+      ? true
       : samanLoaded
         ? samanHasNoBooking
         : false

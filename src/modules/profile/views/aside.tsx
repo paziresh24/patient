@@ -99,7 +99,6 @@ export const Aside = (data: any) => {
           risman={fragmentComponents?.risman}
           slug={seo.slug}
           centers={centers ?? []}
-          isBulk={!!isBulk}
           partnerKey={customize?.partnerKey}
           ssrUseSamanAvailabilityStatus={!!ssrUseSamanAvailabilityStatus}
         />

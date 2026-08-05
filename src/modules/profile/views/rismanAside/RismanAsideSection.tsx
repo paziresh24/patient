@@ -10,7 +10,6 @@ type RismanAsideSectionProps = {
   risman: unknown;
   slug: string;
   centers: { id: string }[];
-  isBulk: boolean;
   partnerKey?: string;
   ssrUseSamanAvailabilityStatus?: boolean;
 };
@@ -19,7 +18,6 @@ export const RismanAsideSection = ({
   risman,
   slug,
   centers,
-  isBulk,
   partnerKey,
   ssrUseSamanAvailabilityStatus = false,
 }: RismanAsideSectionProps) => {
@@ -28,12 +26,18 @@ export const RismanAsideSection = ({
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
     enabled: !!slug && useSamanAvailabilityStatus,
   });
-  const samanLoaded = useSamanAvailabilityStatus && !!samanAvailability.data && !samanAvailability.isError;
-  const samanResolved = !useSamanAvailabilityStatus || samanLoaded || samanAvailability.isError;
+
+  const samanStatus: 'pending' | 'success' | 'error' = !useSamanAvailabilityStatus
+    ? 'error'
+    : samanAvailability.isError
+      ? 'error'
+      : samanAvailability.data
+        ? 'success'
+        : 'pending';
 
   const show =
     !partnerKey &&
-    shouldShowRismanExternalBooking(risman, centers ?? [], samanAvailability.data, isBulk, samanResolved);
+    shouldShowRismanExternalBooking(risman, centers ?? [], samanAvailability.data, samanStatus);
 
   if (!show) return null;
 
