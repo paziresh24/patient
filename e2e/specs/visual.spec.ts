@@ -26,7 +26,8 @@ test.describe('Visual regression', () => {
     const search = new SearchPage(page);
     await search.gotoListing(LISTING_TEMPLATES.specialtyInCity);
     await search.expectHealthyResults();
-    await page.waitForLoadState('networkidle').catch(() => undefined);
+    // best-effort با سقف — بدونِ timeout این انتظار بی‌نهایت است (playwright.config.ts).
+    await page.waitForLoadState('networkidle', { timeout: 5_000 }).catch(() => undefined);
 
     const viewport = page.viewportSize();
     await expect(page).toHaveScreenshot('listing-chrome.png', {
@@ -40,7 +41,8 @@ test.describe('Visual regression', () => {
     const search = new SearchPage(page);
     await search.gotoListing(LISTING_TEMPLATES.specialtyInCity);
     await search.expectHealthyResults();
-    await page.waitForLoadState('networkidle').catch(() => undefined);
+    // best-effort با سقف — بدونِ timeout این انتظار بی‌نهایت است (playwright.config.ts).
+    await page.waitForLoadState('networkidle', { timeout: 5_000 }).catch(() => undefined);
 
     const layout = await page.evaluate(() => {
       const doc = document.documentElement;

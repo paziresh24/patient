@@ -50,7 +50,9 @@ test.describe('Visual regression — کارتِ اول (element-level)', () => {
     const search = new SearchPage(page);
     await search.gotoListing(LISTING_TEMPLATES.specialtyInCity);
     await search.expectHealthyResults();
-    await page.waitForLoadState('networkidle').catch(() => undefined);
+    // best-effort: اگر صفحه در ۵ ثانیه آرام نشد، ادامه بده. سقف الزامی است — بدونِ آن این انتظار
+    // بی‌نهایت است و کلِ بودجه‌ی تست را می‌خورد (توضیحِ کامل در playwright.config.ts).
+    await page.waitForLoadState('networkidle', { timeout: 5_000 }).catch(() => undefined);
 
     await tagFirstCard(page);
     const card = page.locator('[data-e2e-first-card="true"]');
