@@ -336,6 +336,9 @@ search-e2e:
   variables:
     E2E_IMAGE: mcr.microsoft.com/playwright:v1.49.1-jammy
     APP_IMAGE: patient-e2e:$CI_COMMIT_SHORT_SHA
+    # ⏳ موقت — فقط برای بازتولیدِ baselineِ بصریِ linux (همان روالِ کامیت‌های 570de90e/0a0b4492).
+    # بعد از برداشتنِ artifactِ `ci-snapshots` و کامیتِ PNG، این خط در همین MR حذف می‌شود.
+    E2E_UPDATE_SNAPSHOTS: "1"
   before_script:
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
   script:
