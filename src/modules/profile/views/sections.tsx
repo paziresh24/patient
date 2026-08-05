@@ -3,6 +3,7 @@ import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
+import { hasBioCredentials } from '@/common/apis/services/profile-microservice/normalizeBioCredentials';
 import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
@@ -14,6 +15,7 @@ import { Fragment2 } from '@/common/fragment/fragment2';
 import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
 import { getImageUrl } from '@/common/utils/getImageUrl';
+import { isSajediProfileSlug } from '@/modules/profile/constants/sajediProfile';
 
 const { publicRuntimeConfig } = config();
 
@@ -21,6 +23,11 @@ const EditButton = dynamic(() => import('../components/viewAs/editButton'));
 const Biography = dynamic(() => import('./biography'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
+  },
+});
+const Credentials = dynamic(() => import('./credentials'), {
+  loading() {
+    return <Skeleton w="100%" h="12rem" rounded="lg" />;
   },
 });
 const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
@@ -65,6 +72,9 @@ export const sections = (data: any) => {
     user_id,
   } = data;
 
+  const credentials = information?.credentials;
+  const showSajediCredentials = isSajediProfileSlug(seo?.slug) && hasBioCredentials(credentials);
+
   const profileData = pick(data, [
     'information',
     'centers',
@@ -100,6 +110,18 @@ export const sections = (data: any) => {
           <AddIcon className="w-5 h-5" />
           <Text fontWeight="medium">نوشتن بیوگرافی</Text>
         </div>
+      ),
+    },
+    // Credentials / honors / experience — Sajedi only
+    {
+      title: 'سوابق و افتخارات',
+      isShow: showSajediCredentials,
+      children: () => (
+        <Credentials
+          degrees={credentials?.degrees ?? []}
+          honors={credentials?.honors ?? []}
+          experiences={credentials?.experiences ?? []}
+        />
       ),
     },
     {

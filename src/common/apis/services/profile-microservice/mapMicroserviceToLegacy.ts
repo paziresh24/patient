@@ -1,5 +1,6 @@
 import type { OverwriteProfileData } from '@/modules/profile/functions/overwriteProfileData';
 import type { ProfileMicroserviceBundle } from './getProfileMicroserviceBundle';
+import { normalizeBioCredentials } from './normalizeBioCredentials';
 
 const CITY_EN_SLUG: Record<string, string> = {
   تهران: 'tehran',
@@ -111,6 +112,7 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
   const prefix = shenasname.prefix ?? '';
   const avatar = shenasname.avatar_url || profile.avatar_url || null;
   const biography = bio.about || bio.summary || shenasname['bio.about'] || shenasname['bio.summary'] || '';
+  const credentials = normalizeBioCredentials(bio);
   const employeeId = shenasname.employee_id != null ? String(shenasname.employee_id) : null;
   const userId = shenasname.paziresh_user_id != null ? String(shenasname.paziresh_user_id) : null;
   const ownerId = shenasname.paziresh_id != null ? String(shenasname.paziresh_id) : String(profile.id ?? '');
@@ -178,6 +180,7 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
     expertises,
     image: avatar ?? undefined,
     biography,
+    credentials,
     centers,
     gallery: gallery.map((img: any) => img?.url ?? img?.image_url ?? img).filter(Boolean),
   };

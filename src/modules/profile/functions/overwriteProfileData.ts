@@ -1,3 +1,4 @@
+import type { BioCredentials } from '@/common/apis/services/profile-microservice/normalizeBioCredentials';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
@@ -33,6 +34,7 @@ export type OverwriteProfileData = {
   expertises?: any;
   image?: string;
   biography?: string;
+  credentials?: BioCredentials;
   centers?: any;
   gallery?: any;
 };
@@ -64,6 +66,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     should_recommend_other_doctors: source?.should_recommend_other_doctors ?? null,
     ...providerRest,
     prefix: '',
+    ...(overwriteData.credentials ? { credentials: overwriteData.credentials } : {}),
   };
 
   const group_expertises = flatMap(overwriteData?.provider?.expertises ?? [], item => get(item, 'speciality.taggables', [])).map(
