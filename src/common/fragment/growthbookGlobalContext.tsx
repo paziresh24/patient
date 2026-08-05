@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
 import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
 import { getCookie } from 'cookies-next';
@@ -10,6 +10,15 @@ const { publicRuntimeConfig } = getConfig();
 const isEnabledGrowthbook =
   !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
   !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
+
+const shallowEqual = (a: Record<string, any>, b: Record<string, any>) => {
+  const aKeys = Object.keys(a);
+  if (aKeys.length !== Object.keys(b).length) return false;
+  for (const key of aKeys) {
+    if (!Object.is(a[key], b[key])) return false;
+  }
+  return true;
+};
 
 interface GrowthbookGlobalContextProps {
   previewAttributes?: Record<string, string>;
@@ -57,13 +66,14 @@ export const GrowthbookGlobalContext = ({
     });
   };
 
+  // DR-08 §28: `attr` deliberately kept out of the deps. It only ever changes through the
+  // setAttributes/setAttributeOverrides actions below, which already sync synchronously —
+  // keeping it here made every keystroke in the search box run this effect a second time
+  // (a full re-sync + a refreshFeatures() network call over ~287 flags).
   useEffect(() => {
     syncAttributes();
-    if (isEnabledGrowthbook && growthbook.ready) {
-      growthbook.refreshFeatures?.();
-    }
     setFeaturesVersion(version => version + 1);
-  }, [user, isDoctor, getDoctorSpecialties, previewAttributes, attr]);
+  }, [user, isDoctor, getDoctorSpecialties, previewAttributes]);
 
   useEffect(() => {
     if (!isEnabledGrowthbook) return;
@@ -84,39 +94,55 @@ export const GrowthbookGlobalContext = ({
 
   const actions = useMemo(
     () => ({
+      // DR-08 §28: no refreshFeatures() here. It refetches the feature *definitions*, which do not
+      // depend on attributes; the SDK is already created with backgroundSync + autoRefresh. This
+      // action runs on every keystroke of the search box, so the refetch was pure cost.
       setAttributes: (attributes: Record<string, any>) => {
         setAttr(attributes);
         syncAttributes(attributes);
-        if (isEnabledGrowthbook) growthbook.refreshFeatures?.();
         setFeaturesVersion(version => version + 1);
       },
       setAttributeOverrides: (attributes: Record<string, any>) => {
         setAttr(prev => ({ ...prev, ...attributes }));
         syncAttributes(attributes);
-        if (isEnabledGrowthbook) growthbook.refreshFeatures?.();
         setFeaturesVersion(version => version + 1);
       },
     }),
     [user, isDoctor, getDoctorSpecialties, previewAttributes, attr],
   );
 
+  const featuresRef = useRef<Record<string, any> | undefined>(undefined);
+
+  // DR-08 §28: same output as before, but built with one getFeatures() call and a plain loop
+  // instead of a spread-accumulating reduce (which allocated a new object per flag — ~41k property
+  // copies over ~287 flags). The reference is also kept stable while no value actually changed, so
+  // a keystroke that flips nothing no longer re-renders every Plasmic consumer of this provider.
   const features = useMemo(() => {
     if (!growthbook.ready) return undefined;
 
-    return Object.keys(growthbook.getFeatures()).reduce((previous, name) => {
-      const feature = growthbook.getFeatures()[name];
-      const isBoolean = typeof feature?.defaultValue === 'boolean';
+    const definitions = growthbook.getFeatures();
+    const next: Record<string, any> = {};
 
-      return {
-        ...previous,
-        [name]: isBoolean ? growthbook.isOn(name) : growthbook.getFeatureValue(name, undefined),
-      };
-    }, {});
+    for (const name of Object.keys(definitions)) {
+      const isBoolean = typeof definitions[name]?.defaultValue === 'boolean';
+      next[name] = isBoolean ? growthbook.isOn(name) : growthbook.getFeatureValue(name, undefined);
+    }
+
+    const previous = featuresRef.current;
+    if (previous && shallowEqual(previous, next)) return previous;
+
+    featuresRef.current = next;
+    return next;
   }, [isReady, featuresVersion, user?.id, isDoctor]);
+
+  const data = useMemo(
+    () => ({ features, isReady, attributes: growthbook.getAttributes() }),
+    [features, isReady, featuresVersion],
+  );
 
   return (
     <GlobalActionsProvider contextName="GrowthbookGlobalContext" actions={actions}>
-      <DataProvider name="Growthbook" data={{ features, isReady, attributes: growthbook.getAttributes() }}>
+      <DataProvider name="Growthbook" data={data}>
         {children}
       </DataProvider>
     </GlobalActionsProvider>
