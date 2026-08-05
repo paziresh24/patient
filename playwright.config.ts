@@ -74,6 +74,12 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 20_000,
+    // ⚠️ بدونِ این، `waitForLoadState`/`waitForURL` **هیچ سقفی ندارند** (پیش‌فرضِ Playwright برای
+    // navigationTimeout صفر = بی‌نهایت است، و `actionTimeout` شاملشان نمی‌شود). نتیجه‌ی واقعی
+    // (2026-08-05): یک `waitForLoadState('networkidle')` که در CI هرگز settle نمی‌شد، کلِ بودجه‌ی
+    // ۹۰ ثانیه‌ای تست را می‌خورد و تست در **خطِ بعدی** با «Target page has been closed» می‌افتاد —
+    // یعنی پیامِ خطا محلِ واقعیِ گیر را نشان نمی‌داد. این سقف آن کلاسِ خطا را می‌بندد.
+    navigationTimeout: 30_000,
   },
   projects: [
     {
