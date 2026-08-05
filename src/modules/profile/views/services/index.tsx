@@ -35,6 +35,7 @@ import {
 import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getProfileOnlineVisitVisibility } from '@/modules/profile/utils/onlineVisitVisibility';
+import { shouldShowRismanExternalBooking } from '@/modules/profile/utils/rismanBookingVisibility';
 import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
 const External = dynamic(() => import('./external'), {
@@ -130,6 +131,15 @@ export const Services = ({
   const samanPending =
     (useSamanAvailabilityStatus && !samanLoaded && !samanAvailability.isError) ||
     (!growthbook?.ready && !!isBulk && !ssrUseSamanAvailabilityStatus);
+  const samanResolved = !useSamanAvailabilityStatus || samanLoaded || samanAvailability.isError;
+  // dontShowDeactiveBox means Risman payload exists — hide native Bulk when Risman should own the CTA.
+  const showRismanExternalBooking = shouldShowRismanExternalBooking(
+    dontShowDeactiveBox ? true : null,
+    centers,
+    samanAvailability.data,
+    isBulk,
+    samanResolved,
+  );
   const scopedInPerson = useMemo(
     () => getScopedInPersonAvailability(centers, samanAvailability.data),
     [centers, samanAvailability.data],
@@ -339,7 +349,7 @@ export const Services = ({
     router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
   };
 
-  if (!customize?.partnerKey && dontShowDeactiveBox && hasNoBooking) {
+  if (!customize?.partnerKey && showRismanExternalBooking && hasNoBooking) {
     return null;
   }
 
