@@ -13,7 +13,7 @@ const emptyRateDetails = {
   countOfFeedbacks: null as number | null,
 };
 
-/** Profile head rate badge — same doctor rate API + comments_count as rate-and-review. */
+/** Profile head/SEO rate count — same doctor rate API + count_rates as rate-and-review. */
 export const getRateDetailsData = async ({ slug }: GetRateDetailsData) => {
   try {
     const data = await fetchDoctorRate(slug);
@@ -30,7 +30,7 @@ export const getRateDetailsData = async ({ slug }: GetRateDetailsData) => {
         average_explanation_of_issue: toFixedRate(data?.explanation_of_issue),
       },
       hide_rates: Boolean(data?.hide_rates ?? data?.hide),
-      countOfFeedbacks: data?.comments_count != null ? Number(data.comments_count) : null,
+      countOfFeedbacks: data?.count_rates != null ? Number(data.count_rates) : null,
     };
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.data?.error?.code === 'RATE_NOT_FOUND') {
