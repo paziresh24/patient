@@ -193,3 +193,90 @@ describe('suggestions — فیلدی که بک‌اند دارد اضافه می
     expect(screen.queryAllByTestId('yara-suggestion')).toHaveLength(0);
   });
 });
+
+describe('composer — این صفحه برای جمله ساخته شده، نه کلیدواژه', () => {
+  it('Enter می‌فرستد و Shift+Enter خط جدید می‌سازد (نه ارسال)', async () => {
+    mockPostTurn.mockResolvedValue(answer());
+    render(<YaraChat />);
+    const box = screen.getByLabelText('پیام شما به یارا');
+
+    await userEvent.type(box, 'خط اول{Shift>}{Enter}{/Shift}خط دوم');
+    expect(mockPostTurn).not.toHaveBeenCalled();
+    expect(box).toHaveValue('خط اول\nخط دوم');
+
+    await userEvent.type(box, '{Enter}');
+    await waitFor(() =>
+      expect(mockPostTurn).toHaveBeenCalledWith(expect.objectContaining({ text: 'خط اول\nخط دوم', explicit: true }))
+    );
+    // و کادر بعد از ارسال خالی می‌شود تا متنِ قبلی دوباره فرستاده نشود
+    expect(box).toHaveValue('');
+  });
+
+  it('فقط وقتی کادر خالی و focus است نمونه‌ها را پیشنهاد می‌دهد', async () => {
+    mockPostTurn.mockResolvedValue(answer());
+    render(<YaraChat />);
+    expect(screen.queryByTestId('yara-suggest-sheet')).not.toBeInTheDocument();
+
+    const box = screen.getByLabelText('پیام شما به یارا');
+    await userEvent.click(box);
+    expect(screen.getByTestId('yara-suggest-sheet')).toBeInTheDocument();
+
+    // به‌محضِ نوشتن، پیشنهادها راه را باز می‌کنند
+    await userEvent.type(box, 'س');
+    expect(screen.queryByTestId('yara-suggest-sheet')).not.toBeInTheDocument();
+  });
+
+  it('لمسِ یک نمونه دقیقاً مثل تایپ‌کردنِ همان جمله است', async () => {
+    mockPostTurn.mockResolvedValue(answer());
+    render(<YaraChat />);
+
+    await userEvent.click(screen.getByLabelText('پیام شما به یارا'));
+    const first = screen.getAllByTestId('yara-suggest-item')[0];
+    const label = first.textContent ?? '';
+    await userEvent.click(first);
+
+    await waitFor(() => expect(mockPostTurn).toHaveBeenCalledWith(expect.objectContaining({ text: label, explicit: true })));
+  });
+});
+
+describe('ریلِ گفت‌وگوها', () => {
+  it('گفت‌وگوهای ذخیره‌شده را گروه‌بندی‌شده نشان می‌دهد و باز کردنشان thread را جایگزین می‌کند', async () => {
+    const { listConversations, getConversation } = require('../chatApi');
+    listConversations.mockResolvedValue([
+      { conversation_id: 'c-9', title: 'گازگرفتگی سگ', created_at: new Date().toISOString(), last_message_at: new Date().toISOString(), turn_count: 4 },
+    ]);
+    getConversation.mockResolvedValue({
+      conversation: {},
+      messages: [
+        { role: 'user', text: 'سلام', turn_index: 0 },
+        { role: 'assistant', text: 'پاسخِ بایگانی', turn_index: 0, payload: { message: 'پاسخِ بایگانی' } },
+      ],
+    });
+    render(<YaraChat />);
+
+    const row = await screen.findByTestId('yara-conversation');
+    expect(row).toHaveTextContent('گازگرفتگی سگ');
+    expect(screen.getByText('امروز')).toBeInTheDocument();
+
+    await userEvent.click(row);
+    expect(await screen.findByText('پاسخِ بایگانی')).toBeInTheDocument();
+  });
+
+  it('«گفت‌وگوی جدید» thread را پاک می‌کند و به حالتِ خوش‌آمد برمی‌گردد', async () => {
+    mockPostTurn.mockResolvedValue(answer());
+    render(<YaraChat />);
+
+    await userEvent.click(screen.getByRole('button', { name: STARTER_CHIPS[0] }));
+    expect(await screen.findByText('این پزشکان را پیشنهاد می‌کنم.')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /گفت‌وگوی جدید/ }));
+
+    expect(screen.queryByText('این پزشکان را پیشنهاد می‌کنم.')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: STARTER_CHIPS[0] })).toBeInTheDocument();
+    // و conversation_id هم رها شده: turnِ بعدی یک گفت‌وگوی تازه است
+    await userEvent.click(screen.getByRole('button', { name: STARTER_CHIPS[0] }));
+    await waitFor(() =>
+      expect(mockPostTurn).toHaveBeenLastCalledWith(expect.not.objectContaining({ conversationId: 'c-1' }))
+    );
+  });
+});

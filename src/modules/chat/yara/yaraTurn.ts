@@ -7,7 +7,7 @@
  *
  * DR-11 (pivot «یارا»), 2026-08-01.
  */
-import type { TurnResponse } from '../chatApi';
+import type { ConversationSummary, TurnResponse } from '../chatApi';
 
 /** Analytics surface id. One string, one place — see `ChatEntryPoint`. */
 export const YARA_ENTRY_POINT = 'yara' as const;
@@ -42,6 +42,43 @@ export const STARTER_CHIPS = [
   'حالم خوب نیست، کمکم کنید',
   'از پزشک مشخصی نوبت می‌خواهم',
   'پیگیری نوبت‌هایم',
+] as const;
+
+/** The empty-state identity, from the owner's panel design (2026-08-06). */
+export const WELCOME_TITLE = 'یارا، دستیار سلامت پذیرش۲۴';
+export const WELCOME_SUBTITLE =
+  'علائم‌تان را بگویید؛ راهنمایی می‌کنم به کدام پزشک مراجعه کنید و نوبتش را همین‌جا می‌گیرم.';
+
+/**
+ * Same client-only personalisation rule as `welcomeText`, applied to the new
+ * hero: the name decorates the sentence in this browser and never travels to
+ * khesht (see the note on `welcomeText`).
+ */
+export function welcomeSubtitle(firstName?: string | null): string {
+  const name = String(firstName ?? '').trim().split(/\s+/)[0];
+  if (!name || name.length > 30) return WELCOME_SUBTITLE;
+  return `${name} عزیز، ${WELCOME_SUBTITLE}`;
+}
+
+/** Beta framing. Shown once in the hero and once at the head of a thread. */
+export const BETA_BADGE = 'نسخهٔ بتا';
+export const BETA_NOTICE = 'در دورهٔ آزمایشی، استفاده از یارا رایگان است';
+
+/**
+ * Example questions offered above the composer while it is empty and focused.
+ *
+ * These are *prompts*, not promises: each one is a sentence Yara can already
+ * take as an ordinary turn, so tapping one is identical to typing it.
+ */
+export const COMPOSER_SUGGESTIONS = [
+  'سردردم چند روز است ادامه دارد، چه کار کنم؟',
+  'نزدیک‌ترین نوبت متخصص پوست را می‌خواهم',
+  'تب کودک ۳ ساله؛ چه زمانی باید به اورژانس برویم؟',
+  'کمردرد بعد از ورزش — ارتوپد یا فیزیوتراپ؟',
+  // ⚠️ Deliberately worded differently from `STARTER_CHIPS`: two buttons with the
+  // same label on one screen are ambiguous to a screen reader and to a test.
+  'از دکتر مشخصی می‌خواهم نوبت بگیرم',
+  'نوبت‌های ثبت‌شده‌ام را نشانم بده',
 ] as const;
 
 /** Shown under the composer on every render — not a per-answer disclaimer. */
@@ -97,6 +134,12 @@ export function readSuggestions(res: TurnResponse | undefined): YaraSuggestion[]
 /** One line in the thread. `failed` is a first-class state, not an absent answer. */
 export interface YaraTurn {
   user: string;
+  /**
+   * When the patient sent it, `Date.now()`. Only ever used to stamp the answer
+   * in the thread — a restored conversation has no live clock, so it is absent
+   * there and the stamp simply does not render.
+   */
+  at?: number;
   assistant?: TurnResponse;
   /** Restored from the archive: text only, no live payload to re-render. */
   archivedAnswer?: string;
@@ -163,6 +206,54 @@ export function archivedTurnResponse(payload: unknown): TurnResponse | null {
     // قاعده‌ای که سمتِ سرور هم client_action را از payload بیرون گذاشته است.
     client_action: undefined,
   } as TurnResponse;
+}
+
+/** One dated section of the conversation rail. */
+export interface ConversationGroup {
+  label: string;
+  items: ConversationSummary[];
+}
+
+const DAY_MS = 86_400_000;
+
+/**
+ * Bucket the conversation rail by recency — «امروز / دیروز / ۷ روز گذشته / …».
+ *
+ * Pure, and `now` is a parameter, because "which bucket" is the kind of thing
+ * that is right in Tehran at noon and wrong at 00:30 UTC; a test has to be able
+ * to pin the clock. Buckets are computed from *local midnight*, not from a
+ * rolling 24 hours, so a conversation at 23:50 is «دیروز» the next morning
+ * rather than «امروز» — which is what the label claims.
+ *
+ * An unparsable or absent `last_message_at` sorts last instead of throwing: a
+ * malformed row must cost its own position in the list, never the whole rail.
+ */
+export function groupConversations(rows: ConversationSummary[], now = Date.now()): ConversationGroup[] {
+  const midnight = new Date(now);
+  midnight.setHours(0, 0, 0, 0);
+  const today = midnight.getTime();
+
+  const label = (row: ConversationSummary): string => {
+    const at = new Date(String(row?.last_message_at ?? '')).getTime();
+    if (!Number.isFinite(at)) return 'قدیمی‌تر';
+    if (at >= today) return 'امروز';
+    if (at >= today - DAY_MS) return 'دیروز';
+    if (at >= today - 7 * DAY_MS) return '۷ روز گذشته';
+    return 'قدیمی‌تر';
+  };
+
+  const order = ['امروز', 'دیروز', '۷ روز گذشته', 'قدیمی‌تر'];
+  const groups: ConversationGroup[] = [];
+  for (const row of rows ?? []) {
+    const key = label(row);
+    let group = groups.find(g => g.label === key);
+    if (!group) {
+      group = { label: key, items: [] };
+      groups.push(group);
+    }
+    group.items.push(row);
+  }
+  return groups.sort((a, b) => order.indexOf(a.label) - order.indexOf(b.label));
 }
 
 /**
