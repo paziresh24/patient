@@ -73,6 +73,7 @@ import Icon32Icon from "./icons/PlasmicIcon__Icon32"; // plasmic-import: Gz4YUaF
 import Icon48Icon from "./icons/PlasmicIcon__Icon48"; // plasmic-import: xyErzd5gLY8W/icon
 
 import { uniq as __lib_lodash__uniq } from "lodash";
+import { SEARCH_BOX_REF, buildSearchBoxUrl } from "@/modules/search/functions/searchBoxUrl";
 
 createPlasmicElementProxy;
 
@@ -262,13 +263,7 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
             href={(() => {
               try {
                 return (() => {
-                  const semanticSearchParam =
-                    $ctx.Growthbook &&
-                    $ctx.Growthbook?.isReady &&
-                    $ctx.Growthbook?.features?.["search-semantic-search"]
-                      ? "true"
-                      : "false";
-                  return `/s/?text=${$props.inputValue}&ref=search_suggestion_box&semantic_search=${semanticSearchParam}`;
+                  return buildSearchBoxUrl({ text: $props.inputValue, ref: SEARCH_BOX_REF });
                 })();
               } catch (e) {
                 if (
@@ -372,8 +367,7 @@ function PlasmicSearchResultSimple__RenderFunc(props: {
                 href={(() => {
                   try {
                     return (() => {
-                      const semanticSearchParam = "true";
-                      return `/s/?text=${$props.inputValue}&ref=search_suggestion_box&semantic_search=${semanticSearchParam}`;
+                      return buildSearchBoxUrl({ text: $props.inputValue, ref: SEARCH_BOX_REF });
                     })();
                   } catch (e) {
                     if (
