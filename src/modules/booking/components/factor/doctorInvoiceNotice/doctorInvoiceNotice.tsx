@@ -1,3 +1,4 @@
+import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 import {
   validateDoctorSlug,
   DoctorSlugValidationResponse,
@@ -7,6 +8,7 @@ import Text from '@/common/components/atom/text';
 import { useDoctorExpertise } from '@/common/hooks/useDoctorExpertise';
 import { useDoctorFullName } from '@/common/hooks/useDoctorFullName';
 import { useDoctorImage } from '@/common/hooks/useDoctorImage';
+import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import { getImageUrl } from '@/common/utils/getImageUrl';
 import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
@@ -17,10 +19,11 @@ import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
 
-export const DoctorInvoiceNotice = ({ slug, serviceId: _serviceId }: { slug: string; serviceId: string }) => {
+export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; serviceId: string }) => {
   const { data: fullName, isLoading: isFullNameLoading } = useDoctorFullName(slug);
   const { data: expertises, isLoading: isExpertiseLoading } = useDoctorExpertise(slug);
   const { data: doctorImage } = useDoctorImage(slug);
+  const { isLoading: isProfileLoading, data: profile } = useGetProfileData({ slug: slug as string });
   const { data: doctorSlugData } = useQuery(
     ['doctorSlugForFactorImage', slug],
     () => validateDoctorSlug(slug),
@@ -34,7 +37,21 @@ export const DoctorInvoiceNotice = ({ slug, serviceId: _serviceId }: { slug: str
   );
 
   const isLoading = isFullNameLoading || isExpertiseLoading;
-  const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({ slug });
+  const consultCenter = profile?.data?.centers?.find((item: any) => item.id == CENTERS.CONSULT);
+  // Previous GrowthBook fallback when doctor-list gate was off: use profile freeturns_info.
+  // const freeturnRaw = consultCenter?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn;
+  // const profileFreeturnMs =
+  //   typeof freeturnRaw === 'number' && Number.isFinite(freeturnRaw) ? freeturnRaw * 1000 : null;
+
+  // Previous (main): freeturn from Saman by slug only.
+  // const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({ slug });
+  const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({
+    // slug, // restore with Saman or GrowthBook gate in useInvoiceNoticeFreeturn
+    serviceId,
+    // profileFreeturnMs, // restore with GrowthBook gate in useInvoiceNoticeFreeturn
+    userCenterId: consultCenter?.user_center_id,
+    isProfileLoading,
+  });
 
   const doctorName = [fullName?.name, fullName?.family].filter(Boolean).join(' ');
   const doctorUserId = (doctorSlugData as DoctorSlugValidationResponse | undefined)?.user_id;

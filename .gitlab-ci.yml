@@ -382,13 +382,42 @@ search-e2e:
       - runner_system_failure
       - stuck_or_timeout_failure
       - job_execution_timeout
+  # دامنه‌ی trigger — بازنگری‌شده 2026-08-05 با یک اندازه‌گیری، نه با حدس.
+  #
+  # 🔴 چه چیزی این بازنگری را لازم کرد: بینِ ۰۸-۰۲ (آخرین اجرای سبز) و ۰۸-۰۵، **~۲۰ کامیت** روی
+  # `main` نشست و **هیچ‌کدام** نمی‌توانست این job را trigger کند — چون هیچ‌کدام در لیستِ زیر نبودند.
+  # نتیجه: این گیت سه روز اصلاً اجرا نشد، و وقتی بالاخره یک MRِ بی‌ربط یک مسیرِ search را لمس کرد،
+  # قرمزیِ انباشته‌ی main به گردنِ همان MR افتاد. یعنی `optional: true` (که برای «مزاحمِ بقیه‌ی
+  # تیم‌ها نباشیم» گذاشته شده بود) عملاً هزینه را روی MRهای search متمرکز کرد.
+  #
+  # قاعده‌ی انتخابِ این لیست: **هر چیزی که در buildِ همین job وارد می‌شود و می‌تواند رندرِ صفحه‌ی
+  # لیستینگ را عوض کند** — نه فقط ماژولِ search. این app یک monolith مشترک است.
+  #
+  # ⚠️ صادقانه: این لیست هنوز کامل نیست و نمی‌تواند باشد (هر فایلی در `src/common/**` می‌تواند
+  # به‌طورِ غیرمستقیم اثر بگذارد). گاردِ واقعیِ مکمل، اجرای همین job روی خودِ `main` بعد از merge
+  # است تا رگرسیون به کامیتِ خودش نسبت داده شود — به‌عنوانِ بدهیِ باز ثبت شد
+  # (ghane: docs/journal/open-debt.md #۴۱)، این‌جا عمداً اضافه نشد چون هزینه‌ی runner دارد و
+  # تصمیمِ ownerِ زیرساخت است.
   rules:
     - if: $CI_MERGE_REQUEST_IID
       changes:
+        # — خودِ کدِ سرچ —
         - src/modules/search/**/*
         - .plasmic/plasmic/paziresh_24_search/**/*
+        # — صفحه‌ای که تست‌ها واقعاً بازش می‌کنند (جا افتاده بود) —
+        - src/pages/s/**/*
+        # — bootstrapِ سراسری: providerها، SDKها، contextهایی که کلِ درختِ Plasmic از آن‌ها تغذیه
+        #   می‌شود. مصداقِ عینی: MR !155 فقط `growthbookGlobalContext.tsx` را عوض کرد و چون در این
+        #   لیست نبود، بدونِ این گیت merge شد —
+        - src/pages/_app.tsx
         - src/pages/_document.tsx
+        - src/common/fragment/**/*
         - src/styles/plasmicRadixBaseCss.ts
+        # — ورودی‌های buildی که خودِ این job از آن‌ها image می‌سازد —
+        - Dockerfile
+        - next.config.js
+        - package.json
+        # — خودِ هارنس —
         - e2e/**/*
         - playwright.config.ts
         - .gitlab-ci.yml
