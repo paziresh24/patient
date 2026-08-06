@@ -31,7 +31,7 @@ import axios from 'axios';
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { ReactElement, useEffect, useState, useMemo, useCallback } from 'react';
+import { ReactElement, useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { growthbook } from '../_app';
 import { Fragment } from '@/common/fragment';
 import { useFilterChange } from '@/modules/search/hooks/useFilterChange';
@@ -135,6 +135,17 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
     }
   }, [params, city, isLoading]);
 
+  // ctr-false-drop-after-dr07 (ghane docs/bug-tickets): on SSR-hydrated loads this effect fires
+  // twice for ONE search — commit 641616a0 changed useSearch's initial isLoading to
+  // `searchRequest.isLoading` (false when the query is hydrated), so the mount flush passes the
+  // guard and emits once with the initial `result`, then useSearch's own [asPath]/[search] effects
+  // replace `result`'s identity ([] → [...search.result]) and re-fire the effect for a second,
+  // byte-identical emission with the SAME query_id. It is race-conditional on `growthbook.ready`
+  // being true at mount, which is why live traffic inflated ~11-17% (not +100%) and a 2-load
+  // browser probe saw single emissions. Dedupe on (query_id + result_count): a genuinely new
+  // search always has a fresh query_id, and pagination grows result.length, so both still emit.
+  const lastSearchViewEmitKey = useRef<string | null>(null);
+
   useEffect(() => {
     if (growthbook.ready && !userPending && !isLoading) {
       // Check if this is a listing page (e.g., /s/city/doctor/)
@@ -144,6 +155,9 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
         shouldUseSearchViewEventRoutesList.routes?.some(route => !!route && asPath.includes(route)) ||
         shouldUseSearchViewEventRoutesList.routes?.includes('*')
       ) {
+        const emitKey = `${search.query_id}:${result.length}`;
+        if (lastSearchViewEmitKey.current === emitKey) return;
+        lastSearchViewEmitKey.current = emitKey;
         if (!fragmentComponents?.showPlasmicResult || showPlasmicResult) {
           splunkInstance('search').sendEvent({
             group: 'search_metrics',
