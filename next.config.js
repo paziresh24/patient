@@ -261,6 +261,8 @@ const nextConfig = {
     // at server start, so flipping it is a pod restart, not a rebuild.
     CHAT_MVP_ENABLED: process.env.CHAT_MVP_ENABLED,
     CHAT_MVP_PREVIEW_KEY: process.env.CHAT_MVP_PREVIEW_KEY,
+    // فقط در NODE_ENV=development اثر دارد (chatEligibility.devFakeLogin) — برای E2E local.
+    CHAT_MVP_DEV_FAKE_LOGIN: process.env.CHAT_MVP_DEV_FAKE_LOGIN,
     CHAT_API_BASE: process.env.CHAT_API_BASE,
   },
   images: {
