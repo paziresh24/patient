@@ -136,3 +136,47 @@ export function withTimeout<T>(work: Promise<T>, ms = TURN_TIMEOUT_MS): Promise<
   return Promise.race([work, ceiling]).finally(() => clearTimeout(timer));
 }
 
+
+/**
+ * Rebuild a renderable answer from an archived `payload`.
+ *
+ * The archive stores an allow-listed subset of the live response, so a restored
+ * turn can render through the exact same path as a live one — cards, chips,
+ * emergency block — instead of the flat audit transcript. Defensive on every
+ * field for the same reason as `readSuggestions`: the payload crosses a version
+ * boundary (it was written by whatever khesht was deployed months ago).
+ */
+export function archivedTurnResponse(payload: unknown): TurnResponse | null {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return null;
+  const p = payload as Partial<TurnResponse>;
+  const hasContent = Boolean(
+    p.message || p.clarifying_question || p.emergency || p.guide || p.provider || (Array.isArray(p.results) && p.results.length)
+  );
+  if (!hasContent) return null;
+  return {
+    mode: 'chat',
+    conversation_id: '',
+    query_id: '',
+    turn_index: 0,
+    ...p,
+    // یک گفتگوی بازیابی‌شده هرگز نباید دوباره جریانِ لغو را مسلح کند — همان
+    // قاعده‌ای که سمتِ سرور هم client_action را از payload بیرون گذاشته است.
+    client_action: undefined,
+  } as TurnResponse;
+}
+
+/**
+ * Legacy conversations (archived before `payload` existed) only have the audit
+ * transcript. Rendering it verbatim shows `[گامِ بعد: …]` markers and raw
+ * `(/dr/…)` paths — noise addressed to the owner's audit, not to a patient. This
+ * strips exactly those two artifact shapes and nothing else.
+ */
+export function stripTranscriptArtifacts(text: string): string {
+  return String(text ?? '')
+    .split('\n')
+    // ⚠️ no \b here: JS word boundaries are ASCII-only and never match after «بعد».
+    .filter(line => !/^\s*\[(?:گامِ? بعد|راهنما|اقدام در گفتگو)/.test(line))
+    .map(line => line.replace(/\s*\((\/[^\s)]*)\)\s*$/u, ''))
+    .join('\n')
+    .trim();
+}

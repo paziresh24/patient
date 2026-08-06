@@ -28,6 +28,18 @@ export interface ChatCard {
   url: string;
   type: string;
   position: number;
+  /**
+   * Trust fields (khesht ≥ 2026-08-06) — the same public catalog data the /s
+   * listing shows. All optional: an older khesht build must degrade to the
+   * minimal card, never break the turn.
+   */
+  image?: string;
+  satisfaction?: number;
+  rates_count?: number;
+  address?: string;
+  waiting_time?: string;
+  online_visit?: boolean;
+  is_bulk?: boolean;
 }
 
 export interface TurnResponse {
@@ -112,6 +124,14 @@ export interface ArchivedMessage {
   role: 'user' | 'assistant';
   text: string;
   created_at: string;
+  /**
+   * The structured answer as it was rendered live (khesht ≥ 2026-08-06).
+   * Restoring from `payload` is what keeps an old conversation looking like a
+   * conversation — `text` is the flat audit transcript, and rendering it in one
+   * bubble was the launch-day bug the owner screenshotted. Absent on messages
+   * archived before the field existed.
+   */
+  payload?: Partial<TurnResponse>;
 }
 
 export interface TurnRequest {

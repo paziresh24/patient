@@ -70,3 +70,60 @@ describe('welcomeText — شخصی‌سازیِ فقط-کلاینت (§۱۳.۸)'
     expect(welcomeText('x'.repeat(40))).toBe(WELCOME_TEXT);
   });
 });
+
+/* ============== restore: structured payload first, stripped transcript as legacy ============== */
+
+// اسکرین‌شاتِ روزِ لانچ (2026-08-06): بازیابیِ گفتگو transcriptِ خامِ audit را در یک
+// حباب ریخت — لیستِ شماره‌دار، مسیرهای /dr/ و «[گامِ بعد: …]». این دو helper همان باگ‌اند.
+
+import { archivedTurnResponse, stripTranscriptArtifacts } from './yaraTurn';
+
+describe('archivedTurnResponse', () => {
+  it('rebuilds a renderable turn from a stored payload, through the same shape live turns use', () => {
+    const res = archivedTurnResponse({
+      message: 'تخصصِ مرتبط «ارتوپدی» است.',
+      results: [{ id: 'doctor_1', title: 'دکتر الف', expertise: 'ارتوپدی', url: '/dr/a/', type: 'doctor', position: 1 }],
+      suggestions: [{ key: 'change_city', label: 'تغییر شهر' }],
+    });
+    expect(res?.mode).toBe('chat');
+    expect(res?.message).toContain('ارتوپدی');
+    expect(res?.results).toHaveLength(1);
+  });
+
+  it('refuses empty or malformed payloads — an empty bubble is worse than the text fallback', () => {
+    expect(archivedTurnResponse(undefined)).toBeNull();
+    expect(archivedTurnResponse(null)).toBeNull();
+    expect(archivedTurnResponse('metn')).toBeNull();
+    expect(archivedTurnResponse([])).toBeNull();
+    expect(archivedTurnResponse({})).toBeNull();
+    expect(archivedTurnResponse({ search_query: 'x', result_count: 0 })).toBeNull();
+  });
+
+  it('never re-arms a client_action from the archive — a restored chat must not reopen a cancel flow', () => {
+    const res = archivedTurnResponse({
+      message: 'x',
+      client_action: { kind: 'cancel_booking', requires_confirmation: true },
+    } as never);
+    expect(res?.client_action).toBeUndefined();
+  });
+});
+
+describe('stripTranscriptArtifacts', () => {
+  it('drops audit markers and trailing path parens, keeps the human sentences', () => {
+    const transcript = [
+      'بر اساس چیزی که نوشتید، تخصصِ مرتبط «مغز و اعصاب» است.',
+      '1. دکتر الف — مغز و اعصاب (/dr/دکتر-الف/)',
+      '[گامِ بعد: تغییر شهر | فقط ویزیت آنلاین]',
+      'این پاسخ راهنمای انتخابِ تخصص است.',
+    ].join('\n');
+    const out = stripTranscriptArtifacts(transcript);
+    expect(out).toContain('مغز و اعصاب');
+    expect(out).toContain('دکتر الف');
+    expect(out).not.toContain('/dr/');
+    expect(out).not.toContain('گامِ بعد');
+  });
+
+  it('is the identity on ordinary prose', () => {
+    expect(stripTranscriptArtifacts('سلام، حالم خوب نیست؟')).toBe('سلام، حالم خوب نیست؟');
+  });
+});
