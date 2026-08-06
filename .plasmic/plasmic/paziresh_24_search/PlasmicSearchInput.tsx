@@ -76,6 +76,7 @@ import Icon21Icon from "./icons/PlasmicIcon__Icon21"; // plasmic-import: GcSkUNa
 import Icon44Icon from "./icons/PlasmicIcon__Icon44"; // plasmic-import: mnMqeXnQZuQo/icon
 
 import { uniq as __lib_lodash__uniq } from "lodash";
+import { stripLegacySearchParams } from "@/modules/search/functions/searchBoxUrl";
 
 createPlasmicElementProxy;
 
@@ -404,7 +405,7 @@ function PlasmicSearchInput__RenderFunc(props: {
                             params.append("text", $state.textInput.value);
                             params.delete("ref");
                             params.append("ref", "search_suggestion_box");
-                            params.delete("semantic_search");
+                            stripLegacySearchParams(params);
                             params.delete("page");
                             return params.toString();
                           })();

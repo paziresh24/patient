@@ -81,6 +81,7 @@ import ChevronLeftIcon from "../fragment_icons/icons/PlasmicIcon__ChevronLeft"; 
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: eKLBqU_Fr5SV/icon
 
 createPlasmicElementProxy;
+import { stripLegacySearchParams } from "@/modules/search/functions/searchBoxUrl";
 
 export type PlasmicSearch__VariantMembers = {
   hasOverlay: "hasOverlay";
@@ -606,7 +607,7 @@ function PlasmicSearch__RenderFunc(props: {
                                     $props.selectedCity.en_slug != "ir"
                                       ? $props.selectedCity.en_slug + "/"
                                       : "";
-                                  params.delete("semantic_search");
+                                  stripLegacySearchParams(params);
                                   params.delete("page");
                                   return `/s/${citySlug}?${params.toString()}`;
                                 }
