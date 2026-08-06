@@ -1,27 +1,28 @@
 /**
  * «یارا» — the full-page conversational assistant (DR-11 pivot, 2026-08-01;
- * redesigned 2026-08-06 after the owner's launch-day review).
+ * rebuilt 2026-08-06 against the owner's «پنل یارا» design).
  *
  * This component assumes it is allowed to run: the gate lives one level up in
  * `yaraPage.tsx`, so this file is a *flow* (ask → render → follow up) and not a
  * second copy of the rollout rules.
  *
- * ### The three findings of the launch-day review, and where each is answered
+ * ### The shape the design asked for, and why each part earns its place
  *
- *  1. «مثل دیزاین سیستم پذیرش۲۴ نیست» — the page now renders through the
- *     product's own components (`SearchCard`, `Button`, the /s color language)
- *     instead of a private visual dialect. Integration here means *reusing the
- *     product*, not imitating it.
- *  2. «اشکالات بدیهی بصری» — assistant rows have an identity (avatar + surface),
- *     the user's messages are unmistakably theirs, «در حال بررسی…» is a typing
- *     indicator instead of a floating sentence, and the thread announces new
- *     content to screen readers (`aria-live`).
- *  3. «اطلاعات اعتمادسازِ پزشک داخلش نیست» — every recommended doctor renders as
- *     the same trust card `/s` shows (photo, tick, satisfaction+count, address,
- *     waiting time) via `YaraDoctorCard`. A name in a list is not a
- *     recommendation.
+ *  - **A rail, not a drawer.** History is a permanent column beside the thread
+ *    (`YaraSidebar`) instead of a panel that opens over it. Switching between
+ *    conversations is the main navigation of this page; it should not require
+ *    covering the conversation you are in. Below `lg` it becomes an overlay,
+ *    because 288px of rail on a phone would leave no thread.
+ *  - **Sides carry meaning.** The patient's words sit at the start of the line
+ *    on brand blue; Yara answers from the other side with an avatar and a white
+ *    surface. Nobody should have to read a bubble to know who wrote it.
+ *  - **An answer is a block, not a bubble.** Text, doctor cards, follow-up
+ *    chips and the actions row are all one assistant turn, aligned to one
+ *    gutter, so a recommendation reads as a single reply.
+ *  - **A composer for sentences.** `YaraComposer` is a growing textarea with an
+ *    example sheet — see its own file for why an `<input>` was the wrong tool.
  *
- * ### What the panel version never needed, built here
+ * ### What the panel version never needed, still built here
  *
  * The in-search-box panel could always fail silently, because the classic
  * results were sitting underneath it. **Here there is nothing underneath.**
@@ -48,11 +49,15 @@
  * No typewriter/streaming animation. A fake token-by-token reveal on a health
  * page sells confidence the answer has not earned; the bounded typing indicator
  * is honest and costs the patient nothing.
+ *
+ * No 👍/👎 on answers either, although the design shows them. There is no
+ * feedback endpoint behind them today, and a rating button that swallows the
+ * rating is worse than no button — it spends the patient's goodwill once and
+ * teaches them the page is decorative.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { getCookie } from 'cookies-next';
-import Button from '@/common/components/atom/button';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import {
   getConversation,
@@ -63,7 +68,7 @@ import {
   type ChatCard,
   type TurnResponse,
 } from '../chatApi';
-import { BookingList, ConfirmCancel, HistoryDrawer, ProviderCard } from '../chatSurfaces';
+import { BookingList, ConfirmCancel, ProviderCard } from '../chatSurfaces';
 import {
   cancelBooking,
   fetchMyBookings,
@@ -73,12 +78,14 @@ import {
 } from '../userDataBridge';
 import {
   archivedTurnResponse,
+  BETA_BADGE,
+  BETA_NOTICE,
   FAILURE_CTA,
   FAILURE_TEXT,
   MAX_CARDS,
-  STANDING_DISCLAIMER,
   stripTranscriptArtifacts,
-  welcomeText,
+  welcomeSubtitle,
+  WELCOME_TITLE,
   STARTER_CHIPS,
   YARA_ENTRY_POINT,
   fallbackSearchUrl,
@@ -87,16 +94,17 @@ import {
   type YaraStatus,
   type YaraTurn,
 } from './yaraTurn';
-import YaraDoctorCard from './yaraDoctorCard';
+import YaraDoctorCard, { YaraDoctorList } from './yaraDoctorCard';
+import YaraSidebar from './yaraSidebar';
+import YaraComposer from './yaraComposer';
 
-/** «ی» on the brand gradient. Inline because it is one element, not a design system. */
-const YaraAvatar = ({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) => (
+/** «ی» on brand blue. Inline because it is one element, not a design system. */
+const YaraAvatar = ({ size = 'sm' }: { size?: 'sm' | 'lg' }) => (
   <span
     aria-hidden="true"
-    className={`flex shrink-0 items-center justify-center rounded-full font-bold text-white ${
-      size === 'lg' ? 'h-14 w-14 text-xl' : size === 'md' ? 'h-9 w-9 text-sm' : 'h-8 w-8 text-xs'
+    className={`grid shrink-0 place-items-center bg-primary font-bold text-white ${
+      size === 'lg' ? 'h-14 w-14 rounded-[1.125rem] text-2xl' : 'mt-0.5 h-8 w-8 rounded-full text-xs'
     }`}
-    style={{ background: 'linear-gradient(135deg,#7A5AF8,#2B6BE6)' }}
   >
     ی
   </span>
@@ -110,10 +118,17 @@ const DOT_CLASS: Record<YaraStatus, string> = {
 };
 
 const DOT_LABEL: Record<YaraStatus, string> = {
-  idle: 'آماده',
-  ok: 'متصل',
+  idle: 'یارا آمادهٔ پاسخ‌گویی است',
+  ok: 'یارا آمادهٔ پاسخ‌گویی است',
   failed: 'ارتباط برقرار نشد',
 };
+
+/** A centred pill for things that happened *to* the thread, not *in* it. */
+const ThreadNote = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex justify-center">
+    <span className="rounded-full bg-[#e9ecf1] px-3 py-1 text-[0.6875rem] text-[#667085]">{children}</span>
+  </div>
+);
 
 /**
  * Is there anything in this response worth showing as an answer?
@@ -135,20 +150,25 @@ function renderableAnswer(res: TurnResponse | null): res is TurnResponse {
   );
 }
 
-/** The assistant's visual identity: avatar + a surface the content sits on. */
+/** The assistant's visual identity: avatar on the far side, content in a column. */
 const AssistantRow = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex items-start gap-2">
-    <YaraAvatar size="sm" />
-    <div className="flex min-w-0 flex-1 flex-col gap-2">{children}</div>
+  // row-reverse so the avatar (first child) lands on the outer edge in RTL.
+  <div className="flex flex-row-reverse justify-end gap-3">
+    <YaraAvatar />
+    <div className="flex min-w-0 flex-1 flex-col gap-3">{children}</div>
   </div>
 );
 
+const CHIP_CLASS =
+  'h-[2.125rem] rounded-full border border-solid border-[#e6e8ec] bg-white px-3.5 text-xs text-[#344054] transition-colors hover:border-primary hover:text-primary';
+
 export const YaraChat = () => {
   const [turns, setTurns] = useState<YaraTurn[]>([]);
-  const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<YaraStatus>('idle');
-  const [showHistory, setShowHistory] = useState(false);
+  const [showRail, setShowRail] = useState(false);
+  const [railKey, setRailKey] = useState(0);
+  const [copiedAt, setCopiedAt] = useState(-1);
   const conversationId = useRef('');
 
   /* ---- the user's own data, fetched by this browser and nowhere else ---- */
@@ -258,6 +278,7 @@ export const YaraChat = () => {
         return;
       }
 
+      const isFirstTurn = !conversationId.current;
       conversationId.current = res.conversation_id;
       setStatus('ok');
       sendChatView(res, YARA_ENTRY_POINT);
@@ -268,6 +289,10 @@ export const YaraChat = () => {
         else next.push({ user: text, assistant: res });
         return next;
       });
+      // A conversation only exists in the archive once it has an answer, so the
+      // rail is re-read exactly then — not on every turn, which would refetch
+      // the whole list for a row that is already in it.
+      if (isFirstTurn) setRailKey(k => k + 1);
       if (res.client_action) void runClientAction(res.client_action);
     },
     [terminalId, city, runClientAction]
@@ -278,7 +303,8 @@ export const YaraChat = () => {
     (raw: string) => {
       const text = String(raw ?? '').trim();
       if (!text || busy) return;
-      setTurns(current => [...current, { user: text }]);
+      setShowRail(false);
+      setTurns(current => [...current, { user: text, at: Date.now() }]);
       void ask(text);
     },
     [ask, busy]
@@ -299,6 +325,17 @@ export const YaraChat = () => {
     }
   }, [pendingCancel, loadBookings]);
 
+  /** «گفت‌وگوی جدید» — a clean thread, without reloading the page. */
+  const newChat = useCallback(() => {
+    conversationId.current = '';
+    setTurns([]);
+    setShowBookings(false);
+    setPendingCancel(null);
+    setNotice('');
+    setStatus('idle');
+    setShowRail(false);
+  }, []);
+
   /**
    * Open an earlier conversation and continue it — «سوییچ بین چت‌ها».
    *
@@ -309,7 +346,7 @@ export const YaraChat = () => {
     const found = await getConversation(id);
     if (!found) return;
     conversationId.current = id;
-    setShowHistory(false);
+    setShowRail(false);
     setShowBookings(false);
     setNotice('');
     const restored: YaraTurn[] = [];
@@ -327,260 +364,321 @@ export const YaraChat = () => {
     setTurns(restored);
   }, []);
 
+  const copyAnswer = useCallback((index: number, text: string) => {
+    // No polyfill and no fallback prompt: on a browser without the async
+    // clipboard the button simply does nothing visible, which is better than a
+    // modal full of text the patient did not ask for.
+    void navigator?.clipboard?.writeText?.(text);
+    setCopiedAt(index);
+    setTimeout(() => setCopiedAt(-1), 1600);
+  }, []);
+
   /** اولین turnِ پاسخ‌دار — لنگرِ نمایشِ تک‌بارِ سلبِ مسئولیت (§۱۳.۸). */
   const firstAnsweredIndex = turns.findIndex(t => t.assistant);
 
+  const statusDot = (
+    <>
+      <span
+        data-testid="yara-status-dot"
+        data-status={status}
+        className={`inline-block h-1.5 w-1.5 shrink-0 rounded-full ${DOT_CLASS[status]}`}
+      />
+      {DOT_LABEL[status]}
+    </>
+  );
+
+  const rail = (
+    <YaraSidebar
+      activeId={conversationId.current}
+      refreshKey={railKey}
+      statusDot={statusDot}
+      onPick={openConversation}
+      onNewChat={newChat}
+    />
+  );
+
   return (
-    <div dir="rtl" className="flex min-h-screen w-full flex-col bg-slate-50">
-      <header className="sticky top-0 z-10 border-b border-solid border-slate-200 bg-white">
-        <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-2 px-4 py-3">
-          <div className="flex items-center gap-2">
-            <YaraAvatar />
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <h1 className="text-sm font-bold text-slate-800">یارا</h1>
-                <span className="rounded-full bg-slate-100 px-2 py-[0.125rem] text-[0.625rem] text-slate-600">
-                  همراه سلامت شما
-                </span>
-              </div>
-              <span className="flex items-center gap-1 text-[0.625rem] text-slate-400">
-                <span
-                  data-testid="yara-status-dot"
-                  data-status={status}
-                  className={`inline-block h-[0.375rem] w-[0.375rem] rounded-full ${DOT_CLASS[status]}`}
-                />
-                {DOT_LABEL[status]}
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <Button variant="text" size="sm" className="!text-xs" onClick={() => setShowHistory(v => !v)}>
-              گفتگوهای من
-            </Button>
-            <Link
-              href="/"
-              prefetch={false}
-              className="rounded-lg px-3 py-2 text-xs text-slate-500 hover:bg-slate-100"
-              onClick={() => sendChatExit(conversationId.current, 'back_home', YARA_ENTRY_POINT)}
-            >
-              بازگشت
-            </Link>
-          </div>
+    <div dir="rtl" className="flex h-[100dvh] w-full flex-col bg-[#f2f3f5] text-[#101828]">
+      <header className="flex h-16 shrink-0 items-center gap-3 border-0 border-b border-solid border-[#e6e8ec] bg-white px-4">
+        <button
+          type="button"
+          aria-label="گفت‌وگوهای من"
+          className="grid h-9 w-9 place-items-center rounded-lg text-[#475467] hover:bg-[#f2f3f5] lg:hidden"
+          onClick={() => setShowRail(v => !v)}
+        >
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="17" x2="20" y2="17" />
+          </svg>
+        </button>
+        <YaraAvatar />
+        <div className="flex min-w-0 flex-col">
+          <h1 className="truncate text-sm font-bold">یارا</h1>
+          <span className="truncate text-[0.6875rem] text-[#98a2b3]">دستیار سلامت پذیرش۲۴</span>
         </div>
+        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[0.6875rem] font-bold text-primary">
+          {BETA_BADGE}
+        </span>
+        <div className="flex-1" />
+        <Link
+          href="/"
+          prefetch={false}
+          className="rounded-lg px-3 py-2 text-xs text-[#667085] hover:bg-[#f2f3f5]"
+          onClick={() => sendChatExit(conversationId.current, 'back_home', YARA_ENTRY_POINT)}
+        >
+          بازگشت
+        </Link>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-4 px-4 py-4" aria-live="polite">
-        {showHistory && (
-          <HistoryDrawer
-            activeId={conversationId.current}
-            onPick={openConversation}
-            onClose={() => setShowHistory(false)}
-          />
-        )}
+      <div className="grid min-h-0 flex-1 lg:grid-cols-[18rem_1fr]">
+        <div className="hidden min-h-0 lg:block">{rail}</div>
 
-        {/* The welcome is static content, not a turn: a greeting must never cost a
-            round-trip, and it must be on screen before anything can fail. */}
-        {turns.length === 0 && (
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 py-10 text-center">
-            <YaraAvatar size="lg" />
-            <p className="max-w-md whitespace-pre-line text-sm leading-7 text-slate-700">{welcomeText(userFirstName)}</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {STARTER_CHIPS.map(chip => (
-                <button
-                  key={chip}
-                  type="button"
-                  className="rounded-full border border-solid border-slate-300 bg-white px-4 py-2 text-xs text-slate-700 transition-colors hover:border-primary hover:text-primary"
-                  onClick={() => send(chip)}
-                >
-                  {chip}
-                </button>
-              ))}
-            </div>
+        {/* Below `lg` the same rail slides over the thread — one component, two
+            placements, so history can never drift between them. */}
+        {showRail && (
+          <div className="fixed inset-0 z-40 lg:hidden">
+            <div
+              role="presentation"
+              className="absolute inset-0 bg-black/30"
+              onClick={() => setShowRail(false)}
+            />
+            <div className="absolute inset-y-0 right-0 w-[18rem] max-w-[85vw] shadow-xl">{rail}</div>
           </div>
         )}
 
-        {turns.map((turn, i) => (
-          <div key={i} className="flex flex-col gap-3">
-            {/* The patient's own words — unmistakably theirs, never restyled away. */}
-            <p className="max-w-[85%] self-end whitespace-pre-line rounded-2xl rounded-bl-md bg-primary px-4 py-2.5 text-sm leading-7 text-white">
-              {turn.user}
-            </p>
-
-            {(turn.assistant || turn.archivedAnswer || turn.failed || turn.emergency) && (
-              <AssistantRow>
-                {(turn.assistant?.emergency || turn.emergency) && (
-                  <p
-                    role="alert"
-                    className="rounded-xl border border-solid border-red-300 bg-red-50 p-3 text-sm font-bold leading-7 text-red-700"
-                  >
-                    {turn.assistant?.emergency || turn.emergency}
-                  </p>
-                )}
-
-                {(turn.assistant?.message || turn.assistant?.clarifying_question || turn.archivedAnswer) && (
-                  <p className="whitespace-pre-line rounded-2xl rounded-tr-md border border-solid border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-800 shadow-sm">
-                    {turn.assistant?.message || turn.assistant?.clarifying_question || turn.archivedAnswer}
-                  </p>
-                )}
-
-                {turn.assistant?.provider && <ProviderCard provider={turn.assistant.provider} />}
-
-                {turn.assistant?.guide && (
-                  <a
-                    href={turn.assistant.guide.url}
-                    className="self-start"
-                    onClick={() =>
-                      sendChatExit(conversationId.current, `guide_${turn.assistant?.guide?.topic}`, YARA_ENTRY_POINT)
-                    }
-                  >
-                    <Button size="sm">{turn.assistant.guide.cta}</Button>
-                  </a>
-                )}
-
-                {/* Only the top few, as full trust cards. An answer that lists ten
-                    doctors has handed the triage back to the patient, which is the
-                    thing this page exists to stop doing. */}
-                {turn.assistant?.results?.slice(0, MAX_CARDS).map((card: ChatCard) => (
-                  <YaraDoctorCard
-                    key={card.id}
-                    card={card}
-                    onClick={() =>
-                      sendChatClick(
-                        card,
-                        {
-                          queryId: turn.assistant?.query_id,
-                          turnIndex: turn.assistant?.turn_index,
-                          resultCount: turn.assistant?.result_count,
-                          searchQuery: turn.assistant?.search_query,
-                          conversationId: conversationId.current,
-                        },
-                        YARA_ENTRY_POINT
-                      )
-                    }
-                  />
-                ))}
-
-                {/* سلبِ مسئولیت فقط روی اولین پاسخ — تکرارش زیرِ هر پیام همان
-                    «محافظه‌کاریِ رباتیک»ی است که owner نخواست (§۱۳.۸)؛ خطِ ثابتِ
-                    زیرِ composer همیشه حاضر است، پس M-7 هم پابرجاست. */}
-                {turn.assistant?.disclaimer && i === firstAnsweredIndex && (
-                  <p className="text-[0.625rem] leading-5 text-slate-400">{turn.assistant.disclaimer}</p>
-                )}
-
-                {/* Tappable next steps. `readSuggestions` swallows every malformed
-                    shape, so this renders nothing rather than throwing. */}
-                {readSuggestions(turn.assistant).length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {readSuggestions(turn.assistant).map(s => (
-                      <button
-                        key={s.key}
-                        type="button"
-                        data-testid="yara-suggestion"
-                        className="rounded-full border border-solid border-primary/30 bg-white px-4 py-2 text-xs text-primary transition-colors hover:bg-primary/5"
-                        onClick={() => send(s.label)}
-                      >
-                        {s.label}
+        <main className="flex min-h-0 flex-col overflow-hidden">
+          <div className="min-h-0 flex-1 overflow-y-auto py-7" aria-live="polite">
+            <div className="mx-auto flex w-full max-w-[47.5rem] flex-col gap-7 px-4">
+              {/* The welcome is static content, not a turn: a greeting must never
+                  cost a round-trip, and it must be on screen before anything can
+                  fail. */}
+              {turns.length === 0 && (
+                <div className="flex flex-col items-center gap-3.5 pb-2 pt-14 text-center">
+                  <YaraAvatar size="lg" />
+                  <h2 className="text-2xl font-bold">{WELCOME_TITLE}</h2>
+                  <p className="max-w-md text-sm leading-7 text-[#667085]">{welcomeSubtitle(userFirstName)}</p>
+                  <div className="flex items-center gap-2 rounded-full border border-solid border-[#e6e8ec] bg-white px-3.5 py-1.5 text-[0.6875rem] text-[#475467]">
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 font-bold text-primary">{BETA_BADGE}</span>
+                    {BETA_NOTICE}
+                  </div>
+                  <div className="mt-2 flex flex-wrap justify-center gap-2">
+                    {STARTER_CHIPS.map(chip => (
+                      <button key={chip} type="button" className={CHIP_CLASS} onClick={() => send(chip)}>
+                        {chip}
                       </button>
                     ))}
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* 🔴 The no-dead-end guarantee. The user's own sentence is right above
-                    this block and is also what builds the link, so the worst outcome
-                    on this page is still one tap from a working search. */}
-                {turn.failed && (
-                  <div
-                    data-testid="yara-failure"
-                    className="flex flex-col items-start gap-2 rounded-2xl rounded-tr-md border border-solid border-amber-200 bg-amber-50 px-4 py-3"
-                  >
-                    <p className="text-sm leading-7 text-slate-700">{FAILURE_TEXT}</p>
-                    <a
-                      href={fallbackSearchUrl(turn.user)}
-                      className="rounded-xl bg-primary px-4 py-2 text-xs font-bold text-white"
-                      onClick={() => sendChatExit(conversationId.current, 'failure_to_search', YARA_ENTRY_POINT)}
-                    >
-                      {FAILURE_CTA}
-                    </a>
+              {turns.length > 0 && <ThreadNote>{`${BETA_BADGE} — ${BETA_NOTICE}`}</ThreadNote>}
+
+              {turns.map((turn, i) => (
+                <div key={i} className="flex flex-col gap-7">
+                  {/* The patient's own words — unmistakably theirs, never restyled away. */}
+                  <div className="flex justify-start">
+                    <p className="max-w-[78%] whitespace-pre-line rounded-2xl rounded-br-[0.25rem] bg-primary px-4 py-3 text-sm leading-7 text-white">
+                      {turn.user}
+                    </p>
                   </div>
-                )}
-              </AssistantRow>
-            )}
-          </div>
-        ))}
 
-        {/* Live data, rendered once below the thread rather than per turn: two
-            copies would disagree the moment one booking is cancelled. */}
-        {showBookings && (
-          <BookingList bookings={bookings} loading={bookingsBusy} onCancel={booking => setPendingCancel(booking)} />
-        )}
+                  {(turn.assistant || turn.archivedAnswer || turn.failed || turn.emergency) && (
+                    <AssistantRow>
+                      {(turn.assistant?.emergency || turn.emergency) && (
+                        <p
+                          role="alert"
+                          className="rounded-2xl border border-solid border-red-300 bg-red-50 px-4 py-3 text-sm font-bold leading-7 text-red-700"
+                        >
+                          {turn.assistant?.emergency || turn.emergency}
+                        </p>
+                      )}
 
-        {pendingCancel && (
-          <ConfirmCancel
-            booking={pendingCancel}
-            busy={cancelBusy}
-            onConfirm={confirmCancel}
-            onDismiss={() => setPendingCancel(null)}
-          />
-        )}
+                      {(turn.assistant?.message || turn.assistant?.clarifying_question || turn.archivedAnswer) && (
+                        <p className="whitespace-pre-line rounded-2xl rounded-bl-[0.25rem] border border-solid border-[#e6e8ec] bg-white px-4 py-3.5 text-sm leading-7 text-[#1d2939]">
+                          {turn.assistant?.message || turn.assistant?.clarifying_question || turn.archivedAnswer}
+                        </p>
+                      )}
 
-        {notice && (
-          <p className="rounded-xl border border-solid border-slate-200 bg-white px-4 py-3 text-sm leading-7 shadow-sm">
-            {notice}
-          </p>
-        )}
+                      {turn.assistant?.provider && <ProviderCard provider={turn.assistant.provider} />}
 
-        {/* Honest, bounded, and shaped like an incoming message — not a floating
-            sentence. The hard ceiling is `withTimeout`, not this animation. */}
-        {busy && (
-          <div data-testid="yara-busy" className="flex items-start gap-2" aria-label="در حال بررسی">
-            <YaraAvatar size="sm" />
-            <div className="flex items-center gap-1.5 rounded-2xl rounded-tr-md border border-solid border-slate-200 bg-white px-4 py-4 shadow-sm">
-              {[0, 150, 300].map(delay => (
-                <span
-                  key={delay}
-                  className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400"
-                  style={{ animationDelay: `${delay}ms` }}
-                />
+                      {turn.assistant?.guide && (
+                        <a
+                          href={turn.assistant.guide.url}
+                          className="self-start rounded-[0.5625rem] bg-primary px-5 py-2.5 text-xs font-bold text-white"
+                          onClick={() =>
+                            sendChatExit(
+                              conversationId.current,
+                              `guide_${turn.assistant?.guide?.topic}`,
+                              YARA_ENTRY_POINT
+                            )
+                          }
+                        >
+                          {turn.assistant.guide.cta}
+                        </a>
+                      )}
+
+                      {/* Only the top few, as full trust cards, in one framed list.
+                          An answer that lists ten doctors has handed the triage
+                          back to the patient, which is the thing this page exists
+                          to stop doing. */}
+                      {!!turn.assistant?.results?.length && (
+                        <YaraDoctorList>
+                          {turn.assistant.results.slice(0, MAX_CARDS).map((card: ChatCard) => (
+                            <YaraDoctorCard
+                              key={card.id}
+                              card={card}
+                              onClick={() =>
+                                sendChatClick(
+                                  card,
+                                  {
+                                    queryId: turn.assistant?.query_id,
+                                    turnIndex: turn.assistant?.turn_index,
+                                    resultCount: turn.assistant?.result_count,
+                                    searchQuery: turn.assistant?.search_query,
+                                    conversationId: conversationId.current,
+                                  },
+                                  YARA_ENTRY_POINT
+                                )
+                              }
+                            />
+                          ))}
+                        </YaraDoctorList>
+                      )}
+
+                      {/* سلبِ مسئولیت فقط روی اولین پاسخ — تکرارش زیرِ هر پیام همان
+                          «محافظه‌کاریِ رباتیک»ی است که owner نخواست (§۱۳.۸)؛ خطِ ثابتِ
+                          زیرِ composer همیشه حاضر است، پس M-7 هم پابرجاست. */}
+                      {turn.assistant?.disclaimer && i === firstAnsweredIndex && (
+                        <p className="text-[0.6875rem] leading-5 text-[#98a2b3]">{turn.assistant.disclaimer}</p>
+                      )}
+
+                      {/* Tappable next steps. `readSuggestions` swallows every malformed
+                          shape, so this renders nothing rather than throwing. */}
+                      {readSuggestions(turn.assistant).length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {readSuggestions(turn.assistant).map(s => (
+                            <button
+                              key={s.key}
+                              type="button"
+                              data-testid="yara-suggestion"
+                              className={CHIP_CLASS}
+                              onClick={() => send(s.label)}
+                            >
+                              {s.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Actions on a *delivered* answer only. Both do something
+                          real — copy the text, ask the same question again — which
+                          is why 👍/👎 are not here (see the file comment). */}
+                      {turn.assistant && (
+                        <div className="flex flex-wrap items-center gap-1 text-[0.6875rem] text-[#98a2b3]">
+                          <button
+                            type="button"
+                            className="rounded-md px-2 py-1 text-[#667085] transition-colors hover:bg-[#eceef2] hover:text-[#101828]"
+                            onClick={() =>
+                              copyAnswer(
+                                i,
+                                String(turn.assistant?.message || turn.assistant?.clarifying_question || '')
+                              )
+                            }
+                          >
+                            {copiedAt === i ? 'کپی شد' : 'کپی'}
+                          </button>
+                          <button
+                            type="button"
+                            className="rounded-md px-2 py-1 text-[#667085] transition-colors hover:bg-[#eceef2] hover:text-[#101828] disabled:opacity-40"
+                            disabled={busy}
+                            onClick={() => send(turn.user)}
+                          >
+                            پاسخ دیگر
+                          </button>
+                          {turn.at && (
+                            <span className="px-2">
+                              {new Date(turn.at).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 🔴 The no-dead-end guarantee. The user's own sentence is right
+                          above this block and is also what builds the link, so the worst
+                          outcome on this page is still one tap from a working search. */}
+                      {turn.failed && (
+                        <div
+                          data-testid="yara-failure"
+                          className="flex flex-col items-start gap-2.5 rounded-2xl rounded-bl-[0.25rem] border border-solid border-amber-200 bg-amber-50 px-4 py-3.5"
+                        >
+                          <p className="text-sm leading-7 text-[#475467]">{FAILURE_TEXT}</p>
+                          <a
+                            href={fallbackSearchUrl(turn.user)}
+                            className="rounded-[0.5625rem] bg-primary px-4 py-2 text-xs font-bold text-white"
+                            onClick={() =>
+                              sendChatExit(conversationId.current, 'failure_to_search', YARA_ENTRY_POINT)
+                            }
+                          >
+                            {FAILURE_CTA}
+                          </a>
+                        </div>
+                      )}
+                    </AssistantRow>
+                  )}
+                </div>
               ))}
+
+              {/* Live data, rendered once below the thread rather than per turn: two
+                  copies would disagree the moment one booking is cancelled. */}
+              {showBookings && (
+                <BookingList
+                  bookings={bookings}
+                  loading={bookingsBusy}
+                  onCancel={booking => setPendingCancel(booking)}
+                />
+              )}
+
+              {pendingCancel && (
+                <ConfirmCancel
+                  booking={pendingCancel}
+                  busy={cancelBusy}
+                  onConfirm={confirmCancel}
+                  onDismiss={() => setPendingCancel(null)}
+                />
+              )}
+
+              {notice && (
+                <p className="rounded-2xl border border-solid border-[#e6e8ec] bg-white px-4 py-3 text-sm leading-7">
+                  {notice}
+                </p>
+              )}
+
+              {/* Honest, bounded, and shaped like an incoming message — not a floating
+                  sentence. The hard ceiling is `withTimeout`, not this animation. */}
+              {busy && (
+                <div data-testid="yara-busy" aria-label="در حال بررسی">
+                  <AssistantRow>
+                    <span className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-[0.25rem] border border-solid border-[#e6e8ec] bg-white px-4 py-4">
+                      {[0, 150, 300].map(delay => (
+                        <span
+                          key={delay}
+                          className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#98a2b3]"
+                          style={{ animationDelay: `${delay}ms` }}
+                        />
+                      ))}
+                    </span>
+                  </AssistantRow>
+                </div>
+              )}
+
+              <div ref={threadEnd} />
             </div>
           </div>
-        )}
 
-        <div ref={threadEnd} />
-      </main>
-
-      <footer className="sticky bottom-0 border-t border-solid border-slate-200 bg-white">
-        <div className="mx-auto w-full max-w-3xl px-4 pb-3 pt-2">
-          <form
-            className="flex items-center gap-2 rounded-full border border-solid border-slate-300 bg-white py-1.5 pe-1.5 ps-4 transition-colors focus-within:border-primary"
-            onSubmit={e => {
-              e.preventDefault();
-              const text = input.trim();
-              if (!text || busy) return;
-              setInput('');
-              send(text);
-            }}
-          >
-            <input
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
-              placeholder="علائم، نام پزشک یا سؤال‌تان را بنویسید…"
-              aria-label="پیام شما به یارا"
-              value={input}
-              maxLength={600}
-              disabled={busy}
-              onChange={e => setInput(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="h-9 shrink-0 rounded-full bg-primary px-5 text-sm text-white transition-opacity disabled:opacity-40"
-              disabled={busy || !input.trim()}
-            >
-              ارسال
-            </button>
-          </form>
-          <p className="mt-2 text-center text-[0.625rem] leading-5 text-slate-400">{STANDING_DISCLAIMER}</p>
-        </div>
-      </footer>
+          <YaraComposer busy={busy} onSend={send} />
+        </main>
+      </div>
     </div>
   );
 };

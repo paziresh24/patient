@@ -127,3 +127,36 @@ describe('stripTranscriptArtifacts', () => {
     expect(stripTranscriptArtifacts('سلام، حالم خوب نیست؟')).toBe('سلام، حالم خوب نیست؟');
   });
 });
+
+describe('groupConversations — «امروز» باید واقعاً یعنی امروز', () => {
+  const { groupConversations } = require('./yaraTurn');
+  // ظهرِ یک روزِ مشخص، تا مرزِ نیمه‌شب در وسطِ تستِ ما نیفتد.
+  const now = new Date('2026-08-06T12:00:00').getTime();
+  const row = (id: string, at: string) =>
+    ({ conversation_id: id, title: id, created_at: at, last_message_at: at, turn_count: 2 }) as never;
+
+  it('برش از نیمه‌شبِ محلی است، نه ۲۴ ساعتِ لغزان', () => {
+    // ۲۳:۵۰ دیشب فقط ۱۲ ساعت پیش است، ولی «امروز» نیست — و این همان چیزی است
+    // که برچسب ادعا می‌کند.
+    const groups = groupConversations([row('last-night', '2026-08-05T23:50:00'), row('today', '2026-08-06T09:00:00')], now);
+    expect(groups.map((g: { label: string }) => g.label)).toEqual(['امروز', 'دیروز']);
+    expect(groups[0].items.map((c: { conversation_id: string }) => c.conversation_id)).toEqual(['today']);
+  });
+
+  it('هفتهٔ گذشته و قدیمی‌تر جدا می‌شوند و ترتیبِ گروه‌ها ثابت است', () => {
+    const groups = groupConversations(
+      [row('old', '2026-06-01T10:00:00'), row('week', '2026-08-02T10:00:00'), row('today', '2026-08-06T08:00:00')],
+      now
+    );
+    expect(groups.map((g: { label: string }) => g.label)).toEqual(['امروز', '۷ روز گذشته', 'قدیمی‌تر']);
+  });
+
+  it('تاریخِ خراب فقط جای خودش را از دست می‌دهد، نه کلِ ریل را', () => {
+    const groups = groupConversations([row('broken', 'not-a-date'), row('today', '2026-08-06T08:00:00')], now);
+    expect(groups.map((g: { label: string }) => g.label)).toEqual(['امروز', 'قدیمی‌تر']);
+  });
+
+  it('لیستِ خالی ⇒ هیچ گروهی', () => {
+    expect(groupConversations([], now)).toEqual([]);
+  });
+});

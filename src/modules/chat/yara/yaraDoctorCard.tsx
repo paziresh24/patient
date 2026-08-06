@@ -22,6 +22,49 @@ interface YaraDoctorCardProps {
   onClick: () => void;
 }
 
+/**
+ * «چرا یارا ایشان را پیشنهاد می‌کند» — the reasoning strip under each card.
+ *
+ * ⛔ Every line here is a field khesht actually sent. The design mock also shows
+ * a quoted patient review and a per-topic review count; neither exists in
+ * `ChatCard`, and inventing a quote under a doctor's name is not a styling
+ * decision. So the strip renders what we have and disappears entirely when we
+ * have nothing — an empty box would be a claim of its own.
+ */
+const WhyStrip = ({ card }: { card: ChatCard }) => {
+  const facts: string[] = [];
+  if (card.satisfaction !== undefined && card.rates_count)
+    facts.push(`${card.satisfaction}٪ رضایت از ${card.rates_count.toLocaleString('fa-IR')} نظر`);
+  if (card.waiting_time) facts.push(`زمان انتظار: ${card.waiting_time}`);
+  if (card.online_visit) facts.push('ویزیت آنلاین دارد');
+  if (!facts.length) return null;
+
+  return (
+    <div
+      data-testid="yara-card-why"
+      className="mx-4 mb-4 flex flex-col gap-1.5 rounded-[0.6875rem] border border-solid border-[#eff1f4] bg-[#fafbfc] px-3.5 py-3"
+    >
+      <span className="text-[0.6875rem] font-bold text-[#344054]">چرا یارا ایشان را پیشنهاد می‌کند</span>
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[#475467]">
+        {facts.map(f => (
+          <span key={f}>{f}</span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/**
+ * The recommended doctors as **one** surface with dividers, the way the panel
+ * design frames them — a short list to choose from, not three loose cards that
+ * read as three separate offers.
+ */
+export const YaraDoctorList = ({ children }: { children: React.ReactNode }) => (
+  <div className="overflow-hidden rounded-[0.875rem] border border-solid border-[#e6e8ec] bg-white [&>*+*]:border-0 [&>*+*]:border-t [&>*+*]:border-solid [&>*+*]:border-[#eff1f4]">
+    {children}
+  </div>
+);
+
 export const YaraDoctorCard = ({ card, onClick }: YaraDoctorCardProps) => {
   const badges = useMemo(() => {
     const list: BadgeProps[] = [];
@@ -36,7 +79,9 @@ export const YaraDoctorCard = ({ card, onClick }: YaraDoctorCardProps) => {
     <div data-testid="yara-result-card" className="w-full" onClick={onClick}>
       <SearchCard
         type={card.type === 'center' ? 'center' : 'doctor'}
-        className="!shadow-none border border-solid border-slate-200"
+        // The frame belongs to `YaraDoctorList`, so the card gives up its own
+        // border/shadow/rounding rather than drawing a second one inside it.
+        className="!rounded-none !border-0 !shadow-none"
         baseInfo={{
           displayName: card.title,
           expertise: card.expertise,
@@ -63,6 +108,7 @@ export const YaraDoctorCard = ({ card, onClick }: YaraDoctorCardProps) => {
           },
         ]}
       />
+      <WhyStrip card={card} />
     </div>
   );
 };
