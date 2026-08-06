@@ -190,3 +190,4 @@ export function toChatContext(bookings: BookingSummary[]) {
     center: b.centerName,
   }));
 }
+

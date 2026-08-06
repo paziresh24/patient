@@ -32,7 +32,7 @@
 const ALLOWED_HOSTS = new Set(['paziresh24.com', 'www.paziresh24.com']);
 
 /** Non-production hosts, allowed only when the build is not production. */
-const DEV_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0']);
+const DEV_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0', 'local.paziresh24.com']);
 
 export function isChatAllowedHost(rawHost: string | undefined | null, isProduction = process.env.NODE_ENV === 'production'): boolean {
   const host = String(rawHost ?? '')
@@ -46,6 +46,17 @@ export function isChatAllowedHost(rawHost: string | undefined | null, isProducti
   if (!isProduction && host.endsWith('.p24cloud.ir')) return true;
   return false;
 }
+
+/**
+ * bypassِ **فقط-توسعه‌ی** گیتِ لاگین برای E2Eِ localِ روی لپ‌تاپ (dr-11 §۱۳.۷ گامِ ۱):
+ * روی لپ‌تاپ sessionِ واقعی نداریم و بدونِ این، مسیرِ اصلیِ گفت‌وگو در مرورگر
+ * تست‌ناپذیر بود. ساختاراً در production بی‌اثر است: شرطِ `nodeEnv === 'development'`
+ * در بیلدِ prod برقرار نیست و envِ اشتباه هم نمی‌تواند زنده‌اش کند (spec دارد).
+ */
+export const devFakeLogin = (
+  cfg: Record<string, unknown>,
+  nodeEnv: string | undefined = process.env.NODE_ENV
+): boolean => nodeEnv === 'development' && String(cfg.CHAT_MVP_DEV_FAKE_LOGIN ?? '') === 'true';
 
 export interface ChatEligibilityInputs {
   /** `window.location.host` on the client, or the forwarded host on the server. */

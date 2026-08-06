@@ -360,7 +360,7 @@ export async function getAggregatedProfileData(
 
   // Conditionally add doctor centers API call
   if (options?.useNewDoctorCentersAPI) {
-    apiCalls.push(getDoctorCenters(validatedSlug, university));
+    apiCalls.push(getDoctorCenters(validatedSlug, university, { onlyBookable: false }));
   }
 
   const samanAvailabilityPromise =

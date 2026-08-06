@@ -15,6 +15,8 @@ import { useSearchStore } from '@/modules/search/store/search';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
+// دعوتِ کم‌صدای یارا — dynamic و ssr:false تا خطای احتمالیِ ماژولِ چت هرگز هوم‌پیج را نگیرد.
+const YaraInvite = dynamic(() => import('@/modules/chat/yara/yaraInvite'), { ssr: false });
 import { ComponentType, useEffect, useState } from 'react';
 import getConfig from 'next/config';
 import { splunkInstance } from '@/common/services/splunk';
@@ -104,6 +106,7 @@ const HomePageBody = ({
                 isMobile,
             })}
           />
+          <YaraInvite />
           {!customize.partnerKey && (
             <div className="lg:w-[50rem] w-full">
               <Fragment2

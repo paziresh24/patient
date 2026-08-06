@@ -63,6 +63,13 @@ export interface TurnResponse {
     requires_confirmation: boolean;
     params: Record<string, string>;
   };
+  /**
+   * Next things the patient can tap instead of typing — added by the orchestrator
+   * for the full-page surface (Yara). Optional and unstable on purpose: a surface
+   * that renders it must treat "absent", "empty" and "malformed" as the same
+   * thing — nothing — so an orchestrator change can never break the page.
+   */
+  suggestions?: Array<{ key: string; label: string }>;
   /** Read-only detail card for one named provider — address / phone / availability. */
   provider?: {
     matched: boolean;
@@ -246,8 +253,28 @@ function send(type: string, event: Record<string, unknown>): void {
   }
 }
 
-/** `entry_point` separates the in-search-box surface from the standalone route. */
-export function sendChatView(res: TurnResponse, entryPoint: 'search_box' | 'chat_route'): void {
+/**
+ * `entry_point` separates the surfaces from each other in the same funnel:
+ * `search_box` (panel inside `/s`), `chat_route` (the old `/chat`), and `yara`
+ * (the standalone full-page assistant at `/yara`). One union, one place, so a new
+ * surface cannot quietly emit a fourth spelling of the same idea.
+ */
+export type ChatEntryPoint = 'search_box' | 'chat_route' | 'yara';
+
+/**
+ * دعوتِ کم‌صدای هوم‌پیج (DR-11 §۱۳-۴). CTRِ همین دو رویداد، عددِ کلیدیِ M-8 است —
+ * بدونِ view، click قابلِ تفسیر نیست (نمی‌دانیم چند نفر دعوت را دیدند).
+ */
+export function sendYaraInvite(action: 'view' | 'click'): void {
+  send('conversational_invite', {
+    action,
+    entry_point: 'homepage',
+    is_conversational: true,
+    has_token: Boolean(getCookie('token')),
+  });
+}
+
+export function sendChatView(res: TurnResponse, entryPoint: ChatEntryPoint): void {
   send('search_view', {
     /**
      * Could this browser read the `token` cookie when it made the call?
@@ -274,7 +301,7 @@ export function sendChatView(res: TurnResponse, entryPoint: 'search_box' | 'chat
 export function sendChatClick(
   card: ChatCard,
   ctx: { queryId?: string; turnIndex?: number; resultCount?: number; searchQuery?: string; conversationId: string },
-  entryPoint: 'search_box' | 'chat_route'
+  entryPoint: ChatEntryPoint
 ): void {
   send('search_click_position', {
     card_data: { _id: card.id, position: card.position, title: card.title, type: card.type, url: card.url },
@@ -291,6 +318,7 @@ export function sendChatClick(
 }
 
 /** The escape hatch's usage rate is KPI M-3. */
-export function sendChatExit(conversationId: string, reason: string, entryPoint: 'search_box' | 'chat_route'): void {
+export function sendChatExit(conversationId: string, reason: string, entryPoint: ChatEntryPoint): void {
   send('conversational_exit', { conversation_id: conversationId, exit_reason: reason, entry_point: entryPoint });
 }
+

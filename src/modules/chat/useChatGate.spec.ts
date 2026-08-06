@@ -55,3 +55,21 @@ describe('DR-11 — preview فقط درصدِ رول‌اوت را دور می�
     expect(gate({ master: true, rollout: false, preview: false })).toBe('feature_off');
   });
 });
+
+describe('DR-11 §۱۳.۷ — bypassِ dev-onlyِ لاگین ساختاراً در production بی‌اثر است', () => {
+  const { devFakeLogin } = require('./chatEligibility');
+
+  it('فقط در development و فقط با env صریح روشن می‌شود', () => {
+    expect(devFakeLogin({ CHAT_MVP_DEV_FAKE_LOGIN: 'true' }, 'development')).toBe(true);
+  });
+
+  it('در production/test حتی با env روشن، خاموش است', () => {
+    expect(devFakeLogin({ CHAT_MVP_DEV_FAKE_LOGIN: 'true' }, 'production')).toBe(false);
+    expect(devFakeLogin({ CHAT_MVP_DEV_FAKE_LOGIN: 'true' }, 'test')).toBe(false);
+    expect(devFakeLogin({ CHAT_MVP_DEV_FAKE_LOGIN: 'true' }, undefined)).toBe(false);
+  });
+
+  it('بدونِ env، حتی در development خاموش است', () => {
+    expect(devFakeLogin({}, 'development')).toBe(false);
+  });
+});
