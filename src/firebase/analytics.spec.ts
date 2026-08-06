@@ -58,3 +58,5 @@ describe('firebase/analytics — gate باید importِ سنگین را کنتر
     expect(mockGetAnalytics).not.toHaveBeenCalled();
   });
 });
+
+export {}; // isolatedModules: این فایل importِ سطح-بالا ندارد و بدونِ این خط TS1208 می‌دهد
