@@ -26,6 +26,7 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 import { computeExperienceYearsFromGraduationDate } from '@/modules/profile/utils/computeExperienceYears';
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
+import { isDoctorProfileSelfRedirect } from '@/modules/profile/utils/isDoctorProfileSelfRedirect';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -226,7 +227,22 @@ export async function getAggregatedProfileData(
 
     // Handle redirects from slug validation service
     if ('redirect' in result) {
-      if (isServer) {
+      // Backend sometimes returns 301 to the same /dr/{slug}/ path (encoding-only
+      // "canonicalization"). Following that loops forever — skip and render.
+      if (isDoctorProfileSelfRedirect(slug, result.redirect.route)) {
+        splunkInstance('doctor-profile').sendEvent({
+          group: 'doctor_slug_self_redirect_ignored',
+          type: 'self_redirect_ignored',
+          event: {
+            original_slug: slug,
+            redirect_route: result.redirect.route,
+            isServer: isServer,
+            timestamp: new Date().toISOString(),
+          },
+        });
+        slugInfo = null;
+        validatedSlug = slug;
+      } else if (isServer) {
         return {
           redirect: {
             statusCode: result.redirect.statusCode,
@@ -237,25 +253,25 @@ export async function getAggregatedProfileData(
       } else {
         return location.replace(encodeURI(result.redirect.route));
       }
+    } else {
+      // Valid slug response - use the validated slug
+      slugInfo = result;
+      validatedSlug = result.slug;
+
+      // Log successful slug validation
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'profile_slug_validation_primary',
+        type: 'slug_validation_primary_success',
+        event: {
+          original_slug: slug,
+          validated_slug: validatedSlug,
+          doctor_id: result.id,
+          user_id: result.user_id,
+          isServer: isServer,
+          timestamp: new Date().toISOString(),
+        },
+      });
     }
-
-    // Valid slug response - use the validated slug
-    slugInfo = result;
-    validatedSlug = result.slug;
-
-    // Log successful slug validation
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'profile_slug_validation_primary',
-      type: 'slug_validation_primary_success',
-      event: {
-        original_slug: slug,
-        validated_slug: validatedSlug,
-        doctor_id: result.id,
-        user_id: result.user_id,
-        isServer: isServer,
-        timestamp: new Date().toISOString(),
-      },
-    });
   } else {
     console.error('Error validating doctor slug:', slugValidationResult.reason);
     splunkInstance('doctor-profile').sendEvent({
