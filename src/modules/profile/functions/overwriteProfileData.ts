@@ -1,5 +1,6 @@
 import type { BioCredentials } from '@/common/apis/services/profile-microservice/normalizeBioCredentials';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { joinProfileNameParts } from '@/modules/profile/utils/resolveProfileDisplayName';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -54,7 +55,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const information = {
     id: source?.id ?? null,
     server_id: source?.server_id ?? null,
-    display_name: source?.name + ' ' + source?.family,
+    display_name: joinProfileNameParts({ name: source?.name, family: source?.family }) || source?.display_name || '',
     name: source?.name,
     family: source?.family,
     biography: pickNonEmptyBiography(overwriteData?.biography, providerBiography, source?.biography),
