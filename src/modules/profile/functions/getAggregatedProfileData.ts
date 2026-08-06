@@ -27,6 +27,7 @@ import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileDa
 import { computeExperienceYearsFromGraduationDate } from '@/modules/profile/utils/computeExperienceYears';
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 import { isDoctorProfileSelfRedirect } from '@/modules/profile/utils/isDoctorProfileSelfRedirect';
+import { resolveProfileDisplayName } from '@/modules/profile/utils/resolveProfileDisplayName';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -189,13 +190,13 @@ export async function getAggregatedProfileData(
   let slugInfo = null;
   let validatedSlug = slug;
   let fullProfileData = null;
+  let skipFullProfile = false;
 
-  // Start both slug validation and full profile calls in parallel
-  // Use retry mechanism for client-side requests
-  const [slugValidationResult, fullProfileResult] = await Promise.allSettled([
-    validateDoctorSlug(slug),
-    getProfile({ slug, university, isServer: isServer }),
-  ]);
+  // Validate slug first — self-redirect slugs must not wait on full-profile (slow + bad merge).
+  const slugValidationResult = await Promise.resolve(validateDoctorSlug(slug)).then(
+    value => ({ status: 'fulfilled' as const, value }),
+    reason => ({ status: 'rejected' as const, reason }),
+  );
 
   // Handle slug validation result first (this handles redirects and errors)
   if (slugValidationResult.status === 'fulfilled') {
@@ -242,6 +243,7 @@ export async function getAggregatedProfileData(
         });
         slugInfo = null;
         validatedSlug = slug;
+        skipFullProfile = true;
       } else if (isServer) {
         return {
           redirect: {
@@ -287,6 +289,16 @@ export async function getAggregatedProfileData(
     });
     slugInfo = null;
     validatedSlug = slug;
+  }
+
+  let fullProfileResult: PromiseSettledResult<Awaited<ReturnType<typeof getProfile>>>;
+  if (skipFullProfile) {
+    fullProfileResult = { status: 'fulfilled', value: { fullProfileData: null, redirect: undefined } };
+  } else {
+    fullProfileResult = await Promise.resolve(getProfile({ slug, university, isServer: isServer })).then(
+      value => ({ status: 'fulfilled' as const, value }),
+      reason => ({ status: 'rejected' as const, reason }),
+    );
   }
 
   // Handle full profile result (no redirect handling - just get data)
@@ -375,20 +387,6 @@ export async function getAggregatedProfileData(
           })
       : Promise.resolve(null);
 
-  const keywordSearchText = [fullProfileData?.name, fullProfileData?.family].filter(Boolean).join(' ').trim();
-  // Prefer an in-person center city (skip consult 5532) so tags match the same search surface.
-  const keywordCitySlug =
-    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city_en_slug)?.city_en_slug ||
-    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug ||
-    'ir';
-  const keywordTagsPromise = options?.fetchExpertiseKeywordTags
-    ? getDoctorKeywordTags({
-        slug: validatedSlug,
-        searchText: keywordSearchText || undefined,
-        cityEnSlug: typeof keywordCitySlug === 'string' ? keywordCitySlug : 'ir',
-      }).catch(() => [])
-    : Promise.resolve([]);
-
   const [
     [
       internalLinksBreadcrumbResult,
@@ -403,8 +401,7 @@ export async function getAggregatedProfileData(
       doctorCentersResult,
     ],
     ,
-    keywordTags,
-  ] = await Promise.all([Promise.allSettled(apiCalls), samanAvailabilityPromise, keywordTagsPromise]);
+  ] = await Promise.all([Promise.allSettled(apiCalls), samanAvailabilityPromise]);
 
   // Extract doctor full name from API response
   const doctorFullName =
@@ -433,6 +430,29 @@ export async function getAggregatedProfileData(
 
   // Extract doctor centers from API response
   const doctorCenters = options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
+
+  const processedName = doctorFullName?.name;
+  const processedFamily = doctorFullName?.family;
+  const finalName = processedName === null ? '' : processedName ?? '';
+  const finalFamily = processedFamily === null ? '' : processedFamily ?? '';
+
+  const keywordSearchText = skipFullProfile
+    ? [finalName, finalFamily].filter(Boolean).join(' ').trim()
+    : [fullProfileData?.name, fullProfileData?.family].filter(Boolean).join(' ').trim();
+  const keywordCitySlug =
+    (skipFullProfile
+      ? doctorCenters?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug
+      : null) ||
+    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city_en_slug)?.city_en_slug ||
+    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug ||
+    'ir';
+  const keywordTags = options?.fetchExpertiseKeywordTags
+    ? await getDoctorKeywordTags({
+        slug: validatedSlug,
+        searchText: keywordSearchText || undefined,
+        cityEnSlug: typeof keywordCitySlug === 'string' ? keywordCitySlug : 'ir',
+      }).catch(() => [])
+    : [];
 
   // Handle gallery API call after all other requests (depends on centers)
   let doctorGallery = null;
@@ -548,14 +568,7 @@ export async function getAggregatedProfileData(
     }
   }
 
-  // Handle null values from fullname web service
-  const processedName = doctorFullName?.name;
-  const processedFamily = doctorFullName?.family;
-
-  // Set empty strings if values are null
-  const finalName = processedName === null ? '' : processedName;
-  const finalFamily = processedFamily === null ? '' : processedFamily;
-
+  // Handle null values from fullname web service (finalName/finalFamily computed above)
   // Log to Splunk if fullname values were null
   if (options?.useNewDoctorFullNameAPI && doctorFullName && (doctorFullName.name === null || doctorFullName.family === null)) {
     splunkInstance('doctor-profile').sendEvent({
@@ -572,24 +585,54 @@ export async function getAggregatedProfileData(
     });
   }
 
+  const profileSource = skipFullProfile
+    ? {}
+    : {
+        ...(fullProfileData ?? {}),
+      };
+
+  const resolvedName = finalName?.trim() ? finalName : skipFullProfile ? undefined : fullProfileData?.name;
+  const resolvedFamily = finalFamily?.trim() ? finalFamily : skipFullProfile ? undefined : fullProfileData?.family;
+
   const {
     centers: initialCenters,
     expertises,
     feedbacks,
     history,
-    information,
+    information: rawInformation,
     media,
     onlineVisit,
     similarLinks: rawSimilarLinks,
     symptomes,
     waitingTimeInfo,
   } = overwriteProfileData(overwriteData, {
-    ...(fullProfileData ?? {}),
+    ...profileSource,
     id: slugInfo?.owner_id,
     server_id: slugInfo?.server_id,
-    name: finalName,
-    family: finalFamily,
+    name: resolvedName,
+    family: resolvedFamily,
   });
+
+  const centerFallbackName = initialCenters?.[0]?.name;
+  const displayName = resolveProfileDisplayName(
+    { name: rawInformation?.name, family: rawInformation?.family },
+    { centerName: centerFallbackName, slug: validatedSlug },
+  );
+  const information = {
+    ...rawInformation,
+    ...(displayName
+      ? {
+          display_name: displayName,
+          name: rawInformation?.name?.trim() ? rawInformation.name : displayName.split(' ')[0] ?? displayName,
+          family:
+            rawInformation?.family?.trim() ?
+              rawInformation.family
+            : displayName.includes(' ') ?
+              displayName.slice(displayName.indexOf(' ') + 1)
+            : '',
+        }
+      : {}),
+  };
 
   // When centers API adds 5532 but full-profile has no/invalid services, hydrate from center services API
   // so profile SSR can render the online-visit card (e.g. Doodangeh).
@@ -640,7 +683,7 @@ export async function getAggregatedProfileData(
 
   if (!university) {
     try {
-      if (!slugInfo?.user_id) {
+      if (!slugInfo?.user_id && !skipFullProfile) {
         const { data } = await drProfileClient.get(`/api/doctors/${encodeURIComponent(validatedSlug)}`, {
           timeout: 3000,
         });
@@ -703,7 +746,7 @@ export async function getAggregatedProfileData(
       keywordTags: Array.isArray(keywordTags) ? keywordTags : [],
       expertiseChipsLikeSearchEnabled: !!options?.fetchExpertiseKeywordTags,
       user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
-      shouldFetchOnClient: !fullProfileData?.id,
+      shouldFetchOnClient: skipFullProfile ? false : !fullProfileData?.id,
       useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
     },
