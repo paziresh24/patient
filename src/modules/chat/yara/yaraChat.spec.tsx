@@ -7,6 +7,8 @@
  */
 jest.mock('@/common/apis/services/booking/getBooks', () => ({ getBooks: jest.fn().mockResolvedValue({ data: [] }) }));
 jest.mock('@/common/apis/services/booking/removeBook', () => ({ removeBook: jest.fn() }));
+// کارتِ /s در ماژول‌اسکوپ getConfig می‌خواند — بیرونِ Next باید mock باشد.
+jest.mock('next/config', () => () => ({ publicRuntimeConfig: {}, serverRuntimeConfig: {} }));
 jest.mock('cookies-next', () => ({ getCookie: jest.fn().mockReturnValue('terminal-1') }));
 // storeِ واقعی زنجیره‌اش به getConfig می‌رسد؛ mockِ selector-خور (zustand-style).
 jest.mock('@/modules/login/store/userInfo', () => ({
