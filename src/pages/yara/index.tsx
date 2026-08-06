@@ -12,8 +12,22 @@
  * switch, GrowthBook percentage, preview key, host allow-list, logged-in — because
  * they live in `useChatGate`/`chatEligibility` and this route does not re-implement
  * any of them.
+ *
+ * ⚠️ **`getServerSideProps` is load-bearing even though it returns nothing.**
+ * Caught on production 2026-08-06: the first deploy of this page served a 200 whose
+ * `__NEXT_DATA__.runtimeConfig` had **4 keys instead of 41** and whose gate said
+ * `feature_off` for everyone, preview key included. Cause: a page with no
+ * data-fetching method is *automatically statically optimized*, and Next.js does not
+ * populate `publicRuntimeConfig` for those — so `CHAT_MVP_ENABLED` read as
+ * `undefined` at runtime and the master switch was permanently off. `/s` never hit
+ * this because it has its own `getServerSideProps`.
+ *
+ * This is the same class as the `NEXT_PUBLIC_*` build-time trap (DR-11 §۱۲.۹ row 1):
+ * the switch existed, but the value could never reach the client. Opting out of
+ * static optimization is what makes the runtime config actually runtime. It does
+ * **not** reintroduce the `/chat` 404 gate — no props, no redirect, no `notFound`.
  */
-import type { NextPage } from 'next';
+import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 import YaraPage from '@/modules/chat/yara/yaraPage';
 
@@ -27,6 +41,13 @@ const Yara: NextPage = () => (
     <YaraPage />
   </>
 );
+
+/**
+ * Empty on purpose: the only job here is to opt the route out of automatic static
+ * optimization so `publicRuntimeConfig` is populated on every request. Anything
+ * that gates, redirects, or 404s belongs in `yaraPage.tsx`, not here.
+ */
+export const getServerSideProps: GetServerSideProps = async () => ({ props: {} });
 
 export default Yara;
 
