@@ -119,7 +119,7 @@ export async function getAggregatedProfileDataFromMicroservice(
     getAverageWaitingTime({ slug: validatedSlug })
       .then(value => ({ status: 'fulfilled' as const, value }))
       .catch(reason => ({ status: 'rejected' as const, reason })),
-    getDoctorCenters(validatedSlug, university)
+    getDoctorCenters(validatedSlug, university, { onlyBookable: false })
       .then(value => ({ status: 'fulfilled' as const, value }))
       .catch(reason => {
         console.error('Error fetching legacy centers for microservice booking hydrate:', reason);
