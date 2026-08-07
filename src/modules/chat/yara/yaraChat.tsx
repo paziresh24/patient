@@ -56,7 +56,8 @@
  * that reason.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Link from 'next/link';
+import Logo from '@/common/components/atom/logo';
+import { useRouter } from 'next/router';
 import { getCookie } from 'cookies-next';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import {
@@ -101,16 +102,22 @@ import {
 import YaraDoctorCard, { YaraDoctorList } from './yaraDoctorCard';
 import YaraSidebar from './yaraSidebar';
 import YaraComposer from './yaraComposer';
+import { clearSnapshot, readSnapshot, snapshotMatches, writeSnapshot } from './yaraSession';
 
-/** «ی» on brand blue. Inline because it is one element, not a design system. */
+/**
+ * Yara answers with the **paziresh24 mark**, not a private «ی» monogram.
+ *
+ * owner (2026-08-07): «در چت‌ها لوگوی یارا همان لوگوی پذیرش۲۴ باشد.» A second
+ * brand mark inside our own product asks the patient to trust a new thing; the
+ * point is that this *is* paziresh24 talking.
+ */
 const YaraAvatar = ({ size = 'sm' }: { size?: 'sm' | 'lg' }) => (
   <span
-    aria-hidden="true"
-    className={`grid shrink-0 place-items-center bg-primary font-bold text-white ${
-      size === 'lg' ? 'h-14 w-14 rounded-[1.125rem] text-2xl' : 'mt-0.5 h-8 w-8 rounded-full text-xs'
+    className={`grid shrink-0 place-items-center rounded-full border border-solid border-[#e6e8ec] bg-white ${
+      size === 'lg' ? 'h-14 w-14' : 'mt-0.5 h-8 w-8'
     }`}
   >
-    ی
+    <Logo width={size === 'lg' ? 30 : 18} type="compact" />
   </span>
 );
 
@@ -175,6 +182,9 @@ export const YaraChat = () => {
   const [copiedAt, setCopiedAt] = useState(-1);
   const [ratings, setRatings] = useState<Record<number, 1 | -1>>({});
   const conversationId = useRef('');
+  const router = useRouter();
+  const scroller = useRef<HTMLDivElement | null>(null);
+  const restored = useRef(false);
 
   /* ---- the user's own data, fetched by this browser and nowhere else ---- */
   const [bookings, setBookings] = useState<BookingSummary[]>([]);
@@ -375,7 +385,9 @@ export const YaraChat = () => {
     setNotice('');
     setStatus('idle');
     setShowRail(false);
-  }, []);
+    clearSnapshot();
+    void router.push({ pathname: '/yara' }, undefined, { shallow: true });
+  }, [router]);
 
   /**
    * Open an earlier conversation and continue it — «سوییچ بین چت‌ها».
@@ -387,6 +399,9 @@ export const YaraChat = () => {
     const found = await getConversation(id);
     if (!found) return;
     conversationId.current = id;
+    // A real history entry, so «back» steps *between* conversations before it
+    // ever leaves Yara. `shallow` because the page has no server data to refetch.
+    void router.push({ pathname: '/yara', query: { c: id } }, undefined, { shallow: true });
     setShowRail(false);
     setShowBookings(false);
     setNotice('');
@@ -413,6 +428,39 @@ export const YaraChat = () => {
     setCopiedAt(index);
     setTimeout(() => setCopiedAt(-1), 1600);
   }, []);
+
+  /**
+   * Come back from a doctor profile and the thread is still there.
+   *
+   * Runs once: a later `?c=` change is the rail's job, and re-running this would
+   * fight it. `restored` also guards against the snapshot re-appearing after the
+   * patient explicitly started a new conversation.
+   */
+  useEffect(() => {
+    if (restored.current) return;
+    restored.current = true;
+    const urlId = String(router.query.c ?? '');
+    const snapshot = readSnapshot();
+    if (snapshotMatches(snapshot, urlId) && snapshot) {
+      conversationId.current = snapshot.conversationId;
+      setTurns(snapshot.turns);
+      setStatus('ok');
+      // After paint, or the container has no height to scroll yet.
+      requestAnimationFrame(() => {
+        if (scroller.current) scroller.current.scrollTop = snapshot.scrollTop;
+      });
+      return;
+    }
+    if (urlId) void openConversation(urlId);
+  }, [router.query.c, openConversation]);
+
+  useEffect(() => {
+    writeSnapshot({
+      conversationId: conversationId.current,
+      turns,
+      scrollTop: scroller.current?.scrollTop ?? 0,
+    });
+  }, [turns]);
 
   /**
    * 👍/👎. Recorded locally so the button visibly latches, and sent once — a
@@ -457,40 +505,9 @@ export const YaraChat = () => {
   );
 
   return (
-    <div dir="rtl" className="flex h-[100dvh] w-full flex-col bg-[#f2f3f5] text-[#101828]">
-      <header className="flex h-16 shrink-0 items-center gap-3 border-0 border-b border-solid border-[#e6e8ec] bg-white px-4">
-        <button
-          type="button"
-          aria-label="گفت‌وگوهای من"
-          className="grid h-9 w-9 place-items-center rounded-lg text-[#475467] hover:bg-[#f2f3f5] lg:hidden"
-          onClick={() => setShowRail(v => !v)}
-        >
-          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <line x1="4" y1="7" x2="20" y2="7" />
-            <line x1="4" y1="12" x2="20" y2="12" />
-            <line x1="4" y1="17" x2="20" y2="17" />
-          </svg>
-        </button>
-        <YaraAvatar />
-        <div className="flex min-w-0 flex-col">
-          <h1 className="truncate text-sm font-bold">یارا</h1>
-          <span className="truncate text-[0.6875rem] text-[#98a2b3]">دستیار سلامت پذیرش۲۴</span>
-        </div>
-        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[0.6875rem] font-bold text-primary">
-          {BETA_BADGE}
-        </span>
-        <div className="flex-1" />
-        <Link
-          href="/"
-          prefetch={false}
-          className="rounded-lg px-3 py-2 text-xs text-[#667085] hover:bg-[#f2f3f5]"
-          onClick={() => sendChatExit(conversationId.current, 'back_home', YARA_ENTRY_POINT)}
-        >
-          بازگشت
-        </Link>
-      </header>
+    <div dir="rtl" className="flex min-h-0 w-full flex-1 flex-col bg-[#f2f3f5] text-[#101828]">
 
-      <div className="grid min-h-0 flex-1 lg:grid-cols-[18rem_1fr]">
+      <div className="grid min-h-0 flex-1 lg:grid-cols-[18rem_1fr]" style={{ height: 'calc(100dvh - 8rem)' }}>
         <div className="hidden min-h-0 lg:block">{rail}</div>
 
         {/* Below `lg` the same rail slides over the thread — one component, two
@@ -507,8 +524,19 @@ export const YaraChat = () => {
         )}
 
         <main className="flex min-h-0 flex-col overflow-hidden">
-          <div className="min-h-0 flex-1 overflow-y-auto py-7" aria-live="polite">
+          <div ref={scroller} className="min-h-0 flex-1 overflow-y-auto py-7" aria-live="polite">
             <div className="mx-auto flex w-full max-w-[47.5rem] flex-col gap-7 px-4">
+              {/* Below `lg` the rail is an overlay, so it needs a way in. It is a
+                  quiet pill inside the thread rather than a second header bar —
+                  the site header above already owns that row. */}
+              <button
+                type="button"
+                data-testid="yara-rail-toggle"
+                className="self-start rounded-full border border-solid border-[#e6e8ec] bg-white px-3.5 py-1.5 text-xs text-[#475467] lg:hidden"
+                onClick={() => setShowRail(true)}
+              >
+                گفت‌وگوهای من
+              </button>
               {/* The welcome is static content, not a turn: a greeting must never
                   cost a round-trip, and it must be on screen before anything can
                   fail. */}

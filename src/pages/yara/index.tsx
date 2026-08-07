@@ -29,9 +29,14 @@
  */
 import type { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
+import type { ReactElement } from 'react';
+import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import YaraPage from '@/modules/chat/yara/yaraPage';
 
-const Yara: NextPage = () => (
+/** `_app` reads `getLayout` off the page component, so the type has to allow it. */
+type PageWithLayout = NextPage & { getLayout?: (page: ReactElement) => ReactElement };
+
+const Yara: PageWithLayout = () => (
   <>
     <Head>
       <title>یارا | همراه سلامت شما | پذیرش۲۴</title>
@@ -47,6 +52,24 @@ const Yara: NextPage = () => (
  * optimization so `publicRuntimeConfig` is populated on every request. Anything
  * that gates, redirects, or 404s belongs in `yaraPage.tsx`, not here.
  */
+/**
+ * The page wears the site's own chrome (owner 2026-08-07: «نوار هدر و نویگیشن
+ * بار باید مثل بقیه صفحات سایت باشه و از اونها Reuse بشه»). Yara used to draw a
+ * private header, which made it feel like a different product and duplicated a
+ * logo, a menu and a back link the site already has — including the bottom
+ * navigation's own «گفت‌وگوها» entry.
+ *
+ * The footer is off because this page is an app shell: a scrolling thread with a
+ * pinned composer has no bottom to put a sitemap on.
+ */
+Yara.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <LayoutWithHeaderAndFooter showFooter={false} shouldShowPromoteApp={false}>
+      {page}
+    </LayoutWithHeaderAndFooter>
+  );
+};
+
 export const getServerSideProps: GetServerSideProps = async () => ({ props: {} });
 
 export default Yara;

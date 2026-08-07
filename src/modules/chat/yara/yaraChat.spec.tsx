@@ -9,6 +9,10 @@ jest.mock('@/common/apis/services/booking/getBooks', () => ({ getBooks: jest.fn(
 jest.mock('@/common/apis/services/booking/removeBook', () => ({ removeBook: jest.fn() }));
 // کارتِ /s در ماژول‌اسکوپ getConfig می‌خواند — بیرونِ Next باید mock باشد.
 jest.mock('next/config', () => () => ({ publicRuntimeConfig: {}, serverRuntimeConfig: {} }));
+// `useRouter` is the page's history channel now (`?c=<id>` per conversation);
+// outside Next there is no router to mount, so the spec supplies a minimal one.
+const push = jest.fn();
+jest.mock('next/router', () => ({ useRouter: () => ({ query: {}, push, pathname: '/yara' }) }));
 jest.mock('cookies-next', () => ({ getCookie: jest.fn().mockReturnValue('terminal-1') }));
 // storeِ واقعی زنجیره‌اش به getConfig می‌رسد؛ mockِ selector-خور (zustand-style).
 jest.mock('@/modules/login/store/userInfo', () => ({
@@ -52,7 +56,12 @@ const cards = (n: number): ChatCard[] =>
     position: i + 1,
   }));
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  // یارا thread را در sessionStorage نگه می‌دارد (بازگشت از پروفایلِ پزشک)؛ بدونِ
+  // پاک‌کردنش، گفتگوی یک تست داخلِ تستِ بعدی restore می‌شود.
+  window.sessionStorage.clear();
+});
 
 describe('مسیرِ شکست — هیچ‌وقت بن‌بست، هیچ‌وقت گم‌شدنِ متنِ کاربر', () => {
   it('خطای شبکه ⇒ بلاکِ عذرخواهی + لینکِ جستجو با همان متنِ کاربر، و حبابِ کاربر سرِ جایش', async () => {
