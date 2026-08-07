@@ -12,11 +12,18 @@ jest.mock('next/config', () => () => ({ publicRuntimeConfig: {}, serverRuntimeCo
 // `useRouter` is the page's history channel now (`?c=<id>` per conversation);
 // outside Next there is no router to mount, so the spec supplies a minimal one.
 const push = jest.fn();
-jest.mock('next/router', () => ({ useRouter: () => ({ query: {}, push, pathname: '/yara' }) }));
+const routerQuery: Record<string, string> = {};
+jest.mock('next/router', () => ({ useRouter: () => ({ query: routerQuery, push, pathname: '/yara' }) }));
 jest.mock('cookies-next', () => ({ getCookie: jest.fn().mockReturnValue('terminal-1') }));
 // storeِ واقعی زنجیره‌اش به getConfig می‌رسد؛ mockِ selector-خور (zustand-style).
 jest.mock('@/modules/login/store/userInfo', () => ({
   useUserInfoStore: (selector: (s: unknown) => unknown) => selector({ info: { name: '' }, isLogin: true, pending: false }),
+}));
+jest.mock('../userDataBridge', () => ({
+  fetchMyBookings: jest.fn().mockResolvedValue([]),
+  toChatContext: jest.fn().mockReturnValue([]),
+  planClientAction: jest.fn().mockReturnValue(null),
+  cancelBooking: jest.fn(),
 }));
 jest.mock('../chatApi', () => ({
   postTurn: jest.fn(),
@@ -31,6 +38,7 @@ jest.mock('../chatApi', () => ({
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { postTurn, sendChatClick, sendChatView, type ChatCard, type TurnResponse } from '../chatApi';
+import { fetchMyBookings } from '../userDataBridge';
 import YaraChat from './yaraChat';
 import { FAILURE_CTA, STARTER_CHIPS, YARA_ENTRY_POINT } from './yaraTurn';
 
@@ -384,5 +392,37 @@ describe('placeholder — راهنما وقتی لازم است، سکوت وق�
     // و شیتِ نمونه‌سؤال‌های بی‌ربط هم دیگر باز نمی‌شود
     await userEvent.click(box);
     expect(screen.queryByTestId('yara-suggest-sheet')).not.toBeInTheDocument();
+  });
+});
+
+describe('بازگشتِ مرورگر — نوبت‌ها باید برگردند', () => {
+  it('اگر نوبتی در thread فهرستِ نوبت خواسته بود، بعد از restore دوباره گرفته می‌شود', async () => {
+    // owner ۲۰۲۶-۰۸-۰۷: «روی یکی از نوبت‌ها کلیک کردم و بک زدم، دیگه نوبت‌ها نبودند.»
+    // فهرست در stateِ کامپوننت است نه در turn، پس snapshot برش نمی‌گرداند.
+    window.sessionStorage.setItem(
+      'yara:thread',
+      JSON.stringify({
+        conversationId: 'c-1',
+        scrollTop: 0,
+        savedAt: Date.now(),
+        turns: [
+          {
+            user: 'نوبت‌هام رو نشون بده',
+            assistant: {
+              mode: 'chat',
+              conversation_id: 'c-1',
+              query_id: 'q',
+              turn_index: 1,
+              message: 'نوبت‌های شما را همین‌جا می‌آورم:',
+              client_action: { kind: 'fetch_my_bookings' },
+            },
+          },
+        ],
+      })
+    );
+    routerQuery.c = 'c-1';
+    render(<YaraChat />);
+    await waitFor(() => expect(fetchMyBookings).toHaveBeenCalled());
+    delete routerQuery.c;
   });
 });

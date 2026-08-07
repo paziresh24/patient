@@ -261,6 +261,9 @@ const nextConfig = {
     // at server start, so flipping it is a pod restart, not a rebuild.
     CHAT_MVP_ENABLED: process.env.CHAT_MVP_ENABLED,
     CHAT_MVP_PREVIEW_KEY: process.env.CHAT_MVP_PREVIEW_KEY,
+    // فهرستِ user_idهایی که یارا برایشان باز است، فارغ از درصدِ rollout. برخلافِ
+    // PREVIEW_KEY به **حساب** بسته است نه به URL، پس با اولین ناوبری از بین نمی‌رود.
+    CHAT_MVP_ALLOW_USER_IDS: process.env.CHAT_MVP_ALLOW_USER_IDS,
     // فقط در NODE_ENV=development اثر دارد (chatEligibility.devFakeLogin) — برای E2E local.
     CHAT_MVP_DEV_FAKE_LOGIN: process.env.CHAT_MVP_DEV_FAKE_LOGIN,
     CHAT_API_BASE: process.env.CHAT_API_BASE,

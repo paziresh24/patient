@@ -53,7 +53,7 @@ export const STARTER_CHIPS = [
  * are asks the patient to admire the product; a question asks them to start. The
  * product name moved down to the subtitle, where it costs nothing.
  */
-export const WELCOME_TITLE = 'امروز چه چیزی اذیت‌تان می‌کند؟';
+export const WELCOME_TITLE = 'چطور می‌توانم برای سلامتی‌تان به شما کمک کنم؟';
 export const WELCOME_SUBTITLE =
   'علائم‌تان را ساده بنویسید — می‌گویم به کدام پزشک مراجعه کنید، پزشکِ مناسب را پیدا می‌کنم و نوبتش را همین‌جا می‌گیرم.';
 

@@ -58,6 +58,28 @@ export const devFakeLogin = (
   nodeEnv: string | undefined = process.env.NODE_ENV
 ): boolean => nodeEnv === 'development' && String(cfg.CHAT_MVP_DEV_FAKE_LOGIN ?? '') === 'true';
 
+/**
+ * حسابِ کاربرانی که یارا برایشان باز است، فارغ از درصدِ rollout.
+ *
+ * جایگزینِ `?chatPreview=<key>` برای آدمِ نام‌برده: کلیدِ query فقط تا اولین
+ * ناوبری زنده می‌ماند — کاربر یک لینک باز می‌کند، به صفحه‌ی دیگری می‌رود و
+ * دوباره «یارا هنوز برای حساب شما فعال نشده است» می‌بیند. یک allow-listِ
+ * user-id به **حساب** بسته است، نه به URL، پس در همه‌ی صفحه‌ها و همه‌ی
+ * دستگاه‌های همان حساب پایدار است.
+ *
+ * ⛔ فقط درصدِ rollout را دور می‌زند. host allow-list، سایتِ پارتنر و الزامِ
+ * لاگین همچنان اعمال می‌شوند — آن‌ها قواعدِ ایمنی و هزینه‌اند، نه دکمه‌ی rollout.
+ */
+export function isAllowedUserId(rawList: unknown, userId: unknown): boolean {
+  const id = String(userId ?? '').trim();
+  if (!id) return false;
+  return String(rawList ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .includes(id);
+}
+
 export interface ChatEligibilityInputs {
   /** `window.location.host` on the client, or the forwarded host on the server. */
   host: string | undefined | null;
