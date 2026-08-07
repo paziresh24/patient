@@ -27,6 +27,12 @@ interface YaraComposerProps {
   busy: boolean;
   /** A started conversation changes what the box should say and offer. */
   hasThread: boolean;
+  /**
+   * A half-written sentence pushed in from a chip. Bumping `draft.seq` re-applies
+   * it even when the same stem is chosen twice — the value alone cannot express
+   * «the patient asked for this again».
+   */
+  draft?: { text: string; seq: number };
   onSend: (text: string) => void;
 }
 
@@ -47,7 +53,7 @@ const SendIcon = () => (
   </svg>
 );
 
-export const YaraComposer = ({ busy, hasThread, onSend }: YaraComposerProps) => {
+export const YaraComposer = ({ busy, hasThread, draft, onSend }: YaraComposerProps) => {
   const [text, setText] = useState('');
   const [focused, setFocused] = useState(false);
   const box = useRef<HTMLTextAreaElement | null>(null);
@@ -64,6 +70,21 @@ export const YaraComposer = ({ busy, hasThread, onSend }: YaraComposerProps) => 
     const id = setInterval(() => setSlot(n => (n + 1) % ROTATING_PLACEHOLDERS.length), PLACEHOLDER_INTERVAL_MS);
     return () => clearInterval(id);
   }, [hasThread, text]);
+
+  /**
+   * Take the chip's stem, put the caret at the end, and open the keyboard. The
+   * whole point is that the patient finishes the sentence, so focus is not a
+   * nicety here — without it the chip is still «یک پیام میاد و هیچ».
+   */
+  useEffect(() => {
+    if (!draft?.text) return;
+    setText(draft.text);
+    const el = box.current;
+    if (!el) return;
+    el.focus();
+    // After the value lands, or the caret jumps to the start on some browsers.
+    requestAnimationFrame(() => el.setSelectionRange(el.value.length, el.value.length));
+  }, [draft?.seq, draft?.text]);
 
   // Re-measure on every value change, including the reset to '' after a send —
   // otherwise a grown box stays tall over an empty placeholder.

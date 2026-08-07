@@ -218,6 +218,62 @@ export function readSuggestions(res: TurnResponse | undefined): YaraSuggestion[]
     .slice(0, 6);
 }
 
+/**
+ * What a follow-up chip should actually *do*.
+ *
+ * owner (2026-08-07): «پاسخ‌های تکمیلی پیشنهادی را خودت تست کن. باید کار کنند.
+ * مثلا تغییر شهر باید کار کند. الان فقط یک پیام میاد و هیچ.» — and named the fix:
+ * «یک جمله ناتمام بزاره توی باکس سرچ و کیبورد باز بشه (فوکوس بره روش) تا کاربر
+ * بتونه کاملش کنه».
+ *
+ * The reason «تغییر شهر» did nothing is structural, not a bug in one chip: it is
+ * not a *message*, it is the **name of a parameter the assistant is missing**.
+ * Sending it as a turn asks the model to guess a city it was never told. So a
+ * chip of that kind must open the composer with a half-written sentence instead
+ * of firing a turn.
+ *
+ * `prefill` on the suggestion wins when khesht sends it; the table below is the
+ * front end's answer for the chips that exist today, so the fix does not wait on
+ * a back-end deploy.
+ */
+export type SuggestionMode = 'send' | 'prefill';
+
+const PREFILL_STEMS: Array<{ match: RegExp; stem: string }> = [
+  { match: /تغییر\s*شهر|شهر\s*دیگر|انتخاب\s*شهر/, stem: 'شهرم را عوض کن به ' },
+  { match: /تغییر\s*تاریخ|روز\s*دیگر|زمان\s*دیگر/, stem: 'نوبت را برای ' },
+  { match: /بیمه/, stem: 'بیمه‌ی من ' },
+  { match: /بودجه|ارزان‌?تر/, stem: 'حداکثر بودجه‌ام ' },
+];
+
+export function suggestionAction(s: YaraSuggestion & { prefill?: unknown }): { mode: SuggestionMode; text: string } {
+  // ⚠️ Leading whitespace and newlines go; the **trailing space stays**. Trimming
+  // it is what turns «بیمه‌ی من » into «بیمه‌ی من» — a finished-looking sentence,
+  // which is exactly the thing a prefill must not be. (Caught by its own test.)
+  const explicit =
+    typeof s?.prefill === 'string' ? s.prefill.replace(/\s+/g, ' ').replace(/^ +/, '') : '';
+  if (explicit.trim()) return { mode: 'prefill', text: explicit };
+  const hit = PREFILL_STEMS.find(row => row.match.test(s.label));
+  // ⛔ A prefill must be *incomplete*. Handing the patient a finished sentence and
+  // focusing the box invites them to press Enter on words they did not choose.
+  if (hit) return { mode: 'prefill', text: hit.stem };
+  return { mode: 'send', text: s.label };
+}
+
+/**
+ * What the waiting state says, by how long it has been waiting.
+ *
+ * owner: «باید پیام واقعی را به کاربر منتقل کند که بفهمد سرور دارد چه کاری
+ * می‌کند.» We have no server-side progress channel, so this describes the
+ * *elapsed stage*, which is true, rather than naming an internal step we cannot
+ * observe — a fake «در حال جست‌وجوی پایگاه داده» would be exactly the invented
+ * confidence the no-typewriter rule above exists to avoid.
+ */
+export function busyLabel(elapsedMs: number): string {
+  if (elapsedMs < 2500) return 'در حال خواندن پیام شما…';
+  if (elapsedMs < 7000) return 'در حال پیدا کردن پزشکِ مناسب…';
+  return 'کمی طول کشید؛ هنوز دارم بررسی می‌کنم…';
+}
+
 /** One line in the thread. `failed` is a first-class state, not an absent answer. */
 export interface YaraTurn {
   user: string;
