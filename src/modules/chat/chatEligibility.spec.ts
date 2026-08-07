@@ -99,3 +99,32 @@ describe('DR-11 §۱۱.۱ — پیش‌فیلترِ شکلی (نه خودِ trig
     expect(looksConversational('')).toBe(false);
   });
 });
+
+describe('دو سطحِ رضایت — پیشنهاد در برابرِ درِ مستقیم', () => {
+  /**
+   * owner ۲۰۲۶-۰۸-۰۷: «۱٪ در هوم‌پیج پیشنهاد ببینند… هرکسی هم آدرسِ مستقیمِ
+   * yara را زد بتواند استفاده کند.» درصدِ rollout یعنی «به چند نفر پیشنهاد
+   * بدهیم»، نه «چه کسی حق دارد وارد شود».
+   */
+  const base = {
+    host: 'www.paziresh24.com',
+    partnerKey: '',
+    isLogin: true,
+    isAuthPending: false,
+    isProduction: true,
+  };
+
+  it('خارج از باکتِ rollout: پیشنهاد نه، ولی درِ مستقیم باز', () => {
+    // پیشنهاد ⇒ featureEnabled از rollout می‌آید ⇒ خاموش
+    expect(chatIneligibleReason({ ...base, featureEnabled: false })).toBe('feature_off');
+    // درِ مستقیم ⇒ صفحه featureEnabled را بدونِ rollout می‌سازد ⇒ باز
+    expect(chatIneligibleReason({ ...base, featureEnabled: true })).toBeNull();
+  });
+
+  it('⛔ درِ مستقیم قواعدِ ایمنی را دور نمی‌زند', () => {
+    // این‌ها برای هر دو سطح یکسان‌اند — درِ مستقیم دکمه‌ی دورزدنشان نیست.
+    expect(chatIneligibleReason({ ...base, featureEnabled: true, host: 'nobat.tums.ac.ir' })).toBe('host_not_allowed');
+    expect(chatIneligibleReason({ ...base, featureEnabled: true, partnerKey: 'tums' })).toBe('partner_site');
+    expect(chatIneligibleReason({ ...base, featureEnabled: true, isLogin: false })).toBe('not_logged_in');
+  });
+});
