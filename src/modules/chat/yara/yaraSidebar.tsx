@@ -74,7 +74,9 @@ export const YaraSidebar = ({ activeId, refreshKey, statusDot, onPick, onNewChat
         <button
           type="button"
           onClick={onNewChat}
-          className="flex h-[2.625rem] w-full items-center justify-center gap-2 rounded-[0.625rem] bg-primary text-sm font-bold text-white transition-colors hover:bg-[#2a4fd6]"
+          // owner: «نیازی نیست دکمه گفتگوی جدید تو پر باشه.» A filled button here
+          // competes with the real CTAs inside answers (نوبت‌دهی/ویزیت آنلاین).
+          className="flex h-[2.625rem] w-full items-center justify-center gap-2 rounded-[0.625rem] border border-solid border-primary bg-white text-sm font-bold text-primary transition-colors hover:bg-primary/5"
         >
           <span aria-hidden="true" className="text-lg leading-none">
             +

@@ -13,12 +13,26 @@
  * a suggestion blurs the textarea before the click lands.
  */
 import { useEffect, useRef, useState } from 'react';
-import { COMPOSER_SUGGESTIONS, STANDING_DISCLAIMER } from './yaraTurn';
+import {
+  COMPOSER_SUGGESTIONS,
+  FOLLOW_UP_PLACEHOLDER,
+  PLACEHOLDER_INTERVAL_MS,
+  ROTATING_PLACEHOLDERS,
+  STANDING_DISCLAIMER,
+} from './yaraTurn';
 
 const MAX_HEIGHT = 160;
 
 interface YaraComposerProps {
   busy: boolean;
+  /** A started conversation changes what the box should say and offer. */
+  hasThread: boolean;
+  /**
+   * A half-written sentence pushed in from a chip. Bumping `draft.seq` re-applies
+   * it even when the same stem is chosen twice — the value alone cannot express
+   * «the patient asked for this again».
+   */
+  draft?: { text: string; seq: number };
   onSend: (text: string) => void;
 }
 
@@ -39,10 +53,38 @@ const SendIcon = () => (
   </svg>
 );
 
-export const YaraComposer = ({ busy, onSend }: YaraComposerProps) => {
+export const YaraComposer = ({ busy, hasThread, draft, onSend }: YaraComposerProps) => {
   const [text, setText] = useState('');
   const [focused, setFocused] = useState(false);
   const box = useRef<HTMLTextAreaElement | null>(null);
+  const [slot, setSlot] = useState(0);
+
+  /**
+   * Rotate the example only while it is actually doing its job: an empty box, on
+   * an empty thread. Once the patient is typing — or is in a conversation — the
+   * placeholder is either invisible or a distraction, and an interval that keeps
+   * running is a re-render every few seconds for nothing.
+   */
+  useEffect(() => {
+    if (hasThread || text) return undefined;
+    const id = setInterval(() => setSlot(n => (n + 1) % ROTATING_PLACEHOLDERS.length), PLACEHOLDER_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [hasThread, text]);
+
+  /**
+   * Take the chip's stem, put the caret at the end, and open the keyboard. The
+   * whole point is that the patient finishes the sentence, so focus is not a
+   * nicety here — without it the chip is still «یک پیام میاد و هیچ».
+   */
+  useEffect(() => {
+    if (!draft?.text) return;
+    setText(draft.text);
+    const el = box.current;
+    if (!el) return;
+    el.focus();
+    // After the value lands, or the caret jumps to the start on some browsers.
+    requestAnimationFrame(() => el.setSelectionRange(el.value.length, el.value.length));
+  }, [draft?.seq, draft?.text]);
 
   // Re-measure on every value change, including the reset to '' after a send —
   // otherwise a grown box stays tall over an empty placeholder.
@@ -62,11 +104,16 @@ export const YaraComposer = ({ busy, onSend }: YaraComposerProps) => {
   };
 
   const canSend = Boolean(text.trim()) && !busy;
+  const placeholder = hasThread ? FOLLOW_UP_PLACEHOLDER : ROTATING_PLACEHOLDERS[slot];
+  // ⛔ The example sheet is for someone who has not started. Mid-conversation the
+  // *relevant* next steps are the assistant's own suggestion chips, and a list of
+  // unrelated openers next to them invites abandoning the thread.
+  const showSheet = focused && !text.trim() && !hasThread;
 
   return (
     <div className="border-0 border-t border-solid border-[#e6e8ec] bg-white px-4 pb-3 pt-4">
       <div className="relative mx-auto w-full max-w-[47.5rem]">
-        {focused && !text.trim() && (
+        {showSheet && (
           <div
             data-testid="yara-suggest-sheet"
             className="absolute bottom-[calc(100%+0.625rem)] z-20 w-full overflow-hidden rounded-[0.875rem] border border-solid border-[#e6e8ec] bg-white shadow-[0_0.75rem_2rem_rgba(16,24,40,.12)]"
@@ -114,9 +161,13 @@ export const YaraComposer = ({ busy, onSend }: YaraComposerProps) => {
           </button>
           <textarea
             ref={box}
-            rows={1}
-            className="max-h-40 min-w-0 flex-1 resize-none bg-transparent py-2 text-sm leading-7 text-[#101828] outline-none placeholder:text-[#98a2b3]"
-            placeholder="علائم، نام پزشک یا سؤال‌تان را بنویسید…"
+            rows={2}
+            className="max-h-40 min-h-[3.5rem] min-w-0 flex-1 resize-none bg-transparent py-2 text-sm leading-7 text-[#101828] outline-none transition-[height] placeholder:text-[#98a2b3]"
+            placeholder={placeholder}
+            // ⚠️ No `key` here. Keying the textarea by the rotating slot swaps the
+            // DOM node, which drops focus mid-typing and — caught by the
+            // Enter/Shift+Enter test — leaves callers holding a detached element.
+            // The placeholder is a plain attribute; changing it is enough.
             aria-label="پیام شما به یارا"
             value={text}
             maxLength={600}

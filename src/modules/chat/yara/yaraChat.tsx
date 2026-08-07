@@ -95,6 +95,8 @@ import {
   YARA_ENTRY_POINT,
   fallbackSearchUrl,
   readSuggestions,
+  suggestionAction,
+  busyLabel,
   withTimeout,
   type YaraStatus,
   type YaraTurn,
@@ -181,6 +183,11 @@ export const YaraChat = () => {
   const [railKey, setRailKey] = useState(0);
   const [copiedAt, setCopiedAt] = useState(-1);
   const [ratings, setRatings] = useState<Record<number, 1 | -1>>({});
+  const [draft, setDraft] = useState<{ text: string; seq: number } | undefined>();
+  const [busySince, setBusySince] = useState(0);
+  // The value is never read: its only job is to re-render so `busyLabel` sees a
+  // fresh clock. A ref would not re-render, and a clock in state would be a lie.
+  const [, setBusyTick] = useState(0);
   const conversationId = useRef('');
   const router = useRouter();
   const scroller = useRef<HTMLDivElement | null>(null);
@@ -254,6 +261,7 @@ export const YaraChat = () => {
   const ask = useCallback(
     async (text: string) => {
       setBusy(true);
+      setBusySince(Date.now());
       setNotice('');
       // `?? null` collapses "timed out" and "call failed" into one value before
       // the guard, so the narrowing below has a single nullable to reason about.
@@ -454,6 +462,14 @@ export const YaraChat = () => {
     if (urlId) void openConversation(urlId);
   }, [router.query.c, openConversation]);
 
+  // One tick per second while waiting — enough for `busyLabel` to advance, and
+  // it stops the moment the answer lands.
+  useEffect(() => {
+    if (!busy) return undefined;
+    const id = setInterval(() => setBusyTick(n => n + 1), 1000);
+    return () => clearInterval(id);
+  }, [busy]);
+
   useEffect(() => {
     writeSnapshot({
       conversationId: conversationId.current,
@@ -565,7 +581,9 @@ export const YaraChat = () => {
                 <div key={i} className="flex flex-col gap-7">
                   {/* The patient's own words — unmistakably theirs, never restyled away. */}
                   <div className="flex justify-start">
-                    <p className="max-w-[78%] whitespace-pre-line rounded-2xl rounded-br-[0.25rem] bg-primary px-4 py-3 text-sm leading-7 text-white">
+                    <p // owner (2026-08-07): پس‌زمینه‌ی آبیِ پررنگ با CTAها اشتباه گرفته می‌شد.
+                      // یک سطحِ خنثیِ روشن با لبه‌ی برند: هنوز «مالِ کاربر» است، دیگر «دکمه» نیست.
+                      className="max-w-[78%] whitespace-pre-line rounded-2xl rounded-br-[0.25rem] border border-solid border-[#d6e0ff] bg-[#eef2ff] px-4 py-3 text-sm leading-7 text-[#1d2939]">
                       {turn.user}
                     </p>
                   </div>
@@ -615,6 +633,13 @@ export const YaraChat = () => {
                             <YaraDoctorCard
                               key={card.id}
                               card={card}
+                              onBook={kind =>
+                                sendYaraEvent('booking_start', {
+                                  route: kind,
+                                  conversation_id: conversationId.current,
+                                  position: card.position,
+                                })
+                              }
                               onClick={() => {
                                 sendYaraEvent('card_click', {
                                   conversation_id: conversationId.current,
@@ -657,7 +682,12 @@ export const YaraChat = () => {
                               type="button"
                               data-testid="yara-suggestion"
                               className={CHIP_CLASS}
-                              onClick={() => send(s.label)}
+                              onClick={() => {
+                          const act = suggestionAction(s);
+                          sendYaraEvent('suggestion_tap', { mode: act.mode, key: s.key.slice(0, 60) });
+                          if (act.mode === 'prefill') setDraft({ text: act.text, seq: Date.now() });
+                          else send(act.text);
+                        }}
                             >
                               {s.label}
                             </button>
@@ -800,14 +830,23 @@ export const YaraChat = () => {
               {busy && (
                 <div data-testid="yara-busy" aria-label="در حال بررسی">
                   <AssistantRow>
-                    <span className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-[0.25rem] border border-solid border-[#e6e8ec] bg-white px-4 py-4">
-                      {[0, 150, 300].map(delay => (
-                        <span
-                          key={delay}
-                          className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#98a2b3]"
-                          style={{ animationDelay: `${delay}ms` }}
-                        />
-                      ))}
+                    {/* Dots alone say "something is happening"; the sentence says
+                        *what*, which is what the owner asked for. It describes the
+                        elapsed stage — a claim we can actually make — rather than
+                        naming a server step we have no channel to observe. */}
+                    <span className="flex w-fit items-center gap-2.5 rounded-2xl rounded-bl-[0.25rem] border border-solid border-[#e6e8ec] bg-white px-4 py-3">
+                      <span className="flex items-center gap-1" aria-hidden="true">
+                        {[0, 150, 300].map(delay => (
+                          <span
+                            key={delay}
+                            className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#98a2b3]"
+                            style={{ animationDelay: `${delay}ms` }}
+                          />
+                        ))}
+                      </span>
+                      <span data-testid="yara-busy-label" className="text-xs text-[#667085]">
+                        {busyLabel(busySince ? Date.now() - busySince : 0)}
+                      </span>
                     </span>
                   </AssistantRow>
                 </div>
@@ -817,7 +856,7 @@ export const YaraChat = () => {
             </div>
           </div>
 
-          <YaraComposer busy={busy} onSend={send} />
+          <YaraComposer busy={busy} hasThread={turns.length > 0} draft={draft} onSend={send} />
         </main>
       </div>
     </div>

@@ -39,6 +39,10 @@ export interface ChatCard {
   address?: string;
   waiting_time?: string;
   online_visit?: boolean;
+  /** قیمتِ ویزیتِ آنلاین به تومان (khesht ≥ 2026-08-07). */
+  online_visit_price?: number;
+  /** مرکزِ زودترین نوبتِ حضوری — لازمِ لینکِ رزرو (khesht ≥ 2026-08-07). */
+  in_person_center_id?: string;
   is_bulk?: boolean;
 }
 

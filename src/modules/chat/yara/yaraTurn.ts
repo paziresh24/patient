@@ -44,10 +44,18 @@ export const STARTER_CHIPS = [
   'پیگیری نوبت‌هایم',
 ] as const;
 
-/** The empty-state identity, from the owner's panel design (2026-08-06). */
-export const WELCOME_TITLE = 'یارا، دستیار سلامت پذیرش۲۴';
+/**
+ * The empty state opens with a **question**, not a nameplate.
+ *
+ * owner (2026-08-07): «تیتر اصلی "یارا، دستیار سلامت پذیرش۲۴" اصلا خوب نیست …
+ * نیازه که یک جمله سوالی دوستانه پرسیده بشه که کاربر باهاش هم متوجه عملکرد و
+ * کاربرد این ابزار بشه، هم ترغیب به طرح مشکلش بکنه.» A title that states who we
+ * are asks the patient to admire the product; a question asks them to start. The
+ * product name moved down to the subtitle, where it costs nothing.
+ */
+export const WELCOME_TITLE = 'امروز چه چیزی اذیت‌تان می‌کند؟';
 export const WELCOME_SUBTITLE =
-  'علائم‌تان را بگویید؛ راهنمایی می‌کنم به کدام پزشک مراجعه کنید و نوبتش را همین‌جا می‌گیرم.';
+  'علائم‌تان را ساده بنویسید — می‌گویم به کدام پزشک مراجعه کنید، پزشکِ مناسب را پیدا می‌کنم و نوبتش را همین‌جا می‌گیرم.';
 
 /**
  * Same client-only personalisation rule as `welcomeText`, applied to the new
@@ -59,6 +67,39 @@ export function welcomeSubtitle(firstName?: string | null): string {
   if (!name || name.length > 30) return WELCOME_SUBTITLE;
   return `${name} عزیز، ${WELCOME_SUBTITLE}`;
 }
+
+/**
+ * Placeholders that rotate while the box is empty.
+ *
+ * owner (2026-08-07): «متن placeholder … بصورت انیمیشن و هر چند ثانیه عوض میشه …
+ * باعث میشه که بیمار بفهمه چه چیزهایی رو میتونه مطرح کنه.» An empty box is a
+ * question with no examples; most people answer it with a keyword, which is
+ * exactly the behaviour this page exists to change.
+ *
+ * Deliberately **four different kinds** of request — a symptom, a named doctor,
+ * a follow-up on an existing booking, an administrative task — because the point
+ * is to widen what the patient believes they may ask, not to show four symptoms.
+ */
+export const ROTATING_PLACEHOLDERS = [
+  'چند روزه گردنم درد می‌کند و دستم بی‌حس می‌شود…',
+  'از دکتر رضایی، متخصص پوست، نوبت می‌خواهم',
+  'نوبت‌های ثبت‌شده‌ام را نشانم بده',
+  'تب کودک ۳ ساله؛ چه زمانی باید به اورژانس برویم؟',
+  'نزدیک‌ترین نوبتِ ارتوپد در شهرم کِی است؟',
+  'می‌خواهم نوبت فردا را لغو کنم',
+] as const;
+
+/** Seconds each placeholder stays. Long enough to read a Persian sentence, once. */
+export const PLACEHOLDER_INTERVAL_MS = 3500;
+
+/**
+ * Once a conversation exists, the rotation stops.
+ *
+ * owner: «وقتی چت آغاز شده دیگه اون placeholder از موضوعیت میافته.» Rotating
+ * example questions *under* an answer invites the patient to abandon the thread
+ * they are in; a mid-conversation box only needs to say "keep going".
+ */
+export const FOLLOW_UP_PLACEHOLDER = 'پاسخ‌تان را بنویسید یا سؤال بعدی را بپرسید…';
 
 /** Beta framing. Shown once in the hero and once at the head of a thread. */
 export const BETA_BADGE = 'نسخهٔ بتا';
@@ -175,6 +216,62 @@ export function readSuggestions(res: TurnResponse | undefined): YaraSuggestion[]
     })
     .filter(s => Boolean(s.label))
     .slice(0, 6);
+}
+
+/**
+ * What a follow-up chip should actually *do*.
+ *
+ * owner (2026-08-07): «پاسخ‌های تکمیلی پیشنهادی را خودت تست کن. باید کار کنند.
+ * مثلا تغییر شهر باید کار کند. الان فقط یک پیام میاد و هیچ.» — and named the fix:
+ * «یک جمله ناتمام بزاره توی باکس سرچ و کیبورد باز بشه (فوکوس بره روش) تا کاربر
+ * بتونه کاملش کنه».
+ *
+ * The reason «تغییر شهر» did nothing is structural, not a bug in one chip: it is
+ * not a *message*, it is the **name of a parameter the assistant is missing**.
+ * Sending it as a turn asks the model to guess a city it was never told. So a
+ * chip of that kind must open the composer with a half-written sentence instead
+ * of firing a turn.
+ *
+ * `prefill` on the suggestion wins when khesht sends it; the table below is the
+ * front end's answer for the chips that exist today, so the fix does not wait on
+ * a back-end deploy.
+ */
+export type SuggestionMode = 'send' | 'prefill';
+
+const PREFILL_STEMS: Array<{ match: RegExp; stem: string }> = [
+  { match: /تغییر\s*شهر|شهر\s*دیگر|انتخاب\s*شهر/, stem: 'شهرم را عوض کن به ' },
+  { match: /تغییر\s*تاریخ|روز\s*دیگر|زمان\s*دیگر/, stem: 'نوبت را برای ' },
+  { match: /بیمه/, stem: 'بیمه‌ی من ' },
+  { match: /بودجه|ارزان‌?تر/, stem: 'حداکثر بودجه‌ام ' },
+];
+
+export function suggestionAction(s: YaraSuggestion & { prefill?: unknown }): { mode: SuggestionMode; text: string } {
+  // ⚠️ Leading whitespace and newlines go; the **trailing space stays**. Trimming
+  // it is what turns «بیمه‌ی من » into «بیمه‌ی من» — a finished-looking sentence,
+  // which is exactly the thing a prefill must not be. (Caught by its own test.)
+  const explicit =
+    typeof s?.prefill === 'string' ? s.prefill.replace(/\s+/g, ' ').replace(/^ +/, '') : '';
+  if (explicit.trim()) return { mode: 'prefill', text: explicit };
+  const hit = PREFILL_STEMS.find(row => row.match.test(s.label));
+  // ⛔ A prefill must be *incomplete*. Handing the patient a finished sentence and
+  // focusing the box invites them to press Enter on words they did not choose.
+  if (hit) return { mode: 'prefill', text: hit.stem };
+  return { mode: 'send', text: s.label };
+}
+
+/**
+ * What the waiting state says, by how long it has been waiting.
+ *
+ * owner: «باید پیام واقعی را به کاربر منتقل کند که بفهمد سرور دارد چه کاری
+ * می‌کند.» We have no server-side progress channel, so this describes the
+ * *elapsed stage*, which is true, rather than naming an internal step we cannot
+ * observe — a fake «در حال جست‌وجوی پایگاه داده» would be exactly the invented
+ * confidence the no-typewriter rule above exists to avoid.
+ */
+export function busyLabel(elapsedMs: number): string {
+  if (elapsedMs < 2500) return 'در حال خواندن پیام شما…';
+  if (elapsedMs < 7000) return 'در حال پیدا کردن پزشکِ مناسب…';
+  return 'کمی طول کشید؛ هنوز دارم بررسی می‌کنم…';
 }
 
 /** One line in the thread. `failed` is a first-class state, not an absent answer. */
