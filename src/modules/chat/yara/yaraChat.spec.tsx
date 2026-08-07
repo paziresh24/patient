@@ -367,3 +367,22 @@ describe('👍/👎 — حالا جایی برای رفتن دارند', () => {
     );
   });
 });
+
+describe('placeholder — راهنما وقتی لازم است، سکوت وقتی نیست', () => {
+  it('قبل از شروع یکی از نمونه‌های چرخشی است؛ بعد از شروعِ گفتگو دیگر نیست', async () => {
+    const { ROTATING_PLACEHOLDERS, FOLLOW_UP_PLACEHOLDER } = require('./yaraTurn');
+    mockPostTurn.mockResolvedValue(answer());
+    render(<YaraChat />);
+
+    const box = screen.getByLabelText('پیام شما به یارا');
+    expect(ROTATING_PLACEHOLDERS).toContain(box.getAttribute('placeholder'));
+
+    await userEvent.click(screen.getByRole('button', { name: STARTER_CHIPS[0] }));
+    expect(await screen.findByText('این پزشکان را پیشنهاد می‌کنم.')).toBeInTheDocument();
+
+    expect(box.getAttribute('placeholder')).toBe(FOLLOW_UP_PLACEHOLDER);
+    // و شیتِ نمونه‌سؤال‌های بی‌ربط هم دیگر باز نمی‌شود
+    await userEvent.click(box);
+    expect(screen.queryByTestId('yara-suggest-sheet')).not.toBeInTheDocument();
+  });
+});

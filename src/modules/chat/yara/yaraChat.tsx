@@ -565,7 +565,9 @@ export const YaraChat = () => {
                 <div key={i} className="flex flex-col gap-7">
                   {/* The patient's own words — unmistakably theirs, never restyled away. */}
                   <div className="flex justify-start">
-                    <p className="max-w-[78%] whitespace-pre-line rounded-2xl rounded-br-[0.25rem] bg-primary px-4 py-3 text-sm leading-7 text-white">
+                    <p // owner (2026-08-07): پس‌زمینه‌ی آبیِ پررنگ با CTAها اشتباه گرفته می‌شد.
+                      // یک سطحِ خنثیِ روشن با لبه‌ی برند: هنوز «مالِ کاربر» است، دیگر «دکمه» نیست.
+                      className="max-w-[78%] whitespace-pre-line rounded-2xl rounded-br-[0.25rem] border border-solid border-[#d6e0ff] bg-[#eef2ff] px-4 py-3 text-sm leading-7 text-[#1d2939]">
                       {turn.user}
                     </p>
                   </div>
@@ -817,7 +819,7 @@ export const YaraChat = () => {
             </div>
           </div>
 
-          <YaraComposer busy={busy} onSend={send} />
+          <YaraComposer busy={busy} hasThread={turns.length > 0} onSend={send} />
         </main>
       </div>
     </div>
