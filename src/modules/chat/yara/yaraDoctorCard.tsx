@@ -69,6 +69,10 @@ export const YaraDoctorCard = ({ card, onClick }: YaraDoctorCardProps) => {
   const badges = useMemo(() => {
     const list: BadgeProps[] = [];
     if (card.waiting_time) list.push({ title: `زمان انتظار: ${card.waiting_time}`, icon: 'clock-icon', type: 'info' });
+    // owner (2026-08-07): کارتِ /s قیمت را دارد، کارتِ یارا نداشت. واحد در khesht
+    // به تومان تبدیل شده، پس این‌جا فقط قالب‌بندیِ فارسی می‌ماند.
+    if (card.online_visit_price)
+      list.push({ title: `ویزیت آنلاین: ${card.online_visit_price.toLocaleString('fa-IR')} تومان`, type: 'info' });
     if (card.online_visit) list.push({ title: 'ویزیت آنلاین', type: 'success' });
     return list;
   }, [card]);

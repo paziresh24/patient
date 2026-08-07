@@ -39,6 +39,8 @@ export interface ChatCard {
   address?: string;
   waiting_time?: string;
   online_visit?: boolean;
+  /** قیمتِ ویزیتِ آنلاین به تومان (khesht ≥ 2026-08-07). */
+  online_visit_price?: number;
   is_bulk?: boolean;
 }
 
