@@ -21,6 +21,7 @@ jest.mock('../chatApi', () => ({
   sendChatView: jest.fn(),
   sendChatClick: jest.fn(),
   sendChatExit: jest.fn(),
+  sendYaraEvent: jest.fn(),
 }));
 
 import { render, screen, waitFor } from '@testing-library/react';
@@ -62,7 +63,11 @@ describe('مسیرِ شکست — هیچ‌وقت بن‌بست، هیچ‌وق�
     await userEvent.click(screen.getByRole('button', { name: 'ارسال' }));
 
     const block = await screen.findByTestId('yara-failure');
-    expect(block).toHaveTextContent('الان نمی‌توانم گفتگو کنم');
+    // خطای شبکه دیگر با «سرویس در دسترس نیست» یکی نیست — کاربر باید بفهمد چه شد
+    expect(block).toHaveAttribute('data-kind', 'offline');
+    expect(block).toHaveTextContent('ارتباط با یارا برقرار نشد');
+    // و مهم‌تر: راهِ «دوباره تلاش کن» دارد، نه فقط درِ خروج
+    expect(screen.getByTestId('yara-retry')).toBeInTheDocument();
     // متنِ کاربر هنوز در thread است
     expect(screen.getByText('گلویم درد می‌کند')).toBeInTheDocument();
     // و همان متن، لینکِ خروج را می‌سازد
@@ -277,6 +282,79 @@ describe('ریلِ گفت‌وگوها', () => {
     await userEvent.click(screen.getByRole('button', { name: STARTER_CHIPS[0] }));
     await waitFor(() =>
       expect(mockPostTurn).toHaveBeenLastCalledWith(expect.not.objectContaining({ conversationId: 'c-1' }))
+    );
+  });
+});
+
+describe('پیامِ شکست باید بگوید چه شد — نه یک جمله برای چهار حالت', () => {
+  it('پاسخِ classic با fallback_reason=rate_limited ⇒ «شلوغ است» + امکانِ تلاشِ دوباره', async () => {
+    mockPostTurn.mockResolvedValue({
+      mode: 'classic',
+      conversation_id: 'c-1',
+      fallback_reason: 'rate_limited',
+    } as TurnResponse);
+    render(<YaraChat />);
+
+    await userEvent.click(screen.getByRole('button', { name: STARTER_CHIPS[0] }));
+
+    const block = await screen.findByTestId('yara-failure');
+    expect(block).toHaveAttribute('data-kind', 'busy');
+    expect(block).toHaveTextContent('شلوغ');
+    expect(screen.getByTestId('yara-retry')).toBeInTheDocument();
+  });
+
+  it('علتِ خامِ khesht به آنالیتیکس می‌رود ولی هرگز به کاربر نشان داده نمی‌شود', async () => {
+    const { sendYaraEvent } = require('../chatApi');
+    mockPostTurn.mockResolvedValue({
+      mode: 'classic',
+      conversation_id: 'c-1',
+      fallback_reason: 'budget_exhausted',
+    } as TurnResponse);
+    render(<YaraChat />);
+
+    await userEvent.click(screen.getByRole('button', { name: STARTER_CHIPS[0] }));
+
+    const block = await screen.findByTestId('yara-failure');
+    expect(block).toHaveAttribute('data-kind', 'unavailable');
+    // ⛔ قاعده‌ی §۱۳: هرگز حرفی از بودجه/هزینه به بیمار
+    expect(block.textContent).not.toMatch(/بودجه|هزینه|سقف|budget/i);
+    expect(sendYaraEvent).toHaveBeenCalledWith(
+      'turn_failed',
+      expect.objectContaining({ failure_kind: 'unavailable', fallback_reason: 'budget_exhausted' })
+    );
+  });
+
+  it('«دوباره تلاش کن» واقعاً همان متن را دوباره می‌فرستد', async () => {
+    mockPostTurn.mockResolvedValue(null);
+    render(<YaraChat />);
+
+    await userEvent.type(screen.getByLabelText('پیام شما به یارا'), 'گلویم درد می‌کند');
+    await userEvent.click(screen.getByRole('button', { name: 'ارسال' }));
+    await screen.findByTestId('yara-retry');
+
+    mockPostTurn.mockResolvedValue(answer());
+    await userEvent.click(screen.getByTestId('yara-retry'));
+
+    await waitFor(() =>
+      expect(mockPostTurn).toHaveBeenLastCalledWith(expect.objectContaining({ text: 'گلویم درد می‌کند' }))
+    );
+  });
+});
+
+describe('👍/👎 — حالا جایی برای رفتن دارند', () => {
+  it('رأی latch می‌شود و یک رویدادِ واقعی می‌فرستد', async () => {
+    const { sendYaraEvent } = require('../chatApi');
+    mockPostTurn.mockResolvedValue(answer({ result_count: 2 }));
+    render(<YaraChat />);
+
+    await userEvent.click(screen.getByRole('button', { name: STARTER_CHIPS[0] }));
+    const up = await screen.findByTestId('yara-rate-up');
+    await userEvent.click(up);
+
+    expect(up).toHaveAttribute('aria-pressed', 'true');
+    expect(sendYaraEvent).toHaveBeenCalledWith(
+      'answer_rated',
+      expect.objectContaining({ rating: 1, conversation_id: 'c-1' })
     );
   });
 });

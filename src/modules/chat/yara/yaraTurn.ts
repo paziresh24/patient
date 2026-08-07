@@ -93,6 +93,52 @@ export const STANDING_DISCLAIMER = 'یارا تشخیص پزشکی نمی‌ده
  */
 export const FAILURE_TEXT = 'الان نمی‌توانم گفتگو کنم؛ عذر می‌خواهم.';
 export const FAILURE_CTA = 'همین متن را در جستجو ببین';
+export const RETRY_CTA = 'دوباره تلاش کن';
+
+/**
+ * Why a turn produced no answer — the *front end's* vocabulary, not khesht's.
+ *
+ * Four back-end reasons collapse into `unavailable` on purpose: whether the LLM
+ * errored, the daily budget ran out, or a tool failed is our problem, and none
+ * of those sentences helps a patient decide what to do next. What genuinely
+ * changes their next action is kept separate: a timeout and a dead connection
+ * are worth *retrying*, "too busy" is worth retrying *in a moment*, and
+ * `unavailable` is worth leaving for the classic search.
+ */
+export type YaraFailureKind = 'timeout' | 'offline' | 'busy' | 'unavailable';
+
+/** Map khesht's `fallback_reason` (or a transport failure) to one of the four. */
+export function classifyFailure(input: {
+  timedOut?: boolean;
+  reached?: boolean;
+  fallbackReason?: string | undefined;
+}): YaraFailureKind {
+  if (input.timedOut) return 'timeout';
+  if (!input.reached) return 'offline';
+  if (String(input.fallbackReason ?? '') === 'rate_limited') return 'busy';
+  return 'unavailable';
+}
+
+/**
+ * One sentence per kind, plus which doors to open.
+ *
+ * ⛔ No copy here may mention budget, cost, quota or an LLM — «سقفِ هزینه تمام
+ * شد» on a health page reads as «شما به‌اندازه‌ی کافی مهم نبودید». Saying *what
+ * happened to the patient* («طول کشید»، «شلوغ است») is not the same as saying
+ * what it cost us, and only the first helps them.
+ */
+export function failureCopy(kind: YaraFailureKind): { text: string; retry: boolean; search: boolean } {
+  switch (kind) {
+    case 'timeout':
+      return { text: 'پاسخ بیشتر از حد طول کشید و نیمه‌کاره ماند.', retry: true, search: true };
+    case 'offline':
+      return { text: 'ارتباط با یارا برقرار نشد؛ اتصال اینترنت‌تان را بررسی کنید.', retry: true, search: true };
+    case 'busy':
+      return { text: 'همین حالا خیلی شلوغ است؛ چند لحظه‌ی دیگر دوباره امتحان کنید.', retry: true, search: true };
+    default:
+      return { text: FAILURE_TEXT, retry: false, search: true };
+  }
+}
 
 /**
  * The escape hatch, built from the patient's **own** words.
@@ -145,6 +191,8 @@ export interface YaraTurn {
   archivedAnswer?: string;
   /** The turn ended without a usable answer ⇒ render the escape hatch. */
   failed?: boolean;
+  /** Which door to open, and with which sentence — see `classifyFailure`. */
+  failureKind?: YaraFailureKind;
   /**
    * هشدارِ اورژانسی که روی یک پاسخِ **غیرقابل‌رندر** آمده (mode:'classic' وقتی
    * LLM مرده یا بودجه تمام است — khesht آن را عمداً به fallback هم می‌چسباند).
@@ -171,10 +219,16 @@ export type YaraStatus = 'idle' | 'ok' | 'failed';
  */
 export const TURN_TIMEOUT_MS = 20_000;
 
-export function withTimeout<T>(work: Promise<T>, ms = TURN_TIMEOUT_MS): Promise<T | null> {
+export function withTimeout<T>(work: Promise<T>, ms = TURN_TIMEOUT_MS, onTimeout?: () => void): Promise<T | null> {
   let timer: ReturnType<typeof setTimeout>;
   const ceiling = new Promise<null>(resolve => {
-    timer = setTimeout(() => resolve(null), ms);
+    timer = setTimeout(() => {
+      // The caller cannot otherwise tell "the ceiling fired" from "the call
+      // failed" — both resolve to null — and those two deserve different
+      // sentences and different diagnostics.
+      onTimeout?.();
+      resolve(null);
+    }, ms);
   });
   return Promise.race([work, ceiling]).finally(() => clearTimeout(timer));
 }

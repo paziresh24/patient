@@ -342,3 +342,33 @@ export function sendChatExit(conversationId: string, reason: string, entryPoint:
   send('conversational_exit', { conversation_id: conversationId, exit_reason: reason, entry_point: entryPoint });
 }
 
+
+/**
+ * Generic client-event ingest (khesht `POST …/chat/events`, 2026-08-07).
+ *
+ * Splunk-from-the-browser already exists for the *search* funnel; this is the
+ * conversational half of it, and it is deliberately **one** function rather
+ * than one per signal: 👍/👎, "opened a doctor card", "reached the booking
+ * step" and whatever we need to ask next all travel through the same door, so
+ * measuring a new thing never again waits on a back-end deploy.
+ *
+ * ⛔ `props` must stay scalar and free of the patient's own words. The server
+ * drops prose/identity keys anyway (`client-events.ts`), but sending them and
+ * relying on the server to refuse them would put health data on the wire.
+ *
+ * Never throws and never awaited: analytics that can break a turn is worse than
+ * no analytics. `keepalive` so an event fired while navigating away survives.
+ */
+export function sendYaraEvent(action: string, props: Record<string, string | number | boolean> = {}): void {
+  try {
+    void fetch(`${API_BASE}/api/khesht/chat/events`, {
+      method: 'POST',
+      credentials: CREDENTIALS,
+      keepalive: true,
+      headers: { 'content-type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ events: [{ group: 'yara', action, props }] }),
+    }).catch(() => undefined);
+  } catch {
+    /* fail-open */
+  }
+}
