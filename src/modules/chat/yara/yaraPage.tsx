@@ -41,7 +41,8 @@ const Shell = ({ children }: { children: React.ReactNode }) => (
 
 export const YaraPage = () => {
   const router = useRouter();
-  const gate = useChatGate();
+  // 'page' = درِ مستقیم: درصدِ rollout اعمال نمی‌شود (بالای useChatGate را ببین).
+  const gate = useChatGate('page');
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 

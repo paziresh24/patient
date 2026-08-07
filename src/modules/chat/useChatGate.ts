@@ -51,6 +51,26 @@ const runtimeConfig = (): Record<string, unknown> =>
 /** GrowthBook feature key. Same naming family as `searchia_backend`. */
 export const CHAT_ROLLOUT_FLAG = 'conversational_search';
 
+/**
+ * دو سطحِ متفاوت، عمداً.
+ *
+ * owner (۲۰۲۶-۰۸-۰۷): «برای ۱٪ از کاربرها در هوم‌پیج پیشنهاد نشان بده… در ضمن
+ * هرکسی هم آدرسِ مستقیمِ yara را زد بتواند استفاده کند.»
+ *
+ * این دو خواسته‌ی متضاد نیستند، دو **سطحِ رضایت**اند: درصدِ rollout تعیین می‌کند
+ * به چند نفر *پیشنهاد* بدهیم، نه اینکه چه کسی حق دارد وارد شود. کسی که خودش
+ * `/yara` را تایپ کرده یا لینکش را از دوستی گرفته، انتخابش را کرده — و روبه‌رو
+ * شدنش با «هنوز فعال نشده» بدترین حالتِ ممکن است.
+ *
+ * پس یک گیتِ مشترک با یک تفاوتِ صریح، نه دو کپی که drift کنند:
+ *   invite → درصدِ rollout لازم است (چقدر مزاحمِ آدم‌ها بشویم)
+ *   page   → لازم نیست (چه کسی حق دارد وارد شود)
+ *
+ * ⛔ بقیه‌ی گیت‌ها برای **هر دو** یکسان‌اند: allow-listِ هاست، سایتِ پارتنر و
+ * الزامِ لاگین. آن‌ها قواعدِ ایمنی و هزینه‌اند و درِ مستقیم هم دورشان نمی‌زند.
+ */
+export type ChatSurface = 'invite' | 'page';
+
 export interface ChatGate {
   allowed: boolean;
   /** null when allowed; otherwise the first gate that said no. */
@@ -59,7 +79,7 @@ export interface ChatGate {
   isPreview: boolean;
 }
 
-export function useChatGate(): ChatGate {
+export function useChatGate(surface: ChatSurface = 'invite'): ChatGate {
   const router = useRouter();
   const partnerKey = useCustomize(state => state.customize?.partnerKey);
   const isLogin = useUserInfoStore(state => state.isLogin);
@@ -83,8 +103,8 @@ export function useChatGate(): ChatGate {
       partnerKey,
       isLogin: isLogin || fakeLogin,
       isAuthPending: isAuthPending && !fakeLogin,
-      featureEnabled: masterOn && (rolloutOn || isPreview || isAllowedUser),
+      featureEnabled: masterOn && (surface === 'page' || rolloutOn || isPreview || isAllowedUser),
     });
     return { allowed: reason === null, reason, isPreview };
-  }, [partnerKey, isLogin, isAuthPending, masterOn, rolloutOn, isPreview, isAllowedUser, fakeLogin]);
+  }, [partnerKey, isLogin, isAuthPending, masterOn, rolloutOn, isPreview, isAllowedUser, fakeLogin, surface]);
 }

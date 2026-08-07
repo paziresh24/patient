@@ -15,11 +15,14 @@
  */
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Logo from '@/common/components/atom/logo';
 import { sendYaraInvite } from '../chatApi';
 import { useChatGate } from '../useChatGate';
 
 export const YaraInvite = () => {
-  const gate = useChatGate();
+  // 'invite' = پیشنهادِ هوم‌پیج ⇒ **تابعِ درصدِ rollout**. درِ مستقیمِ `/yara`
+  // عمداً این قید را ندارد (useChatGate را ببین).
+  const gate = useChatGate('invite');
   const viewSent = useRef(false);
 
   useEffect(() => {
@@ -40,14 +43,20 @@ export const YaraInvite = () => {
       className="flex items-center gap-2 self-start px-1 py-0.5 text-xs text-slate-500 hover:opacity-80 lg:w-[50rem] lg:self-center"
       onClick={() => sendYaraInvite('click')}
     >
+      {/*
+        owner: «آرم و لوگوی یارا نداریم؛ همان لوگوی پذیرش۲۴ است.» همان قاعده‌ای
+        که در خودِ چت اعمال شد — یک مارکِ برندِ دومِ بنفش داخلِ محصولِ خودمان از
+        کاربر می‌خواهد به چیزِ تازه‌ای اعتماد کند، در حالی که نکته دقیقاً این است
+        که این **پذیرش۲۴** است که حرف می‌زند.
+      */}
       <span
         aria-hidden="true"
-        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#7A5AF8] to-[#2B6BE6] text-[0.6rem] font-extrabold text-white"
+        className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-solid border-[#e6e8ec] bg-white"
       >
-        ی
+        <Logo width={12} type="compact" />
       </span>
       <span>
-        نمی‌دانید از کجا شروع کنید؟ <span className="font-bold text-[#7A5AF8]">از یارا بپرسید</span>
+        نمی‌دانید از کجا شروع کنید؟ <span className="font-bold text-primary">از یارا بپرسید</span>
       </span>
     </Link>
   );
