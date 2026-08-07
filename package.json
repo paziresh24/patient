@@ -24,6 +24,7 @@
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:public": "playwright test search doctor-profile booking-public",
+    "e2e:yara": "playwright test yara",
     "e2e:visual": "playwright test visual",
     "e2e:visual:update": "playwright test visual --update-snapshots",
     "e2e:login": "playwright test --project=login --headed",
