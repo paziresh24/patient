@@ -22,6 +22,7 @@ jest.mock('../chatApi', () => ({
   sendChatView: jest.fn(),
   sendChatClick: jest.fn(),
   sendChatExit: jest.fn(),
+  sendYaraEvent: jest.fn(),
 }));
 jest.mock('../useChatGate', () => ({ useChatGate: jest.fn() }));
 

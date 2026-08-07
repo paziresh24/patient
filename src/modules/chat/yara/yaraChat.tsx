@@ -50,10 +50,10 @@
  * page sells confidence the answer has not earned; the bounded typing indicator
  * is honest and costs the patient nothing.
  *
- * No 👍/👎 on answers either, although the design shows them. There is no
- * feedback endpoint behind them today, and a rating button that swallows the
- * rating is worse than no button — it spends the patient's goodwill once and
- * teaches them the page is decorative.
+ * 👍/👎 *do* exist now (2026-08-07): khesht's generic client-event ingest gives
+ * them somewhere real to land, so they are no longer a button that swallows the
+ * rating. Until that endpoint existed they were deliberately absent, for exactly
+ * that reason.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
@@ -65,6 +65,7 @@ import {
   sendChatClick,
   sendChatExit,
   sendChatView,
+  sendYaraEvent,
   type ChatCard,
   type TurnResponse,
 } from '../chatApi';
@@ -79,6 +80,9 @@ import {
 import {
   archivedTurnResponse,
   BETA_BADGE,
+  classifyFailure,
+  failureCopy,
+  RETRY_CTA,
   BETA_NOTICE,
   FAILURE_CTA,
   FAILURE_TEXT,
@@ -169,6 +173,7 @@ export const YaraChat = () => {
   const [showRail, setShowRail] = useState(false);
   const [railKey, setRailKey] = useState(0);
   const [copiedAt, setCopiedAt] = useState(-1);
+  const [ratings, setRatings] = useState<Record<number, 1 | -1>>({});
   const conversationId = useRef('');
 
   /* ---- the user's own data, fetched by this browser and nowhere else ---- */
@@ -242,6 +247,8 @@ export const YaraChat = () => {
       setNotice('');
       // `?? null` collapses "timed out" and "call failed" into one value before
       // the guard, so the narrowing below has a single nullable to reason about.
+      let timedOut = false;
+      const startedAt = Date.now();
       const res: TurnResponse | null =
         (await withTimeout(
           postTurn({
@@ -253,7 +260,11 @@ export const YaraChat = () => {
             terminalId,
             city,
             ...(bookingsRef.current.length ? { bookings: toChatContext(bookingsRef.current) } : {}),
-          })
+          }),
+          undefined,
+          () => {
+            timedOut = true;
+          }
         )) ?? null;
       setBusy(false);
 
@@ -262,17 +273,39 @@ export const YaraChat = () => {
       // safety سمتِ سرور). آن هشدار نباید همراهِ پاسخِ غیرقابل‌رندر دور ریخته شود؛
       // کنارِ درِ فرار می‌نشیند.
       const emergency = res?.emergency?.trim() || undefined;
+      // Read **before** the type guard: `renderableAnswer` narrows `res` away to
+      // `null`, and a `mode:'classic'` body — the one that actually carries a
+      // reason — is exactly the case that fails the guard.
+      const reached = res !== null;
+      const fallbackReason = res?.fallback_reason;
 
       if (!renderableAnswer(res)) {
         // Network error, timeout, `mode: "classic"`, or a 200 with nothing in it.
         // All four are the same thing to the patient, so they get the same door.
         setStatus('failed');
+        // Four outcomes that used to be one sentence. `reached` is the honest
+        // signal for "the server answered at all" — a `mode:'classic'` body did,
+        // a network error did not.
+        const failureKind = classifyFailure({
+          timedOut,
+          reached,
+          fallbackReason,
+        });
         sendChatExit(conversationId.current, 'turn_failed', YARA_ENTRY_POINT);
+        // The reason khesht gave us is kept verbatim in analytics even though the
+        // patient never sees it — that asymmetry is the whole point of §۱۳.۱۰.
+        sendYaraEvent('turn_failed', {
+          failure_kind: failureKind,
+          fallback_reason: String(fallbackReason ?? ''),
+          duration_ms: Date.now() - startedAt,
+          conversation_id: conversationId.current,
+          turn_number: turns.length + 1,
+        });
         setTurns(current => {
           const next = [...current];
           const last = next[next.length - 1];
-          if (last && !last.assistant) next[next.length - 1] = { ...last, failed: true, emergency };
-          else next.push({ user: text, failed: true, emergency });
+          if (last && !last.assistant) next[next.length - 1] = { ...last, failed: true, failureKind, emergency };
+          else next.push({ user: text, failed: true, failureKind, emergency });
           return next;
         });
         return;
@@ -293,6 +326,14 @@ export const YaraChat = () => {
       // rail is re-read exactly then — not on every turn, which would refetch
       // the whole list for a row that is already in it.
       if (isFirstTurn) setRailKey(k => k + 1);
+      sendYaraEvent('turn_answered', {
+        conversation_id: res.conversation_id,
+        turn_index: res.turn_index,
+        result_count: res.result_count ?? 0,
+        has_emergency: Boolean(res.emergency),
+        is_clarifying: Boolean(res.clarifying_question && !res.message),
+        duration_ms: Date.now() - startedAt,
+      });
       if (res.client_action) void runClientAction(res.client_action);
     },
     [terminalId, city, runClientAction]
@@ -372,6 +413,24 @@ export const YaraChat = () => {
     setCopiedAt(index);
     setTimeout(() => setCopiedAt(-1), 1600);
   }, []);
+
+  /**
+   * 👍/👎. Recorded locally so the button visibly latches, and sent once — a
+   * changed mind sends a second event rather than editing the first, because an
+   * analytics row is a record of what happened, not a mutable opinion.
+   */
+  const rateAnswer = useCallback(
+    (index: number, value: 1 | -1, turn: YaraTurn) => {
+      setRatings(current => ({ ...current, [index]: value }));
+      sendYaraEvent('answer_rated', {
+        rating: value,
+        conversation_id: conversationId.current,
+        turn_index: turn.assistant?.turn_index ?? index,
+        result_count: turn.assistant?.result_count ?? 0,
+      });
+    },
+    []
+  );
 
   /** اولین turnِ پاسخ‌دار — لنگرِ نمایشِ تک‌بارِ سلبِ مسئولیت (§۱۳.۸). */
   const firstAnsweredIndex = turns.findIndex(t => t.assistant);
@@ -528,7 +587,14 @@ export const YaraChat = () => {
                             <YaraDoctorCard
                               key={card.id}
                               card={card}
-                              onClick={() =>
+                              onClick={() => {
+                                sendYaraEvent('card_click', {
+                                  conversation_id: conversationId.current,
+                                  turn_index: turn.assistant?.turn_index ?? 0,
+                                  position: card.position,
+                                  card_type: card.type,
+                                  online_visit: Boolean(card.online_visit),
+                                });
                                 sendChatClick(
                                   card,
                                   {
@@ -539,8 +605,8 @@ export const YaraChat = () => {
                                     conversationId: conversationId.current,
                                   },
                                   YARA_ENTRY_POINT
-                                )
-                              }
+                                );
+                              }}
                             />
                           ))}
                         </YaraDoctorList>
@@ -596,6 +662,30 @@ export const YaraChat = () => {
                           >
                             پاسخ دیگر
                           </button>
+                          <button
+                            type="button"
+                            aria-label="این پاسخ کمک کرد"
+                            aria-pressed={ratings[i] === 1}
+                            data-testid="yara-rate-up"
+                            className={`rounded-md px-2 py-1 transition-colors hover:bg-[#eceef2] ${
+                              ratings[i] === 1 ? 'text-primary' : 'text-[#667085] hover:text-[#101828]'
+                            }`}
+                            onClick={() => rateAnswer(i, 1, turn)}
+                          >
+                            👍
+                          </button>
+                          <button
+                            type="button"
+                            aria-label="این پاسخ کمک نکرد"
+                            aria-pressed={ratings[i] === -1}
+                            data-testid="yara-rate-down"
+                            className={`rounded-md px-2 py-1 transition-colors hover:bg-[#eceef2] ${
+                              ratings[i] === -1 ? 'text-[#e5343f]' : 'text-[#667085] hover:text-[#101828]'
+                            }`}
+                            onClick={() => rateAnswer(i, -1, turn)}
+                          >
+                            👎
+                          </button>
                           {turn.at && (
                             <span className="px-2">
                               {new Date(turn.at).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })}
@@ -610,18 +700,41 @@ export const YaraChat = () => {
                       {turn.failed && (
                         <div
                           data-testid="yara-failure"
+                          data-kind={turn.failureKind ?? 'unavailable'}
                           className="flex flex-col items-start gap-2.5 rounded-2xl rounded-bl-[0.25rem] border border-solid border-amber-200 bg-amber-50 px-4 py-3.5"
                         >
-                          <p className="text-sm leading-7 text-[#475467]">{FAILURE_TEXT}</p>
-                          <a
-                            href={fallbackSearchUrl(turn.user)}
-                            className="rounded-[0.5625rem] bg-primary px-4 py-2 text-xs font-bold text-white"
-                            onClick={() =>
-                              sendChatExit(conversationId.current, 'failure_to_search', YARA_ENTRY_POINT)
-                            }
-                          >
-                            {FAILURE_CTA}
-                          </a>
+                          <p className="text-sm leading-7 text-[#475467]">
+                            {failureCopy(turn.failureKind ?? 'unavailable').text}
+                          </p>
+                          <div className="flex flex-wrap items-center gap-2">
+                            {/* A retry is the *right* door for a timeout or a dead
+                                connection — sending them to classic search would
+                                lose the conversation for a problem that is very
+                                often gone one second later. */}
+                            {failureCopy(turn.failureKind ?? 'unavailable').retry && (
+                              <button
+                                type="button"
+                                data-testid="yara-retry"
+                                disabled={busy}
+                                className="rounded-[0.5625rem] bg-primary px-4 py-2 text-xs font-bold text-white disabled:opacity-40"
+                                onClick={() => {
+                                  sendYaraEvent('failure_retry', { failure_kind: turn.failureKind ?? '' });
+                                  send(turn.user);
+                                }}
+                              >
+                                {RETRY_CTA}
+                              </button>
+                            )}
+                            <a
+                              href={fallbackSearchUrl(turn.user)}
+                              className="rounded-[0.5625rem] border border-solid border-[#d0d5dd] bg-white px-4 py-2 text-xs font-bold text-[#344054]"
+                              onClick={() =>
+                                sendChatExit(conversationId.current, 'failure_to_search', YARA_ENTRY_POINT)
+                              }
+                            >
+                              {FAILURE_CTA}
+                            </a>
+                          </div>
                         </div>
                       )}
                     </AssistantRow>
