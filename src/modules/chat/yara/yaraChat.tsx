@@ -617,6 +617,13 @@ export const YaraChat = () => {
                             <YaraDoctorCard
                               key={card.id}
                               card={card}
+                              onBook={kind =>
+                                sendYaraEvent('booking_start', {
+                                  route: kind,
+                                  conversation_id: conversationId.current,
+                                  position: card.position,
+                                })
+                              }
                               onClick={() => {
                                 sendYaraEvent('card_click', {
                                   conversation_id: conversationId.current,

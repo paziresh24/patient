@@ -16,10 +16,13 @@ import SearchCard from '@/modules/search/components/card/card';
 import type { BadgeProps } from '@/modules/search/components/badge';
 import { useMemo } from 'react';
 import type { ChatCard } from '../chatApi';
+import { inPersonBookingUrl, onlineVisitUrl } from './yaraBooking';
 
 interface YaraDoctorCardProps {
   card: ChatCard;
   onClick: () => void;
+  /** Fired with the chosen route, so the funnel can tell «رفت به رزرو» from «رفت به پروفایل». */
+  onBook?: (kind: 'online_visit' | 'in_person' | 'profile') => void;
 }
 
 /**
@@ -65,7 +68,7 @@ export const YaraDoctorList = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
-export const YaraDoctorCard = ({ card, onClick }: YaraDoctorCardProps) => {
+export const YaraDoctorCard = ({ card, onClick, onBook }: YaraDoctorCardProps) => {
   const badges = useMemo(() => {
     const list: BadgeProps[] = [];
     if (card.waiting_time) list.push({ title: `زمان انتظار: ${card.waiting_time}`, icon: 'clock-icon', type: 'info' });
@@ -76,6 +79,26 @@ export const YaraDoctorCard = ({ card, onClick }: YaraDoctorCardProps) => {
     if (card.online_visit) list.push({ title: 'ویزیت آنلاین', type: 'success' });
     return list;
   }, [card]);
+
+  const actions = useMemo(() => {
+    const go = (url: string, kind: 'online_visit' | 'in_person' | 'profile') => () => {
+      onBook?.(kind);
+      window.location.href = url;
+    };
+    const list: Array<{ text: string; description: string; outline: boolean; action: () => void }> = [];
+    const inPerson = inPersonBookingUrl(card.url, card.in_person_center_id);
+    if (inPerson) list.push({ text: 'نوبت حضوری', description: '', outline: true, action: go(inPerson, 'in_person') });
+    const online = card.online_visit ? onlineVisitUrl(card.url) : null;
+    if (online) list.push({ text: 'ویزیت آنلاین', description: '', outline: false, action: go(online, 'online_visit') });
+    if (!list.length)
+      list.push({
+        text: 'مشاهده پروفایل و نوبت‌دهی',
+        description: '',
+        outline: false,
+        action: go(card.url, 'profile'),
+      });
+    return list;
+  }, [card, onBook]);
 
   if (!card.title) return null;
 
@@ -101,16 +124,17 @@ export const YaraDoctorCard = ({ card, onClick }: YaraDoctorCardProps) => {
           ...(card.address ? { address: { text: card.address } } : {}),
           ...(badges.length ? { badges } : {}),
         }}
-        actions={[
-          {
-            text: card.online_visit ? 'نوبت‌دهی و ویزیت آنلاین' : 'مشاهده پروفایل و نوبت‌دهی',
-            description: '',
-            outline: false,
-            action: () => {
-              window.location.href = card.url;
-            },
-          },
-        ]}
+        /**
+         * Two buttons, each landing on the *step* rather than the profile.
+         *
+         * The order is deliberate: the in-person button is the outline one and
+         * comes first, so the filled CTA is the action with a price attached —
+         * the same hierarchy the classic card uses. Either falls back to the
+         * profile when its URL cannot be built (no `/dr/` slug, or no centre for
+         * the in-person route), because a broken booking step is worse than a
+         * profile page.
+         */
+        actions={actions}
       />
       <WhyStrip card={card} />
     </div>
