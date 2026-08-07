@@ -21,7 +21,6 @@ const SuggestionContent = dynamic(() => import('../../components/suggestion/sugg
 // DR-11: the conversational layer expands *under* the existing search box. Loaded
 // lazily and client-only so a search box on a partner/university host (where it is
 // never allowed to render) does not even pay for the bytes.
-const ConversationalSearchPanel = dynamic(() => import('@/modules/chat/conversationalSearchPanel'), { ssr: false });
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { Fragment2 } from '@/common/fragment/fragment2';
 const PlasmicSearchLazy = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearch'));
@@ -258,10 +257,6 @@ export const Suggestion = (props: SuggestionProps) => {
             }}
           />
         </SearchGlobalContextsProvider>
-        {/* The Plasmic-rendered search box is a second, independent rendering of
-            the same box (feature-flagged). Wiring only the hand-written one would
-            make the rollout silently invisible for whoever is in that bucket. */}
-        <ConversationalSearchPanel />
       </div>
     );
   }
@@ -305,10 +300,6 @@ export const Suggestion = (props: SuggestionProps) => {
           isLoading={isLoading}
         />
       )}
-      {/* DR-11 — renders null unless every gate passes (logged in, our own host,
-          feature on) AND the query looks like a sentence. It never intercepts the
-          search: the classic results above/below it load exactly as before. */}
-      <ConversationalSearchPanel />
     </div>
   );
 };
