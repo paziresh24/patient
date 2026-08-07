@@ -1,4 +1,4 @@
-import { chatIneligibleReason, chatRouteAllowed } from './chatEligibility';
+import { chatIneligibleReason, chatRouteAllowed , isAllowedUserId } from './chatEligibility';
 
 /**
  * These lock in the fix for a trap that would have shipped the feature
@@ -71,5 +71,20 @@ describe('DR-11 §۱۳.۷ — bypassِ dev-onlyِ لاگین ساختاراً د
 
   it('بدونِ env، حتی در development خاموش است', () => {
     expect(devFakeLogin({}, 'development')).toBe(false);
+  });
+});
+
+describe('allow-listِ حساب — جایگزینِ chatPreview برای آدمِ نام‌برده', () => {
+  it('فقط idِ دقیق را می‌پذیرد، و فهرستِ خالی هیچ‌کس را باز نمی‌کند', () => {
+    expect(isAllowedUserId('5050715', '5050715')).toBe(true);
+    expect(isAllowedUserId('111, 5050715 ,222', '5050715')).toBe(true);
+    expect(isAllowedUserId('5050715', '505071')).toBe(false);
+    expect(isAllowedUserId('5050715', '50507150')).toBe(false);
+    // fail-closed: نبودِ فهرست یا نبودِ کاربر ⇒ هیچ‌کس. یک allow-listِ خالی که
+    // همه را راه بدهد، بدترین حالتِ ممکنِ یک گیتِ rollout است.
+    expect(isAllowedUserId('', '5050715')).toBe(false);
+    expect(isAllowedUserId(undefined, '5050715')).toBe(false);
+    expect(isAllowedUserId('5050715', undefined)).toBe(false);
+    expect(isAllowedUserId('5050715', '')).toBe(false);
   });
 });

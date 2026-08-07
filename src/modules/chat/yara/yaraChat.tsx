@@ -191,6 +191,36 @@ export const YaraChat = () => {
   const conversationId = useRef('');
   const router = useRouter();
   const scroller = useRef<HTMLDivElement | null>(null);
+  const shell = useRef<HTMLDivElement | null>(null);
+  /**
+   * ارتفاعِ پوسته **اندازه‌گیری** می‌شود، حدس زده نمی‌شود.
+   *
+   * 🔴 نسخه‌ی قبلی `calc(100dvh - 8rem)` بود — یک عددِ جادویی برای ارتفاعِ
+   * هدر/فوترِ سایت. هر جایی که پوسته‌ی سایت از ۸rem بلندتر می‌شد (نوارِ اعلان،
+   * هدرِ دو‌سطری، زوم)، کلِ صفحه اسکرول می‌گرفت و **کادرِ گفت‌وگو می‌رفت زیرِ
+   * لبه‌ی صفحه** — دقیقاً گزارشِ owner در ۲۰۲۶-۰۸-۰۷. جادو با یک عددِ جادوییِ
+   * دیگر جایگزین نمی‌شود: فاصله‌ی واقعیِ بالای پوسته از viewport خوانده می‌شود،
+   * پس هر ارتفاعِ هدری درست کار می‌کند.
+   */
+  const [shellHeight, setShellHeight] = useState('100dvh');
+  useEffect(() => {
+    const el = shell.current;
+    if (!el || typeof window === 'undefined') return undefined;
+    const measure = () => {
+      const top = Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY));
+      setShellHeight(`calc(100dvh - ${top}px)`);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    // هدرِ سایت می‌تواند بعد از hydration قد بکشد (اعلان، بنر) — یک‌بار اندازه
+    // گرفتن کافی نیست.
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
+    if (ro && el.parentElement) ro.observe(el.parentElement);
+    return () => {
+      window.removeEventListener('resize', measure);
+      ro?.disconnect();
+    };
+  }, []);
   const restored = useRef(false);
 
   /* ---- the user's own data, fetched by this browser and nowhere else ---- */
@@ -453,6 +483,22 @@ export const YaraChat = () => {
       conversationId.current = snapshot.conversationId;
       setTurns(snapshot.turns);
       setStatus('ok');
+      /**
+       * فهرستِ نوبت‌ها **دوباره گرفته می‌شود**، نه اینکه ذخیره شده باشد.
+       *
+       * 🔴 owner (۲۰۲۶-۰۸-۰۷): «نوبت‌هام رو نشون بده → روی یکی کلیک کردم →
+       * بکِ مرورگر → دیگه نوبت‌ها نبودند.» علتش این بود که فهرست در stateِ
+       * کامپوننت زندگی می‌کند نه در خودِ turn، پس snapshot آن را برنمی‌گرداند.
+       *
+       * راهِ ارزان‌تر ذخیره‌کردنِ فهرست در snapshot بود؛ عمداً نه: آن یعنی
+       * نوشتنِ جزئیاتِ نوبتِ بیمار روی دستگاه — همان دلیلی که snapshot در
+       * sessionStorage است و نه localStorage. fetchِ دوباره با sessionِ خودِ
+       * کاربر انجام می‌شود، چیزی جا نمی‌گذارد، و نوبتی که بینِ این دو لحظه لغو
+       * شده را هم درست نشان می‌دهد.
+       */
+      if (snapshot.turns.some(t => t.assistant?.client_action?.kind === 'fetch_my_bookings')) {
+        void loadBookings();
+      }
       // After paint, or the container has no height to scroll yet.
       requestAnimationFrame(() => {
         if (scroller.current) scroller.current.scrollTop = snapshot.scrollTop;
@@ -460,7 +506,7 @@ export const YaraChat = () => {
       return;
     }
     if (urlId) void openConversation(urlId);
-  }, [router.query.c, openConversation]);
+  }, [router.query.c, openConversation, loadBookings]);
 
   // One tick per second while waiting — enough for `busyLabel` to advance, and
   // it stops the moment the answer lands.
@@ -521,9 +567,17 @@ export const YaraChat = () => {
   );
 
   return (
-    <div dir="rtl" className="flex min-h-0 w-full flex-1 flex-col bg-[#f2f3f5] text-[#101828]">
+    <div ref={shell} dir="rtl" className="flex min-h-0 w-full flex-1 flex-col bg-[#f2f3f5] text-[#101828]">
 
-      <div className="grid min-h-0 flex-1 lg:grid-cols-[18rem_1fr]" style={{ height: 'calc(100dvh - 8rem)' }}>
+      {/*
+        `grid-rows-[minmax(0,1fr)]` عمدی است: ردیفِ پیش‌فرضِ grid ‏`auto` است و
+        `min-height:auto` روی آیتم‌ها اجازه می‌دهد فهرستِ بلندِ کناری ردیف را از
+        ارتفاعِ ظرف بلندتر کند — همان‌طور که با زیادشدنِ گفت‌وگوها اتفاق افتاد.
+      */}
+      <div
+        className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] lg:grid-cols-[18rem_1fr]"
+        style={{ height: shellHeight }}
+      >
         <div className="hidden min-h-0 lg:block">{rail}</div>
 
         {/* Below `lg` the same rail slides over the thread — one component, two

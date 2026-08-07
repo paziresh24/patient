@@ -23,10 +23,17 @@
  *
  * Both must be on. Plus the preview escape hatch:
  *
- * 3. **`?chatPreview=<CHAT_MVP_PREVIEW_KEY>`** — lets a named person see it on
- *    production while GrowthBook is still at 0%. It bypasses the rollout
- *    percentage **only**; the host allow-list and the logged-in requirement still
- *    apply, because those are safety and cost rules, not rollout knobs.
+ * 3. **`CHAT_MVP_ALLOW_USER_IDS`** — a comma-separated allow-list of account ids
+ *    that see it regardless of the rollout percentage. This is the way to open it
+ *    for a named person, because it is bound to the **account**: it survives
+ *    navigation, a new tab and a different device.
+ * 4. **`?chatPreview=<CHAT_MVP_PREVIEW_KEY>`** — the older URL-bound escape
+ *    hatch. Kept for one-off link sharing, but it dies at the first navigation,
+ *    which is exactly how the owner ended up back on «فعال نشده» (2026-08-07).
+ *
+ * Both 3 and 4 bypass the rollout percentage **only**; the host allow-list and
+ * the logged-in requirement still apply, because those are safety and cost
+ * rules, not rollout knobs.
  */
 import { useMemo } from 'react';
 import { useRouter } from 'next/router';
@@ -34,7 +41,7 @@ import getConfig from 'next/config';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { chatIneligibleReason, devFakeLogin, type ChatIneligibleReason } from './chatEligibility';
+import { chatIneligibleReason, devFakeLogin, isAllowedUserId, type ChatIneligibleReason } from './chatEligibility';
 export { chatRouteAllowed } from './chatEligibility';
 
 /** Lazy + defensive: `getConfig()` returns undefined outside a Next runtime (tests). */
@@ -56,6 +63,7 @@ export function useChatGate(): ChatGate {
   const router = useRouter();
   const partnerKey = useCustomize(state => state.customize?.partnerKey);
   const isLogin = useUserInfoStore(state => state.isLogin);
+  const userId = useUserInfoStore(state => state.info?.id);
   const isAuthPending = useUserInfoStore(state => state.pending);
   const rolloutOn = useFeatureIsOn(CHAT_ROLLOUT_FLAG);
 
@@ -63,6 +71,8 @@ export function useChatGate(): ChatGate {
   const previewKey = String(cfg.CHAT_MVP_PREVIEW_KEY ?? '');
   const isPreview = Boolean(previewKey) && router.query.chatPreview === previewKey;
   const masterOn = String(cfg.CHAT_MVP_ENABLED ?? '') === 'true';
+  // allow-listِ حساب — همان سطحِ دورزدنِ preview key، ولی وابسته به URL نیست.
+  const isAllowedUser = isAllowedUserId(cfg.CHAT_MVP_ALLOW_USER_IDS, userId);
   const fakeLogin = devFakeLogin(cfg);
 
   return useMemo(() => {
@@ -73,8 +83,8 @@ export function useChatGate(): ChatGate {
       partnerKey,
       isLogin: isLogin || fakeLogin,
       isAuthPending: isAuthPending && !fakeLogin,
-      featureEnabled: masterOn && (rolloutOn || isPreview),
+      featureEnabled: masterOn && (rolloutOn || isPreview || isAllowedUser),
     });
     return { allowed: reason === null, reason, isPreview };
-  }, [partnerKey, isLogin, isAuthPending, masterOn, rolloutOn, isPreview, fakeLogin]);
+  }, [partnerKey, isLogin, isAuthPending, masterOn, rolloutOn, isPreview, isAllowedUser, fakeLogin]);
 }
