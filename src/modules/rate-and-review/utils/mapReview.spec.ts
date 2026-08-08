@@ -27,6 +27,17 @@ describe('mapRawReviewToRaviReview', () => {
     });
   });
 
+  it('keeps only first name from full user_display_name', () => {
+    const review = mapRawReviewToRaviReview({
+      id: 7,
+      user_display_name: 'نرگس بهرامی',
+      description: 'خوب',
+      user_id: 9,
+    });
+
+    expect(review.userName).toBe('نرگس');
+  });
+
   it('handles missing optional fields', () => {
     const review = mapRawReviewToRaviReview({ Id: 'x', description: null });
 

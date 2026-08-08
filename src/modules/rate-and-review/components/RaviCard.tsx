@@ -26,10 +26,9 @@ export const RaviCard = ({
   onDeleted,
   onEdited,
 }: RaviCardProps) => {
-  const { data: fetchedName, isLoading: isNameLoading } = useReviewerName(
-    review.userName ? undefined : review.userId,
-  );
-  const displayName = review.userName ?? fetchedName ?? (isNameLoading ? '...' : 'بیمار');
+  const { data: fetchedName, isLoading: isNameLoading } = useReviewerName(review.userId);
+  // Prefer /v1/users.name (first name). Never show family from user_display_name.
+  const displayName = fetchedName ?? review.userName ?? (isNameLoading ? '...' : 'بیمار');
   const doctorReply = useRaviDoctorReply({
     feedbackId: review.id,
     doctorSlug,
