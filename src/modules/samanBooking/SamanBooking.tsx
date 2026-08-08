@@ -15,6 +15,8 @@ interface SamanBookingProps {
   doctorCity?: string;
   centers?: { id: string }[];
   ssrUseSamanAvailabilityStatus?: boolean;
+  /** MS allowlist only: when bookable, render nothing so Aside Services is the CTA. */
+  deferBookableToServices?: boolean;
 }
 
 interface LegacyAvailabilityResponse {
@@ -30,6 +32,7 @@ const SamanBooking = ({
   doctorCity,
   centers = [],
   ssrUseSamanAvailabilityStatus = false,
+  deferBookableToServices = false,
 }: SamanBookingProps) => {
   const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
   const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
@@ -73,6 +76,11 @@ const SamanBooking = ({
 
   // Show inactive/future box when nothing is bookable now (with or without future available_time)
   const showUnavailableState = nothingBookable;
+
+  // MS allowlist: bookable → no CTA here; Aside Services handles booking.
+  if (deferBookableToServices && !showUnavailableState) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col space-y-3">

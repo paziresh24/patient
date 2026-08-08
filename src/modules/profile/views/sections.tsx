@@ -15,7 +15,6 @@ import { Fragment2 } from '@/common/fragment/fragment2';
 import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
 import { getImageUrl } from '@/common/utils/getImageUrl';
-import { isSajediProfileSlug } from '@/modules/profile/constants/sajediProfile';
 import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
 
 const { publicRuntimeConfig } = config();
@@ -71,10 +70,12 @@ export const sections = (data: any) => {
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
+    profile_backend,
   } = data;
 
   const credentials = information?.credentials;
-  const showSajediCredentials = isSajediProfileSlug(seo?.slug) && hasBioCredentials(credentials);
+  // MS path is allowlist-driven (GrowthBook / PROFILE_API_SOURCE_SLUGS) — not a Sajedi hardcode.
+  const showMsCredentials = profile_backend === 'microservice' && hasBioCredentials(credentials);
 
   const profileData = pick(data, [
     'information',
@@ -113,10 +114,10 @@ export const sections = (data: any) => {
         </div>
       ),
     },
-    // Credentials / honors / experience — Sajedi only
+    // Credentials / honors / experience — new profile backend (allowlist)
     {
       title: 'سوابق و افتخارات',
-      isShow: showSajediCredentials,
+      isShow: showMsCredentials,
       children: () => (
         <Credentials
           degrees={credentials?.degrees ?? []}

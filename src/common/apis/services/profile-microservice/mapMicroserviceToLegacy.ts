@@ -31,16 +31,24 @@ function mapLocationsToCenters(locations: any[]) {
     const cityName = loc?.address?.city ?? (typeof loc?.city === 'string' ? loc.city : loc?.city?.name) ?? null;
     const citySlug = loc?.address?.city_slug ?? loc?.city_en_slug ?? loc?.city?.slug ?? cityEnSlug(cityName);
     const province = loc?.address?.province ?? loc?.province ?? null;
+    const externalIds = (loc?.external_ids ?? {}) as Record<string, unknown>;
+    // Prefer legacy center id when profiles-api stores it — helps booking hydrate match.
+    const legacyCenterId =
+      externalIds.center_id ?? externalIds.paziresh_center_id ?? loc?.center_id ?? loc?.paziresh_center_id;
+    const userCenterId =
+      externalIds.user_center_id ?? loc?.user_center_id ?? null;
 
     return {
-      id: String(loc?.id ?? ''),
+      id: String(legacyCenterId ?? loc?.id ?? ''),
+      ms_location_id: loc?.id != null ? String(loc.id) : null,
       name: loc?.name ?? '',
-      address: loc?.address?.full ?? loc?.address?.line ?? '',
+      address: loc?.address?.full ?? loc?.address?.line ?? loc?.address?.address ?? '',
       display_number: phones,
       tell: phones,
-      type_id: loc?.location_type === 'hospital' ? 2 : 1,
+      type_id: loc?.location_type === 'hospital' || loc?.type === 'hospital' ? 2 : 1,
       status: loc?.is_active === false ? 2 : 1,
-      server_id: loc?.server_id ?? null,
+      server_id: loc?.server_id ?? externalIds.server_id ?? null,
+      user_center_id: userCenterId != null ? String(userCenterId) : null,
       city: cityName
         ? {
             name: cityName,
