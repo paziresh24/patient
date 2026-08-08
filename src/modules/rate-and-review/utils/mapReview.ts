@@ -1,4 +1,5 @@
 import { RaviReview } from '../types';
+import { toPatientFirstName } from './patientFirstName';
 
 export const mapRawReviewToRaviReview = (item: Record<string, unknown> & { relativeCreatedTime?: string }): RaviReview => {
   const nameRaw =
@@ -24,7 +25,8 @@ export const mapRawReviewToRaviReview = (item: Record<string, unknown> & { relat
   return {
     id: String(item.id ?? item.Id ?? ''),
     userId,
-    userName: typeof nameRaw === 'string' && nameRaw.trim() ? nameRaw.trim() : undefined,
+    // Never expose family: user_display_name is often "نام نام‌خانوادگی".
+    userName: toPatientFirstName(typeof nameRaw === 'string' ? nameRaw : null),
     description: String(item.description ?? ''),
     dateLabel: item.relativeCreatedTime ?? '—',
     centerName: centerLabel,
