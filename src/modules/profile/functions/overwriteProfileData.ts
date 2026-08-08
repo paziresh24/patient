@@ -80,9 +80,21 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
 
       if (sourceCenter) {
         // Merge new center data with full profile data
+        const resolvedCityName =
+          newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null) || sourceCenter.city;
+        const resolvedCitySlug =
+          newCenter.city?.slug || newCenter.city_en_slug || sourceCenter.city_en_slug || null;
+        const resolvedProvince =
+          newCenter.city?.province?.name ||
+          (typeof newCenter.city?.province === 'string' ? newCenter.city.province : null) ||
+          (typeof newCenter.province === 'string' ? newCenter.province : null) ||
+          sourceCenter.province;
+        const resolvedCenterType =
+          newCenter.type_id ?? newCenter.center_type ?? sourceCenter.center_type ?? null;
+
         return {
-          ...sourceCenter, // Start with full profile data
-          // Override with new API data where available
+          ...sourceCenter, // Start with full profile data (services, freeturn, …)
+          // Override with new API / MS location data where available
           id: newCenter.id,
           name: newCenter.name,
           display_number: newCenter.display_number,
@@ -90,39 +102,42 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
           tell: newCenter.tell,
           tell_array: newCenter.tell, // Map tell to tell_array
           address: newCenter.address,
-          center_type: newCenter.type_id, // Map type_id to center_type
-          status: newCenter.status,
-          server_id: newCenter.server_id,
-          city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null) || sourceCenter.city,
-          city_en_slug: newCenter.city?.slug,
-          province: newCenter.city?.province?.name || (typeof newCenter.city?.province === 'string' ? newCenter.city.province : null),
+          center_type: resolvedCenterType,
+          status: newCenter.status ?? sourceCenter.status,
+          server_id: newCenter.server_id ?? sourceCenter.server_id,
+          city: resolvedCityName,
+          city_en_slug: resolvedCitySlug,
+          province: resolvedProvince,
           map: newCenter.location
             ? {
                 lat: newCenter.location.lat,
                 lon: newCenter.location.lon,
               }
-            : sourceCenter.map,
+            : newCenter.map ?? sourceCenter.map,
           // Keep services from full profile
           services: sourceCenter.services,
           // Keep other full profile fields like freeturn, settings, etc.
         };
       } else {
         // If no matching center in full profile, use new center data with empty services
+        const resolvedCenterType = newCenter.type_id ?? newCenter.center_type ?? null;
         return {
           ...newCenter,
           display_number_array: newCenter.display_number, // Map display_number to display_number_array
           tell_array: newCenter.tell, // Map tell to tell_array
-          center_type: newCenter.type_id, // Map type_id to center_type
-          city: newCenter.city?.name || newCenter.city, // Ensure city is string, not object
-          city_en_slug: newCenter.city?.slug,
-          province: newCenter.city?.province?.name,
+          center_type: resolvedCenterType,
+          city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null),
+          city_en_slug: newCenter.city?.slug || newCenter.city_en_slug || null,
+          province:
+            newCenter.city?.province?.name ||
+            (typeof newCenter.province === 'string' ? newCenter.province : null),
           map: newCenter.location
             ? {
                 lat: newCenter.location.lat,
                 lon: newCenter.location.lon,
               }
-            : null,
-          services: [],
+            : newCenter.map ?? null,
+          services: newCenter.services ?? [],
         };
       }
     }) ??

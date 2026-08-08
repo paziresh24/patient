@@ -172,6 +172,7 @@ const DoctorProfile = (props: any) => {
     user_id,
     dontShowRateAndReviewMessage,
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
+    profile_backend,
     title: documentTitleFromProps,
     description: documentDescriptionFromProps,
     host: documentHostFromProps,
@@ -486,6 +487,7 @@ const DoctorProfile = (props: any) => {
     keywordTags: resolvedKeywordTags,
     user_id,
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
+    profile_backend,
   };
 
   if (!finalProps?.information?.id ? shouldFetchOnClient || isLoading : false) {

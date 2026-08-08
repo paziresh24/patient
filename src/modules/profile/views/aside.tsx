@@ -41,7 +41,11 @@ export const Aside = (data: any) => {
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
     // Passed from the page so Aside stays a plain function (no hooks after early returns).
     isSamanBookingEnabled = false,
+    // Set only for allowlist slugs (GrowthBook profile.api-source-by-slug).
+    profile_backend,
   } = data;
+
+  const isMicroserviceProfile = profile_backend === 'microservice';
 
   const profileData = pick(data, [
     'information',
@@ -60,12 +64,14 @@ export const Aside = (data: any) => {
   return [
     {
       id: 'saman-booking',
+      // On MS (allowlist) profiles, widget is only for unavailable/inactive messaging.
       isShow: isSamanBookingEnabled,
       function: () => {
         return {
           expertises,
           doctorCity: information.city_en_slug,
           ssrUseSamanAvailabilityStatus: !!ssrUseSamanAvailabilityStatus,
+          deferBookableToServices: isMicroserviceProfile,
         };
       },
       children: (props: any) => (
@@ -74,7 +80,9 @@ export const Aside = (data: any) => {
     },
     {
       id: 'book-me',
-      isShow: centers?.length > 0 && !isSamanBookingEnabled,
+      // Legacy: hide when saman-booking owns the slot. MS allowlist: keep Services as CTA
+      // (SamanBooking returns null when bookable via deferBookableToServices).
+      isShow: centers?.length > 0 && (isMicroserviceProfile || !isSamanBookingEnabled),
       function: () => {
         return {
           id: information.id,
