@@ -7,6 +7,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { getErrorMessage } from '@/common/utils/errorHandler';
 import { normalizeDigitInput } from '@/common/utils/normalizeDigitInput';
+import { sanitizeRedirectUrl } from '@/common/utils/sanitizeRedirectUrl';
 import Trans from 'next-translate/Trans';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';
@@ -145,9 +146,9 @@ export const MobileNumber = (props: MobileNumberProps) => {
                 setOidcOauthLoading(true);
 
                 const origin = window.location.origin;
-                const redirectUrl = router.query?.redirect_url
-                  ? (router.query?.redirect_url as string)
-                  : `${window.location.pathname}${window.location.search}`;
+                const redirectUrl =
+                  sanitizeRedirectUrl(router.query?.redirect_url) ??
+                  `${window.location.pathname}${window.location.search}`;
 
                 const authServiceUrl = `https://user.paziresh24.com/auth/gov?origin=${encodeURIComponent(
                   origin,
@@ -175,9 +176,9 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
                 // ۱. مشخص کردن آدرسی که کاربر الان توش هست و آدرسی که باید بعدا برگرده
                 const origin = window.location.origin; // مثلاً https://www.paziresh24.com
-                const redirectUrl = router.query?.redirect_url
-                  ? (router.query?.redirect_url as string)
-                  : `${window.location.pathname}${window.location.search}`;
+                const redirectUrl =
+                  sanitizeRedirectUrl(router.query?.redirect_url) ??
+                  `${window.location.pathname}${window.location.search}`;
 
                 // ۲. ریدایرکت مستقیم به وب‌سرویس خودت (بک‌اِند کرسر امنیت و ریدایرکت به گوگل را هندل می‌کند)
                 const authServiceUrl = `https://user.paziresh24.com/auth/google?origin=${encodeURIComponent(
