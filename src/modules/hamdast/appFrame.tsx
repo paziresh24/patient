@@ -86,7 +86,7 @@ export const AppFrame = ({
   const isEmbeddedModal = Boolean(dontShowAppBar && dontShowProfile && dontShowNotification);
 
   const embedSrc = useMemo(() => {
-    const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
+    const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters ?? [], params?.slice(1) as string[]) : '';
     const doctorUserId = getProfileDoctorUserId();
     return page?.embed_src
       ? constructUrlWithQuery(replaceParameters, {
