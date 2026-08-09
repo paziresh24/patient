@@ -170,7 +170,7 @@ export const AppFrame = ({
       {!dontShowAppBar && (
 
         <AppBar
-          title={page?.name?.fa}
+          title={page?.name?.fa ?? ''}
           backButton={showBackButton}
           titleLoading={!page?.name}
           notification={!dontShowNotification}
