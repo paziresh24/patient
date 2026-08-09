@@ -1,3 +1,4 @@
+/** Smooth-scroll to a selector, no-op if the element is missing (SSR-safe). */
 export const scrollIntoViewWithOffset = (selector: string, offset: number) => {
   const el = typeof document !== 'undefined' ? document.querySelector(selector) : null;
   if (!el) return;
