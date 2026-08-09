@@ -81,7 +81,7 @@ const Page = ({ page, app }: any) => {
   const [showSupportButton, setShowSupportButton] = useState(false);
 
   const embedSrc = useMemo(() => {
-    const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
+    const replaceParameters = page?.embed_src ? replaceKeysInString(page.embed_src, page.parameters ?? [], params?.slice(1) ?? []) : '';
     return page?.embed_src ? constructUrlWithQuery(replaceParameters, { ...queries, user_id: user.id, hamdast_embedded: true }) : null;
   }, [page, params, queries, user.id]);
 
