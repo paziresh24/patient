@@ -7,19 +7,20 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
-import { useApps } from '@/modules/dashboard/apis/apps';
+import { buildDashboardEmbedSrc, getKnownDrappEmbedSrc } from '@/modules/dashboard/constants/knownEmbedSrc';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useRef, useState } from 'react';
 
+const APPOINTMENTS_EMBED_SRC = getKnownDrappEmbedSrc('drapp', 'appointments')!;
+
 export const Dashboard = (props: any) => {
   const user = useUserInfoStore(state => state.info);
   const [isAppLoading, setIsAppLoading] = useState(true);
   const iframeRef = useRef<any>(null);
   const sessionStartTime = useRef<any>(null);
-  const appsData = useApps();
   const { isMobile } = useResponsive();
 
   useEffect(() => {
@@ -82,7 +83,6 @@ export const Dashboard = (props: any) => {
       <AppBar
         title={'مراجعین من'}
         className="md:hidden"
-        titleLoading={!appsData.isSuccess}
         backButton={true}
         actionButton={<Report app_key={'drapp'} page_key={'appointments'} />}
       />
@@ -90,17 +90,17 @@ export const Dashboard = (props: any) => {
         <div className="flex flex-grow flex-col w-full">
           <Seo title={'مراجعین من'} noIndex />
           <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto h-full flex-col flex-grow w-full relative">
-            {(!appsData.isSuccess || isAppLoading) && (
+            {isAppLoading && (
               <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
                 <Loading />
               </div>
             )}
-            {appsData.isSuccess && user?.id && (
+            {user?.id && (
               <iframe
                 ref={iframeRef}
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
-                src={`https://opium-dashboard.paziresh24.com/book-list/?user_id=${user.id}`}
+                src={buildDashboardEmbedSrc(APPOINTMENTS_EMBED_SRC, user.id)}
                 allow="microphone; camera; fullscreen; clipboard-write;"
                 sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />
