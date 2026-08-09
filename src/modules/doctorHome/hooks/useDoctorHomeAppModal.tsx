@@ -67,7 +67,7 @@ export const DoctorHomeAppModalProvider = ({ children }: { children: ReactNode }
 
   const openApp = useCallback(
     (key: string) => {
-      void prefetchOneApp(queryClient, { appKey: key, pageKey: 'launcher' }, 0);
+      void prefetchOneApp(queryClient, { appKey: key, pageKey: 'launcher' }, []);
       setAppKey(key);
       const extra = { [APP_KEY_PARAM]: key };
       // بستن toolbox با history.back() قبل از push باعث race و باز نشدن اپ می‌شد

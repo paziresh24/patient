@@ -21,7 +21,7 @@ export default function NoskheyarRenewal({ profileData }: { profileData?: any })
   const doctorId = profileData?.information?.id;
 
   const openRenewalFlow = () => {
-    void prefetchOneApp(queryClient, { appKey: APP_KEY, pageKey: 'flows' }, 1);
+    void prefetchOneApp(queryClient, { appKey: APP_KEY, pageKey: 'flows' }, ['SERVICE']);
     handleOpen();
   };
 
