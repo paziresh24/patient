@@ -201,6 +201,15 @@ initial-chunks:
     REGISTRY_PUSH_HOST_TLS: registry-gitlab.mobin.p24cloud.ir
     # Must use the same registry host we docker-login to (private image JWT).
     PATIENT_BASE_IMAGE: gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:0d479232
+    # Default runner job limit is 2Gi — dind extract of patient image OOMs/kills the pod.
+    KUBERNETES_MEMORY_REQUEST: "2Gi"
+    KUBERNETES_MEMORY_LIMIT: "8Gi"
+    KUBERNETES_SERVICE_MEMORY_REQUEST: "2Gi"
+    KUBERNETES_SERVICE_MEMORY_LIMIT: "8Gi"
+    KUBERNETES_EPHEMERAL_STORAGE_REQUEST: "15Gi"
+    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "40Gi"
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_LIMIT: "6"
   retry:
     max: 2
     when:
