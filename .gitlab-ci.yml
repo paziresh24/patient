@@ -76,7 +76,7 @@ auto-merge-safe:
   variables:
     GITLAB_BOT_USERNAME: "harun"
   before_script:
-    - sh -c 'sed -i -e "s|dl-cdn.alpinelinux.org|mirrors.aliyun.com|g" -e "s|dl-cdn.alpinelinux.org|mirror.rackspace.com|g" /etc/apk/repositories 2>/dev/null || true; apk add --no-cache curl jq' 
+    # apk skipped (alpine CDN unreachable from runner pods)
   script:
     - python3 scripts/ci-assert-gitlab-user.py "${GITLAB_MERGE_TOKEN:-$GITLAB_API_TOKEN}"
     - sh scripts/ci-auto-merge-safe.sh
@@ -147,18 +147,7 @@ initial-chunks:
   extends: .build-docker-common
   stage: perf
   before_script:
-    # No apk: alpine package CDNs are unreachable from mobin runner pods (TLS/egress).
-    # docker:cli already ships wget; registry probe + docker login need nothing else.
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    - |
-      PUSH_HOST="$REGISTRY_PUSH_HOST"
-      if ! wget -q -O /dev/null -T 5 "https://${PUSH_HOST}/v2/" 2>/dev/null; then
-        echo "Push host unreachable, falling back to $CI_REGISTRY"
-        PUSH_HOST="$CI_REGISTRY"
-      fi
-      echo "$PUSH_HOST" > /tmp/push_host
-      echo "Using push host: $PUSH_HOST"
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
   script:
     - docker build --provenance=false -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
     - docker run --rm patient-initial-chunks:$CI_COMMIT_SHORT_SHA node scripts/check-initial-chunks.js
@@ -213,8 +202,7 @@ build-docker-image:
   extends: .build-docker-common
   stage: build
   before_script:
-    # No apk: alpine package CDNs are unreachable from mobin runner pods (TLS/egress).
-    # docker:cli already ships wget; registry probe + docker login need nothing else.
+    # No apk: alpine package CDNs are unreachable from mobin runner pods.
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - |
       PUSH_HOST="$REGISTRY_PUSH_HOST"
@@ -225,48 +213,6 @@ build-docker-image:
       echo "$PUSH_HOST" > /tmp/push_host
       echo "Using push host: $PUSH_HOST"
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
-  script:
-    - |
-      PUSH_HOST=$(cat /tmp/push_host)
-      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
-      docker build --provenance=false \
-        -t "${PUSH_IMAGE}:latest" \
-        -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
-        .
-    - |
-      push_with_retry() {
-        local image="$1" attempt=1 max=3
-        while [ "$attempt" -le "$max" ]; do
-          echo "Pushing $image (attempt $attempt/$max)..."
-          if docker push "$image"; then return 0; fi
-          echo "Push failed (attempt $attempt/$max)"
-          [ "$attempt" -eq "$max" ] && return 1
-          sleep $((attempt * 10))
-          attempt=$((attempt + 1))
-        done
-      }
-      PUSH_HOST=$(cat /tmp/push_host)
-      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
-      push_with_retry "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}"
-      push_with_retry "${PUSH_IMAGE}:latest"
-    - |
-      cat <<EOF > webhook_payload.json
-      {
-        "project_name": "$CI_PROJECT_NAME",
-        "commit_sha": "$CI_COMMIT_SHORT_SHA",
-        "branch": "$CI_COMMIT_BRANCH",
-        "registry_image": "$(cat /tmp/push_host)/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA",
-        "status": "build_success"
-      }
-      EOF
-    - >
-      curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
-      -H "Content-Type: application/json"
-      -d @webhook_payload.json
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-      when: always
-
 build-docker-image-next:
   extends: .build-docker-common
   stage: build
@@ -276,18 +222,9 @@ build-docker-image-next:
     ZOT_REGISTRY: registry.paziresh24.com
     ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
   before_script:
-    # No apk: alpine package CDNs are unreachable from mobin runner pods (TLS/egress).
-    # docker:cli already ships wget; registry probe + docker login need nothing else.
+    # apk skipped (alpine CDN unreachable from runner pods)
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    - |
-      PUSH_HOST="$REGISTRY_PUSH_HOST"
-      if ! wget -q -O /dev/null -T 5 "https://${PUSH_HOST}/v2/" 2>/dev/null; then
-        echo "Push host unreachable, falling back to $CI_REGISTRY"
-        PUSH_HOST="$CI_REGISTRY"
-      fi
-      echo "$PUSH_HOST" > /tmp/push_host
-      echo "Using push host: $PUSH_HOST"
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
+    - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
   script:
     - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
     - |
@@ -313,9 +250,10 @@ build-docker-image-next:
       }
       EOF
     - >
-      curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
-      -H "Content-Type: application/json"
-      -d @webhook_payload.json
+      wget -q -O /dev/null --header="Content-Type: application/json"
+      --post-file=webhook_payload.json
+      https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
+      || echo "webhook notify failed (non-fatal)" 
   rules:
     - if: $CI_COMMIT_BRANCH == "next"
       when: always
@@ -350,18 +288,7 @@ search-e2e:
     E2E_IMAGE: mcr.microsoft.com/playwright:v1.49.1-jammy
     APP_IMAGE: patient-e2e:$CI_COMMIT_SHORT_SHA
   before_script:
-    # No apk: alpine package CDNs are unreachable from mobin runner pods (TLS/egress).
-    # docker:cli already ships wget; registry probe + docker login need nothing else.
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    - |
-      PUSH_HOST="$REGISTRY_PUSH_HOST"
-      if ! wget -q -O /dev/null -T 5 "https://${PUSH_HOST}/v2/" 2>/dev/null; then
-        echo "Push host unreachable, falling back to $CI_REGISTRY"
-        PUSH_HOST="$CI_REGISTRY"
-      fi
-      echo "$PUSH_HOST" > /tmp/push_host
-      echo "Using push host: $PUSH_HOST"
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
   script:
     - docker build --provenance=false -t "$APP_IMAGE" .
     - docker network create e2e-net
