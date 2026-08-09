@@ -76,7 +76,7 @@ auto-merge-safe:
   variables:
     GITLAB_BOT_USERNAME: "harun"
   before_script:
-    - apk add --no-cache curl jq
+    - sh -c 'sed -i -e "s|dl-cdn.alpinelinux.org|mirrors.aliyun.com|g" -e "s|dl-cdn.alpinelinux.org|mirror.rackspace.com|g" /etc/apk/repositories 2>/dev/null || true; apk add --no-cache curl jq' 
   script:
     - python3 scripts/ci-assert-gitlab-user.py "${GITLAB_MERGE_TOKEN:-$GITLAB_API_TOKEN}"
     - sh scripts/ci-auto-merge-safe.sh
@@ -202,7 +202,7 @@ build-docker-image:
   extends: .build-docker-common
   stage: build
   before_script:
-    - apk add --no-cache curl jq
+    - sh -c 'sed -i -e "s|dl-cdn.alpinelinux.org|mirrors.aliyun.com|g" -e "s|dl-cdn.alpinelinux.org|mirror.rackspace.com|g" /etc/apk/repositories 2>/dev/null || true; apk add --no-cache curl jq' 
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - |
       PUSH_HOST="$REGISTRY_PUSH_HOST"
@@ -268,7 +268,7 @@ build-docker-image-next:
     ZOT_REGISTRY: registry.paziresh24.com
     ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
   before_script:
-    - apk add --no-cache curl jq
+    - sh -c 'sed -i -e "s|dl-cdn.alpinelinux.org|mirrors.aliyun.com|g" -e "s|dl-cdn.alpinelinux.org|mirror.rackspace.com|g" /etc/apk/repositories 2>/dev/null || true; apk add --no-cache curl jq' 
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
     - |
