@@ -120,8 +120,19 @@ export const Head = (props: HeadProps) => {
         </ScrollContainer>
       )}
       {!!satisfaction && !editable && (
-        <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
-          {!shouldUseFragmentReviewCard && (
+        <div
+          className="self-center cursor-pointer"
+          role="button"
+          tabIndex={0}
+          aria-label="مشاهده نظرات و امتیاز پزشک"
+          onClick={() => scrollIntoViewWithOffset('#reviews', 90)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              scrollIntoViewWithOffset('#reviews', 90);
+            }
+          }}
+        >          {!shouldUseFragmentReviewCard && (
             <RateBadge
               text={`${satisfaction}%`}
               icon={<LikeIcon className="w-5 text-white" />}

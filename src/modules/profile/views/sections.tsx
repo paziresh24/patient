@@ -32,7 +32,7 @@ const Credentials = dynamic(() => import('./credentials'), {
 });
 const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
 const ProfileSeo = dynamic(() => import('.plasmic/ProfileSeo'));
-const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
+const PlasmicProfileGallery = dynamic(() => import('.plasmic/ProfileGallery'));
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
   loading(loadingProps) {
@@ -176,6 +176,8 @@ export const sections = (data: any) => {
       children: (props: any) => {
         const items = media?.gallery;
         const reformattedItems = items?.map((item: any) => getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)) ?? [];
+        const doctorName = information?.display_name?.trim();
+        const imageAltPrefix = doctorName ? `تصویر گالری ${doctorName}` : 'تصویر گالری پزشک';
 
         return (
           <Fragment2
@@ -183,6 +185,7 @@ export const sections = (data: any) => {
             Component={PlasmicProfileGallery}
             args={{
               gallery: reformattedItems,
+              imageAltPrefix,
             }}
           />
         );

@@ -1,5 +1,5 @@
 import Button from '@/common/components/atom/button';
-import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
+import { sendCenterProfileEvent, sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -8,16 +8,35 @@ const ErrorPage = ({
   refresh,
   message,
   slug,
+  pageType = 'doctor',
 }: {
   message?: string;
   statusCode?: number;
   refresh: () => void;
   slug?: string;
+  /** Center pages must not emit doctor-profile analytics. */
+  pageType?: 'doctor' | 'center';
 }) => {
   const router = useRouter();
   const resolvedSlug = slug ?? (typeof router.query.slug === 'string' ? decodeURIComponent(router.query.slug) : undefined);
 
   useEffect(() => {
+    if (pageType === 'center') {
+      sendCenterProfileEvent('center_profile_error', 'profile_error_client_side', {
+        handle_error_status: statusCode ?? null,
+        http_status: statusCode ?? null,
+        slug: resolvedSlug ?? null,
+        path: router.asPath,
+        message: message ?? null,
+      });
+      sendCenterProfileEvent('center_profile_render_result', 'error', {
+        slug: resolvedSlug ?? null,
+        http_status: statusCode ?? null,
+        source: 'error_page',
+      });
+      return;
+    }
+
     sendDoctorProfileEvent('profile_error', 'profile_error_client_side', {
       handle_error_status: statusCode ?? null,
       http_status: statusCode ?? null,
@@ -30,7 +49,7 @@ const ErrorPage = ({
       http_status: statusCode ?? null,
       source: 'error_page',
     });
-  }, [statusCode, resolvedSlug, router.asPath, message]);
+  }, [statusCode, resolvedSlug, router.asPath, message, pageType]);
 
   const errors: { [key: number]: { status: number; title: string; message: string } } = {
     404: {
@@ -39,9 +58,9 @@ const ErrorPage = ({
       message: 'متاسفیم، اما صفحه‌ای که دنبال آن هستید وجود ندارد.',
     },
     410: {
-      status: 404,
-      title: 'صفحه یافت نشد',
-      message: 'متاسفیم، اما صفحه‌ای که دنبال آن هستید وجود ندارد.',
+      status: 410,
+      title: 'صفحه در دسترس نیست',
+      message: 'این صفحه حذف شده یا دیگر در دسترس نیست.',
     },
     500: {
       status: 500,
@@ -71,7 +90,7 @@ const ErrorPage = ({
         <Button className="mt-6" onClick={refresh}>
           تلاش مجدد
         </Button>
-        {error.status == 404 && (
+        {(error.status === 404 || error.status === 410) && (
           <Button variant="secondary" className="mt-6" onClick={() => router.push('/')}>
             بازگشت به صفحه اصلی
           </Button>

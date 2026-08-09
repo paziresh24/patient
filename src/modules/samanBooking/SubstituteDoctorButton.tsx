@@ -15,7 +15,7 @@ import { useEffect, useMemo } from 'react';
 interface SubstituteDoctorButtonProps {
   displayName: string;
   expertises: any;
-  doctorCity: string;
+  doctorCity?: string;
   buttonId?: string;
   buttonText?: string;
   autoOpenDelay?: number;

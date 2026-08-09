@@ -24,7 +24,7 @@ import sortBy from 'lodash/sortBy';
 import { splunkInstance } from '@/common/services/splunk';
 import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
-import PlasmicServices from '.plasmic/plasmic/paziresh_24/PlasmicServices';
+import PlasmicServicesWrapper from '.plasmic/Services';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import {
   formatSamanAvailabilityTime,
@@ -436,7 +436,7 @@ export const Services = ({
               <div key={index} className="flex flex-col gap-2">
                 <Fragment2
                   name="Services"
-                  Component={PlasmicServices}
+                  Component={PlasmicServicesWrapper}
                   args={{
                     ...profileData,
                     service: serviceWithLifecycleDuration,
