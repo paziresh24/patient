@@ -5,6 +5,7 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import buildSubstituteDoctorSearch from '@/common/utils/buildSubstituteDoctorSearch';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
@@ -30,20 +31,9 @@ const SubstituteDoctorButton = ({
 }: SubstituteDoctorButtonProps) => {
   const { handleOpen, modalProps } = useModal();
   const customize = useCustomize(state => state.customize);
-  const searchData = useSearch(
-    {
-      route: decodeURIComponent(doctorCity || 'ir'),
-      query: {
-        turn_type: 'consult',
-        text: expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-          ? expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-          : expertises?.expertises.filter((item: any) => item.expertise_id !== 325)?.map((expertise: any) => expertise.expertise_name)[0],
-      },
-    },
-    {
-      enabled: !customize.partnerKey,
-    },
-  );
+  const searchData = useSearch(buildSubstituteDoctorSearch(expertises?.expertises, doctorCity), {
+    enabled: !customize.partnerKey,
+  });
   const { changeRoute } = useSearchRouting();
 
   const handleOpenSubstituteDoctorModal = () => {
