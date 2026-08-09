@@ -27,6 +27,7 @@ import { HamdastClose } from './components/close';
 import { HamdastFlow } from './components/flow';
 import Link from 'next/link';
 import { HamdastInvite } from './components/invite';
+import { getPageFromOneAppData } from '@/modules/hamdast/utils/getPageFromOneAppData';
 import { getProfileDoctorUserId } from './stores/profileDoctorInfo';
 
 export const AppFrame = ({
@@ -68,13 +69,7 @@ export const AppFrame = ({
   const page = useMemo(() => {
     if (!app?.fragments) return {};
 
-    return (
-      app.fragments
-        ?.find((item: any) => item.type === 'pages')
-        ?.options?.find(
-          (item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1,
-        ) ?? {}
-    );
+    return getPageFromOneAppData(app, params?.[0] as string, (params?.slice(1) as string[]) ?? []) ?? {};
   }, [app, params]);
 
   const iframeRef = useRef<HTMLIFrameElement>(null);

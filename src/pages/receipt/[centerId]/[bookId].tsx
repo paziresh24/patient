@@ -403,7 +403,7 @@ const Receipt = () => {
           return;
         }
 
-        void prefetchOneApp(queryClient, { appKey: targetWidget.app, pageKey: 'flows' }, 1);
+        void prefetchOneApp(queryClient, { appKey: targetWidget.app, pageKey: 'flows' }, ['ONLINE_VISIT_CHANNEL_BUTTON']);
 
         const addonsResponse = await apiGatewayClient.get('/v1/hamdast/addons/receipt', {
           params: {

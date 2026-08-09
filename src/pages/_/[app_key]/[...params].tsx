@@ -33,6 +33,7 @@ import { HamdastRasanActivate } from '@/modules/hamdast/components/smsActivate';
 import { HamdastRasanCharge } from '@/modules/hamdast/components/smsCharge';
 import Button from '@/common/components/atom/button';
 import Link from 'next/link';
+import { getPageFromOneAppData } from '@/modules/hamdast/utils/getPageFromOneAppData';
 
 export function replaceKeysInString(template: string, keys: string[], values: string[]) {
   const regex = /{{(.*?)}}/g;
@@ -360,9 +361,11 @@ export const getServerSideProps: GetServerSideProps = withServerUtils(
     const getOneApp = await oneApp({ appKey: app_key as string, pageKey: params?.[0] as string });
 
     const app = getOneApp?.data;
-    const page = app?.fragments
-      ?.find((item: any) => item.type === 'pages')
-      ?.options?.find((item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1);
+    const page = getPageFromOneAppData(
+      app,
+      params?.[0] as string,
+      ((Array.isArray(params) ? params : []).slice(1) as string[]) ?? [],
+    );
 
     return {
       props: {
