@@ -148,8 +148,13 @@ initial-chunks:
   stage: perf
   before_script:
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    - |
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      echo "$PUSH_HOST" > /tmp/push_host
+      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
   script:
-    - docker build --provenance=false --build-arg "BASE_IMAGE=${PATIENT_BASE_IMAGE}" -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
+    - docker build --provenance=false --build-arg "BASE_IMAGE=$(cat /tmp/base_image)" -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
     - docker run --rm patient-initial-chunks:$CI_COMMIT_SHORT_SHA node scripts/check-initial-chunks.js
   # `.build-docker-common` روی `script_failure` هم retry می‌کند — برای pushِ ناپایدارِ registry منطقی
   # است، ولی این‌جا یعنی یک نقضِ واقعیِ گارد دو بارِ دیگر هم ۸ دقیقه build شود. فقط خطای زیرساخت retry.
@@ -190,12 +195,12 @@ initial-chunks:
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
-    # Admin hostname (reachable in-cluster; /v2/ returns 401 without auth — that is OK).
-    REGISTRY_PUSH_HOST: registry-gitlab.mobin.p24cloud.ir
-    # HTTP fallback when TLS hostname path fails inside dind.
+    # Prefer in-cluster registry (same host for login + FROM + push).
+    REGISTRY_PUSH_HOST: gitlab-app-registry.gitlab.svc:5000
     REGISTRY_PUSH_HOST_INTERNAL: gitlab-app-registry.gitlab.svc:5000
-    # Rebuild atop last known-good image so npm/apk egress is not required.
-    PATIENT_BASE_IMAGE: registry-gitlab.mobin.p24cloud.ir/paziresh24/patient:0d479232
+    REGISTRY_PUSH_HOST_TLS: registry-gitlab.mobin.p24cloud.ir
+    # Must use the same registry host we docker-login to (private image JWT).
+    PATIENT_BASE_IMAGE: gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:0d479232
   retry:
     max: 2
     when:
@@ -220,16 +225,21 @@ build-docker-image:
         echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
       }
       PUSH_HOST="$REGISTRY_PUSH_HOST"
-      if registry_reachable "https://${PUSH_HOST}/v2/"; then
-        echo "Using TLS push host: $PUSH_HOST"
-      elif registry_reachable "http://${REGISTRY_PUSH_HOST_INTERNAL}/v2/"; then
-        PUSH_HOST="$REGISTRY_PUSH_HOST_INTERNAL"
-        echo "Using internal HTTP push host: $PUSH_HOST"
+      SCHEME=http
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        SCHEME=https
+        echo "Using TLS registry: $PUSH_HOST"
       else
         echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
         PUSH_HOST="$CI_REGISTRY"
+        SCHEME=https
       fi
       echo "$PUSH_HOST" > /tmp/push_host
+      # Keep BASE_IMAGE on the same host we authenticate to.
+      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
     - |
       PUSH_HOST=$(cat /tmp/push_host)
       echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
@@ -237,8 +247,10 @@ build-docker-image:
     - |
       PUSH_HOST=$(cat /tmp/push_host)
       PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      BASE_IMAGE=$(cat /tmp/base_image)
+      echo "Building FROM $BASE_IMAGE"
       docker build --provenance=false \
-        --build-arg "BASE_IMAGE=${PATIENT_BASE_IMAGE}" \
+        --build-arg "BASE_IMAGE=${BASE_IMAGE}" \
         -t "${PUSH_IMAGE}:latest" \
         -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
         .

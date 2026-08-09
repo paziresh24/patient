@@ -1,6 +1,6 @@
 # Rebuild without npm/apk egress: reuse node_modules from last known-good image.
 # package.json / package-lock.json are unchanged vs 0d479232; only app source is rebuilt.
-ARG BASE_IMAGE=registry-gitlab.mobin.p24cloud.ir/paziresh24/patient:0d479232
+ARG BASE_IMAGE=gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:0d479232
 FROM ${BASE_IMAGE}
 
 WORKDIR /app
