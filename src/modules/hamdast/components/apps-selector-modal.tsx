@@ -131,7 +131,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
         uniqueAppKeys.map(appKey => ({
           appKey,
           pageKey: 'launcher',
-          routeParamCount: 0,
+          routeParamValues: [],
         })),
       );
     },
@@ -219,7 +219,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
   const handleAppClick = (app: HamdastApp | CustomApp) => {
     onAppSelect?.(app);
 
-    void prefetchOneApp(queryClient, { appKey: app.app_key, pageKey: 'launcher' }, 0);
+    void prefetchOneApp(queryClient, { appKey: app.app_key, pageKey: 'launcher' }, []);
 
     if (openOptions?.openInModal) {
       setActiveAppOptions(openOptions);
@@ -265,7 +265,7 @@ export const HamdastAppsSelectorModal = forwardRef<HamdastAppsSelectorModalRef, 
                   'hover:bg-slate-50 active:bg-slate-100',
                 )}
                 onPointerEnter={() => {
-                  void prefetchOneApp(queryClient, { appKey: app.app_key, pageKey: 'launcher' }, 0);
+                  void prefetchOneApp(queryClient, { appKey: app.app_key, pageKey: 'launcher' }, []);
                 }}
                 onClick={() => handleAppClick(app)}
               >

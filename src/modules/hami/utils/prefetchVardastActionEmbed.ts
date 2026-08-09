@@ -3,7 +3,7 @@ import { prefetchOneApp } from '@/modules/hamdast/utils/prefetchOneApp';
 import { QueryClient } from '@tanstack/react-query';
 
 const VARDAST_ACTION_PAGE_KEY = 'flows';
-const VARDAST_ACTION_ROUTE_PARAM_COUNT = 1;
+const VARDAST_ACTION_ROUTE_PARAMS = ['CHAT'];
 
 export const prefetchVardastActionEmbed = (
   queryClient: QueryClient,
@@ -11,7 +11,7 @@ export const prefetchVardastActionEmbed = (
 ) => {
   if (!action.app_key) return;
 
-  void prefetchOneApp(queryClient, { appKey: action.app_key, pageKey: VARDAST_ACTION_PAGE_KEY }, VARDAST_ACTION_ROUTE_PARAM_COUNT);
+  void prefetchOneApp(queryClient, { appKey: action.app_key, pageKey: VARDAST_ACTION_PAGE_KEY }, VARDAST_ACTION_ROUTE_PARAMS);
 };
 
 export const prefetchVardastActionEmbeds = (
