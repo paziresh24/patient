@@ -202,7 +202,7 @@ build-docker-image:
   extends: .build-docker-common
   stage: build
   before_script:
-    # No apk: alpine package CDNs are unreachable from mobin runner pods.
+    # apk skipped (alpine CDN unreachable from runner pods)
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - |
       PUSH_HOST="$REGISTRY_PUSH_HOST"
@@ -213,6 +213,49 @@ build-docker-image:
       echo "$PUSH_HOST" > /tmp/push_host
       echo "Using push host: $PUSH_HOST"
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
+  script:
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      docker build --provenance=false \
+        -t "${PUSH_IMAGE}:latest" \
+        -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
+        .
+    - |
+      push_with_retry() {
+        local image="$1" attempt=1 max=3
+        while [ "$attempt" -le "$max" ]; do
+          echo "Pushing $image (attempt $attempt/$max)..."
+          if docker push "$image"; then return 0; fi
+          echo "Push failed (attempt $attempt/$max)"
+          [ "$attempt" -eq "$max" ] && return 1
+          sleep $((attempt * 10))
+          attempt=$((attempt + 1))
+        done
+      }
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      push_with_retry "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+      push_with_retry "${PUSH_IMAGE}:latest"
+    - |
+      cat <<EOF > webhook_payload.json
+      {
+        "project_name": "$CI_PROJECT_NAME",
+        "commit_sha": "$CI_COMMIT_SHORT_SHA",
+        "branch": "$CI_COMMIT_BRANCH",
+        "registry_image": "$(cat /tmp/push_host)/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA",
+        "status": "build_success"
+      }
+      EOF
+    - >
+      wget -q -O /dev/null --header="Content-Type: application/json"
+      --post-file=webhook_payload.json
+      https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
+      || echo "webhook notify failed (non-fatal)"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
+
 build-docker-image-next:
   extends: .build-docker-common
   stage: build
@@ -250,10 +293,9 @@ build-docker-image-next:
       }
       EOF
     - >
-      wget -q -O /dev/null --header="Content-Type: application/json"
-      --post-file=webhook_payload.json
-      https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
-      || echo "webhook notify failed (non-fatal)" 
+      curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
+      -H "Content-Type: application/json"
+      -d @webhook_payload.json
   rules:
     - if: $CI_COMMIT_BRANCH == "next"
       when: always
