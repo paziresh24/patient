@@ -288,7 +288,7 @@ function PlasmicServices__RenderFunc(props: {
                     [sty.freeBoxtype_onlineVisit__lnM17QAlK]: hasVariant($state, 'type', 'onlineVisit'),
                   })}
                 >
-                  <img src="https://hami.paziresh24.com/hami-logo.svg" className="w-6 h-6" />
+                  <img src="https://hami.paziresh24.com/hami-logo.svg" alt="پیام‌رسان پذیرش۲۴" className="w-6 h-6" />
 
                   <div
                     className={classNames(projectcss.all, projectcss.__wab_text, sty.text__jNh3G, {
@@ -323,6 +323,7 @@ function PlasmicServices__RenderFunc(props: {
                       [sty.svgtype_onlineVisit__lpwaK7QAlK]: hasVariant($state, 'type', 'onlineVisit'),
                     })}
                     role={'img'}
+                    aria-label={'ایتا'}
                   />
 
                   <div
