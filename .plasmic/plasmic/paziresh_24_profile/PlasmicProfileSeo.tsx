@@ -93,6 +93,7 @@ export type PlasmicProfileSeo__ArgsType = {
   doctorExpertise?: string;
   countOfPageView?: string;
   bredcrumbs?: any;
+  about?: string;
 };
 type ArgPropType = keyof PlasmicProfileSeo__ArgsType;
 export const PlasmicProfileSeo__ArgProps = new Array<ArgPropType>(
@@ -104,7 +105,8 @@ export const PlasmicProfileSeo__ArgProps = new Array<ArgPropType>(
   "center",
   "doctorExpertise",
   "countOfPageView",
-  "bredcrumbs"
+  "bredcrumbs",
+  "about"
 );
 
 export type PlasmicProfileSeo__OverridesType = {
@@ -125,6 +127,7 @@ export interface DefaultProfileSeoProps {
   doctorExpertise?: string;
   countOfPageView?: string;
   bredcrumbs?: any;
+  about?: string;
   className?: string;
 }
 
@@ -257,6 +260,10 @@ function PlasmicProfileSeo__RenderFunc(props: {
                   dangerouslySetInnerHTML={{
                     __html: (() => {
                       try {
+                        if ($props.about) {
+                          return $props.about;
+                        }
+
                         return (() => {
                           const center = $props.center;
                           const information = $props.information;

@@ -7,14 +7,14 @@ import pick from 'lodash/pick';
 import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
 import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import Hamdast from '@/modules/hamdast/render';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { SamanBooking } from '@/modules/samanBooking';
 import { Fragment2 } from '@/common/fragment/fragment2';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import RismanAsideSection from './rismanAside';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
 const PlasmicBookingAddressesCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard'));
-const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
 
 export const Aside = (data: any) => {
   const {
@@ -38,9 +38,14 @@ export const Aside = (data: any) => {
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
+    useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
+    // Passed from the page so Aside stays a plain function (no hooks after early returns).
+    isSamanBookingEnabled = false,
+    // Set only for allowlist slugs (GrowthBook profile.api-source-by-slug).
+    profile_backend,
   } = data;
 
-  const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
+  const isMicroserviceProfile = profile_backend === 'microservice';
 
   const profileData = pick(data, [
     'information',
@@ -59,18 +64,25 @@ export const Aside = (data: any) => {
   return [
     {
       id: 'saman-booking',
+      // On MS (allowlist) profiles, widget is only for unavailable/inactive messaging.
       isShow: isSamanBookingEnabled,
       function: () => {
         return {
           expertises,
           doctorCity: information.city_en_slug,
+          ssrUseSamanAvailabilityStatus: !!ssrUseSamanAvailabilityStatus,
+          deferBookableToServices: isMicroserviceProfile,
         };
       },
-      children: (props: any) => <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} {...props} />,
+      children: (props: any) => (
+        <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} centers={centers} />
+      ),
     },
     {
       id: 'book-me',
-      isShow: centers?.length > 0 && !isSamanBookingEnabled,
+      // Legacy: hide when saman-booking owns the slot. MS allowlist: keep Services as CTA
+      // (SamanBooking returns null when bookable via deferBookableToServices).
+      isShow: centers?.length > 0 && (isMicroserviceProfile || !isSamanBookingEnabled),
       function: () => {
         return {
           id: information.id,
@@ -82,21 +94,21 @@ export const Aside = (data: any) => {
           slug: seo.slug,
           profileData,
           isBulk,
+          ssrUseSamanAvailabilityStatus: !!ssrUseSamanAvailabilityStatus,
         };
       },
       children: (props: any) => <Services {...props} enabledWidgets={hamdastWidgets} dontShowDeactiveBox={!!fragmentComponents?.risman} />,
     },
     {
       id: 'risman',
-      isShow: !customize.partnerKey && !!fragmentComponents?.risman && isBulk,
-      children: (props: any) => (
-        <Fragment2
-          name="Risman"
-          Component={PlasmicRisman}
-          args={{
-            data: fragmentComponents?.risman,
-            slug: seo.slug,
-          }}
+      isShow: !customize.partnerKey && !!fragmentComponents?.risman,
+      children: () => (
+        <RismanAsideSection
+          risman={fragmentComponents?.risman}
+          slug={seo.slug}
+          centers={centers ?? []}
+          partnerKey={customize?.partnerKey}
+          ssrUseSamanAvailabilityStatus={!!ssrUseSamanAvailabilityStatus}
         />
       ),
     },
@@ -120,7 +132,7 @@ export const Aside = (data: any) => {
             />
           )),
     },
-    // Rcommend
+    // Recommend
     {
       isShow: information?.should_recommend_other_doctors && centers[0] && expertises?.expertises?.[0],
       function: () => {
@@ -179,7 +191,7 @@ export const Aside = (data: any) => {
               address: center.address,
               city: center.city,
               slug: center.center_type === 1 ? `/dr/${seo.slug}` : `/center/${center.slug}`,
-              description: center.description,
+              description: removeHtmlTagInString(center.description ?? '').trim(),
               phoneNumbers: center?.display_number_array,
               name: center.center_type !== 1 ? center.name : `مطب ${information?.display_name}`,
               location: center.map,
@@ -196,7 +208,7 @@ export const Aside = (data: any) => {
                     server_id: information.server_id,
                     slug: seo.slug,
                     id: information.id,
-                    expertise: expertises.expertises[0].alias_title,
+                    expertise: expertises?.expertises?.[0]?.alias_title,
                     group_expertise: expertises.group_expertises[0].name,
                   },
                   center: {
@@ -224,7 +236,7 @@ export const Aside = (data: any) => {
                     server_id: information.server_id,
                     slug: seo.slug,
                     id: information.id,
-                    expertise: expertises.expertises[0].alias_title,
+                    expertise: expertises?.expertises?.[0]?.alias_title,
                     group_expertise: expertises.group_expertises[0].name,
                   },
                   center: {
@@ -269,7 +281,7 @@ export const Aside = (data: any) => {
                       displayNumberArray: center.display_number_array,
                       slug: center.slug,
                       centerType: center.center_type == 1 ? 'office' : 'hospital',
-                      description: center.description?.trim(),
+                      description: removeHtmlTagInString(center.description ?? '').trim(),
                       userCenterId: center.user_center_id,
                       centerName: center.name,
                       children: hamdastWidgets.some(

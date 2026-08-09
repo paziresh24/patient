@@ -2,6 +2,8 @@
 import { useGetMegaMenu } from '@/common/apis/services/general/getMegaMenu';
 import useCustomize from '@/common/hooks/useCustomize';
 import useResponsive from '@/common/hooks/useResponsive';
+import classNames from '@/common/utils/classNames';
+import { DOCTOR_HOME_SURFACE_CLASS, useDoctorViewHeaderSurface } from '@/modules/doctorHome/hooks/useDoctorViewHeaderSurface';
 import ChevronIcon from '@/components/icons/chevron';
 import SupportButtonBamdad from '@/modules/bamdad/components/suppoortButton';
 import useTranslation from 'next-translate/useTranslation';
@@ -49,6 +51,7 @@ const Header = (props: HeaderProps) => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const user = useUserInfoStore(state => state.info);
   const router = useRouter();
+  const doctorViewHeader = useDoctorViewHeaderSurface();
 
   const ref = useRef(null);
   useClickAway(ref, () => {
@@ -64,7 +67,12 @@ const Header = (props: HeaderProps) => {
   return (
     <>
       {!isDesktop && shouldShowPromoteApp && customize.showPromoteApp && <PromoteAppBanner />}
-      <header className="z-50 flex items-center min-h-14 h-14 px-3 text-lg bg-white border-b border-solid shadow-sm print:hidden text-slate-700 md:px-4 md:min-h-20 md:h-20 border-slate-100">
+      <header
+        className={classNames(
+          'z-50 flex items-center min-h-14 h-14 px-3 text-lg border-b border-solid print:hidden text-slate-700 md:px-4 md:min-h-20 md:h-20',
+          doctorViewHeader ? classNames(DOCTOR_HOME_SURFACE_CLASS, 'border-slate-200/50 shadow-none') : 'bg-white border-slate-100 shadow-sm',
+        )}
+      >
         <div className="max-w-screen-xl relative items-center justify-between hidden w-full h-full mx-auto md:flex">
           {shouldShowBrand && (
             <div className="flex items-center space-s-4">

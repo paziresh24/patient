@@ -1,4 +1,5 @@
 import classNames from '@/common/utils/classNames';
+import { detectTextDirection, getTextDirectionClass } from '@/common/utils/detectTextDirection';
 import { VardastWorkflowEvent, VardastWorkflowEventStatus } from '@/modules/hami/apis/parseVardastWorkflowMessages';
 import { MouseEvent, PointerEvent } from 'react';
 
@@ -39,6 +40,7 @@ export const ChatAssistantEventBubbles = ({
   const activeEvent = getMostRelevantEvent(events);
   const otherCount = events.length - 1;
   const isLoading = isLoadingStatus(activeEvent.status);
+  const eventDirection = detectTextDirection(activeEvent.text);
 
   return (
     <div
@@ -57,8 +59,10 @@ export const ChatAssistantEventBubbles = ({
             event.stopPropagation();
             onBubbleClick?.(event);
           }}
+          dir={eventDirection}
           className={classNames(
-            'vardast-event-msg pointer-events-auto w-[min(168px,calc(100vw-52px))] text-right active:scale-[0.97]',
+            'vardast-event-msg pointer-events-auto w-[min(168px,calc(100vw-52px))] active:scale-[0.97]',
+            getTextDirectionClass(eventDirection),
             isLoading && 'vardast-event-msg--live',
           )}
         >
@@ -66,7 +70,7 @@ export const ChatAssistantEventBubbles = ({
             {isLoading ? (
               <div className="flex items-end gap-1.5">
                 <LiveDots />
-                <p className="min-w-0 flex-1 text-right text-xs font-medium leading-[1.5] text-slate-700">
+                <p className="min-w-0 flex-1 text-xs font-medium leading-[1.5] text-slate-700">
                   {activeEvent.text}
                 </p>
               </div>

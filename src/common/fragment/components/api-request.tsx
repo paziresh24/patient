@@ -4,6 +4,16 @@ import { CodeComponentMeta, useSelector } from '@plasmicapp/host';
 import { forwardRef, ReactNode, useImperativeHandle, useMemo, useState } from 'react';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import useCustomize from '@/common/hooks/useCustomize';
+
+/**
+ * روی سایت‌های اختصاصی (partner) همه‌ی درخواست‌های سرچ باید به همان دانشگاه/مرکز محدود شوند.
+ * مسیرِ کدیِ سرچ این کار را با پارامترِ `university` انجام می‌دهد
+ * (`apis/services/search/{search,suggestion}.ts`) ولی URLهای codegenِ Plasmic آن را ندارند و
+ * دستی‌اضافه‌کردنشان با هر `plasmic sync` پاک می‌شود؛ پس این‌جا — تنها نقطه‌ی مشترکِ همه‌ی
+ * آن fetchها — به‌صورتِ جنرال تزریق می‌شود.
+ */
+const UNIVERSITY_SCOPED_URL = /\/seapi\/v1\/(search|suggestion)|\/qs\/index\//;
 
 type ApiRequestType = {
   method: 'GET' | 'POST' | 'DELETE' | 'PUT' | 'PATCH';
@@ -40,12 +50,19 @@ export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
   const fragmentConfig = useSelector('Fragment');
   const growthbookContext = useSelector('Growthbook');
   const growthbookReady = growthbookContext?.isReady ?? true;
+  const partnerKey = useCustomize(state => state.customize?.partnerKey);
+
+  const scopedParams = useMemo(() => {
+    if (!partnerKey || typeof url !== 'string' || !UNIVERSITY_SCOPED_URL.test(url)) return params;
+    if (params?.university || /[?&]university=/.test(url)) return params;
+    return { ...(params ?? {}), university: partnerKey };
+  }, [params, url, partnerKey]);
 
   const fetchProps = useMemo(
     () => ({
       method,
       url,
-      params,
+      params: scopedParams,
       body,
       config: {
         ...fragmentConfig?.apiConfig,
@@ -53,11 +70,11 @@ export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
         ...config,
       },
     }),
-    [method, url, params, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig],
+    [method, url, scopedParams, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig],
   );
 
   const { data, isLoading, isInitialLoading, isError, refetch } = useQuery(
-    [method, url, params, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig, growthbookReady],
+    [method, url, scopedParams, body, config, fragmentConfig?.apiConfig, fragmentConfig?.previewApiConfig, growthbookReady],
     () => reuqestFn(fetchProps),
     {
       onError(err) {
@@ -121,17 +138,15 @@ export const ApiRequest = forwardRef((props: ApiRequestType, ref): any => {
     });
   };
 
-  if (isInitialLoading || isLoading || previewLoadingDisplay) {
+  if ((isInitialLoading || isLoading || previewLoadingDisplay) && loadingDisplay != null) {
     return loadingDisplay;
   }
 
-  if (isError || previewErrorDisplay) {
+  if ((isError || previewErrorDisplay) && errorDisplay != null) {
     return errorDisplay;
   }
 
-  if (data?.data) {
-    return children;
-  }
+  return children;
 });
 
 export const apiRequestMeta: CodeComponentMeta<ApiRequestType> = {

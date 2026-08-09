@@ -1,7 +1,10 @@
 import classNames from '@/common/utils/classNames';
 import { parseVardastContent, VardastWorkflowMessageItem } from '@/modules/hami/apis/parseVardastWorkflowMessages';
 import { ChatAssistantMessage } from '@/modules/hami/components/chatAssistantMessage';
-import { ChatAssistantRichContent } from '@/modules/hami/components/chatAssistantRichContent';
+import {
+  ChatAssistantRichContent,
+  getRichContentDirection,
+} from '@/modules/hami/components/chatAssistantRichContent';
 import { useMemo } from 'react';
 
 interface ChatAssistantWorkflowMessageProps {
@@ -38,6 +41,7 @@ export const ChatAssistantWorkflowMessage = ({
   const statusTitle = title ? cleanStatusTitle(title) : '';
   const statusStyle = title ? getStatusStyle(title) : null;
   const isLongContent = body.length > 280 || (hasHtmlBody && body.length > 120);
+  const contentDirection = getRichContentDirection(hasHtmlBody ? body : undefined, !hasHtmlBody ? body : undefined);
 
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -62,8 +66,13 @@ export const ChatAssistantWorkflowMessage = ({
       visible={visible}
       index={index}
       wide={isLongContent}
+      direction={contentDirection}
     >
-      <ChatAssistantRichContent html={hasHtmlBody ? body : undefined} plain={!hasHtmlBody ? body : undefined} />
+      <ChatAssistantRichContent
+        direction={contentDirection}
+        html={hasHtmlBody ? body : undefined}
+        plain={!hasHtmlBody ? body : undefined}
+      />
     </ChatAssistantMessage>
   );
 };

@@ -22,6 +22,16 @@ export interface VardastWorkflowEvent {
 
 }
 
+export interface VardastWorkflowAttachment {
+
+  section?: string;
+
+  url: string;
+
+  content_type?: string;
+
+}
+
 
 
 export interface VardastWorkflowMessageItem {
@@ -33,6 +43,8 @@ export interface VardastWorkflowMessageItem {
   pooling?: boolean;
 
   event?: VardastWorkflowEvent[];
+
+  attachments?: VardastWorkflowAttachment[];
 
 }
 
@@ -123,6 +135,42 @@ const parseVardastEvents = (raw: unknown): VardastWorkflowEvent[] | undefined =>
 
 
   return events.length > 0 ? events : undefined;
+
+};
+
+const parseVardastAttachments = (raw: unknown): VardastWorkflowAttachment[] | undefined => {
+
+  if (!Array.isArray(raw)) return undefined;
+
+
+
+  const attachments = raw
+    .map((item): VardastWorkflowAttachment | null => {
+      if (!item || typeof item !== 'object') return null;
+
+      const { section, url, content_type } = item as {
+        section?: unknown;
+        url?: unknown;
+        content_type?: unknown;
+      };
+
+      if (typeof url !== 'string' || !url.trim()) return null;
+
+      const attachment: VardastWorkflowAttachment = { url: url.trim() };
+      if (typeof section === 'string' && section.trim()) {
+        attachment.section = section.trim();
+      }
+      if (typeof content_type === 'string' && content_type.trim()) {
+        attachment.content_type = content_type.trim();
+      }
+
+      return attachment;
+    })
+    .filter((item): item is VardastWorkflowAttachment => item !== null);
+
+
+
+  return attachments.length > 0 ? attachments : undefined;
 
 };
 
@@ -225,6 +273,8 @@ export const parseVardastWorkflowMessages = (
           app: parsedApp,
 
           event: parseVardastEvents(record.event),
+
+          attachments: parseVardastAttachments(record.attachments),
 
         };
 

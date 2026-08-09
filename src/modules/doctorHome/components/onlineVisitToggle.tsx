@@ -5,6 +5,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useOnlineVisitServices, useToggleOnlineVisit } from '../apis/onlineVisit';
+import { ds } from '../designSystem/tokens';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { SectionCard } from './sectionCard';
 
@@ -29,15 +30,12 @@ export const OnlineVisitToggle = ({ userCenterId, hasOnlineVisitCenter, classNam
   if (!hasOnlineVisitCenter) {
     return (
       <SectionCard className={className}>
-        <div className="flex items-center justify-between gap-3">
+        <div className={classNames('flex items-center justify-between', ds.layout.listRowGap)}>
           <div>
-            <p className="text-sm font-bold text-slate-800">ویزیت آنلاین</p>
-            <p className="mt-1 text-xs text-slate-500">هنوز ویزیت آنلاین را فعال نکرده‌اید.</p>
+            <p className={ds.type.cardTitle}>ویزیت آنلاین</p>
+            <p className={classNames(ds.type.caption, 'mt-1')}>هنوز ویزیت آنلاین را فعال نکرده‌اید.</p>
           </div>
-          <Link
-            href={ACTIVATION_URL}
-            className="shrink-0 rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-white"
-          >
+          <Link href={ACTIVATION_URL} className={classNames('shrink-0', ds.type.pillButton)}>
             فعال‌سازی
           </Link>
         </div>
@@ -62,15 +60,15 @@ export const OnlineVisitToggle = ({ userCenterId, hasOnlineVisitCenter, classNam
 
   return (
     <SectionCard className={className}>
-      <div className="flex items-center justify-between gap-3">
+      <div className={classNames('flex items-center justify-between', ds.layout.listRowGap)}>
         <div>
-          <p className="text-sm font-bold text-slate-800">ویزیت آنلاین</p>
+          <p className={ds.type.cardTitle}>ویزیت آنلاین</p>
           {isLoading ? (
             <Skeleton h="0.875rem" w="5rem" rounded="full" className="mt-1" />
           ) : (
-            <p className="mt-1 text-xs text-slate-500">
+            <p className={classNames(ds.type.caption, 'mt-1')}>
               وضعیت:{' '}
-              <span className={classNames('font-semibold', isActive ? 'text-green-600' : 'text-slate-500')}>
+              <span className={classNames(isActive ? ds.type.success : ds.type.caption)}>
                 {isActive ? 'فعال' : 'غیرفعال'}
               </span>
             </p>

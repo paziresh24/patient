@@ -3,6 +3,7 @@ import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
+import { hasBioCredentials } from '@/common/apis/services/profile-microservice/normalizeBioCredentials';
 import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
@@ -12,6 +13,9 @@ import classNames from '@/common/utils/classNames';
 import Hamdast from '@/modules/hamdast/render';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import ProfileFallback from '@/modules/hamdast/profileFallback';
+import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
+import { getImageUrl } from '@/common/utils/getImageUrl';
+import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
 
 const { publicRuntimeConfig } = config();
 
@@ -21,9 +25,14 @@ const Biography = dynamic(() => import('./biography'), {
     return <Skeleton w="100%" h="16rem" rounded="lg" />;
   },
 });
+const Credentials = dynamic(() => import('./credentials'), {
+  loading() {
+    return <Skeleton w="100%" h="12rem" rounded="lg" />;
+  },
+});
 const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
-const PlasmicProfileSeo = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo'));
-const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
+const ProfileSeo = dynamic(() => import('.plasmic/ProfileSeo'));
+const PlasmicProfileGallery = dynamic(() => import('.plasmic/ProfileGallery'));
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
   loading(loadingProps) {
@@ -61,7 +70,12 @@ export const sections = (data: any) => {
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
+    profile_backend,
   } = data;
+
+  const credentials = information?.credentials;
+  // MS path is allowlist-driven (GrowthBook / PROFILE_API_SOURCE_SLUGS) — not a Sajedi hardcode.
+  const showMsCredentials = profile_backend === 'microservice' && hasBioCredentials(credentials);
 
   const profileData = pick(data, [
     'information',
@@ -100,6 +114,18 @@ export const sections = (data: any) => {
         </div>
       ),
     },
+    // Credentials / honors / experience — new profile backend (allowlist)
+    {
+      title: 'سوابق و افتخارات',
+      isShow: showMsCredentials,
+      children: () => (
+        <Credentials
+          degrees={credentials?.degrees ?? []}
+          honors={credentials?.honors ?? []}
+          experiences={credentials?.experiences ?? []}
+        />
+      ),
+    },
     {
       isShow: !customize?.partnerKey,
       noWrapper: true,
@@ -123,7 +149,17 @@ export const sections = (data: any) => {
     // Video
     {
       isShow: media?.aparat && media?.aparat !== '0',
-      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media?.aparat }} />,
+      children: () => (
+        <div
+          className="overflow-hidden md:rounded-lg"
+          dangerouslySetInnerHTML={{
+            __html: ensureIframeTitle(
+              media?.aparat,
+              `ویدیو معرفی ${information?.display_name ?? 'پزشک'}`,
+            ),
+          }}
+        />
+      ),
     },
     // Gallery
     {
@@ -132,14 +168,16 @@ export const sections = (data: any) => {
       isShowFallback: editable,
       function: () => {
         const items = media?.gallery;
-        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+        const reformattedItems = items?.map((item: any) => getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)) ?? [];
         return {
           items: reformattedItems,
         };
       },
       children: (props: any) => {
         const items = media?.gallery;
-        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+        const reformattedItems = items?.map((item: any) => getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)) ?? [];
+        const doctorName = information?.display_name?.trim();
+        const imageAltPrefix = doctorName ? `تصویر گالری ${doctorName}` : 'تصویر گالری پزشک';
 
         return (
           <Fragment2
@@ -147,6 +185,7 @@ export const sections = (data: any) => {
             Component={PlasmicProfileGallery}
             args={{
               gallery: reformattedItems,
+              imageAltPrefix,
             }}
           />
         );
@@ -244,67 +283,52 @@ export const sections = (data: any) => {
     {
       isShow: customize.showSeoBoxs,
       function: () => {
-        const center = centers?.find?.((item: any) => item?.center_type === 1) ?? centers?.[0];
-        const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
-        const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
-        const about = `<p>${information.display_name}، ${doctorExpertise ?? 'سایر'} در شهر ${center?.city ?? '(ثبت نشده)'} است. مطب ${information.display_name
-          } در ${center?.address ?? '(ثبت نشده)'} واقع شده است که در صورت نیاز می‌توانید با شماره <span class="inline-block">${!isOnlineVisitCenter && !!center?.display_number_array[0] ? center?.display_number_array[0] : '(ثبت نشده)'
-          }</span> تماس بگیرید.</p>
-        <p>تاکنون   ${convertLongToCompactNumber(history?.count_of_page_view) ?? 0} نفر از پروفایل ${information.display_name}، ${doctorExpertise ?? 'سایر'
-          }  بازدید کرده‌اند؛ ${!feedbacks?.details?.hide_rates
-            ? `همچنین ${+(
-              (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-              3
-            )?.toFixed(1) * 20
-            }٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند. <b>نظرات ${information.display_name
-            }</b> در پروفایل دکتر در پذیرش۲۴  قابل مشاهده است.</p>`
-            : ''
-          }
-        ${center?.freeturn_text
-            ? `<p>زودترین زمان رزرو نوبت از مطب ${information.display_name} ${center?.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
-            : ''
-          }
-        <p>اگر زمان کافی برای مراجعه حضوری به پزشک مورد نظر خود را ندارید، به پروفایل پزشک در <a href="/" class="text-primary">پذیرش۲۴</a> سری بزنید و در صورت فعال بودن خدمات ویزیت آنلاین ایشان، نوبت ویزیت آنلاین خود را دریافت کنید؛ در غیر این‌صورت می‌توانید از سایر پزشکان ${doctorExpertise ?? 'سایر'
-          } <a href="/consult" class="text-primary"> ویزیت آنلاین (تلفنی و متنی)</a> نوبت بگیرید.</p>
-        <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${information.display_name
-          }</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
-        <ui>
-        <li>آدرس مطب ${information.display_name}: ${isOnlineVisitCenter || (!center?.address && !center?.city) ? 'ثبت نشده' : `${center?.city}، ${center?.address}`
-          }</li>
-        <li>تلفن مطب ${information.display_name}: <span class="inline-block">${isOnlineVisitCenter || !center?.display_number_array[0] ? 'ثبت نشده' : center?.display_number_array[0] ?? ''
-          }</span></li>
-        <li>تخصص ${information.display_name}: ${expertises?.expertises?.map?.((item: any) => item?.alias_title)?.join('/ ') ?? expertises?.expertises?.[0]?.name
-          }</li>
-        </ui>
-        `;
+        const countOfPageView = convertLongToCompactNumber(history?.count_of_page_view);
+        const seoSectionData = getProfileSeoSectionData({
+          information,
+          centers,
+          expertises,
+          feedbacks,
+          history,
+          similarLinks,
+          seo,
+          countOfPageView,
+        });
 
         return {
-          similarLinks: similarLinks?.map((item: any) => ({ name: item.caption, url: item.link })),
-          about,
-          breadcrumbs: seo.breadcrumbs,
+          similarLinks: seoSectionData.similarLinks,
+          about: seoSectionData.about,
+          breadcrumbs: seoSectionData.breadcrumbs,
         };
       },
-      children: (props: any) => {
-        const center = centers?.find?.((item: any) => item?.center_type === 1) ?? centers?.[0];
-        const isOnlineVisitCenter = center?.id === CENTERS.CONSULT;
-        const doctorExpertise = `${expertises?.expertises?.[0]?.degree_name ?? ''} ${expertises?.expertises?.[0]?.expertise_name ?? ''}`;
+      children: () => {
+        const countOfPageView = convertLongToCompactNumber(history?.count_of_page_view);
+        const seoSectionData = getProfileSeoSectionData({
+          information,
+          centers,
+          expertises,
+          feedbacks,
+          history,
+          similarLinks,
+          seo,
+          countOfPageView,
+        });
 
         return (
           <Fragment2
             name="ProfileSeo"
-            Component={PlasmicProfileSeo}
+            Component={ProfileSeo}
             args={{
               information,
               feedbacks,
-              center,
-              isOnlineVisitCenter,
-              doctorExpertise,
-              countOfPageView: convertLongToCompactNumber(history?.count_of_page_view),
-              bredcrumbs: seo.breadcrumbs,
+              center: seoSectionData.center,
+              isOnlineVisitCenter: seoSectionData.isOnlineVisitCenter,
+              doctorExpertise: seoSectionData.doctorExpertise,
+              countOfPageView,
+              breadcrumbs: seoSectionData.breadcrumbs,
               similarLinks,
               expertises,
+              about: seoSectionData.about,
             }}
           />
         );

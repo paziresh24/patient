@@ -22,6 +22,8 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // total control over the props for your component.
 export interface RaviUserProps extends DefaultRaviUserProps {}
 
+const REVIEWER_FALLBACK_NAME = 'کاربر پذیرش24';
+
 function RaviUser_(props: RaviUserProps, ref: HTMLElementRefOf<"div">) {
   // Use PlasmicRaviUser to render this component as it was
   // designed in Plasmic, by activating the appropriate variants,
@@ -38,7 +40,13 @@ function RaviUser_(props: RaviUserProps, ref: HTMLElementRefOf<"div">) {
   // By default, we are just piping all RaviUserProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicRaviUser root={{ ref }} {...props} />;
+  return (
+    <PlasmicRaviUser
+      root={{ ref }}
+      {...props}
+      userName={props.userName?.trim() || REVIEWER_FALLBACK_NAME}
+    />
+  );
 }
 
 const RaviUser = React.forwardRef(RaviUser_);

@@ -4,8 +4,10 @@ import {
   getFeedbackCreatedAtValue,
 } from '@/common/utils/formatRelativeFeedbackTime';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useMemo } from 'react';
+import { ds } from '../designSystem/tokens';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { SectionCard } from './sectionCard';
 import { SectionHeader } from './sectionHeader';
@@ -29,16 +31,16 @@ const ReviewRow = ({ item }: { item: ReviewItem & { relativeCreatedTime?: string
   const isRecommended = item.recommended === '1' || item.recommended === 1 || item.recommended === true;
 
   return (
-    <div className="border-b border-slate-100 py-2.5 last:border-0">
+    <div className={classNames('border-b border-slate-100 py-2.5 last:border-0')}>
       <div className="mb-1 flex items-center justify-between gap-2">
-        <span className="text-[10px] font-medium text-slate-500">{item.relativeCreatedTime ?? ''}</span>
+        <span className={ds.type.captionSm}>{item.relativeCreatedTime ?? ''}</span>
         {item.recommended != null && (
-          <span className={`text-[10px] font-medium ${isRecommended ? 'text-green-600' : 'text-red-500'}`}>
+          <span className={classNames(ds.type.captionSm, isRecommended ? ds.type.success : ds.type.danger)}>
             {isRecommended ? 'توصیه می‌کند' : 'توصیه نمی‌کند'}
           </span>
         )}
       </div>
-      <p className="line-clamp-2 text-sm text-slate-700">{description || 'بدون متن'}</p>
+      <p className={classNames(ds.type.body, 'line-clamp-2')}>{description || 'بدون متن'}</p>
     </div>
   );
 };
@@ -75,7 +77,7 @@ export const RecentReviews = ({ items, isLoading, slug, className }: RecentRevie
       )}
 
       {!isLoading && enrichedItems.length === 0 && (
-        <p className="py-4 text-center text-sm text-slate-500">هنوز نظری ثبت نشده است.</p>
+        <p className={classNames(ds.type.emptyState, 'py-4 text-center')}>هنوز نظری ثبت نشده است.</p>
       )}
 
       {!isLoading && enrichedItems.length > 0 && (

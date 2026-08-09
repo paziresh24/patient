@@ -1,25 +1,35 @@
 import classNames from '@/common/utils/classNames';
 import moment from 'jalali-moment';
-import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { useIsomorphicLayoutEffect } from '@/common/hooks/useIsomorphicLayoutEffect';
 import { flushSync } from 'react-dom';
 import { animated, useSpring } from 'react-spring';
 import { HOLIDAY_YEAR_END, HOLIDAY_YEAR_START, useHolidays } from '../apis/holidays';
-import { useFullDayVacationSet } from '../apis/vacations';
+import { useDoctorVacations } from '../apis/vacations';
 import { useSelectedDateStore } from '../store/selectedDate';
+import { useSelectedCenterStore } from '../store/selectedCenter';
+import { getVacationCenterTargets } from '../utils/centers';
+import { dsFocusRing, prefersReducedMotion } from '../utils/a11y';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { ds } from './tokens';
 
 const BUFFER = 30;
 const SNAP_MAX = 7;
 const SNAP_SPRING = { tension: 320, friction: 30, mass: 1 };
+/** Fixed pill around the selected day — must not scale with viewport cell width */
+const SLOT_FRAME_W = 44;
+const SLOT_FRAME_H = 59;
+const SLOT_FRAME_OFFSET_Y = 0;
 
 export interface DsDateStripRef {
   goToToday: () => void;
 }
 
-export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({ className }, ref) => {
+export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string; markedDates?: Set<string> }>(
+  ({ className, markedDates }, ref) => {
   const today = moment();
   const selectedDate = useSelectedDateStore(s => s.selectedDate);
+  const selectedCenterId = useSelectedCenterStore(s => s.selectedCenterId);
   const setSelectedDate = useSelectedDateStore(s => s.setSelectedDate);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -49,6 +59,7 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
   };
 
   const playTick = () => {
+    if (prefersReducedMotion()) return;
     const ctx = getAudioCtx();
     if (!ctx) return;
     const t = ctx.currentTime;
@@ -67,17 +78,34 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
 
 
   const selectedMoment = useMemo(() => moment(selectedDate, 'YYYY-MM-DD'), [selectedDate]);
-  const isToday = selectedMoment.isSame(today, 'day');
+  const [liveMessage, setLiveMessage] = useState('');
+
+  useEffect(() => {
+    const label = selectedMoment.clone().locale('fa').format('dddd jD jMMMM jYYYY');
+    setLiveMessage(`${label} انتخاب شد`);
+  }, [selectedDate, selectedMoment]);
+
+  const formatDayAriaLabel = (
+    day: moment.Moment,
+    flags: { isSelected: boolean; isHoliday: boolean; isVacation: boolean; hasNotification: boolean; isDayToday: boolean },
+  ) => {
+    const dateLabel = day.clone().locale('fa').format('dddd jD jMMMM');
+    const parts = [
+      flags.isDayToday && 'امروز',
+      flags.isSelected && 'انتخاب‌شده',
+      flags.isHoliday && 'تعطیل',
+      flags.isVacation && 'مرخصی',
+      flags.hasNotification && 'دارای اعلان',
+    ].filter(Boolean);
+    return parts.length > 0 ? `${dateLabel}، ${parts.join('، ')}` : dateLabel;
+  };
 
   const user = useUserInfoStore(s => s.info);
-  const centerIds = useMemo(
-    () => (user?.provider?.centers ?? []).map((c: { id?: string }) => c.id).filter((id): id is string => !!id),
-    [user?.provider?.centers],
-  );
+  const vacationCenterTargets = useMemo(() => getVacationCenterTargets(user ?? undefined), [user]);
 
   const { data: holidays } = useHolidays(HOLIDAY_YEAR_START, HOLIDAY_YEAR_END);
   const holidaySet = useMemo(() => new Set((holidays ?? []).filter(h => h.is_holiday).map(h => h.date)), [holidays]);
-  const vacationSet = useFullDayVacationSet(centerIds, selectedDate);
+  const { fullDaySet: vacationSet } = useDoctorVacations(vacationCenterTargets, selectedDate, selectedCenterId);
 
   useEffect(() => { selectedMomentRef.current = selectedMoment; }, [selectedMoment]);
 
@@ -89,7 +117,7 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
   );
 
   // ── Measure ──────────────────────────────────────────────────────────────
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
     const measure = () => {
@@ -111,7 +139,7 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
   //   cell[BUFFER].left  = BUFFER * cellW
   //   viewport center    = 3.5 * cellW (7 cells wide)
   //   scrollLeft = BUFFER*cellW − 3.5*cellW + 0.5*cellW = (BUFFER − 3)*cellW
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const container = containerRef.current;
     if (!container || cellW === 0) return;
     container.scrollLeft = (BUFFER - 3) * cellW;
@@ -230,6 +258,10 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
 
   return (
     <div className={classNames('select-none', className)}>
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {liveMessage}
+      </div>
+      <div className="relative" role="group" aria-label="انتخاب تاریخ">
       {/*
         Wrapper is relative so overlays (indicator + edge fades) can be
         positioned on top of the scroll container without being clipped or
@@ -258,11 +290,20 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
                 const isMonthBoundary = idx < TOTAL - 1 && day.jMonth() !== days[idx + 1].jMonth();
                 const isHoliday = holidaySet.has(isoDate) || day.day() === 5;
                 const isVacation = vacationSet.has(isoDate);
+                const hasNotification = markedDates?.has(isoDate) ?? false;
 
                 return (
-                  <div
+                  <button
                     key={isoDate}
-                    className="relative flex shrink-0 flex-col items-center gap-1 py-1"
+                    type="button"
+                    aria-pressed={isSelected}
+                    aria-label={formatDayAriaLabel(day, { isSelected, isHoliday, isVacation, hasNotification, isDayToday })}
+                    onPointerDown={event => event.stopPropagation()}
+                    onClick={() => setSelectedDate(isoDate)}
+                    className={classNames(
+                      'relative flex shrink-0 flex-col items-center gap-0.5 border-0 bg-transparent py-0.5',
+                      dsFocusRing,
+                    )}
                     style={{ width: cellW }}
                   >
                     {isMonthBoundary && (
@@ -271,7 +312,7 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
                         style={{ width: 0 }}
                       >
                         <span
-                          className="text-[8px] font-medium text-slate-400 whitespace-nowrap"
+                          className={classNames(ds.type.monthLabel, 'whitespace-nowrap')}
                           style={{ transform: 'rotate(-90deg)', display: 'block' }}
                         >
                           {day.clone().locale('fa').format('jMMMM')}
@@ -293,9 +334,10 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
 
                     <span
                       className={classNames(
-                        'flex h-9 w-9 items-center justify-center text-sm font-bold',
+                        'flex h-8 w-8 items-center justify-center',
+                        ds.type.dateNum,
                         isSelected
-                          ? classNames(ds.radius.pill, isHoliday ? 'bg-red-500 text-white shadow-[0_3px_12px_rgba(239,68,68,0.45)]' : 'bg-primary text-white shadow-[0_3px_12px_rgba(56,97,251,0.45)]')
+                          ? classNames(ds.radius.pill, isHoliday ? 'bg-red-500 text-white shadow-[0_2px_10px_rgba(239,68,68,0.4)]' : 'bg-primary text-white shadow-[0_2px_10px_rgba(56,97,251,0.4)]')
                           : isHoliday
                           ? 'text-red-500'
                           : isDayToday
@@ -311,10 +353,17 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
                     <span
                       className={classNames(
                         'h-1 w-1 rounded-full',
-                        isDayToday && !isSelected ? 'bg-primary' : 'bg-transparent',
+                        hasNotification
+                          ? isSelected
+                            ? 'bg-amber-400'
+                            : 'bg-amber-500'
+                          : isDayToday && !isSelected
+                            ? 'bg-primary'
+                            : 'bg-transparent',
                       )}
+                      aria-hidden
                     />
-                  </div>
+                  </button>
                 );
               })}
             </animated.div>
@@ -325,33 +374,36 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string }>(({
         <div
           aria-hidden
           className="pointer-events-none absolute inset-y-0 left-0 z-10"
-          style={{ width: '18%', background: 'linear-gradient(to right, #F2F3F5 30%, transparent)' }}
+          style={{ width: '18%', background: `linear-gradient(to right, ${ds.surface.pageColor} 30%, transparent)` }}
         />
         <div
           aria-hidden
           className="pointer-events-none absolute inset-y-0 right-0 z-10"
-          style={{ width: '18%', background: 'linear-gradient(to left, #F2F3F5 30%, transparent)' }}
+          style={{ width: '18%', background: `linear-gradient(to left, ${ds.surface.pageColor} 30%, transparent)` }}
         />
 
-        {/* ── Center slot indicator — fixed, outside scroll & mask ──────── */}
+        {/* ── Center slot indicator — fixed size, centered in middle cell ─ */}
         {cellW > 0 && (
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 z-20"
+            className="pointer-events-none absolute inset-y-0 z-20 flex items-center justify-center"
             style={{ left: 3 * cellW, width: cellW }}
           >
             <div
-              className="mx-1 h-[calc(100%-4px)]"
+              className="shrink-0"
               style={{
-                marginTop: '-0.1rem',
-                borderRadius: 52,
+                width: SLOT_FRAME_W,
+                height: SLOT_FRAME_H,
+                borderRadius: SLOT_FRAME_H / 2,
+                transform: `translateY(${SLOT_FRAME_OFFSET_Y}px)`,
                 boxShadow: '0 0 0 1.5px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.07)',
               }}
             />
           </div>
         )}
       </div>
-
+      </div>
     </div>
   );
-});
+},
+);

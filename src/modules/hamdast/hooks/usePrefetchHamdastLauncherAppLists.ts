@@ -34,7 +34,7 @@ export const useHamdastAppListParams = () => {
   return useMemo(() => {
     if (!growthbookReady) return {};
     return getHamdastAppListParams();
-  }, [growthbookReady, user?.id, user?.is_doctor, user?.provider?.job_title, user?.provider?.slug]);
+  }, [growthbookReady, user?.id, user?.is_doctor, user?.provider?.job_title, user?.provider?.centers]);
 };
 
 export const usePrefetchHamdastLauncherAppLists = () => {

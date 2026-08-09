@@ -4,27 +4,61 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { useDoctorHomeRedirectLoading } from '@/common/hooks/useDoctorHomeRedirectLoading';
+import { useIsomorphicLayoutEffect } from '@/common/hooks/useIsomorphicLayoutEffect';
 import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
 import { getHost, HeaderBag } from '@/common/utils/getHost';
+import {
+  DoctorViewSwitcher,
+  useDoctorViewRouteGuard,
+  useDoctorViewSwapActive,
+  useIsNewDoctorLauncherLoading,
+} from '@/modules/doctorHome';
 import { GrowthBook } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
 import { ReactElement } from 'react';
+import PlasmicSearch from '.plasmic/plasmic/paziresh_24_search/PlasmicSearch';
+import { useSearchStore } from '@/modules/search/store/search';
 
-const HomePageBody = dynamic(() => import('@/modules/home/views/homePageBody'));
+const HomePageBody = dynamic(() => import('@/modules/home/views/homePageBody'), {
+  loading: () => (
+    <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+      <Loading />
+    </div>
+  ),
+});
 
 const Home = ({ fragmentComponents }: any) => {
+  const swapActive = useDoctorViewSwapActive();
+  const doctorLauncherLoading = useIsNewDoctorLauncherLoading();
   const showRedirectLoading = useDoctorHomeRedirectLoading();
+  const setIsOpenSuggestion = useSearchStore(state => state.setIsOpenSuggestion);
 
-  if (showRedirectLoading) {
-    return (
-      <div className="flex items-center justify-center flex-grow min-h-[50vh]">
-        <Loading />
-      </div>
-    );
-  }
+  useDoctorViewRouteGuard();
 
-  return <HomePageBody fragmentComponents={fragmentComponents} />;
+  useIsomorphicLayoutEffect(() => {
+    setIsOpenSuggestion(false);
+  }, [setIsOpenSuggestion]);
+
+  // New-design rollout doctors always get the view switcher on home.
+  const showSwitcher = swapActive || doctorLauncherLoading;
+
+  return (
+    <>
+      {showSwitcher && (
+        <div className="bg-white">
+          <DoctorViewSwitcher className="px-0 pb-1 pt-3" />
+        </div>
+      )}
+      {showRedirectLoading ? (
+        <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+          <Loading />
+        </div>
+      ) : (
+        <HomePageBody fragmentComponents={fragmentComponents} plasmicSearchComponent={PlasmicSearch} />
+      )}
+    </>
+  );
 };
 
 Home.getLayout = function getLayout(page: ReactElement) {
@@ -90,7 +124,7 @@ export const getServerSideProps = withCSR(
       const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
       const growthbook = new GrowthBook(growthbookContext);
       growthbook.setAttributes({ url });
-      await growthbook.loadFeatures({ timeout: 500 });
+      await growthbook.loadFeatures({ timeout: 200 });
 
       showPlasmicSuggestion = growthbook.isOn('search_plasmic_suggestion');
       showPlasmicRecentSearch = growthbook.isOn('search_plasmic_recent_search');

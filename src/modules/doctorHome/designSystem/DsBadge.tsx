@@ -1,13 +1,14 @@
 import classNames from '@/common/utils/classNames';
 import { ReactNode } from 'react';
+import { ds } from './tokens';
 
 type DsBadgeTone = 'neutral' | 'success' | 'online' | 'warning';
 
 const toneStyles: Record<DsBadgeTone, string> = {
-  neutral: 'bg-slate-100 text-slate-600',
+  neutral: classNames(ds.surface.neutralSoft, 'text-slate-600'),
   success: 'bg-secondary/10 text-secondary',
-  online: 'bg-primary/10 text-primary',
-  warning: 'bg-amber-50 text-amber-700',
+  online: classNames(ds.icon.bg, ds.icon.color),
+  warning: classNames(ds.surface.warningSoft, 'text-amber-700'),
 };
 
 export const DsBadge = ({
@@ -21,7 +22,8 @@ export const DsBadge = ({
 }) => (
   <span
     className={classNames(
-      'inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold',
+      'inline-flex items-center rounded-full px-2.5 py-0.5',
+      ds.type.badge,
       toneStyles[tone],
       className,
     )}

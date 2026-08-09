@@ -22,7 +22,6 @@ import { useNetworkStatus } from "@/common/hooks/useNetworkStatus";
 import useServerQuery from "@/common/hooks/useServerQuery";
 import { splunkInstance } from "@/common/services/splunk";
 import Provider from "@/components/layouts/provider";
-import "@/firebase/analytics";
 import { GrowthBook, GrowthBookProvider, configureCache } from "@growthbook/growthbook-react";
 import { PlasmicRootProvider } from "@plasmicapp/react-web";
 import { Hydrate } from "@tanstack/react-query";
@@ -38,12 +37,14 @@ import "react-photo-view/dist/react-photo-view.css";
 import "../styles/globals.css";
 import "../styles/nprogress.css";
 import GlobalContextsProvider from "../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider";
+import { VoiceCallHost } from "@/modules/voice-agent";
 import { useUserInfoStore } from "@/modules/login/store/userInfo";
 import axios from "axios";
 import RouteProgress from "@/common/components/layouts/RouteProgress";
 import { RismanSurveyScript } from "@/common/components/layouts/RismanSurveyScript";
 import { RoutedExternalScripts } from "@/common/components/layouts/RoutedExternalScripts";
 import { useNotificationPermission } from "@/common/hooks/useNotificationPermission";
+import { sendWebVital } from "@/common/services/rum/webVitals";
 const { publicRuntimeConfig } = getConfig();
 const isEnabledGrowthbook =
   !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
@@ -120,6 +121,14 @@ function MyApp(props: AppProps) {
     useCustomize.getState().setCustomize(pageProps?.themeConfing);
     useServerQuery.getState().setQueries(pageProps?.query);
   }, [pageProps?.query, pageProps?.themeConfing]);
+  useEffect(() => {
+    // PERF (DR-08 §۱۱): این side-effect-only import قبلاً بالای فایل و استاتیک بود، یعنی همیشه در
+    // شاخه‌ی مشترکِ webpack هر صفحه bundle/execute می‌شد — حتی برای بازدیدهای غیر-PWA که
+    // src/firebase/analytics.ts هیچ‌وقت واقعاً از آن استفاده نمی‌کند. دینامیک+deferred کردنش (بعد از
+    // mount، نه در مسیرِ رندرِ بحرانی) هزینه‌ی main-thread را از مسیرِ بارگذاریِ اولیه‌ی هر صفحه حذف
+    // می‌کند؛ گیتِ داخلیِ isPWA()/IS_FIREBASE_ENABLE در خودِ ماژول حفظ شده (رفتار عوض نشده).
+    import("@/firebase/analytics");
+  }, []);
   useEffect(() => {
     if (
       isLogin &&
@@ -224,6 +233,7 @@ function MyApp(props: AppProps) {
               </Head>
               <Hydrate state={pageProps.dehydratedState}>
                 {getLayout(<Component {...pageProps} />, router)}
+                <VoiceCallHost />
               </Hydrate>
               {!isGtmDisabled && isGtmReady && (
                 <Script
@@ -245,5 +255,8 @@ function MyApp(props: AppProps) {
 }
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   if (metric.label === "custom" || !publicRuntimeConfig.IS_PRODUCTION) return;
+  // DR-08 §۱۷ — تا امروز این تابع خالی بود و متریک‌های CWVِ کاربرانِ واقعی دور ریخته می‌شد.
+  // مقصد و صفحاتِ مجاز در `webVitals.ts` تعریف شده (فعلاً فقط صفحاتِ جستجو).
+  sendWebVital(metric);
 }
 export default MyApp;

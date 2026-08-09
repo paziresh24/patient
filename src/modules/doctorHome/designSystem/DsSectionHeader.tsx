@@ -1,5 +1,7 @@
 import classNames from '@/common/utils/classNames';
 import Link from 'next/link';
+import type { ReactNode } from 'react';
+import { dsFocusRing } from '../utils/a11y';
 import { ds } from './tokens';
 
 export const DsSectionHeader = ({
@@ -8,6 +10,8 @@ export const DsSectionHeader = ({
   href,
   onPress,
   linkLabel = 'همه',
+  linkAriaLabel,
+  linkIcon,
   onLinkClick,
 }: {
   title: string;
@@ -15,21 +19,43 @@ export const DsSectionHeader = ({
   href?: string;
   onPress?: () => void;
   linkLabel?: string;
+  linkAriaLabel?: string;
+  linkIcon?: ReactNode;
   onLinkClick?: () => void;
-}) => (
-  <div className="mb-3 flex items-center justify-between gap-4">
-    <div>
-      <h2 className={ds.type.section}>{title}</h2>
-      {subtitle && <p className={classNames(ds.type.caption, 'mt-0.5')}>{subtitle}</p>}
+}) => {
+  const linkContent = (
+    <>
+      {linkIcon}
+      {linkLabel}
+    </>
+  );
+  const resolvedLinkLabel = linkAriaLabel ?? `${linkLabel} ${title}`;
+
+  return (
+    <div className="mb-2.5 flex items-center justify-between gap-4">
+      <div>
+        <h2 className={ds.type.section}>{title}</h2>
+        {subtitle && <p className={classNames(ds.type.caption, 'mt-0.5')}>{subtitle}</p>}
+      </div>
+      {onPress ? (
+        <button
+          type="button"
+          onClick={onPress}
+          aria-label={resolvedLinkLabel}
+          className={classNames(ds.type.link, 'inline-flex items-center gap-1', dsFocusRing)}
+        >
+          {linkContent}
+        </button>
+      ) : href ? (
+        <Link
+          href={href}
+          onClick={onLinkClick}
+          aria-label={resolvedLinkLabel}
+          className={classNames(ds.type.link, 'inline-flex items-center gap-1', dsFocusRing)}
+        >
+          {linkContent}
+        </Link>
+      ) : null}
     </div>
-    {onPress ? (
-      <button type="button" onClick={onPress} className={ds.type.link}>
-        {linkLabel}
-      </button>
-    ) : href ? (
-      <Link href={href} onClick={onLinkClick} className={ds.type.link}>
-        {linkLabel}
-      </Link>
-    ) : null}
-  </div>
-);
+  );
+};

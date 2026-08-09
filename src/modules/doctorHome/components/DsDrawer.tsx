@@ -1,9 +1,19 @@
 'use client';
-import { Drawer } from 'vaul';
-import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import ClientOnlyPortal from '@/common/components/layouts/clientOnlyPortal';
+import useResponsive from '@/common/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
+import { X } from 'lucide-react';
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { Drawer } from 'vaul';
+import { ds } from '../designSystem/tokens';
 
-const SNAP_MAX = 0.9;
+/**
+ * بالاتر از هدر/ناوبری (z-40/50) و پایین‌تر از `z-infinity` (999) —
+ * تا مودال پرداخت و لاگین روی شیت اپ دیده شوند، نه زیر آن.
+ */
+const DRAWER_BASE_Z = 900;
+const DESKTOP_EXIT_MS = 200;
+const MOBILE_CLICK_SHIELD_MS = 500;
 
 interface DsDrawerProps {
   trigger?: ReactNode;
@@ -19,135 +29,402 @@ interface DsDrawerProps {
   fullHeight?: boolean;
   /** وقتی این شیت داخل یک شیت دیگر باز میشه (nested) — از Drawer.NestedRoot وال استفاده می‌کنه */
   nested?: boolean;
+  /**
+   * فقط دسکتاپ: پنل تقریبا تمام‌صفحه می‌شود (اجرای فول‌اسکرین ابزارک) —
+   * لبه‌ها به‌خاطر padding دور پنل دیده می‌شوند و کلیک روی پس‌زمینه می‌بندد.
+   */
+  expanded?: boolean;
 }
+
+const DesktopDrawerPanel = ({
+  title,
+  description,
+  children,
+  className,
+  fullHeight,
+  expanded,
+  level,
+  closing,
+  onClose,
+}: {
+  title?: string;
+  description?: string;
+  children: ReactNode;
+  className?: string;
+  fullHeight?: boolean;
+  expanded?: boolean;
+  level: number;
+  closing: boolean;
+  onClose: () => void;
+}) => {
+  const isFlush = className?.includes('!p-0');
+  const accessibleLabel = title ?? description ?? 'sheet';
+  const overlayZ = DRAWER_BASE_Z + level * 10;
+  const panelZ = DRAWER_BASE_Z + 1 + level * 10;
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0" style={{ zIndex: overlayZ }} dir="rtl">
+      <button
+        type="button"
+        aria-label="بستن"
+        className={classNames(
+          'absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]',
+          closing ? ds.motion.backdropExit : ds.motion.backdropEnter,
+        )}
+        onClick={onClose}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 flex items-center justify-center p-4 sm:p-5"
+        style={{ zIndex: panelZ }}
+      >
+        <div
+          className={classNames(
+            'pointer-events-auto flex w-full items-start gap-3 transition-[max-width] duration-300',
+            closing ? ds.motion.sheetExit : ds.motion.sheetEnter,
+            expanded ? 'max-w-[calc(100vw_-_2.5rem)]'
+            : fullHeight ? 'max-w-[min(42rem,calc(100vw_-_2.5rem))]'
+            : 'max-w-md',
+          )}
+          dir="rtl"
+        >
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="بستن"
+            className={classNames(
+              'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-slate-600 shadow-md ring-1 ring-slate-200/80 hover:bg-slate-50 hover:text-slate-900',
+              ds.motion.surface,
+              ds.motion.press,
+            )}
+          >
+            <X className="h-5 w-5" strokeWidth={2} aria-hidden />
+          </button>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={accessibleLabel}
+            className={classNames(
+              'flex min-w-0 flex-1 flex-col overflow-hidden bg-white outline-none',
+              'rounded-2xl ring-1 ring-slate-200/80 shadow-[0_24px_64px_rgba(15,23,42,0.14)]',
+              'transition-[height] duration-300',
+              expanded ? 'h-[calc(100dvh_-_2.5rem)]'
+              : fullHeight ? 'h-[min(88dvh,calc(100dvh_-_2.5rem))]'
+              : 'max-h-[min(85vh,36rem)]',
+            )}
+          >
+            <div
+              className={classNames(
+                'no-scroll flex min-h-0 flex-col overscroll-contain',
+                fullHeight ? 'flex-1 overflow-hidden' : 'overflow-y-auto',
+                '[&_*]:[-ms-overflow-style:none] [&_*]:[scrollbar-width:none] [&_*::-webkit-scrollbar]:hidden',
+                !isFlush && 'p-4',
+                className,
+              )}
+            >
+              {children}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const MobileDrawerPanel = ({
+  title,
+  description,
+  children,
+  className,
+  fullHeight,
+  level,
+  nested,
+  trigger,
+  mobileOpen,
+  onMobileOpenChange,
+  onAnimationEnd,
+}: {
+  title?: string;
+  description?: string;
+  children: ReactNode;
+  className?: string;
+  fullHeight?: boolean;
+  level: number;
+  nested?: boolean;
+  trigger?: ReactNode;
+  mobileOpen: boolean;
+  onMobileOpenChange: (open: boolean) => void;
+  onAnimationEnd: (open: boolean) => void;
+}) => {
+  const Root = nested ? Drawer.NestedRoot : Drawer.Root;
+  const isFlush = className?.includes('!p-0');
+  const accessibleLabel = title ?? description ?? 'sheet';
+
+  return (
+    <Root
+      open={mobileOpen}
+      onOpenChange={onMobileOpenChange}
+      onAnimationEnd={onAnimationEnd}
+      handleOnly={false}
+      modal
+      repositionInputs={false}
+    >
+      {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
+      <Drawer.Portal>
+        <Drawer.Overlay
+          className="fixed inset-0 bg-black/50"
+          style={{ zIndex: DRAWER_BASE_Z + level * 10 }}
+        />
+        <Drawer.Content
+          className={classNames(
+            'fixed inset-x-0 bottom-0 flex flex-col rounded-t-[24px] bg-white outline-none',
+            fullHeight ? 'h-[90dvh] max-h-[90dvh]' : 'max-h-[90dvh]',
+          )}
+          style={{ zIndex: DRAWER_BASE_Z + 1 + level * 10 }}
+          dir="rtl"
+        >
+          <div className="flex shrink-0 cursor-grab justify-center pt-3.5 pb-2 active:cursor-grabbing">
+            <Drawer.Handle className="!h-1 !w-10 !rounded-full !bg-slate-200 transition-transform duration-200 active:scale-95" />
+          </div>
+          <Drawer.Title className="sr-only">{accessibleLabel}</Drawer.Title>
+          {description ? <Drawer.Description className="sr-only">{description}</Drawer.Description> : null}
+          <div
+            className={classNames(
+              'no-scroll flex min-h-0 flex-col overscroll-contain',
+              fullHeight ? 'flex-1 overflow-hidden' : 'overflow-y-auto',
+              '[&_*]:[-ms-overflow-style:none] [&_*]:[scrollbar-width:none] [&_*::-webkit-scrollbar]:hidden',
+              !isFlush && 'pb-[max(1rem,env(safe-area-inset-bottom))]',
+              className,
+            )}
+          >
+            {children}
+          </div>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Root>
+  );
+};
 
 export const DsDrawer = ({
   trigger,
   title,
   description,
   children,
-  open,
+  open = false,
   onOpenChange,
   className,
   level = 0,
   fullHeight = false,
   nested = false,
+  expanded = false,
 }: DsDrawerProps) => {
-  const Root = nested ? Drawer.NestedRoot : Drawer.Root;
-  const measureRef = useRef<HTMLDivElement>(null);
-  const [snapMin, setSnapMin] = useState(0.6);
-  const [mounted, setMounted] = useState(false);
+  const { isDesktop } = useResponsive();
+  const [desktopVisible, setDesktopVisible] = useState(false);
+  const [desktopClosing, setDesktopClosing] = useState(false);
+  const [mobileMounted, setMobileMounted] = useState(open);
+  const [mobileOpen, setMobileOpen] = useState(open);
+  const [clickShield, setClickShield] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const shieldTimer = useRef<ReturnType<typeof setTimeout>>();
+  const isClosingRef = useRef(false);
+  const dismissPendingRef = useRef(false);
+  const dismissSafetyTimer = useRef<ReturnType<typeof setTimeout>>();
+  const openRef = useRef(open);
 
-  // محاسبه‌ی ارتفاع از روی محتوای واقعی داخل div مخفی
-  const computeSnap = useCallback(() => {
-    if (fullHeight) return; // حالت ۹۰٪ ثابت — اندازه‌گیری لازم نیست
-    const el = measureRef.current;
-    if (!el) return;
-    const contentH = el.scrollHeight;
-    // محتوا هنوز آماده نیست (داده/URL با تأخیر میاد) — مقدار قبلی رو نگه دار، روی 0.15 نیفت
-    if (contentH < 20) return;
-    const vh = window.innerHeight || 800;
-    // ارتفاع واقعی chrome شیت: handle (~22px) + نوار title (~50px با border).
-    // پدینگ پایین محتوا داخل خود children هست (pb-8) پس اینجا اضافه نمی‌کنیم.
-    const handleH = 22;
-    const titleH = title ? 46 : 0;
-    const totalH = handleH + titleH + contentH; // بدون buffer اضافه — دقیقاً اندازه محتوا
-    const frac = totalH / vh;
-    setSnapMin(Math.min(Math.max(frac, 0.15), 0.6));
-  }, [title, fullHeight]);
+  openRef.current = open;
 
-  // اندازه‌گیری دقیقاً وقتی open=true میشه + رصد تغییرات محتوا (داده‌ی async، reflow فونت)
-  // useLayoutEffect قبل از paint اجرا میشه، پس مقدار اولیه قبل از mount شدن Drawer.Root آماده‌ست.
-  // ResizeObserver هر بار که ارتفاع محتوا عوض شد دوباره حساب می‌کنه و شیت خودش رو تصحیح می‌کنه.
-  useLayoutEffect(() => {
-    if (!open) return;
-    computeSnap();
-    const el = measureRef.current;
-    if (!el || typeof ResizeObserver === 'undefined') return;
-    const ro = new ResizeObserver(() => computeSnap());
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [open, computeSnap]);
+  const activateClickShield = useCallback(() => {
+    setClickShield(true);
+    clearTimeout(shieldTimer.current);
+    shieldTimer.current = setTimeout(() => setClickShield(false), MOBILE_CLICK_SHIELD_MS);
+  }, []);
 
-  // remeasure بعد از load شدن فونت‌ها (فارسی دیرتر میاد و متن reflow میشه)
-  useEffect(() => {
-    if (!open) return;
-    const fonts = (document as Document & { fonts?: { ready?: Promise<unknown> } }).fonts;
-    fonts?.ready?.then(() => computeSnap());
-  }, [open, computeSnap]);
-
-  // mounted جدا از open تا انیمیشن close کامل بشه
-  // useEffect = بعد از useLayoutEffect اجرا میشه، پس snapMin قبلاً set شده
-  useEffect(() => {
-    clearTimeout(closeTimer.current);
-    if (open) {
-      setMounted(true);
-    } else if (mounted) {
-      closeTimer.current = setTimeout(() => setMounted(false), 350);
+  const finishMobileClose = useCallback(() => {
+    if (!dismissPendingRef.current) return;
+    const shouldNotifyParent = openRef.current;
+    dismissPendingRef.current = false;
+    isClosingRef.current = false;
+    clearTimeout(dismissSafetyTimer.current);
+    if (shouldNotifyParent) {
+      activateClickShield();
+      onOpenChange?.(false);
     }
-    return () => clearTimeout(closeTimer.current);
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activateClickShield, onOpenChange]);
+
+  const scheduleDismissSafety = useCallback(() => {
+    clearTimeout(dismissSafetyTimer.current);
+    dismissSafetyTimer.current = setTimeout(() => finishMobileClose(), 700);
+  }, [finishMobileClose]);
+
+  const requestClose = useCallback(() => {
+    if (!onOpenChange || !open) return;
+    onOpenChange(false);
+  }, [onOpenChange, open]);
+
+  const beginMobileDismiss = useCallback(() => {
+    if (!mobileOpen || isClosingRef.current) return;
+    isClosingRef.current = true;
+    dismissPendingRef.current = true;
+    setMobileOpen(false);
+    scheduleDismissSafety();
+  }, [mobileOpen, scheduleDismissSafety]);
+
+  const handleMobileOpenChange = useCallback(
+    (nextOpen: boolean) => {
+      if (nextOpen) {
+        if (isClosingRef.current || dismissPendingRef.current || !openRef.current) return;
+        setMobileOpen(true);
+        return;
+      }
+      beginMobileDismiss();
+    },
+    [beginMobileDismiss],
+  );
+
+  const handleMobileAnimationEnd = useCallback(
+    (nextOpen: boolean) => {
+      if (!nextOpen) {
+        finishMobileClose();
+        return;
+      }
+      if (!openRef.current) {
+        setMobileOpen(false);
+      }
+    },
+    [finishMobileClose],
+  );
+
+  useEffect(() => {
+    if (!isDesktop) return;
+
+    if (open) {
+      clearTimeout(closeTimer.current);
+      setDesktopClosing(false);
+      setDesktopVisible(true);
+      return;
+    }
+
+    if (!desktopVisible) return;
+
+    setDesktopClosing(true);
+    closeTimer.current = setTimeout(() => {
+      setDesktopVisible(false);
+      setDesktopClosing(false);
+    }, DESKTOP_EXIT_MS);
+  }, [open, isDesktop, desktopVisible]);
+
+  useEffect(() => {
+    if (isDesktop) return;
+
+    if (open) {
+      // حتی وسط انیمیشن بسته‌شدن، اگر store دوباره open شد باید باز شود
+      clearTimeout(dismissSafetyTimer.current);
+      dismissPendingRef.current = false;
+      isClosingRef.current = false;
+      setMobileMounted(true);
+      setMobileOpen(true);
+      return;
+    }
+
+    if (!mobileMounted) return;
+
+    if (!isClosingRef.current) {
+      dismissPendingRef.current = true;
+      isClosingRef.current = true;
+      setMobileOpen(false);
+      scheduleDismissSafety();
+    }
+  }, [open, isDesktop, mobileMounted, scheduleDismissSafety]);
+
+  useEffect(() => {
+    if (isDesktop) return;
+    if (mobileOpen || !mobileMounted) return;
+
+    const timer = setTimeout(() => {
+      setMobileMounted(false);
+      dismissPendingRef.current = false;
+      isClosingRef.current = false;
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [isDesktop, mobileMounted, mobileOpen]);
+
+  useEffect(
+    () => () => {
+      clearTimeout(closeTimer.current);
+      clearTimeout(shieldTimer.current);
+      clearTimeout(dismissSafetyTimer.current);
+    },
+    [],
+  );
+
+  if (isDesktop) {
+    return (
+      <>
+        {trigger}
+        {desktopVisible ? (
+          <ClientOnlyPortal selector="body">
+            <DesktopDrawerPanel
+              title={title}
+              description={description}
+              className={className}
+              fullHeight={fullHeight}
+              expanded={expanded}
+              level={level}
+              closing={desktopClosing}
+              onClose={requestClose}
+            >
+              {children}
+            </DesktopDrawerPanel>
+          </ClientOnlyPortal>
+        ) : null}
+      </>
+    );
+  }
+
+  if (!mobileMounted) {
+    return <>{trigger}</>;
+  }
 
   return (
     <>
-      {/* همیشه render میشه تا hidden div محتوا داشته باشه موقع اندازه‌گیری */}
-      <div
-        ref={measureRef}
-        aria-hidden="true"
-        dir="rtl"
-        style={{
-          position: 'fixed',
-          top: '-200vh',
-          left: 0,
-          width: '100vw',
-          visibility: 'hidden',
-          pointerEvents: 'none',
-          zIndex: -1,
-        }}
-      >
-        {!fullHeight && children}
-      </div>
-
-      {/* vaul به‌صورت پیش‌فرض روی اولین snap point باز میشه؛ چون هر بار باز شدن
-          یه mount تازه‌ست (شرط mounted)، همیشه از index 0 شروع میشه. */}
-      {mounted && (
-        <Root
-          open={open}
-          onOpenChange={onOpenChange}
-          snapPoints={fullHeight ? [SNAP_MAX] : [snapMin, SNAP_MAX]}
-          fadeFromIndex={0}
+      <ClientOnlyPortal selector="body">
+        <MobileDrawerPanel
+          title={title}
+          description={description}
+          className={className}
+          fullHeight={fullHeight}
+          level={level}
+          nested={nested}
+          trigger={trigger}
+          mobileOpen={mobileOpen}
+          onMobileOpenChange={handleMobileOpenChange}
+          onAnimationEnd={handleMobileAnimationEnd}
         >
-          {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
-          <Drawer.Portal>
-            <Drawer.Overlay className="fixed inset-0 bg-black/50" style={{ zIndex: 200 + level * 10 }} />
-            <Drawer.Content
-              className="fixed inset-x-0 bottom-0 flex h-screen flex-col rounded-t-[24px] bg-white outline-none"
-              style={{ zIndex: 201 + level * 10 }}
-              dir="rtl"
-            >
-              {/* Drawer.Handle = دستگیره‌ی درگ واقعی vaul با ناحیه‌ی لمسی بزرگ
-                  تا حتی وقتی iframe زیرش هست با درگ بشه شیت رو بست */}
-              <div className="flex shrink-0 cursor-grab justify-center pt-3.5 pb-2 active:cursor-grabbing">
-                <Drawer.Handle className="!h-1 !w-10 !rounded-full !bg-slate-200" />
-              </div>
-              {title ? (
-                <Drawer.Title className="border-b border-slate-100 px-5 py-3 text-base font-bold text-slate-900">
-                  {title}
-                </Drawer.Title>
-              ) : (
-                <Drawer.Title className="sr-only">{description ?? 'sheet'}</Drawer.Title>
-              )}
-              {description && (
-                <Drawer.Description className="sr-only">{description}</Drawer.Description>
-              )}
-              <div className={classNames('flex-1 overflow-y-auto overscroll-contain', className)}>
-                {children}
-              </div>
-            </Drawer.Content>
-          </Drawer.Portal>
-        </Root>
-      )}
+          {children}
+        </MobileDrawerPanel>
+      </ClientOnlyPortal>
+      {clickShield ? (
+        <ClientOnlyPortal selector="body">
+          <div
+            className="fixed inset-0 touch-none"
+            style={{ zIndex: DRAWER_BASE_Z + 50 + level * 10 }}
+            aria-hidden
+          />
+        </ClientOnlyPortal>
+      ) : null}
     </>
   );
 };

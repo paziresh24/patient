@@ -6,7 +6,7 @@ import { getCookie } from 'cookies-next';
 import debounce from 'lodash/debounce';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useClickAway, useDebounce } from 'react-use';
 import SearchBar from '../../components/suggestion/searchBar';
 import suggestionEvents from '../../functions/suggestionEvents';
@@ -18,9 +18,12 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { Fragment } from '@/common/fragment';
 import { useSearch } from '../../hooks/useSearch';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
+// DR-11: the conversational layer expands *under* the existing search box. Loaded
+// lazily and client-only so a search box on a partner/university host (where it is
+// never allowed to render) does not even pay for the bytes.
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { Fragment2 } from '@/common/fragment/fragment2';
-const PlasmicSearch = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearch'));
+const PlasmicSearchLazy = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearch'));
 
 interface SuggestionProps {
   overlay?: boolean;
@@ -29,6 +32,7 @@ interface SuggestionProps {
   defaultInputValue?: string;
   setDefaultInputValue?: (value: string) => void;
   showPlasmicSuggestion?: boolean;
+  plasmicSearchComponent?: ComponentType<any>;
   className?: string;
 }
 
@@ -40,8 +44,10 @@ export const Suggestion = (props: SuggestionProps) => {
     defaultInputValue,
     setDefaultInputValue,
     showPlasmicSuggestion,
+    plasmicSearchComponent,
     className,
   } = props;
+  const PlasmicSearch = plasmicSearchComponent ?? PlasmicSearchLazy;
   const router = useRouter();
   const { selectedFilters } = useSearch();
   const isOpenSuggestion = useSearchStore(state => state.isOpenSuggestion);

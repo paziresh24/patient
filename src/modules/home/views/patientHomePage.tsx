@@ -8,6 +8,10 @@ import classNames from '@/common/utils/classNames';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
+import dynamic from 'next/dynamic';
+// دعوتِ کم‌صدای یارا — dynamic و ssr:false تا خطای احتمالیِ ماژولِ چت هرگز هوم‌پیج را نگیرد.
+const YaraInvite = dynamic(() => import('@/modules/chat/yara/yaraInvite'), { ssr: false });
+import { useShowPlasmicSuggestion } from '@/modules/search/hooks/useShowPlasmicSuggestion';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
 import { useRouter } from 'next/router';
@@ -35,6 +39,7 @@ export const PatientHomePage = ({ embedded = false }: PatientHomePageProps) => {
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const { setIsOpenSuggestion } = useSearchStore();
   const customize = useCustomize(state => state.customize);
+  const showPlasmicSuggestion = useShowPlasmicSuggestion();
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
   const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
 
@@ -76,7 +81,7 @@ export const PatientHomePage = ({ embedded = false }: PatientHomePageProps) => {
         )}
         <div className="flex w-full flex-col items-center gap-3">
           <Suggestion
-            showPlasmicSuggestion={!customize.partnerKey}
+            showPlasmicSuggestion={showPlasmicSuggestion}
             defaultInputValue={defaultInputValue}
             setDefaultInputValue={setDefaultInputValue}
             className={classNames('!p-0', {
@@ -84,6 +89,7 @@ export const PatientHomePage = ({ embedded = false }: PatientHomePageProps) => {
                 isMobile,
             })}
           />
+          <YaraInvite />
           {!customize.partnerKey && (
             <div className="w-full lg:w-[50rem]">
               <Fragment2

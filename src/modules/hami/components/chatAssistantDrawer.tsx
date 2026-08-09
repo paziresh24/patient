@@ -73,7 +73,7 @@ const ChatAssistantDrawerView = ({
   const { messages } = useVardastWorkflow();
   const workflowEvents = getVardastWorkflowEvents(messages);
   const userId = useUserInfoStore(state => state.info?.id);
-  const shouldShowDrawerUI = shouldShowVardastUI;
+  const shouldShowDrawerUI = shouldShowVardastUI && hasChatWidget && !isWidgetsLoading;
   const [liveProgress, setLiveProgress] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const chatLayerRef = useRef<HTMLDivElement>(null);
@@ -520,9 +520,7 @@ const ChatAssistantDrawerView = ({
           </div>
 
           <div className="relative z-[3] flex min-h-0 flex-1 flex-col">
-            {typeof panelContent === 'function'
-              ? panelContent({ isOpen, hasChatWidget, isWidgetsLoading })
-              : panelContent}
+            {typeof panelContent === 'function' ? panelContent({ isOpen, hasChatWidget, isWidgetsLoading }) : panelContent}
           </div>
         </div>
       </div>
@@ -601,10 +599,7 @@ export const ChatAssistantDrawer = (props: ChatAssistantDrawerProps) => {
   const doctorProfilePending = useUserInfoStore(state => state.doctorProfilePending);
   const isDoctor = isDoctorUser(userInfo);
   const shouldShowVardastUI =
-    isDoctor ||
-    doctorProfilePending ||
-    isDoctorDeviceCached() ||
-    (typeof window !== 'undefined' && window.user?.is_doctor === true);
+    isDoctor || doctorProfilePending || isDoctorDeviceCached() || (typeof window !== 'undefined' && window.user?.is_doctor === true);
   const shouldFetchWidgets = isLogin && !!userInfo?.id && shouldShowVardastUI;
   const { hasChatWidget, isLoading: isWidgetsLoading } = useHasVardastChatWidget(userInfo?.id, shouldFetchWidgets);
   const vardastEnabled = hasChatWidget && !isWidgetsLoading;

@@ -9,12 +9,15 @@ import { Fragment2 } from '@/common/fragment/fragment2';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import Suggestion from '@/modules/search/view/suggestion';
+import { useShowPlasmicSuggestion } from '@/modules/search/hooks/useShowPlasmicSuggestion';
 import RecentSearch from '@/modules/search/view/recentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+// دعوتِ کم‌صدای یارا — dynamic و ssr:false تا خطای احتمالیِ ماژولِ چت هرگز هوم‌پیج را نگیرد.
+const YaraInvite = dynamic(() => import('@/modules/chat/yara/yaraInvite'), { ssr: false });
+import { ComponentType, useEffect, useState } from 'react';
 import getConfig from 'next/config';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
@@ -27,13 +30,20 @@ const { publicRuntimeConfig } = getConfig();
 const CentersList = dynamic(() => import('@/modules/home/components/centersList/centersList'));
 const Promote = dynamic(() => import('@/modules/home/components/promote'));
 
-const HomePageBody = ({ fragmentComponents }: { fragmentComponents?: any }) => {
+const HomePageBody = ({
+  fragmentComponents,
+  plasmicSearchComponent,
+}: {
+  fragmentComponents?: any;
+  plasmicSearchComponent: ComponentType<any>;
+}) => {
   const { isMobile } = useResponsive();
   const router = useRouter();
   const { recent } = useRecentSearch();
   const [defaultInputValue, setDefaultInputValue] = useState('');
   const { setIsOpenSuggestion } = useSearchStore();
   const customize = useCustomize(state => state.customize);
+  const showPlasmicSuggestion = useShowPlasmicSuggestion();
   const showPlasmicOnlineVisit = useFeatureIsOn('search_plasmic_online_visit');
   const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
 
@@ -87,7 +97,8 @@ const HomePageBody = ({ fragmentComponents }: { fragmentComponents?: any }) => {
         )}
         <div className="flex flex-col items-center w-full gap-3">
           <Suggestion
-            showPlasmicSuggestion={!customize.partnerKey}
+            showPlasmicSuggestion={showPlasmicSuggestion}
+            plasmicSearchComponent={plasmicSearchComponent}
             defaultInputValue={defaultInputValue}
             setDefaultInputValue={setDefaultInputValue}
             className={classNames('!p-0', {
@@ -95,6 +106,7 @@ const HomePageBody = ({ fragmentComponents }: { fragmentComponents?: any }) => {
                 isMobile,
             })}
           />
+          <YaraInvite />
           {!customize.partnerKey && (
             <div className="lg:w-[50rem] w-full">
               <Fragment2

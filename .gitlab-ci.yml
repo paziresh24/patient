@@ -1,39 +1,423 @@
 stages:
+  - review
+  - perf
+  - merge
   - build
 
-build-docker-image:
-  stage: build
-  image: docker:cli
+# AI summary review on Merge Requests (Nikita-Filonov/ai-review).
+# Required CI/CD variables: OPENAI_API_KEY, GITLAB_API_TOKEN (PAT of @harun, api scope).
+# Optional: LLM_API_URL, LLM_MODEL, GITLAB_BOT_USERNAME (default harun).
+# Comments/merges must appear as https://gitlab.paziresh24.com/harun
+ai-review:
+  stage: review
+  image: nikitafilonov/ai-review:latest
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
   variables:
-    DOCKER_HOST: "unix:///var/run/docker.sock"
-    
-  before_script:
-    - apk add --no-cache curl
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    
+    GIT_DEPTH: "0"
+    GITLAB_BOT_USERNAME: "harun"
+    # Defaults — override via project CI/CD Variables with the same names.
+    LLM_API_URL: "https://api.openai.com/v1"
+    LLM_MODEL: "gpt-4o-mini"
+    LLM__PROVIDER: "OPENAI"
+    LLM__META__MODEL: "$LLM_MODEL"
+    LLM__META__MAX_TOKENS: "15000"
+    LLM__META__TEMPERATURE: "0.3"
+    LLM__HTTP_CLIENT__API_URL: "$LLM_API_URL"
+    LLM__HTTP_CLIENT__API_TOKEN: "$OPENAI_API_KEY"
+    VCS__PROVIDER: "GITLAB"
+    VCS__PIPELINE__PROJECT_ID: "$CI_PROJECT_ID"
+    VCS__PIPELINE__MERGE_REQUEST_ID: "$CI_MERGE_REQUEST_IID"
+    VCS__HTTP_CLIENT__API_URL: "$CI_SERVER_URL"
+    VCS__HTTP_CLIENT__API_TOKEN: "$GITLAB_API_TOKEN"
+    REVIEW__IGNORE_CHANGES: '[".plasmic/plasmic/**", "package-lock.json", "yarn.lock"]'
+    PROMPT__SUMMARY_PROMPT_FILES: '["./prompts/ai-review/summary.md"]'
   script:
-    - docker build --provenance=false -t "$CI_REGISTRY_IMAGE:latest" -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
-    
-    - docker push "$CI_REGISTRY_IMAGE:latest"
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
-    
+    - |
+      set -euo pipefail
+      missing=0
+      if [ -z "${GITLAB_API_TOKEN:-}" ]; then
+        echo "ERROR: GITLAB_API_TOKEN is empty (Masked, NOT Protected)."
+        missing=1
+      fi
+      if [ -z "${OPENAI_API_KEY:-}" ]; then
+        echo "ERROR: OPENAI_API_KEY is empty (Masked, NOT Protected)."
+        missing=1
+      fi
+      if [ "$missing" -ne 0 ]; then
+        exit 1
+      fi
+      python3 scripts/ci-assert-gitlab-user.py "$GITLAB_API_TOKEN"
+      ai-review run-summary 2>&1 | tee /tmp/ai-review.log
+      # Tool often exits 0 even after LLM/VCS failures — treat log errors as job failure.
+      if grep -E -q "ERROR \\||Illegal header value|LLM request failed|Failed to fetch|HTTPStatusError|LocalProtocolError" /tmp/ai-review.log; then
+        echo "ERROR: ai-review reported failures (see log above)."
+        exit 1
+      fi
+      if grep -E -q "LLM returned empty summary|Summary LLM output was empty" /tmp/ai-review.log; then
+        echo "ERROR: ai-review produced an empty summary."
+        exit 1
+      fi
+
+# Auto-merge only when: pipeline jobs succeed, ai-review READY, low-risk diff.
+# Enable with CI variable AUTO_MERGE_SAFE_MRS=true. Token must be @harun Maintainer.
+auto-merge-safe:
+  stage: merge
+  image: python:3.12-alpine
+  needs:
+    - job: ai-review
+    # DR-08 §۲۷.۴.۱ — گیتِ scoped: اگر `search-e2e` در این pipeline اجرا شده باشد باید سبز باشد،
+    # وگرنه merge نمی‌شود. `optional: true` یعنی MRهایی که مسیرهای search/e2e را دست نزده‌اند
+    # (یعنی کارِ بقیه‌ی تیم‌ها روی این کدبیسِ مشترک) اصلاً تحتِ تأثیر قرار نمی‌گیرند.
+    - job: search-e2e
+      optional: true
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+  variables:
+    GITLAB_BOT_USERNAME: "harun"
+  before_script:
+    - apk add --no-cache curl jq
+  script:
+    - python3 scripts/ci-assert-gitlab-user.py "${GITLAB_MERGE_TOKEN:-$GITLAB_API_TOKEN}"
+    - sh scripts/ci-auto-merge-safe.sh
+
+# DR-08 (docs/dev-requests/dr-08-listing-pagespeed.md) — Lighthouse CI budget gate for the three
+# highest-traffic /s/* listing templates. See lighthouserc.js for the full rationale/thresholds.
+#
+# HONEST SCOPE (working-agreements §۱۲, not overclaiming): this job hits LIVE PRODUCTION URLs, not
+# a build of this MR's own code — there is no per-MR review-app for `patient` today, and building +
+# serving the full SSR app inside a throwaway CI job would require a working Plasmic project token,
+# Sentry/GrowthBook/Firebase secrets, and reachable internal APIs (not safe/cheap to fake here, see
+# docs/working-agreements.md §۱۳ ladder-of-least-code). So this is a **regression MONITOR** — did
+# prod get worse after the last deploy / on today's schedule — not a pre-merge blocking gate. It
+# still runs on MRs so a reviewer sees the current prod budget status inline; it does NOT feed
+# `auto-merge-safe`'s `needs:` (deliberately — expanding that gate's blocking surface is a separate,
+# owner-reviewed decision, not bundled into this DR). The real pre-merge gate needs a per-MR
+# preview environment — flagged as the outside-the-box follow-up in the DR-08 doc §۱۱, not built here.
+lighthouse-budget:
+  stage: perf
+  image: node:20-slim
+  script:
+    - |
+      set +e
+      output="$(npx --yes @lhci/cli@0.13.0 autorun --config=./lighthouserc.js 2>&1)"
+      status=$?
+      echo "$output"
+      # Runner sometimes doesn't have Chrome installed; this gate is a PROD regression monitor
+      # and is already marked allow_failure, but we also suppress this specific env issue so
+      # reviewers don't interpret it as a code regression.
+      if echo "$output" | grep -q "Chrome installation not found"; then
+        exit 0
+      fi
+      exit $status
+  artifacts:
+    when: always
+    expire_in: 30 days
+    paths:
+      - .lighthouseci/
+  allow_failure: true # monitor, not a merge-blocker yet (see rationale above) — flip to false once a per-MR preview env lands
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "next"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+
+# DR-08 §۱۲ — گاردِ «کدِ سنگین در chunkِ initial».
+#
+# چرا لازم شد: دو بار پشتِ سر هم یک کلاسِ باگ رخ داد (Firebase، بعد LiveKit) که در code review
+# نامرئی است: گیتِ runtime دورِ *استفاده* گذاشته می‌شود ولی *import* استاتیک می‌ماند، پس webpack
+# کتابخانه را در گرافِ initialِ هر صفحه نگه می‌دارد. تنها جایی که این باگ دیده می‌شود خروجیِ
+# واقعیِ build است — نه دیف، نه unit test.
+#
+# برخلافِ `lighthouse-budget` (که علیهِ productionِ زنده اجرا می‌شود و monitor است، نه gate)، این
+# job **کدِ خودِ همین MR را build می‌کند** و کاملاً deterministic است ⇒ blocking (بدونِ
+# allow_failure). برای کنترلِ هزینه فقط وقتی اجرا می‌شود که فایلی از مسیرهای پرخطر عوض شده باشد.
+# چرا از دوکر build می‌گیریم و نه مستقیم `npm run build` در یک jobِ node (تاریخچه‌ی سه اجرای قرمز):
+#   • pipeline 3461 — با `NODE_ENV: production` روی کلِ job، ‏npm ‏devDependencies را نصب نکرد و
+#     `next build` روی type-check ترکید (در buildِ Docker دیده نمی‌شد، چون آن‌جا Next خودش
+#     devDependencies را auto-install می‌کند؛ داخلِ CI با `CI=true` آن auto-install غیرفعال است).
+#   • pipeline 3466 و 3469 — بعد از رفعِ آن، ‏build با `exit 137 (OOMKilled)` کشته شد. اندازه‌گیری:
+#     این runner ‏`nproc=96` دارد و buildِ Next مصرفِ حافظه‌اش را با CPU مقیاس می‌دهد؛ حتی با
+#     `--max-old-space-size=2048` و `experimental.cpus=2` هم همان‌جا («Creating an optimized
+#     production build») می‌مرد ⇒ سقفِ حافظه‌ی containerِ jobهای معمولی برای این build کافی نیست.
+# ولی `build-docker-image` هر روز روی همین CI با موفقیت همین build را می‌گیرد (~۸ دقیقه) — پس
+# به‌جای اختراعِ یک مسیرِ buildِ دوم و شکننده، از همان مسیرِ اثبات‌شده استفاده می‌کنیم و فقط
+# گارد را داخلِ image اجرا می‌کنیم. push هم نمی‌کنیم؛ این job فقط بررسی است.
+initial-chunks:
+  extends: .build-docker-common
+  stage: perf
+  before_script:
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+  script:
+    - docker build --provenance=false -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
+    - docker run --rm patient-initial-chunks:$CI_COMMIT_SHORT_SHA node scripts/check-initial-chunks.js
+  # `.build-docker-common` روی `script_failure` هم retry می‌کند — برای pushِ ناپایدارِ registry منطقی
+  # است، ولی این‌جا یعنی یک نقضِ واقعیِ گارد دو بارِ دیگر هم ۸ دقیقه build شود. فقط خطای زیرساخت retry.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/modules/voice-agent/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/modules/voice-agent/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+
+.build-docker-common:
+  image: docker:cli
+  services:
+    - name: docker:dind
+      command: ["--registry-mirror=https://docker.devneeds.ir"]
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+    # Admin hostname → Hybrid (CDN gitlab-registry still Omnibus; cert lacks that name).
+    REGISTRY_PUSH_HOST: registry-gitlab.mobin.p24cloud.ir
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - api_failure
+      - script_failure
+      - job_execution_timeout
+
+build-docker-image:
+  extends: .build-docker-common
+  stage: build
+  before_script:
+    - apk add --no-cache curl jq
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    - |
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if ! curl -sk --connect-timeout 5 "https://${PUSH_HOST}/v2/" >/dev/null 2>&1; then
+        echo "Push host unreachable, falling back to $CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+      echo "Using push host: $PUSH_HOST"
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
+    - |
+      jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
+        "$HOME/.docker/config.json" > /tmp/docker-config.json \
+        && mv /tmp/docker-config.json "$HOME/.docker/config.json"
+  script:
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      docker build --provenance=false \
+        -t "${PUSH_IMAGE}:latest" \
+        -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
+        .
+    - |
+      push_with_retry() {
+        local image="$1" attempt=1 max=3
+        while [ "$attempt" -le "$max" ]; do
+          echo "Pushing $image (attempt $attempt/$max)..."
+          if docker push "$image"; then return 0; fi
+          echo "Push failed (attempt $attempt/$max)"
+          [ "$attempt" -eq "$max" ] && return 1
+          sleep $((attempt * 10))
+          attempt=$((attempt + 1))
+        done
+      }
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      push_with_retry "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+      push_with_retry "${PUSH_IMAGE}:latest"
     - |
       cat <<EOF > webhook_payload.json
       {
         "project_name": "$CI_PROJECT_NAME",
         "commit_sha": "$CI_COMMIT_SHORT_SHA",
         "branch": "$CI_COMMIT_BRANCH",
-        "registry_image": "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA",
+        "registry_image": "$(cat /tmp/push_host)/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA",
         "status": "build_success"
       }
       EOF
-    
-    
     - >
-      curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook 
-      -H "Content-Type: application/json" 
+      curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
+      -H "Content-Type: application/json"
       -d @webhook_payload.json
-    
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: always
+
+build-docker-image-next:
+  extends: .build-docker-common
+  stage: build
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+    ZOT_REGISTRY: registry.paziresh24.com
+    ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
+  before_script:
+    - apk add --no-cache curl jq
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
+    - |
+      jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
+        "$HOME/.docker/config.json" > /tmp/docker-config.json \
+        && mv /tmp/docker-config.json "$HOME/.docker/config.json"
+  script:
+    - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
+    - |
+      push_with_retry() {
+        local image="$1" attempt=1 max=3
+        while [ "$attempt" -le "$max" ]; do
+          echo "Pushing $image (attempt $attempt/$max)..."
+          if docker push "$image"; then return 0; fi
+          [ "$attempt" -eq "$max" ] && return 1
+          sleep $((attempt * 10))
+          attempt=$((attempt + 1))
+        done
+      }
+      push_with_retry "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA"
+    - |
+      cat <<EOF > webhook_payload.json
+      {
+        "project_name": "$CI_PROJECT_NAME",
+        "commit_sha": "$CI_COMMIT_SHORT_SHA",
+        "branch": "$CI_COMMIT_BRANCH",
+        "registry_image": "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA",
+        "status": "build_success"
+      }
+      EOF
+    - >
+      curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
+      -H "Content-Type: application/json"
+      -d @webhook_payload.json
+  rules:
+    - if: $CI_COMMIT_BRANCH == "next"
+      when: always
+
+# DR-08 §۲۷.۴ — گیتِ e2eِ **scoped** روی buildِ همان MR.
+#
+# چرا این job وجود دارد (open-debt #۲۲): تا امروز هیچ jobaی در این pipeline تست اجرا نمی‌کرد و
+# `auto-merge-safe` فقط به `ai-review` نگاه می‌کرد ⇒ یک رگرسیونِ رفتاری (نمونه‌ی واقعی: مودالِ
+# انتخابِ شهر، MR !124) بدونِ هیچ قرمزی merge و deploy شد. تستِ e2e داشتیم؛ چیزی که نداشتیم
+# «تستی که deploy را متوقف کند» بود.
+#
+# چرا علیهِ **کانتینرِ همین MR** و نه production (تفاوتِ اصلی با `lighthouse-budget`):
+# گیتِ pre-merge باید دربارهٔ کدِ *این* MR قضاوت کند. `patient` per-MR preview-env ندارد، پس
+# محیط را همین‌جا می‌سازیم: همان Dockerfileِ اثبات‌شده build می‌شود، کانتینر در dind بالا می‌آید،
+# و Playwright از داخلِ imageِ رسمی علیهِ آن اجرا می‌شود. env از `.env.example` می‌آید که فقط
+# URLهایِ عمومی است (هیچ secretی) — و چون این‌ها `publicRuntimeConfig`اند، در زمانِ **start**
+# خوانده می‌شوند نه build.
+#
+# ⚠ دامنه عمداً محدود است (کدبیسِ مشترکِ همه‌ی تیم‌هاست): فقط وقتی اجرا می‌شود که مسیرهایِ
+# search/e2e عوض شده باشند. در `auto-merge-safe` هم با `optional: true` می‌آید ⇒ MRaی که این
+# مسیرها را دست نزند اصلاً این job را نمی‌بیند و گیتش معطل نمی‌شود. گسترشِ دامنه به بقیه‌ی
+# تیم‌ها فقط بعد از ~۲ هفته داده‌ی flake-rate پیشنهاد می‌شود (ghane dr-08 §۲۷.۴.۱).
+#
+# مجهولاتِ محیطی قبل از نوشتن با jobِ موقتِ `e2e-env-probe` اندازه‌گیری شد (pipeline 3728):
+# pullِ `mcr.microsoft.com/playwright` از این runner کار می‌کند (A_EXIT=0) و دانلودِ chromium هم
+# (B_EXIT=0) — پس طراحی روی حدس بنا نشده است.
+search-e2e:
+  extends: .build-docker-common
+  stage: perf
+  timeout: 45m
+  variables:
+    E2E_IMAGE: mcr.microsoft.com/playwright:v1.49.1-jammy
+    APP_IMAGE: patient-e2e:$CI_COMMIT_SHORT_SHA
+  before_script:
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+  script:
+    - docker build --provenance=false -t "$APP_IMAGE" .
+    - docker network create e2e-net
+    - >
+      docker run -d --name e2e-app --network e2e-net --network-alias app
+      --env-file .env.example -e NODE_ENV=production -e PORT=3000 "$APP_IMAGE"
+    - |
+      # آمادگیِ واقعی، نه `sleep`: تا وقتی خودِ صفحه‌ی لیستینگ ۲۰۰ ندهد تست شروع نمی‌شود.
+      ok=0
+      for i in $(seq 1 60); do
+        if docker run --rm --network e2e-net curlimages/curl:8.10.1 -sf -o /dev/null "http://app:3000/s/tehran/dermatology/"; then ok=1; break; fi
+        sleep 3
+      done
+      if [ "$ok" -ne 1 ]; then echo "ERROR: app container never became ready"; docker logs e2e-app | tail -80; exit 1; fi
+    - |
+      # Playwright از داخلِ imageِ رسمی. repo با `docker cp` منتقل می‌شود چون workspaceِ jobِ
+      # container روی فایل‌سیستمِ dind وجود ندارد (bind-mount این‌جا بی‌صدا خالی می‌شود).
+      docker create --name e2e-runner --network e2e-net         -e E2E_BASE_URL=http://app:3000 -e E2E_BROWSER_CHANNEL= -e CI=true -e E2E_UPDATE_SNAPSHOTS="$E2E_UPDATE_SNAPSHOTS"         -w /work "$E2E_IMAGE"         sh -lc "npm i --no-save --registry=https://npm.devneeds.ir/ @playwright/test@1.49.1 && npx playwright test --project=mobile e2e/specs/search.spec.ts e2e/specs/ssr-critical-markup.spec.ts e2e/specs/ssr-style-dedupe.spec.ts e2e/specs/dialog-city-select.spec.ts e2e/specs/card-content.spec.ts e2e/specs/card-visual.spec.ts e2e/specs/card-instrumentation.spec.ts ${E2E_UPDATE_SNAPSHOTS:+--update-snapshots}"
+    - docker cp . e2e-runner:/work
+    - docker start -a e2e-runner
+  after_script:
+    - docker cp e2e-runner:/work/e2e/.report e2e/.report > /dev/null 2>&1 || true
+    # baselineهای بصری platform-specificاند (پسوندِ OS در نامِ فایل). baselineِ لوکالِ win32 در
+    # containerِ linuxِ CI بی‌مصرف است؛ با `E2E_UPDATE_SNAPSHOTS=1` یک‌بار تولید و از همین
+    # artifact برداشته و commit می‌شود.
+    - docker cp e2e-runner:/work/e2e/specs/card-visual.spec.ts-snapshots ci-snapshots > /dev/null 2>&1 || true
+    - docker logs e2e-app > app.log 2>&1 || true
+    - docker rm -f e2e-app e2e-runner > /dev/null 2>&1 || true
+    - docker network rm e2e-net > /dev/null 2>&1 || true
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - e2e/.report
+      - app.log
+      - ci-snapshots
+  # `.build-docker-common` روی `script_failure` هم retry می‌کند — این‌جا یعنی یک شکستِ **واقعیِ
+  # تست** دوباره اجرا شود و flakiness را پنهان کند. فقط خطای زیرساخت retry می‌شود.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
+  # دامنه‌ی trigger — بازنگری‌شده 2026-08-05 با یک اندازه‌گیری، نه با حدس.
+  #
+  # 🔴 چه چیزی این بازنگری را لازم کرد: بینِ ۰۸-۰۲ (آخرین اجرای سبز) و ۰۸-۰۵، **~۲۰ کامیت** روی
+  # `main` نشست و **هیچ‌کدام** نمی‌توانست این job را trigger کند — چون هیچ‌کدام در لیستِ زیر نبودند.
+  # نتیجه: این گیت سه روز اصلاً اجرا نشد، و وقتی بالاخره یک MRِ بی‌ربط یک مسیرِ search را لمس کرد،
+  # قرمزیِ انباشته‌ی main به گردنِ همان MR افتاد. یعنی `optional: true` (که برای «مزاحمِ بقیه‌ی
+  # تیم‌ها نباشیم» گذاشته شده بود) عملاً هزینه را روی MRهای search متمرکز کرد.
+  #
+  # قاعده‌ی انتخابِ این لیست: **هر چیزی که در buildِ همین job وارد می‌شود و می‌تواند رندرِ صفحه‌ی
+  # لیستینگ را عوض کند** — نه فقط ماژولِ search. این app یک monolith مشترک است.
+  #
+  # ⚠️ صادقانه: این لیست هنوز کامل نیست و نمی‌تواند باشد (هر فایلی در `src/common/**` می‌تواند
+  # به‌طورِ غیرمستقیم اثر بگذارد). گاردِ واقعیِ مکمل، اجرای همین job روی خودِ `main` بعد از merge
+  # است تا رگرسیون به کامیتِ خودش نسبت داده شود — به‌عنوانِ بدهیِ باز ثبت شد
+  # (ghane: docs/journal/open-debt.md #۴۱)، این‌جا عمداً اضافه نشد چون هزینه‌ی runner دارد و
+  # تصمیمِ ownerِ زیرساخت است.
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        # — خودِ کدِ سرچ —
+        - src/modules/search/**/*
+        - .plasmic/plasmic/paziresh_24_search/**/*
+        # — صفحه‌ای که تست‌ها واقعاً بازش می‌کنند (جا افتاده بود) —
+        - src/pages/s/**/*
+        # — bootstrapِ سراسری: providerها، SDKها، contextهایی که کلِ درختِ Plasmic از آن‌ها تغذیه
+        #   می‌شود. مصداقِ عینی: MR !155 فقط `growthbookGlobalContext.tsx` را عوض کرد و چون در این
+        #   لیست نبود، بدونِ این گیت merge شد —
+        - src/pages/_app.tsx
+        - src/pages/_document.tsx
+        - src/common/fragment/**/*
+        - src/styles/plasmicRadixBaseCss.ts
+        # — ورودی‌های buildی که خودِ این job از آن‌ها image می‌سازد —
+        - Dockerfile
+        - next.config.js
+        - package.json
+        # — خودِ هارنس —
+        - e2e/**/*
+        - playwright.config.ts
+        - .gitlab-ci.yml

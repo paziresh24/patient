@@ -44,7 +44,7 @@ export const DsFeedCard = ({
       )}
       onClick={!href ? onClick : undefined}
     >
-      <header className="flex items-center gap-3 px-4 pb-1 pt-4">
+      <header className={classNames('flex items-center', ds.layout.listRowGap, ds.layout.feedCardHeader)}>
         <div className={classNames('flex h-9 w-9 shrink-0 items-center justify-center', ds.radius.pill, ds.surface.muted)}>
           {source.icon}
         </div>
@@ -55,15 +55,15 @@ export const DsFeedCard = ({
         {action && <div className="shrink-0">{action}</div>}
       </header>
 
-      {visual && <div className="px-4 pt-3">{visual}</div>}
+      {visual && <div className={ds.layout.feedCardVisual}>{visual}</div>}
 
-      <div className="px-4 py-3">
+      <div className={ds.layout.feedCardBody}>
         {title && <h3 className={ds.type.cardTitle}>{title}</h3>}
         {children && <div className={title ? 'mt-1' : ''}>{children}</div>}
       </div>
 
       {footer && (
-        <footer className="flex items-center justify-between border-t border-slate-100 px-4 py-3">
+        <footer className={classNames('flex items-center justify-between border-t border-slate-100', ds.layout.feedCardBody)}>
           {footer}
         </footer>
       )}

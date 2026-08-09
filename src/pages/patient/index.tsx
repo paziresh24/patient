@@ -135,7 +135,7 @@ export const PatinetProfile = () => {
 
           <div className="flex flex-col mt-2 bg-white shadow-sm">
             <Link
-              href={`${publicRuntimeConfig.CLINIC_BASE_URL}/home/privacy-policy/`}
+              href="/privacy-policy/"
               className="flex items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
             >
               <SecuritySafeIcon />

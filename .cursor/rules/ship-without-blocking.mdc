@@ -1,0 +1,13 @@
+---
+description: Ship end-to-end without unnecessary questions when user asks to deploy/test
+alwaysApply: true
+---
+
+# Ship and verify without blocking
+
+When the user asks to push, deploy, and/or verify on production (or similar end-to-end ship requests):
+
+- Do not stop for non-essential confirmations or questionnaires.
+- Prefer action: run tests → commit → push → open/merge MR when credentials allow → wait for deploy → verify production → report results.
+- Only ask when a hard blocker exists (missing secrets you cannot obtain, destructive irreversible action needing explicit consent, or genuine ambiguity that changes product behavior).
+- Keep the final report concise: what shipped, what was verified, any remaining backend/index limitations.

@@ -7,6 +7,7 @@ import { useDoctorImage } from '@/common/hooks/useDoctorImage';
 import { useDoctorExpertise } from '@/common/hooks/useDoctorExpertise';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
 import getConfig from 'next/config';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 const { publicRuntimeConfig } = getConfig();
 
 interface DoctorInfoProps {
@@ -60,7 +61,7 @@ export const DoctorInfo: React.FC<DoctorInfoProps> = props => {
   // Determine the final doctor image
   const finalDoctorImage = React.useMemo(() => {
     if (avatar) return avatar;
-    if (doctorImageData?.image) return publicRuntimeConfig.CDN_BASE_URL + doctorImageData.image;
+    if (doctorImageData?.image) return getImageUrl(doctorImageData.image, publicRuntimeConfig.CDN_BASE_URL);
     return '';
   }, [avatar, doctorImageData]);
 

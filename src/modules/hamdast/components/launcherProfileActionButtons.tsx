@@ -6,11 +6,13 @@ import { useRef, useState } from 'react';
 import {
   getLauncherProfileActiveWidgetButtonText,
   getLauncherProfileButtonEndpoint,
+  getLauncherProfileConnectButtonEndpoint,
   getLauncherProfileDisconnectButtonEndpoint,
   getLauncherProfileMainButtonText,
   getLauncherProfileWidgetButtonText,
   isLauncherProfileButtonOutline,
   openLauncherProfileButtonEndpoint,
+  shouldRequireSubscriptionBeforeConnect,
   shouldShowLauncherProfileMainButtonWithActiveWidget,
 } from '@/modules/hamdast/utils/launcherProfileButton';
 
@@ -29,9 +31,13 @@ type LauncherProfileActionButtonsProps = {
   userWidgets?: Array<{ app?: string }> | null;
   appKey?: string;
   profileData?: { button_text?: string; scopes?: Array<{ id?: string; scope?: string }> } | null;
+  directPayment?: boolean;
+  hasActiveSubscription?: boolean;
   isLoading?: boolean;
   onLoadingChange?: (loading: boolean) => void;
   onMainClick?: () => void | Promise<void>;
+  onSubscribeOnly?: (planKey?: string) => Promise<{ success?: boolean } | void>;
+  forceOutline?: boolean;
   className?: string;
 };
 
@@ -40,9 +46,13 @@ export function LauncherProfileActionButtons({
   userWidgets,
   appKey,
   profileData,
+  directPayment,
+  hasActiveSubscription,
   isLoading = false,
   onLoadingChange,
   onMainClick,
+  onSubscribeOnly,
+  forceOutline = false,
   className,
 }: LauncherProfileActionButtonsProps) {
   const isEndpointLoadingRef = useRef(false);
@@ -69,8 +79,39 @@ export function LauncherProfileActionButtons({
     }
   };
 
+  const resetEndpointLoading = () => {
+    isEndpointLoadingRef.current = false;
+    setIsEndpointPending(false);
+    onLoadingChange?.(false);
+  };
+
   const handleSingleButtonClick = async () => {
     if (endpoint) {
+      const connectEndpoint = getLauncherProfileConnectButtonEndpoint(widgetInfo);
+      const isConnectAction = Boolean(connectEndpoint && endpoint === connectEndpoint);
+
+      if (
+        isConnectAction &&
+        shouldRequireSubscriptionBeforeConnect(directPayment, hasActiveSubscription, widgetInfo)
+      ) {
+        if (!appKey || isEndpointLoadingRef.current || isEndpointPending || isLoading) return;
+
+        isEndpointLoadingRef.current = true;
+        setIsEndpointPending(true);
+        onLoadingChange?.(true);
+        try {
+          const result = await onSubscribeOnly?.();
+          if (!result?.success) {
+            resetEndpointLoading();
+            return;
+          }
+          await openLauncherProfileButtonEndpoint(appKey, endpoint, profileData);
+        } catch {
+          resetEndpointLoading();
+        }
+        return;
+      }
+
       await handleEndpointClick(endpoint);
       return;
     }
@@ -136,7 +177,7 @@ export function LauncherProfileActionButtons({
       className={buttonClassName}
       isDisabled={Boolean(endpoint && isEndpointButtonLoading)}
       loading={Boolean(endpoint && isEndpointButtonLoading)}
-      outline={isLauncherProfileButtonOutline(widgetInfo, userWidgets, appKey)}
+      outline={forceOutline || isLauncherProfileButtonOutline(widgetInfo, userWidgets, appKey)}
       onClick={() => {
         void handleSingleButtonClick();
       }}

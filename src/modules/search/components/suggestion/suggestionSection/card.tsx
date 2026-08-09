@@ -3,6 +3,7 @@ import Text from '@/common/components/atom/text';
 import classNames from '@/common/utils/classNames';
 import { useSuggestionItem } from '@/modules/search/hooks/useSuggestionItemClick';
 import { Item } from '@/modules/search/types/suggestion';
+import { safeHighlight } from '@/modules/search/functions/safeHighlight';
 import getConfig from 'next/config';
 import style from './section.module.css';
 import { Fragment } from '@/common/fragment';
@@ -58,12 +59,9 @@ export const CardSection = (props: CardSectionProps) => {
             />
           </div>
           <div className="flex flex-col">
-            <Text
-              className={style.title}
-              fontWeight="medium"
-              fontSize="sm"
-              dangerouslySetInnerHTML={{ __html: item.formatted_title ?? '' ?? '' }}
-            />
+            <Text className={style.title} fontWeight="medium" fontSize="sm">
+              {safeHighlight(item.formatted_title)}
+            </Text>
             <Text fontSize="xs" className="line-clamp-1">
               {item.sub_title}
             </Text>

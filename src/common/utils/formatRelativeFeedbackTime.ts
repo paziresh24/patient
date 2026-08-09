@@ -18,6 +18,31 @@ export const parseFeedbackCreatedAt = (value: string | number | null | undefined
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 };
 
+const TEHRAN_DATE_FORMATTER = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' });
+const TEHRAN_TIME_FORMATTER = new Intl.DateTimeFormat('fa-IR', {
+  timeZone: 'Asia/Tehran',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+});
+
+/** تاریخ میلادی روز ثبت نظر در منطقه زمانی تهران (YYYY-MM-DD) */
+export const getFeedbackLocalDateKey = (
+  value: string | number | null | undefined,
+): string | null => {
+  const created = parseFeedbackCreatedAt(value);
+  if (!created) return null;
+  return TEHRAN_DATE_FORMATTER.format(created);
+};
+
+export const formatFeedbackLocalTime = (
+  value: string | number | null | undefined,
+): string | undefined => {
+  const created = parseFeedbackCreatedAt(value);
+  if (!created) return undefined;
+  return TEHRAN_TIME_FORMATTER.format(created);
+};
+
 export const getFeedbackCreatedAtValue = (
   item: Record<string, unknown> | null | undefined,
 ): string | number | null | undefined => {

@@ -23,15 +23,11 @@ export const footerForUsers = {
     },
     {
       title: 'ثبت نام / ورود بیماران',
-      link: '/register',
-    },
-    {
-      title: 'راهنمای دریافت نوبت',
-      link: '/home/help/',
+      link: '/login',
     },
     {
       title: 'سوالات متداول',
-      link: '/home/faq/',
+      link: '/faq/',
     },
   ],
 };
@@ -40,12 +36,8 @@ export const footerPaziresh24 = {
   title: 'پذیرش24',
   links: [
     {
-      title: 'درباره ما',
-      link: '/home/about-us/',
-    },
-    {
       title: 'تماس با ما',
-      link: '/home/contact-us/',
+      link: '/contact-us/',
     },
     {
       title: 'توسعه دهندگان',
@@ -61,11 +53,7 @@ export const footerPaziresh24 = {
     },
     {
       title: 'حریم خصوصی',
-      link: '/home/privacy-policy/',
-    },
-    {
-      title: 'قوانین',
-      link: '/home/rules/',
+      link: '/privacy-policy/',
     },
   ],
 };

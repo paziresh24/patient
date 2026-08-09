@@ -1,5 +1,6 @@
 import classNames from '@/common/utils/classNames';
 import { ReactNode } from 'react';
+import { ds } from '../designSystem/tokens';
 
 interface SectionCardProps {
   children: ReactNode;
@@ -7,5 +8,7 @@ interface SectionCardProps {
 }
 
 export const SectionCard = ({ children, className }: SectionCardProps) => (
-  <div className={classNames('rounded-2xl bg-white p-4 shadow-sm border border-slate-100', className)}>{children}</div>
+  <div className={classNames(ds.radius.card, ds.surface.card, ds.shadow.sm, ds.layout.sectionCardPadding, className)}>
+    {children}
+  </div>
 );

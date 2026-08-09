@@ -16,12 +16,7 @@ export interface DsWidgetItem {
 }
 
 export const DsWidgetStrip = ({ items, className }: { items: DsWidgetItem[]; className?: string }) => (
-  <div
-    className={classNames(
-      '-mx-4 flex gap-2.5 overflow-x-auto px-4 pb-1 scrollbar-hide snap-x snap-mandatory',
-      className,
-    )}
-  >
+  <div className={classNames(ds.layout.carouselStrip, className)}>
     {items.map((item, index) => {
       const content = (
         <div
@@ -29,7 +24,7 @@ export const DsWidgetStrip = ({ items, className }: { items: DsWidgetItem[]; cla
             ds.radius.tile,
             ds.shadow.sm,
             'flex h-[5.75rem] w-[7.75rem] shrink-0 snap-start flex-col justify-between border border-slate-100 p-3.5',
-            item.tint ?? 'bg-white',
+            item.tint ?? ds.surface.tile,
             item.href && 'transition-transform active:scale-[0.96]',
           )}
         >
@@ -38,7 +33,7 @@ export const DsWidgetStrip = ({ items, className }: { items: DsWidgetItem[]; cla
             <Skeleton h="1.25rem" w="2.5rem" rounded="md" />
           ) : (
             <div>
-              <p className="text-xl font-bold leading-none text-slate-800">{item.value ?? '—'}</p>
+              <p className={ds.type.insightValue}>{item.value ?? '—'}</p>
               <p className={classNames(ds.type.caption, 'mt-1 truncate')}>{item.label}</p>
             </div>
           )}

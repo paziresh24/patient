@@ -7,9 +7,8 @@ export interface Params {
 }
 
 export const payRequest = (params: Params) => {
-  return axios.post(`https://apigw.paziresh24.com/katibe/v1/payments/${params.id}/pay`, {
-    centerid: params?.centerid,
-  }, {
+  const body = params.centerid ? { centerid: params.centerid } : {};
+  return axios.post(`https://apigw.paziresh24.com/katibe/v1/payments/${params.id}/pay`, body, {
     withCredentials: true,
   });
 };

@@ -2,7 +2,7 @@ import { apiGatewayClient } from '@/common/apis/client';
 import { useEffect, useRef } from 'react';
 import { useUserInfoStore } from '../../store/userInfo';
 import { useGetMe } from '@/common/apis/services/auth/me';
-import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
+import { getCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
@@ -17,7 +17,6 @@ const GoogleOneTap = () => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const getMe = useGetMe();
-  const getDoctorProfile = useGetDoctorProfile();
   const university = useCustomize(state => state.customize?.partnerKey);
   const setPending = useUserInfoStore(state => state.setPending);
   const isEnable = useFeatureIsOn('google-one-tap-login');
@@ -53,16 +52,13 @@ const GoogleOneTap = () => {
       });
 
       const userData = await getMe.mutateAsync();
-      const doctorProfileData = getDoctorProfile.mutateAsync().then(data => {
-        setUserInfo({
-          provider: data,
-          ...userData,
-        });
-      });
+      const centersData = userData?.id ? await getCentersByUserId(userData.id.toString()) : [];
 
       setUserInfo({
-        provider: doctorProfileData,
         ...userData,
+        provider: {
+          ...(Array.isArray(centersData) ? { centers: centersData } : { centers: [] }),
+        },
       });
       setPending(false);
     } catch (error) {

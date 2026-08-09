@@ -2,13 +2,16 @@ import { create } from 'zustand';
 
 export type DoctorViewMode = 'doctor' | 'patient';
 
-const STORAGE_KEY = 'doctor-home-view-mode';
+export const DOCTOR_VIEW_MODE_STORAGE_KEY = 'doctor-home-view-mode';
 
 const readStoredMode = (): DoctorViewMode => {
   if (typeof window === 'undefined') return 'doctor';
-  const stored = sessionStorage.getItem(STORAGE_KEY);
+  const stored = sessionStorage.getItem(DOCTOR_VIEW_MODE_STORAGE_KEY);
   return stored === 'patient' ? 'patient' : 'doctor';
 };
+
+export const isPatientViewModeStored = (): boolean =>
+  typeof window !== 'undefined' && sessionStorage.getItem(DOCTOR_VIEW_MODE_STORAGE_KEY) === 'patient';
 
 interface DoctorViewModeStore {
   mode: DoctorViewMode;
@@ -20,7 +23,7 @@ export const useDoctorViewModeStore = create<DoctorViewModeStore>(set => ({
   mode: 'doctor',
   setMode: mode => {
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem(STORAGE_KEY, mode);
+      sessionStorage.setItem(DOCTOR_VIEW_MODE_STORAGE_KEY, mode);
     }
     set({ mode });
   },

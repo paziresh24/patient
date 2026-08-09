@@ -1,4 +1,4 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { apiGatewayClient, raviApisClient } from '@/common/apis/client';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
@@ -126,14 +126,14 @@ export const reportFeedback = async ({
 
 export const useReportFeedback = () => useMutation(reportFeedback);
 
-/** لینک اشتراک‌گذاری نظر — GET /ravi/v1/share_comment?slug={slug}&id={feedbackId} → url */
+/** لینک اشتراک‌گذاری نظر — GET /ravi/v1/share/doctors/{slug}/{commentId} → url */
 export const useShareCommentUrl = (slug?: string, feedbackId?: string, enabled = true) =>
   useQuery(
     ['doctorHome', 'shareComment', slug ?? '', feedbackId ?? ''],
     async (): Promise<string | null> => {
-      const { data } = await apiGatewayClient.get('/ravi/v1/share_comment', {
-        params: { slug, id: feedbackId },
-      });
+      const { data } = await raviApisClient.get(
+        `/ravi/v1/share/doctors/${encodeURIComponent(slug!)}/${encodeURIComponent(feedbackId!)}`,
+      );
       const url = (data?.url ?? data?.data?.url ?? data?.link) as string | undefined;
       return typeof url === 'string' && url ? url : null;
     },

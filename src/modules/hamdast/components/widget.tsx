@@ -10,6 +10,7 @@ import Loading from '@/common/components/atom/loading';
 import { useGetCenters } from '@/common/apis/services/profile/centers';
 import classNames from '@/common/utils/classNames';
 import CheckIcon from '@/common/components/icons/check';
+import { useOpenDoctorPublicProfile } from '@/common/utils/doctorPublicProfile';
 
 export const HamdastWidget = ({
   app_id,
@@ -23,13 +24,19 @@ export const HamdastWidget = ({
   onChangeWidget?: (action?: 'add' | 'remove' | 'update') => void;
 }) => {
   const widgetInfo = useGetWidgetInfo({ app_id }, { enabled: false });
+  const skipCancelOnCloseRef = useRef(false);
   const { handleClose, handleOpen, modalProps } = useModal({
     onClose: () => {
+      if (skipCancelOnCloseRef.current) {
+        skipCancelOnCloseRef.current = false;
+        return;
+      }
       cancel();
     },
   });
   const { handleClose: handlePreviewWidgetClose, handleOpen: handlePreviewWidgetOpen, modalProps: previewWidgetModalProps } = useModal();
   const { isLogin, info } = useUserInfoStore();
+  const { openPublicProfile, isOpening: isOpeningPublicProfile } = useOpenDoctorPublicProfile();
   const hashId = useRef();
   const [isLoading, setIsLoading] = useState(false);
   const [isCancelLoading, setIsCancelLoading] = useState(false);
@@ -88,7 +95,6 @@ export const HamdastWidget = ({
         },
         { withCredentials: true },
       );
-      handleClose();
       if (widgetInfo.data?.data?.successful_popup?.title) {
         handlePreviewWidgetOpen();
       }
@@ -121,6 +127,7 @@ export const HamdastWidget = ({
         '*',
       );
     } finally {
+      skipCancelOnCloseRef.current = true;
       handleClose();
       setIsLoading(false);
     }
@@ -163,6 +170,7 @@ export const HamdastWidget = ({
         '*',
       );
     } finally {
+      skipCancelOnCloseRef.current = true;
       handleClose();
       setIsCancelLoading(false);
     }
@@ -277,7 +285,7 @@ export const HamdastWidget = ({
         <span className="font-bold">{widgetInfo.data?.data?.successful_popup?.title}</span>
         <span className="text-sm">{widgetInfo.data?.data?.successful_popup?.description} </span>
         <div className="flex gap-3 w-full">
-          <Button className="w-full" onClick={() => window.open(`/dr/${info.provider?.slug}`)}>
+          <Button className="w-full" loading={isOpeningPublicProfile} onClick={() => void openPublicProfile()}>
             مشاهده پروفایل من
           </Button>
           <Button variant="secondary" className="w-full" onClick={handlePreviewWidgetClose}>

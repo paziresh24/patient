@@ -5,7 +5,11 @@
 @supports (font-variation-settings: normal) {
   @font-face {
     font-family: 'IRANSansXV';
-    src: url('../../public/fonts/IRANSansXV.woff2') format('woff2-variations'), url('../../public/fonts/IRANSansXV.woff2') format('woff2');
+    /* Served straight from public/ rather than imported through webpack, so this URL is identical
+       to the <link rel="preload"> in _document.tsx. A webpack-hashed URL cannot be preloaded from
+       _document (the hash is not known there), and a preload whose URL differs by even one
+       character is not a preload — it is a second download. See DR-08 §۱۹. */
+    src: url('/fonts/IRANSansXV.woff2') format('woff2-variations'), url('/fonts/IRANSansXV.woff2') format('woff2');
     font-weight: 100 900;
     font-display: swap;
   }
@@ -554,8 +558,46 @@ input[type='range']::-webkit-slider-thumb {
   @apply w-5 h-5 bg-white border-[6px] border-solid rounded-full appearance-none pointer-events-auto border-primary cursor-pointer;
 }
 
+/*
+ * PhotoView slide/swipe math assumes LTR on the portal.
+ * Keep the engine LTR; flip only banner chrome (counter + close) in RTL.
+ * Widget phone-strip lightbox reverses the image list so “next” slides from the left;
+ * do not swap arrow sides here — that would invert navigation against that list.
+ */
 .PhotoView-Portal {
   direction: ltr;
+}
+
+/* Banner flex: counter on the right, close/toolbar on the left in RTL pages. */
+html[dir='rtl'] .PhotoView-Portal .PhotoView-Slider__BannerWrap {
+  direction: rtl;
+}
+
+/* Counter numerals stay LTR even when the banner is RTL. */
+.PhotoView-Portal .PhotoView-Slider__Counter {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Widget RTL lightbox: hide engine counter (reverse-list index); toolbar shows API order. */
+.PhotoView-Portal.PhotoView--widget-rtl .PhotoView-Slider__BannerWrap > .PhotoView-Slider__Counter {
+  display: none;
+}
+
+.PhotoView-Portal.PhotoView--widget-rtl .PhotoView-widget-rtl-counter {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  left: auto;
+  transform: translateY(-50%);
+  direction: ltr;
+  unicode-bidi: isolate;
+  margin: 0;
+  opacity: 0.75;
+  font-size: 14px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
 }
 
 .loader {
@@ -569,4 +611,28 @@ input[type='range']::-webkit-slider-thumb {
 
 [data-radix-popper-content-wrapper] {
   z-index: 9999 !important;
+}
+
+/*
+ * اجرای تقریباً تمام‌صفحهٔ ابزارک در دسکتاپ (پرچم layout.fullscreen پورتال).
+ * کارت ۳۰remِ کامپوننت Plasmic (LauncherComponentsApp → freeBox__vjSbm) وقتی
+ * AppFrameِ داخلش در حالت اجرا و fullscreen است پهن می‌شود؛ پدینگ ۳۰pxِ مودالِ
+ * Plasmic لبه‌ها را از پشت نگه می‌دارد. پروفایل لانچر (بدون پرچم) همان ۳۰rem می‌ماند.
+ */
+@media (min-width: 768px) {
+  [class*="LauncherComponentsApp_freeBox__vjSbm"]:has(
+      [data-hamdast-run-fullscreen='true']
+    ) {
+    width: calc(100vw - 8rem) !important;
+    max-width: calc(100vw - 8rem) !important;
+  }
+  /* دکمهٔ بستن (freeBox__ojupf, پیش‌فرض right:-55px) بیرونِ لبهٔ راستِ کارت شناور است؛
+     در حالت تمام‌صفحه داخلِ حاشیهٔ امن نگهش می‌داریم تا به گوشهٔ صفحه نچسبد. */
+  [class*="LauncherComponentsApp_freeBox__h9WDu"]:has(
+      [data-hamdast-run-fullscreen='true']
+    )
+    [class*="LauncherComponentsApp_freeBox__ojupf"] {
+    right: -48px !important;
+    top: 4px !important;
+  }
 }

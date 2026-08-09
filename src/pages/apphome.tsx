@@ -10,6 +10,12 @@ import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useDoctorHomeRedirectLoading } from '@/common/hooks/useDoctorHomeRedirectLoading';
+import {
+  DoctorViewSwitcher,
+  useDoctorViewRouteGuard,
+  useDoctorViewSwapActive,
+  useIsNewDoctorLauncherLoading,
+} from '@/modules/doctorHome';
 import OnlineVisitPromote from '@/modules/home/components/onlineVisitPromote';
 import { useRecentSearch } from '@/modules/search/hooks/useRecentSearch';
 import { useSearchStore } from '@/modules/search/store/search';
@@ -30,6 +36,8 @@ import { getHost, HeaderBag } from '@/common/utils/getHost';
 
 const Home = ({ fragmentComponents }: any) => {
   const isApplication = useApplication();
+  const swapActive = useDoctorViewSwapActive();
+  const doctorLauncherLoading = useIsNewDoctorLauncherLoading();
   const showRedirectLoading = useDoctorHomeRedirectLoading();
   const { query, isReady, ...router } = useRouter();
   const { recent } = useRecentSearch();
@@ -42,6 +50,7 @@ const Home = ({ fragmentComponents }: any) => {
   const showHealthAssistantsButton = useFeatureIsOn('home-page::health-assistants-button');
 
   const { isMobile } = useResponsive();
+  useDoctorViewRouteGuard();
 
   useEffect(() => {
     if (isReady && isApplication) {
@@ -66,17 +75,22 @@ const Home = ({ fragmentComponents }: any) => {
     router.prefetch('/s/[[...params]]');
   }, []);
 
-  if (showRedirectLoading) {
-    return (
-      <div className="flex min-h-[50vh] flex-grow items-center justify-center">
-        <Loading />
-      </div>
-    );
-  }
+  const showSwitcher = swapActive || doctorLauncherLoading;
 
   return (
     <>
       <Seo title="اپلیکیشن پذیرش24" noIndex />
+      {showSwitcher && (
+        <div className="bg-white">
+          <DoctorViewSwitcher className="px-0 pb-1 pt-3" />
+        </div>
+      )}
+      {showRedirectLoading ? (
+        <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+          <Loading />
+        </div>
+      ) : (
+        <>
       <Fragment name="LocationSelectionScript" />
       <main className="flex flex-col items-center justify-center flex-grow w-full p-4 mx-auto space-y-6 bg-white md:w-96">
         <Logo as="h1" className="text-2xl md:text-3xl" width={55} home />
@@ -144,6 +158,8 @@ const Home = ({ fragmentComponents }: any) => {
           <Fragment name="HomePageShortcuts" />
         </SearchGlobalContextsProvider>
       </main>
+        </>
+      )}
     </>
   );
 };

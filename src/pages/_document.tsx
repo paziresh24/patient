@@ -3,6 +3,7 @@ import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
 import Script from 'next/script';
+import { plasmicRadixBaseCss } from '../styles/plasmicRadixBaseCss';
 
 const CustomDocument: NextComponentType = (props: any) => {
   const { locale } = props.__NEXT_DATA__;
@@ -16,8 +17,20 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://growthbook-api.paziresh24.com" />
-        <link rel="preload" href="/fonts/IRANSansXFaNum-Medium.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/IRANSansXFaNum-Regular.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/*
+          DR-08 §۱۹: preload the font the page ACTUALLY renders with.
+          globals.css declares two families behind feature queries: `IRANSansXV` (variable) inside
+          `@supports (font-variation-settings: normal)`, and the static `IRANSansX` FaNum weights
+          inside `@supports not (...)`. Every browser with variable-font support — i.e. effectively
+          all of them — renders with IRANSansXV. The two preloads that used to live here pointed at
+          the *legacy* family, so every modern visitor eagerly downloaded 61KB it would never use,
+          while IRANSansXV was left to be discovered from CSS: measured on production it started at
+          5758ms and landed at 8073ms, and the resulting swap moved the layout at ~8.7s — which both
+          produced a CLS event and re-fired LCP with a second, larger entry (DR-08 §۱۸.۶).
+          The URL must match the one in globals.css byte-for-byte or the preload buys nothing and
+          the file is fetched twice; both now point at the unhashed /fonts/ path under public/.
+        */}
+        <link rel="preload" href="/fonts/IRANSansXV.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="mobile-web-app-capable" content="yes" />
@@ -96,6 +109,18 @@ const CustomDocument: NextComponentType = (props: any) => {
         style={{ direction: dir }}
       >
         <Main />
+        {/*
+          DR-08 §۲۵.۴ (re-land): بلوکِ base CSSِ Radix عمداً این‌جاست — بعدِ `<Main/>`، در انتهایِ
+          `<body>` — نه در `<Head>`/`_app.tsx`. نسخه‌ی اول این CSS را در یک stylesheetِ معمولیِ head
+          گذاشته بود؛ نتیجه یک رگرسیونِ cascade بود که کادرِ «انتخاب شهر» را نامرئی کرد
+          (ghane/docs/bug-tickets/city-modal-radix-basestyles-cascade.md): `.pl__fixed` در تساویِ
+          specificityِ (0,1,0) به CSS-moduleِ Plasmic باخت، چون آن sheet در head *بعد از* CSSِ ما
+          می‌آمد. cascade با **موقعیتِ عنصر در سند** تصمیم می‌گیرد، نه زمانِ درج — پس یک <style> در
+          آخرینِ نقطه‌ی body، حتی وقتی CSS-moduleِ یک chunkِ lazy در runtime به head اضافه شود، باز
+          هم آخرین در ترتیبِ سند و برنده‌ی هر تساویِ specificity می‌ماند (اثباتِ تجربی‌اش، شاملِ حالتِ
+          ناوبریِ client-side: e2e/specs/dialog-city-select.spec.ts).
+        */}
+        <style id="plasmic-radix-base" dangerouslySetInnerHTML={{ __html: plasmicRadixBaseCss }} />
         <NextScript />
       </body>
     </Html>

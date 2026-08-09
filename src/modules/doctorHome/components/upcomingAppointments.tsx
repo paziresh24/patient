@@ -3,6 +3,7 @@ import classNames from '@/common/utils/classNames';
 import moment from 'jalali-moment';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { UpcomingAppointment } from '../apis/upcomingAppointments';
+import { ds } from '../designSystem/tokens';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { SectionCard } from './sectionCard';
 import { SectionHeader } from './sectionHeader';
@@ -24,15 +25,15 @@ const formatTime = (item: UpcomingAppointment) => {
 const AppointmentRow = ({ item }: { item: UpcomingAppointment }) => (
   <div className="flex items-start justify-between gap-3 border-b border-slate-100 py-2.5 last:border-0">
     <div className="min-w-0 flex-1">
-      <p className="text-sm font-medium leading-snug text-slate-800">{item.patient_name}</p>
-      <p className="mt-0.5 text-xs text-slate-500">
+      <p className={ds.type.bodyMedium}>{item.patient_name}</p>
+      <p className={classNames(ds.type.caption, 'mt-0.5')}>
         {item.center_name}
         {item.service_name ? ` · ${item.service_name}` : ''}
       </p>
     </div>
     <div className="shrink-0 text-left">
-      <p className="text-sm font-bold tabular-nums text-slate-800">{formatTime(item)}</p>
-      <p className={classNames('mt-0.5 text-[10px] font-medium', item.is_online_visit ? 'text-blue-600' : 'text-slate-500')}>
+      <p className={ds.type.count}>{formatTime(item)}</p>
+      <p className={classNames(ds.type.captionSm, 'mt-0.5', item.is_online_visit ? ds.type.online : 'text-slate-500')}>
         {item.is_online_visit ? 'آنلاین' : 'حضوری'}
       </p>
     </div>
@@ -62,11 +63,11 @@ export const UpcomingAppointments = ({ items, todayCount, isLoading, isError, cl
       )}
 
       {!isLoading && isError && items.length === 0 && (
-        <div className="rounded-xl bg-slate-50 px-3 py-4 text-center">
-          <p className="text-sm text-slate-600">لیست نوبت‌ها به‌زودی اینجا نمایش داده می‌شود.</p>
+        <div className={classNames(ds.surface.emptyState, ds.layout.rowPadding, 'text-center')}>
+          <p className={ds.type.cardBody}>لیست نوبت‌ها به‌زودی اینجا نمایش داده می‌شود.</p>
           <a
             href="/dashboard/apps/drapp/appointments/"
-            className="mt-2 inline-block text-xs font-medium text-primary"
+            className={classNames(ds.type.link, 'mt-2 inline-block')}
             onClick={() => sendDoctorHomeEvent(userId, 'appointments_see_all')}
           >
             مشاهده مراجعین من
@@ -75,7 +76,7 @@ export const UpcomingAppointments = ({ items, todayCount, isLoading, isError, cl
       )}
 
       {!isLoading && !isError && items.length === 0 && (
-        <p className="py-4 text-center text-sm text-slate-500">نوبت پیش‌رویی ندارید.</p>
+        <p className={classNames(ds.type.emptyState, 'py-4 text-center')}>نوبت پیش‌رویی ندارید.</p>
       )}
 
       {!isLoading && items.length > 0 && (

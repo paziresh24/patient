@@ -6,6 +6,7 @@ import {
   DefaultLauncherProfileProps
 } from "./plasmic/launcher/PlasmicLauncherProfile";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
+import { WidgetProfileGallery } from "@/common/fragment/components/gallery";
 
 // Your component props start with props for variants and slots you defined
 // in Plasmic, but you can add more here, like event handlers that you can
@@ -41,7 +42,16 @@ function LauncherProfile_(
   // By default, we are just piping all LauncherProfileProps here, but feel free
   // to do whatever works for you.
 
-  return <PlasmicLauncherProfile root={{ ref }} {...props} />;
+  return (
+    <PlasmicLauncherProfile
+      {...props}
+      root={{ ref }}
+      // Plasmic codegen would mount fragment `Gallery` (90×90 Next/Image).
+      // `as` replaces that node with WidgetProfileGallery (phone strip + lightbox).
+      // Keep items in API order — visual RTL is handled inside PhoneStripGallery.
+      paizresh24Gallery={{ as: WidgetProfileGallery }}
+    />
+  );
 }
 
 const LauncherProfile = React.forwardRef(LauncherProfile_);

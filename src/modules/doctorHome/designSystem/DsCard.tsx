@@ -8,12 +8,14 @@ interface DsCardProps {
   className?: string;
   href?: string;
   onClick?: () => void;
-  padding?: 'none' | 'md' | 'lg';
+  padding?: 'none' | 'sm' | 'md' | 'lg';
   interactive?: boolean;
+  variant?: 'default' | 'widget';
 }
 
 const paddingMap = {
   none: '',
+  sm: 'p-3',
   md: 'p-4',
   lg: 'p-5',
 };
@@ -25,16 +27,16 @@ export const DsCard = ({
   onClick,
   padding = 'lg',
   interactive,
+  variant = 'default',
 }: DsCardProps) => {
   const isInteractive = interactive ?? !!(href || onClick);
+  const isWidget = variant === 'widget';
 
   const card = (
     <div
       className={classNames(
-        ds.radius.card,
-        ds.surface.card,
-        ds.shadow.sm,
-        isInteractive && 'cursor-pointer transition-transform active:scale-[0.99]',
+        isWidget ? ds.workstation.widget : classNames(ds.radius.card, ds.surface.card, ds.shadow.sm),
+        isInteractive && classNames('cursor-pointer', ds.motion.surface, ds.motion.press, 'hover:shadow-md'),
         paddingMap[padding],
         className,
       )}

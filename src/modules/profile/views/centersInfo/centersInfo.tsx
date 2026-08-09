@@ -1,4 +1,4 @@
-import PlasmicBookingSchedules from '.plasmic/plasmic/paziresh_24_booking/PlasmicBookingSchedules';
+import PlasmicBookingSchedules from '.plasmic/BookingSchedules';
 import Button from '@/common/components/atom/button/button';
 import Text from '@/common/components/atom/text/text';
 import LocationIcon from '@/common/components/icons/location';
@@ -6,6 +6,7 @@ import PhoneIcon from '@/common/components/icons/phone';
 import QuotesIcon from '@/common/components/icons/quotes';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import classNames from '@/common/utils/classNames';
+import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { openGoogleMap } from '@/common/utils/openGoogleMap';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import isEmpty from 'lodash/isEmpty';
@@ -22,10 +23,10 @@ interface CentersInfoProps {
     phoneNumbers: string | string[];
     address: string;
     city: string;
-    location: {
+    location?: {
       lat: number;
       lon: number;
-    };
+    } | null;
     description?: string;
     slug: string;
   }[];
@@ -51,7 +52,10 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
 
   return (
     <div className={classNames('p-3 flex flex-col space-y-2', className)}>
-      {centers.map((center, index) => (
+      {centers.map((center, index) => {
+        const description = removeHtmlTagInString(center.description ?? '').trim();
+
+        return (
         <div key={index} className="flex flex-col p-4 space-y-3 rounded-lg bg-slate-50">
           {center.name && (
             <div className="flex justify-between">
@@ -74,12 +78,12 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
               <Text fontSize="sm">{center.address}</Text>
             </div>
           )}
-          {center.description && (
-            <DescriptionWrapper length={center.description.length}>
+          {description && (
+            <DescriptionWrapper length={description.length}>
               <div className="flex space-s-1">
                 <QuotesIcon className="w-5 h-5 min-w-5" />
                 <Text align="justify" fontSize="sm" className="leading-6">
-                  {center.description}
+                  {description}
                 </Text>
               </div>
             </DescriptionWrapper>
@@ -96,7 +100,7 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
                 }}
               />
             )}
-            {(center.location.lat || !isEmpty(center.phoneNumbers)) && (
+            {((center.location?.lat != null && center.location?.lon != null) || !isEmpty(center.phoneNumbers)) && (
               <>
                 {typeof center.phoneNumbers === 'string' && (
                   <Button
@@ -124,13 +128,13 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
                       {phoneNumber}
                     </Button>
                   ))}
-                {center.location.lat && (
+                {center.location?.lat != null && center.location?.lon != null && (
                   <Button
                     variant="secondary"
                     icon={<LocationIcon width={20} height={20} />}
                     onClick={() => {
                       onEventAddress?.(center.id);
-                      openGoogleMap(center.location);
+                      openGoogleMap({ lat: center.location!.lat, lon: center.location!.lon });
                     }}
                   >
                     مشاهده در نقشه و مسیریابی
@@ -140,7 +144,8 @@ export const CentersInfo = memo((props: CentersInfoProps) => {
             )}
           </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 });

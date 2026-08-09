@@ -73,6 +73,7 @@ import sty from "./PlasmicSearchResultQs.module.css"; // plasmic-import: 4t5SBkI
 import Icon14Icon from "./icons/PlasmicIcon__Icon14"; // plasmic-import: eKLBqU_Fr5SV/icon
 
 import { uniq as __lib_lodash__uniq } from "lodash";
+import { SEARCH_BOX_QS_REF, buildSearchBoxUrl } from "@/modules/search/functions/searchBoxUrl";
 
 createPlasmicElementProxy;
 
@@ -326,7 +327,11 @@ function PlasmicSearchResultQs__RenderFunc(props: {
                   const actionArgs = {
                     destination: (() => {
                       try {
-                        return `/s/${$props.citySlug ? $props.citySlug + "/" : ""}?text=${value}&ref=search_suggestion_box_qs&semantic_search=${$ctx.Growthbook && $ctx.Growthbook.isReady && $ctx.Growthbook.features["search-semantic-search"] ? "true" : "false"}`;
+                        return buildSearchBoxUrl({
+                          text: value,
+                          ref: SEARCH_BOX_QS_REF,
+                          citySlug: $props.citySlug
+                        });
                       } catch (e) {
                         if (
                           e instanceof TypeError ||

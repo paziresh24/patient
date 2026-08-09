@@ -5,12 +5,22 @@ type DoctorHomeFeature =
   | 'stat_satisfaction'
   | 'stat_appointments'
   | 'stat_page_view'
+  | 'stat_wallet'
   | 'online_visit_toggle'
+  | 'online_visit_actions_open'
+  | 'clinic_actions_open'
+  | 'clinic_picker_select'
   | 'appointments_see_all'
   | 'reviews_see_all'
   | 'notification_click'
   | 'tools_see_all'
-  | 'view_mode_switch';
+  | 'tools_browse'
+  | 'widget_open'
+  | 'view_mode_switch'
+  | 'shortcut_workhours'
+  | 'shortcut_vacation'
+  | 'shortcut_tariff'
+  | 'shortcut_booking_settings';
 
 export const sendDoctorHomeEvent = (
   userId: string | undefined,

@@ -2,33 +2,45 @@ import Loading from '@/common/components/atom/loading';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { dayToSecond } from '@/common/utils/dayToSecond';
+import { sanitizeRedirectUrl } from '@/common/utils/sanitizeRedirectUrl';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import LoginForm from '@/modules/login/views/loginForm';
-import { setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect } from 'react';
-
-function isValidHttpUrl(string: string) {
-  try {
-    const newUrl = new URL(string);
-    return newUrl.protocol === 'http:' || newUrl.protocol === 'https:';
-  } catch (err) {
-    return false;
-  }
-}
 
 const LoginPage = () => {
   const router = useRouter();
   const isLoading = useUserInfoStore(state => state.pending);
   const isLogin = useUserInfoStore(state => state.isLogin);
 
-  const isUrlValid = isValidHttpUrl(router.query?.redirect_url as string)
-    ? new URL(router.query?.redirect_url as string).hostname.includes('paziresh24.com')
-    : (router.query?.redirect_url as string)?.startsWith('/');
-
   const redirectAction = () => {
-    router.push(isUrlValid ? decodeURI(decodeURIComponent(router.query?.redirect_url as string)) : '/');
+    const target = sanitizeRedirectUrl(router.query?.redirect_url);
+    if (!target) {
+      router.push('/');
+      return;
+    }
+
+    // Absolute URLs (incl. p24cloud survey host) need a full navigation.
+    if (target.startsWith('http://') || target.startsWith('https://')) {
+      try {
+        const url = new URL(target);
+        // Cross-site hosts cannot read *.paziresh24.com cookies; pass token once.
+        if (url.hostname === 'p24cloud.ir' || url.hostname.endsWith('.p24cloud.ir')) {
+          const token = getCookie('token');
+          if (typeof token === 'string' && token) {
+            url.searchParams.set('token', token);
+          }
+        }
+        window.location.assign(url.toString());
+      } catch {
+        window.location.assign(target);
+      }
+      return;
+    }
+
+    router.push(target);
   };
 
   useEffect(() => {

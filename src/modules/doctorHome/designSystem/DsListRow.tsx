@@ -16,7 +16,7 @@ export const DsListRow = ({
   className?: string;
   isLast?: boolean;
 }) => (
-  <div className={classNames('flex items-center gap-3.5', className)}>
+  <div className={classNames('flex items-center', ds.layout.listRowGap, className)}>
     {leading && <div className="shrink-0">{leading}</div>}
     <div className="min-w-0 flex-1">
       <p className={classNames(ds.type.cardTitle, 'truncate')}>{title}</p>

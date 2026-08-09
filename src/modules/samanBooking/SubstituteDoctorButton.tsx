@@ -5,6 +5,7 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import buildSubstituteDoctorSearch from '@/common/utils/buildSubstituteDoctorSearch';
 import { splunkInstance } from '@/common/services/splunk';
 import SearchCard from '@/modules/search/components/card/card';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
@@ -14,7 +15,8 @@ import { useEffect, useMemo } from 'react';
 interface SubstituteDoctorButtonProps {
   displayName: string;
   expertises: any;
-  doctorCity: string;
+  /** @deprecated no longer used — the online-visit suggestion is nationwide (ghane finding #68) */
+  doctorCity?: string;
   buttonId?: string;
   buttonText?: string;
   autoOpenDelay?: number;
@@ -23,27 +25,15 @@ interface SubstituteDoctorButtonProps {
 const SubstituteDoctorButton = ({
   displayName,
   expertises,
-  doctorCity,
   buttonId = 'substitute-doctor-button',
   buttonText = 'دریافت نوبت از پزشک جایگزین',
   autoOpenDelay = 6000,
 }: SubstituteDoctorButtonProps) => {
   const { handleOpen, modalProps } = useModal();
   const customize = useCustomize(state => state.customize);
-  const searchData = useSearch(
-    {
-      route: decodeURIComponent(doctorCity),
-      query: {
-        turn_type: 'consult',
-        text: expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-          ? expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-          : expertises?.expertises.filter((item: any) => item.expertise_id !== 325)?.map((expertise: any) => expertise.expertise_name)[0],
-      },
-    },
-    {
-      enabled: !customize.partnerKey,
-    },
-  );
+  const searchData = useSearch(buildSubstituteDoctorSearch(expertises?.expertises), {
+    enabled: !customize.partnerKey,
+  });
   const { changeRoute } = useSearchRouting();
 
   const handleOpenSubstituteDoctorModal = () => {

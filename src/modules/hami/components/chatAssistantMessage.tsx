@@ -1,5 +1,6 @@
 import SparkleIcon from '@/common/components/icons/sparkle';
 import classNames from '@/common/utils/classNames';
+import { getTextDirectionClass, type TextDirection } from '@/common/utils/detectTextDirection';
 import { ReactNode } from 'react';
 
 export interface ChatAssistantMessageAction {
@@ -14,6 +15,7 @@ interface ChatAssistantMessageProps {
   index?: number;
   wide?: boolean;
   accent?: boolean;
+  direction?: TextDirection;
   actions?: ChatAssistantMessageAction[];
   onActionClick?: (action: ChatAssistantMessageAction) => void;
   children: ReactNode;
@@ -25,6 +27,7 @@ export const ChatAssistantMessage = ({
   index = 0,
   wide = false,
   accent = false,
+  direction = 'rtl',
   actions,
   onActionClick,
   children,
@@ -37,18 +40,22 @@ export const ChatAssistantMessage = ({
     style={{ transitionDelay: visible ? `${index * 40}ms` : '0ms' }}
   >
     <div
+      dir={direction}
       className={classNames(
-        'relative overflow-hidden rounded-[18px] bg-white px-4 py-3.5 text-right shadow-[0_4px_24px_-6px_rgba(56,97,251,0.14)] ring-1 ring-slate-900/[0.05]',
+        'relative overflow-hidden rounded-[18px] bg-white px-4 py-3.5 shadow-[0_4px_24px_-6px_rgba(56,97,251,0.14)] ring-1 ring-slate-900/[0.05]',
+        getTextDirectionClass(direction),
         accent && 'bg-gradient-to-br from-white via-white to-primary/[0.03]',
       )}
     >
-      {accent && <div className="absolute inset-y-3 right-0 w-[3px] rounded-full bg-gradient-to-b from-primary via-[#6B8AFF] to-violet-400" />}
+      {accent && (
+        <div className="absolute inset-y-3 start-0 w-[3px] rounded-full bg-gradient-to-b from-primary via-[#6B8AFF] to-violet-400" />
+      )}
 
-      {header && <div className="mb-2.5 pr-1">{header}</div>}
-      <div className="pr-1">{children}</div>
+      {header && <div className="mb-2.5 ps-1">{header}</div>}
+      <div className="ps-1">{children}</div>
 
       {!!actions?.length && (
-        <div className="mt-3 space-y-2 border-t border-slate-100 pt-3 pr-1">
+        <div className="mt-3 space-y-2 border-t border-slate-100 pt-3 ps-1">
           {actions.map(action => (
             <button
               key={action.id}
