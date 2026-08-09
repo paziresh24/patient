@@ -200,7 +200,14 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
     biography,
     credentials,
     centers,
-    gallery: gallery.map((img: any) => img?.url ?? img?.image_url ?? img).filter(Boolean),
+    // UI (sections gallery) expects `{ image: string }[]`, not bare URL strings.
+    gallery: gallery
+      .map((img: any) => {
+        if (typeof img === 'string' && img.trim()) return { image: img.trim() };
+        const url = img?.url ?? img?.image_url ?? img?.image;
+        return typeof url === 'string' && url.trim() ? { image: url.trim() } : null;
+      })
+      .filter(Boolean),
   };
 
   return { slugInfo, fullProfileLike, overwrite, seo, displayName };

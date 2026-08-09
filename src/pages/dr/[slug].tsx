@@ -38,6 +38,7 @@ import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents'
 import Hamdast from '@/modules/hamdast/render';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
+import { formatAverageRate } from '@/modules/profile/utils/getAverageRate';
 import { trackDoctorProfileViewByDoctorId } from '@/modules/hamdast/utils/profileViewFrequency';
 import {
   clearProfileDoctorInfo,
@@ -633,7 +634,19 @@ const DoctorProfile = (props: any) => {
                             />
                           ))}
                         <RaviGlobalContextsProvider>
-                          <div className="self-center cursor-pointer" onClick={() => scrollIntoViewWithOffset('#reviews', 90)}>
+                          <div
+                            className="self-center cursor-pointer"
+                            role="button"
+                            tabIndex={0}
+                            aria-label="مشاهده نظرات و امتیاز پزشک"
+                            onClick={() => scrollIntoViewWithOffset('#reviews', 90)}
+                            onKeyDown={e => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                scrollIntoViewWithOffset('#reviews', 90);
+                              }
+                            }}
+                          >
                             <Fragment2
                               name="RateAndCommentCount2"
                               Component={PlasmicRateAndCommentCount}
@@ -643,12 +656,7 @@ const DoctorProfile = (props: any) => {
                                 rate:
                                   customize.showRateAndReviews &&
                                   !dontShowRateAndReviewMessage &&
-                                  (
-                                    (+(profileData.feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-                                      +(profileData.feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-                                      +(profileData.feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-                                    3
-                                  ).toFixed(1),
+                                  formatAverageRate(profileData.feedbacks?.details?.average_rates),
                                 hideRates: profileData.feedbacks?.details?.hide_rates,
                               }}
                             />
@@ -692,7 +700,11 @@ const DoctorProfile = (props: any) => {
             <div className="clear-both"></div>
           </main>
           <Modal {...viewAsModalProps} title={viewAdData?.title ?? ''} fullScreen bodyClassName="p-0">
-            <iframe src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`} className="w-full h-full" />
+            <iframe
+              title={viewAdData?.title || 'ویرایش پروفایل پزشک'}
+              src={`${publicRuntimeConfig.DOCTOR_APP_BASE_URL}${viewAdData?.url}`}
+              className="w-full h-full"
+            />
           </Modal>
         </div>
       </RaviGlobalContextsProvider>

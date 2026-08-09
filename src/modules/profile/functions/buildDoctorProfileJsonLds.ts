@@ -2,6 +2,7 @@ import { CENTERS } from '@/common/types/centers';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
 import { addCommas } from '@persian-tools/persian-tools';
 import config from 'next/config';
+import { getAverageRate } from '@/modules/profile/utils/getAverageRate';
 
 const { publicRuntimeConfig } = config();
 
@@ -168,15 +169,11 @@ export function buildDoctorProfileJsonLds({
           ) ?? [],
     },
     ...(!feedbacks?.details?.hide_rates &&
-      (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 && {
+      (feedbacks?.details?.count_of_feedbacks ?? 0) > 0 &&
+      getAverageRate(feedbacks?.details?.average_rates) != null && {
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: +(
-            (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-              +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-            3
-          ).toFixed(1),
+          ratingValue: getAverageRate(feedbacks?.details?.average_rates),
           reviewCount: feedbacks?.details?.count_of_feedbacks ?? 0,
           bestRating: 5,
           worstRating: 0,

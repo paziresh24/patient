@@ -132,7 +132,7 @@ export const Aside = (data: any) => {
             />
           )),
     },
-    // Rcommend
+    // Recommend
     {
       isShow: information?.should_recommend_other_doctors && centers[0] && expertises?.expertises?.[0],
       function: () => {
@@ -208,7 +208,7 @@ export const Aside = (data: any) => {
                     server_id: information.server_id,
                     slug: seo.slug,
                     id: information.id,
-                    expertise: expertises.expertises[0].alias_title,
+                    expertise: expertises?.expertises?.[0]?.alias_title,
                     group_expertise: expertises.group_expertises[0].name,
                   },
                   center: {
@@ -236,7 +236,7 @@ export const Aside = (data: any) => {
                     server_id: information.server_id,
                     slug: seo.slug,
                     id: information.id,
-                    expertise: expertises.expertises[0].alias_title,
+                    expertise: expertises?.expertises?.[0]?.alias_title,
                     group_expertise: expertises.group_expertises[0].name,
                   },
                   center: {
