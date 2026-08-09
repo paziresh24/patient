@@ -149,7 +149,7 @@ initial-chunks:
   before_script:
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
   script:
-    - docker build --provenance=false -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
+    - docker build --provenance=false --build-arg "BASE_IMAGE=${PATIENT_BASE_IMAGE}" -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
     - docker run --rm patient-initial-chunks:$CI_COMMIT_SHORT_SHA node scripts/check-initial-chunks.js
   # `.build-docker-common` روی `script_failure` هم retry می‌کند — برای pushِ ناپایدارِ registry منطقی
   # است، ولی این‌جا یعنی یک نقضِ واقعیِ گارد دو بارِ دیگر هم ۸ دقیقه build شود. فقط خطای زیرساخت retry.
@@ -183,12 +183,19 @@ initial-chunks:
   image: docker:cli
   services:
     - name: docker:dind
-      command: ["--registry-mirror=https://docker.devneeds.ir"]
+      # Prefer in-cluster GitLab registry (ClusterIP). Mirror often unreachable from runners.
+      command:
+        - "--insecure-registry=gitlab-app-registry.gitlab.svc:5000"
+        - "--registry-mirror=https://docker.devneeds.ir"
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
-    # Admin hostname → Hybrid (CDN gitlab-registry still Omnibus; cert lacks that name).
+    # Admin hostname (reachable in-cluster; /v2/ returns 401 without auth — that is OK).
     REGISTRY_PUSH_HOST: registry-gitlab.mobin.p24cloud.ir
+    # HTTP fallback when TLS hostname path fails inside dind.
+    REGISTRY_PUSH_HOST_INTERNAL: gitlab-app-registry.gitlab.svc:5000
+    # Rebuild atop last known-good image so npm/apk egress is not required.
+    PATIENT_BASE_IMAGE: registry-gitlab.mobin.p24cloud.ir/paziresh24/patient:0d479232
   retry:
     max: 2
     when:
@@ -205,19 +212,33 @@ build-docker-image:
     # apk skipped (alpine CDN unreachable from runner pods)
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - |
+      # wget treats HTTP 401 from /v2/ as failure — registry is reachable without auth.
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
       PUSH_HOST="$REGISTRY_PUSH_HOST"
-      if ! wget -q -O /dev/null -T 5 "https://${PUSH_HOST}/v2/" 2>/dev/null; then
-        echo "Push host unreachable, falling back to $CI_REGISTRY"
+      if registry_reachable "https://${PUSH_HOST}/v2/"; then
+        echo "Using TLS push host: $PUSH_HOST"
+      elif registry_reachable "http://${REGISTRY_PUSH_HOST_INTERNAL}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_INTERNAL"
+        echo "Using internal HTTP push host: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
         PUSH_HOST="$CI_REGISTRY"
       fi
       echo "$PUSH_HOST" > /tmp/push_host
-      echo "Using push host: $PUSH_HOST"
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
   script:
     - |
       PUSH_HOST=$(cat /tmp/push_host)
       PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
       docker build --provenance=false \
+        --build-arg "BASE_IMAGE=${PATIENT_BASE_IMAGE}" \
         -t "${PUSH_IMAGE}:latest" \
         -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
         .
