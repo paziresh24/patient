@@ -248,7 +248,7 @@ const Page = ({ page, app }: any) => {
                 پشتیبانی ابزارک
               </Button>
             ) : (
-              <Report app_key={app_key as string} page_key={page?.key} />
+              <Report app_key={app_key as string} page_key={page?.key ?? ''} />
             )
           }
         />

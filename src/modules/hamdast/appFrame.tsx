@@ -185,7 +185,7 @@ export const AppFrame = ({
                 پشتیبانی ابزارک
               </Button>
             ) : (
-              <Report app_key={appKey as string} page_key={page?.key} openSignal={reportOpenSignal} onSubmit={onReportSubmit} />
+              <Report app_key={appKey as string} page_key={page?.key ?? ''} openSignal={reportOpenSignal} onSubmit={onReportSubmit} />
             )
           }
         />
