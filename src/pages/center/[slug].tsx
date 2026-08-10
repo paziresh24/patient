@@ -167,6 +167,7 @@ const CenterProfile = ({
       query: '',
       center_id: centerId,
       return_expertise: true,
+      withoutUniversity: true,
     },
     {
       keepPreviousData: true,
@@ -526,12 +527,18 @@ const CenterProfile = ({
                     isMainSite={isMainSite}
                     doctors={doctors}
                     expertises={
-                      expertises.data?.[0]?.items?.[0]?.sub_items
-                        ?.filter((expertise: any) => expertise?.name && expertise?.url)
-                        ?.map((expertise: any) => ({
-                          label: expertise.name,
-                          value: expertise.url,
-                        })) ?? []
+                      (() => {
+                        const sections = expertises.data?.[0]?.items ?? [];
+                        const withSubs = sections.find((item: any) => Array.isArray(item?.sub_items) && item.sub_items.length > 0);
+                        return (
+                          withSubs?.sub_items
+                            ?.filter((expertise: any) => expertise?.name && expertise?.url)
+                            ?.map((expertise: any) => ({
+                              label: expertise.name,
+                              value: expertise.url,
+                            })) ?? []
+                        );
+                      })()
                     }
                     onChangePage={() => {
                       fetchNextPage();
@@ -543,7 +550,8 @@ const CenterProfile = ({
                     isFetchingNextPage={isFetchingNextPage}
                     paginationResetKey={doctorsListResetKey}
                     onSelectExpertise={expertise => {
-                      setSelectedExpertise(normalizeExpertiseRoute(expertise.replace(/^\/?s\//, '')));
+                      const raw = typeof expertise === 'string' ? expertise : '';
+                      setSelectedExpertise(normalizeExpertiseRoute(raw.replace(/^\/?s\//, '')));
                     }}
                     searchQuery={searchQuery}
                     onSearch={query => {

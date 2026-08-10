@@ -97,7 +97,13 @@ export const raviApisClient = axios.create({
 });
 
 export const searchClient = axios.create({
-  baseURL: publicRuntimeConfig.SEARCH_BASE_URL ? publicRuntimeConfig.SEARCH_BASE_URL : 'https://apigw.paziresh24.com',
+  // Local browser: proxy via custom server.js (strips Origin). apigw returns [] for Origin=localhost.
+  baseURL:
+    !isServer && process.env.NODE_ENV !== 'production'
+      ? '/__dev-proxy/search'
+      : publicRuntimeConfig.SEARCH_BASE_URL
+        ? publicRuntimeConfig.SEARCH_BASE_URL
+        : 'https://apigw.paziresh24.com',
   withCredentials: true,
   ...baseConfig,
 });
