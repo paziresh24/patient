@@ -21,7 +21,7 @@ export default function NoskheyarRenewal({ profileData }: { profileData?: any })
   const doctorId = profileData?.information?.id;
 
   const openRenewalFlow = () => {
-    void prefetchOneApp(queryClient, { appKey: APP_KEY, pageKey: 'flows' }, ['SERVICE']);
+    void prefetchOneApp(queryClient, { appKey: APP_KEY, pageKey: 'flows' }, ['CHAT']);
     handleOpen();
   };
 
@@ -63,7 +63,7 @@ export default function NoskheyarRenewal({ profileData }: { profileData?: any })
           dontShowProfile
           dontShowNotification
           appKey={APP_KEY}
-          params={['flows', 'SERVICE']}
+          params={['flows', 'CHAT']}
           queries={{
             open_from: 'profile',
             ...(doctorId != null ? { doctor_id: String(doctorId) } : {}),
