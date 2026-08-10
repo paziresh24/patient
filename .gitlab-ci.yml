@@ -376,8 +376,34 @@ search-e2e:
     APP_IMAGE: patient-e2e:$CI_COMMIT_SHORT_SHA
   before_script:
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    - |
+      # Dockerfile reuses patient base image from in-cluster registry — same login as build-docker-image.
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        echo "Using TLS registry: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
   script:
-    - docker build --provenance=false -t "$APP_IMAGE" .
+    - |
+      BASE_IMAGE=$(cat /tmp/base_image)
+      echo "E2E building FROM $BASE_IMAGE"
+      docker build --provenance=false --build-arg "BASE_IMAGE=${BASE_IMAGE}" -t "$APP_IMAGE" .
     - docker network create e2e-net
     - >
       docker run -d --name e2e-app --network e2e-net --network-alias app
