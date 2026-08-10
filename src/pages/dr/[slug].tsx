@@ -35,7 +35,7 @@ import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import ErrorPage from '@/modules/profile/components/errorPage';
 import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
-import Hamdast from '@/modules/hamdast/render';
+import dynamic from 'next/dynamic';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
 import { formatAverageRate } from '@/modules/profile/utils/getAverageRate';
@@ -60,6 +60,11 @@ import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAnd
 import { useRate } from '@/common/apis/services/reviews/rate';
 
 const { publicRuntimeConfig } = config();
+
+const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ default: m.Hamdast })), {
+  ssr: false,
+  loading: () => null,
+});
 
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
@@ -89,13 +94,11 @@ const DoctorProfile = (props: any) => {
       window.removeEventListener('keydown', onInteract);
       window.removeEventListener('touchstart', onInteract);
       window.removeEventListener('scroll', onInteract);
-      window.removeEventListener('mousemove', onInteract);
     };
     window.addEventListener('pointerdown', onInteract, { passive: true });
     window.addEventListener('keydown', onInteract, { passive: true });
     window.addEventListener('touchstart', onInteract, { passive: true });
     window.addEventListener('scroll', onInteract, { passive: true });
-    window.addEventListener('mousemove', onInteract, { passive: true });
     timeoutId = setTimeout(enable, 10000);
     return cleanup;
   }, []);

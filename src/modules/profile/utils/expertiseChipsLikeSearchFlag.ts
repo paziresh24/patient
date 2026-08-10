@@ -20,6 +20,8 @@ const fetchExpertiseChipsConfig = async (): Promise<ExpertiseChipsConfig> => {
 
   try {
     // Use GrowthBook SDK (not raw REST) so rule-based values are evaluated correctly.
+    // Dedicated load (timeout 2500) — do not fold into the short profile SSR GB load,
+    // or gradual allowlist/percentage rollout can mis-evaluate under 500ms timeout.
     setPolyfills({
       fetch: require('node-fetch'),
       EventSource: require('eventsource'),

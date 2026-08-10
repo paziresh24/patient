@@ -171,7 +171,6 @@ function MyApp(props: AppProps) {
       window.removeEventListener("keydown", onInteract);
       window.removeEventListener("touchstart", onInteract);
       window.removeEventListener("scroll", onInteract);
-      window.removeEventListener("mousemove", onInteract);
     };
     if (isDoctorPage) {
       window.addEventListener("pointerdown", onInteract, {
@@ -187,10 +186,6 @@ function MyApp(props: AppProps) {
         once: true
       });
       window.addEventListener("scroll", onInteract, {
-        passive: true,
-        once: true
-      });
-      window.addEventListener("mousemove", onInteract, {
         passive: true,
         once: true
       });
