@@ -7,17 +7,33 @@ import { hasBioCredentials } from '@/common/apis/services/profile-microservice/n
 import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
-import { FragmentRateReview } from './rateReview/fragmentRateReview';
 import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import classNames from '@/common/utils/classNames';
-import Hamdast from '@/modules/hamdast/render';
 import { Fragment2 } from '@/common/fragment/fragment2';
-import ProfileFallback from '@/modules/hamdast/profileFallback';
 import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
 import { getImageUrl } from '@/common/utils/getImageUrl';
 import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
 
 const { publicRuntimeConfig } = config();
+
+const FragmentRateReview = dynamic(
+  () => import('./rateReview/fragmentRateReview').then(m => ({ default: m.FragmentRateReview })),
+  {
+    loading() {
+      return <Skeleton w="100%" h="30rem" rounded="lg" />;
+    },
+  },
+);
+const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ default: m.Hamdast })), {
+  loading() {
+    return <Skeleton w="100%" h="4rem" rounded="lg" />;
+  },
+});
+const ProfileFallback = dynamic(() => import('@/modules/hamdast/profileFallback'), {
+  loading() {
+    return <Skeleton w="100%" h="4rem" rounded="lg" />;
+  },
+});
 
 const EditButton = dynamic(() => import('../components/viewAs/editButton'));
 const Biography = dynamic(() => import('./biography'), {
