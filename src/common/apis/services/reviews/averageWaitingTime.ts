@@ -1,14 +1,16 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { raviApisClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
 
 interface AverageWaitingTimeParams {
   slug: string;
 }
 
+/** GET /ravi/v1/avg-waiting-time/doctors/{slug} — calculator rows per center for profile wait-time. */
 export const averageWaitingTime = async (params: AverageWaitingTimeParams) => {
-  return await apiGatewayClient.get(`/ravi/v3/avg-time-for-profile`, {
+  return await raviApisClient.get(`/ravi/v1/avg-waiting-time/doctors/${encodeURIComponent(params.slug)}`, {
     params: {
-      where: `(slug,eq,${params.slug})`,
+      page: 1,
+      pageSize: 25,
     },
     timeout: 500,
   });
