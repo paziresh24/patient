@@ -16,6 +16,8 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
+        <link rel="dns-prefetch" href="https://pic.paziresh24.com" />
+        <link rel="preconnect" href="https://pic.paziresh24.com" crossOrigin="" />
         <link rel="preconnect" href="https://growthbook-api.paziresh24.com" />
         {/*
           DR-08 §۱۹: preload the font the page ACTUALLY renders with.
