@@ -204,8 +204,8 @@ initial-chunks:
     # Default runner job limit is 2Gi — dind extract of patient image OOMs/kills the pod.
     KUBERNETES_MEMORY_REQUEST: "1Gi"
     KUBERNETES_MEMORY_LIMIT: "4Gi"
-    KUBERNETES_SERVICE_MEMORY_REQUEST: "8Gi"
-    KUBERNETES_SERVICE_MEMORY_LIMIT: "20Gi"
+    KUBERNETES_SERVICE_MEMORY_REQUEST: "10Gi"
+    KUBERNETES_SERVICE_MEMORY_LIMIT: "24Gi"
     KUBERNETES_EPHEMERAL_STORAGE_REQUEST: "15Gi"
     KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "40Gi"
     KUBERNETES_CPU_REQUEST: "1"
@@ -218,6 +218,9 @@ initial-chunks:
       - api_failure
       - script_failure
       - job_execution_timeout
+      # Mid-build dind/OOM kills often land as unknown_failure with a truncated log
+      # (no "ERROR:" line) — without this, main stays red until a human clicks Retry.
+      - unknown_failure
 
 build-docker-image:
   extends: .build-docker-common

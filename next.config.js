@@ -97,6 +97,11 @@ const nextConfig = {
       return config;
     }
 
+    // Cap webpack workers in CI/docker builds — unbounded parallelism OOMs dind
+    // (main build-docker-image often dies mid-"Creating an optimized production build"
+    // with failure_reason=unknown_failure and a truncated log).
+    config.parallelism = Math.min(config.parallelism || 2, 2);
+
     // بهینه‌سازی webpack splitChunks
     config.optimization = {
       ...config.optimization,
