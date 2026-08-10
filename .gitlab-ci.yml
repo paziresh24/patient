@@ -76,7 +76,7 @@ auto-merge-safe:
   variables:
     GITLAB_BOT_USERNAME: "harun"
   before_script:
-    - apk add --no-cache curl jq
+    # apk skipped (alpine CDN unreachable from runner pods)
   script:
     - python3 scripts/ci-assert-gitlab-user.py "${GITLAB_MERGE_TOKEN:-$GITLAB_API_TOKEN}"
     - sh scripts/ci-auto-merge-safe.sh
@@ -148,8 +148,13 @@ initial-chunks:
   stage: perf
   before_script:
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    - |
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      echo "$PUSH_HOST" > /tmp/push_host
+      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
   script:
-    - docker build --provenance=false -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
+    - docker build --provenance=false --build-arg "BASE_IMAGE=$(cat /tmp/base_image)" -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
     - docker run --rm patient-initial-chunks:$CI_COMMIT_SHORT_SHA node scripts/check-initial-chunks.js
   # `.build-docker-common` روی `script_failure` هم retry می‌کند — برای pushِ ناپایدارِ registry منطقی
   # است، ولی این‌جا یعنی یک نقضِ واقعیِ گارد دو بارِ دیگر هم ۸ دقیقه build شود. فقط خطای زیرساخت retry.
@@ -183,12 +188,28 @@ initial-chunks:
   image: docker:cli
   services:
     - name: docker:dind
-      command: ["--registry-mirror=https://docker.devneeds.ir"]
+      # Prefer in-cluster GitLab registry (ClusterIP). Mirror often unreachable from runners.
+      command:
+        - "--insecure-registry=gitlab-app-registry.gitlab.svc:5000"
+        - "--registry-mirror=https://docker.devneeds.ir"
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
-    # Admin hostname → Hybrid (CDN gitlab-registry still Omnibus; cert lacks that name).
-    REGISTRY_PUSH_HOST: registry-gitlab.mobin.p24cloud.ir
+    # Prefer in-cluster registry (same host for login + FROM + push).
+    REGISTRY_PUSH_HOST: gitlab-app-registry.gitlab.svc:5000
+    REGISTRY_PUSH_HOST_INTERNAL: gitlab-app-registry.gitlab.svc:5000
+    REGISTRY_PUSH_HOST_TLS: registry-gitlab.mobin.p24cloud.ir
+    # Must use the same registry host we docker-login to (private image JWT).
+    PATIENT_BASE_IMAGE: gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:0d479232
+    # Default runner job limit is 2Gi — dind extract of patient image OOMs/kills the pod.
+    KUBERNETES_MEMORY_REQUEST: "1Gi"
+    KUBERNETES_MEMORY_LIMIT: "4Gi"
+    KUBERNETES_SERVICE_MEMORY_REQUEST: "8Gi"
+    KUBERNETES_SERVICE_MEMORY_LIMIT: "20Gi"
+    KUBERNETES_EPHEMERAL_STORAGE_REQUEST: "15Gi"
+    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "40Gi"
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_LIMIT: "6"
   retry:
     max: 2
     when:
@@ -202,26 +223,43 @@ build-docker-image:
   extends: .build-docker-common
   stage: build
   before_script:
-    - apk add --no-cache curl jq
+    # apk skipped (alpine CDN unreachable from runner pods)
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - |
+      # wget treats HTTP 401 from /v2/ as failure — registry is reachable without auth.
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
       PUSH_HOST="$REGISTRY_PUSH_HOST"
-      if ! curl -sk --connect-timeout 5 "https://${PUSH_HOST}/v2/" >/dev/null 2>&1; then
-        echo "Push host unreachable, falling back to $CI_REGISTRY"
+      SCHEME=http
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        SCHEME=https
+        echo "Using TLS registry: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
         PUSH_HOST="$CI_REGISTRY"
+        SCHEME=https
       fi
       echo "$PUSH_HOST" > /tmp/push_host
-      echo "Using push host: $PUSH_HOST"
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$(cat /tmp/push_host)"
+      # Keep BASE_IMAGE on the same host we authenticate to.
+      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
     - |
-      jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
-        "$HOME/.docker/config.json" > /tmp/docker-config.json \
-        && mv /tmp/docker-config.json "$HOME/.docker/config.json"
+      PUSH_HOST=$(cat /tmp/push_host)
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
   script:
     - |
       PUSH_HOST=$(cat /tmp/push_host)
       PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      BASE_IMAGE=$(cat /tmp/base_image)
+      echo "Building FROM $BASE_IMAGE"
       docker build --provenance=false \
+        --build-arg "BASE_IMAGE=${BASE_IMAGE}" \
         -t "${PUSH_IMAGE}:latest" \
         -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
         .
@@ -252,9 +290,10 @@ build-docker-image:
       }
       EOF
     - >
-      curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
-      -H "Content-Type: application/json"
-      -d @webhook_payload.json
+      wget -q -O /dev/null --header="Content-Type: application/json"
+      --post-file=webhook_payload.json
+      https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
+      || echo "webhook notify failed (non-fatal)"
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
       when: always
@@ -268,13 +307,9 @@ build-docker-image-next:
     ZOT_REGISTRY: registry.paziresh24.com
     ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
   before_script:
-    - apk add --no-cache curl jq
+    # apk skipped (alpine CDN unreachable from runner pods)
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
-    - |
-      jq '. + {"max-concurrent-uploads": 1, "max-concurrent-downloads": 3}' \
-        "$HOME/.docker/config.json" > /tmp/docker-config.json \
-        && mv /tmp/docker-config.json "$HOME/.docker/config.json"
   script:
     - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
     - |

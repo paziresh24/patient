@@ -15,7 +15,6 @@ import { useEffect, useMemo } from 'react';
 interface SubstituteDoctorButtonProps {
   displayName: string;
   expertises: any;
-  /** @deprecated no longer used — the online-visit suggestion is nationwide (ghane finding #68) */
   doctorCity?: string;
   buttonId?: string;
   buttonText?: string;
@@ -25,13 +24,14 @@ interface SubstituteDoctorButtonProps {
 const SubstituteDoctorButton = ({
   displayName,
   expertises,
+  doctorCity,
   buttonId = 'substitute-doctor-button',
   buttonText = 'دریافت نوبت از پزشک جایگزین',
   autoOpenDelay = 6000,
 }: SubstituteDoctorButtonProps) => {
   const { handleOpen, modalProps } = useModal();
   const customize = useCustomize(state => state.customize);
-  const searchData = useSearch(buildSubstituteDoctorSearch(expertises?.expertises), {
+  const searchData = useSearch(buildSubstituteDoctorSearch(expertises?.expertises, doctorCity), {
     enabled: !customize.partnerKey,
   });
   const { changeRoute } = useSearchRouting();

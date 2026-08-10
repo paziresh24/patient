@@ -33,6 +33,7 @@ import { HamdastRasanActivate } from '@/modules/hamdast/components/smsActivate';
 import { HamdastRasanCharge } from '@/modules/hamdast/components/smsCharge';
 import Button from '@/common/components/atom/button';
 import Link from 'next/link';
+import { getPageFromOneAppData } from '@/modules/hamdast/utils/getPageFromOneAppData';
 
 export function replaceKeysInString(template: string, keys: string[], values: string[]) {
   const regex = /{{(.*?)}}/g;
@@ -80,7 +81,7 @@ const Page = ({ page, app }: any) => {
   const [showSupportButton, setShowSupportButton] = useState(false);
 
   const embedSrc = useMemo(() => {
-    const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
+    const replaceParameters = page?.embed_src ? replaceKeysInString(page.embed_src, page.parameters ?? [], params?.slice(1) ?? []) : '';
     return page?.embed_src ? constructUrlWithQuery(replaceParameters, { ...queries, user_id: user.id, hamdast_embedded: true }) : null;
   }, [page, params, queries, user.id]);
 
@@ -247,7 +248,7 @@ const Page = ({ page, app }: any) => {
                 پشتیبانی ابزارک
               </Button>
             ) : (
-              <Report app_key={app_key as string} page_key={page?.key} />
+              <Report app_key={app_key as string} page_key={page?.key ?? ''} />
             )
           }
         />
@@ -360,9 +361,11 @@ export const getServerSideProps: GetServerSideProps = withServerUtils(
     const getOneApp = await oneApp({ appKey: app_key as string, pageKey: params?.[0] as string });
 
     const app = getOneApp?.data;
-    const page = app?.fragments
-      ?.find((item: any) => item.type === 'pages')
-      ?.options?.find((item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1);
+    const page = getPageFromOneAppData(
+      app,
+      params?.[0] as string,
+      ((Array.isArray(params) ? params : []).slice(1) as string[]) ?? [],
+    );
 
     return {
       props: {

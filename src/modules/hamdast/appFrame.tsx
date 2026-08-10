@@ -27,6 +27,7 @@ import { HamdastClose } from './components/close';
 import { HamdastFlow } from './components/flow';
 import Link from 'next/link';
 import { HamdastInvite } from './components/invite';
+import { getPageFromOneAppData } from '@/modules/hamdast/utils/getPageFromOneAppData';
 import { getProfileDoctorUserId } from './stores/profileDoctorInfo';
 
 export const AppFrame = ({
@@ -68,13 +69,7 @@ export const AppFrame = ({
   const page = useMemo(() => {
     if (!app?.fragments) return {};
 
-    return (
-      app.fragments
-        ?.find((item: any) => item.type === 'pages')
-        ?.options?.find(
-          (item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1,
-        ) ?? {}
-    );
+    return getPageFromOneAppData(app, params?.[0] as string, (params?.slice(1) as string[]) ?? []) ?? {};
   }, [app, params]);
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -91,7 +86,7 @@ export const AppFrame = ({
   const isEmbeddedModal = Boolean(dontShowAppBar && dontShowProfile && dontShowNotification);
 
   const embedSrc = useMemo(() => {
-    const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
+    const replaceParameters = page?.embed_src ? replaceKeysInString(page.embed_src, page.parameters ?? [], params?.slice(1) ?? []) : '';
     const doctorUserId = getProfileDoctorUserId();
     return page?.embed_src
       ? constructUrlWithQuery(replaceParameters, {
@@ -175,7 +170,7 @@ export const AppFrame = ({
       {!dontShowAppBar && (
 
         <AppBar
-          title={page?.name?.fa}
+          title={page?.name?.fa ?? ''}
           backButton={showBackButton}
           titleLoading={!page?.name}
           notification={!dontShowNotification}
@@ -190,7 +185,7 @@ export const AppFrame = ({
                 پشتیبانی ابزارک
               </Button>
             ) : (
-              <Report app_key={appKey as string} page_key={page?.key} openSignal={reportOpenSignal} onSubmit={onReportSubmit} />
+              <Report app_key={appKey as string} page_key={page?.key ?? ''} openSignal={reportOpenSignal} onSubmit={onReportSubmit} />
             )
           }
         />

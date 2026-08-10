@@ -1,14 +1,26 @@
-import buildSubstituteDoctorSearch, { buildSubstituteDoctorSearchText } from './buildSubstituteDoctorSearch';
+import buildSubstituteDoctorSearch, {
+  buildSubstituteDoctorSearchText,
+  SUBSTITUTE_DOCTOR_SEARCH_REF,
+} from './buildSubstituteDoctorSearch';
 
 describe('buildSubstituteDoctorSearch', () => {
-  it('never sends the profile doctor city — the online-visit pool is nationwide (ghane finding #68)', () => {
-    expect(buildSubstituteDoctorSearch([{ expertise_name: 'چشم پزشکی', alias_title: 'متخصص چشم پزشکی' }]).route).toBe(
-      'ir',
+  it('sends a ref so the request reaches query understanding (ghane finding #68)', () => {
+    expect(buildSubstituteDoctorSearch([{ expertise_name: 'چشم پزشکی' }], 'bojnurd').query.ref).toBe(
+      SUBSTITUTE_DOCTOR_SEARCH_REF,
     );
   });
 
+  it('keeps the doctor city — it is a personalization signal, not the bug', () => {
+    expect(buildSubstituteDoctorSearch([{ expertise_name: 'چشم پزشکی' }], 'bojnurd').route).toBe('bojnurd');
+  });
+
+  it('falls back to nationwide when the doctor has no city', () => {
+    expect(buildSubstituteDoctorSearch([{ expertise_name: 'چشم پزشکی' }], null).route).toBe('ir');
+    expect(buildSubstituteDoctorSearch([{ expertise_name: 'چشم پزشکی' }], undefined).route).toBe('ir');
+  });
+
   it('keeps the consult turn type', () => {
-    expect(buildSubstituteDoctorSearch([{ expertise_name: 'قلب و عروق' }]).query.turn_type).toBe('consult');
+    expect(buildSubstituteDoctorSearch([{ expertise_name: 'قلب و عروق' }], 'ir').query.turn_type).toBe('consult');
   });
 
   it('prefers the first expertise that has an alias_title', () => {

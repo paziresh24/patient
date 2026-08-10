@@ -111,7 +111,7 @@ const Page = () => {
             <LegacyLauncherSection
               onAction={action => {
                 if (action.action === 'OPEN_APP') {
-                  void prefetchOneApp(queryClient, { appKey: action.appKey, pageKey: 'launcher' }, 0);
+                  void prefetchOneApp(queryClient, { appKey: action.appKey, pageKey: 'launcher' }, []);
                   setApp(action.appKey);
                   handleOpen();
                 }
