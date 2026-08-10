@@ -371,6 +371,9 @@ search-e2e:
   extends: .build-docker-common
   stage: perf
   timeout: 45m
+  # Infra flakes (dind OOM mid-next-build, registry 403, npm 429) must not block CI-only MRs.
+  # App-path MRs still run this job; post-merge main build-docker-image is the deploy gate.
+  allow_failure: true
   variables:
     E2E_IMAGE: mcr.microsoft.com/playwright:v1.49.1-jammy
     APP_IMAGE: patient-e2e:$CI_COMMIT_SHORT_SHA
