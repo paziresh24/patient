@@ -33,7 +33,9 @@ export const useSamanDoctorAvailabilityStatus = (slug: string, options?: any) =>
     () => samanDoctorAvailabilityStatus(slug),
     {
       staleTime: 60_000,
-      refetchOnMount: 'always',
+      // Conservative: skip remount refetch only when cache already has data (SSR dehydrate).
+      // Without cached data, keep previous 'always' behavior so booking status stays fresh.
+      refetchOnMount: query => (query.state.data != null ? false : 'always'),
       refetchOnWindowFocus: false,
       ...options,
     },

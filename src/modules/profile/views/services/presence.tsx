@@ -127,9 +127,20 @@ export const Presence = memo((props: PresenceProps) => {
   const handleOnBook = () => {
     if (bookingDisabled) return;
 
+    // Open UI first — analytics payload building must not delay the click response (INP).
+    if (centers.length === 1) {
+      const center = centers[0];
+      handleOnBookByCenter(center, {
+        event: {
+          action: 'automatic_select_center',
+        },
+      });
+    } else {
+      handleOpenSelectCenterModal();
+    }
+
     sendGaEvent({ action: 'P24DrsPage', category: 'bookButtonStartPresence', label: 'bookButtonStartPresence' });
     sendGaEvent({ action: 'newprofile', category: 'button-book', label: displayName });
-
     profileEvent('doctor profile press book button', {
       centers_name: centers.map(center => center.name),
       centers_address: centers.map(center => center.address),
@@ -138,29 +149,61 @@ export const Presence = memo((props: PresenceProps) => {
       centers_statuses: centers.map(center => center.status),
       centers_types: centers.map(center => center.center_type_name),
     });
+    if (centers.length > 1) {
+      profileEvent('center_selection_modal_load', {
+        centers_name: centers.map(center => center.name),
+        centers_address: centers.map(center => center.address),
+        centers_phone: centers.map(center => center.tell),
+        centers_city: centers.map(center => center.city),
+        centers_statuses: centers.map(center => center.status),
+        centers_types: centers.map(center => center.center_type_name),
+      });
+    }
+  };
 
-    if (centers.length === 1) {
-      const center = centers[0];
-      handleOnBookByCenter(center, {
-        event: {
-          action: 'automatic_select_center',
-        },
+  const handleOnBookByCenter = async (center: any, options?: { event: Record<string, string> }) => {
+    if (center.is_center === 'mashhad') {
+      setSelectedCenter(center);
+      handleOpenSelectExternalBookingModal();
+      profileEvent('center_selection_modal_click', {
+        center_name: center.name,
+        center_address: center.address,
+        center_phone: center.tell,
+        center_city: center.city,
+        center_status: center.status,
+        center_type: center.center_type_name,
+        ...options?.event,
       });
       return;
     }
 
-    profileEvent('center_selection_modal_load', {
-      centers_name: centers.map(center => center.name),
-      centers_address: centers.map(center => center.address),
-      centers_phone: centers.map(center => center.tell),
-      centers_city: centers.map(center => center.city),
-      centers_statuses: centers.map(center => center.status),
-      centers_types: centers.map(center => center.center_type_name),
-    });
-    handleOpenSelectCenterModal();
-  };
+    if (center.is_only_in_app?.status && !customise.partnerKey && !isWebView && !isApplication) {
+      setSelectedCenter(center);
+      handleOpenSelectDownloadAppModal();
+      profileEvent('center_selection_modal_click', {
+        center_name: center.name,
+        center_address: center.address,
+        center_phone: center.tell,
+        center_city: center.city,
+        center_status: center.status,
+        center_type: center.center_type_name,
+        ...options?.event,
+      });
+      return;
+    }
 
-  const handleOnBookByCenter = async (center: any, options?: { event: Record<string, string> }) => {
+    const needsFetch = needsDrprofileServices(center);
+    if (needsFetch) {
+      // Show service modal immediately with current (possibly empty) services + loading state.
+      setSelectedCenter(center);
+      handleCloseSelectCenterModal();
+      handleOpenSelectServiceModal();
+    }
+
+    const resolvedServices = await resolveCenterServices(center);
+    const centerWithServices = { ...center, services: resolvedServices };
+    setSelectedCenter(centerWithServices);
+
     profileEvent('center_selection_modal_click', {
       center_name: center.name,
       center_address: center.address,
@@ -171,30 +214,16 @@ export const Presence = memo((props: PresenceProps) => {
       ...options?.event,
     });
 
-    if (center.is_center === 'mashhad') {
-      setSelectedCenter(center);
-      handleOpenSelectExternalBookingModal();
-      return;
-    }
-
-    if (center.is_only_in_app?.status && !customise.partnerKey && !isWebView && !isApplication) {
-      setSelectedCenter(center);
-      handleOpenSelectDownloadAppModal();
-      return;
-    }
-
-    const resolvedServices = await resolveCenterServices(center);
-    const centerWithServices = { ...center, services: resolvedServices };
-    setSelectedCenter(centerWithServices);
-
     if (resolvedServices.length === 1) {
       const serviceId = resolvedServices[0]?.id;
       if (!isInvalidProfileServiceId(serviceId)) {
+        if (needsFetch) handleCloseSelectServiceModal();
         return onBook({ centerId: center.id, serviceId });
       }
     }
 
     if (resolvedServices.length === 0) {
+      if (needsFetch) handleCloseSelectServiceModal();
       toast.error('خدمتی برای این مرکز یافت نشد.');
       return;
     }
@@ -204,8 +233,10 @@ export const Presence = memo((props: PresenceProps) => {
       freeturn_text: center?.freeturn_text,
     });
 
-    handleCloseSelectCenterModal();
-    handleOpenSelectServiceModal();
+    if (!needsFetch) {
+      handleCloseSelectCenterModal();
+      handleOpenSelectServiceModal();
+    }
   };
 
   const handleOnBookByService = (service: any) => {
@@ -296,11 +327,17 @@ export const Presence = memo((props: PresenceProps) => {
       <Modal title="انتخاب خدمت" {...selectServiceModalProps}>
         {selectServiceModalProps.isOpen && (
           <div>
-            <SelectService
-              center={selectedCenter}
-              services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
-              onSelect={handleOnBookByService}
-            />
+            {isResolvingServices ? (
+              <Text fontWeight="medium" className="block py-6 text-center text-slate-500">
+                در حال دریافت خدمات…
+              </Text>
+            ) : (
+              <SelectService
+                center={selectedCenter}
+                services={reformattedServicesProperty({ services: selectedCenter.services, center: selectedCenter })}
+                onSelect={handleOnBookByService}
+              />
+            )}
           </div>
         )}
       </Modal>

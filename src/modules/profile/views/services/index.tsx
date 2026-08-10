@@ -346,13 +346,17 @@ export const Services = ({
       ...(isBookRequest && { timeId: '-1' }),
     };
 
-    onEvent({ centerId, serviceId: serviceId ?? '' });
-
+    // Navigate first; analytics after — keeps booking click off the Splunk path (INP).
     if (isNativeWebView()) {
-      if (isBookRequest) return location.assign(`/booking/${slug}?${queryStirng.stringify({ ...params, openInBrowser: 1 })}`);
+      if (isBookRequest) {
+        location.assign(`/booking/${slug}?${queryStirng.stringify({ ...params, openInBrowser: 1 })}`);
+        onEvent({ centerId, serviceId: serviceId ?? '' });
+        return;
+      }
     }
 
     router.push(`/booking/${slug}?${queryStirng.stringify({ ...params })}`);
+    onEvent({ centerId, serviceId: serviceId ?? '' });
   };
 
   if (!customize?.partnerKey && showRismanExternalBooking && hasNoBooking) {
