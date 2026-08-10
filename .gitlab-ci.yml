@@ -478,10 +478,10 @@ search-e2e:
         - src/common/fragment/**/*
         - src/styles/plasmicRadixBaseCss.ts
         # — ورودی‌های buildی که خودِ این job از آن‌ها image می‌سازد —
-        - Dockerfile
+        # Dockerfile / .gitlab-ci.yml عمداً نیستند: تغییرات infra (base image، heap، login)
+        # همان خروجی listing را می‌دهند ولی ۴۵دقیقه e2e+docker build را روی MRهای CI می‌اندازند.
         - next.config.js
         - package.json
         # — خودِ هارنس —
         - e2e/**/*
         - playwright.config.ts
-        - .gitlab-ci.yml
