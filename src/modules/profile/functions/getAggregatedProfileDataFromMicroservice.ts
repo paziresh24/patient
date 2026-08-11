@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { apiGatewayClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
@@ -16,10 +17,12 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { overwriteProfileData } from './overwriteProfileData';
 import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyBooking';
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
+import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
 import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
 import { drProfileClient } from '@/common/apis/client';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
+const RISMAN_DOCTORS = 'https://apigw.paziresh24.com/v1/risman/doctors/';
 
 const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
   const reformattedBreadcrumb = links?.map(link => ({ href: link.orginalLink, text: link.title })) ?? [];
@@ -106,6 +109,13 @@ export async function getAggregatedProfileDataFromMicroservice(
   }
 
   const rateDetailsResult = await getRateDetailsData({ slug: validatedSlug }).catch(() => null);
+  const rismanDoctorId = buildRismanDoctorId(slugInfo.owner_id, slugInfo.server_id);
+  const rismanResult = rismanDoctorId
+    ? await axios
+        .get(RISMAN_DOCTORS, { params: { doctor_id: rismanDoctorId }, timeout: 1500 })
+        .then(response => response.data)
+        .catch(() => null)
+    : null;
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
 
   const samanAvailabilityPromise =
@@ -279,7 +289,7 @@ export async function getAggregatedProfileDataFromMicroservice(
       ),
       fragmentComponents: {
         raviComponentTopOrderProfile: false,
-        risman: null,
+        risman: rismanResult,
       },
       hamdastWidgets,
       hamdastWidgetsData,

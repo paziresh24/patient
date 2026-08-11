@@ -26,6 +26,7 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 import { computeExperienceYearsFromGraduationDate } from '@/modules/profile/utils/computeExperienceYears';
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
+import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
 import { isDoctorProfileSelfRedirect } from '@/modules/profile/utils/isDoctorProfileSelfRedirect';
 import { resolveProfileDisplayName } from '@/modules/profile/utils/resolveProfileDisplayName';
 
@@ -347,7 +348,14 @@ export async function getAggregatedProfileData(
     getAverageWaitingTime({
       slug: validatedSlug,
     }),
-    axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: slugInfo?.owner_id }, timeout: 1500 }),
+    buildRismanDoctorId(slugInfo?.owner_id, slugInfo?.server_id)
+      ? axios.get(API_ENDPOINTS.RISMAN_DOCTORS, {
+          params: {
+            doctor_id: buildRismanDoctorId(slugInfo?.owner_id, slugInfo?.server_id),
+          },
+          timeout: 1500,
+        })
+      : Promise.resolve({ data: null }),
   ];
 
   // Conditionally add doctor full name API call
