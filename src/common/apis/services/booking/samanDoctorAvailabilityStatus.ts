@@ -33,6 +33,9 @@ export const useSamanDoctorAvailabilityStatus = (slug: string, options?: any) =>
     () => samanDoctorAvailabilityStatus(slug),
     {
       staleTime: 60_000,
+      // Keep 'always': product/ops expect Saman availability-status to hit the network on
+      // profile mount (browser Network tab). Skipping remount refetch after SSR dehydrate
+      // looked like "Saman does not run on profile pages" (!199 follow-up).
       refetchOnMount: 'always',
       refetchOnWindowFocus: false,
       ...options,

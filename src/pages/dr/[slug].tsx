@@ -35,10 +35,15 @@ import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
 import ErrorPage from '@/modules/profile/components/errorPage';
 import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
-import Hamdast from '@/modules/hamdast/render';
+import dynamic from 'next/dynamic';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
 import { formatAverageRate } from '@/modules/profile/utils/getAverageRate';
+import {
+  isPicUserImageUrl,
+  resolveDoctorProfileImageUrl,
+  resolveDoctorProfileLcpImageUrl,
+} from '@/modules/profile/utils/doctorProfileImageUrl';
 import { trackDoctorProfileViewByDoctorId } from '@/modules/hamdast/utils/profileViewFrequency';
 import {
   clearProfileDoctorInfo,
@@ -56,25 +61,10 @@ import { useRate } from '@/common/apis/services/reviews/rate';
 
 const { publicRuntimeConfig } = config();
 
-const NO_DOCTOR_PROFILE_IMAGE = 'https://cdn.paziresh24.com/getImage/p24/search-men/noimage.png';
-
-function resolveDoctorProfileImageUrl(
-  information: { user_id?: string | null; image?: string | null } | undefined,
-  pageUserId?: string | null,
-) {
-  const userId = information?.user_id ?? pageUserId;
-  // Prefer pic CDN when we have paziresh user id.
-  if (userId) {
-    return `https://pic.paziresh24.com/api/image/${userId}`;
-  }
-  // Fallback: microservice avatar_url mapped into information.image
-  const image = typeof information?.image === 'string' ? information.image.trim() : '';
-  if (image) {
-    if (/^https?:\/\//i.test(image)) return image;
-    return `https://www.paziresh24.com${image.startsWith('/') ? '' : '/'}${image}`;
-  }
-  return NO_DOCTOR_PROFILE_IMAGE;
-}
+const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ default: m.Hamdast })), {
+  ssr: false,
+  loading: () => null,
+});
 
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status } = props;
@@ -104,13 +94,11 @@ const DoctorProfile = (props: any) => {
       window.removeEventListener('keydown', onInteract);
       window.removeEventListener('touchstart', onInteract);
       window.removeEventListener('scroll', onInteract);
-      window.removeEventListener('mousemove', onInteract);
     };
     window.addEventListener('pointerdown', onInteract, { passive: true });
     window.addEventListener('keydown', onInteract, { passive: true });
     window.addEventListener('touchstart', onInteract, { passive: true });
     window.addEventListener('scroll', onInteract, { passive: true });
-    window.addEventListener('mousemove', onInteract, { passive: true });
     timeoutId = setTimeout(enable, 10000);
     return cleanup;
   }, []);
@@ -227,6 +215,11 @@ const DoctorProfile = (props: any) => {
 
   const doctorProfileImageUrl = useMemo(
     () => resolveDoctorProfileImageUrl(information, user_id),
+    [information?.user_id, information?.image, user_id],
+  );
+
+  const doctorProfileLcpImageUrl = useMemo(
+    () => resolveDoctorProfileLcpImageUrl(information, user_id),
     [information?.user_id, information?.image, user_id],
   );
 
@@ -581,7 +574,12 @@ const DoctorProfile = (props: any) => {
       <Head>
         {browserTitle ? <title>{browserTitle}</title> : null}
         <link rel="dns-prefetch" href="//cdn.paziresh24.com" />
+        <link rel="dns-prefetch" href="//pic.paziresh24.com" />
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
+        <link rel="preconnect" href="https://pic.paziresh24.com" crossOrigin="" />
+        {isPicUserImageUrl(doctorProfileLcpImageUrl) ? (
+          <link rel="preload" as="image" href={doctorProfileLcpImageUrl} fetchPriority="high" />
+        ) : null}
       </Head>
       <RaviGlobalContextsProvider>
         <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
@@ -614,7 +612,7 @@ const DoctorProfile = (props: any) => {
                     displayName: profileData.information.display_name,
                     title: information?.experience ? `${profileData.information?.experience} سال تجربه` : undefined,
                     subTitle: `شماره نظام پزشکی: ${profileData.information?.employee_id}`,
-                    imageUrl: doctorProfileImageUrl,
+                    imageUrl: doctorProfileLcpImageUrl,
                     slug: slug,
                     children: (
                       <div className="flex flex-col w-full gap-2">

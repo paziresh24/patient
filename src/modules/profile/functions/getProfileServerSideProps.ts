@@ -89,6 +89,8 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
       trackSsrError(error, { source: 'ProfileSSR', message: 'Error loading GrowthBook for Saman availability SSR', path: context.resolvedUrl });
     }
 
+    // Keep a dedicated GrowthBook load for expertise chips (timeout 2500) so gradual
+    // allowlist/percentage rollout is not tied to the short 500ms profile GB load.
     try {
       fetchExpertiseKeywordTags = await isExpertiseChipsLikeSearchEnabledForSlug(slug);
     } catch (error) {

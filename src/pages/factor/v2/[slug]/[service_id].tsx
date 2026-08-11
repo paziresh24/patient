@@ -1,5 +1,6 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
@@ -8,6 +9,10 @@ import { useDoctorExpertise } from '@/common/hooks/useDoctorExpertise';
 import { useDoctorFullName } from '@/common/hooks/useDoctorFullName';
 import { CENTERS } from '@/common/types/centers';
 import DoctorInvoiceNotice from '@/modules/booking/components/factor/doctorInvoiceNotice';
+import {
+  mapDoctorCenterServices,
+  resolveBookableServiceId,
+} from '@/modules/booking/functions/mapDoctorCenterServices';
 import FactorWrapper from '@/modules/booking/views/factor/wrapper';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -21,6 +26,7 @@ const Factor = () => {
     query: { slug, service_id },
   } = useRouter();
   const doctorSlug = slug as string;
+  const requestedServiceId = service_id as string | undefined;
 
   const { data: centers } = useQuery(
     [ServerStateKeysEnum.DoctorCenters, doctorSlug],
@@ -31,6 +37,22 @@ const Factor = () => {
       refetchOnWindowFocus: false,
     },
   );
+  const consultCenter = useMemo(
+    () => centers?.find(item => String(item.id) === String(CENTERS.CONSULT)),
+    [centers],
+  );
+  const { data: consultServices, isSuccess: consultServicesReady } = useDoctorCenterServices(
+    doctorSlug,
+    CENTERS.CONSULT,
+    { enabled: !!doctorSlug && !!consultCenter },
+  );
+  const resolvedServiceId = useMemo(() => {
+    if (!consultServicesReady || !consultServices?.length) {
+      return requestedServiceId;
+    }
+    const mapped = mapDoctorCenterServices(consultServices, consultCenter?.user_center_id);
+    return resolveBookableServiceId(requestedServiceId, mapped) ?? requestedServiceId;
+  }, [consultServicesReady, consultServices, consultCenter?.user_center_id, requestedServiceId]);
   const { data: fullName } = useDoctorFullName(doctorSlug);
   const { data: expertises } = useDoctorExpertise(doctorSlug);
 
@@ -62,13 +84,13 @@ const Factor = () => {
         <div className="w-full md:basis-4/6 z-10">
           <FactorWrapper
             centerId={'5532'}
-            serviceId={service_id as string}
+            serviceId={resolvedServiceId}
             userCenterId={userCenterId}
             doctorName={doctorName}
             groupExpertise={groupExpertise}
           />
         </div>
-        <DoctorInvoiceNotice slug={doctorSlug} serviceId={service_id as string} />
+        <DoctorInvoiceNotice slug={doctorSlug} serviceId={resolvedServiceId as string} />
       </div>
     </>
   );

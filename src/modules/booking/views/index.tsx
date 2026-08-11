@@ -72,7 +72,7 @@ import {
   mapSamanAvailabilityToCenters,
 } from '../functions/mapSamanAvailabilityToCenters';
 import { mergeBookableCentersFromDoctorCenters } from '../functions/mergeBookableCentersFromDoctorCenters';
-import { isInvalidProfileServiceId, mapDoctorCenterServices } from '../functions/mapDoctorCenterServices';
+import { isInvalidProfileServiceId, mapDoctorCenterServices, resolveBookableServiceId } from '../functions/mapDoctorCenterServices';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
@@ -549,11 +549,15 @@ const BookingSteps = (props: BookingStepsProps) => {
     if (!doctorCenterServicesQuery.isSuccess && !doctorCenterServicesQuery.isError) return;
 
     const requestedServiceId = payload?.serviceId ?? service?.id;
-    const hasValidRequestedId = !isInvalidProfileServiceId(requestedServiceId);
+    const resolvedRequestedId = resolveBookableServiceId(
+      requestedServiceId != null ? String(requestedServiceId) : undefined,
+      bookableServices,
+    );
+    const hasValidRequestedId = !isInvalidProfileServiceId(resolvedRequestedId);
 
     let selectedService =
-      hasValidRequestedId && requestedServiceId
-        ? bookableServices.find((item: any) => item.id?.toString() === requestedServiceId.toString())
+      hasValidRequestedId && resolvedRequestedId
+        ? bookableServices.find((item: any) => item.id?.toString() === resolvedRequestedId.toString())
         : undefined;
 
     if (!selectedService && bookableServices.length === 1) {

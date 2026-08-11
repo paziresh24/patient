@@ -18,6 +18,7 @@ import { overwriteProfileData } from './overwriteProfileData';
 import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyBooking';
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
+import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
 import { drProfileClient } from '@/common/apis/client';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
@@ -96,6 +97,16 @@ export async function getAggregatedProfileDataFromMicroservice(
   const { slugInfo, fullProfileLike, overwrite, seo, displayName: mappedDisplayName } = mapMicroserviceToLegacy(bundle);
   const validatedSlug = slugInfo.slug || slug;
   const pageSlug = `/dr/${validatedSlug}`;
+
+  // profiles-api gallery URLs (/storage/gallery/...) may 404 on CDN; drprofile has live clinic images.
+  try {
+    const drprofileGallery = await fetchDoctorGalleryFromDrprofile(validatedSlug, university);
+    if (drprofileGallery.length > 0) {
+      overwrite.gallery = drprofileGallery;
+    }
+  } catch (error) {
+    console.error('Error hydrating gallery from drprofile (microservice path):', error);
+  }
 
   const rateDetailsResult = await getRateDetailsData({ slug: validatedSlug }).catch(() => null);
   const rismanDoctorId = buildRismanDoctorId(slugInfo.owner_id, slugInfo.server_id);
@@ -193,11 +204,14 @@ export async function getAggregatedProfileDataFromMicroservice(
   let centers = initialCenters;
 
   // If merge left bookable centers without services (FP flake), hydrate per-center services API.
-  const centersNeedingServices = (centers || []).filter(
-    (center: any) =>
-      center?.id &&
-      (!(center.services?.length > 0) || center.services.some((service: any) => isInvalidProfileServiceId(service?.id))),
-  );
+  const centersNeedingServices = (centers || []).filter((center: any) => {
+    if (!center?.id) return false;
+    // Online visit center: always refresh from drprofile (full-profile service ids can be stale).
+    if (String(center.id) === CENTERS.CONSULT) return true;
+    return (
+      !(center.services?.length > 0) || center.services.some((service: any) => isInvalidProfileServiceId(service?.id))
+    );
+  });
   if (centersNeedingServices.length > 0) {
     try {
       const serviceResults = await Promise.allSettled(
@@ -219,25 +233,6 @@ export async function getAggregatedProfileDataFromMicroservice(
     }
   }
 
-  const consultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
-  const needsOnlineServices =
-    !!consultCenter &&
-    (!(consultCenter.services?.length > 0) || consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
-
-  if (needsOnlineServices) {
-    try {
-      const onlineServices = await getDoctorCenterServices(validatedSlug, CENTERS.CONSULT);
-      if (onlineServices?.length) {
-        const mapped = mapDoctorCenterServices(onlineServices, consultCenter.user_center_id);
-        centers = centers.map((center: any) => (String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center));
-        if (isServer) {
-          queryClient.setQueryData([ServerStateKeysEnum.DoctorCenterServices, validatedSlug, CENTERS.CONSULT], onlineServices);
-        }
-      }
-    } catch (error) {
-      console.error('Error hydrating online visit center services (microservice path):', error);
-    }
-  }
 
   const doctorCityNames = formatDoctorCitiesForTitle(centers);
   const displayName = information?.display_name || mappedDisplayName || validatedSlug;

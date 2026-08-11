@@ -36,3 +36,27 @@ export const isInvalidProfileServiceId = (serviceId?: string | number | null) =>
   if (serviceId == null || serviceId === '') return true;
   return String(serviceId) === '-1';
 };
+
+type MappedCenterService = ReturnType<typeof mapDoctorCenterServices>[number];
+
+/**
+ * full-profile service ids can be stale; drprofile /centers/{id}/services is source of truth.
+ * When the requested id is missing from drprofile, pick the sole bookable service if unambiguous.
+ */
+export const resolveBookableServiceId = (
+  requestedId: string | undefined,
+  drprofileServices: MappedCenterService[],
+): string | undefined => {
+  if (!drprofileServices.length) {
+    return requestedId && !isInvalidProfileServiceId(requestedId) ? String(requestedId) : undefined;
+  }
+
+  if (requestedId && drprofileServices.some(service => String(service.id) === String(requestedId))) {
+    return String(requestedId);
+  }
+
+  const bookable = drprofileServices.filter(service => service.can_booking === 1);
+  if (bookable.length === 1) return String(bookable[0].id);
+  if (drprofileServices.length === 1) return String(drprofileServices[0].id);
+  return bookable[0]?.id != null ? String(bookable[0].id) : requestedId;
+};

@@ -2,11 +2,10 @@ import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Services from './services';
 import pick from 'lodash/pick';
 import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
-import { FragmentRateReview } from './rateReview/fragmentRateReview';
-import Hamdast from '@/modules/hamdast/render';
 import { SamanBooking } from '@/modules/samanBooking';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
@@ -15,6 +14,19 @@ import RismanAsideSection from './rismanAside';
 const RecommendWrapper = dynamic(() => import('./recommend'));
 const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
 const PlasmicBookingAddressesCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard'));
+const FragmentRateReview = dynamic(
+  () => import('./rateReview/fragmentRateReview').then(m => ({ default: m.FragmentRateReview })),
+  {
+    loading() {
+      return <Skeleton w="100%" h="30rem" rounded="lg" />;
+    },
+  },
+);
+const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ default: m.Hamdast })), {
+  loading() {
+    return <Skeleton w="100%" h="4rem" rounded="lg" />;
+  },
+});
 
 export const Aside = (data: any) => {
   const {
