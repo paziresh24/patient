@@ -297,6 +297,7 @@ export async function getAggregatedProfileDataFromMicroservice(
       shouldFetchOnClient: false,
       useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
       profile_backend: 'microservice',
+      profile_api_id: slugInfo.profile_api_id ?? null,
       profile_type: slugInfo.type,
       doctor_city_names: doctorCityNames,
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
