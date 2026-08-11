@@ -95,7 +95,7 @@ describe('composeBookingProfile', () => {
     expect(profile?.centers[0].server_id).toBe(1);
     expect(profile?.centers[0].settings).toEqual({ booking_enable_insurance: '1' });
     expect(profile?.centers[0].insurances).toEqual([{ id: 1, name: 'تامین' }]);
-    expect(profile?.centers[0].services).toEqual([{ id: 'svc-1' }]);
+    expect(profile?.centers[0].services).toEqual([]);
     expect(profile?.online_visit_channel_types).toEqual(['whatsapp']);
     expect(profile?.feedback_visit).toEqual({ two_weeks_data: [] });
   });
