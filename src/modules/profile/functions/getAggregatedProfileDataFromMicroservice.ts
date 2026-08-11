@@ -183,11 +183,14 @@ export async function getAggregatedProfileDataFromMicroservice(
   let centers = initialCenters;
 
   // If merge left bookable centers without services (FP flake), hydrate per-center services API.
-  const centersNeedingServices = (centers || []).filter(
-    (center: any) =>
-      center?.id &&
-      (!(center.services?.length > 0) || center.services.some((service: any) => isInvalidProfileServiceId(service?.id))),
-  );
+  const centersNeedingServices = (centers || []).filter((center: any) => {
+    if (!center?.id) return false;
+    // Online visit center: always refresh from drprofile (full-profile service ids can be stale).
+    if (String(center.id) === CENTERS.CONSULT) return true;
+    return (
+      !(center.services?.length > 0) || center.services.some((service: any) => isInvalidProfileServiceId(service?.id))
+    );
+  });
   if (centersNeedingServices.length > 0) {
     try {
       const serviceResults = await Promise.allSettled(
@@ -209,25 +212,6 @@ export async function getAggregatedProfileDataFromMicroservice(
     }
   }
 
-  const consultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
-  const needsOnlineServices =
-    !!consultCenter &&
-    (!(consultCenter.services?.length > 0) || consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
-
-  if (needsOnlineServices) {
-    try {
-      const onlineServices = await getDoctorCenterServices(validatedSlug, CENTERS.CONSULT);
-      if (onlineServices?.length) {
-        const mapped = mapDoctorCenterServices(onlineServices, consultCenter.user_center_id);
-        centers = centers.map((center: any) => (String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center));
-        if (isServer) {
-          queryClient.setQueryData([ServerStateKeysEnum.DoctorCenterServices, validatedSlug, CENTERS.CONSULT], onlineServices);
-        }
-      }
-    } catch (error) {
-      console.error('Error hydrating online visit center services (microservice path):', error);
-    }
-  }
 
   const doctorCityNames = formatDoctorCitiesForTitle(centers);
   const displayName = information?.display_name || mappedDisplayName || validatedSlug;

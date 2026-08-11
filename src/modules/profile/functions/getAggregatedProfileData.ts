@@ -638,10 +638,8 @@ export async function getAggregatedProfileData(
   // so profile SSR can render the online-visit card (e.g. Doodangeh).
   let centers = initialCenters;
   const consultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
-  const needsOnlineServices =
-    !!consultCenter &&
-    (!(consultCenter.services?.length > 0) ||
-      consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
+  // full-profile service ids (5532) can be stale; always hydrate online visit from drprofile.
+  const needsOnlineServices = !!consultCenter;
 
   if (needsOnlineServices) {
     try {

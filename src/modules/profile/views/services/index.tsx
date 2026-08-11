@@ -196,11 +196,8 @@ export const Services = ({
   ]);
 
   const consultCenter = centers.find((center: any) => String(center.id) === CENTERS.CONSULT);
-  const needsOnlineServices =
-    showOnlineVisit &&
-    consultCenter &&
-    (!(consultCenter.services?.length > 0) ||
-      consultCenter.services.some((service: any) => isInvalidProfileServiceId(service?.id)));
+  // full-profile service ids can be stale; always load 5532 services from drprofile when showing online visit.
+  const needsOnlineServices = showOnlineVisit && !!consultCenter;
 
   const onlineServicesQuery = useDoctorCenterServices(slug, CENTERS.CONSULT, {
     enabled: !!slug && needsOnlineServices,
@@ -213,8 +210,15 @@ export const Services = ({
     if (onlineServicesQuery.isSuccess && onlineServicesQuery.data) {
       return mapDoctorCenterServices(onlineServicesQuery.data, consultCenter.user_center_id);
     }
+    if (onlineServicesQuery.isError) return profileServices;
     return [];
-  }, [consultCenter, needsOnlineServices, onlineServicesQuery.isSuccess, onlineServicesQuery.data]);
+  }, [
+    consultCenter,
+    needsOnlineServices,
+    onlineServicesQuery.isSuccess,
+    onlineServicesQuery.isError,
+    onlineServicesQuery.data,
+  ]);
   const canBookPresence = !samanLoaded || scopedInPerson.bookingAvailable;
 
   const legacyHasNoBooking = alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk;
