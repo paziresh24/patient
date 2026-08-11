@@ -1,5 +1,9 @@
 stages:
   - review
+  # Shared Next docker build for MR/main gates (ci-app-image) — measured 2026-08-10
+  # (MR !199 / pipelines 6095–6097): search-e2e + initial-chunks each did a full ~6–8m
+  # Next build; sharing one :ci-$SHA image cuts wall-clock roughly in half when both run.
+  - ci-image
   - perf
   - merge
   - build
@@ -94,9 +98,13 @@ auto-merge-safe:
 # `auto-merge-safe`'s `needs:` (deliberately — expanding that gate's blocking surface is a separate,
 # owner-reviewed decision, not bundled into this DR). The real pre-merge gate needs a per-MR
 # preview environment — flagged as the outside-the-box follow-up in the DR-08 doc §۱۱, not built here.
+#
+# timeout 10m (was default 1h): pipeline 6097 hung with empty log / job_execution_timeout for 3600s;
+# this is a prod monitor with allow_failure — must not hold the pipeline open for an hour.
 lighthouse-budget:
   stage: perf
   image: node:20-slim
+  timeout: 10m
   script:
     - |
       set +e
@@ -122,6 +130,83 @@ lighthouse-budget:
     - if: $CI_COMMIT_BRANCH == "next"
     - if: $CI_PIPELINE_SOURCE == "schedule"
 
+# ---------------------------------------------------------------------------
+# Shared CI app image — one Next docker build for gates that used to each rebuild.
+# Pushes ONLY :ci-$CI_COMMIT_SHORT_SHA (never :latest — that is deploy's job).
+# rules.changes = union of initial-chunks + search-e2e paths so needs: never
+# references a skipped producer.
+# ---------------------------------------------------------------------------
+ci-app-image:
+  extends: .build-docker-common
+  stage: ci-image
+  timeout: 25m
+  before_script:
+    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    - |
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        echo "Using TLS registry: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
+  script:
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      BASE_IMAGE=$(cat /tmp/base_image)
+      CI_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}:ci-${CI_COMMIT_SHORT_SHA}"
+      echo "Building CI gate image FROM $BASE_IMAGE -> $CI_IMAGE"
+      docker build --provenance=false \
+        --build-arg "BASE_IMAGE=${BASE_IMAGE}" \
+        -t "$CI_IMAGE" \
+        .
+      echo "Pushing $CI_IMAGE (CI tag only — not :latest)"
+      docker push "$CI_IMAGE"
+  # Infra-only retry: a real Next/build failure must not burn 2–3× wall-clock.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
+      - unknown_failure
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes: &ci-app-image-changes
+        # — initial-chunks —
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/modules/voice-agent/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+        # — search-e2e —
+        - src/modules/search/**/*
+        - .plasmic/plasmic/paziresh_24_search/**/*
+        - src/pages/s/**/*
+        - src/pages/_document.tsx
+        - src/common/fragment/**/*
+        - src/styles/plasmicRadixBaseCss.ts
+        - e2e/**/*
+        - playwright.config.ts
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes: *ci-app-image-changes
+
 # DR-08 §۱۲ — گاردِ «کدِ سنگین در chunkِ initial».
 #
 # چرا لازم شد: دو بار پشتِ سر هم یک کلاسِ باگ رخ داد (Firebase، بعد LiveKit) که در code review
@@ -130,34 +215,45 @@ lighthouse-budget:
 # واقعیِ build است — نه دیف، نه unit test.
 #
 # برخلافِ `lighthouse-budget` (که علیهِ productionِ زنده اجرا می‌شود و monitor است، نه gate)، این
-# job **کدِ خودِ همین MR را build می‌کند** و کاملاً deterministic است ⇒ blocking (بدونِ
-# allow_failure). برای کنترلِ هزینه فقط وقتی اجرا می‌شود که فایلی از مسیرهای پرخطر عوض شده باشد.
-# چرا از دوکر build می‌گیریم و نه مستقیم `npm run build` در یک jobِ node (تاریخچه‌ی سه اجرای قرمز):
-#   • pipeline 3461 — با `NODE_ENV: production` روی کلِ job، ‏npm ‏devDependencies را نصب نکرد و
-#     `next build` روی type-check ترکید (در buildِ Docker دیده نمی‌شد، چون آن‌جا Next خودش
-#     devDependencies را auto-install می‌کند؛ داخلِ CI با `CI=true` آن auto-install غیرفعال است).
-#   • pipeline 3466 و 3469 — بعد از رفعِ آن، ‏build با `exit 137 (OOMKilled)` کشته شد. اندازه‌گیری:
-#     این runner ‏`nproc=96` دارد و buildِ Next مصرفِ حافظه‌اش را با CPU مقیاس می‌دهد؛ حتی با
-#     `--max-old-space-size=2048` و `experimental.cpus=2` هم همان‌جا («Creating an optimized
-#     production build») می‌مرد ⇒ سقفِ حافظه‌ی containerِ jobهای معمولی برای این build کافی نیست.
-# ولی `build-docker-image` هر روز روی همین CI با موفقیت همین build را می‌گیرد (~۸ دقیقه) — پس
-# به‌جای اختراعِ یک مسیرِ buildِ دوم و شکننده، از همان مسیرِ اثبات‌شده استفاده می‌کنیم و فقط
-# گارد را داخلِ image اجرا می‌کنیم. push هم نمی‌کنیم؛ این job فقط بررسی است.
+# job **کدِ خودِ همین MR را** از ایمیج مشترک `ci-app-image` می‌کشد و گارد را داخلش اجرا می‌کند
+# (بدونِ buildِ تکراری). blocking (بدونِ allow_failure). برای کنترلِ هزینه فقط وقتی اجرا می‌شود
+# که فایلی از مسیرهای پرخطر عوض شده باشد.
 initial-chunks:
   extends: .build-docker-common
   stage: perf
+  needs:
+    - job: ci-app-image
   before_script:
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - |
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
       PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        echo "Using TLS registry: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      fi
       echo "$PUSH_HOST" > /tmp/push_host
-      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
       echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
   script:
-    - docker build --provenance=false --build-arg "BASE_IMAGE=$(cat /tmp/base_image)" -t patient-initial-chunks:$CI_COMMIT_SHORT_SHA .
-    - docker run --rm patient-initial-chunks:$CI_COMMIT_SHORT_SHA node scripts/check-initial-chunks.js
-  # `.build-docker-common` روی `script_failure` هم retry می‌کند — برای pushِ ناپایدارِ registry منطقی
-  # است، ولی این‌جا یعنی یک نقضِ واقعیِ گارد دو بارِ دیگر هم ۸ دقیقه build شود. فقط خطای زیرساخت retry.
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      CI_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}:ci-${CI_COMMIT_SHORT_SHA}"
+      echo "Pulling shared CI image $CI_IMAGE"
+      docker pull "$CI_IMAGE"
+      docker run --rm "$CI_IMAGE" node scripts/check-initial-chunks.js
+  # فقط خطای زیرساخت retry — نقض واقعی گارد نباید دوباره چند دقیقه بسوزاند.
   retry:
     max: 1
     when:
@@ -210,13 +306,14 @@ initial-chunks:
     KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "40Gi"
     KUBERNETES_CPU_REQUEST: "1"
     KUBERNETES_CPU_LIMIT: "6"
+  # 2026-08-10: retrying script_failure (max 2) multiplied wall-clock on real build failures
+  # (~24% success on recent build-docker-image). Keep one infra-oriented retry only.
   retry:
-    max: 2
+    max: 1
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
       - api_failure
-      - script_failure
       - job_execution_timeout
       # Mid-build dind/OOM kills often land as unknown_failure with a truncated log
       # (no "ERROR:" line) — without this, main stays red until a human clicks Retry.
@@ -354,10 +451,9 @@ build-docker-image-next:
 #
 # چرا علیهِ **کانتینرِ همین MR** و نه production (تفاوتِ اصلی با `lighthouse-budget`):
 # گیتِ pre-merge باید دربارهٔ کدِ *این* MR قضاوت کند. `patient` per-MR preview-env ندارد، پس
-# محیط را همین‌جا می‌سازیم: همان Dockerfileِ اثبات‌شده build می‌شود، کانتینر در dind بالا می‌آید،
-# و Playwright از داخلِ imageِ رسمی علیهِ آن اجرا می‌شود. env از `.env.example` می‌آید که فقط
-# URLهایِ عمومی است (هیچ secretی) — و چون این‌ها `publicRuntimeConfig`اند، در زمانِ **start**
-# خوانده می‌شوند نه build.
+# ایمیج را جابِ مشترک `ci-app-image` می‌سازد؛ این جاب فقط pull می‌کند، کانتینر را بالا می‌آورد،
+# و Playwright را علیهِ آن اجرا می‌کند. env از `.env.example` می‌آید که فقط URLهایِ عمومی است
+# (هیچ secretی) — و چون این‌ها `publicRuntimeConfig`اند، در زمانِ **start** خوانده می‌شوند نه build.
 #
 # ⚠ دامنه عمداً محدود است (کدبیسِ مشترکِ همه‌ی تیم‌هاست): فقط وقتی اجرا می‌شود که مسیرهایِ
 # search/e2e عوض شده باشند. در `auto-merge-safe` هم با `optional: true` می‌آید ⇒ MRaی که این
@@ -367,20 +463,24 @@ build-docker-image-next:
 # مجهولاتِ محیطی قبل از نوشتن با jobِ موقتِ `e2e-env-probe` اندازه‌گیری شد (pipeline 3728):
 # pullِ `mcr.microsoft.com/playwright` از این runner کار می‌کند (A_EXIT=0) و دانلودِ chromium هم
 # (B_EXIT=0) — پس طراحی روی حدس بنا نشده است.
+#
+# timeout 25m (was 45m): Next build moved to ci-app-image; remaining work is pull + Playwright.
+# Fail-fast: pull Playwright BEFORE the app so MCR/network failures do not waste ~7m first
+# (seen on pipeline 6075 after a full Next build).
 search-e2e:
   extends: .build-docker-common
   stage: perf
-  timeout: 45m
-  # Infra flakes (dind OOM mid-next-build, registry 403, npm 429) must not block CI-only MRs.
+  timeout: 25m
+  needs:
+    - job: ci-app-image
+  # Infra flakes (dind OOM, registry 403, npm 429, MCR pull) must not block CI-only MRs.
   # App-path MRs still run this job; post-merge main build-docker-image is the deploy gate.
   allow_failure: true
   variables:
     E2E_IMAGE: mcr.microsoft.com/playwright:v1.49.1-jammy
-    APP_IMAGE: patient-e2e:$CI_COMMIT_SHORT_SHA
   before_script:
     - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
     - |
-      # Dockerfile reuses patient base image from in-cluster registry — same login as build-docker-image.
       registry_reachable() {
         local url="$1"
         local out
@@ -398,19 +498,28 @@ search-e2e:
         PUSH_HOST="$CI_REGISTRY"
       fi
       echo "$PUSH_HOST" > /tmp/push_host
-      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
     - |
       PUSH_HOST=$(cat /tmp/push_host)
       echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
   script:
     - |
-      BASE_IMAGE=$(cat /tmp/base_image)
-      echo "E2E building FROM $BASE_IMAGE"
-      docker build --provenance=false --build-arg "BASE_IMAGE=${BASE_IMAGE}" -t "$APP_IMAGE" .
+      # Fail-fast on Playwright registry before spending time on app pull / startup.
+      echo "Pulling Playwright image $E2E_IMAGE"
+      if ! docker pull "$E2E_IMAGE"; then
+        echo "ERROR: failed to pull Playwright image (MCR/network). Failing fast."
+        exit 1
+      fi
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      APP_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}:ci-${CI_COMMIT_SHORT_SHA}"
+      echo "Pulling shared CI app image $APP_IMAGE"
+      docker pull "$APP_IMAGE"
+      echo "$APP_IMAGE" > /tmp/app_image
     - docker network create e2e-net
-    - >
-      docker run -d --name e2e-app --network e2e-net --network-alias app
-      --env-file .env.example -e NODE_ENV=production -e PORT=3000 "$APP_IMAGE"
+    - |
+      APP_IMAGE=$(cat /tmp/app_image)
+      docker run -d --name e2e-app --network e2e-net --network-alias app \
+        --env-file .env.example -e NODE_ENV=production -e PORT=3000 "$APP_IMAGE"
     - |
       # آمادگیِ واقعی، نه `sleep`: تا وقتی خودِ صفحه‌ی لیستینگ ۲۰۰ ندهد تست شروع نمی‌شود.
       ok=0
@@ -441,8 +550,7 @@ search-e2e:
       - e2e/.report
       - app.log
       - ci-snapshots
-  # `.build-docker-common` روی `script_failure` هم retry می‌کند — این‌جا یعنی یک شکستِ **واقعیِ
-  # تست** دوباره اجرا شود و flakiness را پنهان کند. فقط خطای زیرساخت retry می‌شود.
+  # فقط خطای زیرساخت retry — شکست واقعی تست نباید دوباره اجرا و flake را پنهان کند.
   retry:
     max: 1
     when:
@@ -480,9 +588,9 @@ search-e2e:
         - src/pages/_document.tsx
         - src/common/fragment/**/*
         - src/styles/plasmicRadixBaseCss.ts
-        # — ورودی‌های buildی که خودِ این job از آن‌ها image می‌سازد —
+        # — ورودی‌های buildی که ایمیج مشترک از آن‌ها ساخته می‌شود —
         # Dockerfile / .gitlab-ci.yml عمداً نیستند: تغییرات infra (base image، heap، login)
-        # همان خروجی listing را می‌دهند ولی ۴۵دقیقه e2e+docker build را روی MRهای CI می‌اندازند.
+        # همان خروجی listing را می‌دهند ولی e2e+docker را روی MRهای CI می‌اندازند.
         - next.config.js
         - package.json
         # — خودِ هارنس —
