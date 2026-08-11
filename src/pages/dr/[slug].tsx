@@ -39,6 +39,7 @@ import dynamic from 'next/dynamic';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
 import { formatAverageRate } from '@/modules/profile/utils/getAverageRate';
+import { recordMicroserviceProfilePageView } from '@/modules/profile/utils/recordMicroserviceProfilePageView';
 import {
   isPicUserImageUrl,
   resolveDoctorProfileImageUrl,
@@ -162,6 +163,7 @@ const DoctorProfile = (props: any) => {
     dontShowRateAndReviewMessage,
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
     profile_backend,
+    profile_api_id,
     title: documentTitleFromProps,
     description: documentDescriptionFromProps,
     host: documentHostFromProps,
@@ -323,13 +325,24 @@ const DoctorProfile = (props: any) => {
         });
       }
 
+      // New backend (microservice): profiles-api page-views only — never vicControl.
+      // Legacy: keep clinic vicControl.
       if (vicControlSentForSlugRef.current !== slug) {
         vicControlSentForSlugRef.current = slug;
-        addPageView.mutate({
-          ownerId: information.id,
-          serverId: information.server_id,
-          type: 'doctor',
-        });
+        if (profile_backend === 'microservice' && profile_api_id) {
+          void recordMicroserviceProfilePageView({
+            profileApiId: String(profile_api_id),
+            viewerUserId: userInfo?.id,
+          }).catch(() => {
+            // Soft-fail: view count must not break profile
+          });
+        } else if (profile_backend !== 'microservice') {
+          addPageView.mutate({
+            ownerId: information.id,
+            serverId: information.server_id,
+            type: 'doctor',
+          });
+        }
       }
 
       const doctorUserId = information?.user_id ?? user_id ?? null;
@@ -346,7 +359,20 @@ const DoctorProfile = (props: any) => {
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
-  }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks, user_id]);
+  }, [
+    isBulk,
+    information,
+    slug,
+    userInfo,
+    shouldUseIncrementPageView,
+    centers,
+    expertises,
+    history,
+    feedbacks,
+    user_id,
+    profile_backend,
+    profile_api_id,
+  ]);
 
   // Cache doctor identity for hamdast doctor-service payment (only clear when user_id/slug lifecycle ends).
   useEffect(() => {

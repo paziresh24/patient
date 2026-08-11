@@ -140,12 +140,16 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
   const expertises = mapSpecialtiesToExpertises(specialties);
   const groupExpertises = mapSpecialtiesToGroupExpertises(specialties);
 
+  const profileApiId = pickId(profile.id);
+
   const slugInfo = {
     slug: profile.slug,
     type: profile.profile_type ?? 'doctor',
     user_id: userId,
     owner_id: ownerId,
     server_id: serverId,
+    /** profiles-api UUID — used for statistics page-views (not clinic owner_id). */
+    profile_api_id: profileApiId,
   };
 
   const fullProfileLike = {
