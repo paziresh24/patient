@@ -5,7 +5,7 @@ import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
-import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
+import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
 import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
@@ -455,24 +455,13 @@ export async function getAggregatedProfileData(
     : [];
 
   // Handle gallery API call after all other requests (depends on centers)
-  let doctorGallery = null;
+  let doctorGallery: Awaited<ReturnType<typeof fetchDoctorGalleryFromDrprofile>> | null = null;
   if (options?.useNewDoctorGalleryAPI) {
-    const centersForGallery = Array.isArray(doctorCenters) ? doctorCenters : [];
-
-    if (centersForGallery.length > 0) {
-      try {
-        const galleryPromises = centersForGallery.map((center: any) => getDoctorGallery(center.id));
-        const galleryResults = await Promise.allSettled(galleryPromises);
-
-        doctorGallery = galleryResults
-          .filter(result => result.status === 'fulfilled')
-          .map((result: any) => result.value)
-          .flat()
-          .filter(Boolean);
-      } catch (error) {
-        console.error('Error fetching doctor gallery:', error);
-        doctorGallery = null;
-      }
+    try {
+      doctorGallery = await fetchDoctorGalleryFromDrprofile(validatedSlug, university);
+    } catch (error) {
+      console.error('Error fetching doctor gallery:', error);
+      doctorGallery = null;
     }
   }
 
