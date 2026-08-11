@@ -16,6 +16,7 @@ import { getRateDetailsData } from './getRateDetailsData';
 import { overwriteProfileData } from './overwriteProfileData';
 import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyBooking';
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
+import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
 import { drProfileClient } from '@/common/apis/client';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
@@ -93,6 +94,16 @@ export async function getAggregatedProfileDataFromMicroservice(
   const { slugInfo, fullProfileLike, overwrite, seo, displayName: mappedDisplayName } = mapMicroserviceToLegacy(bundle);
   const validatedSlug = slugInfo.slug || slug;
   const pageSlug = `/dr/${validatedSlug}`;
+
+  // profiles-api gallery URLs (/storage/gallery/...) may 404 on CDN; drprofile has live clinic images.
+  try {
+    const drprofileGallery = await fetchDoctorGalleryFromDrprofile(validatedSlug, university);
+    if (drprofileGallery.length > 0) {
+      overwrite.gallery = drprofileGallery;
+    }
+  } catch (error) {
+    console.error('Error hydrating gallery from drprofile (microservice path):', error);
+  }
 
   const rateDetailsResult = await getRateDetailsData({ slug: validatedSlug }).catch(() => null);
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
