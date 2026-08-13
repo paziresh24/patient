@@ -1,16 +1,18 @@
 import { useLogin as useLoginRequest } from '@/common/apis/services/auth/login';
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
+import useCustomize from '@/common/hooks/useCustomize';
 import { dayToSecond } from '@/common/utils/dayToSecond';
 import { getErrorMessage } from '@/common/utils/errorHandler';
 import axios from 'axios';
-import { setCookie } from 'cookies-next';
+import { deleteCookie, setCookie } from 'cookies-next';
 import { useUserInfoStore } from '../store/userInfo';
 
 export const useLogin = () => {
   const loginRequest = useLoginRequest();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const getMe = useGetMe();
+  const university = useCustomize(state => state.customize?.partnerKey);
 
   const handleLogin = async ({ username, password, force }: { username: string; password: string; force?: boolean }) => {
     try {
@@ -21,11 +23,16 @@ export const useLogin = () => {
       });
 
       if (data.status === ClinicStatus.SUCCESS) {
-        if (data.token) {
+        // Only partner/university hosts need a JS-readable token cookie.
+        // On paziresh24.com the login service already sets an httpOnly cookie
+        // on .paziresh24.com; duplicating it without httpOnly exposes the JWT to XSS.
+        if (university && data.token) {
           setCookie('token', data.token, {
             path: '/',
             maxAge: dayToSecond(365),
           });
+        } else {
+          deleteCookie('token', { path: '/' });
         }
 
         const userData = await getMe.mutateAsync();
