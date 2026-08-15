@@ -7,7 +7,7 @@ import { getProfileMicroserviceBundle } from '@/common/apis/services/profile-mic
 import { mapMicroserviceToLegacy } from '@/common/apis/services/profile-microservice/mapMicroserviceToLegacy';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { CENTERS } from '@/common/types/centers';
-import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { filterBookableMappedCenterServices, isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import isEmpty from 'lodash/isEmpty';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
@@ -223,10 +223,12 @@ export async function getAggregatedProfileDataFromMicroservice(
         const result = serviceResults[idx];
         if (result.status !== 'fulfilled' || !result.value?.length) return center;
         const mapped = mapDoctorCenterServices(result.value, center.user_center_id);
+        const services =
+          String(center.id) === CENTERS.CONSULT ? filterBookableMappedCenterServices(mapped) : mapped;
         if (isServer) {
           queryClient.setQueryData([ServerStateKeysEnum.DoctorCenterServices, validatedSlug, String(center.id)], result.value);
         }
-        return { ...center, services: mapped };
+        return { ...center, services };
       });
     } catch (error) {
       console.error('Error hydrating center services (microservice path):', error);

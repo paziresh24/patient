@@ -18,7 +18,7 @@ import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
-import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { filterBookableMappedCenterServices, isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getProfile } from './getProfileData';
@@ -642,7 +642,9 @@ export async function getAggregatedProfileData(
     try {
       const onlineServices = await getDoctorCenterServices(validatedSlug, CENTERS.CONSULT);
       if (onlineServices?.length) {
-        const mapped = mapDoctorCenterServices(onlineServices, consultCenter.user_center_id);
+        const mapped = filterBookableMappedCenterServices(
+          mapDoctorCenterServices(onlineServices, consultCenter.user_center_id),
+        );
         centers = centers.map((center: any) =>
           String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center,
         );
