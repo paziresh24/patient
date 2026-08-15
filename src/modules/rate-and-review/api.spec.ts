@@ -4,6 +4,7 @@ import {
   deleteFeedback,
   editFeedback,
   fetchFeedbackReply,
+  fetchMyFeedbacks,
   fetchRateSummary,
   fetchReviewPage,
   fetchShareCommentUrl,
@@ -142,11 +143,11 @@ describe('rate-and-review api', () => {
     );
   });
 
-  it('editFeedback patches description', async () => {
+  it('editFeedback patches description on feedbacks webservice', async () => {
     mockedPatch.mockResolvedValueOnce({ data: {} });
     await editFeedback({ feedbackId: 'fb-1', description: 'updated' });
     expect(mockedPatch).toHaveBeenCalledWith(
-      '/ravi/v2/feedbacks?id=fb-1',
+      '/ravi/v1/feedbacks/fb-1/description',
       { description: 'updated' },
       { withCredentials: true },
     );
@@ -156,6 +157,31 @@ describe('rate-and-review api', () => {
     mockedDelete.mockResolvedValueOnce({ data: {} });
     await deleteFeedback('fb-2');
     expect(mockedDelete).toHaveBeenCalledWith('/ravi/v1/feedbacks/fb-2', { withCredentials: true });
+  });
+
+  it('fetchMyFeedbacks requests patients/me with pagination', async () => {
+    mockedGet.mockResolvedValueOnce({
+      data: {
+        data: [{ id: 1, book_id: 'book-1', doctor_slug: 'dr-test', description: 'متن', replies: [] }],
+        meta: {
+          userId: 2123019,
+          count: 1,
+          limit: 20,
+          offset: 0,
+          total: 1,
+          hasNext: false,
+          nextOffset: null,
+        },
+      },
+    });
+
+    const page = await fetchMyFeedbacks({ limit: 20, offset: 0 });
+    expect(mockedGet).toHaveBeenCalledWith('/ravi/v1/feedbacks/patients/me', {
+      params: { limit: 20, offset: 0 },
+      withCredentials: true,
+    });
+    expect(page.data).toHaveLength(1);
+    expect(page.meta.total).toBe(1);
   });
 
   it('reportFeedback posts to ravi v3 report endpoint', async () => {

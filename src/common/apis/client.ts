@@ -96,6 +96,22 @@ export const raviApisClient = axios.create({
   ...baseConfig,
 });
 
+raviApisClient.interceptors.request.use(
+  config => {
+    if (getCookie('token')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + getCookie('token');
+    }
+    if (typeof window !== 'undefined' && window.localStorage?.getItem('fragment::previewToken')) {
+      (config as any).headers['Authorization'] = 'Bearer ' + window.localStorage.getItem('fragment::previewToken');
+    }
+    if (typeof Intl?.DateTimeFormat?.()?.resolvedOptions()?.timeZone == 'string') {
+      (config as any).headers['accept-timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+    return config;
+  },
+  err => Promise.reject(err),
+);
+
 export const searchClient = axios.create({
   // Local browser: proxy via custom server.js (strips Origin). apigw returns [] for Origin=localhost.
   baseURL:
