@@ -59,6 +59,7 @@ import Head from 'next/head';
 import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
 import { useRate } from '@/common/apis/services/reviews/rate';
+import { ProfileBackendDebugBadge } from '@/modules/profile/components/profileBackendDebugBadge';
 
 const { publicRuntimeConfig } = config();
 
@@ -164,10 +165,14 @@ const DoctorProfile = (props: any) => {
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
     profile_backend,
     profile_api_id,
+    profile_fallback_reason,
     title: documentTitleFromProps,
     description: documentDescriptionFromProps,
     host: documentHostFromProps,
   } = finalProps ?? {};
+
+  const showProfileBackendDebug =
+    query.profileDebug === '1' || query.profile_debug === '1' || query.rateDebug === '1';
 
   const clientExpertiseChipsLikeSearch = newApiFeatureFlaggingCondition(
     expertiseChipsConfig?.slugs ?? [],
@@ -614,6 +619,13 @@ const DoctorProfile = (props: any) => {
           />
         ) : null}
       </Head>
+      <ProfileBackendDebugBadge
+        enabled={showProfileBackendDebug}
+        profile_backend={profile_backend}
+        profile_api_id={profile_api_id}
+        profile_fallback_reason={profile_fallback_reason}
+        useSamanAvailabilityStatus={ssrUseSamanAvailabilityStatus}
+      />
       <RaviGlobalContextsProvider>
         <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
           {isProfileScriptsReady &&

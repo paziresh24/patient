@@ -169,8 +169,17 @@ export async function getAggregatedProfileData(
         return microserviceResult;
       }
     } catch (error) {
-      // Never hard-500/404 the page when profiles-api is unreachable, unauthorized, or missing the slug.
-      // Fall back to the legacy path so production stays up while API data is incomplete.
+      // Allowlisted doctors must not silently become full-legacy (ops/managers see coin-flip).
+      // Caller asked for MS explicitly — surface the failure instead of swapping backends.
+      if (options?.useProfileMicroservice === true) {
+        const status = (error as any)?.response?.status ?? (error as any)?.status;
+        console.error('[profile] microservice aggregation failed; NOT falling back to legacy (allowlist sticky)', {
+          slug,
+          status,
+          message: error instanceof Error ? error.message : String(error),
+        });
+        throw error;
+      }
       const status = (error as any)?.response?.status ?? (error as any)?.status;
       console.error('[profile] microservice aggregation failed; falling back to legacy', {
         slug,
@@ -745,6 +754,7 @@ export async function getAggregatedProfileData(
       user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       shouldFetchOnClient: skipFullProfile ? false : !fullProfileData?.id,
       useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
+      profile_backend: 'legacy',
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
     },
   };

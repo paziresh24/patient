@@ -10,10 +10,7 @@ import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGro
 import { GrowthBook } from '@growthbook/growthbook-react';
 import { getHost, HeaderBag } from '@/common/utils/getHost';
 import { getProfileMicroserviceConfig } from '@/common/apis/clients/profileMicroserviceClient';
-import {
-  isSlugInProfileApiSourceAllowlist,
-  PROFILE_API_SOURCE_FEATURE_KEY,
-} from '@/modules/profile/utils/profileApiSourceBySlugFlag';
+import { isProfileMicroserviceAllowlistedSlug } from '@/modules/profile/utils/profileApiSourceAllowlist.server';
 import { isExpertiseChipsLikeSearchEnabledForSlug } from '@/modules/profile/utils/expertiseChipsLikeSearchFlag';
 import { sendDoctorProfileEventServer } from '@/modules/profile/events/nightBatEvents';
 import {
@@ -21,7 +18,7 @@ import {
   resolveDoctorProfileLcpImageUrl,
 } from '@/modules/profile/utils/doctorProfileImageUrl';
 
-const clientFetchFallbackProps = (slug: string) =>
+const clientFetchFallbackProps = (slug: string, extras?: Record<string, unknown>) =>
   sanitizeObject({
     slug,
     shouldFetchOnClient: true,
@@ -43,6 +40,9 @@ const clientFetchFallbackProps = (slug: string) =>
     hamdastWidgets: [],
     hamdastWidgetsData: {},
     user_id: null,
+    profile_backend: 'legacy',
+    profile_fallback_reason: 'client_soft_shell',
+    ...extras,
   });
 
 export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
@@ -60,19 +60,40 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
     const slug = decodeURIComponent(rawSlug as string);
     const university = themeConfing?.partnerKey as string;
 
-    // Client navigations hit /_next/data — skip heavy SSR but keep slug + loading title for the tab.
-    // (Global withCSR returned props:{} which made Seo render "| پذیرش24".)
-    if (context.req.url?.startsWith('/_next')) {
-      return { props: clientFetchFallbackProps(slug) };
-    }
-
     let prefetchSamanAvailability = false;
     // Explicit false = legacy for this request (no second GB check in aggregator).
     let useProfileMicroservice = false;
     let fetchExpertiseKeywordTags = false;
 
-    // Run profile GB (short timeout) and chips GB (dedicated 2500ms path) in parallel —
-    // sequential awaits stacked TTFB without changing chips rollout semantics.
+    // Allowlist comes from GrowthBook via a dedicated cached loader (not the 500ms Saman GB load),
+    // so editing GB still works and SSR does not coin-flip to full legacy on slow GB/CDN.
+    const allowlistPromise = (async () => {
+      try {
+        const { baseURL } = getProfileMicroserviceConfig();
+        if (!baseURL) return false;
+        return await isProfileMicroserviceAllowlistedSlug(slug);
+      } catch (error) {
+        trackSsrError(error, {
+          source: 'ProfileSSR',
+          message: 'Error resolving profile.api-source-by-slug allowlist',
+          path: context.resolvedUrl,
+        });
+        return false;
+      }
+    })();
+
+    // Client navigations hit /_next/data — soft shell is OK for legacy, but allowlisted doctors
+    // must stay on the hybrid/MS path (CSR always forced legacy before and confused ops).
+    const isNextData = !!context.req.url?.startsWith('/_next');
+    if (isNextData) {
+      const allowlisted = await allowlistPromise;
+      if (!allowlisted) {
+        return { props: clientFetchFallbackProps(slug) };
+      }
+      // Fall through to full SSR hybrid for allowlisted slugs.
+    }
+
+    // Run Saman GB (short timeout), allowlist cache, and chips GB in parallel.
     const profileFlagsPromise = (async () => {
       try {
         const host = getHost(context.req.headers as HeaderBag);
@@ -81,25 +102,14 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
         const growthbook = new GrowthBook(growthbookContext);
         growthbook.setAttributes({ url, host, slug });
         await growthbook.loadFeatures({ timeout: 500 });
-        const samanOn = growthbook.isOn('use-saman-availability-status');
-
-        let microservice = false;
-        const { baseURL, envSlugs } = getProfileMicroserviceConfig();
-        if (baseURL) {
-          const apiSource = growthbook.getFeatureValue<{ slugs?: string[] }>(PROFILE_API_SOURCE_FEATURE_KEY, {
-            slugs: [],
-          });
-          const gbSlugs = apiSource?.slugs ?? [];
-          microservice = isSlugInProfileApiSourceAllowlist(gbSlugs.length > 0 ? gbSlugs : envSlugs, slug);
-        }
-        return { samanOn, microservice };
+        return { samanOn: growthbook.isOn('use-saman-availability-status') };
       } catch (error) {
         trackSsrError(error, {
           source: 'ProfileSSR',
           message: 'Error loading GrowthBook for Saman availability SSR',
           path: context.resolvedUrl,
         });
-        return { samanOn: false, microservice: false };
+        return { samanOn: false };
       }
     })();
 
@@ -116,9 +126,13 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
       }
     })();
 
-    const [profileFlags, chipsEnabled] = await Promise.all([profileFlagsPromise, chipsFlagPromise]);
+    const [profileFlags, chipsEnabled, allowlisted] = await Promise.all([
+      profileFlagsPromise,
+      chipsFlagPromise,
+      allowlistPromise,
+    ]);
     prefetchSamanAvailability = profileFlags.samanOn;
-    useProfileMicroservice = profileFlags.microservice;
+    useProfileMicroservice = allowlisted;
     fetchExpertiseKeywordTags = chipsEnabled;
 
     try {
@@ -208,6 +222,12 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
         );
 
         if (csrFallback) {
+          // Allowlisted hybrid must not soft-shell into CSR legacy (that was the coin-flip).
+          if (useProfileMicroservice) {
+            console.warn(`SSR error for allowlisted MS slug: ${slug}. Serving error page (no legacy swap).`);
+            context.res.statusCode = statusCode;
+            return handleSsrError(context.res.statusCode, slug);
+          }
           console.warn(`SSR Timeout/Error for slug: ${slug}. Falling back to client-side rendering.`);
           return {
             props: clientFetchFallbackProps(slug),
@@ -231,24 +251,30 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
           handle_error_status: 500,
           http_status: 500,
           duration_ms: durationMs,
-          csr_fallback: true,
+          csr_fallback: !useProfileMicroservice,
         },
         userAgent,
       );
 
       void sendDoctorProfileEventServer(
         'profile_ssr',
-        'csr_fallback',
+        useProfileMicroservice ? 'error' : 'csr_fallback',
         {
           slug,
           path: context.resolvedUrl,
           duration_ms: durationMs,
           http_status: 500,
-          csr_fallback: true,
+          csr_fallback: !useProfileMicroservice,
           message: error instanceof Error ? error.message : String(error),
         },
         userAgent,
       );
+
+      if (useProfileMicroservice) {
+        console.warn(`SSR non-Axios error for allowlisted MS slug: ${slug}. Serving error page (no legacy swap).`);
+        context.res.statusCode = 500;
+        return handleSsrError(500, slug);
+      }
 
       // Soft-fail: keep the page up via CSR instead of a hard 500.
       console.warn(`SSR non-Axios error for slug: ${slug}. Falling back to client-side rendering.`);

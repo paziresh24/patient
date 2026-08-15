@@ -108,7 +108,17 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
   const profile = bundle.profile ?? {};
   const shenasname = bundle.shenasname ?? {};
   const bio = bundle.bio ?? {};
-  const specialties = Array.isArray(bundle.specialties) ? bundle.specialties : [];
+  let specialties = Array.isArray(bundle.specialties) ? bundle.specialties : [];
+  if (specialties.length === 0 && shenasname.professional_title) {
+    specialties = [
+      {
+        id: null,
+        name: shenasname.professional_title,
+        slug: null,
+        is_primary: true,
+      },
+    ];
+  }
   const locations = Array.isArray(bundle.locations) ? bundle.locations : [];
   const gallery = Array.isArray(bundle.gallery) ? bundle.gallery : [];
   const statistics = bundle.statistics ?? {};
@@ -152,6 +162,11 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
     profile_api_id: profileApiId,
   };
 
+  const consultationTypes = Array.isArray(shenasname.consultation_types)
+    ? shenasname.consultation_types.map((item: unknown) => String(item))
+    : [];
+  const seoInternalLinks = Array.isArray(seo.internal_links) ? seo.internal_links : [];
+
   const fullProfileLike = {
     id: ownerId,
     server_id: serverId,
@@ -167,6 +182,11 @@ export function mapMicroserviceToLegacy(bundle: ProfileMicroserviceBundle) {
     centers,
     group_expertises: groupExpertises,
     expertises,
+    // New backend: in_person | online — not the legacy messenger channel list.
+    consult_active_booking: consultationTypes.includes('online'),
+    // Filled later from online-visit service titles (profiles-api has no channel_types yet).
+    online_visit_channel_types: [] as string[],
+    similar_links: seoInternalLinks,
     feedbacks: {
       details: {
         doctor_encounter: statistics.rating_score ?? null,

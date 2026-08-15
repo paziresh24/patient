@@ -19,6 +19,7 @@ import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyB
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
 import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
+import { deriveOnlineVisitChannelTypesFromServices } from '@/modules/profile/utils/deriveOnlineVisitChannelTypes';
 import { drProfileClient } from '@/common/apis/client';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
@@ -157,7 +158,7 @@ export async function getAggregatedProfileDataFromMicroservice(
   let legacyCenters =
     legacyProfileResult.status === 'fulfilled' ? legacyProfileResult.value?.fullProfileData?.centers : null;
 
-  // Booking hydrate depends on legacy centers; retry once with a longer timeout if first call failed.
+  // Booking hydrate only (services/freeturn/user_center_id). Do NOT copy identity UI fields from full-profile.
   if (!Array.isArray(legacyCenters) || legacyCenters.length === 0) {
     try {
       const { data } = await drProfileClient.get(`/api/full-profile/${encodeURIComponent(validatedSlug)}/`, {
@@ -195,13 +196,14 @@ export async function getAggregatedProfileDataFromMicroservice(
     history,
     information,
     media,
-    onlineVisit,
+    onlineVisit: initialOnlineVisit,
     similarLinks,
     symptomes,
     waitingTimeInfo,
   } = overwriteProfileData(overwrite, fullProfileLike);
 
   let centers = initialCenters;
+  let onlineVisit = initialOnlineVisit;
 
   // If merge left bookable centers without services (FP flake), hydrate per-center services API.
   const centersNeedingServices = (centers || []).filter((center: any) => {
@@ -234,6 +236,14 @@ export async function getAggregatedProfileDataFromMicroservice(
       console.error('Error hydrating center services (microservice path):', error);
     }
   }
+
+  // Messenger icons: derive from online-visit service titles (not full-profile channel_types).
+  const onlineCenter = (centers || []).find((center: any) => String(center?.id) === CENTERS.CONSULT);
+  const derivedChannels = deriveOnlineVisitChannelTypesFromServices(onlineCenter?.services);
+  onlineVisit = {
+    ...onlineVisit,
+    channels: derivedChannels.length > 0 ? derivedChannels : onlineVisit?.channels ?? [],
+  };
 
 
   const doctorCityNames = formatDoctorCitiesForTitle(centers);
@@ -299,7 +309,8 @@ export async function getAggregatedProfileDataFromMicroservice(
       shouldFetchOnClient: false,
       useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
       profile_backend: 'microservice',
-      profile_api_id: slugInfo.profile_api_id ?? null,
+      profile_api_id:
+        bundle.profile?.id != null ? String(bundle.profile.id) : slugInfo.profile_api_id ?? null,
       profile_type: slugInfo.type,
       doctor_city_names: doctorCityNames,
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
