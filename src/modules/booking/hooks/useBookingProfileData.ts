@@ -75,13 +75,12 @@ export const useBookingProfileData = (slug: string | undefined, options?: UseBoo
     },
   );
 
-  const slugRedirect =
+  // Only honor validateDoctorSlug redirects. full-profile redirects can point at stale
+  // slugs and fight the canonical chain (infinite booking URL loop).
+  const redirect =
     slugQuery.data && typeof slugQuery.data === 'object' && 'redirect' in slugQuery.data
       ? (slugQuery.data as { redirect: { route: string; statusCode?: number } }).redirect
       : undefined;
-
-  const fullProfileRedirect = fullProfileQuery.data?.redirect;
-  const redirect = slugRedirect ?? fullProfileRedirect;
 
   const slugInfo = isValidSlugInfo(slugQuery.data) ? slugQuery.data : null;
   const fullProfile = fullProfileQuery.data?.data ?? null;
