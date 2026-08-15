@@ -32,7 +32,10 @@ import {
   getScopedOnlineVisitAvailability,
   mapSamanAvailabilityToCenters,
 } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
-import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import {
+  filterBookableMappedCenterServices,
+  mapDoctorCenterServices,
+} from '@/modules/booking/functions/mapDoctorCenterServices';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getProfileOnlineVisitVisibility } from '@/modules/profile/utils/onlineVisitVisibility';
 import { shouldShowRismanExternalBooking } from '@/modules/profile/utils/rismanBookingVisibility';
@@ -205,10 +208,13 @@ export const Services = ({
 
   const onlineVisitServices = useMemo(() => {
     if (!consultCenter) return [];
-    const profileServices = consultCenter.services ?? [];
+    const profileServices = filterBookableMappedCenterServices(consultCenter.services ?? []);
     if (!needsOnlineServices) return profileServices;
     if (onlineServicesQuery.isSuccess && onlineServicesQuery.data) {
-      return mapDoctorCenterServices(onlineServicesQuery.data, consultCenter.user_center_id);
+      // drprofile returns historical inactive consult rows; only show bookable/requestable.
+      return filterBookableMappedCenterServices(
+        mapDoctorCenterServices(onlineServicesQuery.data, consultCenter.user_center_id),
+      );
     }
     if (onlineServicesQuery.isError) return profileServices;
     return [];
@@ -441,7 +447,7 @@ export const Services = ({
                 : { ...service, chat_lifecycle_loading: true };
 
             return (
-              <div key={index} className="flex flex-col gap-2">
+              <div key={service.id ?? index} className="flex flex-col gap-2">
                 <Fragment2
                   name="Services"
                   Component={PlasmicServicesWrapper}
