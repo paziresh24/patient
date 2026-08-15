@@ -16,6 +16,10 @@ import {
 } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
 import { isExpertiseChipsLikeSearchEnabledForSlug } from '@/modules/profile/utils/expertiseChipsLikeSearchFlag';
 import { sendDoctorProfileEventServer } from '@/modules/profile/events/nightBatEvents';
+import {
+  isPicUserImageUrl,
+  resolveDoctorProfileLcpImageUrl,
+} from '@/modules/profile/utils/doctorProfileImageUrl';
 
 const clientFetchFallbackProps = (slug: string) =>
   sanitizeObject({
@@ -43,7 +47,9 @@ const clientFetchFallbackProps = (slug: string) =>
 
 export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
   async (context: GetServerSidePropsContext, themeConfing: ThemeConfig) => {
-    context.res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
+    // Longer shared-cache window for edge TTFB; SWR keeps serving while revalidating.
+    // DevOps: CDN must honor s-maxage (not strip Cache-Control) for this to help origin TTFB.
+    context.res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=120');
     const ssrStartedAt = Date.now();
     const userAgent = context.req.headers['user-agent'] ?? null;
 
@@ -64,43 +70,56 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
     // Explicit false = legacy for this request (no second GB check in aggregator).
     let useProfileMicroservice = false;
     let fetchExpertiseKeywordTags = false;
-    try {
-      const host = getHost(context.req.headers as HeaderBag);
-      const url = `https://${host}${context.resolvedUrl}`;
-      const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-      const growthbook = new GrowthBook(growthbookContext);
-      growthbook.setAttributes({ url, host, slug });
-      await growthbook.loadFeatures({ timeout: 500 });
-      prefetchSamanAvailability = growthbook.isOn('use-saman-availability-status');
 
-      const { baseURL, envSlugs } = getProfileMicroserviceConfig();
-      if (baseURL) {
-        const apiSource = growthbook.getFeatureValue<{ slugs?: string[] }>(PROFILE_API_SOURCE_FEATURE_KEY, {
-          slugs: [],
+    // Run profile GB (short timeout) and chips GB (dedicated 2500ms path) in parallel —
+    // sequential awaits stacked TTFB without changing chips rollout semantics.
+    const profileFlagsPromise = (async () => {
+      try {
+        const host = getHost(context.req.headers as HeaderBag);
+        const url = `https://${host}${context.resolvedUrl}`;
+        const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
+        const growthbook = new GrowthBook(growthbookContext);
+        growthbook.setAttributes({ url, host, slug });
+        await growthbook.loadFeatures({ timeout: 500 });
+        const samanOn = growthbook.isOn('use-saman-availability-status');
+
+        let microservice = false;
+        const { baseURL, envSlugs } = getProfileMicroserviceConfig();
+        if (baseURL) {
+          const apiSource = growthbook.getFeatureValue<{ slugs?: string[] }>(PROFILE_API_SOURCE_FEATURE_KEY, {
+            slugs: [],
+          });
+          const gbSlugs = apiSource?.slugs ?? [];
+          microservice = isSlugInProfileApiSourceAllowlist(gbSlugs.length > 0 ? gbSlugs : envSlugs, slug);
+        }
+        return { samanOn, microservice };
+      } catch (error) {
+        trackSsrError(error, {
+          source: 'ProfileSSR',
+          message: 'Error loading GrowthBook for Saman availability SSR',
+          path: context.resolvedUrl,
         });
-        const gbSlugs = apiSource?.slugs ?? [];
-        // Prefer GrowthBook allowlist; env is local fallback when GB is empty.
-        useProfileMicroservice = isSlugInProfileApiSourceAllowlist(
-          gbSlugs.length > 0 ? gbSlugs : envSlugs,
-          slug,
-        );
+        return { samanOn: false, microservice: false };
       }
-    } catch (error) {
-      trackSsrError(error, { source: 'ProfileSSR', message: 'Error loading GrowthBook for Saman availability SSR', path: context.resolvedUrl });
-    }
+    })();
 
-    // Keep a dedicated GrowthBook load for expertise chips (timeout 2500) so gradual
-    // allowlist/percentage rollout is not tied to the short 500ms profile GB load.
-    try {
-      fetchExpertiseKeywordTags = await isExpertiseChipsLikeSearchEnabledForSlug(slug);
-    } catch (error) {
-      trackSsrError(error, {
-        source: 'ProfileSSR',
-        message: 'Error resolving profile.expertise-chips-like-search',
-        path: context.resolvedUrl,
-      });
-      fetchExpertiseKeywordTags = false;
-    }
+    const chipsFlagPromise = (async () => {
+      try {
+        return await isExpertiseChipsLikeSearchEnabledForSlug(slug);
+      } catch (error) {
+        trackSsrError(error, {
+          source: 'ProfileSSR',
+          message: 'Error resolving profile.expertise-chips-like-search',
+          path: context.resolvedUrl,
+        });
+        return false;
+      }
+    })();
+
+    const [profileFlags, chipsEnabled] = await Promise.all([profileFlagsPromise, chipsFlagPromise]);
+    prefetchSamanAvailability = profileFlags.samanOn;
+    useProfileMicroservice = profileFlags.microservice;
+    fetchExpertiseKeywordTags = chipsEnabled;
 
     try {
       const finalProps = await getAggregatedProfileData(slug, university, true, {
@@ -117,6 +136,13 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
 
       const durationMs = Date.now() - ssrStartedAt;
       const httpStatus = context.res.statusCode || 200;
+      const props = (finalProps as any)?.props ?? {};
+      const lcpImageUrl = resolveDoctorProfileLcpImageUrl(props.information, props.user_id);
+      if (isPicUserImageUrl(lcpImageUrl)) {
+        // HTTP Link preload reaches the browser before HTML parse finishes (helps LCP).
+        context.res.setHeader('Link', `<${lcpImageUrl}>; rel=preload; as=image`);
+      }
+
       void sendDoctorProfileEventServer(
         'profile_ssr',
         'success',
@@ -126,7 +152,7 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
           duration_ms: durationMs,
           http_status: httpStatus,
           csr_fallback: false,
-          doctor_id: (finalProps as any)?.props?.information?.id ?? null,
+          doctor_id: props?.information?.id ?? null,
         },
         userAgent,
       );

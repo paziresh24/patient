@@ -604,7 +604,14 @@ const DoctorProfile = (props: any) => {
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
         <link rel="preconnect" href="https://pic.paziresh24.com" crossOrigin="" />
         {isPicUserImageUrl(doctorProfileLcpImageUrl) ? (
-          <link rel="preload" as="image" href={doctorProfileLcpImageUrl} fetchPriority="high" />
+          <link
+            rel="preload"
+            as="image"
+            href={doctorProfileLcpImageUrl}
+            // Avatar is ~85px CSS; tell the browser not to treat this as a full-bleed hero.
+            imageSizes="85px"
+            fetchPriority="high"
+          />
         ) : null}
       </Head>
       <RaviGlobalContextsProvider>
