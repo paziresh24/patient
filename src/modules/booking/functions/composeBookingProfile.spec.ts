@@ -55,7 +55,7 @@ describe('composeBookingProfile', () => {
     expect(profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug).toBe('general');
   });
 
-  it('fills gap fields from full-profile without overriding centers user_center_id', () => {
+  it('fills gap fields from full-profile but settings only from Saman', () => {
     const profile = composeBookingProfile({
       slugInfo: {
         id: 1,
@@ -78,7 +78,7 @@ describe('composeBookingProfile', () => {
             id: 'center-1',
             user_center_id: 'ucid-from-fp',
             server_id: 99,
-            settings: { booking_enable_insurance: '1' },
+            settings: { booking_enable_insurance: '0' },
             insurances: [{ id: 1, name: 'تامین' }],
             user_center_desk: 'میز',
             freeturn: 123,
@@ -89,15 +89,53 @@ describe('composeBookingProfile', () => {
           },
         ],
       },
+      settingsByCenterId: {
+        'center-1': {
+          booking_enable_insurance: '1',
+          booking_new_turn_suggestion_type: 'only_first_turn',
+          booking_paging_from_clinic: null,
+        },
+      },
     });
 
     expect(profile?.centers[0].user_center_id).toBe('ucid-from-centers');
     expect(profile?.centers[0].server_id).toBe(1);
-    expect(profile?.centers[0].settings).toEqual({ booking_enable_insurance: '1' });
     expect(profile?.centers[0].insurances).toEqual([{ id: 1, name: 'تامین' }]);
     expect(profile?.centers[0].services).toEqual([]);
+    expect(profile?.centers[0].settings).toEqual({
+      booking_enable_insurance: '1',
+      booking_new_turn_suggestion_type: 'only_first_turn',
+      booking_paging_from_clinic: null,
+    });
     expect(profile?.online_visit_channel_types).toEqual(['whatsapp']);
     expect(profile?.feedback_visit).toEqual({ two_weeks_data: [] });
+  });
+
+  it('ignores full-profile settings when Saman settings are missing', () => {
+    const profile = composeBookingProfile({
+      slugInfo: {
+        id: 1,
+        slug: 'dr-test',
+        owner_id: 'owner-1',
+        server_id: 1,
+        type: 'doctor',
+        user_id: 10,
+      },
+      fullName: { name: 'علی', family: 'تست' },
+      doctorCenters,
+      fullProfile: {
+        centers: [
+          {
+            id: 'center-1',
+            settings: { booking_enable_insurance: '1' },
+            insurances: [{ id: 1, name: 'تامین' }],
+          },
+        ],
+      },
+    });
+
+    expect(profile?.centers[0].settings).toBeNull();
+    expect(profile?.centers[0].insurances).toEqual([{ id: 1, name: 'تامین' }]);
   });
 
   it('returns null when no sources are available', () => {
