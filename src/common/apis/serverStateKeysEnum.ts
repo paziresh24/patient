@@ -23,6 +23,7 @@ export enum ServerStateKeysEnum {
   Rate = 'rate',
   AvailabilityStatus = 'availabilityStatus',
   SamanDoctorAvailabilityStatus = 'samanDoctorAvailabilityStatus',
+  SamanCenterBookingSettings = 'samanCenterBookingSettings',
   DoctorCenters = 'doctorCenters',
   DoctorCenterServices = 'doctorCenterServices',
   Services = 'services',
