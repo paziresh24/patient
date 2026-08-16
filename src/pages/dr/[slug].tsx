@@ -166,6 +166,10 @@ const DoctorProfile = (props: any) => {
     profile_backend,
     profile_api_id,
     profile_fallback_reason,
+    profile_type,
+    profile_perf,
+    profile_debug_meta,
+    shouldFetchOnClient: shouldFetchOnClientFromProps,
     title: documentTitleFromProps,
     description: documentDescriptionFromProps,
     host: documentHostFromProps,
@@ -625,6 +629,12 @@ const DoctorProfile = (props: any) => {
         profile_api_id={profile_api_id}
         profile_fallback_reason={profile_fallback_reason}
         useSamanAvailabilityStatus={ssrUseSamanAvailabilityStatus}
+        slug={String(slug ?? currentSlug ?? '')}
+        profile_type={profile_type}
+        isBulk={!!isBulk}
+        shouldFetchOnClient={!!(shouldFetchOnClientFromProps ?? shouldFetchOnClient)}
+        profile_perf={profile_perf}
+        profile_debug_meta={profile_debug_meta}
       />
       <RaviGlobalContextsProvider>
         <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
