@@ -350,8 +350,22 @@ build-docker-image:
       # Keep BASE_IMAGE on the same host we authenticate to.
       echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
     - |
+      # Fast script_failure (~20–40s) after merge is usually registry/login flake, not app code.
+      # Retry login a few times so main does not stay red until a manual Retry click.
       PUSH_HOST=$(cat /tmp/push_host)
-      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
+      login_ok=0
+      for i in 1 2 3 4 5; do
+        if echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"; then
+          login_ok=1
+          break
+        fi
+        echo "docker login failed for $PUSH_HOST (attempt $i/5); sleeping..."
+        sleep $((i * 3))
+      done
+      if [ "$login_ok" != "1" ]; then
+        echo "FATAL: docker login failed for $PUSH_HOST after retries"
+        exit 1
+      fi
   script:
     - |
       PUSH_HOST=$(cat /tmp/push_host)
