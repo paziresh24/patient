@@ -76,6 +76,7 @@ import { isInvalidProfileServiceId, mapDoctorCenterServices, resolveBookableServ
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { isBookingInsuranceEnabled, useCenterInsurances } from '@/common/apis/services/doctor/getCenterInsurances';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
 import useBooking from '../hooks/booking';
@@ -231,6 +232,15 @@ const BookingSteps = (props: BookingStepsProps) => {
   );
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
+  const insuranceEnabled = isBookingInsuranceEnabled(center?.settings?.booking_enable_insurance);
+  const centerInsurancesQuery = useCenterInsurances(center?.id, {
+    enabled: insuranceEnabled && step === 'SELECT_USER',
+  });
+  const centerWithInsurances = useMemo(() => {
+    if (!center) return center;
+    if (!centerInsurancesQuery.data) return center;
+    return { ...center, insurances: centerInsurancesQuery.data };
+  }, [center, centerInsurancesQuery.data]);
   const { data: services } = useGetServices({ slug, center_id: center?.id }, { enabled: !!center?.id && !!service?.id });
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
@@ -477,7 +487,7 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const bookingAddon = useBookingAddon({
     slug,
-    center,
+    center: centerWithInsurances,
     profile,
     user,
     service,
@@ -626,7 +636,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         value: insurance.id,
       }));
     } else {
-      insurances = center?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
+      insurances = centerWithInsurances?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
     }
 
     insurances.push({ label: 'آزاد', value: -1 });
@@ -1039,16 +1049,23 @@ const BookingSteps = (props: BookingStepsProps) => {
       </Modal>
       <Modal title="انتخاب بیمه" {...insuranceModalProps} noScroll>
         <div className="flex flex-col space-y-3">
-          <Autocomplete
-            placeholder="انتخاب کنید."
-            align={isMobile ? 'top' : 'bottom'}
-            onChange={e => setInsuranceName(e.target.value.value)}
-            label="نام بیمه"
-            options={getInsuranceList()}
-          />
+          {insuranceEnabled && centerInsurancesQuery.isLoading ? (
+            <div className="flex justify-center py-6">
+              <Loading />
+            </div>
+          ) : (
+            <Autocomplete
+              placeholder="انتخاب کنید."
+              align={isMobile ? 'top' : 'bottom'}
+              onChange={e => setInsuranceName(e.target.value.value)}
+              label="نام بیمه"
+              options={getInsuranceList()}
+            />
+          )}
           <Button
-            loading={bookLoading}
+            loading={bookLoading || (insuranceEnabled && centerInsurancesQuery.isLoading)}
             block
+            disabled={insuranceEnabled && centerInsurancesQuery.isLoading}
             onClick={() =>
               handleBookAction({
                 ...user,

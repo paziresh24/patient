@@ -1,4 +1,5 @@
 import type { DoctorCentersResponse } from '@/common/apis/services/doctor/getDoctorCenters';
+import type { CenterInsuranceResponse } from '@/common/apis/services/doctor/getCenterInsurances';
 import type { DoctorExpertiseResponse } from '@/common/apis/services/doctor/getDoctorExpertise';
 import type { DoctorFullNameResponse } from '@/common/apis/services/doctor/getDoctorFullName';
 import type { DoctorSlugValidationResponse } from '@/common/apis/services/doctor/validateDoctorSlug';
@@ -16,6 +17,8 @@ export type ComposeBookingProfileInput = {
   fullProfile?: FullProfilePayload;
   /** Saman booking-settings keyed by center id — preferred over full-profile settings */
   settingsByCenterId?: Record<string, SamanCenterBookingSettingsPayload | null>;
+  /** drprofile center insurances keyed by center id — not from full-profile */
+  insurancesByCenterId?: Record<string, CenterInsuranceResponse[] | null>;
 };
 
 const mapExpertiseForBooking = (items: DoctorExpertiseResponse[]) =>
@@ -32,13 +35,13 @@ const mergeCenterWithFullProfile = (
   center: ReturnType<typeof mapDoctorCenterToProfileCenter>,
   fullProfileCenter: Record<string, any> | undefined,
   samanSettings: SamanCenterBookingSettingsPayload | null | undefined,
+  centerInsurances: CenterInsuranceResponse[] | null | undefined,
 ) => {
   const base = fullProfileCenter
     ? {
         ...center,
         user_center_id: center.user_center_id ?? fullProfileCenter.user_center_id ?? null,
         server_id: center.server_id ?? fullProfileCenter.server_id,
-        insurances: fullProfileCenter.insurances ?? null,
         user_center_desk: fullProfileCenter.user_center_desk ?? null,
         freeturn: fullProfileCenter.freeturn ?? null,
         freeturn_text: fullProfileCenter.freeturn_text ?? null,
@@ -51,19 +54,20 @@ const mergeCenterWithFullProfile = (
       }
     : center;
 
-  // Settings only from Saman booking-settings — never from full-profile.
   return {
     ...base,
     settings: samanSettings ?? null,
+    insurances: centerInsurances ?? null,
   };
 };
 
 /**
  * Prefer granular drprofile APIs; fill gaps from full-profile.
- * center.settings comes only from Saman booking-settings (not full-profile).
+ * center.settings from Saman; center.insurances from drprofile when provided.
  */
 export const composeBookingProfile = (input: ComposeBookingProfileInput): Record<string, any> | null => {
-  const { slugInfo, fullName, expertise, doctorCenters, fullProfile, settingsByCenterId } = input;
+  const { slugInfo, fullName, expertise, doctorCenters, fullProfile, settingsByCenterId, insurancesByCenterId } =
+    input;
   const fp = fullProfile ?? null;
 
   const hasDoctorCenters = Array.isArray(doctorCenters) && doctorCenters.length > 0;
@@ -77,10 +81,15 @@ export const composeBookingProfile = (input: ComposeBookingProfileInput): Record
 
   const centersFromApi = hasDoctorCenters
     ? doctorCenters!.map(center => {
+        const centerId = String(center.id);
         const mapped = mapDoctorCenterToProfileCenter(center);
-        const fpCenter = fp?.centers?.find((item: any) => String(item.id) === String(center.id));
-        const samanSettings = settingsByCenterId?.[String(center.id)];
-        return mergeCenterWithFullProfile(mapped, fpCenter, samanSettings);
+        const fpCenter = fp?.centers?.find((item: any) => String(item.id) === centerId);
+        return mergeCenterWithFullProfile(
+          mapped,
+          fpCenter,
+          settingsByCenterId?.[centerId],
+          insurancesByCenterId?.[centerId],
+        );
       })
     : null;
 
@@ -112,6 +121,7 @@ export const composeBookingProfile = (input: ComposeBookingProfileInput): Record
             }),
             fpCenter,
             settingsByCenterId?.[centerId],
+            insurancesByCenterId?.[centerId],
           );
         })
       : []);

@@ -19,7 +19,7 @@ export const mapDoctorCenterToProfileCenter = (newCenter: DoctorCentersResponse)
   is_active: newCenter.active_booking ?? true,
   // settings: filled from Saman booking-settings in composeBookingProfile; null until then
   settings: null as Record<string, unknown> | null,
-  // Filled from full-profile when available; null when full-profile soft-fails
+  // insurances: filled later when booking_enable_insurance is on (SELECT_USER)
   insurances: null as unknown[] | null,
   user_center_desk: null as string | null,
   freeturn: null as number | null,

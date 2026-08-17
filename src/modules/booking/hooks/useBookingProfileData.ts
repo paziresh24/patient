@@ -48,8 +48,9 @@ const fetchSettingsByCenterId = async (
 };
 
 /**
- * Booking profile loader: granular drprofile first, full-profile for gaps (e.g. insurances).
- * center.settings comes from Saman booking-settings only (not full-profile).
+ * Booking profile loader: granular drprofile first, full-profile for remaining gaps.
+ * center.settings from Saman. Insurances are fetched later only when the selected
+ * center has booking_enable_insurance enabled.
  * full-profile / settings errors soft-fail; UI is not blocked on them.
  */
 export const useBookingProfileData = (slug: string | undefined, options?: UseBookingProfileDataOptions) => {

@@ -50,12 +50,13 @@ describe('composeBookingProfile', () => {
     expect(profile?.centers[0].user_center_id).toBe('ucid-from-centers');
     expect(profile?.centers[0].server_id).toBe(1);
     expect(profile?.centers[0].settings).toBeNull();
+    expect(profile?.centers[0].insurances).toBeNull();
     expect(profile?.online_visit_channel_types).toBeNull();
     expect(profile?.feedback_visit).toBeNull();
     expect(profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug).toBe('general');
   });
 
-  it('fills gap fields from full-profile but settings only from Saman', () => {
+  it('fills gap fields from full-profile but settings and insurances from dedicated APIs', () => {
     const profile = composeBookingProfile({
       slugInfo: {
         id: 1,
@@ -79,7 +80,7 @@ describe('composeBookingProfile', () => {
             user_center_id: 'ucid-from-fp',
             server_id: 99,
             settings: { booking_enable_insurance: '0' },
-            insurances: [{ id: 1, name: 'تامین' }],
+            insurances: [{ id: 'fp-insurance', name: 'از-fp' }],
             user_center_desk: 'میز',
             freeturn: 123,
             freeturn_text: 'امروز',
@@ -96,11 +97,14 @@ describe('composeBookingProfile', () => {
           booking_paging_from_clinic: null,
         },
       },
+      insurancesByCenterId: {
+        'center-1': [{ id: 'dr-insurance', name: 'تامین' }],
+      },
     });
 
     expect(profile?.centers[0].user_center_id).toBe('ucid-from-centers');
     expect(profile?.centers[0].server_id).toBe(1);
-    expect(profile?.centers[0].insurances).toEqual([{ id: 1, name: 'تامین' }]);
+    expect(profile?.centers[0].insurances).toEqual([{ id: 'dr-insurance', name: 'تامین' }]);
     expect(profile?.centers[0].services).toEqual([]);
     expect(profile?.centers[0].settings).toEqual({
       booking_enable_insurance: '1',
@@ -111,7 +115,7 @@ describe('composeBookingProfile', () => {
     expect(profile?.feedback_visit).toEqual({ two_weeks_data: [] });
   });
 
-  it('ignores full-profile settings when Saman settings are missing', () => {
+  it('ignores full-profile settings and insurances when dedicated API data is missing', () => {
     const profile = composeBookingProfile({
       slugInfo: {
         id: 1,
@@ -128,14 +132,14 @@ describe('composeBookingProfile', () => {
           {
             id: 'center-1',
             settings: { booking_enable_insurance: '1' },
-            insurances: [{ id: 1, name: 'تامین' }],
+            insurances: [{ id: 'fp-insurance', name: 'تامین' }],
           },
         ],
       },
     });
 
     expect(profile?.centers[0].settings).toBeNull();
-    expect(profile?.centers[0].insurances).toEqual([{ id: 1, name: 'تامین' }]);
+    expect(profile?.centers[0].insurances).toBeNull();
   });
 
   it('returns null when no sources are available', () => {
