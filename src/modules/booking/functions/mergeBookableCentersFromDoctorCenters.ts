@@ -21,6 +21,7 @@ export const mapDoctorCenterToProfileCenter = (newCenter: DoctorCentersResponse)
   settings: null as Record<string, unknown> | null,
   // insurances: filled later when booking_enable_insurance is on (SELECT_USER)
   insurances: null as unknown[] | null,
+  // user_center_desk: filled from drprofile descriptions on SELECT_USER
   user_center_desk: null as string | null,
   freeturn: null as number | null,
   freeturn_text: null as string | null,
