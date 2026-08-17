@@ -52,6 +52,7 @@ describe('composeBookingProfile', () => {
     expect(profile?.centers[0].settings).toBeNull();
     expect(profile?.centers[0].insurances).toBeNull();
     expect(profile?.centers[0].user_center_desk).toBeNull();
+    expect(profile?.centers[0].freeturn).toBeNull();
     expect(profile?.online_visit_channel_types).toBeNull();
     expect(profile?.feedback_visit).toBeNull();
     expect(profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug).toBe('general');
@@ -107,6 +108,7 @@ describe('composeBookingProfile', () => {
     expect(profile?.centers[0].server_id).toBe(1);
     expect(profile?.centers[0].insurances).toEqual([{ id: 'dr-insurance', name: 'تامین' }]);
     expect(profile?.centers[0].user_center_desk).toBeNull();
+    expect(profile?.centers[0].freeturn).toBeNull();
     expect(profile?.centers[0].services).toEqual([]);
     expect(profile?.centers[0].settings).toEqual({
       booking_enable_insurance: '1',

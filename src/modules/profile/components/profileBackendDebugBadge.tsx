@@ -41,7 +41,6 @@ export function ProfileBackendDebugBadge({
   profile_backend,
   profile_api_id,
   profile_fallback_reason,
-  useSamanAvailabilityStatus,
   slug,
   profile_type,
   isBulk,
@@ -75,7 +74,7 @@ export function ProfileBackendDebugBadge({
       </div>
       {slug ? <div>slug: {slug}</div> : null}
       <div>
-        saman: {useSamanAvailabilityStatus ? 'on' : 'off'}
+        saman: 'on'
         {perf?.saman_ssr ? ` (ssr=${perf.saman_ssr})` : ''}
         {typeof isBulk === 'boolean' ? ` · bulk=${isBulk ? 'yes' : 'no'}` : ''}
         {typeof shouldFetchOnClient === 'boolean' ? ` · csr=${shouldFetchOnClient ? 'yes' : 'no'}` : ''}

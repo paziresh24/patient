@@ -23,6 +23,7 @@ export const mapDoctorCenterToProfileCenter = (newCenter: DoctorCentersResponse)
   insurances: null as unknown[] | null,
   // user_center_desk: filled from drprofile descriptions on SELECT_USER
   user_center_desk: null as string | null,
+  // freeturn*: filled from Saman availability when mapped onto centers
   freeturn: null as number | null,
   freeturn_text: null as string | null,
   freeturns_info: null as unknown[] | null,

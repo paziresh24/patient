@@ -97,7 +97,6 @@ interface BookingStepsProps {
   slug: string;
   defaultStep?: SELECT_CENTER | SELECT_SERVICES | SELECT_TIME | SELECT_USER | BOOK_REQUEST;
   className?: string;
-  ssrUseSamanAvailabilityStatus?: boolean;
 }
 
 type SELECT_CENTER = {
@@ -135,16 +134,14 @@ const BookingSteps = (props: BookingStepsProps) => {
   const router = useRouter();
   const { customize } = useCustomize();
   const isApplication = useApplication();
-  const { slug, defaultStep, className, ssrUseSamanAvailabilityStatus = false } = props;
+  const { slug, defaultStep, className } = props;
   const { isMobile } = useResponsive();
   const { data, profile, isLoading } = useBookingProfileData(slug, {
     enabled: !!slug,
   });
   const centers = profile?.centers ?? (data && 'data' in data ? data.data?.centers : undefined);
-  const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
-  const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
-    enabled: !!slug && useSamanAvailabilityStatus,
+    enabled: !!slug,
   });
   const doctorCentersQuery = useQuery(
     [ServerStateKeysEnum.DoctorCenters, slug],
@@ -157,10 +154,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   );
   const enrichedCenters = useMemo(() => {
     if (!centers) return centers;
-    let list =
-      useSamanAvailabilityStatus && samanAvailability.data
-        ? mapSamanAvailabilityToCenters(centers, samanAvailability.data)
-        : centers;
+    let list = samanAvailability.data ? mapSamanAvailabilityToCenters(centers, samanAvailability.data) : centers;
 
     // getDoctorCenters already returns only centers with has_bookable_services === true.
     // Allowlist profile centers and add bookable centers missing from full-profile (e.g. online 5532).
@@ -169,7 +163,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     }
 
     return list;
-  }, [centers, samanAvailability.data, useSamanAvailabilityStatus, doctorCentersQuery.data, doctorCentersQuery.isSuccess]);
+  }, [centers, samanAvailability.data, doctorCentersQuery.data, doctorCentersQuery.isSuccess]);
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
@@ -310,7 +304,7 @@ const BookingSteps = (props: BookingStepsProps) => {
   }, [enrichedCenters, defaultStep?.payload?.centerId, defaultStep?.step, (defaultStep?.payload as any)?.timeId]);
 
   useEffect(() => {
-    if (!useSamanAvailabilityStatus || !samanAvailability.data || !enrichedCenters) return;
+    if (!samanAvailability.data || !enrichedCenters) return;
 
     const centerId = defaultStep?.payload?.centerId ?? router.query.centerId?.toString();
     if (!centerId) return;
@@ -321,7 +315,6 @@ const BookingSteps = (props: BookingStepsProps) => {
       router.replace(`/booking/${slug}/`);
     }
   }, [
-    useSamanAvailabilityStatus,
     samanAvailability.data,
     enrichedCenters,
     defaultStep?.payload?.centerId,
@@ -372,7 +365,8 @@ const BookingSteps = (props: BookingStepsProps) => {
           full_date: freeturnData?.full_date,
           status: freeturnData?.status,
           message: freeturnData?.message,
-          difference_freeTurn_profile_by_real: getFirstFreeTime.timeStamp! - (center?.freeturn ?? null),
+          difference_freeTurn_profile_by_real:
+            center?.freeturn != null ? getFirstFreeTime.timeStamp! - center.freeturn : undefined,
         },
         doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, service_id: center?.server_id }, service, doctor: profile }),
       });
@@ -818,7 +812,8 @@ const BookingSteps = (props: BookingStepsProps) => {
                     status,
                     message,
                     meta,
-                    difference_freeTurn_profile_by_real: result?.timestamp - center?.freeturn,
+                    difference_freeTurn_profile_by_real:
+                      center?.freeturn != null ? result?.timestamp - center.freeturn : undefined,
                   },
                   doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, server_id, server_name }, service, doctor: profile }),
                 });

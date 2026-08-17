@@ -753,7 +753,7 @@ export async function getAggregatedProfileData(
       expertiseChipsLikeSearchEnabled: !!options?.fetchExpertiseKeywordTags,
       user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       shouldFetchOnClient: skipFullProfile ? false : !fullProfileData?.id,
-      useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
+      useSamanAvailabilityStatus: true,
       profile_backend: 'legacy',
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
     },
