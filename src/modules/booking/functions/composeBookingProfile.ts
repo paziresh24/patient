@@ -42,7 +42,6 @@ const mergeCenterWithFullProfile = (
         ...center,
         user_center_id: center.user_center_id ?? fullProfileCenter.user_center_id ?? null,
         server_id: center.server_id ?? fullProfileCenter.server_id,
-        user_center_desk: fullProfileCenter.user_center_desk ?? null,
         freeturn: fullProfileCenter.freeturn ?? null,
         freeturn_text: fullProfileCenter.freeturn_text ?? null,
         freeturns_info: fullProfileCenter.freeturns_info ?? null,

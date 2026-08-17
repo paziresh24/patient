@@ -78,6 +78,7 @@ import { useSamanCenterBookingSettings } from '@/common/apis/services/booking/sa
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { isBookingInsuranceEnabled, useCenterInsurances } from '@/common/apis/services/doctor/getCenterInsurances';
+import { useDoctorCenterDescriptions } from '@/common/apis/services/doctor/getDoctorCenterDescriptions';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
 import useBooking from '../hooks/booking';
@@ -245,6 +246,10 @@ const BookingSteps = (props: BookingStepsProps) => {
   const centerInsurancesQuery = useCenterInsurances(center?.id, {
     enabled: insuranceEnabled && step === 'SELECT_USER',
   });
+  const centerDescriptionsQuery = useDoctorCenterDescriptions(slug, center?.id, {
+    enabled: step === 'SELECT_USER' && !!slug && !!center?.id && center?.id !== CENTERS.CONSULT,
+  });
+  const userCenterDescription = centerDescriptionsQuery.data?.user_center_description?.trim() || '';
   const centerWithBookingData = useMemo(() => {
     if (!centerWithSettings) return centerWithSettings;
     if (!centerInsurancesQuery.data) return centerWithSettings;
@@ -837,9 +842,9 @@ const BookingSteps = (props: BookingStepsProps) => {
       )}
       {step === 'SELECT_USER' && (
         <>
-          {center?.user_center_desk && center?.id !== CENTERS.CONSULT && (
+          {center?.id !== CENTERS.CONSULT && userCenterDescription && (
             <div className="p-3 mb-5 rounded-lg bg-slate-100">
-              <Text fontSize="sm">{center?.user_center_desk}</Text>
+              <Text fontSize="sm">{userCenterDescription}</Text>
             </div>
           )}
           {/* {center?.id === CENTERS.CONSULT && !shouldShowMessengers && (
