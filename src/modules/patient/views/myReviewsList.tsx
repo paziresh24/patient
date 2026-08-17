@@ -14,6 +14,7 @@ import { trackRaviReviewEvent } from '@/modules/rate-and-review/analytics/trackR
 import { deleteFeedback, fetchMyFeedbacks, MyFeedbackItem } from '@/modules/rate-and-review/api';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
+import { splitAppointmentsByOwner } from '@/modules/patient/utils/myReviewsOwnership';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -70,6 +71,7 @@ type AppointmentRow = {
   paymentStatus?: string;
   doctorId?: string | number;
   serverId?: string | number;
+  patientNationalCode?: string;
 };
 
 type ReviewStatus = 'reviewed' | 'not_reviewed' | 'not_eligible';
@@ -140,6 +142,7 @@ const mapBookToRow = (turn: any): AppointmentRow | null => {
     paymentStatus: turn?.payment_status,
     doctorId: turn?.doctor_info?.id,
     serverId: turn?.server_id,
+    patientNationalCode: normalizeId(turn?.patient_info?.national_code) || undefined,
   };
 };
 
@@ -233,6 +236,7 @@ export const MyReviewsList = () => {
   const isLogin = useUserInfoStore(state => state.isLogin);
   const pending = useUserInfoStore(state => state.pending);
   const userId = useUserInfoStore(state => state.info?.id);
+  const ownerNationalCode = useUserInfoStore(state => state.info?.national_code);
 
   const [appointments, setAppointments] = useState<AppointmentRow[]>([]);
   const [feedbacks, setFeedbacks] = useState<MyFeedbackItem[]>([]);
@@ -248,11 +252,12 @@ export const MyReviewsList = () => {
     setError(false);
     try {
       const [books, reviews] = await Promise.all([fetchAllBooks(), fetchAllMyFeedbacks()]);
-      setAppointments(books);
-      setFeedbacks(reviews);
+      const { owned, excludedBookIds } = splitAppointmentsByOwner(books, ownerNationalCode);
+      setAppointments(owned);
+      setFeedbacks(reviews.filter(item => !excludedBookIds.has(normalizeId(item.book_id))));
       void trackRaviReviewEvent({
         event_type: 'review_list_load',
-        count: books.length,
+        count: owned.length,
         ok: true,
       });
     } catch {
@@ -267,7 +272,7 @@ export const MyReviewsList = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [ownerNationalCode]);
 
   useEffect(() => {
     if (pending) return;
