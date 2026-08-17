@@ -69,7 +69,7 @@ const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ de
 });
 
 const DoctorProfile = (props: any) => {
-  const { shouldFetchOnClient, slug: initialSlug, status } = props;
+  const { shouldFetchOnClient, slug: initialSlug, status, errorMessage } = props;
   const { query, ...router } = useRouter();
   const [isProfileScriptsReady, setIsProfileScriptsReady] = useState(false);
   const profileScriptsReadyRef = useRef(false);
@@ -532,8 +532,8 @@ const DoctorProfile = (props: any) => {
     return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} slug={currentSlug} />;
   }
 
-  if ([404, 500, 504, 410].includes(status) && !shouldFetchOnClient) {
-    return <ErrorPage statusCode={status} refresh={refetch} slug={slug ?? currentSlug} />;
+  if ([404, 410, 500, 502, 503, 504].includes(status) && !shouldFetchOnClient) {
+    return <ErrorPage statusCode={status} message={errorMessage} refresh={refetch} slug={slug ?? currentSlug} />;
   }
 
   const brandName = customize?.partnerTitle || 'پذیرش24';

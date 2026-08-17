@@ -162,8 +162,13 @@ export async function getAggregatedProfileData(
     try {
       const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
       const microserviceResult = await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
-      // If MS explicitly returns notFound, still try legacy (slug may only exist there).
+      // If MS explicitly returns notFound: sticky SSR must not become legacy.
       if (microserviceResult && typeof microserviceResult === 'object' && 'notFound' in microserviceResult && (microserviceResult as { notFound?: boolean }).notFound) {
+        if (options?.useProfileMicroservice === true) {
+          const err = new Error('Profile not found in microservice') as Error & { status?: number };
+          err.status = 404;
+          throw err;
+        }
         console.warn('[profile] microservice profile missing; falling back to legacy', { slug });
       } else {
         return microserviceResult;
