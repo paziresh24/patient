@@ -46,7 +46,6 @@ const mergeCenterWithFullProfile = (
         // full-profile service ids can be stale and break factor/v2 + getFreeTurn.
         services: center.services?.length ? center.services : [],
         is_active: fullProfileCenter.is_active ?? center.is_active,
-        waiting_time_info: fullProfileCenter.waiting_time_info,
       }
     : center;
 
@@ -137,7 +136,9 @@ export const composeBookingProfile = (input: ComposeBookingProfileInput): Record
     expertises: mappedExpertise,
     centers,
     online_visit_channel_types: fp?.online_visit_channel_types ?? null,
-    feedback_visit: fp?.feedback_visit ?? null,
+    // Not from full-profile; leave empty so another source can fill later
+    waiting_time_info: null,
+    feedback_visit: null,
     city_en_slug:
       fp?.city_en_slug ??
       centers.find((center: any) => center?.city_en_slug)?.city_en_slug ??
