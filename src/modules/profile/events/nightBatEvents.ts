@@ -56,6 +56,30 @@ export function sendDoctorProfileEventServer(
   });
 }
 
+/** Count MS profile SSR failures (no legacy fallback). Splunk: event_group=profile_ms_error */
+export function sendProfileMicroserviceErrorEvent(
+  event: {
+    slug: string;
+    path?: string | null;
+    api_status?: number | null;
+    http_status: number;
+    message?: string | null;
+    duration_ms?: number;
+    endpoint?: string | null;
+  },
+  userAgent?: string | null,
+) {
+  return sendDoctorProfileEventServer(
+    'profile_ms_error',
+    'ssr_unavailable',
+    {
+      profile_backend: 'microservice',
+      ...event,
+    },
+    userAgent,
+  );
+}
+
 export function sendCenterProfileEventServer(
   group: string,
   type: string,
