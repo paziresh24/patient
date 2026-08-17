@@ -53,6 +53,7 @@ describe('composeBookingProfile', () => {
     expect(profile?.centers[0].insurances).toBeNull();
     expect(profile?.centers[0].user_center_desk).toBeNull();
     expect(profile?.centers[0].freeturn).toBeNull();
+    expect(profile?.centers[0].waiting_time_info).toBeNull();
     expect(profile?.online_visit_channel_types).toBeNull();
     expect(profile?.feedback_visit).toBeNull();
     expect(profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug).toBe('general');
@@ -89,6 +90,7 @@ describe('composeBookingProfile', () => {
             freeturns_info: [],
             services: [{ id: 'svc-1' }],
             is_active: true,
+            waiting_time_info: { waiting_time_title: '۱۵ دقیقه' },
           },
         ],
       },
@@ -116,7 +118,9 @@ describe('composeBookingProfile', () => {
       booking_paging_from_clinic: null,
     });
     expect(profile?.online_visit_channel_types).toEqual(['whatsapp']);
-    expect(profile?.feedback_visit).toEqual({ two_weeks_data: [] });
+    expect(profile?.feedback_visit).toBeNull();
+    expect(profile?.waiting_time_info).toBeNull();
+    expect(profile?.centers[0].waiting_time_info).toBeNull();
   });
 
   it('ignores full-profile settings and insurances when dedicated API data is missing', () => {
