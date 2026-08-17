@@ -74,6 +74,7 @@ import {
 import { mergeBookableCentersFromDoctorCenters } from '../functions/mergeBookableCentersFromDoctorCenters';
 import { isInvalidProfileServiceId, mapDoctorCenterServices, resolveBookableServiceId } from '../functions/mapDoctorCenterServices';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
+import { useSamanCenterBookingSettings } from '@/common/apis/services/booking/samanCenterBookingSettings';
 import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { isBookingInsuranceEnabled, useCenterInsurances } from '@/common/apis/services/doctor/getCenterInsurances';
@@ -232,15 +233,23 @@ const BookingSteps = (props: BookingStepsProps) => {
   );
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
-  const insuranceEnabled = isBookingInsuranceEnabled(center?.settings?.booking_enable_insurance);
+  const centerBookingSettingsQuery = useSamanCenterBookingSettings(center?.id, center?.user_center_id, {
+    enabled: !!center?.id && !!center?.user_center_id && step !== 'SELECT_CENTER',
+  });
+  const centerWithSettings = useMemo(() => {
+    if (!center) return center;
+    if (!centerBookingSettingsQuery.data) return center;
+    return { ...center, settings: centerBookingSettingsQuery.data };
+  }, [center, centerBookingSettingsQuery.data]);
+  const insuranceEnabled = isBookingInsuranceEnabled(centerWithSettings?.settings?.booking_enable_insurance);
   const centerInsurancesQuery = useCenterInsurances(center?.id, {
     enabled: insuranceEnabled && step === 'SELECT_USER',
   });
-  const centerWithInsurances = useMemo(() => {
-    if (!center) return center;
-    if (!centerInsurancesQuery.data) return center;
-    return { ...center, insurances: centerInsurancesQuery.data };
-  }, [center, centerInsurancesQuery.data]);
+  const centerWithBookingData = useMemo(() => {
+    if (!centerWithSettings) return centerWithSettings;
+    if (!centerInsurancesQuery.data) return centerWithSettings;
+    return { ...centerWithSettings, insurances: centerInsurancesQuery.data };
+  }, [centerWithSettings, centerInsurancesQuery.data]);
   const { data: services } = useGetServices({ slug, center_id: center?.id }, { enabled: !!center?.id && !!service?.id });
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
@@ -487,7 +496,7 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const bookingAddon = useBookingAddon({
     slug,
-    center: centerWithInsurances,
+    center: centerWithBookingData,
     profile,
     user,
     service,
@@ -636,7 +645,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         value: insurance.id,
       }));
     } else {
-      insurances = centerWithInsurances?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
+      insurances = centerWithBookingData?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
     }
 
     insurances.push({ label: 'آزاد', value: -1 });
@@ -786,7 +795,7 @@ const BookingSteps = (props: BookingStepsProps) => {
             serviceId: service?.id ?? '',
             serverId: center?.server_id ?? '',
             userCenterId: service?.user_center_id ?? center?.user_center_id,
-            showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
+            showOnlyFirstFreeTime: centerWithSettings?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {
               setFirstFreeTimeErrorText(errorText);
               sendGaEvent({
@@ -978,7 +987,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 return;
               }
               if (addonResult === 'no_addon' || addonResult === 'error') {
-                if (+center?.settings?.booking_enable_insurance) {
+                if (isBookingInsuranceEnabled(centerWithSettings?.settings?.booking_enable_insurance)) {
                   handleOpenInsuranceModal();
                   return;
                 }
@@ -986,7 +995,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 return;
               }
 
-              if (+center?.settings?.booking_enable_insurance) {
+              if (isBookingInsuranceEnabled(centerWithSettings?.settings?.booking_enable_insurance)) {
                 handleOpenInsuranceModal();
                 return;
               }

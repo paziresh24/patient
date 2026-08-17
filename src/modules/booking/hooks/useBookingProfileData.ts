@@ -4,10 +4,6 @@ import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExper
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { validateDoctorSlug, type DoctorSlugValidationResponse } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { getProfileData } from '@/common/apis/services/profile/getFullProfile';
-import {
-  samanCenterBookingSettings,
-  type SamanCenterBookingSettingsPayload,
-} from '@/common/apis/services/booking/samanCenterBookingSettings';
 import { composeBookingProfile } from '@/modules/booking/functions/composeBookingProfile';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
@@ -22,36 +18,11 @@ const isValidSlugInfo = (data: unknown): data is DoctorSlugValidationResponse =>
   return 'owner_id' in data || 'slug' in data;
 };
 
-const fetchSettingsByCenterId = async (
-  centers: Array<{ id: string; user_center_id?: string }>,
-): Promise<Record<string, SamanCenterBookingSettingsPayload | null>> => {
-  const entries = await Promise.all(
-    centers.map(async center => {
-      const centerId = String(center.id);
-      const userCenterId = center.user_center_id;
-      if (!userCenterId) {
-        return [centerId, null] as const;
-      }
-      try {
-        const settings = await samanCenterBookingSettings({
-          centerId,
-          userCenterId: String(userCenterId),
-        });
-        return [centerId, settings] as const;
-      } catch {
-        return [centerId, null] as const;
-      }
-    }),
-  );
-
-  return Object.fromEntries(entries);
-};
-
 /**
  * Booking profile loader: granular drprofile first, full-profile for remaining gaps.
- * center.settings from Saman. Insurances are fetched later only when the selected
- * center has booking_enable_insurance enabled.
- * full-profile / settings errors soft-fail; UI is not blocked on them.
+ * center.settings and center.insurances are fetched later in BookingSteps for the
+ * selected center only.
+ * full-profile errors soft-fail; UI is not blocked on them.
  */
 export const useBookingProfileData = (slug: string | undefined, options?: UseBookingProfileDataOptions) => {
   const enabled = !!slug && options?.enabled !== false;
@@ -106,17 +77,6 @@ export const useBookingProfileData = (slug: string | undefined, options?: UseBoo
     },
   );
 
-  const settingsQuery = useQuery(
-    [ServerStateKeysEnum.SamanCenterBookingSettings, slug, centersQuery.data?.map(c => `${c.id}:${c.user_center_id}`)],
-    () => fetchSettingsByCenterId(centersQuery.data ?? []),
-    {
-      enabled: enabled && !!centersQuery.data?.length,
-      retry: false,
-      refetchOnWindowFocus: false,
-      staleTime: 60_000,
-    },
-  );
-
   // Only honor validateDoctorSlug redirects. full-profile redirects can point at stale
   // slugs and fight the canonical chain (infinite booking URL loop).
   const redirect =
@@ -127,7 +87,6 @@ export const useBookingProfileData = (slug: string | undefined, options?: UseBoo
   const slugInfo = isValidSlugInfo(slugQuery.data) ? slugQuery.data : null;
   const fullProfile = fullProfileQuery.data?.data ?? null;
   const fullProfileFailed = fullProfileQuery.isFetched && !fullProfile;
-  const settingsByCenterId = settingsQuery.data ?? {};
 
   const profile = useMemo(
     () =>
@@ -137,9 +96,8 @@ export const useBookingProfileData = (slug: string | undefined, options?: UseBoo
         expertise: expertiseQuery.data ?? null,
         doctorCenters: centersQuery.data ?? null,
         fullProfile,
-        settingsByCenterId,
       }),
-    [slugInfo, fullNameQuery.data, expertiseQuery.data, centersQuery.data, fullProfile, settingsByCenterId],
+    [slugInfo, fullNameQuery.data, expertiseQuery.data, centersQuery.data, fullProfile],
   );
 
   const essentialsReady = !slugQuery.isLoading && !centersQuery.isLoading;

@@ -63,7 +63,7 @@ const mergeCenterWithFullProfile = (
 
 /**
  * Prefer granular drprofile APIs; fill gaps from full-profile.
- * center.settings from Saman; center.insurances from drprofile when provided.
+ * center.settings and center.insurances are attached in BookingSteps for the selected center.
  */
 export const composeBookingProfile = (input: ComposeBookingProfileInput): Record<string, any> | null => {
   const { slugInfo, fullName, expertise, doctorCenters, fullProfile, settingsByCenterId, insurancesByCenterId } =

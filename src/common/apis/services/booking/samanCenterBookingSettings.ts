@@ -1,4 +1,6 @@
 import { samanClient } from '@/common/apis/client';
+import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
+import { useQuery } from '@tanstack/react-query';
 
 export type SamanCenterBookingSettingsPayload = {
   booking_enable_insurance?: string | null;
@@ -33,4 +35,21 @@ export const samanCenterBookingSettings = async ({
   );
 
   return data?.settings ?? null;
+};
+
+export const useSamanCenterBookingSettings = (
+  centerId: string | undefined,
+  userCenterId: string | undefined,
+  options?: { enabled?: boolean },
+) => {
+  return useQuery(
+    [ServerStateKeysEnum.SamanCenterBookingSettings, centerId, userCenterId],
+    () => samanCenterBookingSettings({ centerId: centerId!, userCenterId: userCenterId! }),
+    {
+      enabled: !!centerId && !!userCenterId && (options?.enabled ?? true),
+      retry: false,
+      refetchOnWindowFocus: false,
+      staleTime: 60_000,
+    },
+  );
 };
