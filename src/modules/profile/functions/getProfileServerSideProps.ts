@@ -1,14 +1,11 @@
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { ThemeConfig } from '@/common/hooks/useCustomize';
 import { getAggregatedProfileData } from './getAggregatedProfileData'; // ۱. وارد کردن تابع مشترک
 import axios from 'axios';
 import { sanitizeObject } from '@/common/utils/sanitizeObject';
 import { handleSsrError } from '@/common/utils/handleSsrError';
 import { trackSsrError } from '@/common/utils/ssrErrorTracker';
-import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
-import { GrowthBook } from '@growthbook/growthbook-react';
-import { getHost, HeaderBag } from '@/common/utils/getHost';
 import { getProfileMicroserviceConfig } from '@/common/apis/clients/profileMicroserviceClient';
 import { isProfileMicroserviceAllowlistedSlug } from '@/modules/profile/utils/profileApiSourceAllowlist.server';
 import { isExpertiseChipsLikeSearchEnabledForSlug } from '@/modules/profile/utils/expertiseChipsLikeSearchFlag';
@@ -136,12 +133,12 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
     const slug = decodeURIComponent(rawSlug as string);
     const university = themeConfing?.partnerKey as string;
 
-    let prefetchSamanAvailability = false;
+    let prefetchSamanAvailability = true;
     // Explicit false = legacy for this request (no second GB check in aggregator).
     let useProfileMicroservice = false;
     let fetchExpertiseKeywordTags = false;
 
-    // Allowlist comes from GrowthBook via a dedicated cached loader (not the 500ms Saman GB load),
+    // Allowlist comes from GrowthBook via a dedicated cached loader,
     // so editing GB still works and SSR does not coin-flip to full legacy on slow GB/CDN.
     const allowlistPromise = (async () => {
       try {
@@ -169,26 +166,6 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
       // Fall through to full SSR hybrid for allowlisted slugs.
     }
 
-    // Run Saman GB (short timeout), allowlist cache, and chips GB in parallel.
-    const profileFlagsPromise = (async () => {
-      try {
-        const host = getHost(context.req.headers as HeaderBag);
-        const url = `https://${host}${context.resolvedUrl}`;
-        const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-        const growthbook = new GrowthBook(growthbookContext);
-        growthbook.setAttributes({ url, host, slug });
-        await growthbook.loadFeatures({ timeout: 500 });
-        return { samanOn: growthbook.isOn('use-saman-availability-status') };
-      } catch (error) {
-        trackSsrError(error, {
-          source: 'ProfileSSR',
-          message: 'Error loading GrowthBook for Saman availability SSR',
-          path: context.resolvedUrl,
-        });
-        return { samanOn: false };
-      }
-    })();
-
     const chipsFlagPromise = (async () => {
       try {
         return await isExpertiseChipsLikeSearchEnabledForSlug(slug);
@@ -202,12 +179,10 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
       }
     })();
 
-    const [profileFlags, chipsEnabled, allowlisted] = await Promise.all([
-      profileFlagsPromise,
+    const [chipsEnabled, allowlisted] = await Promise.all([
       chipsFlagPromise,
       allowlistPromise,
     ]);
-    prefetchSamanAvailability = profileFlags.samanOn;
     useProfileMicroservice = allowlisted;
     fetchExpertiseKeywordTags = chipsEnabled;
 

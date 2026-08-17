@@ -13,6 +13,12 @@ export const formatSamanAvailabilityTime = (timeString?: string | null) => {
   return moment(timeString).locale('fa').calendar(undefined, calendarFormat);
 };
 
+export const samanTimeToUnixSeconds = (timeString?: string | null): number | null => {
+  if (!timeString) return null;
+  const ms = new Date(timeString).getTime();
+  return Number.isFinite(ms) ? Math.floor(ms / 1000) : null;
+};
+
 const findCenterAvailability = (samanData: SamanDoctorAvailabilityStatus | undefined, centerId: string) => {
   return samanData?.centers?.find(item => String(item.id) === String(centerId))?.availability_status;
 };
@@ -26,6 +32,7 @@ export const mapSamanAvailabilityToCenters = <T extends { id: string }>(
   samanData?: SamanDoctorAvailabilityStatus,
 ): (T & {
   is_active: boolean;
+  freeturn: number | null;
   freeturn_text: string;
   freeturns_info: {
     available_time: number;
@@ -36,8 +43,9 @@ export const mapSamanAvailabilityToCenters = <T extends { id: string }>(
     return profileCenters.map(center => ({
       ...center,
       is_active: (center as any).is_active ?? true,
-      freeturn_text: (center as any).freeturn_text ?? '',
-      freeturns_info: (center as any).freeturns_info ?? [],
+      freeturn: null,
+      freeturn_text: '',
+      freeturns_info: [],
     }));
   }
 
@@ -52,6 +60,7 @@ export const mapSamanAvailabilityToCenters = <T extends { id: string }>(
     return {
       ...center,
       is_active: availability?.booking_available ?? false,
+      freeturn: samanTimeToUnixSeconds(availability?.nearest_time_slot),
       freeturn_text: freeturnText,
       freeturns_info:
         !availability?.booking_available && availability?.nearest_available_time

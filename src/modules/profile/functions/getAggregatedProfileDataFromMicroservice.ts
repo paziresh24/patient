@@ -347,7 +347,7 @@ export async function getAggregatedProfileDataFromMicroservice(
       user_id: information?.user_id ?? slugInfo.user_id ?? null,
       shouldFetchOnClient: false,
       // Flag stays on for client hooks; MS SSR does not await Saman (TTFB).
-      useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
+      useSamanAvailabilityStatus: true,
       profile_backend: 'microservice',
       profile_api_id:
         bundle.profile?.id != null ? String(bundle.profile.id) : slugInfo.profile_api_id ?? null,

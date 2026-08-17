@@ -42,9 +42,6 @@ const mergeCenterWithFullProfile = (
         ...center,
         user_center_id: center.user_center_id ?? fullProfileCenter.user_center_id ?? null,
         server_id: center.server_id ?? fullProfileCenter.server_id,
-        freeturn: fullProfileCenter.freeturn ?? null,
-        freeturn_text: fullProfileCenter.freeturn_text ?? null,
-        freeturns_info: fullProfileCenter.freeturns_info ?? null,
         // Services come from drprofile /centers/{id}/services (booking + profile hydrate there).
         // full-profile service ids can be stale and break factor/v2 + getFreeTurn.
         services: center.services?.length ? center.services : [],

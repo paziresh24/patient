@@ -16,11 +16,9 @@ import queryStirng from 'querystring';
 import { useInView } from 'react-intersection-observer';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import BulkService from './bulk';
-import { useAvailabilityStatus } from '@/common/apis/services/booking/availabilityStatus';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { bookRequestAvailability } from '@/common/apis/services/booking/bookRequestAvailability';
 import moment from 'jalali-moment';
-import sortBy from 'lodash/sortBy';
 import { splunkInstance } from '@/common/services/splunk';
 import useCustomize from '@/common/hooks/useCustomize';
 import Presence from './presence';
@@ -59,7 +57,6 @@ export const Services = ({
   isBulk,
   enabledWidgets,
   dontShowDeactiveBox,
-  ssrUseSamanAvailabilityStatus = false,
 }: {
   id: string;
   expertises: any;
@@ -72,18 +69,13 @@ export const Services = ({
   isBulk: boolean;
   enabledWidgets?: any[];
   dontShowDeactiveBox?: boolean;
-  ssrUseSamanAvailabilityStatus?: boolean;
 }) => {
   const router = useRouter();
   const [servicesRef, inViewServices] = useInView({
     initialInView: true,
   });
 
-  const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
-  // SSR flag avoids waiting for GrowthBook client init (prevents isBulk flash)
-  const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
   const growthbook = useGrowthBook();
-  const useAvailabilityStatusApi = useFeatureIsOn('use-availability-status-api');
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
   const featureFromHook = useFeatureIsOn('online-visit-chat-lifecycle-duration');
   const [featureFromSlugAttr, setFeatureFromSlugAttr] = useState(false);
@@ -114,13 +106,8 @@ export const Services = ({
     });
 
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
-    enabled: !!slug && useSamanAvailabilityStatus,
+    enabled: !!slug,
   });
-
-  const alabilityStatus = useAvailabilityStatus(
-    { user_id: doctor.user_id, center_id: centers.map(center => center.id), slug: slug },
-    { enabled: !!useAvailabilityStatusApi && !useSamanAvailabilityStatus },
-  );
   const { isMobile } = useResponsive();
   const isWebView = useWebView();
   const dontShowRateDetails = useFeatureIsOn('ravi_show_external_rate');
@@ -129,18 +116,13 @@ export const Services = ({
   const { handleOpen: handleOpenAvailabilityModal, modalProps: availabilityModalProps } = useModal();
   const [availabilityMessage, setAvailabilityMessage] = useState<string>('');
 
-  const samanLoaded = useSamanAvailabilityStatus && !!samanAvailability.data && !samanAvailability.isError;
-  // Avoid flashing the red bulk box before GrowthBook/Saman resolve
-  const samanPending =
-    (useSamanAvailabilityStatus && !samanLoaded && !samanAvailability.isError) ||
-    (!growthbook?.ready && !ssrUseSamanAvailabilityStatus && !!isBulk);
-  const samanStatus: 'pending' | 'success' | 'error' = !useSamanAvailabilityStatus
+  const samanLoaded = !!samanAvailability.data && !samanAvailability.isError;
+  const samanPending = !samanLoaded && !samanAvailability.isError;
+  const samanStatus: 'pending' | 'success' | 'error' = samanAvailability.isError
     ? 'error'
-    : samanAvailability.isError
-      ? 'error'
-      : samanAvailability.data
-        ? 'success'
-        : 'pending';
+    : samanAvailability.data
+      ? 'success'
+      : 'pending';
   // dontShowDeactiveBox means Risman payload exists — hide native Bulk when Risman should own the CTA.
   // Decision source: Saman only (never Full-profile isBulk).
   const showRismanExternalBooking = shouldShowRismanExternalBooking(
@@ -172,7 +154,7 @@ export const Services = ({
   const onlineVisitVisibilitySentRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!slug || !useSamanAvailabilityStatus) return;
+    if (!slug) return;
     // Wait until Saman settled (or errored) so reason is meaningful; still log pending once if never settles.
     if (!samanLoaded && !samanAvailability.isError) return;
     const key = `${slug}:${onlineVisitVisibility.reason}:${showOnlineVisit}`;
@@ -190,7 +172,6 @@ export const Services = ({
   }, [
     slug,
     id,
-    useSamanAvailabilityStatus,
     samanLoaded,
     samanAvailability.isError,
     showOnlineVisit,
@@ -227,16 +208,8 @@ export const Services = ({
   ]);
   const canBookPresence = !samanLoaded || scopedInPerson.bookingAvailable;
 
-  const legacyHasNoBooking = alabilityStatus.data?.data ? !alabilityStatus.data?.data?.has_available_booking : isBulk;
   const samanHasNoBooking = samanLoaded && !scopedInPerson.bookingAvailable && !scopedOnlineVisit.bookingAvailable;
-  // Saman is the booking decision source. Pending → not "no booking" yet (skeleton). Error → no native booking.
-  const hasNoBooking = useSamanAvailabilityStatus
-    ? samanAvailability.isError
-      ? true
-      : samanLoaded
-        ? samanHasNoBooking
-        : false
-    : legacyHasNoBooking;
+  const hasNoBooking = samanAvailability.isError ? true : samanLoaded ? samanHasNoBooking : false;
 
   const presenceCenters = useMemo(() => {
     const inPersonCenters = centers.filter((center: any) => center.id !== CENTERS.CONSULT);
@@ -252,33 +225,9 @@ export const Services = ({
     return inPersonCenters.map(center => ({
       ...center,
       waiting_time_info: waitingTimeInfo?.find?.((c: any) => c?.center_id == center.id),
-      ...(useAvailabilityStatusApi && {
-        is_active: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.status == 'AVAILABLE',
-        freeturn_text: alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn
-          ? moment(alabilityStatus.data?.data?.availability?.find((c: any) => c.center_id === center.id)?.freeturn)
-              ?.locale('fa')
-              .calendar(undefined, {
-                sameDay: '[امروز] ساعت HH:mm',
-                nextDay: '[فردا] ساعت HH:mm',
-                sameElse: 'jD jMMMM ساعت HH:mm',
-              })
-          : '',
-        freeturns_info: alabilityStatus.data?.data?.availability
-          ?.filter((c: any) => c.center_id === center.id)
-          ?.map((item: any) => ({
-            available_time: item?.available_time ? new Date(item?.available_time).getTime() / 1000 : Date.now(),
-            availalbe_time_text: item?.available_time
-              ? moment(item?.available_time)?.locale('fa').calendar(undefined, {
-                  sameDay: '[امروز] ساعت HH:mm',
-                  nextDay: '[فردا] ساعت HH:mm',
-                  sameElse: 'jD jMMMM ساعت HH:mm',
-                })
-              : '',
-          })),
-      }),
       is_book_request: center.services?.some((service: any) => service.can_request == 1),
     }));
-  }, [alabilityStatus.data, centers, samanAvailability.data, samanLoaded, useAvailabilityStatusApi, waitingTimeInfo]);
+  }, [centers, samanAvailability.data, samanLoaded, waitingTimeInfo]);
 
   const onEvent = ({ centerId, serviceId }: { centerId: string; serviceId: string }) => {
     splunkInstance('doctor-profile').sendEvent({
@@ -390,15 +339,6 @@ export const Services = ({
         }
       }
 
-      const availabilityCenters = alabilityStatus.data?.data?.availability?.filter((item: any) => item?.status === 'FUTURE_AVAILABLE');
-      const availableTime = sortBy(availabilityCenters, 'available_time')[0]?.available_time;
-      if (availableTime) {
-        return moment(availableTime)?.locale('fa').calendar(undefined, {
-          sameDay: '[امروز] ساعت HH:mm',
-          nextDay: '[فردا] ساعت HH:mm',
-          sameElse: 'jD jMMMM ساعت HH:mm',
-        });
-      }
       return undefined;
     };
 

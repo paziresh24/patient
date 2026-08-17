@@ -1,8 +1,5 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
-import { samanClient } from '@/common/apis/client';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
-import { useQuery } from '@tanstack/react-query';
 import Card from '@/common/components/atom/card';
 import InActiveDoctor from './inActiveDoctor';
 import { getScopedInPersonAvailability, getScopedOnlineVisitAvailability } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
@@ -14,15 +11,8 @@ interface SamanBookingProps {
   expertises?: any;
   doctorCity?: string;
   centers?: { id: string }[];
-  ssrUseSamanAvailabilityStatus?: boolean;
   /** MS allowlist only: when bookable, render nothing so Aside Services is the CTA. */
   deferBookableToServices?: boolean;
-}
-
-interface LegacyAvailabilityResponse {
-  booking_available: boolean;
-  nearest_time_slot: string | null;
-  nearest_available_time: string | null;
 }
 
 const SamanBooking = ({
@@ -31,33 +21,17 @@ const SamanBooking = ({
   expertises,
   doctorCity,
   centers = [],
-  ssrUseSamanAvailabilityStatus = false,
   deferBookableToServices = false,
 }: SamanBookingProps) => {
-  const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
-  const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
-
   const {
     data: v1AvailabilityData,
     isLoading: isV1Loading,
     isError: isV1Error,
   } = useSamanDoctorAvailabilityStatus(slug, {
-    enabled: !!slug && useSamanAvailabilityStatus,
+    enabled: !!slug,
   });
 
-  const {
-    data: legacyAvailabilityData,
-    isLoading: isLegacyLoading,
-  } = useQuery<LegacyAvailabilityResponse>({
-    queryKey: ['saman-availability', slug],
-    queryFn: async () => {
-      const response = await samanClient.get(`/api/doctors/${encodeURIComponent(slug)}/availability-status`);
-      return response.data;
-    },
-    enabled: !!slug && !useSamanAvailabilityStatus,
-  });
-
-  if ((useSamanAvailabilityStatus && isV1Loading) || (!useSamanAvailabilityStatus && isLegacyLoading)) {
+  if (isV1Loading) {
     return <Skeleton w="100%" h="120px" rounded="lg" />;
   }
 
@@ -65,16 +39,9 @@ const SamanBooking = ({
   const scopedInPerson = getScopedInPersonAvailability(scopedCenters, v1AvailabilityData);
   const scopedOnline = getScopedOnlineVisitAvailability(scopedCenters, v1AvailabilityData);
 
-  const futureAvailableTime =
-    scopedInPerson.nearestAvailableTime || scopedOnline.nearestAvailableTime || legacyAvailabilityData?.nearest_available_time || null;
-
+  const futureAvailableTime = scopedInPerson.nearestAvailableTime || scopedOnline.nearestAvailableTime || null;
   const hasFutureAvailableTime = !!futureAvailableTime;
-
-  const nothingBookable = useSamanAvailabilityStatus
-    ? !isV1Error && !!v1AvailabilityData && !scopedInPerson.bookingAvailable && !scopedOnline.bookingAvailable
-    : !legacyAvailabilityData?.booking_available;
-
-  // Show inactive/future box when nothing is bookable now (with or without future available_time)
+  const nothingBookable = !isV1Error && !!v1AvailabilityData && !scopedInPerson.bookingAvailable && !scopedOnline.bookingAvailable;
   const showUnavailableState = nothingBookable;
 
   // MS allowlist: bookable → no CTA here; Aside Services handles booking.
