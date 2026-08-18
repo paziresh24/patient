@@ -28,6 +28,7 @@ export enum ServerStateKeysEnum {
   DoctorCenterDescriptions = 'doctorCenterDescriptions',
   DoctorCenters = 'doctorCenters',
   DoctorCenterServices = 'doctorCenterServices',
+  DoctorOnlineChannels = 'doctorOnlineChannels',
   Services = 'services',
   WalletBalance = 'walletBalance',
   OnlineChannels = 'onlineChannels',

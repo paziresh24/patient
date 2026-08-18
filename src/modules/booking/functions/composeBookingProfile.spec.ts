@@ -117,10 +117,31 @@ describe('composeBookingProfile', () => {
       booking_new_turn_suggestion_type: 'only_first_turn',
       booking_paging_from_clinic: null,
     });
-    expect(profile?.online_visit_channel_types).toEqual(['whatsapp']);
+    expect(profile?.online_visit_channel_types).toBeNull();
     expect(profile?.feedback_visit).toBeNull();
     expect(profile?.waiting_time_info).toBeNull();
     expect(profile?.centers[0].waiting_time_info).toBeNull();
+  });
+
+  it('uses drprofile online-channels and ignores full-profile online_visit_channel_types', () => {
+    const profile = composeBookingProfile({
+      slugInfo: {
+        id: 1,
+        slug: 'dr-test',
+        owner_id: 'owner-1',
+        server_id: 1,
+        type: 'doctor',
+        user_id: 10,
+      },
+      fullName: { name: 'علی', family: 'تست' },
+      doctorCenters,
+      fullProfile: {
+        online_visit_channel_types: ['whatsapp'],
+      },
+      onlineVisitChannelTypes: ['eitaa', 'secure_call'],
+    });
+
+    expect(profile?.online_visit_channel_types).toEqual(['eitaa', 'secure_call']);
   });
 
   it('ignores full-profile settings and insurances when dedicated API data is missing', () => {

@@ -19,6 +19,8 @@ export type ComposeBookingProfileInput = {
   settingsByCenterId?: Record<string, SamanCenterBookingSettingsPayload | null>;
   /** drprofile center insurances keyed by center id — not from full-profile */
   insurancesByCenterId?: Record<string, CenterInsuranceResponse[] | null>;
+  /** drprofile /doctors/:slug/online-channels — attached in BookingSteps on SELECT_USER for consult */
+  onlineVisitChannelTypes?: string[] | null;
 };
 
 const mapExpertiseForBooking = (items: DoctorExpertiseResponse[]) =>
@@ -61,7 +63,7 @@ const mergeCenterWithFullProfile = (
  * center.settings and center.insurances are attached in BookingSteps for the selected center.
  */
 export const composeBookingProfile = (input: ComposeBookingProfileInput): Record<string, any> | null => {
-  const { slugInfo, fullName, expertise, doctorCenters, fullProfile, settingsByCenterId, insurancesByCenterId } =
+  const { slugInfo, fullName, expertise, doctorCenters, fullProfile, settingsByCenterId, insurancesByCenterId, onlineVisitChannelTypes } =
     input;
   const fp = fullProfile ?? null;
 
@@ -135,7 +137,8 @@ export const composeBookingProfile = (input: ComposeBookingProfileInput): Record
     display_name: displayName,
     expertises: mappedExpertise,
     centers,
-    online_visit_channel_types: fp?.online_visit_channel_types ?? null,
+    // online-channels API — never copy from full-profile (spread above)
+    online_visit_channel_types: Array.isArray(onlineVisitChannelTypes) ? onlineVisitChannelTypes : null,
     // Not from full-profile; leave empty so another source can fill later
     waiting_time_info: null,
     feedback_visit: null,
