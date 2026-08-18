@@ -68,8 +68,11 @@ const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ de
   loading: () => null,
 });
 
+const SSR_ERROR_STATUSES = [404, 410, 500, 502, 503, 504];
+
 const DoctorProfile = (props: any) => {
   const { shouldFetchOnClient, slug: initialSlug, status, errorMessage } = props;
+  const isSsrErrorPage = SSR_ERROR_STATUSES.includes(Number(status));
   const { query, ...router } = useRouter();
   const [isProfileScriptsReady, setIsProfileScriptsReady] = useState(false);
   const profileScriptsReadyRef = useRef(false);
@@ -111,7 +114,11 @@ const DoctorProfile = (props: any) => {
     isError,
     error,
     refetch,
-  } = useProfileClientFetch(currentSlug, !!shouldFetchOnClient || !props?.information);
+  } = useProfileClientFetch(
+    currentSlug,
+    // MS 503/5xx must not hydrate from legacy CSR (browser cannot call PROFILE_API).
+    !isSsrErrorPage && (!!shouldFetchOnClient || !props?.information),
+  );
 
   const { customize } = useCustomize();
   const isApplication = useApplication();
@@ -137,7 +144,8 @@ const DoctorProfile = (props: any) => {
   const layoutWasCsrFallback = !!props?.shouldFetchOnClient;
 
   const preferClientProps =
-    (!!shouldFetchOnClient && !props?.information) || !!(clientData?.props as any)?.information;
+    !isSsrErrorPage &&
+    ((!!shouldFetchOnClient && !props?.information) || !!(clientData?.props as any)?.information);
   const finalProps = (preferClientProps && clientData?.props ? clientData.props : props) ?? props;
 
   const {
@@ -519,6 +527,17 @@ const DoctorProfile = (props: any) => {
     profile_backend,
   };
 
+  if (isSsrErrorPage && !shouldFetchOnClient) {
+    return (
+      <ErrorPage
+        statusCode={Number(status)}
+        message={errorMessage}
+        refresh={() => window.location.reload()}
+        slug={slug ?? currentSlug}
+      />
+    );
+  }
+
   if (!finalProps?.information?.id ? shouldFetchOnClient || isLoading : false) {
     return (
       <div className="flex flex-grow justify-center items-center">
@@ -530,10 +549,6 @@ const DoctorProfile = (props: any) => {
   if (isError) {
     const clientErrorStatusCode = (error as any)?.response?.status ?? 500;
     return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} slug={currentSlug} />;
-  }
-
-  if ([404, 410, 500, 502, 503, 504].includes(status) && !shouldFetchOnClient) {
-    return <ErrorPage statusCode={status} message={errorMessage} refresh={refetch} slug={slug ?? currentSlug} />;
   }
 
   const brandName = customize?.partnerTitle || 'پذیرش24';
