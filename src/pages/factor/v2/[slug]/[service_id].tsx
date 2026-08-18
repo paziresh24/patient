@@ -90,7 +90,7 @@ const Factor = () => {
             groupExpertise={groupExpertise}
           />
         </div>
-        <DoctorInvoiceNotice slug={doctorSlug} serviceId={resolvedServiceId as string} />
+        <DoctorInvoiceNotice slug={doctorSlug} serviceId={resolvedServiceId as string} userCenterId={userCenterId} />
       </div>
     </>
   );

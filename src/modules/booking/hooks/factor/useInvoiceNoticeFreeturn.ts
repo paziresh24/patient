@@ -24,7 +24,7 @@ interface UseInvoiceNoticeFreeturnParams {
   serviceId: string;
   // profileFreeturnMs: number | null; // fallback when doctor was not in the GB list
   userCenterId?: string;
-  isProfileLoading: boolean;
+  isUserCenterLoading: boolean;
 }
 
 export const useInvoiceNoticeFreeturn = ({
@@ -32,7 +32,7 @@ export const useInvoiceNoticeFreeturn = ({
   serviceId,
   // profileFreeturnMs,
   userCenterId,
-  isProfileLoading,
+  isUserCenterLoading,
 }: UseInvoiceNoticeFreeturnParams) => {
   // Previous (main): freeturn from Saman doctor availability by slug.
   // const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
@@ -70,8 +70,7 @@ export const useInvoiceNoticeFreeturn = ({
   // Previous GrowthBook: freeturnMs = useNewApi ? mapFirstAvailableFreeturnMs(...) : profileFreeturnMs
   const freeturnMs = mapFirstAvailableFreeturnMs(firstAvailableQuery.data);
 
-  // Previous GrowthBook: isFreeturnLoading = useNewApi && (isProfileLoading || ...)
-  const isFreeturnLoading = isProfileLoading || (hasRequiredParams && firstAvailableQuery.isLoading);
+  const isFreeturnLoading = isUserCenterLoading || (hasRequiredParams && firstAvailableQuery.isLoading);
 
   return {
     freeturnText: getFreeturnDisplayText(freeturnMs),
