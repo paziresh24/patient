@@ -79,6 +79,7 @@ import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctor
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { isBookingInsuranceEnabled, useCenterInsurances } from '@/common/apis/services/doctor/getCenterInsurances';
 import { useDoctorCenterDescriptions } from '@/common/apis/services/doctor/getDoctorCenterDescriptions';
+import { useDoctorOnlineChannels } from '@/common/apis/services/doctor/getDoctorOnlineChannels';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { useQuery } from '@tanstack/react-query';
 import useBooking from '../hooks/booking';
@@ -187,7 +188,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   });
   const shouldShowOnlineVistRecommendModal = onlineVisitDoctorList?.slugs?.includes?.(profile?.slug);
 
-  const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
   const shouldShowMessengers = false;
 
   const {
@@ -243,6 +243,13 @@ const BookingSteps = (props: BookingStepsProps) => {
   const centerDescriptionsQuery = useDoctorCenterDescriptions(slug, center?.id, {
     enabled: step === 'SELECT_USER' && !!slug && !!center?.id && center?.id !== CENTERS.CONSULT,
   });
+  const isOnlineVisitSelectUser =
+    step === 'SELECT_USER' && (center?.id === CENTERS.CONSULT || String(defaultStep?.payload?.centerId) === CENTERS.CONSULT);
+  const onlineChannelsQuery = useDoctorOnlineChannels(slug, {
+    enabled: isOnlineVisitSelectUser && !!slug,
+  });
+  const onlineVisitChannelTypes = onlineChannelsQuery.data ?? [];
+  const doctorMessenger = uniqMessengers(onlineVisitChannelTypes, Object.keys(messengers));
   const userCenterDescription = centerDescriptionsQuery.data?.user_center_description?.trim() || '';
   const centerWithBookingData = useMemo(() => {
     if (!centerWithSettings) return centerWithSettings;
@@ -398,7 +405,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         user: {
           ...user,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
-          messengerType: profile?.online_visit_channel_types?.includes('whatsapp') ? 'hami' : 'eitaa',
+          messengerType: onlineVisitChannelTypes.includes('whatsapp') ? 'hami' : 'eitaa',
         },
       },
       {
