@@ -3,7 +3,6 @@ import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters
 import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { validateDoctorSlug, type DoctorSlugValidationResponse } from '@/common/apis/services/doctor/validateDoctorSlug';
-import { getProfileData } from '@/common/apis/services/profile/getFullProfile';
 import { composeBookingProfile } from '@/modules/booking/functions/composeBookingProfile';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
@@ -19,10 +18,10 @@ const isValidSlugInfo = (data: unknown): data is DoctorSlugValidationResponse =>
 };
 
 /**
- * Booking profile loader: granular drprofile first, full-profile for remaining gaps.
- * center.settings and center.insurances are fetched later in BookingSteps for the
- * selected center only.
- * full-profile errors soft-fail; UI is not blocked on them.
+ * Booking profile loader from granular drprofile APIs.
+ * center.settings, insurances, descriptions, and online-channels are fetched
+ * later in BookingSteps for the selected center / SELECT_USER.
+ * Failed sources stay null; full-profile is not fetched.
  */
 export const useBookingProfileData = (slug: string | undefined, options?: UseBookingProfileDataOptions) => {
   const enabled = !!slug && options?.enabled !== false;
@@ -60,44 +59,22 @@ export const useBookingProfileData = (slug: string | undefined, options?: UseBoo
     refetchOnWindowFocus: false,
   });
 
-  const fullProfileQuery = useQuery(
-    [ServerStateKeysEnum.DoctorFullProfile, { slug }],
-    async () => {
-      try {
-        return await getProfileData({ slug: slug! });
-      } catch {
-        return null;
-      }
-    },
-    {
-      enabled,
-      retry: false,
-      refetchOnWindowFocus: false,
-      staleTime: 60_000,
-    },
-  );
-
-  // Only honor validateDoctorSlug redirects. full-profile redirects can point at stale
-  // slugs and fight the canonical chain (infinite booking URL loop).
   const redirect =
     slugQuery.data && typeof slugQuery.data === 'object' && 'redirect' in slugQuery.data
       ? (slugQuery.data as { redirect: { route: string; statusCode?: number } }).redirect
       : undefined;
 
   const slugInfo = isValidSlugInfo(slugQuery.data) ? slugQuery.data : null;
-  const fullProfile = fullProfileQuery.data?.data ?? null;
-  const fullProfileFailed = fullProfileQuery.isFetched && !fullProfile;
 
   const profile = useMemo(
     () =>
       composeBookingProfile({
         slugInfo,
-        fullName: fullNameQuery.data ?? null,
-        expertise: expertiseQuery.data ?? null,
-        doctorCenters: centersQuery.data ?? null,
-        fullProfile,
+        fullName: fullNameQuery.isError ? null : fullNameQuery.data ?? null,
+        expertise: expertiseQuery.isError ? null : expertiseQuery.data ?? null,
+        doctorCenters: centersQuery.isError ? null : centersQuery.data ?? null,
       }),
-    [slugInfo, fullNameQuery.data, expertiseQuery.data, centersQuery.data, fullProfile],
+    [slugInfo, fullNameQuery.data, fullNameQuery.isError, expertiseQuery.data, expertiseQuery.isError, centersQuery.data, centersQuery.isError],
   );
 
   const essentialsReady = !slugQuery.isLoading && !centersQuery.isLoading;
@@ -112,7 +89,6 @@ export const useBookingProfileData = (slug: string | undefined, options?: UseBoo
   const status = isLoading ? 'loading' : isSuccess ? 'success' : isError ? 'error' : 'idle';
 
   return {
-    /** Mimics useGetProfileData envelope: `data.data` is the profile */
     data: profile
       ? { data: profile, ...(redirect ? { redirect } : {}) }
       : redirect
@@ -123,7 +99,6 @@ export const useBookingProfileData = (slug: string | undefined, options?: UseBoo
     isSuccess,
     isError,
     status,
-    fullProfileFailed,
     redirect,
   };
 };
