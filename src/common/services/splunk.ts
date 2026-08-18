@@ -12,7 +12,8 @@ type Index =
   | 'dashboard'
   | 'cwv'
   | 'contribute'
-  | 'homepage';
+  | 'homepage'
+  | 'ravi';
 
 type SplunkOptions = {
   baseUrl: string;
@@ -180,6 +181,20 @@ export const splunkInstance = (index: Index) => {
           current_url: typeof window !== 'undefined' ? window.location.href : null,
           terminal_id: getCookie('terminal_id'),
           is_application: isPWA(),
+        },
+      });
+    }
+    case 'ravi': {
+      const token =
+        (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_RAVI_SPLUNK_HEC_TOKEN) || '';
+      return createSafeSplunk({
+        baseUrl: 'https://ravi-splunk-hec.paziresh24.com',
+        token,
+        constant: {
+          current_url: typeof window !== 'undefined' ? window.location.href : null,
+          terminal_id: getCookie('terminal_id'),
+          is_application: isPWA(),
+          index_name: 'ravi',
         },
       });
     }

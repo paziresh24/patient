@@ -1,5 +1,6 @@
 import { getCookie } from 'cookies-next';
 import { isPWA } from '@/common/utils/isPwa';
+import { splunkInstance } from '@/common/services/splunk';
 
 export type RaviReviewEventType =
   | 'rate_summary_load'
@@ -43,11 +44,7 @@ function source(): 'patient_app' | 'patient_web' {
   return isPWA() ? 'patient_app' : 'patient_web';
 }
 
-/**
- * Lean rate/review UI events → Ravi Splunk via API beacon (index=ravi).
- * No PII / free-text review body.
- */
-export const trackRaviReviewEvent = async (payload: RaviReviewEventPayload): Promise<void> => {
+async function postBeacon(payload: RaviReviewEventPayload): Promise<void> {
   try {
     await fetch(`${BEACON_URL.replace(/\/$/, '')}/ravi/v1/ops/ravi-events`, {
       method: 'POST',
@@ -62,4 +59,41 @@ export const trackRaviReviewEvent = async (payload: RaviReviewEventPayload): Pro
   } catch {
     // fire-and-forget
   }
+}
+
+/**
+ * Lean rate/review UI events → Ravi Splunk only (index=ravi).
+ * Prefers HEC when NEXT_PUBLIC_RAVI_SPLUNK_HEC_TOKEN is set; otherwise ships via API beacon.
+ */
+export const trackRaviReviewEvent = async (payload: RaviReviewEventPayload): Promise<void> => {
+  const hecToken =
+    typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_RAVI_SPLUNK_HEC_TOKEN : undefined;
+  const ok = payload.ok !== false;
+  const group = ok ? 'ravi_review_ui' : 'ravi_error';
+
+  if (hecToken) {
+    await splunkInstance('ravi').sendEvent({
+      group,
+      type: payload.event_type,
+      event: {
+        source: source(),
+        slug: payload.slug,
+        doctor_id: payload.doctor_id,
+        feedback_id: payload.feedback_id,
+        filter: payload.filter,
+        sort: payload.sort,
+        status_code: payload.status_code,
+        duration_ms: payload.duration_ms,
+        error_code: payload.error_code,
+        page: payload.page,
+        hide_rates: payload.hide_rates,
+        count: payload.count,
+        ok,
+        ts: new Date().toISOString(),
+      },
+    });
+    return;
+  }
+
+  await postBeacon(payload);
 };

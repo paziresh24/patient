@@ -1,4 +1,5 @@
 import ShareIcon from '@/common/components/icons/share';
+import { trackRaviReviewEvent } from '../analytics/trackRaviReviewEvent';
 import { fetchShareCommentUrl } from '../api';
 import { RaviReview } from '../types';
 import { useReviewerName } from '../composables/useReviewerName';
@@ -41,17 +42,43 @@ export const RaviCard = ({
       const url = await fetchShareCommentUrl(doctorSlug, review.id);
       if (!url) {
         toast.error('دریافت لینک اشتراک‌گذاری ناموفق بود.');
+        void trackRaviReviewEvent({
+          event_type: 'review_share_click',
+          slug: doctorSlug,
+          feedback_id: review.id,
+          ok: false,
+          error_code: 'SHARE_URL_EMPTY',
+        });
         return;
       }
       const shareText = 'این نظر رو در پذیرش24 ببین 👇';
       if (navigator.share) {
         await navigator.share({ text: shareText, url }).catch(() => undefined);
+        void trackRaviReviewEvent({
+          event_type: 'review_share_click',
+          slug: doctorSlug,
+          feedback_id: review.id,
+          ok: true,
+        });
         return;
       }
       await navigator.clipboard?.writeText(url);
       toast.success('لینک نظر کپی شد.');
+      void trackRaviReviewEvent({
+        event_type: 'review_share_click',
+        slug: doctorSlug,
+        feedback_id: review.id,
+        ok: true,
+      });
     } catch {
       toast.error('اشتراک‌گذاری ناموفق بود.');
+      void trackRaviReviewEvent({
+        event_type: 'review_share_click',
+        slug: doctorSlug,
+        feedback_id: review.id,
+        ok: false,
+        error_code: 'SHARE_ERROR',
+      });
     }
   };
 
@@ -117,7 +144,7 @@ export const RaviCard = ({
           <ShareIcon width={16} height={16} className="shrink-0" />
         </button>
 
-        <RaviUsefulRating feedbackId={review.id} likeCount={review.likeCount} />
+        <RaviUsefulRating feedbackId={review.id} likeCount={review.likeCount} doctorSlug={doctorSlug} />
 
         <RaviDoctorReplyToolbarButton state={doctorReply} />
       </div>

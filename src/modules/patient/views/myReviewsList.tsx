@@ -8,7 +8,6 @@ import Text from '@/common/components/atom/text';
 import { ChevronIcon } from '@/common/components/icons/chevron';
 import { getBooks } from '@/common/apis/services/booking/getBooks';
 import useModal from '@/common/hooks/useModal';
-import { formatRelativeFeedbackTime } from '@/common/utils/formatRelativeFeedbackTime';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { trackRaviReviewEvent } from '@/modules/rate-and-review/analytics/trackRaviReviewEvent';
 import { deleteFeedback, fetchMyFeedbacks, MyFeedbackItem } from '@/modules/rate-and-review/api';
@@ -55,8 +54,6 @@ const COPY = {
   deleteConfirm: 'تأیید حذف',
   deleteCancel: 'انصراف',
   doctorReply: 'پاسخ پزشک',
-  orphanNote: 'این نظر به نوبت فعلی وصل نیست',
-  editUnavailable: 'ویرایش ممکن نیست',
 } as const;
 
 type AppointmentRow = {
@@ -81,10 +78,6 @@ type AppointmentReviewRow = AppointmentRow & {
   feedback?: MyFeedbackItem;
 };
 
-type OrphanReviewRow = {
-  kind: 'orphan';
-  feedback: MyFeedbackItem;
-};
 
 const doctorProfileHref = (slug?: string) => (slug ? `/dr/${encodeURIComponent(slug)}/` : '#');
 
@@ -306,25 +299,16 @@ export const MyReviewsList = () => {
     });
   }, [appointments, feedbackByBookId]);
 
-  const orphanReviews = useMemo<OrphanReviewRow[]>(() => {
-    const linked = new Set(appointments.map(item => item.bookId));
-    return feedbacks
-      .filter(item => {
-        const bookId = normalizeId(item.book_id);
-        return !bookId || !linked.has(bookId);
-      })
-      .map(feedback => ({ kind: 'orphan' as const, feedback }));
-  }, [appointments, feedbacks]);
 
   const counts = useMemo(() => {
-    const reviewed = appointmentRows.filter(row => row.status === 'reviewed').length + orphanReviews.length;
+    const reviewed = appointmentRows.filter(row => row.status === 'reviewed').length;
     const notReviewed = appointmentRows.filter(row => row.status === 'not_reviewed').length;
     return {
-      all: appointmentRows.length + orphanReviews.length,
+      all: appointmentRows.length,
       reviewed,
       notReviewed,
     };
-  }, [appointmentRows, orphanReviews]);
+  }, [appointmentRows]);
 
   const visibleAppointments = useMemo(() => {
     if (filter === 'reviewed') return appointmentRows.filter(row => row.status === 'reviewed');
@@ -332,10 +316,6 @@ export const MyReviewsList = () => {
     return appointmentRows;
   }, [appointmentRows, filter]);
 
-  const visibleOrphans = useMemo(() => {
-    if (filter === 'not_reviewed') return [];
-    return orphanReviews;
-  }, [orphanReviews, filter]);
 
   const openSurvey = (args: {
     bookId: string;
@@ -573,86 +553,9 @@ export const MyReviewsList = () => {
           );
         })}
 
-        {visibleOrphans.map(({ feedback }) => {
-          const replies = (feedback.replies ?? []).filter(reply => Boolean(String(reply.description ?? '').trim()));
-          const rate = feedback.avg_rate_value != null ? Number(feedback.avg_rate_value) : null;
-          const bookId = normalizeId(feedback.book_id);
-          const description = String(feedback.description ?? '').trim();
-          const doctorName = doctorLabelFromSlug(feedback.doctor_slug);
-          return (
-            <Card
-              key={`orphan-${String(feedback.id)}`}
-              className="space-y-3 !rounded-none border-dashed border-slate-300 md:!rounded-lg md:border md:shadow-none"
-              data-testid="my-review-card"
-            >
-              <div className="relative flex items-start justify-between gap-3">
-                <Link href={doctorProfileHref(feedback.doctor_slug)} className="flex min-w-0 flex-1 items-center space-s-3">
-                  <Avatar name={doctorName} width={48} height={48} />
-                  <div className="flex min-w-0 flex-col">
-                    <Text fontSize="sm" fontWeight="bold" className="line-clamp-1">
-                      {doctorName}
-                    </Text>
-                    <Text fontSize="xs" className="mt-1 line-clamp-2 text-slate-500">
-                      {[formatRelativeFeedbackTime(feedback.created_at) || '—', feedback.center_name].filter(Boolean).join(' | ')}
-                    </Text>
-                    <Text fontSize="xs" className="mt-1 text-amber-700">
-                      {COPY.orphanNote}
-                    </Text>
-                  </div>
-                </Link>
-                <div className="flex shrink-0 items-start gap-2">
-                  <RateBadge value={rate} />
-                  <Chips className={statusChipClass.reviewed}>{statusLabel.reviewed}</Chips>
-                </div>
-              </div>
-              {description ? (
-                <Text fontSize="sm" align="justify" className="block whitespace-pre-wrap leading-7 text-slate-700">
-                  {description}
-                </Text>
-              ) : (
-                <Text fontSize="xs" className="block text-slate-400">
-                  {COPY.emptyTextOnly}
-                </Text>
-              )}
-              {replies.length > 0 ? (
-                <div className="space-y-2">
-                  {replies.map(reply => (
-                    <DoctorReply key={String(reply.id)} description={String(reply.description)} />
-                  ))}
-                </div>
-              ) : null}
-              <div className="flex gap-2">
-                {bookId ? (
-                  <Button
-                    variant="secondary"
-                    className="flex-1"
-                    onClick={() =>
-                      openSurvey({
-                        bookId,
-                        doctorSlug: feedback.doctor_slug,
-                        centerId: String(feedback.center_id ?? ''),
-                        feedbackId: feedback.id,
-                        mode: 'edit',
-                      })
-                    }
-                  >
-                    {COPY.editCta}
-                  </Button>
-                ) : (
-                  <Button variant="secondary" className="flex-1" disabled>
-                    {COPY.editUnavailable}
-                  </Button>
-                )}
-                <Button variant="secondary" theme="error" className="flex-1" onClick={() => openDelete(feedback)}>
-                  {COPY.deleteCta}
-                </Button>
-              </div>
-            </Card>
-          );
-        })}
       </div>
 
-      {!visibleAppointments.length && !visibleOrphans.length ? (
+      {!visibleAppointments.length ? (
         <Card className="items-center !rounded-none md:!rounded-lg">
           <Text fontSize="sm" className="text-slate-500">
             {COPY.emptyFilter}

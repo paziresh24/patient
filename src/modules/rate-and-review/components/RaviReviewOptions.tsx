@@ -6,6 +6,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import * as Popover from '@radix-ui/react-popover';
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { trackRaviReviewEvent } from '../analytics/trackRaviReviewEvent';
 import { deleteFeedback, editFeedback, reportFeedback } from '../api';
 
 const REPORT_REASONS = [
@@ -120,8 +121,21 @@ export const RaviReviewOptions = ({
       onEdited?.(description);
       editModal.handleClose();
       toast.success('نظر شما پس از بررسی و با استناد به قوانین پذیرش۲۴ ویرایش خواهد شد.');
+      void trackRaviReviewEvent({
+        event_type: 'review_edit_submit',
+        slug: doctorSlug,
+        feedback_id: feedbackId,
+        ok: true,
+      });
     } catch {
       toast.error('ویرایش نظر ناموفق بود. دوباره تلاش کنید.');
+      void trackRaviReviewEvent({
+        event_type: 'review_edit_submit',
+        slug: doctorSlug,
+        feedback_id: feedbackId,
+        ok: false,
+        error_code: 'EDIT_ERROR',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -134,8 +148,21 @@ export const RaviReviewOptions = ({
       onDeleted?.();
       deleteModal.handleClose();
       toast.success('نظر شما با موفقیت حذف شد.');
+      void trackRaviReviewEvent({
+        event_type: 'review_delete_submit',
+        slug: doctorSlug,
+        feedback_id: feedbackId,
+        ok: true,
+      });
     } catch {
       toast.error('حذف نظر ناموفق بود. دوباره تلاش کنید.');
+      void trackRaviReviewEvent({
+        event_type: 'review_delete_submit',
+        slug: doctorSlug,
+        feedback_id: feedbackId,
+        ok: false,
+        error_code: 'DELETE_ERROR',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -164,8 +191,21 @@ export const RaviReviewOptions = ({
       });
       reportModal.handleClose();
       toast.success('گزارش شما ثبت شد.');
+      void trackRaviReviewEvent({
+        event_type: 'review_report_submit',
+        slug: doctorSlug,
+        feedback_id: feedbackId,
+        ok: true,
+      });
     } catch {
       toast.error('ثبت گزارش ناموفق بود. دوباره تلاش کنید.');
+      void trackRaviReviewEvent({
+        event_type: 'review_report_error',
+        slug: doctorSlug,
+        feedback_id: feedbackId,
+        ok: false,
+        error_code: 'REPORT_ERROR',
+      });
     } finally {
       setIsSubmitting(false);
     }
