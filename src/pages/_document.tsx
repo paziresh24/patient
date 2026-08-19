@@ -20,7 +20,7 @@ const CustomDocument: NextComponentType = (props: any) => {
           https://developers.google.com/search/docs/appearance/favicon-in-search
         */}
         <link rel="icon" type="image/png" sizes="192x192" href="/logos/icon_x192.png" />
-        <link rel="icon" href="/favicon.ico" sizes="48x48" />
+        <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="192x192" href="/logos/icon_x192.png" />
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
