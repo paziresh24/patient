@@ -327,6 +327,11 @@ const nextConfig = {
         source: '/robots.txt',
         destination: '/api/robots',
       },
+      // Googlebot and browsers request /favicon.ico at the hostname root.
+      // Keep this rewrite even if public/favicon.ico is missing from a given image.
+      // trailingSlash:true can send some crawlers to /favicon.ico/.
+      { source: '/favicon.ico', destination: '/logos/favicon.ico' },
+      { source: '/favicon.ico/', destination: '/logos/favicon.ico' },
     ];
 
     // Browser calls to ravi-apis are CORS-blocked from localhost / local.paziresh24.com
@@ -342,6 +347,33 @@ const nextConfig = {
   },
   async headers() {
     return [
+      {
+        source: '/favicon.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
+        ],
+      },
+      {
+        source: '/apple-touch-icon.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
+        ],
+      },
+      {
+        source: '/logos/:file*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
+        ],
+      },
       {
         // DR-13: صفحه‌ی static «نظر شما برای ما مهم است» — long-cache روی CDN، revalidate روزانه در مرورگر
         source: '/rate-us/',
