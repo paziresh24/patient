@@ -332,6 +332,7 @@ const nextConfig = {
       // trailingSlash:true can send some crawlers to /favicon.ico/.
       { source: '/favicon.ico', destination: '/logos/favicon.ico' },
       { source: '/favicon.ico/', destination: '/logos/favicon.ico' },
+      { source: '/img/logo.png', destination: '/logos/icon_x192.png' },
     ];
 
     // Browser calls to ravi-apis are CORS-blocked from localhost / local.paziresh24.com
@@ -349,6 +350,15 @@ const nextConfig = {
     return [
       {
         source: '/favicon.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
+        ],
+      },
+      {
+        source: '/img/logo.png',
         headers: [
           {
             key: 'Cache-Control',
