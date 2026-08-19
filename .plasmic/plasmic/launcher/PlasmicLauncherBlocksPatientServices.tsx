@@ -297,7 +297,7 @@ function PlasmicLauncherBlocksPatientServices__RenderFunc(props: {
                     {
                       name: "نظرات من",
                       icon: "https://launcher.s3.ir-thr-at1.arvanstorage.ir/shortcuts%2Fpatient%2Fmy-reviews.svg?versionId=",
-                      url: "/dashboard/apps/ravi/my_feedbacks/"
+                      url: "/dashboard/my-reviews/"
                     }
                   ];
                 } catch (e) {

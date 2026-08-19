@@ -213,7 +213,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       label: 'نظرات من',
       url: '/dashboard/my-reviews',
       shouldShowDoctor: true,
-      shouldShow: user.provider?.job_title !== 'doctor',
+      shouldShow: true,
     },
     {
       icon: <UsersIcon />,

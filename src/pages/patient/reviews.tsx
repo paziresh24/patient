@@ -5,7 +5,7 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
-import { MyReviewsList } from '@/modules/patient/views/myReviewsList';
+import { RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
@@ -21,7 +21,7 @@ export const PatientReviewsPage = () => {
         <Text fontWeight="black" fontSize="xl" className="pwa:hidden mb-5 px-5 pt-5 md:px-0 md:pt-0">
           نوبت‌ها و نظرات من
         </Text>
-        <MyReviewsList />
+        <RedirectToRaviMyReviews />
       </div>
     </>
   );
