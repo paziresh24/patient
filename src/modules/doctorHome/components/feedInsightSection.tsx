@@ -86,7 +86,10 @@ export const FeedInsightSection = ({
         {
           icon: <ReviewsIcon size="sm" />,
           title: 'نظرات بیماران',
-          description: stats.satisfactionReviewCount != null ? `${stats.satisfactionReviewCount} نظر` : 'میانگین امتیاز',
+          description:
+            stats.satisfactionReviewCount != null
+              ? `${stats.satisfactionReviewCount.toLocaleString('fa-IR')} نظر`
+              : 'میانگین امتیاز',
           value: stats.satisfactionRating ?? null,
           valueMax: 5,
           valueBarClass: ds.progress.fillRating,
@@ -133,7 +136,12 @@ export const FeedInsightSection = ({
   return (
     <>
       <FeedContentSwap swapKey={insightSwapKey} variant="fade">
-        <DsInsightCarousel items={insightItems} variant={variant} className={className} />
+        <DsInsightCarousel
+          items={insightItems}
+          variant={variant}
+          appearance={variant === 'stack' ? 'workstation' : 'default'}
+          className={className}
+        />
       </FeedContentSwap>
 
       <DsDrawer {...reviewsDrawerProps} title="نظرات بیماران" description="راوی" fullHeight className="!p-0">

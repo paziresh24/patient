@@ -6,6 +6,7 @@ import { useIsomorphicLayoutEffect } from '@/common/hooks/useIsomorphicLayoutEff
 import { animated, useSpring } from 'react-spring';
 import { EyeHiddenIcon, EyeVisibleIcon } from '../components/icons';
 import { dsFocusRing, prefersReducedMotion } from '../utils/a11y';
+import { DsCard } from './DsCard';
 import { ds } from './tokens';
 
 const DRAG_CLICK_THRESHOLD = 8;
@@ -212,12 +213,16 @@ const InsightCard = ({
   fullWidth = false,
   appearance = 'default',
   compact = false,
+  grouped = false,
+  isLast = false,
   shouldIgnorePress,
 }: {
   item: DsInsightItem;
   fullWidth?: boolean;
   appearance?: 'default' | 'workstation';
   compact?: boolean;
+  grouped?: boolean;
+  isLast?: boolean;
   shouldIgnorePress?: () => boolean;
 }) => {
   const isValueVisible = !item.visibilityToggle || item.visibilityToggle.isVisible;
@@ -250,21 +255,57 @@ const InsightCard = ({
   );
 
   const isWorkstation = appearance === 'workstation' && fullWidth;
+  const isWorkstationCompact = appearance === 'workstation' && compact && !grouped;
+
+  const compactRowClassName = classNames(
+    'relative flex w-full items-center justify-between gap-3',
+    grouped
+      ? classNames(
+          ds.layout.rowPadding,
+          !isLast && 'border-b border-slate-100',
+          (item.href || item.onPress) && ds.motion.listRow,
+        )
+      : classNames(
+          isWorkstationCompact
+            ? classNames(ds.radius.card, ds.shadow.sm, ds.surface.card, 'min-h-[3.75rem]')
+            : classNames(ds.radius.card, ds.shadow.sm, ds.surface.card),
+          isWorkstationCompact ? 'p-3.5' : 'p-3',
+          (item.href || item.onPress) && 'cursor-pointer hover:-translate-y-px hover:shadow-md active:scale-[0.98]',
+        ),
+  );
 
   const cardClassName = classNames(
-    isWorkstation
-      ? classNames(ds.workstation.widgetSm, 'min-h-[8rem]')
-      : classNames(ds.radius.card, ds.shadow.sm, ds.surface.card),
-    'relative overflow-hidden',
-    compact
-      ? 'flex w-full items-center gap-2.5 p-2.5'
-      : classNames('flex flex-col justify-between', isWorkstation ? 'p-5' : 'p-4'),
+    grouped && compact
+      ? compactRowClassName
+      : classNames(
+          isWorkstation
+            ? classNames(ds.workstation.widgetSm, 'min-h-[8rem]')
+            : classNames(ds.radius.card, ds.shadow.sm, ds.surface.card),
+          'relative overflow-hidden',
+          compact
+            ? classNames('flex w-full items-center justify-between', isWorkstationCompact ? 'gap-3 p-3.5' : 'gap-3 p-3')
+            : classNames('flex flex-col justify-between', isWorkstation ? 'p-5' : 'p-4'),
+        ),
+    !grouped && 'relative overflow-hidden',
     !compact && (isWorkstation ? 'min-h-[8rem]' : 'h-[7rem]'),
     !compact && (fullWidth ? 'w-full' : 'w-[9.25rem]'),
-    'transition-[transform,box-shadow] duration-200 ease-out',
-    (item.href || item.onPress) && 'cursor-pointer hover:-translate-y-px hover:shadow-md active:scale-[0.98]',
-    !isWalletCard && fullWidth && !isWorkstation && !compact && (item.href || item.onPress) && 'hover:shadow-[0_10px_28px_rgba(15,23,42,0.08)]',
-    !isWalletCard && fullWidth && isWorkstation && (item.href || item.onPress) && 'hover:shadow-[0_12px_36px_rgba(15,23,42,0.1)]',
+    !grouped && 'transition-[transform,box-shadow] duration-200 ease-out',
+    !grouped &&
+      (item.href || item.onPress) &&
+      'cursor-pointer hover:-translate-y-px hover:shadow-md active:scale-[0.98]',
+    !grouped &&
+      !isWalletCard &&
+      fullWidth &&
+      !isWorkstation &&
+      !compact &&
+      (item.href || item.onPress) &&
+      'hover:shadow-[0_10px_28px_rgba(15,23,42,0.08)]',
+    !grouped &&
+      !isWalletCard &&
+      fullWidth &&
+      isWorkstation &&
+      (item.href || item.onPress) &&
+      'hover:shadow-[0_12px_36px_rgba(15,23,42,0.1)]',
   );
 
   const iconBoxClass = classNames(compact ? 'h-7 w-7' : 'h-8 w-8', 'shrink-0', ds.icon.containerTile);
@@ -445,14 +486,16 @@ const InsightCard = ({
           className={classNames(cardClassName, item.onPress && 'cursor-pointer')}
           {...walletInteractiveProps}
         >
-          <div className={iconBoxClass}>
-            <span className={iconInnerClass}>{item.icon}</span>
+          <div className="flex min-w-0 items-center gap-2.5">
+            <div className={iconBoxClass}>
+              <span className={iconInnerClass}>{item.icon}</span>
+            </div>
+            <p className={classNames(ds.type.insightTitle, 'truncate')}>{item.title}</p>
           </div>
-          <p className={classNames(ds.type.insightTitle, 'min-w-0 flex-1 truncate text-right')}>{item.title}</p>
           {item.isLoading ? (
-            <Skeleton h="1rem" w="4.5rem" rounded="md" />
+            <Skeleton h="1rem" w="4.5rem" rounded="md" className="shrink-0" />
           ) : (
-            <div className="flex shrink-0 items-center gap-1.5">
+            <div className="flex shrink-0 items-center gap-1.5 ps-2">
               {walletToggle}
               <div className="text-end leading-tight" dir="ltr">
                 {renderMetricValue(true)}
@@ -465,18 +508,20 @@ const InsightCard = ({
 
     return (
       <div className={cardClassName}>
-        <div className={iconBoxClass}>
-          <span className={iconInnerClass}>{item.icon}</span>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <div className={iconBoxClass}>
+            <span className={iconInnerClass}>{item.icon}</span>
+          </div>
+          <div className="min-w-0 text-right">
+            <p className={classNames(ds.type.insightTitle, 'truncate')}>{item.title}</p>
+            {item.isLoading ? (
+              <Skeleton h="0.5rem" w="4.5rem" rounded="md" className="mt-1" />
+            ) : (
+              item.description && <p className={classNames(ds.type.captionSm, 'mt-0.5 truncate')}>{item.description}</p>
+            )}
+          </div>
         </div>
-        <div className="min-w-0 flex-1 text-right">
-          <p className={classNames(ds.type.insightTitle, 'truncate')}>{item.title}</p>
-          {item.isLoading ? (
-            <Skeleton h="0.5rem" w="60%" rounded="md" className="mt-1" />
-          ) : (
-            item.description && <p className={classNames(ds.type.captionSm, 'mt-0.5 truncate')}>{item.description}</p>
-          )}
-        </div>
-        <div className="shrink-0">{renderMetricValue(true)}</div>
+        <div className="shrink-0 ps-2">{renderMetricValue(true)}</div>
       </div>
     );
   }
@@ -700,13 +745,22 @@ export const DsInsightCarousel = ({
   const wasDragged = () => pointerRef.current.dragDistance > DRAG_CLICK_THRESHOLD;
   const hasBandPadding = !!(header || footer);
 
-  const renderInsightItem = (item: DsInsightItem, index: number, fullWidth = false, compact = false) => {
+  const renderInsightItem = (
+    item: DsInsightItem,
+    index: number,
+    fullWidth = false,
+    compact = false,
+    grouped = false,
+    isLast = false,
+  ) => {
     const card = (
       <InsightCard
         item={item}
         fullWidth={fullWidth}
         appearance={appearance}
         compact={compact}
+        grouped={grouped}
+        isLast={isLast}
         shouldIgnorePress={!fullWidth ? wasDragged : undefined}
       />
     );
@@ -764,15 +818,28 @@ export const DsInsightCarousel = ({
     );
   };
 
+  const renderStackItems = (grouped: boolean) =>
+    items.map((item, index) =>
+      renderInsightItem(item, index, true, true, grouped, grouped && index === items.length - 1),
+    );
+
   const showGrid = variant === 'grid' || variant === 'responsive';
   const showCarousel = variant === 'carousel' || variant === 'responsive';
   const showStack = variant === 'stack';
 
   return (
     <div className={className}>
-      {showStack && (
+      {showStack && appearance === 'workstation' && (
+        <div role="region" aria-label="آمار عملکرد">
+          <DsCard padding="none" className="overflow-hidden">
+            {renderStackItems(true)}
+          </DsCard>
+        </div>
+      )}
+
+      {showStack && appearance !== 'workstation' && (
         <div className="flex flex-col gap-2" role="region" aria-label="آمار عملکرد">
-          {items.map((item, index) => renderInsightItem(item, index, true, true))}
+          {renderStackItems(false)}
         </div>
       )}
 
