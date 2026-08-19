@@ -2,24 +2,23 @@ import axios from 'axios';
 import { apiGatewayClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { getProfileMicroserviceBundle } from '@/common/apis/services/profile-microservice/getProfileMicroserviceBundle';
 import { mapMicroserviceToLegacy } from '@/common/apis/services/profile-microservice/mapMicroserviceToLegacy';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { CENTERS } from '@/common/types/centers';
-import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { isInvalidProfileServiceId, mapDoctorCenterServices, filterBookableMappedCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import isEmpty from 'lodash/isEmpty';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
-import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { overwriteProfileData } from './overwriteProfileData';
 import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyBooking';
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
 import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
-import { drProfileClient } from '@/common/apis/client';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
 const RISMAN_DOCTORS = 'https://apigw.paziresh24.com/v1/risman/doctors/';
@@ -74,7 +73,8 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
  * Hybrid aggregation for allowlisted slugs:
  * - Identity/content (name, bio, gallery, SEO, …) from PROFILE_API_BASE_URL
  * - Address/phone in sidebar from profiles-api locations (source of truth)
- * - Services / freeturn / hours from legacy full-profile (matched onto MS locations)
+ * - Address/phone from profiles-api locations (external_ids UUID → drprofile center id)
+ * - Booking services/freeturn: match MS locations to drprofile /centers (same as /booking — no full-profile)
  * - Booking availability from Saman
  */
 export async function getAggregatedProfileDataFromMicroservice(
@@ -132,7 +132,7 @@ export async function getAggregatedProfileDataFromMicroservice(
 
   const msLocationsAsCenters = Array.isArray(overwrite.centers) ? [...overwrite.centers] : [];
 
-  const [reviewsResult, averageWaitingTimeResult, legacyProfileResult] = await Promise.all([
+  const [reviewsResult, averageWaitingTimeResult, doctorCenters] = await Promise.all([
     shouldFetchReviews
       ? queryClient
           .fetchQuery([ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }], () =>
@@ -144,38 +144,15 @@ export async function getAggregatedProfileDataFromMicroservice(
     getAverageWaitingTime({ slug: validatedSlug })
       .then(value => ({ status: 'fulfilled' as const, value }))
       .catch(reason => ({ status: 'rejected' as const, reason })),
-    getProfile({ slug: validatedSlug, university, isServer })
-      .then(value => ({ status: 'fulfilled' as const, value }))
-      .catch(reason => {
-        console.error('Error fetching legacy full-profile for microservice booking hydrate:', reason);
-        return { status: 'rejected' as const, reason };
-      }),
+    getDoctorCenters(validatedSlug, university, { onlyBookable: false }).catch(error => {
+      console.error('Error fetching drprofile centers for MS booking hydrate:', error);
+      return [] as Awaited<ReturnType<typeof getDoctorCenters>>;
+    }),
   ]);
 
   await samanAvailabilityPromise;
 
-  let legacyCenters =
-    legacyProfileResult.status === 'fulfilled' ? legacyProfileResult.value?.fullProfileData?.centers : null;
-
-  // Booking hydrate depends on legacy centers; retry once with a longer timeout if first call failed.
-  if (!Array.isArray(legacyCenters) || legacyCenters.length === 0) {
-    try {
-      const { data } = await drProfileClient.get(`/api/full-profile/${encodeURIComponent(validatedSlug)}/`, {
-        params: university ? { university } : undefined,
-        timeout: 12000,
-      });
-      legacyCenters = data?.centers ?? data?.data?.centers ?? null;
-    } catch (error) {
-      console.error('Retry legacy full-profile for microservice booking hydrate failed:', error);
-    }
-  }
-
-  // Address/phone from MS locations; services/freeturn from legacy full-profile when matched.
-  // Do NOT overwrite address with legacy Centers API — sidebar must show new-backend locations.
-  const mergedCenters = mergeMsLocationsWithLegacyBooking(msLocationsAsCenters as any[], legacyCenters);
-  if (Array.isArray(legacyCenters) && legacyCenters.length > 0) {
-    fullProfileLike.centers = legacyCenters;
-  }
+  const mergedCenters = mergeMsLocationsWithLegacyBooking(msLocationsAsCenters as any[], doctorCenters);
   overwrite.centers = mergedCenters as any;
 
   overwrite.feedbacks = {
@@ -223,10 +200,12 @@ export async function getAggregatedProfileDataFromMicroservice(
         const result = serviceResults[idx];
         if (result.status !== 'fulfilled' || !result.value?.length) return center;
         const mapped = mapDoctorCenterServices(result.value, center.user_center_id);
+        const services =
+          String(center.id) === CENTERS.CONSULT ? filterBookableMappedCenterServices(mapped) : mapped;
         if (isServer) {
           queryClient.setQueryData([ServerStateKeysEnum.DoctorCenterServices, validatedSlug, String(center.id)], result.value);
         }
-        return { ...center, services: mapped };
+        return { ...center, services };
       });
     } catch (error) {
       console.error('Error hydrating center services (microservice path):', error);

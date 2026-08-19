@@ -1,6 +1,7 @@
 import type { OverwriteProfileData } from '@/modules/profile/functions/overwriteProfileData';
 import type { ProfileMicroserviceBundle } from './getProfileMicroserviceBundle';
 import { normalizeBioCredentials } from './normalizeBioCredentials';
+import { resolveMsLocationBookingIds } from './resolveMsLocationBookingIds';
 
 const CITY_EN_SLUG: Record<string, string> = {
   تهران: 'tehran',
@@ -31,24 +32,20 @@ function mapLocationsToCenters(locations: any[]) {
     const cityName = loc?.address?.city ?? (typeof loc?.city === 'string' ? loc.city : loc?.city?.name) ?? null;
     const citySlug = loc?.address?.city_slug ?? loc?.city_en_slug ?? loc?.city?.slug ?? cityEnSlug(cityName);
     const province = loc?.address?.province ?? loc?.province ?? null;
-    const externalIds = (loc?.external_ids ?? {}) as Record<string, unknown>;
-    // Prefer legacy center id when profiles-api stores it — helps booking hydrate match.
-    const legacyCenterId =
-      externalIds.center_id ?? externalIds.paziresh_center_id ?? loc?.center_id ?? loc?.paziresh_center_id;
-    const userCenterId =
-      externalIds.user_center_id ?? loc?.user_center_id ?? null;
+    const { bookingCenterId, userCenterId, msLocationId } = resolveMsLocationBookingIds(loc);
 
     return {
-      id: String(legacyCenterId ?? loc?.id ?? ''),
-      ms_location_id: loc?.id != null ? String(loc.id) : null,
+      // When backend sends UUID in external_ids, use it for drprofile/Saman; else ms pk until merge.
+      id: bookingCenterId ?? msLocationId ?? '',
+      ms_location_id: msLocationId,
       name: loc?.name ?? '',
       address: loc?.address?.full ?? loc?.address?.line ?? loc?.address?.address ?? '',
       display_number: phones,
       tell: phones,
       type_id: loc?.location_type === 'hospital' || loc?.type === 'hospital' ? 2 : 1,
       status: loc?.is_active === false ? 2 : 1,
-      server_id: loc?.server_id ?? externalIds.server_id ?? null,
-      user_center_id: userCenterId != null ? String(userCenterId) : null,
+      server_id: loc?.server_id ?? (loc?.external_ids as Record<string, unknown> | undefined)?.server_id ?? null,
+      user_center_id: userCenterId,
       city: cityName
         ? {
             name: cityName,
