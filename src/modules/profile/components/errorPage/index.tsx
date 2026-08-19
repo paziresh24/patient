@@ -72,6 +72,11 @@ const ErrorPage = ({
       title: 'مشکلی پیش آمده است',
       message: 'مشکلی در سرور رخ داده است. لطفاً بعداً دوباره امتحان کنید.',
     },
+    503: {
+      status: 503,
+      title: 'اطلاعات پزشک در حال به‌روزرسانی است',
+      message: 'این صفحه موقتاً در دسترس نیست. لطفاً کمی بعد دوباره تلاش کنید.',
+    },
     504: {
       status: 504,
       title: 'زمان درخواست به پایان رسید',
@@ -90,7 +95,7 @@ const ErrorPage = ({
         <Button className="mt-6" onClick={refresh}>
           تلاش مجدد
         </Button>
-        {(error.status === 404 || error.status === 410) && (
+        {(error.status === 404 || error.status === 410 || error.status === 503) && (
           <Button variant="secondary" className="mt-6" onClick={() => router.push('/')}>
             بازگشت به صفحه اصلی
           </Button>

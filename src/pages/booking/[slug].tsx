@@ -15,16 +15,13 @@ import { useProfileDataStore } from '@/modules/profile/store/profileData';
 import { useAbsentScore } from '@/common/apis/services/ravi/absentScore';
 import moment from 'jalali-moment';
 import { useRouter } from 'next/router';
-import { GetServerSidePropsContext, NextApiRequest } from 'next/types';
+import { GetServerSidePropsContext } from 'next/types';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import { ReactElement, useCallback, useEffect, useMemo } from 'react';
-import { GrowthBook } from '@growthbook/growthbook-react';
-import { getServerSideGrowthBookContext } from '@/common/helper/getServerSideGrowthBookContext';
-import { getHost } from '@/common/utils/getHost';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 
-const Booking = ({ useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus = false }: { useSamanAvailabilityStatus?: boolean }) => {
+const Booking = () => {
   const router = useRouter();
   const setProfileData = useProfileDataStore(state => state.setData);
 
@@ -191,7 +188,7 @@ const Booking = ({ useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus = f
             </div>
           )}
           <Transition match={!!queryHandler(router.query) && !isLoading} animation="bottom">
-            {<BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} ssrUseSamanAvailabilityStatus={ssrUseSamanAvailabilityStatus} />}
+            {<BookingSteps defaultStep={queryHandler(router.query) as any} slug={router.query?.slug?.toString() ?? '/'} />}
           </Transition>
         </div>
         <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
@@ -262,34 +259,18 @@ export const getServerSideProps = withCSR(
 
     const queryClient = new QueryClient();
     const slug = typeof rawSlug === 'string' ? decodeURIComponent(rawSlug) : undefined;
-    let useSamanAvailabilityStatus = false;
 
     if (slug) {
-      try {
-        const host = getHost(context.req.headers);
-        const url = `https://${host}${context.resolvedUrl}`;
-        const growthbookContext = getServerSideGrowthBookContext(context.req as NextApiRequest);
-        const growthbook = new GrowthBook(growthbookContext);
-        growthbook.setAttributes({ url, host });
-        await growthbook.loadFeatures({ timeout: 500 });
-        useSamanAvailabilityStatus = growthbook.isOn('use-saman-availability-status');
-
-        if (useSamanAvailabilityStatus) {
-          await queryClient
-            .fetchQuery([ServerStateKeysEnum.SamanDoctorAvailabilityStatus, slug], () => samanDoctorAvailabilityStatus(slug))
-            .catch(error => {
-              console.error('Error prefetching Saman availability status on booking page:', error);
-            });
-        }
-      } catch (error) {
-        console.error('Error loading GrowthBook for Saman availability SSR on booking page:', error);
-      }
+      await queryClient
+        .fetchQuery([ServerStateKeysEnum.SamanDoctorAvailabilityStatus, slug], () => samanDoctorAvailabilityStatus(slug))
+        .catch(error => {
+          console.error('Error prefetching Saman availability status on booking page:', error);
+        });
     }
 
     return {
       props: {
         query: context.query,
-        useSamanAvailabilityStatus,
         dehydratedState: dehydrate(queryClient),
       },
     };

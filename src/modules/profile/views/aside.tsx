@@ -50,7 +50,6 @@ export const Aside = (data: any) => {
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
-    useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
     // Passed from the page so Aside stays a plain function (no hooks after early returns).
     isSamanBookingEnabled = false,
     // Set only for allowlist slugs (GrowthBook profile.api-source-by-slug).
@@ -82,7 +81,6 @@ export const Aside = (data: any) => {
         return {
           expertises,
           doctorCity: information.city_en_slug,
-          ssrUseSamanAvailabilityStatus: !!ssrUseSamanAvailabilityStatus,
           deferBookableToServices: isMicroserviceProfile,
         };
       },
@@ -106,7 +104,6 @@ export const Aside = (data: any) => {
           slug: seo.slug,
           profileData,
           isBulk,
-          ssrUseSamanAvailabilityStatus: !!ssrUseSamanAvailabilityStatus,
         };
       },
       children: (props: any) => <Services {...props} enabledWidgets={hamdastWidgets} dontShowDeactiveBox={!!fragmentComponents?.risman} />,
@@ -120,7 +117,6 @@ export const Aside = (data: any) => {
           slug={seo.slug}
           centers={centers ?? []}
           partnerKey={customize?.partnerKey}
-          ssrUseSamanAvailabilityStatus={!!ssrUseSamanAvailabilityStatus}
         />
       ),
     },

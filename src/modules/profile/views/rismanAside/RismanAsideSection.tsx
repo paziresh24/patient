@@ -1,7 +1,6 @@
 import { Fragment2 } from '@/common/fragment/fragment2';
 import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { shouldShowRismanExternalBooking } from '@/modules/profile/utils/rismanBookingVisibility';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import dynamic from 'next/dynamic';
 
 const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
@@ -11,33 +10,21 @@ type RismanAsideSectionProps = {
   slug: string;
   centers: { id: string }[];
   partnerKey?: string;
-  ssrUseSamanAvailabilityStatus?: boolean;
 };
 
-export const RismanAsideSection = ({
-  risman,
-  slug,
-  centers,
-  partnerKey,
-  ssrUseSamanAvailabilityStatus = false,
-}: RismanAsideSectionProps) => {
-  const featureUseSamanAvailabilityStatus = useFeatureIsOn('use-saman-availability-status');
-  const useSamanAvailabilityStatus = featureUseSamanAvailabilityStatus || ssrUseSamanAvailabilityStatus;
+export const RismanAsideSection = ({ risman, slug, centers, partnerKey }: RismanAsideSectionProps) => {
   const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
-    enabled: !!slug && useSamanAvailabilityStatus,
+    enabled: !!slug,
   });
 
-  const samanStatus: 'pending' | 'success' | 'error' = !useSamanAvailabilityStatus
+  const samanStatus: 'pending' | 'success' | 'error' = samanAvailability.isError
     ? 'error'
-    : samanAvailability.isError
-      ? 'error'
-      : samanAvailability.data
-        ? 'success'
-        : 'pending';
+    : samanAvailability.data
+      ? 'success'
+      : 'pending';
 
   const show =
-    !partnerKey &&
-    shouldShowRismanExternalBooking(risman, centers ?? [], samanAvailability.data, samanStatus);
+    !partnerKey && shouldShowRismanExternalBooking(risman, centers ?? [], samanAvailability.data, samanStatus);
 
   if (!show) return null;
 

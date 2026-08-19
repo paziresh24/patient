@@ -4,6 +4,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
+import CommentIcon from '@/common/components/icons/comment';
 import EditIcon from '@/common/components/icons/edit';
 import { UsersIcon } from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
@@ -30,7 +31,12 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
       !customize.partnerKey &&
       (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
     ) {
-      router.replace(`/dashboard${router.asPath.replace('/patient', '')}`);
+      const patientPath = router.asPath.replace('/patient', '');
+      // /dashboard/reviews is the doctor iframe; patient reviews live at /dashboard/my-reviews
+      const dashboardPath = patientPath === '/reviews' || patientPath.startsWith('/reviews?') || patientPath.startsWith('/reviews/')
+        ? patientPath.replace(/^\/reviews/, '/my-reviews')
+        : patientPath;
+      router.replace(`/dashboard${dashboardPath}`);
     }
   }, [userInfo.id]);
 
@@ -72,6 +78,10 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
               <Text fontWeight="medium">{t('menu.bookmarks')}</Text>
             </Link>
           )}
+          <Link href="/patient/reviews" className="flex items-center py-4 space-s-3 whitespace-nowrap">
+            <CommentIcon />
+            <Text fontWeight="medium">نظرات من</Text>
+          </Link>
           <Link href="/patient/subuser" className="flex items-center py-4 space-s-3 whitespace-nowrap">
             <UsersIcon />
             <Text fontWeight="medium">{t('menu.subuser')}</Text>

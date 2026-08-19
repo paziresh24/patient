@@ -39,6 +39,7 @@ import dynamic from 'next/dynamic';
 import { useProfileClientFetch } from '@/modules/profile/hooks/useProfileClientFetch';
 import { useProfileHamdastWidgets } from '@/modules/profile/hooks/useProfileHamdastWidgets';
 import { formatAverageRate } from '@/modules/profile/utils/getAverageRate';
+import { recordMicroserviceProfilePageView } from '@/modules/profile/utils/recordMicroserviceProfilePageView';
 import {
   isPicUserImageUrl,
   resolveDoctorProfileImageUrl,
@@ -58,6 +59,7 @@ import Head from 'next/head';
 import { PlasmicProfileHead } from '.plasmic/plasmic/paziresh_24_profile/PlasmicProfileHead';
 import PlasmicRateAndCommentCount from '.plasmic/plasmic/ravi_r_r/PlasmicRateAndCommentCount';
 import { useRate } from '@/common/apis/services/reviews/rate';
+import { ProfileBackendDebugBadge } from '@/modules/profile/components/profileBackendDebugBadge';
 
 const { publicRuntimeConfig } = config();
 
@@ -66,8 +68,11 @@ const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ de
   loading: () => null,
 });
 
+const SSR_ERROR_STATUSES = [404, 410, 500, 502, 503, 504];
+
 const DoctorProfile = (props: any) => {
-  const { shouldFetchOnClient, slug: initialSlug, status } = props;
+  const { shouldFetchOnClient, slug: initialSlug, status, errorMessage } = props;
+  const isSsrErrorPage = SSR_ERROR_STATUSES.includes(Number(status));
   const { query, ...router } = useRouter();
   const [isProfileScriptsReady, setIsProfileScriptsReady] = useState(false);
   const profileScriptsReadyRef = useRef(false);
@@ -109,7 +114,11 @@ const DoctorProfile = (props: any) => {
     isError,
     error,
     refetch,
-  } = useProfileClientFetch(currentSlug, !!shouldFetchOnClient || !props?.information);
+  } = useProfileClientFetch(
+    currentSlug,
+    // MS 503/5xx must not hydrate from legacy CSR (browser cannot call PROFILE_API).
+    !isSsrErrorPage && (!!shouldFetchOnClient || !props?.information),
+  );
 
   const { customize } = useCustomize();
   const isApplication = useApplication();
@@ -135,7 +144,8 @@ const DoctorProfile = (props: any) => {
   const layoutWasCsrFallback = !!props?.shouldFetchOnClient;
 
   const preferClientProps =
-    (!!shouldFetchOnClient && !props?.information) || !!(clientData?.props as any)?.information;
+    !isSsrErrorPage &&
+    ((!!shouldFetchOnClient && !props?.information) || !!(clientData?.props as any)?.information);
   const finalProps = (preferClientProps && clientData?.props ? clientData.props : props) ?? props;
 
   const {
@@ -162,10 +172,19 @@ const DoctorProfile = (props: any) => {
     dontShowRateAndReviewMessage,
     useSamanAvailabilityStatus: ssrUseSamanAvailabilityStatus,
     profile_backend,
+    profile_api_id,
+    profile_fallback_reason,
+    profile_type,
+    profile_perf,
+    profile_debug_meta,
+    shouldFetchOnClient: shouldFetchOnClientFromProps,
     title: documentTitleFromProps,
     description: documentDescriptionFromProps,
     host: documentHostFromProps,
   } = finalProps ?? {};
+
+  const showProfileBackendDebug =
+    query.profileDebug === '1' || query.profile_debug === '1' || query.rateDebug === '1';
 
   const clientExpertiseChipsLikeSearch = newApiFeatureFlaggingCondition(
     expertiseChipsConfig?.slugs ?? [],
@@ -323,13 +342,24 @@ const DoctorProfile = (props: any) => {
         });
       }
 
+      // New backend (microservice): profiles-api page-views only — never vicControl.
+      // Legacy: keep clinic vicControl.
       if (vicControlSentForSlugRef.current !== slug) {
         vicControlSentForSlugRef.current = slug;
-        addPageView.mutate({
-          ownerId: information.id,
-          serverId: information.server_id,
-          type: 'doctor',
-        });
+        if (profile_backend === 'microservice' && profile_api_id) {
+          void recordMicroserviceProfilePageView({
+            profileApiId: String(profile_api_id),
+            viewerUserId: userInfo?.id,
+          }).catch(() => {
+            // Soft-fail: view count must not break profile
+          });
+        } else if (profile_backend !== 'microservice') {
+          addPageView.mutate({
+            ownerId: information.id,
+            serverId: information.server_id,
+            type: 'doctor',
+          });
+        }
       }
 
       const doctorUserId = information?.user_id ?? user_id ?? null;
@@ -346,7 +376,20 @@ const DoctorProfile = (props: any) => {
       if (information.should_recommend_other_doctors) recommendEvent('loadrecommend');
       setProfileData({ ...information, centers: [...centers], ...expertises, feedbacks });
     }
-  }, [isBulk, information, slug, userInfo, shouldUseIncrementPageView, centers, expertises, history, feedbacks, user_id]);
+  }, [
+    isBulk,
+    information,
+    slug,
+    userInfo,
+    shouldUseIncrementPageView,
+    centers,
+    expertises,
+    history,
+    feedbacks,
+    user_id,
+    profile_backend,
+    profile_api_id,
+  ]);
 
   // Cache doctor identity for hamdast doctor-service payment (only clear when user_id/slug lifecycle ends).
   useEffect(() => {
@@ -484,6 +527,17 @@ const DoctorProfile = (props: any) => {
     profile_backend,
   };
 
+  if (isSsrErrorPage && !shouldFetchOnClient) {
+    return (
+      <ErrorPage
+        statusCode={Number(status)}
+        message={errorMessage}
+        refresh={() => window.location.reload()}
+        slug={slug ?? currentSlug}
+      />
+    );
+  }
+
   if (!finalProps?.information?.id ? shouldFetchOnClient || isLoading : false) {
     return (
       <div className="flex flex-grow justify-center items-center">
@@ -495,10 +549,6 @@ const DoctorProfile = (props: any) => {
   if (isError) {
     const clientErrorStatusCode = (error as any)?.response?.status ?? 500;
     return <ErrorPage statusCode={clientErrorStatusCode} refresh={refetch} slug={currentSlug} />;
-  }
-
-  if ([404, 500, 504, 410].includes(status) && !shouldFetchOnClient) {
-    return <ErrorPage statusCode={status} refresh={refetch} slug={slug ?? currentSlug} />;
   }
 
   const brandName = customize?.partnerTitle || 'پذیرش24';
@@ -578,9 +628,29 @@ const DoctorProfile = (props: any) => {
         <link rel="preconnect" href="https://cdn.paziresh24.com" crossOrigin="" />
         <link rel="preconnect" href="https://pic.paziresh24.com" crossOrigin="" />
         {isPicUserImageUrl(doctorProfileLcpImageUrl) ? (
-          <link rel="preload" as="image" href={doctorProfileLcpImageUrl} fetchPriority="high" />
+          <link
+            rel="preload"
+            as="image"
+            href={doctorProfileLcpImageUrl}
+            // Avatar is ~85px CSS; tell the browser not to treat this as a full-bleed hero.
+            imageSizes="85px"
+            fetchPriority="high"
+          />
         ) : null}
       </Head>
+      <ProfileBackendDebugBadge
+        enabled={showProfileBackendDebug}
+        profile_backend={profile_backend}
+        profile_api_id={profile_api_id}
+        profile_fallback_reason={profile_fallback_reason}
+        useSamanAvailabilityStatus={ssrUseSamanAvailabilityStatus}
+        slug={String(slug ?? currentSlug ?? '')}
+        profile_type={profile_type}
+        isBulk={!!isBulk}
+        shouldFetchOnClient={!!(shouldFetchOnClientFromProps ?? shouldFetchOnClient)}
+        profile_perf={profile_perf}
+        profile_debug_meta={profile_debug_meta}
+      />
       <RaviGlobalContextsProvider>
         <div className="lg:min-w-[320px] w-full lg:max-w-[1160px] mx-auto">
           {isProfileScriptsReady &&

@@ -39,6 +39,25 @@ export const isInvalidProfileServiceId = (serviceId?: string | number | null) =>
 
 type MappedCenterService = ReturnType<typeof mapDoctorCenterServices>[number];
 
+/** Profile online-visit cards should not list inactive/historical consult services. */
+export const isBookableMappedCenterService = (service: {
+  can_booking?: number | boolean | null;
+  can_request?: number | boolean | null;
+}) => {
+  const bookable = service.can_booking === 1 || service.can_booking === true;
+  const requestable = service.can_request === 1 || service.can_request === true;
+  return bookable || requestable;
+};
+
+export const filterBookableMappedCenterServices = <
+  T extends {
+    can_booking?: number | boolean | null;
+    can_request?: number | boolean | null;
+  },
+>(
+  services: T[],
+): T[] => services.filter(isBookableMappedCenterService);
+
 /**
  * full-profile service ids can be stale; drprofile /centers/{id}/services is source of truth.
  * When the requested id is missing from drprofile, pick the sole bookable service if unambiguous.

@@ -17,10 +17,14 @@ export const mapDoctorCenterToProfileCenter = (newCenter: DoctorCentersResponse)
   user_center_id: newCenter.user_center_id ?? null,
   server_id: newCenter.server_id,
   is_active: newCenter.active_booking ?? true,
-  // Filled from full-profile when available; null when full-profile soft-fails
+  // settings: filled from Saman booking-settings when center is selected (SELECT_SERVICES+)
   settings: null as Record<string, unknown> | null,
+  // insurances: filled later when booking_enable_insurance is on (SELECT_USER)
   insurances: null as unknown[] | null,
+  // user_center_desk: filled from drprofile descriptions on SELECT_USER
   user_center_desk: null as string | null,
+  // waiting_time_info: not from full-profile; leave empty for other sources
+  waiting_time_info: null as Record<string, unknown> | null,
   freeturn: null as number | null,
   freeturn_text: null as string | null,
   freeturns_info: null as unknown[] | null,

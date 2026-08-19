@@ -2,6 +2,10 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { useRaviReviews } from './useRaviReviews';
 import { fetchReviewPage } from '../api';
 
+jest.mock('../analytics/trackRaviReviewEvent', () => ({
+  trackRaviReviewEvent: jest.fn(),
+}));
+
 jest.mock('../api', () => ({
   fetchReviewPage: jest.fn(),
   PAGE_SIZE: 10,

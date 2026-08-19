@@ -12,3 +12,8 @@ export {
 } from './getDoctorCenterServices';
 export { getDoctorGallery, type DoctorGalleryResponse } from './getDoctorGallery';
 export { getDoctorExpertise, type DoctorExpertiseResponse } from './getDoctorExpertise';
+export {
+  getDoctorOnlineChannels,
+  useDoctorOnlineChannels,
+  normalizeDoctorOnlineChannels,
+} from './getDoctorOnlineChannels';

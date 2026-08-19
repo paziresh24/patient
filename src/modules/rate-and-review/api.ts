@@ -131,10 +131,71 @@ export const submitLikeRate = async ({
   );
 
 export const editFeedback = async ({ feedbackId, description }: { feedbackId: string; description: string }) =>
-  raviApisClient.patch(`/ravi/v2/feedbacks?id=${encodeURIComponent(feedbackId)}`, { description }, { withCredentials: true });
+  raviApisClient.patch(
+    `/ravi/v1/feedbacks/${encodeURIComponent(feedbackId)}/description`,
+    { description },
+    { withCredentials: true },
+  );
 
 export const deleteFeedback = async (feedbackId: string) =>
   raviApisClient.delete(`/ravi/v1/feedbacks/${encodeURIComponent(feedbackId)}`, { withCredentials: true });
+
+export interface MyFeedbackReply {
+  id: number | string;
+  description?: string;
+  user_id?: number | string;
+  user_display_name?: string | null;
+  created_at?: string | null;
+}
+
+export interface MyFeedbackItem {
+  id: number | string;
+  book_id?: number | string | null;
+  doctor_slug?: string;
+  description?: string;
+  center_name?: string | null;
+  center_id?: number | string | null;
+  avg_rate_value?: number | null;
+  created_at?: string | null;
+  show?: number | null;
+  delete?: number | null;
+  replies?: MyFeedbackReply[];
+}
+
+export interface MyFeedbacksPage {
+  data: MyFeedbackItem[];
+  meta: {
+    userId: number;
+    count: number;
+    limit: number;
+    offset: number;
+    total: number;
+    hasNext: boolean;
+    nextOffset: number | null;
+  };
+}
+
+export const fetchMyFeedbacks = async (params: { limit?: number; offset?: number } = {}): Promise<MyFeedbacksPage> => {
+  const { data } = await raviApisClient.get<MyFeedbacksPage>('/ravi/v1/feedbacks/patients/me', {
+    params: {
+      limit: params.limit ?? 20,
+      offset: params.offset ?? 0,
+    },
+    withCredentials: true,
+  });
+  return {
+    data: data?.data ?? [],
+    meta: data?.meta ?? {
+      userId: 0,
+      count: 0,
+      limit: params.limit ?? 20,
+      offset: params.offset ?? 0,
+      total: 0,
+      hasNext: false,
+      nextOffset: null,
+    },
+  };
+};
 
 export const reportFeedback = async ({
   feedbackId,

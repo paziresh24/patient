@@ -18,7 +18,7 @@ import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
-import { isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { filterBookableMappedCenterServices, isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
 import { getProfile } from './getProfileData';
@@ -162,15 +162,29 @@ export async function getAggregatedProfileData(
     try {
       const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
       const microserviceResult = await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
-      // If MS explicitly returns notFound, still try legacy (slug may only exist there).
+      // If MS explicitly returns notFound: sticky SSR must not become legacy.
       if (microserviceResult && typeof microserviceResult === 'object' && 'notFound' in microserviceResult && (microserviceResult as { notFound?: boolean }).notFound) {
+        if (options?.useProfileMicroservice === true) {
+          const err = new Error('Profile not found in microservice') as Error & { status?: number };
+          err.status = 404;
+          throw err;
+        }
         console.warn('[profile] microservice profile missing; falling back to legacy', { slug });
       } else {
         return microserviceResult;
       }
     } catch (error) {
-      // Never hard-500/404 the page when profiles-api is unreachable, unauthorized, or missing the slug.
-      // Fall back to the legacy path so production stays up while API data is incomplete.
+      // Allowlisted doctors must not silently become full-legacy (ops/managers see coin-flip).
+      // Caller asked for MS explicitly — surface the failure instead of swapping backends.
+      if (options?.useProfileMicroservice === true) {
+        const status = (error as any)?.response?.status ?? (error as any)?.status;
+        console.error('[profile] microservice aggregation failed; NOT falling back to legacy (allowlist sticky)', {
+          slug,
+          status,
+          message: error instanceof Error ? error.message : String(error),
+        });
+        throw error;
+      }
       const status = (error as any)?.response?.status ?? (error as any)?.status;
       console.error('[profile] microservice aggregation failed; falling back to legacy', {
         slug,
@@ -642,7 +656,9 @@ export async function getAggregatedProfileData(
     try {
       const onlineServices = await getDoctorCenterServices(validatedSlug, CENTERS.CONSULT);
       if (onlineServices?.length) {
-        const mapped = mapDoctorCenterServices(onlineServices, consultCenter.user_center_id);
+        const mapped = filterBookableMappedCenterServices(
+          mapDoctorCenterServices(onlineServices, consultCenter.user_center_id),
+        );
         centers = centers.map((center: any) =>
           String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center,
         );
@@ -742,7 +758,8 @@ export async function getAggregatedProfileData(
       expertiseChipsLikeSearchEnabled: !!options?.fetchExpertiseKeywordTags,
       user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       shouldFetchOnClient: skipFullProfile ? false : !fullProfileData?.id,
-      useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
+      useSamanAvailabilityStatus: true,
+      profile_backend: 'legacy',
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
     },
   };

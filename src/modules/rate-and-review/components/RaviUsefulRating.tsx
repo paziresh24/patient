@@ -4,6 +4,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import * as Popover from '@radix-ui/react-popover';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { trackRaviReviewEvent } from '../analytics/trackRaviReviewEvent';
 import { submitLikeRate } from '../api';
 import { getUserLikeRate, saveLikedComment } from '../utils/likedComments';
 import { RaviRateStar } from './RaviRateStar';
@@ -11,9 +12,10 @@ import { RaviRateStar } from './RaviRateStar';
 interface RaviUsefulRatingProps {
   feedbackId: string;
   likeCount?: number;
+  doctorSlug?: string;
 }
 
-export const RaviUsefulRating = ({ feedbackId, likeCount }: RaviUsefulRatingProps) => {
+export const RaviUsefulRating = ({ feedbackId, likeCount, doctorSlug }: RaviUsefulRatingProps) => {
   const { isLogin, userId } = useUserInfoStore(state => ({
     isLogin: state.isLogin,
     userId: state.info?.id,
@@ -80,15 +82,37 @@ export const RaviUsefulRating = ({ feedbackId, likeCount }: RaviUsefulRatingProp
           saveLikedComment({ user_id: userId, id: feedbackId, rate: value });
           setRate(value);
           setOpen(false);
+          void trackRaviReviewEvent({
+            event_type: 'review_helpful_submit',
+            slug: doctorSlug,
+            feedback_id: feedbackId,
+            ok: true,
+          });
+        } else {
+          void trackRaviReviewEvent({
+            event_type: 'review_helpful_error',
+            slug: doctorSlug,
+            feedback_id: feedbackId,
+            status_code: response.status,
+            ok: false,
+            error_code: 'HELPFUL_STATUS',
+          });
         }
       } catch {
         toast.error('ثبت امتیاز مفید بودن ناموفق بود. دوباره تلاش کنید.');
+        void trackRaviReviewEvent({
+          event_type: 'review_helpful_error',
+          slug: doctorSlug,
+          feedback_id: feedbackId,
+          ok: false,
+          error_code: 'HELPFUL_ERROR',
+        });
       } finally {
         submitInFlightRef.current = false;
         setIsSubmitting(false);
       }
     },
-    [feedbackId, isLogin, rate, requireLogin, userId],
+    [doctorSlug, feedbackId, isLogin, rate, requireLogin, userId],
   );
 
   return (

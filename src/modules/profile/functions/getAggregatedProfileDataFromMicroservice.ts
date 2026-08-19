@@ -3,12 +3,11 @@ import { apiGatewayClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
-import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
 import { getProfileMicroserviceBundle } from '@/common/apis/services/profile-microservice/getProfileMicroserviceBundle';
 import { mapMicroserviceToLegacy } from '@/common/apis/services/profile-microservice/mapMicroserviceToLegacy';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { CENTERS } from '@/common/types/centers';
-import { isInvalidProfileServiceId, mapDoctorCenterServices, filterBookableMappedCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { filterBookableMappedCenterServices, isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import isEmpty from 'lodash/isEmpty';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
@@ -19,15 +18,46 @@ import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyB
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
 import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
+import { deriveOnlineVisitChannelTypesFromServices } from '@/modules/profile/utils/deriveOnlineVisitChannelTypes';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
 const RISMAN_DOCTORS = 'https://apigw.paziresh24.com/v1/risman/doctors/';
+/** Hamdast is below-the-fold for CWV — soft-cap SSR wait. */
+const HAMDAST_SSR_BUDGET_MS = 900;
+
+export type ProfileMsPerfTimings = {
+  total_ms: number;
+  bundle_ms: number;
+  parallel_ms: number;
+  reviews_ms: number;
+  services_ms: number;
+  widgets_ms: number;
+  legacy_fp_ok: boolean;
+  booking_centers_ok?: boolean;
+  services_hydrated: number;
+  saman_ssr: 'skipped_client';
+  parallelized: true;
+};
 
 const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
   const reformattedBreadcrumb = links?.map(link => ({ href: link.orginalLink, text: link.title })) ?? [];
   reformattedBreadcrumb.unshift({ href: '/', text: 'پذیرش۲۴' });
   reformattedBreadcrumb.push({ href: currentPathName, text: displayName });
   return reformattedBreadcrumb;
+};
+
+const withBudget = async <T,>(promise: Promise<T>, budgetMs: number, fallback: T): Promise<T> => {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>(resolve => {
+        timer = setTimeout(() => resolve(fallback), budgetMs);
+      }),
+    ]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 };
 
 const fetchWidgetsData = async (information: any, userData: any): Promise<{ widgets: any[]; widgetsData: any }> => {
@@ -70,12 +100,12 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 };
 
 /**
- * Hybrid aggregation for allowlisted slugs:
- * - Identity/content (name, bio, gallery, SEO, …) from PROFILE_API_BASE_URL
- * - Address/phone in sidebar from profiles-api locations (source of truth)
- * - Address/phone from profiles-api locations (external_ids UUID → drprofile center id)
- * - Booking services/freeturn: match MS locations to drprofile /centers (same as /booking — no full-profile)
- * - Booking availability from Saman
+ * Hybrid aggregation for allowlisted slugs (PageSpeed-oriented):
+ * - Identity/content from PROFILE_API_BASE_URL
+ * - Parallel secondary fetches (gallery hydrate, rates, waiting, risman, getDoctorCenters for booking)
+ * - Saman availability is client-only on MS (does not block HTML)
+ * - Hamdast SSR soft-budget
+ * Legacy getAggregatedProfileData path is untouched.
  */
 export async function getAggregatedProfileDataFromMicroservice(
   slug: string,
@@ -83,12 +113,14 @@ export async function getAggregatedProfileDataFromMicroservice(
   isServer: boolean,
   options?: { prefetchSamanAvailability?: boolean },
 ) {
+  const startedAt = Date.now();
   const queryClient = new QueryClient();
+
+  const bundleStartedAt = Date.now();
   const bundle = await getProfileMicroserviceBundle(slug);
+  const bundle_ms = Date.now() - bundleStartedAt;
 
   if ('error' in bundle) {
-    // Missing/broken in profiles-api → throw so the caller falls back to legacy.
-    // Do NOT return { notFound: true } here: allowlisted slugs may exist only on legacy.
     const err = new Error(bundle.error || 'Profile not found in microservice') as Error & { status?: number };
     err.status = bundle.status ?? 404;
     throw err;
@@ -97,60 +129,48 @@ export async function getAggregatedProfileDataFromMicroservice(
   const { slugInfo, fullProfileLike, overwrite, seo, displayName: mappedDisplayName } = mapMicroserviceToLegacy(bundle);
   const validatedSlug = slugInfo.slug || slug;
   const pageSlug = `/dr/${validatedSlug}`;
+  const msLocationsAsCenters = Array.isArray(overwrite.centers) ? [...overwrite.centers] : [];
+  const rismanDoctorId = buildRismanDoctorId(slugInfo.owner_id, slugInfo.server_id);
 
-  // profiles-api gallery URLs (/storage/gallery/...) may 404 on CDN; drprofile has live clinic images.
-  try {
-    const drprofileGallery = await fetchDoctorGalleryFromDrprofile(validatedSlug, university);
-    if (drprofileGallery.length > 0) {
-      overwrite.gallery = drprofileGallery;
-    }
-  } catch (error) {
-    console.error('Error hydrating gallery from drprofile (microservice path):', error);
+  const parallelStartedAt = Date.now();
+  const [drprofileGallery, rateDetailsResult, rismanResult, averageWaitingTimeResult, doctorCenters] =
+    await Promise.all([
+      fetchDoctorGalleryFromDrprofile(validatedSlug, university).catch(error => {
+        console.error('Error hydrating gallery from drprofile (microservice path):', error);
+        return [] as Awaited<ReturnType<typeof fetchDoctorGalleryFromDrprofile>>;
+      }),
+      getRateDetailsData({ slug: validatedSlug }).catch(() => null),
+      rismanDoctorId
+        ? axios
+            .get(RISMAN_DOCTORS, { params: { doctor_id: rismanDoctorId }, timeout: 1500 })
+            .then(response => response.data)
+            .catch(() => null)
+        : Promise.resolve(null),
+      getAverageWaitingTime({ slug: validatedSlug }).catch(() => null),
+      getDoctorCenters(validatedSlug, university, { onlyBookable: false }).catch(error => {
+        console.error('Error fetching drprofile centers for MS booking hydrate:', error);
+        return [] as Awaited<ReturnType<typeof getDoctorCenters>>;
+      }),
+    ]);
+  const parallel_ms = Date.now() - parallelStartedAt;
+
+  if (Array.isArray(drprofileGallery) && drprofileGallery.length > 0) {
+    overwrite.gallery = drprofileGallery;
   }
 
-  const rateDetailsResult = await getRateDetailsData({ slug: validatedSlug }).catch(() => null);
-  const rismanDoctorId = buildRismanDoctorId(slugInfo.owner_id, slugInfo.server_id);
-  const rismanResult = rismanDoctorId
-    ? await axios
-        .get(RISMAN_DOCTORS, { params: { doctor_id: rismanDoctorId }, timeout: 1500 })
-        .then(response => response.data)
-        .catch(() => null)
-    : null;
+  const bookingCentersOk = Array.isArray(doctorCenters) && doctorCenters.length > 0;
+
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
-
-  const samanAvailabilityPromise =
-    isServer && options?.prefetchSamanAvailability
-      ? queryClient
-          .fetchQuery([ServerStateKeysEnum.SamanDoctorAvailabilityStatus, validatedSlug], () =>
-            samanDoctorAvailabilityStatus(validatedSlug),
-          )
-          .catch(error => {
-            console.error('Error prefetching Saman availability (microservice path):', error);
-            return null;
-          })
-      : Promise.resolve(null);
-
-  const msLocationsAsCenters = Array.isArray(overwrite.centers) ? [...overwrite.centers] : [];
-
-  const [reviewsResult, averageWaitingTimeResult, doctorCenters] = await Promise.all([
-    shouldFetchReviews
-      ? queryClient
-          .fetchQuery([ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }], () =>
-            getReviews({ slug: validatedSlug, sort: 'default_order' }),
-          )
-          .then(value => ({ status: 'fulfilled' as const, value }))
-          .catch(reason => ({ status: 'rejected' as const, reason }))
-      : Promise.resolve({ status: 'fulfilled' as const, value: null }),
-    getAverageWaitingTime({ slug: validatedSlug })
-      .then(value => ({ status: 'fulfilled' as const, value }))
-      .catch(reason => ({ status: 'rejected' as const, reason })),
-    getDoctorCenters(validatedSlug, university, { onlyBookable: false }).catch(error => {
-      console.error('Error fetching drprofile centers for MS booking hydrate:', error);
-      return [] as Awaited<ReturnType<typeof getDoctorCenters>>;
-    }),
-  ]);
-
-  await samanAvailabilityPromise;
+  const reviewsStartedAt = Date.now();
+  const reviewsResult = shouldFetchReviews
+    ? await queryClient
+        .fetchQuery([ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }], () =>
+          getReviews({ slug: validatedSlug, sort: 'default_order' }),
+        )
+        .then(value => ({ status: 'fulfilled' as const, value }))
+        .catch(reason => ({ status: 'rejected' as const, reason }))
+    : { status: 'fulfilled' as const, value: null };
+  const reviews_ms = Date.now() - reviewsStartedAt;
 
   const mergedCenters = mergeMsLocationsWithLegacyBooking(msLocationsAsCenters as any[], doctorCenters);
   overwrite.centers = mergedCenters as any;
@@ -162,7 +182,7 @@ export async function getAggregatedProfileDataFromMicroservice(
     waiting_time_statistics: overwrite.feedbacks.waiting_time_statistics,
     hideRates: rateDetailsResult?.hide_rates,
     reviews: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
-    waiting_time_info: averageWaitingTimeResult.status === 'fulfilled' ? (averageWaitingTimeResult.value as any) : [],
+    waiting_time_info: averageWaitingTimeResult ?? [],
   };
 
   const {
@@ -172,23 +192,24 @@ export async function getAggregatedProfileDataFromMicroservice(
     history,
     information,
     media,
-    onlineVisit,
+    onlineVisit: initialOnlineVisit,
     similarLinks,
     symptomes,
     waitingTimeInfo,
   } = overwriteProfileData(overwrite, fullProfileLike);
 
   let centers = initialCenters;
+  let onlineVisit = initialOnlineVisit;
 
-  // If merge left bookable centers without services (FP flake), hydrate per-center services API.
   const centersNeedingServices = (centers || []).filter((center: any) => {
     if (!center?.id) return false;
-    // Online visit center: always refresh from drprofile (full-profile service ids can be stale).
     if (String(center.id) === CENTERS.CONSULT) return true;
     return (
       !(center.services?.length > 0) || center.services.some((service: any) => isInvalidProfileServiceId(service?.id))
     );
   });
+
+  const servicesStartedAt = Date.now();
   if (centersNeedingServices.length > 0) {
     try {
       const serviceResults = await Promise.allSettled(
@@ -211,7 +232,14 @@ export async function getAggregatedProfileDataFromMicroservice(
       console.error('Error hydrating center services (microservice path):', error);
     }
   }
+  const services_ms = Date.now() - servicesStartedAt;
 
+  const onlineCenter = (centers || []).find((center: any) => String(center?.id) === CENTERS.CONSULT);
+  const derivedChannels = deriveOnlineVisitChannelTypesFromServices(onlineCenter?.services);
+  onlineVisit = {
+    ...onlineVisit,
+    channels: derivedChannels.length > 0 ? derivedChannels : onlineVisit?.channels ?? [],
+  };
 
   const doctorCityNames = formatDoctorCitiesForTitle(centers);
   const displayName = information?.display_name || mappedDisplayName || validatedSlug;
@@ -220,13 +248,17 @@ export async function getAggregatedProfileDataFromMicroservice(
 
   let hamdastWidgets: any[] = [];
   let hamdastWidgetsData: any = {};
+  const widgetsStartedAt = Date.now();
   if (!university) {
-    const widgetsResult = await fetchWidgetsData(information, {
-      user_id: slugInfo.user_id,
-    });
+    const widgetsResult = await withBudget(
+      fetchWidgetsData(information, { user_id: slugInfo.user_id }),
+      HAMDAST_SSR_BUDGET_MS,
+      { widgets: [], widgetsData: {} },
+    );
     hamdastWidgets = widgetsResult.widgets;
     hamdastWidgetsData = widgetsResult.widgetsData;
   }
+  const widgets_ms = Date.now() - widgetsStartedAt;
 
   const breadcrumbs = createBreadcrumb([], displayName, pageSlug);
 
@@ -240,6 +272,29 @@ export async function getAggregatedProfileDataFromMicroservice(
   const description =
     seoDescriptionHint ||
     `نوبت دهی اینترنتی ${displayName}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
+
+  const isBulk = !!(
+    centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services?.every?.((s: any) => !s.hours_of_work))
+  );
+
+  const servicesCount = (centers || []).reduce(
+    (sum: number, center: any) => sum + (Array.isArray(center?.services) ? center.services.length : 0),
+    0,
+  );
+
+  const profile_perf: ProfileMsPerfTimings = {
+    total_ms: Date.now() - startedAt,
+    bundle_ms,
+    parallel_ms,
+    reviews_ms,
+    services_ms,
+    widgets_ms,
+    legacy_fp_ok: bookingCentersOk,
+    booking_centers_ok: bookingCentersOk,
+    services_hydrated: centersNeedingServices.length,
+    saman_ssr: 'skipped_client',
+    parallelized: true,
+  };
 
   return {
     props: {
@@ -263,9 +318,7 @@ export async function getAggregatedProfileDataFromMicroservice(
       symptomes: symptomes ?? [],
       waitingTimeInfo: waitingTimeInfo ?? [],
       breadcrumbs,
-      isBulk: !!(
-        centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services?.every?.((s: any) => !s.hours_of_work))
-      ),
+      isBulk,
       fragmentComponents: {
         raviComponentTopOrderProfile: false,
         risman: rismanResult,
@@ -274,10 +327,21 @@ export async function getAggregatedProfileDataFromMicroservice(
       hamdastWidgetsData,
       user_id: information?.user_id ?? slugInfo.user_id ?? null,
       shouldFetchOnClient: false,
-      useSamanAvailabilityStatus: !!options?.prefetchSamanAvailability,
+      useSamanAvailabilityStatus: true,
       profile_backend: 'microservice',
+      profile_api_id:
+        bundle.profile?.id != null ? String(bundle.profile.id) : slugInfo.profile_api_id ?? null,
       profile_type: slugInfo.type,
       doctor_city_names: doctorCityNames,
+      profile_perf,
+      profile_debug_meta: {
+        centers: centers?.length ?? 0,
+        services: servicesCount,
+        channels: onlineVisit?.channels ?? [],
+        similar_links: Array.isArray(similarLinks) ? similarLinks.length : 0,
+        hamdast_widgets: hamdastWidgets?.length ?? 0,
+        page_views: history?.count_of_page_view ?? null,
+      },
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
       status: 200,
     },

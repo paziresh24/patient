@@ -19,16 +19,18 @@ describe('composeBookingProfile', () => {
     },
   ];
 
-  it('builds profile from drprofile when full-profile is null', () => {
+  const slugInfo = {
+    id: 1,
+    slug: 'dr-test',
+    owner_id: 'owner-1',
+    server_id: 1,
+    type: 'doctor',
+    user_id: 10,
+  };
+
+  it('builds profile from drprofile sources', () => {
     const profile = composeBookingProfile({
-      slugInfo: {
-        id: 1,
-        slug: 'dr-test',
-        owner_id: 'owner-1',
-        server_id: 1,
-        type: 'doctor',
-        user_id: 10,
-      },
+      slugInfo,
       fullName: { name: 'علی', family: 'تست' },
       expertise: [
         {
@@ -41,7 +43,6 @@ describe('composeBookingProfile', () => {
         },
       ],
       doctorCenters,
-      fullProfile: null,
     });
 
     expect(profile?.id).toBe('owner-1');
@@ -50,57 +51,100 @@ describe('composeBookingProfile', () => {
     expect(profile?.centers[0].user_center_id).toBe('ucid-from-centers');
     expect(profile?.centers[0].server_id).toBe(1);
     expect(profile?.centers[0].settings).toBeNull();
+    expect(profile?.centers[0].insurances).toBeNull();
+    expect(profile?.centers[0].user_center_desk).toBeNull();
+    expect(profile?.centers[0].freeturn).toBeNull();
+    expect(profile?.centers[0].waiting_time_info).toBeNull();
     expect(profile?.online_visit_channel_types).toBeNull();
     expect(profile?.feedback_visit).toBeNull();
     expect(profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug).toBe('general');
+    expect(profile?.city_en_slug).toBe('tehran');
   });
 
-  it('fills gap fields from full-profile without overriding centers user_center_id', () => {
+  it('uses dedicated settings and insurances APIs on centers', () => {
     const profile = composeBookingProfile({
-      slugInfo: {
-        id: 1,
-        slug: 'dr-test',
-        owner_id: 'owner-1',
-        server_id: 1,
-        type: 'doctor',
-        user_id: 10,
-      },
+      slugInfo,
       fullName: { name: 'علی', family: 'تست' },
       expertise: [],
       doctorCenters,
-      fullProfile: {
-        id: 'fp-id',
-        online_visit_channel_types: ['whatsapp'],
-        feedback_visit: { two_weeks_data: [] },
-        expertises: [{ expertise: { name: 'از-fp' }, expertise_groups: [{ en_slug: 'fp' }] }],
-        centers: [
-          {
-            id: 'center-1',
-            user_center_id: 'ucid-from-fp',
-            server_id: 99,
-            settings: { booking_enable_insurance: '1' },
-            insurances: [{ id: 1, name: 'تامین' }],
-            user_center_desk: 'میز',
-            freeturn: 123,
-            freeturn_text: 'امروز',
-            freeturns_info: [],
-            services: [{ id: 'svc-1' }],
-            is_active: true,
-          },
-        ],
+      settingsByCenterId: {
+        'center-1': {
+          booking_enable_insurance: '1',
+          booking_new_turn_suggestion_type: 'only_first_turn',
+          booking_paging_from_clinic: null,
+        },
+      },
+      insurancesByCenterId: {
+        'center-1': [{ id: 'dr-insurance', name: 'تامین' }],
       },
     });
 
     expect(profile?.centers[0].user_center_id).toBe('ucid-from-centers');
     expect(profile?.centers[0].server_id).toBe(1);
-    expect(profile?.centers[0].settings).toEqual({ booking_enable_insurance: '1' });
-    expect(profile?.centers[0].insurances).toEqual([{ id: 1, name: 'تامین' }]);
-    expect(profile?.centers[0].services).toEqual([]);
-    expect(profile?.online_visit_channel_types).toEqual(['whatsapp']);
-    expect(profile?.feedback_visit).toEqual({ two_weeks_data: [] });
+    expect(profile?.centers[0].insurances).toEqual([{ id: 'dr-insurance', name: 'تامین' }]);
+    expect(profile?.centers[0].settings).toEqual({
+      booking_enable_insurance: '1',
+      booking_new_turn_suggestion_type: 'only_first_turn',
+      booking_paging_from_clinic: null,
+    });
+    expect(profile?.expertises).toBeNull();
+    expect(profile?.online_visit_channel_types).toBeNull();
+    expect(profile?.feedback_visit).toBeNull();
+    expect(profile?.waiting_time_info).toBeNull();
+  });
+
+  it('uses drprofile online-channels when provided', () => {
+    const profile = composeBookingProfile({
+      slugInfo,
+      fullName: { name: 'علی', family: 'تست' },
+      doctorCenters,
+      onlineVisitChannelTypes: ['eitaa', 'secure_call'],
+    });
+
+    expect(profile?.online_visit_channel_types).toEqual(['eitaa', 'secure_call']);
+  });
+
+  it('uses empty strings for missing name fields and null for other missing sources', () => {
+    const profile = composeBookingProfile({
+      slugInfo,
+      fullName: null,
+      expertise: null,
+      doctorCenters,
+    });
+
+    expect(profile?.name).toBe('');
+    expect(profile?.family).toBe('');
+    expect(profile?.display_name).toBe('');
+    expect(profile?.expertises).toBeNull();
+    expect(profile?.online_visit_channel_types).toBeNull();
+    expect(profile?.centers).toHaveLength(1);
+  });
+
+  it('leaves settings and insurances null when dedicated API data is missing', () => {
+    const profile = composeBookingProfile({
+      slugInfo,
+      fullName: { name: 'علی', family: 'تست' },
+      doctorCenters,
+    });
+
+    expect(profile?.centers[0].settings).toBeNull();
+    expect(profile?.centers[0].insurances).toBeNull();
+    expect(profile?.centers[0].user_center_desk).toBeNull();
+  });
+
+  it('returns empty centers when the centers API has no rows', () => {
+    const profile = composeBookingProfile({
+      slugInfo,
+      fullName: { name: 'علی', family: 'تست' },
+      doctorCenters: [],
+    });
+
+    expect(profile?.centers).toEqual([]);
+    expect(profile?.city_en_slug).toBeNull();
   });
 
   it('returns null when no sources are available', () => {
     expect(composeBookingProfile({})).toBeNull();
+    expect(composeBookingProfile({ fullName: { name: 'علی', family: 'تست' } })).toBeNull();
   });
 });
