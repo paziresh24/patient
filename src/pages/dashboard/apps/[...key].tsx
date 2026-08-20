@@ -13,10 +13,11 @@ import { isRaviPatientMyReviewsMenu } from '@/modules/dashboard/constants/raviPa
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
+import { redirectToRaviMyReviewsFromContext } from '@/modules/patient/utils/redirectToRaviMyReviewsFromContext';
+import { goToRaviMyReviews, RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 export const Dashboard = (props: any) => {
   const user = useUserInfoStore(state => state.info);
@@ -32,8 +33,15 @@ export const Dashboard = (props: any) => {
 
   const appKey = (keys as string[])[0];
   const menuKey = (keys as string[])[1];
+  const shouldOpenRaviMyReviews = isRaviPatientMyReviewsMenu(appKey, menuKey);
 
   const knownEmbedSrc = useMemo(() => getKnownDrappEmbedSrc(appKey, menuKey), [appKey, menuKey]);
+
+  useLayoutEffect(() => {
+    if (shouldOpenRaviMyReviews) {
+      goToRaviMyReviews();
+    }
+  }, [shouldOpenRaviMyReviews]);
 
   const app = useMemo(() => appsData.data?.data?.find((app: App) => app.key === `${appKey}`), [isReady, appKey, appsData]);
 
@@ -98,7 +106,7 @@ export const Dashboard = (props: any) => {
     }, 6000);
   }, [appKey, menuKey]);
 
-  if (isRaviPatientMyReviewsMenu(appKey, menuKey)) {
+  if (shouldOpenRaviMyReviews) {
     return (
       <LayoutWithHeaderAndFooter
         {...props.config}
@@ -165,6 +173,12 @@ export const Dashboard = (props: any) => {
 
 export const getServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext) => {
+    const keys = context.params?.key;
+    const appKey = Array.isArray(keys) ? keys[0] : undefined;
+    const menuKey = Array.isArray(keys) ? keys[1] : undefined;
+    if (isRaviPatientMyReviewsMenu(appKey, menuKey)) {
+      return redirectToRaviMyReviewsFromContext(context);
+    }
     return {
       props: {
         query: context.query,
