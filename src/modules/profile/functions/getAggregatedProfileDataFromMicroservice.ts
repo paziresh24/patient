@@ -2,6 +2,7 @@ import axios from 'axios';
 import { apiGatewayClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+import { getDoctorOnlineChannels } from '@/common/apis/services/doctor/getDoctorOnlineChannels';
 import { getProfileMicroserviceBundle } from '@/common/apis/services/profile-microservice/getProfileMicroserviceBundle';
 import { mapMicroserviceToLegacy } from '@/common/apis/services/profile-microservice/mapMicroserviceToLegacy';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
@@ -11,20 +12,14 @@ import { QueryClient, dehydrate } from '@tanstack/react-query';
 import isEmpty from 'lodash/isEmpty';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
-import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { overwriteProfileData } from './overwriteProfileData';
 import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyBooking';
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
 import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
-import { deriveOnlineVisitChannelTypesFromServices } from '@/modules/profile/utils/deriveOnlineVisitChannelTypes';
-import { drProfileClient } from '@/common/apis/client';
-
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
 const RISMAN_DOCTORS = 'https://apigw.paziresh24.com/v1/risman/doctors/';
-/** Cap legacy booking hydrate so MS TTFB is not stuck on a slow full-profile. */
-const LEGACY_FULL_PROFILE_TIMEOUT_MS = 4500;
 /** Hamdast is below-the-fold for CWV — soft-cap SSR wait. */
 const HAMDAST_SSR_BUDGET_MS = 900;
 
@@ -35,7 +30,6 @@ export type ProfileMsPerfTimings = {
   reviews_ms: number;
   services_ms: number;
   widgets_ms: number;
-  legacy_fp_ok: boolean;
   services_hydrated: number;
   saman_ssr: 'skipped_client';
   parallelized: true;
@@ -135,7 +129,7 @@ export async function getAggregatedProfileDataFromMicroservice(
   const rismanDoctorId = buildRismanDoctorId(slugInfo.owner_id, slugInfo.server_id);
 
   const parallelStartedAt = Date.now();
-  const [drprofileGallery, rateDetailsResult, rismanResult, averageWaitingTimeResult, legacyProfileResult] =
+  const [drprofileGallery, rateDetailsResult, rismanResult, averageWaitingTimeResult] =
     await Promise.all([
       fetchDoctorGalleryFromDrprofile(validatedSlug, university).catch(error => {
         console.error('Error hydrating gallery from drprofile (microservice path):', error);
@@ -149,12 +143,6 @@ export async function getAggregatedProfileDataFromMicroservice(
             .catch(() => null)
         : Promise.resolve(null),
       getAverageWaitingTime({ slug: validatedSlug }).catch(() => null),
-      getProfile({ slug: validatedSlug, university, isServer })
-        .then(value => ({ status: 'fulfilled' as const, value }))
-        .catch(reason => {
-          console.error('Error fetching legacy full-profile for microservice booking hydrate:', reason);
-          return { status: 'rejected' as const, reason };
-        }),
     ]);
   const parallel_ms = Date.now() - parallelStartedAt;
 
@@ -174,25 +162,7 @@ export async function getAggregatedProfileDataFromMicroservice(
     : { status: 'fulfilled' as const, value: null };
   const reviews_ms = Date.now() - reviewsStartedAt;
 
-  let legacyCenters =
-    legacyProfileResult.status === 'fulfilled' ? legacyProfileResult.value?.fullProfileData?.centers : null;
-
-  if (!Array.isArray(legacyCenters) || legacyCenters.length === 0) {
-    try {
-      const { data } = await drProfileClient.get(`/api/full-profile/${encodeURIComponent(validatedSlug)}/`, {
-        params: university ? { university } : undefined,
-        timeout: LEGACY_FULL_PROFILE_TIMEOUT_MS,
-      });
-      legacyCenters = data?.centers ?? data?.data?.centers ?? null;
-    } catch (error) {
-      console.error('Retry legacy full-profile for microservice booking hydrate failed:', error);
-    }
-  }
-
-  const mergedCenters = mergeMsLocationsWithLegacyBooking(msLocationsAsCenters as any[], legacyCenters);
-  if (Array.isArray(legacyCenters) && legacyCenters.length > 0) {
-    fullProfileLike.centers = legacyCenters;
-  }
+  const mergedCenters = mergeMsLocationsWithLegacyBooking(msLocationsAsCenters as any[], null);
   overwrite.centers = mergedCenters as any;
 
   overwrite.feedbacks = {
@@ -229,13 +199,15 @@ export async function getAggregatedProfileDataFromMicroservice(
     );
   });
 
+  const onlineCenter = (centers || []).find((center: any) => String(center?.id) === CENTERS.CONSULT);
   const servicesStartedAt = Date.now();
-  if (centersNeedingServices.length > 0) {
-    try {
+  const [servicesHydrationResult, onlineChannelsResult] = await Promise.allSettled([
+    (async () => {
+      if (centersNeedingServices.length === 0) return centers;
       const serviceResults = await Promise.allSettled(
         centersNeedingServices.map((center: any) => getDoctorCenterServices(validatedSlug, String(center.id))),
       );
-      centers = centers.map((center: any) => {
+      return centers.map((center: any) => {
         const idx = centersNeedingServices.findIndex((c: any) => String(c.id) === String(center.id));
         if (idx < 0) return center;
         const result = serviceResults[idx];
@@ -248,17 +220,20 @@ export async function getAggregatedProfileDataFromMicroservice(
         }
         return { ...center, services };
       });
-    } catch (error) {
-      console.error('Error hydrating center services (microservice path):', error);
-    }
+    })(),
+    onlineCenter ? getDoctorOnlineChannels(validatedSlug) : Promise.resolve([] as string[]),
+  ]);
+  if (servicesHydrationResult.status === 'fulfilled') {
+    centers = servicesHydrationResult.value;
+  } else {
+    console.error('Error hydrating center services (microservice path):', servicesHydrationResult.reason);
   }
   const services_ms = Date.now() - servicesStartedAt;
 
-  const onlineCenter = (centers || []).find((center: any) => String(center?.id) === CENTERS.CONSULT);
-  const derivedChannels = deriveOnlineVisitChannelTypesFromServices(onlineCenter?.services);
   onlineVisit = {
     ...onlineVisit,
-    channels: derivedChannels.length > 0 ? derivedChannels : onlineVisit?.channels ?? [],
+    enabled: !!onlineCenter,
+    channels: onlineChannelsResult.status === 'fulfilled' ? onlineChannelsResult.value : [],
   };
 
   const doctorCityNames = formatDoctorCitiesForTitle(centers);
@@ -309,7 +284,6 @@ export async function getAggregatedProfileDataFromMicroservice(
     reviews_ms,
     services_ms,
     widgets_ms,
-    legacy_fp_ok: Array.isArray(legacyCenters) && legacyCenters.length > 0,
     services_hydrated: centersNeedingServices.length,
     saman_ssr: 'skipped_client',
     parallelized: true,

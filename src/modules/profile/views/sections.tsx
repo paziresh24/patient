@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic';
 import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import classNames from '@/common/utils/classNames';
 import { Fragment2 } from '@/common/fragment/fragment2';
-import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
+import ProfileSeoSection from './profileSeoSection';
 import { getImageUrl } from '@/common/utils/getImageUrl';
 import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
 
@@ -47,7 +47,6 @@ const Credentials = dynamic(() => import('./credentials'), {
   },
 });
 const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
-const ProfileSeo = dynamic(() => import('.plasmic/ProfileSeo'));
 const PlasmicProfileGallery = dynamic(() => import('.plasmic/ProfileGallery'));
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
@@ -65,8 +64,6 @@ const RateReview = dynamic(() => import('./rateReview'), {
     return <Skeleton w="100%" h="30rem" rounded="lg" />;
   },
 });
-const ProfileSeoBox = dynamic(() => import('./seoBox'));
-
 export const sections = (data: any) => {
   const {
     information,
@@ -87,6 +84,7 @@ export const sections = (data: any) => {
     hamdastWidgets,
     user_id,
     profile_backend,
+    slug,
   } = data;
 
   const credentials = information?.credentials;
@@ -298,57 +296,18 @@ export const sections = (data: any) => {
     // Seo Box
     {
       isShow: customize.showSeoBoxs,
-      function: () => {
-        const countOfPageView = convertLongToCompactNumber(history?.count_of_page_view);
-        const seoSectionData = getProfileSeoSectionData({
-          information,
-          centers,
-          expertises,
-          feedbacks,
-          history,
-          similarLinks,
-          seo,
-          countOfPageView,
-        });
-
-        return {
-          similarLinks: seoSectionData.similarLinks,
-          about: seoSectionData.about,
-          breadcrumbs: seoSectionData.breadcrumbs,
-        };
-      },
-      children: () => {
-        const countOfPageView = convertLongToCompactNumber(history?.count_of_page_view);
-        const seoSectionData = getProfileSeoSectionData({
-          information,
-          centers,
-          expertises,
-          feedbacks,
-          history,
-          similarLinks,
-          seo,
-          countOfPageView,
-        });
-
-        return (
-          <Fragment2
-            name="ProfileSeo"
-            Component={ProfileSeo}
-            args={{
-              information,
-              feedbacks,
-              center: seoSectionData.center,
-              isOnlineVisitCenter: seoSectionData.isOnlineVisitCenter,
-              doctorExpertise: seoSectionData.doctorExpertise,
-              countOfPageView,
-              breadcrumbs: seoSectionData.breadcrumbs,
-              similarLinks,
-              expertises,
-              about: seoSectionData.about,
-            }}
-          />
-        );
-      },
+      children: () => (
+        <ProfileSeoSection
+          slug={slug}
+          information={information}
+          centers={centers}
+          expertises={expertises}
+          feedbacks={feedbacks}
+          history={history}
+          similarLinks={similarLinks}
+          seo={seo}
+        />
+      ),
     },
   ] as const;
 };
