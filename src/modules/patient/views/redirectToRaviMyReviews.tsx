@@ -1,13 +1,23 @@
 import Loading from '@/common/components/atom/loading';
 import { buildRaviMyReviewsUrl } from '@/modules/patient/utils/buildRaviMyReviewsUrl';
 import { getCookie } from 'cookies-next';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
+
+function readToken(): string | undefined {
+  const token = getCookie('token');
+  return typeof token === 'string' && token.trim() ? token.trim() : undefined;
+}
+
+/** Hard-navigate to ravi-front my-reviews (p24cloud cannot read *.paziresh24.com cookies). */
+export function goToRaviMyReviews(): void {
+  if (typeof window === 'undefined') return;
+  window.location.replace(buildRaviMyReviewsUrl(readToken()));
+}
 
 /** Cross-site: p24cloud cannot read *.paziresh24.com cookies; pass token once. */
 export const RedirectToRaviMyReviews = () => {
-  useEffect(() => {
-    const token = getCookie('token');
-    window.location.assign(buildRaviMyReviewsUrl(typeof token === 'string' ? token : undefined));
+  useLayoutEffect(() => {
+    goToRaviMyReviews();
   }, []);
 
   return (

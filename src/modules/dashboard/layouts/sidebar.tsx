@@ -23,6 +23,8 @@ import toast from 'react-hot-toast';
 import { useApps } from '../apis/apps';
 import { MenuItem } from '../components/menuItem';
 import { isRaviPatientMyReviewsMenu } from '../constants/raviPatientMyReviewsRoute';
+import { buildRaviMyReviewsUrl } from '@/modules/patient/utils/buildRaviMyReviewsUrl';
+import { getCookie } from 'cookies-next';
 import axios from 'axios';
 import HeadphoneIcon from '@/common/components/icons/headphone';
 
@@ -102,6 +104,11 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
 
   const openProfileView = () => {
     void openPublicProfile();
+  };
+
+  const raviMyReviewsHref = () => {
+    const token = getCookie('token');
+    return buildRaviMyReviewsUrl(typeof token === 'string' ? token : undefined);
   };
 
   const currentData: any = useMemo(
@@ -212,7 +219,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     {
       icon: <CommentIcon />,
       label: 'نظرات من',
-      url: '/dashboard/my-reviews',
+      url: raviMyReviewsHref(),
       shouldShowDoctor: true,
       shouldShow: true,
     },
@@ -287,9 +294,9 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                           ?.options?.filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
                           .map((item: any) => ({
                             name: item.name?.fa,
-                            // Only «نظرات من» — keep «نظرات پروفایل من» and other ravi menus on hamdast
+                            // Only «نظرات من» — keep «نظرات پروفایل من» on hamdast (ravi-docs)
                             link: isRaviPatientMyReviewsMenu(app.key, item.key)
-                              ? '/dashboard/my-reviews/'
+                              ? raviMyReviewsHref()
                               : `/dashboard/apps/${app.key}/${item.key}/`,
                           }))}
                         onEvent={label =>
@@ -311,7 +318,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                     name={menu.label}
                     icon={menu.icon}
                     button={menu?.button}
-                    link={`${menu.url}/`}
+                    link={menu.url.startsWith('http') ? menu.url : `${menu.url}/`}
                     onEvent={label =>
                       appClickEvent({
                         app_key: 'default_app',

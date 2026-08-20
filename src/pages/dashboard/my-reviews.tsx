@@ -3,6 +3,7 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { Wrapper } from '@/modules/dashboard/components/wrapper';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
+import { redirectToRaviMyReviewsFromContext } from '@/modules/patient/utils/redirectToRaviMyReviewsFromContext';
 import { RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
@@ -27,11 +28,7 @@ MyReviewsDashboardPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext) => {
-    return {
-      props: {
-        query: context.query,
-      },
-    };
+    return redirectToRaviMyReviewsFromContext(context);
   }),
 );
 
