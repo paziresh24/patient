@@ -1,4 +1,4 @@
-import { isRaviPatientMyReviewsMenu } from './raviPatientMyReviewsRoute';
+import { isRaviPatientMyReviewsMenu, raviAppParentLink } from './raviPatientMyReviewsRoute';
 
 describe('isRaviPatientMyReviewsMenu', () => {
   it('matches the hamdast ravi my_feedbacks menu', () => {
@@ -11,8 +11,21 @@ describe('isRaviPatientMyReviewsMenu', () => {
   });
 
   it('does not rewrite the parent نظرات branch itself', () => {
-    // Parent menu stays on hamdast; only the my_feedbacks child is remapped.
     expect(isRaviPatientMyReviewsMenu('ravi', undefined)).toBe(false);
     expect(isRaviPatientMyReviewsMenu('ravi', '')).toBe(false);
+  });
+});
+
+describe('raviAppParentLink', () => {
+  it('omits the parent link for ravi when submenu exists so نظرات only expands', () => {
+    expect(raviAppParentLink('ravi', 'my_feedbacks', true)).toBeUndefined();
+  });
+
+  it('keeps other apps parent links unchanged', () => {
+    expect(raviAppParentLink('drapp', 'appointments', true)).toBe('/dashboard/apps/drapp/appointments/');
+  });
+
+  it('keeps ravi parent link when there is no submenu', () => {
+    expect(raviAppParentLink('ravi', 'my_feedbacks', false)).toBe('/dashboard/apps/ravi/my_feedbacks/');
   });
 });

@@ -22,7 +22,7 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useApps } from '../apis/apps';
 import { MenuItem } from '../components/menuItem';
-import { isRaviPatientMyReviewsMenu } from '../constants/raviPatientMyReviewsRoute';
+import { isRaviPatientMyReviewsMenu, raviAppParentLink } from '../constants/raviPatientMyReviewsRoute';
 import { buildRaviMyReviewsUrl } from '@/modules/patient/utils/buildRaviMyReviewsUrl';
 import { getCookie } from 'cookies-next';
 import axios from 'axios';
@@ -271,7 +271,25 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                 {appsData.isSuccess &&
                   apps
                     .filter((app: any) => !app.pin && app?.fragments?.some((item: any) => item.type === 'menu' && item.options?.length > 0))
-                    .map((app: any) => (
+                    .map((app: any) => {
+                      const menuOptions =
+                        app.fragments.find((item: any) => item.type === 'menu')?.options ?? [];
+                      const homeKey = menuOptions.find(
+                        (item: any, index: number) => item.rel === 'home' || index === 0,
+                      )?.key;
+                      const subMenu = menuOptions
+                        .filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
+                        .map((item: any) => ({
+                          name: item.name?.fa,
+                          // Only «نظرات من» — keep «نظرات پروفایل من» on hamdast (ravi-docs)
+                          link: isRaviPatientMyReviewsMenu(app.key, item.key)
+                            ? raviMyReviewsHref()
+                            : `/dashboard/apps/${app.key}/${item.key}/`,
+                        }));
+                      // Ravi home is my_feedbacks (hard-redirect). Parent must only expand so both children stay selectable.
+                      const parentLink = raviAppParentLink(app.key, homeKey, subMenu.length > 0);
+
+                      return (
                       <MenuItem
                         key={app.key}
                         name={app.display_name.fa}
@@ -279,26 +297,11 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                         pattern={app.key}
                         unread={
                           (unreads as any)[
-                            app.fragments
-                              .find((item: any) => item.type === 'menu')
-                              ?.options?.find((item: any, index: number) => index === 0)?.id as any
+                            menuOptions.find((item: any, index: number) => index === 0)?.id as any
                           ]
                         }
-                        link={`/dashboard/apps/${app.key}/${
-                          app.fragments
-                            .find((item: any) => item.type === 'menu')
-                            ?.options?.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key
-                        }/`}
-                        subMenu={app.fragments
-                          .find((item: any) => item.type === 'menu')
-                          ?.options?.filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
-                          .map((item: any) => ({
-                            name: item.name?.fa,
-                            // Only «نظرات من» — keep «نظرات پروفایل من» on hamdast (ravi-docs)
-                            link: isRaviPatientMyReviewsMenu(app.key, item.key)
-                              ? raviMyReviewsHref()
-                              : `/dashboard/apps/${app.key}/${item.key}/`,
-                          }))}
+                        link={parentLink}
+                        subMenu={subMenu}
                         onEvent={label =>
                           appClickEvent({
                             app_key: app.key,
@@ -307,7 +310,8 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                           })
                         }
                       />
-                    ))}
+                      );
+                    })}
 
                 {((appsData.isSuccess &&
                   (apps[0]?.fragments?.some((item: any) => item.type === 'menu' && item.options?.length > 0) || shouldShowBazaarMenu)) ||
