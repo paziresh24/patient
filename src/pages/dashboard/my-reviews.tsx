@@ -1,20 +1,20 @@
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
+import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
-import { Wrapper } from '@/modules/dashboard/components/wrapper';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
-import { redirectToRaviMyReviewsFromContext } from '@/modules/patient/utils/redirectToRaviMyReviewsFromContext';
-import { RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
+import { RaviMyReviewsEmbed } from '@/modules/patient/views/RaviMyReviewsEmbed';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
 
 export const MyReviewsDashboardPage = () => {
   return (
-    <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
-      <Wrapper>
-        <RedirectToRaviMyReviews />
-      </Wrapper>
-    </div>
+    <>
+      <Seo title="نظرات من" noIndex />
+      <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
+        <RaviMyReviewsEmbed />
+      </div>
+    </>
   );
 };
 
@@ -28,7 +28,11 @@ MyReviewsDashboardPage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext) => {
-    return redirectToRaviMyReviewsFromContext(context);
+    return {
+      props: {
+        query: context.query,
+      },
+    };
   }),
 );
 

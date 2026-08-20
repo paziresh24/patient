@@ -23,8 +23,6 @@ import toast from 'react-hot-toast';
 import { useApps } from '../apis/apps';
 import { MenuItem } from '../components/menuItem';
 import { isRaviPatientMyReviewsMenu, raviAppParentLink } from '../constants/raviPatientMyReviewsRoute';
-import { buildRaviMyReviewsUrl } from '@/modules/patient/utils/buildRaviMyReviewsUrl';
-import { getCookie } from 'cookies-next';
 import axios from 'axios';
 import HeadphoneIcon from '@/common/components/icons/headphone';
 
@@ -104,11 +102,6 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
 
   const openProfileView = () => {
     void openPublicProfile();
-  };
-
-  const raviMyReviewsHref = () => {
-    const token = getCookie('token');
-    return buildRaviMyReviewsUrl(typeof token === 'string' ? token : undefined);
   };
 
   const currentData: any = useMemo(
@@ -219,7 +212,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     {
       icon: <CommentIcon />,
       label: 'نظرات من',
-      url: raviMyReviewsHref(),
+      url: '/dashboard/my-reviews',
       shouldShowDoctor: true,
       shouldShow: true,
     },
@@ -283,7 +276,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                           name: item.name?.fa,
                           // Only «نظرات من» — keep «نظرات پروفایل من» on hamdast (ravi-docs)
                           link: isRaviPatientMyReviewsMenu(app.key, item.key)
-                            ? raviMyReviewsHref()
+                            ? '/dashboard/my-reviews/'
                             : `/dashboard/apps/${app.key}/${item.key}/`,
                         }));
                       // Ravi home is my_feedbacks (hard-redirect). Parent must only expand so both children stay selectable.

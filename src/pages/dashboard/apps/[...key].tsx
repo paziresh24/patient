@@ -13,11 +13,11 @@ import { isRaviPatientMyReviewsMenu } from '@/modules/dashboard/constants/raviPa
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { redirectToRaviMyReviewsFromContext } from '@/modules/patient/utils/redirectToRaviMyReviewsFromContext';
-import { goToRaviMyReviews, RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
+import { buildRaviMyReviewsUrl } from '@/modules/patient/utils/buildRaviMyReviewsUrl';
+import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export const Dashboard = (props: any) => {
   const user = useUserInfoStore(state => state.info);
@@ -33,15 +33,15 @@ export const Dashboard = (props: any) => {
 
   const appKey = (keys as string[])[0];
   const menuKey = (keys as string[])[1];
-  const shouldOpenRaviMyReviews = isRaviPatientMyReviewsMenu(appKey, menuKey);
+  const isPatientMyReviews = isRaviPatientMyReviewsMenu(appKey, menuKey);
 
-  const knownEmbedSrc = useMemo(() => getKnownDrappEmbedSrc(appKey, menuKey), [appKey, menuKey]);
-
-  useLayoutEffect(() => {
-    if (shouldOpenRaviMyReviews) {
-      goToRaviMyReviews();
+  const knownEmbedSrc = useMemo(() => {
+    if (isPatientMyReviews) {
+      const token = typeof window === 'undefined' ? undefined : getCookie('token');
+      return buildRaviMyReviewsUrl(typeof token === 'string' ? token : undefined);
     }
-  }, [shouldOpenRaviMyReviews]);
+    return getKnownDrappEmbedSrc(appKey, menuKey);
+  }, [appKey, menuKey, isPatientMyReviews]);
 
   const app = useMemo(() => appsData.data?.data?.find((app: App) => app.key === `${appKey}`), [isReady, appKey, appsData]);
 
@@ -49,7 +49,9 @@ export const Dashboard = (props: any) => {
     () => app?.fragments.find((item: any) => item.type === 'menu')?.options.find((item: any) => item.key === menuKey),
     [app, isReady, menuKey, appKey],
   );
-  const appName = selctedMenu?.name?.fa ?? app?.display_name?.fa ?? 'داشبورد';
+  const appName = isPatientMyReviews
+    ? 'نظرات من'
+    : selctedMenu?.name?.fa ?? app?.display_name?.fa ?? 'داشبورد';
   const embedSrc = knownEmbedSrc ?? selctedMenu?.embed_src;
   const waitingForHamdastMenu = !knownEmbedSrc && !appsData.isSuccess;
 
@@ -106,25 +108,12 @@ export const Dashboard = (props: any) => {
     }, 6000);
   }, [appKey, menuKey]);
 
-  if (shouldOpenRaviMyReviews) {
-    return (
-      <LayoutWithHeaderAndFooter
-        {...props.config}
-        shouldShowPromoteApp={false}
-        showFooter={false}
-        showHeader={!isMobile}
-        className="!h-svh !min-h-svh !max-h-svh:"
-      >
-        <AppBar title="نظرات من" className="md:hidden" backButton={true} />
-        <SideBar className="hidden md:flex">
-          <div className="flex flex-grow flex-col w-full">
-            <Seo title="نظرات من" noIndex />
-            <RedirectToRaviMyReviews />
-          </div>
-        </SideBar>
-      </LayoutWithHeaderAndFooter>
-    );
-  }
+  const iframeSrc =
+    user?.id && embedSrc
+      ? isPatientMyReviews
+        ? embedSrc
+        : buildDashboardEmbedSrc(embedSrc, user.id, window?.location?.search)
+      : undefined;
 
   return (
     <LayoutWithHeaderAndFooter
@@ -153,13 +142,13 @@ export const Dashboard = (props: any) => {
                 <Loading />
               </div>
             )}
-            {user?.id && embedSrc && (
+            {iframeSrc && (
               <iframe
                 ref={iframeRef}
                 key={menuKey ?? selctedMenu?.key}
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
-                src={buildDashboardEmbedSrc(embedSrc, user.id, window?.location?.search)}
+                src={iframeSrc}
                 allow="microphone; camera; fullscreen; clipboard-write;"
                 sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />
@@ -173,12 +162,6 @@ export const Dashboard = (props: any) => {
 
 export const getServerSideProps = withCSR(
   withServerUtils(async (context: GetServerSidePropsContext) => {
-    const keys = context.params?.key;
-    const appKey = Array.isArray(keys) ? keys[0] : undefined;
-    const menuKey = Array.isArray(keys) ? keys[1] : undefined;
-    if (isRaviPatientMyReviewsMenu(appKey, menuKey)) {
-      return redirectToRaviMyReviewsFromContext(context);
-    }
     return {
       props: {
         query: context.query,
