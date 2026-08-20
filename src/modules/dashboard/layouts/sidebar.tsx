@@ -22,6 +22,7 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useApps } from '../apis/apps';
 import { MenuItem } from '../components/menuItem';
+import { isRaviPatientMyReviewsMenu } from '../constants/raviPatientMyReviewsRoute';
 import axios from 'axios';
 import HeadphoneIcon from '@/common/components/icons/headphone';
 
@@ -276,25 +277,20 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                               ?.options?.find((item: any, index: number) => index === 0)?.id as any
                           ]
                         }
-                        link={(() => {
-                          const homeKey = app.fragments
+                        link={`/dashboard/apps/${app.key}/${
+                          app.fragments
                             .find((item: any) => item.type === 'menu')
-                            ?.options?.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key;
-                          if (app.key === 'ravi' && homeKey === 'my_feedbacks') {
-                            return '/dashboard/my-reviews/';
-                          }
-                          return `/dashboard/apps/${app.key}/${homeKey}/`;
-                        })()}
+                            ?.options?.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key
+                        }/`}
                         subMenu={app.fragments
                           .find((item: any) => item.type === 'menu')
                           ?.options?.filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
                           .map((item: any) => ({
                             name: item.name?.fa,
-                            // Hamdast still ships my_feedbacks; patient list is on ravi-front via /dashboard/my-reviews
-                            link:
-                              app.key === 'ravi' && item.key === 'my_feedbacks'
-                                ? '/dashboard/my-reviews/'
-                                : `/dashboard/apps/${app.key}/${item.key}/`,
+                            // Only «نظرات من» — keep «نظرات پروفایل من» and other ravi menus on hamdast
+                            link: isRaviPatientMyReviewsMenu(app.key, item.key)
+                              ? '/dashboard/my-reviews/'
+                              : `/dashboard/apps/${app.key}/${item.key}/`,
                           }))}
                         onEvent={label =>
                           appClickEvent({
