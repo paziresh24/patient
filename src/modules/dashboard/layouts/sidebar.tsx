@@ -276,17 +276,25 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                               ?.options?.find((item: any, index: number) => index === 0)?.id as any
                           ]
                         }
-                        link={`/dashboard/apps/${app.key}/${
-                          app.fragments
+                        link={(() => {
+                          const homeKey = app.fragments
                             .find((item: any) => item.type === 'menu')
-                            ?.options?.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key
-                        }/`}
+                            ?.options?.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key;
+                          if (app.key === 'ravi' && homeKey === 'my_feedbacks') {
+                            return '/dashboard/my-reviews/';
+                          }
+                          return `/dashboard/apps/${app.key}/${homeKey}/`;
+                        })()}
                         subMenu={app.fragments
                           .find((item: any) => item.type === 'menu')
                           ?.options?.filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
                           .map((item: any) => ({
                             name: item.name?.fa,
-                            link: `/dashboard/apps/${app.key}/${item.key}/`,
+                            // Hamdast still ships my_feedbacks; patient list is on ravi-front via /dashboard/my-reviews
+                            link:
+                              app.key === 'ravi' && item.key === 'my_feedbacks'
+                                ? '/dashboard/my-reviews/'
+                                : `/dashboard/apps/${app.key}/${item.key}/`,
                           }))}
                         onEvent={label =>
                           appClickEvent({
