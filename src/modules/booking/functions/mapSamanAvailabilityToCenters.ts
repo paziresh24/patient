@@ -1,5 +1,6 @@
 import { CENTERS } from '@/common/types/centers';
 import type { SamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
+import { getPrimaryInPersonCenter } from '@/modules/profile/functions/getDoctorCities';
 import moment from 'jalali-moment';
 
 const calendarFormat = {
@@ -128,4 +129,17 @@ export const isCenterBookingAvailable = (
 ) => {
   if (!samanData) return true;
   return findCenterAvailability(samanData, centerId)?.booking_available ?? false;
+};
+
+/** Fill freeturn_text from Saman when legacy full-profile did not provide it (SEO about block). */
+export const enrichProfileCentersWithSamanAvailability = <T extends { id: string; freeturn_text?: string | null }>(
+  profileCenters: T[],
+  samanData?: SamanDoctorAvailabilityStatus | null,
+): T[] => {
+  if (!samanData || profileCenters.length === 0) return profileCenters;
+
+  const primaryInPerson = getPrimaryInPersonCenter(profileCenters);
+  if (primaryInPerson?.freeturn_text) return profileCenters;
+
+  return mapSamanAvailabilityToCenters(profileCenters, samanData);
 };

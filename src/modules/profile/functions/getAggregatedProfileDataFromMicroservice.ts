@@ -3,6 +3,7 @@ import { apiGatewayClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { getDoctorOnlineChannels } from '@/common/apis/services/doctor/getDoctorOnlineChannels';
 import { getProfileMicroserviceBundle } from '@/common/apis/services/profile-microservice/getProfileMicroserviceBundle';
 import { mapMicroserviceToLegacy } from '@/common/apis/services/profile-microservice/mapMicroserviceToLegacy';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
@@ -18,7 +19,6 @@ import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyB
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
 import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
-import { deriveOnlineVisitChannelTypesFromServices } from '@/modules/profile/utils/deriveOnlineVisitChannelTypes';
 
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
 const RISMAN_DOCTORS = 'https://apigw.paziresh24.com/v1/risman/doctors/';
@@ -32,6 +32,7 @@ export type ProfileMsPerfTimings = {
   reviews_ms: number;
   services_ms: number;
   widgets_ms: number;
+  /** True when drprofile centers hydrate succeeded (replaces legacy full-profile gate). */
   legacy_fp_ok: boolean;
   booking_centers_ok?: boolean;
   services_hydrated: number;
@@ -103,6 +104,7 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
  * Hybrid aggregation for allowlisted slugs (PageSpeed-oriented):
  * - Identity/content from PROFILE_API_BASE_URL
  * - Parallel secondary fetches (gallery hydrate, rates, waiting, risman, getDoctorCenters for booking)
+ * - Online visit channels from drprofile /online-channels (not service-title heuristics)
  * - Saman availability is client-only on MS (does not block HTML)
  * - Hamdast SSR soft-budget
  * Legacy getAggregatedProfileData path is untouched.
@@ -201,6 +203,7 @@ export async function getAggregatedProfileDataFromMicroservice(
   let centers = initialCenters;
   let onlineVisit = initialOnlineVisit;
 
+  // Always hydrate CONSULT; other centers only when service ids are missing/invalid.
   const centersNeedingServices = (centers || []).filter((center: any) => {
     if (!center?.id) return false;
     if (String(center.id) === CENTERS.CONSULT) return true;
@@ -209,13 +212,15 @@ export async function getAggregatedProfileDataFromMicroservice(
     );
   });
 
+  const onlineCenter = (centers || []).find((center: any) => String(center?.id) === CENTERS.CONSULT);
   const servicesStartedAt = Date.now();
-  if (centersNeedingServices.length > 0) {
-    try {
+  const [servicesHydrationResult, onlineChannelsResult] = await Promise.allSettled([
+    (async () => {
+      if (centersNeedingServices.length === 0) return centers;
       const serviceResults = await Promise.allSettled(
         centersNeedingServices.map((center: any) => getDoctorCenterServices(validatedSlug, String(center.id))),
       );
-      centers = centers.map((center: any) => {
+      return centers.map((center: any) => {
         const idx = centersNeedingServices.findIndex((c: any) => String(c.id) === String(center.id));
         if (idx < 0) return center;
         const result = serviceResults[idx];
@@ -228,17 +233,20 @@ export async function getAggregatedProfileDataFromMicroservice(
         }
         return { ...center, services };
       });
-    } catch (error) {
-      console.error('Error hydrating center services (microservice path):', error);
-    }
+    })(),
+    onlineCenter ? getDoctorOnlineChannels(validatedSlug) : Promise.resolve([] as string[]),
+  ]);
+  if (servicesHydrationResult.status === 'fulfilled') {
+    centers = servicesHydrationResult.value;
+  } else {
+    console.error('Error hydrating center services (microservice path):', servicesHydrationResult.reason);
   }
   const services_ms = Date.now() - servicesStartedAt;
 
-  const onlineCenter = (centers || []).find((center: any) => String(center?.id) === CENTERS.CONSULT);
-  const derivedChannels = deriveOnlineVisitChannelTypesFromServices(onlineCenter?.services);
   onlineVisit = {
     ...onlineVisit,
-    channels: derivedChannels.length > 0 ? derivedChannels : onlineVisit?.channels ?? [],
+    enabled: !!onlineCenter,
+    channels: onlineChannelsResult.status === 'fulfilled' ? onlineChannelsResult.value : [],
   };
 
   const doctorCityNames = formatDoctorCitiesForTitle(centers);

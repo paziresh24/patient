@@ -49,6 +49,53 @@ const pickNonEmptyBiography = (...candidates: unknown[]): string | null => {
   return null;
 };
 
+const normalizeGroupExpertise = (group: any) => ({
+  id: group?.id,
+  en_slug: group?.en_slug ?? group?.slug ?? null,
+  icon: group?.icon ?? null,
+  name: group?.name ?? group?.title ?? null,
+});
+
+const dedupeGroupExpertises = (groups: Array<{ id?: number; en_slug?: string | null; icon?: string | null; name?: string | null }>) =>
+  groups.filter((group, index, array) => {
+    const slug = group?.en_slug;
+    if (slug) {
+      return array.findIndex(item => item?.en_slug === slug) === index;
+    }
+    if (group?.id != null) {
+      return array.findIndex(item => item?.id === group.id) === index;
+    }
+    return false;
+  });
+
+const resolveGroupExpertises = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
+  const fromTaggables = flatMap(overwriteData?.provider?.expertises ?? [], item => get(item, 'speciality.taggables', []))
+    .map((item: any) => item?.tag)
+    .filter(Boolean)
+    .map((item: any) =>
+      normalizeGroupExpertise({
+        id: item.id,
+        slug: item.slug,
+        icon: item.icon,
+        title: item.title,
+      }),
+    );
+
+  if (!isEmpty(fromTaggables)) {
+    return dedupeGroupExpertises(fromTaggables);
+  }
+
+  const fromExpertiseApi = flatMap(overwriteData?.expertises ?? [], item => item?.groups ?? [])
+    .filter(Boolean)
+    .map(normalizeGroupExpertise);
+
+  if (!isEmpty(fromExpertiseApi)) {
+    return dedupeGroupExpertises(fromExpertiseApi);
+  }
+
+  return source?.group_expertises ?? [];
+};
+
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
   // Pull biography out of provider so an empty/undefined provider.biography cannot wipe a valid bio.
   const { biography: providerBiography, ...providerRest } = overwriteData.provider ?? {};
@@ -70,85 +117,34 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     ...(overwriteData.credentials ? { credentials: overwriteData.credentials } : {}),
   };
 
-  const group_expertises = flatMap(overwriteData?.provider?.expertises ?? [], item => get(item, 'speciality.taggables', [])).map(
-    (item: any) => item.tag,
-  );
+  const resolvedGroupExpertises = resolveGroupExpertises(overwriteData, source);
 
   const centers =
     overwriteData?.centers?.map((newCenter: any) => {
-      // Find corresponding center in full profile
-      const sourceCenter = source?.centers?.find((sourceCenter: any) => sourceCenter.id === newCenter.id);
-
-      if (sourceCenter) {
-        // Merge new center data with full profile data
-        const resolvedCityName =
-          newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null) || sourceCenter.city;
-        const resolvedCitySlug =
-          newCenter.city?.slug || newCenter.city_en_slug || sourceCenter.city_en_slug || null;
-        const resolvedProvince =
+      const resolvedCenterType = newCenter.type_id ?? newCenter.center_type ?? null;
+      return {
+        ...newCenter,
+        display_number_array: newCenter.display_number,
+        tell_array: newCenter.tell,
+        center_type: resolvedCenterType,
+        city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null),
+        city_en_slug: newCenter.city?.slug || newCenter.city_en_slug || null,
+        province:
           newCenter.city?.province?.name ||
-          (typeof newCenter.city?.province === 'string' ? newCenter.city.province : null) ||
-          (typeof newCenter.province === 'string' ? newCenter.province : null) ||
-          sourceCenter.province;
-        const resolvedCenterType =
-          newCenter.type_id ?? newCenter.center_type ?? sourceCenter.center_type ?? null;
-
-        return {
-          ...sourceCenter, // Start with full profile data (services, freeturn, …)
-          // Override with new API / MS location data where available
-          id: newCenter.id,
-          name: newCenter.name,
-          display_number: newCenter.display_number,
-          display_number_array: newCenter.display_number, // Map display_number to display_number_array
-          tell: newCenter.tell,
-          tell_array: newCenter.tell, // Map tell to tell_array
-          address: newCenter.address,
-          center_type: resolvedCenterType,
-          status: newCenter.status ?? sourceCenter.status,
-          server_id: newCenter.server_id ?? sourceCenter.server_id,
-          city: resolvedCityName,
-          city_en_slug: resolvedCitySlug,
-          province: resolvedProvince,
-          map: newCenter.location
-            ? {
-                lat: newCenter.location.lat,
-                lon: newCenter.location.lon,
-              }
-            : newCenter.map ?? sourceCenter.map,
-          // Keep services from full profile
-          services: sourceCenter.services,
-          // Keep other full profile fields like freeturn, settings, etc.
-        };
-      } else {
-        // If no matching center in full profile, use new center data with empty services
-        const resolvedCenterType = newCenter.type_id ?? newCenter.center_type ?? null;
-        return {
-          ...newCenter,
-          display_number_array: newCenter.display_number, // Map display_number to display_number_array
-          tell_array: newCenter.tell, // Map tell to tell_array
-          center_type: resolvedCenterType,
-          city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null),
-          city_en_slug: newCenter.city?.slug || newCenter.city_en_slug || null,
-          province:
-            newCenter.city?.province?.name ||
-            (typeof newCenter.province === 'string' ? newCenter.province : null),
-          map: newCenter.location
-            ? {
-                lat: newCenter.location.lat,
-                lon: newCenter.location.lon,
-              }
-            : newCenter.map ?? null,
-          services: newCenter.services ?? [],
-        };
-      }
+          (typeof newCenter.province === 'string' ? newCenter.province : null),
+        map: newCenter.location
+          ? {
+              lat: newCenter.location.lat,
+              lon: newCenter.location.lon,
+            }
+          : newCenter.map ?? null,
+        services: newCenter.services ?? [],
+      };
     }) ??
-    source?.centers ??
     [];
 
   const expertises = {
-    group_expertises: isEmpty(group_expertises)
-      ? source?.group_expertises ?? []
-      : group_expertises.map((item: any) => item && { id: item.id, en_slug: item.slug, icon: item.icon, name: item.title }),
+    group_expertises: resolvedGroupExpertises,
     expertises:
       (overwriteData?.expertises ?? source?.expertises)?.map?.((item: any) => {
         // New expertise API may flatten to { name, id, slug }; full-profile keeps { expertise: { name } }.

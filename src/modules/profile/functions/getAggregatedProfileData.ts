@@ -7,6 +7,7 @@ import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExper
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
 import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
+import { getDoctorOnlineChannels } from '@/common/apis/services/doctor/getDoctorOnlineChannels';
 import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
 import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
@@ -19,9 +20,9 @@ import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
 import { filterBookableMappedCenterServices, isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { enrichProfileCentersWithSamanAvailability } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
-import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
 import { computeExperienceYearsFromGraduationDate } from '@/modules/profile/utils/computeExperienceYears';
@@ -79,6 +80,33 @@ const getRelatedSpecialityLinks = ({ centers, group_expertises }: any): string[]
     });
 
   return links;
+};
+
+const getProdLikeRelatedSpecialityLinks = ({ centers, group_expertises }: any): string[] => {
+  const groups = (Array.isArray(group_expertises) ? group_expertises : []).filter((group: any) => {
+    const groupId = group?.group_id ?? group?.id;
+    return groupId !== 35;
+  });
+  const uniqueCitySlugs = (Array.isArray(centers) ? centers : [])
+    .filter((center: any) => center?.city_en_slug && String(center?.id) !== IGNORED_CENTER_ID)
+    .map((center: any) => center.city_en_slug)
+    .filter((slug: string, index: number, array: string[]) => array.indexOf(slug) === index);
+
+  const expertiseLinks: string[] = [];
+  const consultLinks: string[] = [];
+  const cityLinks: string[] = [];
+
+  groups.forEach((group: any) => {
+    const slug = group?.en_slug || group?.slug;
+    if (!slug) return;
+    expertiseLinks.push(`/s/ir/${slug}/`);
+    consultLinks.push(`/consult/${slug}/`);
+  });
+  uniqueCitySlugs.forEach(citySlug => {
+    cityLinks.push(`/s/${citySlug}/doctor/`, `/s/${citySlug}/center/`);
+  });
+
+  return Array.from(new Set([...expertiseLinks, ...cityLinks, ...consultLinks]));
 };
 
 const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
@@ -204,7 +232,6 @@ export async function getAggregatedProfileData(
 
   let slugInfo = null;
   let validatedSlug = slug;
-  let fullProfileData = null;
   let skipFullProfile = false;
 
   // Validate slug first — self-redirect slugs must not wait on full-profile (slow + bad merge).
@@ -306,26 +333,6 @@ export async function getAggregatedProfileData(
     validatedSlug = slug;
   }
 
-  let fullProfileResult: PromiseSettledResult<Awaited<ReturnType<typeof getProfile>>>;
-  if (skipFullProfile) {
-    fullProfileResult = { status: 'fulfilled', value: { fullProfileData: null, redirect: undefined } };
-  } else {
-    fullProfileResult = await Promise.resolve(getProfile({ slug, university, isServer: isServer })).then(
-      value => ({ status: 'fulfilled' as const, value }),
-      reason => ({ status: 'rejected' as const, reason }),
-    );
-  }
-
-  // Handle full profile result (no redirect handling - just get data)
-  if (fullProfileResult.status === 'fulfilled') {
-    const { fullProfileData: data } = fullProfileResult.value;
-    fullProfileData = data;
-  } else {
-    // Full profile failed - log error but continue to show page
-    console.error('Error in full profile:', fullProfileResult.reason);
-    fullProfileData = null;
-  }
-
   const pageSlug = `/dr/${validatedSlug}`;
 
   const rateDetailsResult = await getRateDetailsData({
@@ -334,68 +341,29 @@ export async function getAggregatedProfileData(
 
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
 
-  const searchLinks = getSearchLinks({
-    centers: fullProfileData?.centers,
-    group_expertises: fullProfileData?.group_expertises ?? [],
-  });
-
-  const relatedSpecialityLinks = getRelatedSpecialityLinks({
-    centers: fullProfileData?.centers,
-    group_expertises: fullProfileData?.group_expertises ?? [],
-  });
-
-  const apiCalls = [
-    internalLinks({
-      links: searchLinks,
-    }),
-    relatedSpecialityLinks.length
-      ? internalLinks({
-          links: relatedSpecialityLinks,
-        })
-      : Promise.resolve([]),
+  // Phase 1: fetch content APIs in parallel (centers/expertise needed for SEO links)
+  const contentCalls = [
     shouldFetchReviews
       ? queryClient.fetchQuery(
           [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }],
           () => getReviews({ slug: validatedSlug, sort: 'default_order' }),
         )
       : Promise.resolve(null),
-    getAverageWaitingTime({
-      slug: validatedSlug,
-    }),
+    getAverageWaitingTime({ slug: validatedSlug }),
     buildRismanDoctorId(slugInfo?.owner_id, slugInfo?.server_id)
       ? axios.get(API_ENDPOINTS.RISMAN_DOCTORS, {
-          params: {
-            doctor_id: buildRismanDoctorId(slugInfo?.owner_id, slugInfo?.server_id),
-          },
+          params: { doctor_id: buildRismanDoctorId(slugInfo?.owner_id, slugInfo?.server_id) },
           timeout: 1500,
         })
       : Promise.resolve({ data: null }),
-  ];
-
-  // Conditionally add doctor full name API call
-  if (options?.useNewDoctorFullNameAPI) {
-    apiCalls.push(getDoctorFullName(validatedSlug));
-  }
-
-  // Conditionally add doctor expertise API call
-  if (options?.useNewDoctorExpertiseAPI) {
-    apiCalls.push(getDoctorExpertise(validatedSlug));
-  }
-
-  // Conditionally add doctor image API call
-  if (options?.useNewDoctorImageAPI) {
-    apiCalls.push(getDoctorImage(validatedSlug));
-  }
-
-  // Conditionally add doctor biography API call
-  if (options?.useNewDoctorBiographyAPI) {
-    apiCalls.push(getDoctorBiography(validatedSlug));
-  }
-
-  // Conditionally add doctor centers API call
-  if (options?.useNewDoctorCentersAPI) {
-    apiCalls.push(getDoctorCenters(validatedSlug, university, { onlyBookable: false }));
-  }
+    options?.useNewDoctorFullNameAPI ? getDoctorFullName(validatedSlug) : Promise.resolve(null),
+    options?.useNewDoctorExpertiseAPI ? getDoctorExpertise(validatedSlug) : Promise.resolve(null),
+    options?.useNewDoctorImageAPI ? getDoctorImage(validatedSlug) : Promise.resolve(null),
+    options?.useNewDoctorBiographyAPI ? getDoctorBiography(validatedSlug) : Promise.resolve(null),
+    options?.useNewDoctorCentersAPI
+      ? getDoctorCenters(validatedSlug, university, { onlyBookable: false })
+      : Promise.resolve(null),
+  ] as const;
 
   const samanAvailabilityPromise =
     isServer && options?.prefetchSamanAvailability
@@ -411,8 +379,6 @@ export async function getAggregatedProfileData(
 
   const [
     [
-      internalLinksBreadcrumbResult,
-      internalLinksRelatedResult,
       reviewsResult,
       averageWaitingTimeResult,
       rismanResult,
@@ -422,8 +388,8 @@ export async function getAggregatedProfileData(
       doctorBiographyResult,
       doctorCentersResult,
     ],
-    ,
-  ] = await Promise.all([Promise.allSettled(apiCalls), samanAvailabilityPromise]);
+    samanAvailability,
+  ] = await Promise.all([Promise.allSettled(contentCalls), samanAvailabilityPromise]);
 
   // Extract doctor full name from API response
   const doctorFullName =
@@ -458,15 +424,10 @@ export async function getAggregatedProfileData(
   const finalName = processedName === null ? '' : processedName ?? '';
   const finalFamily = processedFamily === null ? '' : processedFamily ?? '';
 
-  const keywordSearchText = skipFullProfile
-    ? [finalName, finalFamily].filter(Boolean).join(' ').trim()
-    : [fullProfileData?.name, fullProfileData?.family].filter(Boolean).join(' ').trim();
+  const keywordSearchText = [finalName, finalFamily].filter(Boolean).join(' ').trim();
   const keywordCitySlug =
-    (skipFullProfile
-      ? doctorCenters?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug
-      : null) ||
-    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city_en_slug)?.city_en_slug ||
-    fullProfileData?.centers?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug ||
+    doctorCenters?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug ||
+    (doctorCenters as any[])?.find?.((center: any) => center?.id !== '5532' && center?.city_en_slug)?.city_en_slug ||
     'ir';
   const keywordTags = options?.fetchExpertiseKeywordTags
     ? await getDoctorKeywordTags({
@@ -504,7 +465,7 @@ export async function getAggregatedProfileData(
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
     provider: {
-      user_id: slugInfo?.user_id ?? null,
+      user_id: slugInfo?.user_id != null ? String(slugInfo.user_id) : undefined,
       ...(experienceYears && { experience: experienceYears }),
     },
     feedbacks: {
@@ -512,11 +473,12 @@ export async function getAggregatedProfileData(
       hideRates: rateDetailsResult?.hide_rates,
       reviews: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
       waiting_time_info: averageWaitingTimeResult?.status === 'fulfilled' ? averageWaitingTimeResult.value : [],
+      countOfFeedbacks: rateDetailsResult?.countOfFeedbacks ?? undefined,
     },
     history: {},
     // Add expertises to overwriteData if new API is used and successful
     ...(options?.useNewDoctorExpertiseAPI &&
-      doctorExpertise?.length > 0 && {
+      (doctorExpertise?.length ?? 0) > 0 && {
         expertises: transformedExpertise,
       }),
     // Add image to overwriteData if new API is used and successful
@@ -532,7 +494,7 @@ export async function getAggregatedProfileData(
       }),
     // Add centers to overwriteData if new API is used and successful
     ...(options?.useNewDoctorCentersAPI &&
-      doctorCenters?.length > 0 && {
+      (doctorCenters?.length ?? 0) > 0 && {
         centers: doctorCenters,
       }),
     // Add gallery to overwriteData if new API is used and successful
@@ -596,14 +558,10 @@ export async function getAggregatedProfileData(
     });
   }
 
-  const profileSource = skipFullProfile
-    ? {}
-    : {
-        ...(fullProfileData ?? {}),
-      };
+  const profileSource = {};
 
-  const resolvedName = finalName?.trim() ? finalName : skipFullProfile ? undefined : fullProfileData?.name;
-  const resolvedFamily = finalFamily?.trim() ? finalFamily : skipFullProfile ? undefined : fullProfileData?.family;
+  const resolvedName = finalName?.trim() ? finalName : undefined;
+  const resolvedFamily = finalFamily?.trim() ? finalFamily : undefined;
 
   const {
     centers: initialCenters,
@@ -612,7 +570,7 @@ export async function getAggregatedProfileData(
     history,
     information: rawInformation,
     media,
-    onlineVisit,
+    onlineVisit: rawOnlineVisit,
     similarLinks: rawSimilarLinks,
     symptomes,
     waitingTimeInfo,
@@ -648,31 +606,83 @@ export async function getAggregatedProfileData(
   // When centers API adds 5532 but full-profile has no/invalid services, hydrate from center services API
   // so profile SSR can render the online-visit card (e.g. Doodangeh).
   let centers = initialCenters;
+  let onlineVisit = rawOnlineVisit;
   const consultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
   // full-profile service ids (5532) can be stale; always hydrate online visit from drprofile.
   const needsOnlineServices = !!consultCenter;
 
+  let onlineChannels: string[] = [];
   if (needsOnlineServices) {
-    try {
-      const onlineServices = await getDoctorCenterServices(validatedSlug, CENTERS.CONSULT);
-      if (onlineServices?.length) {
-        const mapped = filterBookableMappedCenterServices(
-          mapDoctorCenterServices(onlineServices, consultCenter.user_center_id),
+    const [onlineServicesResult, onlineChannelsResult] = await Promise.allSettled([
+      getDoctorCenterServices(validatedSlug, CENTERS.CONSULT),
+      getDoctorOnlineChannels(validatedSlug),
+    ]);
+
+    if (onlineServicesResult.status === 'fulfilled' && onlineServicesResult.value?.length) {
+      const mapped = filterBookableMappedCenterServices(
+        mapDoctorCenterServices(onlineServicesResult.value, consultCenter.user_center_id),
+      );
+      centers = centers.map((center: any) =>
+        String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center,
+      );
+      if (isServer) {
+        queryClient.setQueryData(
+          [ServerStateKeysEnum.DoctorCenterServices, validatedSlug, CENTERS.CONSULT],
+          onlineServicesResult.value,
         );
-        centers = centers.map((center: any) =>
-          String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center,
-        );
-        if (isServer) {
-          queryClient.setQueryData(
-            [ServerStateKeysEnum.DoctorCenterServices, validatedSlug, CENTERS.CONSULT],
-            onlineServices,
-          );
-        }
       }
-    } catch (error) {
-      console.error('Error hydrating online visit center services:', error);
+    } else if (onlineServicesResult.status === 'rejected') {
+      console.error('Error hydrating online visit center services:', onlineServicesResult.reason);
     }
+
+    onlineChannels = onlineChannelsResult.status === 'fulfilled' ? onlineChannelsResult.value : [];
   }
+
+  const hydratedConsultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
+  onlineVisit = {
+    ...onlineVisit,
+    enabled: !!hydratedConsultCenter,
+    channels: onlineChannels,
+  };
+
+  const normalizedGroupExpertisesSource =
+    doctorExpertise?.flatMap((item: any) => item?.groups ?? []) ??
+    expertises?.group_expertises ??
+    [];
+  const normalizedGroupExpertises = normalizedGroupExpertisesSource.filter((group: any, index: number, array: any[]) => {
+    const slug = group?.en_slug || group?.slug;
+    if (!slug) return false;
+    return array.findIndex(item => (item?.en_slug || item?.slug) === slug) === index;
+  });
+
+  const expertisesWithGroups = {
+    ...expertises,
+    group_expertises:
+      expertises?.group_expertises?.length > 0
+        ? expertises.group_expertises
+        : normalizedGroupExpertises.map((group: any) => ({
+            id: group.id,
+            en_slug: group.en_slug ?? group.slug,
+            icon: group.icon ?? null,
+            name: group.name,
+          })),
+  };
+
+  const relatedSpecialityLinks = getProdLikeRelatedSpecialityLinks({
+    centers,
+    group_expertises: expertisesWithGroups.group_expertises?.length
+      ? expertisesWithGroups.group_expertises
+      : normalizedGroupExpertises,
+  });
+
+  const internalLinksRelatedResult = await (
+    relatedSpecialityLinks.length
+      ? Promise.resolve(internalLinks({ links: relatedSpecialityLinks })).then(
+          value => ({ status: 'fulfilled' as const, value }),
+          () => ({ status: 'rejected' as const, reason: null }),
+        )
+      : Promise.resolve({ status: 'fulfilled' as const, value: [] })
+  );
 
   // Prefer internal-links based items for "تخصص های مرتبط" when available
   let similarLinks = rawSimilarLinks;
@@ -694,7 +704,7 @@ export async function getAggregatedProfileData(
 
   if (!university) {
     try {
-      if (!slugInfo?.user_id && !skipFullProfile) {
+      if (!slugInfo?.user_id) {
         const { data } = await drProfileClient.get(`/api/doctors/${encodeURIComponent(validatedSlug)}`, {
           timeout: 3000,
         });
@@ -709,11 +719,13 @@ export async function getAggregatedProfileData(
     }
   }
 
+  centers = enrichProfileCentersWithSamanAvailability(centers, samanAvailability);
+
   // Step 5: Construct the final props object
   const doctorCitiesLabel = formatDoctorCitiesForTitle(centers);
   const title = buildDoctorProfileDocumentTitle({
     displayName: information?.display_name,
-    expertiseTitle: expertises?.expertises?.[0]?.alias_title,
+    expertiseTitle: expertisesWithGroups?.expertises?.[0]?.alias_title,
     doctorCitiesLabel,
   });
   const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
@@ -727,7 +739,7 @@ export async function getAggregatedProfileData(
         user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       },
       centers,
-      expertises,
+      expertises: expertisesWithGroups,
       feedbacks: {
         ...feedbacks,
         feedbacks: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
@@ -736,16 +748,12 @@ export async function getAggregatedProfileData(
       symptomes,
       history,
       onlineVisit,
-      similarLinks,
+      similarLinks: similarLinks ?? [],
       waitingTimeInfo,
       isBulk: !!(
         centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services?.every?.((s: any) => !s.hours_of_work))
       ),
-      breadcrumbs: createBreadcrumb(
-        internalLinksBreadcrumbResult.status === 'fulfilled' ? internalLinksBreadcrumbResult.value : [],
-        information?.display_name,
-        pageSlug,
-      ),
+      breadcrumbs: createBreadcrumb([], information?.display_name, pageSlug),
       slug: validatedSlug,
       fragmentComponents: {
         // Note: Flags would need to be handled differently on the client
@@ -757,7 +765,7 @@ export async function getAggregatedProfileData(
       keywordTags: Array.isArray(keywordTags) ? keywordTags : [],
       expertiseChipsLikeSearchEnabled: !!options?.fetchExpertiseKeywordTags,
       user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
-      shouldFetchOnClient: skipFullProfile ? false : !fullProfileData?.id,
+      shouldFetchOnClient: false,
       useSamanAvailabilityStatus: true,
       profile_backend: 'legacy',
       ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
