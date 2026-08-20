@@ -3,15 +3,15 @@ import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { Wrapper } from '@/modules/dashboard/components/wrapper';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
+import { RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement } from 'react';
-import PatientReviewsPage from '../patient/reviews';
 
 export const MyReviewsDashboardPage = () => {
   return (
     <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
       <Wrapper>
-        <PatientReviewsPage />
+        <RedirectToRaviMyReviews />
       </Wrapper>
     </div>
   );

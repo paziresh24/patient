@@ -17,7 +17,10 @@ export async function getProfileMicroserviceBundle(slug: string): Promise<Profil
   const client = createProfileMicroserviceClient();
 
   try {
-    const { data: profilePayload } = await client.get(`/v1/profiles/by-slug/${encodeURIComponent(slug)}`);
+    const { data: profilePayload } = await client.get(`/v1/profiles/by-slug/${encodeURIComponent(slug)}`, {
+      // Cold profiles-api can exceed the default 8s and still return 200; don't map that to 503.
+      timeout: 15_000,
+    });
     const profile = unwrap<any>(profilePayload);
     const profileId = profile?.id;
     if (!profileId) {

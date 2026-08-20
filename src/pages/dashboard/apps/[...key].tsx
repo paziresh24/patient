@@ -9,9 +9,11 @@ import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useApps } from '@/modules/dashboard/apis/apps';
 import { buildDashboardEmbedSrc, getKnownDrappEmbedSrc } from '@/modules/dashboard/constants/knownEmbedSrc';
+import { isRaviPatientMyReviewsMenu } from '@/modules/dashboard/constants/raviPatientMyReviewsRoute';
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -95,6 +97,26 @@ export const Dashboard = (props: any) => {
       setIsAppLoading(false);
     }, 6000);
   }, [appKey, menuKey]);
+
+  if (isRaviPatientMyReviewsMenu(appKey, menuKey)) {
+    return (
+      <LayoutWithHeaderAndFooter
+        {...props.config}
+        shouldShowPromoteApp={false}
+        showFooter={false}
+        showHeader={!isMobile}
+        className="!h-svh !min-h-svh !max-h-svh:"
+      >
+        <AppBar title="نظرات من" className="md:hidden" backButton={true} />
+        <SideBar className="hidden md:flex">
+          <div className="flex flex-grow flex-col w-full">
+            <Seo title="نظرات من" noIndex />
+            <RedirectToRaviMyReviews />
+          </div>
+        </SideBar>
+      </LayoutWithHeaderAndFooter>
+    );
+  }
 
   return (
     <LayoutWithHeaderAndFooter

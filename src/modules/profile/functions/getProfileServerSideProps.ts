@@ -9,11 +9,87 @@ import { trackSsrError } from '@/common/utils/ssrErrorTracker';
 import { getProfileMicroserviceConfig } from '@/common/apis/clients/profileMicroserviceClient';
 import { isProfileMicroserviceAllowlistedSlug } from '@/modules/profile/utils/profileApiSourceAllowlist.server';
 import { isExpertiseChipsLikeSearchEnabledForSlug } from '@/modules/profile/utils/expertiseChipsLikeSearchFlag';
-import { sendDoctorProfileEventServer } from '@/modules/profile/events/nightBatEvents';
+import { sendDoctorProfileEventServer, sendProfileMicroserviceErrorEvent } from '@/modules/profile/events/nightBatEvents';
 import {
   isPicUserImageUrl,
   resolveDoctorProfileLcpImageUrl,
 } from '@/modules/profile/utils/doctorProfileImageUrl';
+
+const MS_UNAVAILABLE_MESSAGE = 'اطلاعات این پزشک در حال به‌روزرسانی است. لطفاً کمی بعد دوباره تلاش کنید.';
+
+const getErrorStatus = (error: unknown): number | undefined => {
+  const maybe = error as { status?: number; response?: { status?: number } };
+  return maybe?.response?.status ?? maybe?.status;
+};
+
+const resolveMicroservicePublicError = (error: unknown): { statusCode: number; message: string } => {
+  const status = getErrorStatus(error);
+  const message = error instanceof Error ? error.message : String(error);
+  const timedOut = /timeout/i.test(message);
+  if (
+    status === 404 ||
+    status === 502 ||
+    status === 503 ||
+    status === 504 ||
+    timedOut ||
+    (typeof status === 'number' && status >= 500)
+  ) {
+    return { statusCode: 503, message: MS_UNAVAILABLE_MESSAGE };
+  }
+  return { statusCode: 500, message: MS_UNAVAILABLE_MESSAGE };
+};
+
+const serveMicroserviceErrorPage = (
+  context: GetServerSidePropsContext,
+  slug: string,
+  error: unknown,
+  extras: { durationMs: number; userAgent?: string | null },
+) => {
+  const { statusCode, message } = resolveMicroservicePublicError(error);
+  const apiStatus = getErrorStatus(error) ?? null;
+  const axiosError = axios.isAxiosError(error) ? error : null;
+
+  context.res.statusCode = statusCode;
+  context.res.setHeader('Cache-Control', 'private, no-store');
+  if (statusCode === 503) {
+    context.res.setHeader('Retry-After', '120');
+  }
+
+  void sendProfileMicroserviceErrorEvent(
+    {
+      slug,
+      path: context.resolvedUrl,
+      api_status: apiStatus,
+      http_status: statusCode,
+      message: error instanceof Error ? error.message : String(error),
+      duration_ms: extras.durationMs,
+      endpoint: axiosError?.config?.url ?? null,
+    },
+    extras.userAgent,
+  );
+
+  void sendDoctorProfileEventServer(
+    'profile_ssr',
+    'ms_unavailable',
+    {
+      slug,
+      path: context.resolvedUrl,
+      duration_ms: extras.durationMs,
+      http_status: statusCode,
+      api_status: apiStatus,
+      csr_fallback: false,
+      profile_backend: 'microservice',
+      message: error instanceof Error ? error.message : String(error),
+    },
+    extras.userAgent,
+  );
+
+  return handleSsrError(statusCode, slug, {
+    message,
+    noIndex: true,
+    profile_backend: 'microservice',
+  });
+};
 
 const clientFetchFallbackProps = (slug: string, extras?: Record<string, unknown>) =>
   sanitizeObject({
@@ -157,6 +233,12 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
     } catch (error) {
       const durationMs = Date.now() - ssrStartedAt;
 
+      // MS-only: never swap to legacy; public 503 + dedicated Splunk counter.
+      if (useProfileMicroservice) {
+        console.warn(`SSR error for allowlisted MS slug: ${slug}. Serving unavailable page (no legacy swap).`);
+        return serveMicroserviceErrorPage(context, slug, error, { durationMs, userAgent });
+      }
+
       if (axios.isAxiosError(error)) {
         const status = error.response?.status ?? 500;
         const statusCode = status === 404 ? 410 : error.message.includes('timeout') || status === 504 ? 504 : status;
@@ -197,12 +279,6 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
         );
 
         if (csrFallback) {
-          // Allowlisted hybrid must not soft-shell into CSR legacy (that was the coin-flip).
-          if (useProfileMicroservice) {
-            console.warn(`SSR error for allowlisted MS slug: ${slug}. Serving error page (no legacy swap).`);
-            context.res.statusCode = statusCode;
-            return handleSsrError(context.res.statusCode, slug);
-          }
           console.warn(`SSR Timeout/Error for slug: ${slug}. Falling back to client-side rendering.`);
           return {
             props: clientFetchFallbackProps(slug),
@@ -226,30 +302,24 @@ export const getProfileServerSideProps: GetServerSideProps = withServerUtils(
           handle_error_status: 500,
           http_status: 500,
           duration_ms: durationMs,
-          csr_fallback: !useProfileMicroservice,
+          csr_fallback: true,
         },
         userAgent,
       );
 
       void sendDoctorProfileEventServer(
         'profile_ssr',
-        useProfileMicroservice ? 'error' : 'csr_fallback',
+        'csr_fallback',
         {
           slug,
           path: context.resolvedUrl,
           duration_ms: durationMs,
           http_status: 500,
-          csr_fallback: !useProfileMicroservice,
+          csr_fallback: true,
           message: error instanceof Error ? error.message : String(error),
         },
         userAgent,
       );
-
-      if (useProfileMicroservice) {
-        console.warn(`SSR non-Axios error for allowlisted MS slug: ${slug}. Serving error page (no legacy swap).`);
-        context.res.statusCode = 500;
-        return handleSsrError(500, slug);
-      }
 
       // Soft-fail: keep the page up via CSR instead of a hard 500.
       console.warn(`SSR non-Axios error for slug: ${slug}. Falling back to client-side rendering.`);

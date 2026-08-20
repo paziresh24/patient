@@ -13,7 +13,15 @@ const CustomDocument: NextComponentType = (props: any) => {
     <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
         <script dangerouslySetInnerHTML={{ __html: DOCTOR_HOME_INLINE_REDIRECT_SCRIPT }} />
-        <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
+        {/*
+          Google SERP favicon: Googlebot fetches /favicon.ico on the hostname root.
+          A 404 there is rendered as the generic globe. Declare a square PNG >48px
+          (Google's current recommendation) plus the root ICO fallback.
+          https://developers.google.com/search/docs/appearance/favicon-in-search
+        */}
+        <link rel="icon" type="image/png" sizes="192x192" href="/logos/icon_x192.png" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/logos/icon_x192.png" />
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
         <link rel="dns-prefetch" href="https://pic.paziresh24.com" />

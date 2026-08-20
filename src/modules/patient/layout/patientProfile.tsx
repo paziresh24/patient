@@ -33,10 +33,9 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
     ) {
       const patientPath = router.asPath.replace('/patient', '');
       // /dashboard/reviews is the doctor iframe; patient reviews live at /dashboard/my-reviews
-      const dashboardPath =
-        patientPath === '/reviews' || patientPath.startsWith('/reviews?') || patientPath.startsWith('/reviews/')
-          ? patientPath.replace(/^\/reviews/, '/my-reviews')
-          : patientPath;
+      const dashboardPath = patientPath === '/reviews' || patientPath.startsWith('/reviews?') || patientPath.startsWith('/reviews/')
+        ? patientPath.replace(/^\/reviews/, '/my-reviews')
+        : patientPath;
       router.replace(`/dashboard${dashboardPath}`);
     }
   }, [userInfo.id]);

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { apiGatewayClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { getDoctorOnlineChannels } from '@/common/apis/services/doctor/getDoctorOnlineChannels';
 import { getProfileMicroserviceBundle } from '@/common/apis/services/profile-microservice/getProfileMicroserviceBundle';
 import { mapMicroserviceToLegacy } from '@/common/apis/services/profile-microservice/mapMicroserviceToLegacy';
@@ -18,6 +19,7 @@ import { mergeMsLocationsWithLegacyBooking } from './mergeMsLocationsWithLegacyB
 import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
 import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
 import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
+
 const HAMDAST_WIDGETS = '/api/v1/widgets/';
 const RISMAN_DOCTORS = 'https://apigw.paziresh24.com/v1/risman/doctors/';
 /** Hamdast is below-the-fold for CWV — soft-cap SSR wait. */
@@ -30,6 +32,9 @@ export type ProfileMsPerfTimings = {
   reviews_ms: number;
   services_ms: number;
   widgets_ms: number;
+  /** True when drprofile centers hydrate succeeded (replaces legacy full-profile gate). */
+  legacy_fp_ok: boolean;
+  booking_centers_ok?: boolean;
   services_hydrated: number;
   saman_ssr: 'skipped_client';
   parallelized: true;
@@ -98,7 +103,8 @@ const fetchWidgetsData = async (information: any, userData: any): Promise<{ widg
 /**
  * Hybrid aggregation for allowlisted slugs (PageSpeed-oriented):
  * - Identity/content from PROFILE_API_BASE_URL
- * - Parallel secondary fetches (gallery hydrate, rates, waiting, risman, legacy booking)
+ * - Parallel secondary fetches (gallery hydrate, rates, waiting, risman, getDoctorCenters for booking)
+ * - Online visit channels from drprofile /online-channels (not service-title heuristics)
  * - Saman availability is client-only on MS (does not block HTML)
  * - Hamdast SSR soft-budget
  * Legacy getAggregatedProfileData path is untouched.
@@ -129,7 +135,7 @@ export async function getAggregatedProfileDataFromMicroservice(
   const rismanDoctorId = buildRismanDoctorId(slugInfo.owner_id, slugInfo.server_id);
 
   const parallelStartedAt = Date.now();
-  const [drprofileGallery, rateDetailsResult, rismanResult, averageWaitingTimeResult] =
+  const [drprofileGallery, rateDetailsResult, rismanResult, averageWaitingTimeResult, doctorCenters] =
     await Promise.all([
       fetchDoctorGalleryFromDrprofile(validatedSlug, university).catch(error => {
         console.error('Error hydrating gallery from drprofile (microservice path):', error);
@@ -143,12 +149,18 @@ export async function getAggregatedProfileDataFromMicroservice(
             .catch(() => null)
         : Promise.resolve(null),
       getAverageWaitingTime({ slug: validatedSlug }).catch(() => null),
+      getDoctorCenters(validatedSlug, university, { onlyBookable: false }).catch(error => {
+        console.error('Error fetching drprofile centers for MS booking hydrate:', error);
+        return [] as Awaited<ReturnType<typeof getDoctorCenters>>;
+      }),
     ]);
   const parallel_ms = Date.now() - parallelStartedAt;
 
   if (Array.isArray(drprofileGallery) && drprofileGallery.length > 0) {
     overwrite.gallery = drprofileGallery;
   }
+
+  const bookingCentersOk = Array.isArray(doctorCenters) && doctorCenters.length > 0;
 
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
   const reviewsStartedAt = Date.now();
@@ -162,7 +174,7 @@ export async function getAggregatedProfileDataFromMicroservice(
     : { status: 'fulfilled' as const, value: null };
   const reviews_ms = Date.now() - reviewsStartedAt;
 
-  const mergedCenters = mergeMsLocationsWithLegacyBooking(msLocationsAsCenters as any[], null);
+  const mergedCenters = mergeMsLocationsWithLegacyBooking(msLocationsAsCenters as any[], doctorCenters);
   overwrite.centers = mergedCenters as any;
 
   overwrite.feedbacks = {
@@ -191,9 +203,10 @@ export async function getAggregatedProfileDataFromMicroservice(
   let centers = initialCenters;
   let onlineVisit = initialOnlineVisit;
 
-  // Only hydrate centers that lack usable service ids (do not always re-hit CONSULT).
+  // Always hydrate CONSULT; other centers only when service ids are missing/invalid.
   const centersNeedingServices = (centers || []).filter((center: any) => {
     if (!center?.id) return false;
+    if (String(center.id) === CENTERS.CONSULT) return true;
     return (
       !(center.services?.length > 0) || center.services.some((service: any) => isInvalidProfileServiceId(service?.id))
     );
@@ -284,6 +297,8 @@ export async function getAggregatedProfileDataFromMicroservice(
     reviews_ms,
     services_ms,
     widgets_ms,
+    legacy_fp_ok: bookingCentersOk,
+    booking_centers_ok: bookingCentersOk,
     services_hydrated: centersNeedingServices.length,
     saman_ssr: 'skipped_client',
     parallelized: true,
@@ -320,7 +335,6 @@ export async function getAggregatedProfileDataFromMicroservice(
       hamdastWidgetsData,
       user_id: information?.user_id ?? slugInfo.user_id ?? null,
       shouldFetchOnClient: false,
-      // Flag stays on for client hooks; MS SSR does not await Saman (TTFB).
       useSamanAvailabilityStatus: true,
       profile_backend: 'microservice',
       profile_api_id:

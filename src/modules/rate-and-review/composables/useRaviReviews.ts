@@ -1,5 +1,6 @@
 import debounce from 'lodash/debounce';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { trackRaviReviewEvent } from '../analytics/trackRaviReviewEvent';
 import { fetchReviewPage, PAGE_SIZE } from '../api';
 import { RaviReviewFilterValue, RaviReviewPage, RaviReviewPageInfo, RaviReviewQuery, RaviSort } from '../types';
 import { resolveFeedbackApiFilter } from '../utils/resolveFeedbackFilter';
@@ -61,10 +62,14 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
       lastRequestRef.current = { page: nextPage, sort: nextSort, filter: nextFilter, append };
       setIsLoading(true);
       setError(null);
+      const startedAt = typeof performance !== 'undefined' ? performance.now() : Date.now();
       try {
         const pageData = await fetchReviewPage(doctorSlug, toQuery(nextPage, nextSort, nextFilter));
         const previousList = append ? (stateBySlugRef.current[doctorSlug]?.list ?? []) : [];
         const nextList = append ? [...previousList, ...pageData.list] : pageData.list;
+        const durationMs = Math.round(
+          (typeof performance !== 'undefined' ? performance.now() : Date.now()) - startedAt,
+        );
 
         setList(nextList);
         setHasMore(pageData.hasMore);
@@ -81,8 +86,32 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
           filter: nextFilter,
           page: nextPage,
         };
+
+        void trackRaviReviewEvent({
+          event_type: 'review_list_load',
+          slug: doctorSlug,
+          page: nextPage,
+          sort: nextSort,
+          filter: nextFilter.type,
+          duration_ms: durationMs,
+          count: pageData.list.length,
+          ok: true,
+        });
       } catch {
+        const durationMs = Math.round(
+          (typeof performance !== 'undefined' ? performance.now() : Date.now()) - startedAt,
+        );
         setError('خطا در دریافت نظرات');
+        void trackRaviReviewEvent({
+          event_type: 'review_list_error',
+          slug: doctorSlug,
+          page: nextPage,
+          sort: nextSort,
+          filter: nextFilter.type,
+          duration_ms: durationMs,
+          ok: false,
+          error_code: 'REVIEW_LIST_ERROR',
+        });
       } finally {
         setIsLoading(false);
       }
@@ -151,9 +180,17 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
       applyDebouncedSearch.cancel();
       setIsSearchPending(false);
       setSort(value);
+      void trackRaviReviewEvent({
+        event_type: 'review_sort_change',
+        slug: doctorSlug,
+        page: 1,
+        sort: value,
+        filter: filter.type,
+        ok: true,
+      });
       run(1, value, filter, false);
     },
-    [applyDebouncedSearch, filter, run],
+    [applyDebouncedSearch, doctorSlug, filter, run],
   );
 
   const onFilter = useCallback(
@@ -161,9 +198,17 @@ export const useRaviReviews = (doctorSlug: string, userId?: string) => {
       applyDebouncedSearch.cancel();
       setIsSearchPending(false);
       setFilter(value);
+      void trackRaviReviewEvent({
+        event_type: 'review_filter_change',
+        slug: doctorSlug,
+        page: 1,
+        sort,
+        filter: value.type,
+        ok: true,
+      });
       run(1, sort, value, false);
     },
-    [applyDebouncedSearch, run, sort],
+    [applyDebouncedSearch, doctorSlug, run, sort],
   );
 
   const syncList = useCallback(
