@@ -9,4 +9,10 @@ describe('isRaviPatientMyReviewsMenu', () => {
     expect(isRaviPatientMyReviewsMenu('ravi', 'my_prifile_feedbacks')).toBe(false);
     expect(isRaviPatientMyReviewsMenu('drapp', 'my_feedbacks')).toBe(false);
   });
+
+  it('does not rewrite the parent نظرات branch itself', () => {
+    // Parent menu stays on hamdast; only the my_feedbacks child is remapped.
+    expect(isRaviPatientMyReviewsMenu('ravi', undefined)).toBe(false);
+    expect(isRaviPatientMyReviewsMenu('ravi', '')).toBe(false);
+  });
 });
