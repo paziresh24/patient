@@ -5,6 +5,7 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
+import { redirectToRaviMyReviewsFromContext } from '@/modules/patient/utils/redirectToRaviMyReviewsFromContext';
 import { RedirectToRaviMyReviews } from '@/modules/patient/views/redirectToRaviMyReviews';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
