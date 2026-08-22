@@ -6,19 +6,42 @@ import { AppFrame } from '@/modules/hamdast/appFrame';
 import { HamdastAppModal } from '@/modules/hamdast/components/appModal';
 import { prefetchOneApp } from '@/modules/hamdast/utils/prefetchOneApp';
 import ServiceCard from '@/modules/profile/components/serviceCard/serviceCard';
+import { addCommas } from '@persian-tools/persian-tools';
 import { useQueryClient } from '@tanstack/react-query';
 
 export const NoskheyarRenewal__ArgProps = new Array<any>('profileData', 'data', 'widgetData');
 
 const APP_KEY = 'nskhh_yar';
 
-export default function NoskheyarRenewal({ profileData }: { profileData?: any }) {
+function resolveServiceCostToman(data?: {
+  ok?: boolean;
+  amount_toman?: number;
+  amount_rial?: number;
+}): number | null {
+  if (!data || data.ok === false) return null;
+  if (typeof data.amount_toman === 'number' && Number.isFinite(data.amount_toman) && data.amount_toman > 0) {
+    return data.amount_toman;
+  }
+  if (typeof data.amount_rial === 'number' && Number.isFinite(data.amount_rial) && data.amount_rial > 0) {
+    return Math.round(data.amount_rial / 10);
+  }
+  return null;
+}
+
+export default function NoskheyarRenewal({
+  profileData,
+  data,
+}: {
+  profileData?: any;
+  data?: { ok?: boolean; amount_toman?: number; amount_rial?: number };
+}) {
   const queryClient = useQueryClient();
   const { handleOpen, handleClose, modalProps } = useModal();
 
   const doctorName = profileData?.information?.display_name?.trim?.() || '';
   const doctorUserId = profileData?.user_id;
   const doctorId = profileData?.information?.id;
+  const serviceCostToman = resolveServiceCostToman(data);
 
   const openRenewalFlow = () => {
     void prefetchOneApp(queryClient, { appKey: APP_KEY, pageKey: 'flows' }, ['SERVICE']);
@@ -31,6 +54,18 @@ export default function NoskheyarRenewal({ profileData }: { profileData?: any })
         header={{
           icon: <StatusIcon />,
           title: 'تمدید آنلاین نسخه',
+          badge: (
+            <span className="text-[10px] font-medium text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full whitespace-nowrap">
+              بدون نیاز به ویزیت
+            </span>
+          ),
+          ...(serviceCostToman != null && {
+            hint: (
+              <Text fontWeight="bold" fontSize="sm">
+                {addCommas(serviceCostToman)} تومان
+              </Text>
+            ),
+          }),
         }}
         body={{
           description: [

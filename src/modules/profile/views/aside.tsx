@@ -106,7 +106,14 @@ export const Aside = (data: any) => {
           isBulk,
         };
       },
-      children: (props: any) => <Services {...props} enabledWidgets={hamdastWidgets} dontShowDeactiveBox={!!fragmentComponents?.risman} />,
+      children: (props: any) => (
+        <Services
+          {...props}
+          enabledWidgets={hamdastWidgets}
+          hamdastWidgetsData={hamdastWidgetsData}
+          dontShowDeactiveBox={!!fragmentComponents?.risman}
+        />
+      ),
     },
     {
       id: 'risman',
@@ -123,8 +130,12 @@ export const Aside = (data: any) => {
     {
       isShow: !customize?.partnerKey,
       noWrapper: true,
-      children: () =>
-        hamdastWidgets
+      children: () => {
+        // When book-me/Services is shown, services-placement widgets render there (after online visit).
+        const servicesOwnsWidgets = centers?.length > 0 && (isMicroserviceProfile || !isSamanBookingEnabled);
+        if (servicesOwnsWidgets) return null;
+
+        return hamdastWidgets
           ?.filter((widget: any) => widget?.placement?.includes?.('services'))
           ?.map((widget: any) => (
             <Hamdast
@@ -138,7 +149,8 @@ export const Aside = (data: any) => {
                 placement_metadata: widget.placements_metadata,
               }}
             />
-          )),
+          ));
+      },
     },
     // Recommend
     {
