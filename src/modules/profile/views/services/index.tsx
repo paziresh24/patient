@@ -39,9 +39,15 @@ import { getProfileOnlineVisitVisibility } from '@/modules/profile/utils/onlineV
 import { shouldShowRismanExternalBooking } from '@/modules/profile/utils/rismanBookingVisibility';
 import { useChatLifecycleAutoCloseHours } from '@/common/apis/services/hami/chatLifecycleSettings';
 import { sendDoctorProfileEvent } from '@/modules/profile/events/nightBatEvents';
+
 const External = dynamic(() => import('./external'), {
   loading(loadingProps) {
     return <Skeleton w="100%" h="198px" rounded="lg" />;
+  },
+});
+const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ default: m.Hamdast })), {
+  loading() {
+    return <Skeleton w="100%" h="4rem" rounded="lg" />;
   },
 });
 
@@ -56,6 +62,7 @@ export const Services = ({
   profileData,
   isBulk,
   enabledWidgets,
+  hamdastWidgetsData,
   dontShowDeactiveBox,
 }: {
   id: string;
@@ -68,6 +75,7 @@ export const Services = ({
   profileData: any;
   isBulk: boolean;
   enabledWidgets?: any[];
+  hamdastWidgetsData?: Record<string, any>;
   dontShowDeactiveBox?: boolean;
 }) => {
   const router = useRouter();
@@ -208,6 +216,26 @@ export const Services = ({
   ]);
   const canBookPresence = !samanLoaded || scopedInPerson.bookingAvailable;
 
+  const servicesPlacementWidgets = useMemo(
+    () => enabledWidgets?.filter((widget: any) => widget?.placement?.includes?.('services')) ?? [],
+    [enabledWidgets],
+  );
+
+  const renderServicesPlacementWidgets = () =>
+    servicesPlacementWidgets.map((widget: any) => (
+      <Hamdast
+        key={widget.id}
+        id={widget.id}
+        app={widget?.app}
+        backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+        profileData={profileData}
+        widgetData={{
+          placement: widget?.placement,
+          placement_metadata: widget.placements_metadata,
+        }}
+      />
+    ));
+
   const samanHasNoBooking = samanLoaded && !scopedInPerson.bookingAvailable && !scopedOnlineVisit.bookingAvailable;
   const hasNoBooking = samanAvailability.isError ? true : samanLoaded ? samanHasNoBooking : false;
 
@@ -319,7 +347,9 @@ export const Services = ({
   };
 
   if (!customize?.partnerKey && showRismanExternalBooking && hasNoBooking) {
-    return null;
+    return servicesPlacementWidgets.length > 0 ? (
+      <div className="flex flex-col space-y-3">{renderServicesPlacementWidgets()}</div>
+    ) : null;
   }
 
   if (samanPending) {
@@ -343,12 +373,15 @@ export const Services = ({
     };
 
     return (
-      <BulkService
-        displayName={doctor.display_name}
-        expertises={expertises}
-        availableTime={sortedAvalaibleTime()}
-        dcotorCity={doctor?.city_en_slug}
-      />
+      <div className="flex flex-col space-y-3">
+        <BulkService
+          displayName={doctor.display_name}
+          expertises={expertises}
+          availableTime={sortedAvalaibleTime()}
+          dcotorCity={doctor?.city_en_slug}
+        />
+        {renderServicesPlacementWidgets()}
+      </div>
     );
   }
 
@@ -406,6 +439,7 @@ export const Services = ({
               </div>
             );
           })}
+        {renderServicesPlacementWidgets()}
         {showPresenceSection &&
           (showPresenceBulk ? (
             <BulkService
