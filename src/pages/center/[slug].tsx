@@ -650,7 +650,8 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       return {
         redirect: {
           statusCode: 301,
-          destination: `/dr/${doctorSlug}/`,
+          // Location header must be ASCII; Persian slugs need encodeURI
+          destination: encodeURI(`/dr/${doctorSlug}/`),
         },
       };
     }
@@ -679,7 +680,8 @@ export const getServerSideProps = withServerUtils(async (context: GetServerSideP
       return {
         redirect: {
           statusCode,
-          destination,
+          // Location header must be ASCII; Persian routes from slugProfile need encodeURI
+          destination: encodeURI(destination),
         },
       };
     }
