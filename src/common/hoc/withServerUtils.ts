@@ -24,10 +24,17 @@ export const withServerUtils = (next: GetServerSideProps & any) => async (ctx: G
 
   const data: any = await next?.(ctx, themeConfing);
 
+  // Next.js GSSP must return exactly one of: props | redirect | notFound.
+  // Spreading props onto a redirect/notFound response causes a 500
+  // (e.g. center slugProfile 301 rename redirects).
+  if (data?.redirect || data?.notFound) {
+    return data;
+  }
+
   return {
     ...data,
     props: {
-      ...data.props,
+      ...data?.props,
       query: ctx.query,
       themeConfing,
       host: getHost(ctx.req.headers),
