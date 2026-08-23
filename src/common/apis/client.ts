@@ -125,13 +125,7 @@ export const searchClient = axios.create({
 });
 
 export const clinicClient = axios.create({
-  // Local browser: proxy via custom server.js — clinic API CORS-blocks localhost Origin.
-  baseURL:
-    !isServer && process.env.NODE_ENV !== 'production'
-      ? '/__dev-proxy/clinic'
-      : publicRuntimeConfig.CLINIC_BASE_URL
-        ? publicRuntimeConfig.CLINIC_BASE_URL
-        : 'https://www.paziresh24.com',
+  baseURL: publicRuntimeConfig.CLINIC_BASE_URL ? publicRuntimeConfig.CLINIC_BASE_URL : 'https://www.paziresh24.com',
   withCredentials: true,
   ...baseConfig,
 });
