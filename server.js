@@ -11,16 +11,23 @@ const app = next({ dev, turbo });
 const handle = app.getRequestHandler();
 
 const SEARCH_PROXY_PREFIX = '/__dev-proxy/search';
+const CLINIC_PROXY_PREFIX = '/__dev-proxy/clinic';
+const CLINIC_UPSTREAM = (process.env.CLINIC_BASE_URL || 'https://www.paziresh24.com').replace(/\/$/, '');
 
-/**
- * Local-dev proxy for Search/Suggestion (apigw).
- * Browser Origin `https://localhost:3443` makes suggestion return `[]`;
- * allowlisted hosts (www / local.paziresh24.com) work. Proxy same-origin and
- * omit Origin/Referer so expertise lists load on localhost.
- */
-function proxySearchDev(req, res, pathname, search) {
-  const upstreamPath = pathname.slice(SEARCH_PROXY_PREFIX.length) || '/';
-  const target = `https://apigw.paziresh24.com${upstreamPath}${search || ''}`;
+/** @param {Record<string, string | string[] | undefined>} reqHeaders */
+function pickProxyHeaders(reqHeaders, names) {
+  /** @type {Record<string, string>} */
+  const headers = {};
+  for (const name of names) {
+    const value = reqHeaders[name];
+    if (value != null && value !== '') headers[name] = Array.isArray(value) ? value.join(', ') : value;
+  }
+  return headers;
+}
+
+function proxyDevUpstream(req, res, pathname, search, { prefix, upstreamOrigin, errorLabel, extraHeaders = [] }) {
+  const upstreamPath = pathname.slice(prefix.length) || '/';
+  const target = `${upstreamOrigin}${upstreamPath}${search || ''}`;
 
   const upstreamReq = https.request(
     target,
@@ -29,7 +36,8 @@ function proxySearchDev(req, res, pathname, search) {
       headers: {
         accept: req.headers.accept || 'application/json',
         'user-agent': req.headers['user-agent'] || 'patient-local-dev-proxy',
-        // Intentionally omit Origin / Referer — apigw filters localhost Origin.
+        ...pickProxyHeaders(req.headers, extraHeaders),
+        // Intentionally omit Origin / Referer — upstream filters localhost Origin.
       },
     },
     upstreamRes => {
@@ -43,7 +51,7 @@ function proxySearchDev(req, res, pathname, search) {
 
   upstreamReq.on('error', err => {
     res.writeHead(502, { 'content-type': 'application/json' });
-    res.end(JSON.stringify({ message: 'search proxy failed', error: err.message }));
+    res.end(JSON.stringify({ message: `${errorLabel} proxy failed`, error: err.message }));
   });
 
   if (req.method === 'GET' || req.method === 'HEAD') {
@@ -51,6 +59,33 @@ function proxySearchDev(req, res, pathname, search) {
   } else {
     req.pipe(upstreamReq);
   }
+}
+
+/**
+ * Local-dev proxy for Search/Suggestion (apigw).
+ * Browser Origin `https://localhost:3443` makes suggestion return `[]`;
+ * allowlisted hosts (www / local.paziresh24.com) work. Proxy same-origin and
+ * omit Origin/Referer so expertise lists load on localhost.
+ */
+function proxySearchDev(req, res, pathname, search) {
+  proxyDevUpstream(req, res, pathname, search, {
+    prefix: SEARCH_PROXY_PREFIX,
+    upstreamOrigin: 'https://apigw.paziresh24.com',
+    errorLabel: 'search',
+  });
+}
+
+/**
+ * Local-dev proxy for Clinic API (www.paziresh24.com).
+ * Browser cross-origin calls (setTerminal, getbaseinfo, …) are CORS-blocked from localhost.
+ */
+function proxyClinicDev(req, res, pathname, search) {
+  proxyDevUpstream(req, res, pathname, search, {
+    prefix: CLINIC_PROXY_PREFIX,
+    upstreamOrigin: CLINIC_UPSTREAM,
+    errorLabel: 'clinic',
+    extraHeaders: ['authorization', 'terminal_id', 'user_id', 'accept-timezone', 'content-type', 'cookie'],
+  });
 }
 
 (() => {
@@ -71,6 +106,10 @@ function proxySearchDev(req, res, pathname, search) {
 
       if (dev && pathname && pathname.startsWith(SEARCH_PROXY_PREFIX)) {
         return proxySearchDev(req, res, pathname, search);
+      }
+
+      if (dev && pathname && pathname.startsWith(CLINIC_PROXY_PREFIX)) {
+        return proxyClinicDev(req, res, pathname, search);
       }
 
       handle(req, res, parsedUrl);
