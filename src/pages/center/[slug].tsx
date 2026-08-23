@@ -1,6 +1,7 @@
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { slugProfile, useSlugProfile } from '@/common/apis/services/profile/slugProfile';
 import { search as searchApi } from '@/common/apis/services/search/search';
+import { normalizeSearchRoute } from '@/common/apis/services/search/route';
 import { useSearchSuggestion } from '@/common/apis/services/search/suggestion';
 import Button from '@/common/components/atom/button/button';
 import Loading from '@/common/components/atom/loading';
@@ -54,6 +55,81 @@ const normalizeExpertiseRoute = (raw: string): string => {
   return `ir/exp-${value}/`;
 };
 
+type ExpertiseOption = { label: string; value: string };
+
+/** Search suggestion API — tree section with sub_items (preferred when available). */
+const mapSuggestionExpertiseOptions = (data: unknown): ExpertiseOption[] => {
+  const sections = (data as any)?.[0]?.items ?? [];
+  const withSubs = sections.find((item: any) => Array.isArray(item?.sub_items) && item.sub_items.length > 0);
+  return (
+    withSubs?.sub_items
+      ?.filter((expertise: any) => expertise?.name && expertise?.url)
+      ?.map((expertise: any) => ({
+        label: expertise.name,
+        value: expertise.url,
+      })) ?? []
+  );
+};
+
+/** seapi expertise routes expect a trailing slash; normalizeSearchRoute strips it. */
+const toCenterSearchRoute = (route: string) => {
+  const normalized = normalizeSearchRoute(route);
+  if (!route?.trim()) return normalized;
+  return normalized.endsWith('/') ? normalized : `${normalized}/`;
+};
+
+const emptyCenterSearchPage = () =>
+  sanitizeCenterSearchResultPage({
+    search: { result: [], total: 0, pagination: { page: 1, limit: 20 } },
+  });
+
+const centerExpertiseRouteCandidates = (route: string): string[] => {
+  const normalized = toCenterSearchRoute(route);
+  if (!route?.trim()) return [normalized];
+
+  const candidates = [normalized];
+  const expMatch = normalized.match(/^ir\/exp-(.+?)\/?$/);
+  if (expMatch?.[1]) {
+    candidates.push(`ir/${expMatch[1]}`);
+  } else {
+    const bareMatch = normalized.match(/^ir\/([^/]+?)\/?$/);
+    if (bareMatch?.[1] && !bareMatch[1].startsWith('exp-')) {
+      candidates.push(`ir/exp-${bareMatch[1]}`);
+    }
+  }
+  return Array.from(new Set(candidates));
+};
+
+const fetchCenterDoctorsSearchPage = async (route: string, query: Record<string, unknown>) => {
+  const routes = centerExpertiseRouteCandidates(route);
+  let lastError: unknown;
+
+  for (const candidate of routes) {
+    try {
+      const page = await searchApi({ route: candidate, query });
+      return sanitizeCenterSearchResultPage(page);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        lastError = error;
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  if (lastError) throw lastError;
+  return emptyCenterSearchPage();
+};
+
+/** slugProfile already returns group_expertises; suggestion?return_expertise often returns []. */
+const mapProfileGroupExpertiseOptions = (groupExpertises: any[] | undefined): ExpertiseOption[] =>
+  (groupExpertises ?? [])
+    .filter((item: any) => item?.name && item?.en_slug)
+    .map((item: any) => ({
+      label: item.name,
+      value: `/s/ir/exp-${item.en_slug}/`,
+    }));
+
 const CenterProfile = ({
   query: { text, expertise },
   host,
@@ -94,7 +170,6 @@ const CenterProfile = ({
   useDebounce(
     () => {
       setDebouncedSearchTerm(searchQuery);
-      remove();
     },
     600,
     [searchQuery],
@@ -129,7 +204,6 @@ const CenterProfile = ({
     isLoading,
     isError: isDoctorsError,
     refetch: refetchDoctors,
-    remove,
   } = useInfiniteQuery({
     queryKey: [
       ServerStateKeysEnum.Search,
@@ -141,15 +215,18 @@ const CenterProfile = ({
       },
     ],
     queryFn: async ({ pageParam }) => {
-      const page = await searchApi({
-        route: selectedExpertise ?? '',
-        query: {
+      try {
+        return await fetchCenterDoctorsSearchPage(selectedExpertise ?? '', {
           ...filters,
           // page must win over any filter field so "load more" advances during search
           page: pageParam?.page ?? 1,
-        },
-      });
-      return sanitizeCenterSearchResultPage(page);
+        });
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          return emptyCenterSearchPage();
+        }
+        throw error;
+      }
     },
     getNextPageParam: lastPage => {
       const pagination = lastPage?.search?.pagination;
@@ -159,6 +236,7 @@ const CenterProfile = ({
     },
     enabled: !!centerId,
     refetchOnMount: false,
+    retry: 2,
     useErrorBoundary: false,
   });
 
@@ -175,23 +253,29 @@ const CenterProfile = ({
     },
   );
 
-  const defaultExpertise = useMemo(() => {
-    const matched = expertises.data?.[0]?.items?.[0]?.sub_items?.find(
-      (item: any) => item.url === `/s/${selectedExpertise}`,
-    );
+  const expertiseOptions = useMemo(() => {
+    const fromSuggestion = mapSuggestionExpertiseOptions(expertises.data);
+    if (fromSuggestion.length) return fromSuggestion;
+    return mapProfileGroupExpertiseOptions(profileData?.group_expertises);
+  }, [expertises.data, profileData?.group_expertises]);
 
-    if (matched?.name) {
+  const defaultExpertise = useMemo(() => {
+    if (!selectedExpertise) {
       return {
-        label: matched.name,
-        value: matched.url ?? `/s/${selectedExpertise}`,
+        label: 'همه تخصص ها',
+        value: '',
       };
     }
+
+    const matched = expertiseOptions.find(item => item.value === `/s/${selectedExpertise}`);
+
+    if (matched) return matched;
 
     return {
       label: 'همه تخصص ها',
       value: '',
     };
-  }, [expertises, selectedExpertise]);
+  }, [expertiseOptions, selectedExpertise]);
 
   useEffect(() => {
     growthbook.setAttributes({
@@ -450,8 +534,8 @@ const CenterProfile = ({
               image={getImageUrl(profileData?.image, publicRuntimeConfig.CDN_BASE_URL)}
               title={`${profileData?.group_expertises?.length ?? 0} تخصص پزشکی`}
               subTitle={`پزشک فعال: ${doctorsTotalHint}`}
-              serviceList={(profileData?.expertises ?? [])
-                .map((expertise: any) => expertise?.alias_title)
+              serviceList={(profileData?.expertises ?? profileData?.group_expertises ?? [])
+                .map((expertise: any) => expertise?.alias_title ?? expertise?.name)
                 .filter(Boolean)}
               toolBarItems={[
                 {
@@ -526,26 +610,13 @@ const CenterProfile = ({
                   <ListOfDoctors
                     isMainSite={isMainSite}
                     doctors={doctors}
-                    expertises={
-                      (() => {
-                        const sections = expertises.data?.[0]?.items ?? [];
-                        const withSubs = sections.find((item: any) => Array.isArray(item?.sub_items) && item.sub_items.length > 0);
-                        return (
-                          withSubs?.sub_items
-                            ?.filter((expertise: any) => expertise?.name && expertise?.url)
-                            ?.map((expertise: any) => ({
-                              label: expertise.name,
-                              value: expertise.url,
-                            })) ?? []
-                        );
-                      })()
-                    }
+                    expertises={expertiseOptions}
                     onChangePage={() => {
                       fetchNextPage();
                     }}
                     hasNextPage={hasNextPage ?? false}
                     showRateAndReviews={customize.showRateAndReviews}
-                    expertiseListLoading={expertises.isLoading}
+                    expertiseListLoading={expertises.isLoading && expertiseOptions.length === 0}
                     loading={isLoading}
                     isFetchingNextPage={isFetchingNextPage}
                     paginationResetKey={doctorsListResetKey}
