@@ -534,8 +534,8 @@ const CenterProfile = ({
               image={getImageUrl(profileData?.image, publicRuntimeConfig.CDN_BASE_URL)}
               title={`${profileData?.group_expertises?.length ?? 0} تخصص پزشکی`}
               subTitle={`پزشک فعال: ${doctorsTotalHint}`}
-              serviceList={(profileData?.expertises ?? profileData?.group_expertises ?? [])
-                .map((expertise: any) => expertise?.alias_title ?? expertise?.name)
+              serviceList={(profileData?.expertises ?? [])
+                .map((expertise: any) => expertise?.alias_title)
                 .filter(Boolean)}
               toolBarItems={[
                 {

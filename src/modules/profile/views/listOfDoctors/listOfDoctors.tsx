@@ -20,7 +20,7 @@ import { Fragment2 } from '@/common/fragment/fragment2';
 const { publicRuntimeConfig } = config();
 
 type ExpertiseType = {
-  label: string;
+  lable: string;
   value: string;
 };
 interface ListOfDoctorsProps {
