@@ -24,6 +24,8 @@ export const Turn: React.FC<TurnProps> = props => {
     id,
     serverId,
     isFromDashboard,
+    hasReviewed,
+    currentTime,
   } = props;
   const { t } = useTranslation();
 
@@ -70,6 +72,10 @@ export const Turn: React.FC<TurnProps> = props => {
         feedbackUrl={feedbackUrl}
         status={status}
         isFromDashboard={isFromDashboard}
+        isDelete={isDelete}
+        hasReviewed={hasReviewed}
+        bookTimestamp={turnDetails.bookTimestamp}
+        currentTime={currentTime}
       />
 
       <TurnFooter
