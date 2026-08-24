@@ -227,16 +227,19 @@ export const Appointments = () => {
               }}
               serverId={turn.server_id}
               feedbackUrl={
-                reviewedBookIdsQuery.isSuccess && !reviewedBookIds.has(String(turn.book_id))
+                user.id && reviewedBookIdsQuery.isSuccess
                   ? buildRaviSurveyUrl({
                       userId: String(user.id),
                       bookId: turn.book_id,
                       doctorSlug: turn.doctor_info?.slug,
                       centerId: turn.center?.id ?? turn.center_id,
                       doctorId: turn.doctor_info?.id,
+                      serverId: turn.server_id,
                     })
                   : null
               }
+              hasReviewed={reviewedBookIds.has(String(turn.book_id))}
+              currentTime={currentTime}
               prescription={{
                 ...turn.prescription,
               }}

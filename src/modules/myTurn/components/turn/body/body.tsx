@@ -1,8 +1,8 @@
 import useCustomize from '@/common/hooks/useCustomize';
-import { CENTERS } from '@/common/types/centers';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
+import { shouldShowAppointmentReviewCta } from '@/modules/myTurn/utils/shouldShowAppointmentReviewCta';
 import { useRouter } from 'next/router';
 import Location from '../../location/location';
 import Rate from '../../rate/rate';
@@ -25,18 +25,42 @@ interface TurnBodyProps {
   centerId: string;
   paymentStatus: PaymentStatus;
   isFromDashboard?: boolean;
+  isDelete?: boolean;
+  hasReviewed?: boolean;
+  bookTimestamp?: number;
+  currentTime?: number;
 }
 
 export const TurnBody: React.FC<TurnBodyProps> = props => {
-  const { detailsData, status, feedbackUrl, location, centerType, id, centerId, doctorInfo, paymentStatus, isFromDashboard } = props;
+  const {
+    detailsData,
+    status,
+    feedbackUrl,
+    location,
+    centerType,
+    id,
+    centerId,
+    doctorInfo,
+    paymentStatus,
+    isFromDashboard,
+    isDelete,
+    hasReviewed,
+    bookTimestamp,
+    currentTime,
+  } = props;
   const router = useRouter();
   const { customize } = useCustomize();
 
   const shouldShowLocation = centerType !== CenterType.consult;
   const shouldShowRate =
-    (status === BookStatus.expired || status === BookStatus.visited) &&
-    paymentStatus !== PaymentStatus.refunded &&
-    feedbackUrl;
+    Boolean(feedbackUrl) &&
+    shouldShowAppointmentReviewCta({
+      isDelete: Boolean(isDelete),
+      status,
+      paymentStatus,
+      bookTimestamp,
+      currentTime,
+    });
 
   const handleClickCard = () => {
     if (paymentStatus !== PaymentStatus.paying) {
@@ -57,6 +81,7 @@ export const TurnBody: React.FC<TurnBodyProps> = props => {
           centerId={centerId}
           doctorSlug={doctorInfo.slug}
           isFromDashboard={isFromDashboard}
+          hasReviewed={hasReviewed}
         />
       )}
     </>
