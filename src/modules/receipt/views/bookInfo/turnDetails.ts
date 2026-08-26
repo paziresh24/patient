@@ -82,7 +82,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
         value: bookTime,
         type: 'Text',
         isBoldValue: true,
-        calendarEvent: bookId ? { bookId, centerId } : undefined,
+        calendarEvent: bookId ? { bookId, centerId, isDeleted: Boolean(isDeleted) } : undefined,
       },
       {
         id: 3,
@@ -175,7 +175,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
       shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: true,
-      calendarEvent: bookId ? { bookId, centerId } : undefined,
+      calendarEvent: bookId ? { bookId, centerId, isDeleted: Boolean(isDeleted) } : undefined,
     },
     {
       id: 17,

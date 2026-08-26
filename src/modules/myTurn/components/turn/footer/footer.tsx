@@ -13,8 +13,10 @@ import Button from '@/components/atom/button';
 import Modal from '@/components/atom/modal';
 import MegaphoneIcon from '@/components/icons/megaphone';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { OnlineVisitCancelModal } from '@/modules/myTurn/components/onlineVisitCancelModal';
 import { WrongDoctorCancelSuccessModal } from '@/modules/myTurn/components/wrongDoctorCancelSuccessModal';
+import { cancelGhandonCalendarEvent } from '@/modules/receipt/components/GoogleCalendarAddEvent/cancelGhandonCalendarEvent';
 import deleteTurnQuestion from '@/modules/myTurn/constants/deleteTurnQuestion.json';
 import {
   getExpiredOnlineVisitCancelReasons,
@@ -127,6 +129,7 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
   const router = useRouter();
   const { removeBookApi } = useBookAction();
   const { removeBook, moveBook } = useBookStore();
+  const userId = useUserInfoStore(state => state.info?.id?.toString());
   const [reasonDeleteTurn, setReasonDeleteTurn] = useState<string | null>(null);
   const [isBookInPersonLoading, setIsBookInPersonLoading] = useState(false);
   const safeCallModuleInfo = useFeatureValue<any>('online_visit_secure_call', {});
@@ -200,6 +203,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
       {
         onSuccess: data => {
           if (data.data?.status === ClinicStatus?.SUCCESS) {
+            cancelGhandonCalendarEvent({
+              user_id: userId,
+              book_id: id,
+            });
             toast.success(data.data?.message);
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
@@ -230,6 +237,10 @@ export const TurnFooter: React.FC<TurnFooterProps> = props => {
           if (data.data?.status) {
             toast.error(data.data.message ?? data.data?.[0]?.message);
           } else {
+            cancelGhandonCalendarEvent({
+              user_id: userId,
+              book_id: id,
+            });
             removeBook({ bookId: id });
             handleCloseRemoveTurnModal();
             toast.success(data.data.message ?? data.data?.[0]?.message);

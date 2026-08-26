@@ -6,6 +6,7 @@ import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormEvent, MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { cancelGhandonCalendarEvent } from './cancelGhandonCalendarEvent';
 import { ADD_EVENT_API_PATH } from './constants';
 import { GoogleCalendarEmailModal } from './GoogleCalendarEmailModal';
 import styles from './googleCalendarAddEvent.module.css';
@@ -16,9 +17,10 @@ type IconStatus = 'idle' | 'loading' | 'success';
 export interface GoogleCalendarAddEventProps {
   bookId: string;
   centerId: string;
+  isDeleted?: boolean;
 }
 
-export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEventProps) => {
+export const GoogleCalendarAddEvent = ({ bookId, centerId, isDeleted = false }: GoogleCalendarAddEventProps) => {
   const normalizedBookId = bookId?.trim() ?? '';
   const normalizedCenterId = centerId?.trim() ?? '';
 
@@ -30,6 +32,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const isActiveRef = useRef(true);
   const isSubmittingRef = useRef(false);
   const autoSyncAttemptedRef = useRef(false);
+  const cancelAttemptedRef = useRef(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const { data: preference } = useGhandonPreference(isLogin);
@@ -102,6 +105,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   useEffect(() => {
     console.info(`[Ghandon-Front] Book changed to [${normalizedBookId}]. Refreshing local states.`);
     autoSyncAttemptedRef.current = false;
+    cancelAttemptedRef.current = false;
     const savedSubmittedEmail = getSubmittedEmail(normalizedCenterId, normalizedBookId);
 
     setSubmittedEmail(savedSubmittedEmail);
@@ -112,7 +116,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   }, [normalizedBookId, normalizedCenterId]);
 
   useEffect(() => {
-    if (!activeAutoSyncEnabled || !activePreferenceEmail) {
+    if (isDeleted || !activeAutoSyncEnabled || !activePreferenceEmail) {
       return;
     }
 
@@ -123,7 +127,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     if (getSubmittedEmail(normalizedCenterId, normalizedBookId)) {
       setIconStatus(prev => (prev === 'loading' ? prev : 'success'));
     }
-  }, [activeAutoSyncEnabled, normalizedBookId, normalizedCenterId, activePreferenceEmail]);
+  }, [activeAutoSyncEnabled, isDeleted, normalizedBookId, normalizedCenterId, activePreferenceEmail]);
 
   useEffect(() => {
     if (!modalProps.isOpen) {
@@ -151,6 +155,11 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
 
   const sendToCalendar = useCallback(
     async (targetEmail: string, options?: { silent?: boolean }) => {
+      if (isDeleted) {
+        console.warn(`[Ghandon-Front] Aborting sendToCalendar. Appointment is deleted.`);
+        return;
+      }
+
       if (!normalizedBookId || !normalizedCenterId || !isValidEmail(targetEmail)) {
         console.warn(`[Ghandon-Front] Aborting sendToCalendar. Validation failed:`, {
           bookId: normalizedBookId,
@@ -216,11 +225,11 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
         }
       }
     },
-    [normalizedBookId, normalizedCenterId, user_id],
+    [isDeleted, normalizedBookId, normalizedCenterId, user_id],
   );
 
   useEffect(() => {
-    if (!activeAutoSyncEnabled || !activePreferenceEmail || autoSyncAttemptedRef.current) {
+    if (isDeleted || !activeAutoSyncEnabled || !activePreferenceEmail || autoSyncAttemptedRef.current) {
       return;
     }
 
@@ -231,11 +240,24 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
     console.info(`[Ghandon-Front] Triggering automated background sync for Book ID: ${normalizedBookId}`);
     autoSyncAttemptedRef.current = true;
     sendToCalendar(activePreferenceEmail, { silent: true });
-  }, [activeAutoSyncEnabled, normalizedBookId, normalizedCenterId, activePreferenceEmail, sendToCalendar]);
+  }, [activeAutoSyncEnabled, isDeleted, normalizedBookId, normalizedCenterId, activePreferenceEmail, sendToCalendar]);
+
+  useEffect(() => {
+    if (!isDeleted || !normalizedBookId || !user_id || cancelAttemptedRef.current) {
+      return;
+    }
+
+    cancelAttemptedRef.current = true;
+    cancelGhandonCalendarEvent({ user_id, book_id: normalizedBookId });
+  }, [isDeleted, normalizedBookId, user_id]);
 
   const handleIconClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     event.stopPropagation();
+
+    if (isDeleted) {
+      return;
+    }
 
     console.info(`[Ghandon-Front] Calendar icon clicked. Status: ${iconStatus}`);
 
@@ -261,7 +283,7 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
-    if (isSubmittingRef.current) {
+    if (isDeleted || isSubmittingRef.current) {
       return;
     }
 
@@ -370,18 +392,19 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
   const isLocked = Boolean(submittedEmail) && !isEditing;
 
   const iconClassName = classNames(styles.icon, {
-    [styles.iconLoading]: iconStatus === 'loading',
-    [styles.iconSuccess]: iconStatus === 'success',
+    [styles.iconLoading]: !isDeleted && iconStatus === 'loading',
+    [styles.iconSuccess]: !isDeleted && iconStatus === 'success',
   });
 
-  const triggerTitle =
-    iconStatus === 'loading'
+  const triggerTitle = isDeleted
+    ? 'نوبت لغو شده است'
+    : iconStatus === 'loading'
       ? 'در حال ارسال دعوتنامه...'
       : activeAutoSyncEnabled && iconStatus === 'success'
-      ? 'نوبت‌ها به‌صورت خودکار به Google Calendar اضافه می‌شوند'
-      : iconStatus === 'success'
-      ? 'نوبت به Google Calendar اضافه شده'
-      : 'برای افزودن نوبت به Google Calendar کلیک کنید';
+        ? 'نوبت‌ها به‌صورت خودکار به Google Calendar اضافه می‌شوند'
+        : iconStatus === 'success'
+          ? 'نوبت به Google Calendar اضافه شده'
+          : 'برای افزودن نوبت به Google Calendar کلیک کنید';
 
   return (
     <>
@@ -390,33 +413,37 @@ export const GoogleCalendarAddEvent = ({ bookId, centerId }: GoogleCalendarAddEv
           type="button"
           aria-label={triggerTitle}
           title={triggerTitle}
-          aria-busy={iconStatus === 'loading'}
-          aria-expanded={modalProps.isOpen}
+          aria-busy={!isDeleted && iconStatus === 'loading'}
+          aria-disabled={isDeleted}
+          aria-expanded={!isDeleted && modalProps.isOpen}
           className={classNames(styles.trigger, {
-            [styles.triggerLoading]: iconStatus === 'loading',
+            [styles.triggerLoading]: !isDeleted && iconStatus === 'loading',
+            [styles.triggerDisabled]: isDeleted,
           })}
           onClick={handleIconClick}
-          disabled={iconStatus === 'loading'}
+          disabled={isDeleted || iconStatus === 'loading'}
         >
           <GoogleCalendarIcon className={iconClassName} width={26} height={26} aria-hidden />
         </button>
       </div>
 
-      <GoogleCalendarEmailModal
-        isOpen={modalProps.isOpen}
-        isSaving={isSaving}
-        email={email}
-        isLocked={isLocked}
-        autoSync={autoSync}
-        initialAutoSync={initialAutoSync}
-        showAutoSyncOption={isLogin}
-        inputRef={inputRef}
-        onClose={handleModalClose}
-        onEdit={handleEdit}
-        onAutoSyncChange={setAutoSync}
-        onEmailChange={setEmail}
-        onSubmit={handleSubmit}
-      />
+      {!isDeleted && (
+        <GoogleCalendarEmailModal
+          isOpen={modalProps.isOpen}
+          isSaving={isSaving}
+          email={email}
+          isLocked={isLocked}
+          autoSync={autoSync}
+          initialAutoSync={initialAutoSync}
+          showAutoSyncOption={isLogin}
+          inputRef={inputRef}
+          onClose={handleModalClose}
+          onEdit={handleEdit}
+          onAutoSyncChange={setAutoSync}
+          onEmailChange={setEmail}
+          onSubmit={handleSubmit}
+        />
+      )}
     </>
   );
 };

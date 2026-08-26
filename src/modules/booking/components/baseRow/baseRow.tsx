@@ -17,7 +17,7 @@ export type Data = {
   copyable?: boolean;
   isOpen?: boolean;
   suffix?: ReactNode;
-  calendarEvent?: { bookId: string; centerId: string };
+  calendarEvent?: { bookId: string; centerId: string; isDeleted?: boolean };
 };
 
 interface BaseRowProps {
@@ -40,7 +40,11 @@ export const BaseRow = (props: BaseRowProps) => {
             copyable={data.copyable}
             suffix={
               data.calendarEvent ? (
-                <GoogleCalendarAddEventButton bookId={data.calendarEvent.bookId} centerId={data.calendarEvent.centerId} />
+                <GoogleCalendarAddEventButton
+                  bookId={data.calendarEvent.bookId}
+                  centerId={data.calendarEvent.centerId}
+                  isDeleted={data.calendarEvent.isDeleted}
+                />
               ) : (
                 data.suffix
               )

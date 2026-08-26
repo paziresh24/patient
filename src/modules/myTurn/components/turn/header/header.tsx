@@ -9,10 +9,12 @@ import ReceiptIcon from '@/components/icons/receipt';
 import ShareIcon from '@/components/icons/share';
 import ThreeDotsIcon from '@/components/icons/threeDots';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
+import { cancelGhandonCalendarEvent } from '@/modules/receipt/components/GoogleCalendarAddEvent/cancelGhandonCalendarEvent';
 import { getAppointmentDoctor } from '@/common/apis/services/booking/getAppointmentDoctor';
 import { PIC_USER_IMAGE_FALLBACK_URL, picUserImageUrl } from '@/common/utils/picUserImageUrl';
 import Link from 'next/link';
@@ -50,6 +52,7 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
 
   const { removeBook } = useBookStore();
   const { shareTurn, removeBookApi } = useBookAction();
+  const userId = useUserInfoStore(state => state.info?.id?.toString());
 
   const shouldShowTagStatus = centerType === CenterType.consult ? status !== BookStatus.expired : status !== BookStatus.notVisited;
 
@@ -64,6 +67,10 @@ export const TurnHeader: React.FC<TurnHeaderProps> = props => {
       {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
+            cancelGhandonCalendarEvent({
+              user_id: userId,
+              book_id: id,
+            });
             removeBook({ bookId: id });
             handleCloseRemoveModal();
             return;

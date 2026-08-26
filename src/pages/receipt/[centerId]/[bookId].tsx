@@ -43,6 +43,7 @@ import {
   WRONG_DOCTOR_CANCEL_REASON,
 } from '@/modules/myTurn/constants/deleteTurnReasons';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { cancelGhandonCalendarEvent } from '@/modules/receipt/components/GoogleCalendarAddEvent/cancelGhandonCalendarEvent';
 import BookInfo from '@/modules/receipt/views/bookInfo/bookInfo';
 import ReceiptError from '@/modules/receipt/components/ReceiptError';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
@@ -577,6 +578,10 @@ const Receipt = () => {
       {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
+            cancelGhandonCalendarEvent({
+              user_id: user?.id?.toString(),
+              book_id: bookId as string,
+            });
             handleCloseRemoveModal();
             toast.success(data.data?.message);
             if (centerType === 'consult') {
@@ -606,6 +611,10 @@ const Receipt = () => {
           if (data.data?.status) {
             toast.error(data.data.message ?? data.data?.[0]?.message);
           } else {
+            cancelGhandonCalendarEvent({
+              user_id: user?.id?.toString(),
+              book_id: bookId as string,
+            });
             handleCloseRemoveModal();
             toast.success(data.data.message ?? data.data?.[0]?.message);
             if (reasonDeleteTurn === WRONG_DOCTOR_CANCEL_REASON) {
@@ -673,6 +682,10 @@ const Receipt = () => {
       {
         onSuccess: data => {
           if (data.data.status === ClinicStatus.SUCCESS) {
+            cancelGhandonCalendarEvent({
+              user_id: user?.id?.toString(),
+              book_id: bookId as string,
+            });
             handleCloseRemoveModal();
             toast.success(data.data?.message);
             splunkInstance('doctor-profile').sendEvent({
@@ -699,6 +712,10 @@ const Receipt = () => {
           if (data.data?.status) {
             toast.error(data.data.message ?? data.data?.[0]?.message);
           } else {
+            cancelGhandonCalendarEvent({
+              user_id: user?.id?.toString(),
+              book_id: bookId as string,
+            });
             handleCloseRemoveModal();
             toast.success(data.data.message ?? data.data?.[0]?.message);
             const doctorSlug = bookDetailsData?.doctor?.slug ?? resolvedDoctorSlug;
