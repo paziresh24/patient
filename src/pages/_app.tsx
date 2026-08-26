@@ -45,6 +45,7 @@ import { RismanSurveyScript } from "@/common/components/layouts/RismanSurveyScri
 import { RoutedExternalScripts } from "@/common/components/layouts/RoutedExternalScripts";
 import { useNotificationPermission } from "@/common/hooks/useNotificationPermission";
 import { sendWebVital } from "@/common/services/rum/webVitals";
+import { scheduleGozargahTokenUpgrade } from "@/modules/login/utils/gozargahTokenUpgrade";
 const { publicRuntimeConfig } = getConfig();
 const isEnabledGrowthbook =
   !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
@@ -151,6 +152,13 @@ function MyApp(props: AppProps) {
   useNotificationPermission({
     autoSubscribe: isLogin // فقط وقتی login است auto-subscribe کند
   });
+
+  // Silent gozargah_token RS256 refresh for sessions that still only have legacy cookies.
+  useEffect(() => {
+    if (!isLogin) return;
+    scheduleGozargahTokenUpgrade();
+  }, [isLogin]);
+
   useEffect(() => {
     if (isGtmDisabled || gtmEnabledRef.current) return;
     const isDoctorPage =
