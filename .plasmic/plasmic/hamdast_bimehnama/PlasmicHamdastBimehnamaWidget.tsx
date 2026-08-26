@@ -62,10 +62,11 @@ import {
 import Collapsible from "../../Collapsible"; // plasmic-import: kYXN54tCkD2S/component
 import LineClamp from "../../LineClamp"; // plasmic-import: fa_t7ELXcm5k/component
 import Button from "../../Button"; // plasmic-import: oVzoHzMf1TLl/component
+import { _useGlobalVariants } from "./plasmic"; // plasmic-import: k6ZwKcaHfkxemp7yqC1vbY/projectModule
+import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: k6ZwKcaHfkxemp7yqC1vbY/styleTokensProvider
 
 import "@plasmicapp/react-web/lib/plasmic.css";
 
-import plasmic_fragment_design_system_css from "../fragment_design_system/plasmic.module.css"; // plasmic-import: h9Dbk9ygddw7UVEq1NNhKi/projectcss
 import projectcss from "./plasmic.module.css"; // plasmic-import: k6ZwKcaHfkxemp7yqC1vbY/projectcss
 import sty from "./PlasmicHamdastBimehnamaWidget.module.css"; // plasmic-import: 6-Wp84uf7hB4/css
 
@@ -138,21 +139,20 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
   const refsRef = React.useRef({});
   const $refs = refsRef.current;
 
+  const styleTokensClassNames = _useStyleTokens();
+
   return (
-    <Stack__
-      as={"div"}
+    <div
       data-plasmic-name={"root"}
       data-plasmic-override={overrides.root}
       data-plasmic-root={true}
       data-plasmic-for-node={forNode}
-      hasGap={true}
       className={classNames(
         projectcss.all,
         projectcss.root_reset,
         projectcss.plasmic_default_styles,
         projectcss.plasmic_mixins,
-        projectcss.plasmic_tokens,
-        plasmic_fragment_design_system_css.plasmic_tokens,
+        styleTokensClassNames,
         sty.root
       )}
     >
@@ -169,11 +169,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
           }
         </div>
       </div>
-      <Stack__
-        as={"div"}
-        hasGap={true}
-        className={classNames(projectcss.all, sty.freeBox__oziL8)}
-      >
+      <div className={classNames(projectcss.all, sty.freeBox__oziL8)}>
         <div
           className={classNames(
             projectcss.all,
@@ -269,11 +265,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
               />
             }
             slot2={
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__nj0VK)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__nj0VK)}>
                 {(() => {
                   try {
                     return $props.data.base?.length > 0;
@@ -287,9 +279,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                     throw e;
                   }
                 })() ? (
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__deuB)}
                   >
                     <IconIcon
@@ -306,7 +296,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                     >
                       {"\u0628\u06cc\u0645\u0647 \u067e\u0627\u06cc\u0647"}
                     </div>
-                  </Stack__>
+                  </div>
                 ) : null}
                 {(() => {
                   try {
@@ -343,9 +333,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
                       return (
-                        <Stack__
-                          as={"div"}
-                          hasGap={true}
+                        <div
                           className={classNames(
                             projectcss.all,
                             sty.freeBox__x3O2J
@@ -417,7 +405,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                               </React.Fragment>
                             </div>
                           </LineClamp>
-                        </Stack__>
+                        </div>
                       );
                     })}
                   </div>
@@ -435,9 +423,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                     throw e;
                   }
                 })() ? (
-                  <Stack__
-                    as={"div"}
-                    hasGap={true}
+                  <div
                     className={classNames(projectcss.all, sty.freeBox__hoqek)}
                   >
                     <IconIcon
@@ -456,7 +442,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                         "\u0628\u06cc\u0645\u0647 \u062a\u06a9\u0645\u06cc\u0644\u06cc"
                       }
                     </div>
-                  </Stack__>
+                  </div>
                 ) : null}
                 {(() => {
                   try {
@@ -493,9 +479,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                       const currentItem = __plasmic_item_0;
                       const currentIndex = __plasmic_idx_0;
                       return (
-                        <Stack__
-                          as={"div"}
-                          hasGap={true}
+                        <div
                           className={classNames(
                             projectcss.all,
                             sty.freeBox__vZmO1
@@ -567,12 +551,12 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                               </React.Fragment>
                             </div>
                           </LineClamp>
-                        </Stack__>
+                        </div>
                       );
                     })}
                   </div>
                 ) : null}
-              </Stack__>
+              </div>
             }
           >
             <Button
@@ -615,11 +599,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
             throw e;
           }
         })() ? (
-          <Stack__
-            as={"div"}
-            hasGap={true}
-            className={classNames(projectcss.all, sty.freeBox__q4QJr)}
-          >
+          <div className={classNames(projectcss.all, sty.freeBox__q4QJr)}>
             {(() => {
               try {
                 return $props.data.base?.length > 0;
@@ -633,11 +613,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                 throw e;
               }
             })() ? (
-              <Stack__
-                as={"div"}
-                hasGap={true}
-                className={classNames(projectcss.all, sty.freeBox__zlFK)}
-              >
+              <div className={classNames(projectcss.all, sty.freeBox__zlFK)}>
                 <IconIcon
                   className={classNames(projectcss.all, sty.svg__idcSb)}
                   role={"img"}
@@ -652,7 +628,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                 >
                   {"\u0628\u06cc\u0645\u0647 \u067e\u0627\u06cc\u0647"}
                 </div>
-              </Stack__>
+              </div>
             ) : null}
             {(() => {
               try {
@@ -686,9 +662,7 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                   const currentItem = __plasmic_item_0;
                   const currentIndex = __plasmic_idx_0;
                   return (
-                    <Stack__
-                      as={"div"}
-                      hasGap={true}
+                    <div
                       className={classNames(projectcss.all, sty.freeBox__on7Fg)}
                       key={currentIndex}
                     >
@@ -755,15 +729,15 @@ function PlasmicHamdastBimehnamaWidget__RenderFunc(props: {
                           </React.Fragment>
                         </div>
                       </LineClamp>
-                    </Stack__>
+                    </div>
                   );
                 })}
               </div>
             ) : null}
-          </Stack__>
+          </div>
         ) : null}
-      </Stack__>
-    </Stack__>
+      </div>
+    </div>
   ) as React.ReactElement | null;
 }
 
@@ -793,15 +767,15 @@ type NodeComponentProps<T extends NodeNameType> =
     args?: PlasmicHamdastBimehnamaWidget__ArgsType;
     overrides?: NodeOverridesType<T>;
   } & Omit<PlasmicHamdastBimehnamaWidget__VariantsArgs, ReservedPropsType> & // Specify variants directly as props
-    /* Specify args directly as props*/ Omit<
-      PlasmicHamdastBimehnamaWidget__ArgsType,
-      ReservedPropsType
-    > &
-    /* Specify overrides for each element directly as props*/ Omit<
+    // Specify args directly as props
+    Omit<PlasmicHamdastBimehnamaWidget__ArgsType, ReservedPropsType> &
+    // Specify overrides for each element directly as props
+    Omit<
       NodeOverridesType<T>,
       ReservedPropsType | VariantPropType | ArgPropType
     > &
-    /* Specify props for the root element*/ Omit<
+    // Specify props for the root element
+    Omit<
       Partial<React.ComponentProps<NodeDefaultElementType[T]>>,
       ReservedPropsType | VariantPropType | ArgPropType | DescendantsType<T>
     >;
