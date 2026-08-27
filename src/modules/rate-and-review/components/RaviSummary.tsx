@@ -5,7 +5,7 @@ import { averageFromBreakdown, toFixedRating } from '../utils/rating';
 import { RaviDoctorHideRatesBanner, RaviLowReviewCountBanner } from './RaviSummaryBanners';
 
 const SATISFACTION_HINT =
-  'درصد رضایت، حاصل میانگین سه پارامتر «برخورد»، «توضیح» و «مهارت و تخصص» پزشک می‌باشد که همگی توسط بیماران اعلام گردیده‌اند.';
+  'درصد رضایت، حاصل میانگین سه پارامتر «برخورد»، «توضیح» و «رسیدگی پزشک و مشخص بودن مسیر درمان» می‌باشد که همگی توسط بیماران اعلام گردیده‌اند.';
 
 interface RaviSummaryProps {
   displayName?: string;

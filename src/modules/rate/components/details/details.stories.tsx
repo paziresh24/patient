@@ -22,6 +22,6 @@ Default.args = {
   information: [
     { id: 1, title: 'رضایت پزشک', satisfaction: 40, avg_star: 4.6 },
     { id: 2, title: 'توضیح در هنگام ویزیت', satisfaction: 50, avg_star: 3.9 },
-    { id: 3, title: 'مهارت و تخصص', satisfaction: 80, avg_star: 4.4 },
+    { id: 3, title: 'رسیدگی پزشک و مشخص بودن مسیر درمان', satisfaction: 80, avg_star: 4.4 },
   ],
 };
