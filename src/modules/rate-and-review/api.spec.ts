@@ -60,7 +60,7 @@ describe('rate-and-review api', () => {
       items: [
         { label: 'برخورد مناسب', value: 4.1 },
         { label: 'توضیح در هنگام ویزیت', value: 4.3 },
-        { label: 'مهارت و تخصص', value: 4.5 },
+        { label: 'رسیدگی پزشک و مشخص بودن مسیر درمان', value: 4.5 },
       ],
     });
 

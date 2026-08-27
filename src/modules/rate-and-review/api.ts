@@ -32,7 +32,7 @@ export const fetchRateSummary = async (doctorSlug: string): Promise<RaviRateSumm
       items: [
         { label: 'برخورد مناسب', value: Number(data?.doctor_encounter) || 0 },
         { label: 'توضیح در هنگام ویزیت', value: Number(data?.explanation_of_issue) || 0 },
-        { label: 'مهارت و تخصص', value: Number(data?.quality_of_treatment) || 0 },
+        { label: 'رسیدگی پزشک و مشخص بودن مسیر درمان', value: Number(data?.quality_of_treatment) || 0 },
       ],
     };
   } catch (error) {
