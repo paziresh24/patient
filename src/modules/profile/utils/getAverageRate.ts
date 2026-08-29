@@ -23,3 +23,9 @@ export function formatAverageRate(averageRates?: AverageRates | null): string | 
   const avg = getAverageRate(averageRates);
   return avg == null ? undefined : avg.toFixed(1);
 }
+
+/** Profile SEO / card percent — 5-star average scaled to 0–100. */
+export function getSatisfactionPercent(averageRates?: AverageRates | null): number | null {
+  const avg = getAverageRate(averageRates);
+  return avg == null ? null : Number((avg * 20).toFixed(0));
+}

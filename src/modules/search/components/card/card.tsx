@@ -33,6 +33,8 @@ interface SearchCardProps {
     rate?: {
       satisfaction: number;
       count: number;
+      /** When set, shown instead of `{satisfaction}٪` (profile-style "5.0 از ۵"). */
+      text?: string;
     };
   };
   type: 'center' | 'doctor';
@@ -117,7 +119,7 @@ export const SearchCard = (props: SearchCardProps) => {
               <div className="flex items-center space-s-1">
                 <LikeIcon width={22} height={22} className="text-primary" />
                 <Text fontWeight="medium" className="text-primary">
-                  {baseInfo?.rate?.satisfaction}٪
+                  {baseInfo?.rate?.text ?? `${baseInfo?.rate?.satisfaction}٪`}
                 </Text>
                 <Text>({baseInfo?.rate?.count} نظر)</Text>
               </div>
