@@ -15,6 +15,7 @@ import {
   NEW_ONLINE_VISIT_BOX_FEATURE,
   isNewOnlineVisitBoxEnabled,
 } from '@/modules/profile/utils/isNewOnlineVisitBoxEnabled';
+import { replaceOnlineVisitHeading } from '@/modules/profile/utils/replaceOnlineVisitHeading';
 
 export interface ServicesProps extends DefaultServicesProps {}
 
@@ -64,7 +65,11 @@ function Services_(props: ServicesProps, ref: HTMLElementRefOf<'div'>) {
 
   return (
     <PlasmicServices
-      root={{ ref, 'data-new-online-visit-box': 'on' }}
+      root={{
+        ref,
+        'data-new-online-visit-box': 'on',
+        wrapChildren: replaceOnlineVisitHeading,
+      }}
       {...props}
       waitingTimeInfo={hideConsultWaitingTime(props.waitingTimeInfo)}
       button={{ children2: buildOnlineVisitCtaText(displayName, freeturnMs) }}
