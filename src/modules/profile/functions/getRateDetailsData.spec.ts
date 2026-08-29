@@ -1,5 +1,5 @@
 import { fetchDoctorRate } from '@/common/apis/services/reviews/rateDoctor';
-import { getRateDetailsData } from './getRateDetailsData';
+import { getRateDetailsData, mapRateDetailsToCardRate } from './getRateDetailsData';
 
 jest.mock('@/common/apis/services/reviews/rateDoctor', () => ({
   fetchDoctorRate: jest.fn(),
@@ -51,5 +51,33 @@ describe('getRateDetailsData', () => {
       hide_rates: false,
       countOfFeedbacks: null,
     });
+  });
+});
+
+describe('mapRateDetailsToCardRate', () => {
+  const visibleDetails = {
+    averageRates: {
+      average_quality_of_treatment: '4.9',
+      average_doctor_encounter: '4.9',
+      average_explanation_of_issue: '4.9',
+    },
+    hide_rates: false,
+    countOfFeedbacks: 502,
+  };
+
+  it('returns profile-style score text and count_rates', () => {
+    expect(mapRateDetailsToCardRate(visibleDetails)).toEqual({
+      count: 502,
+      satisfaction: 98,
+      text: '4.9 از ۵',
+    });
+  });
+
+  it('hides the rate when hide_rates is on', () => {
+    expect(mapRateDetailsToCardRate({ ...visibleDetails, hide_rates: true })).toBeUndefined();
+  });
+
+  it('hides the rate when count is below the profile visible minimum', () => {
+    expect(mapRateDetailsToCardRate({ ...visibleDetails, countOfFeedbacks: 4 })).toBeUndefined();
   });
 });

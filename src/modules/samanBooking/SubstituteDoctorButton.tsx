@@ -7,6 +7,7 @@ import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
 import buildSubstituteDoctorSearch from '@/common/utils/buildSubstituteDoctorSearch';
 import { splunkInstance } from '@/common/services/splunk';
+import { doctorSlugFromSearchHit, useRaviCardRate } from '@/modules/profile/hooks/useDoctorRateDetails';
 import SearchCard from '@/modules/search/components/card/card';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import random from 'lodash/random';
@@ -82,6 +83,7 @@ const SubstituteDoctorButton = ({
   };
 
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
+  const raviRate = useRaviCardRate(doctorSlugFromSearchHit(substituteDoctor));
 
   useEffect(() => {
     if (substituteDoctor?.url && autoOpenDelay > 0) {
@@ -124,10 +126,7 @@ const SubstituteDoctorButton = ({
                   expertise: substituteDoctor.display_expertise,
                   isVerify: true,
                   avatar: substituteDoctor.image,
-                  rate: {
-                    count: substituteDoctor.rates_count,
-                    satisfaction: substituteDoctor.satisfaction,
-                  },
+                  rate: raviRate,
                   isOnline: true,
                 }}
                 type="doctor"

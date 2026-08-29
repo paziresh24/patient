@@ -60,6 +60,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import SearchCard from '@/modules/search/components/card/card';
+import { doctorSlugFromSearchHit, useRaviCardRate } from '@/modules/profile/hooks/useDoctorRateDetails';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import axios from 'axios';
 import moment from 'jalali-moment';
@@ -227,6 +228,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     },
   );
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
+  const raviRate = useRaviCardRate(doctorSlugFromSearchHit(substituteDoctor));
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
   const centerBookingSettingsQuery = useSamanCenterBookingSettings(center?.id, center?.user_center_id, {
     enabled: !!center?.id && !!center?.user_center_id && step !== 'SELECT_CENTER',
@@ -1207,20 +1209,8 @@ const BookingSteps = (props: BookingStepsProps) => {
                               experience: substituteDoctor.experience,
                               isVerify: true,
                               avatar: substituteDoctor.image,
-                              rate: {
-                                count: substituteDoctor.rates_count,
-                                satisfaction: substituteDoctor.satisfaction,
-                              },
+                              rate: raviRate,
                               isOnline: true,
-                            }}
-                            details={{
-                              badges: [
-                                {
-                                  title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
-                                  icon: 'shield-icon',
-                                  type: 'error',
-                                },
-                              ],
                             }}
                             className="shadow-none !py-2 lg:!py-2 cursor-pointer"
                             type="doctor"

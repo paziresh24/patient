@@ -5,6 +5,7 @@ import Text from '@/common/components/atom/text/text';
 import { usePartnerSubstituteSearch } from '@/common/apis/services/search/search';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import { doctorSlugFromSearchHit, useRaviCardRate } from '@/modules/profile/hooks/useDoctorRateDetails';
 import SearchCard from '@/modules/search/components/card/card';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import random from 'lodash/random';
@@ -56,6 +57,7 @@ const PartnerSubstituteDoctorButton = ({
     if (results.length === 0) return {};
     return results[random(0, Math.min(2, results.length - 1))] ?? {};
   }, [searchData.data]);
+  const raviRate = useRaviCardRate(doctorSlugFromSearchHit(substituteDoctor));
 
   if (!customize?.partnerKey) {
     return null;
@@ -108,10 +110,7 @@ const PartnerSubstituteDoctorButton = ({
                   expertise: substituteDoctor.display_expertise,
                   isVerify: true,
                   avatar: substituteDoctor.image,
-                  rate: {
-                    count: substituteDoctor.rates_count,
-                    satisfaction: substituteDoctor.satisfaction,
-                  },
+                  rate: raviRate,
                   isOnline: true,
                 }}
                 type="doctor"
