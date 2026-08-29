@@ -37,6 +37,7 @@ export const getFirstAvailableBooking = async (
       timeout: 5000,
       headers: {
         Accept: 'application/json',
+        'accept-timezone': 'Asia/Tehran',
       },
     },
   );
