@@ -6,11 +6,70 @@ import {
   DefaultServicesProps,
 } from './plasmic/paziresh_24/PlasmicServices';
 import { HTMLElementRefOf } from '@plasmicapp/react-web';
+import { useRouter } from 'next/router';
+import { useFeatureIsOn, useFeatureValue, useGrowthBook } from '@growthbook/growthbook-react';
+import { CENTERS } from '@/common/types/centers';
+import { useOnlineVisitFirstAvailable } from '@/modules/profile/hooks/useOnlineVisitFirstAvailable';
+import { buildOnlineVisitCtaText } from '@/modules/profile/utils/formatOnlineVisitApproxTime';
+import {
+  NEW_ONLINE_VISIT_BOX_FEATURE,
+  isNewOnlineVisitBoxEnabled,
+} from '@/modules/profile/utils/isNewOnlineVisitBoxEnabled';
 
 export interface ServicesProps extends DefaultServicesProps {}
 
+const hideConsultWaitingTime = (waitingTimeInfo: unknown) => {
+  if (!Array.isArray(waitingTimeInfo)) return waitingTimeInfo;
+  return waitingTimeInfo.map(item =>
+    String(item?.center_id) === CENTERS.CONSULT ? { ...item, waiting_time_title: undefined } : item,
+  );
+};
+
 function Services_(props: ServicesProps, ref: HTMLElementRefOf<'div'>) {
-  return <PlasmicServices root={{ ref }} {...props} />;
+  const slug = typeof props.seo?.slug === 'string' ? props.seo.slug : '';
+  const router = useRouter();
+  const growthbook = useGrowthBook();
+  const featureValue = useFeatureValue<unknown>(NEW_ONLINE_VISIT_BOX_FEATURE, { slugs: [] });
+  const featureFromHook = useFeatureIsOn(NEW_ONLINE_VISIT_BOX_FEATURE);
+  const [featureFromSlugAttr, setFeatureFromSlugAttr] = React.useState(false);
+  const qaOverride =
+    process.env.NODE_ENV === 'development' &&
+    (router.query.new_onlinevisit_box === '1' || router.query.new_onlinevisit_box === 'true');
+
+  React.useLayoutEffect(() => {
+    if (!growthbook || !slug) {
+      setFeatureFromSlugAttr(false);
+      return;
+    }
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug,
+    });
+    setFeatureFromSlugAttr(growthbook.isOn(NEW_ONLINE_VISIT_BOX_FEATURE));
+  }, [growthbook, slug, growthbook?.ready, featureFromHook]);
+
+  const showNewBox =
+    props.type === 'onlineVisit' &&
+    (qaOverride || isNewOnlineVisitBoxEnabled(featureValue, slug, featureFromHook || featureFromSlugAttr));
+  const displayName = typeof props.information?.display_name === 'string' ? props.information.display_name : '';
+  const { freeturnMs } = useOnlineVisitFirstAvailable({
+    enabled: showNewBox,
+    serviceId: props.service?.id != null ? String(props.service.id) : undefined,
+    userCenterId: props.service?.user_center_id != null ? String(props.service.user_center_id) : undefined,
+  });
+
+  if (!showNewBox) {
+    return <PlasmicServices root={{ ref, 'data-new-online-visit-box': 'off' }} {...props} />;
+  }
+
+  return (
+    <PlasmicServices
+      root={{ ref, 'data-new-online-visit-box': 'on' }}
+      {...props}
+      waitingTimeInfo={hideConsultWaitingTime(props.waitingTimeInfo)}
+      button={{ children2: buildOnlineVisitCtaText(displayName, freeturnMs) }}
+    />
+  );
 }
 
 const Services = React.forwardRef(Services_);
