@@ -11,7 +11,9 @@ const PlasmicServices = dynamic(() => import('.plasmic/plasmic/paziresh_24/Plasm
 const PlasmicActivity = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicActivity'));
 const PlasmicAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicAbout'));
 const PlasmicLocationSelectionScript = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript'));
-const PlasmicProductCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicProductCard'));
+// اسکلتِ خودمان روی همان کارتِ Plasmic — «حضورِ پزشک» را اضافه می‌کند و بقیه‌ی propها را عیناً پاس می‌دهد.
+// این مسیرِ رندرِ دومِ کارت است (پروفایلِ مرکز)؛ مسیرِ لیستینگ از قبل از همین اسکلت می‌آید.
+const ProductCardWithPresence = dynamic(() => import('.plasmic/ProductCard'));
 const PlasmicSearchResults = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults'));
 const PlasmicBookingSchedules = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingSchedules'));
 const PlasmicSearchRequest = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearchRequest'));
@@ -145,7 +147,7 @@ export const Components = {
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
   ProductCard: {
-    Component: PlasmicProductCard,
+    Component: ProductCardWithPresence,
     id: 'NhMGML-3Q4Pu',
     propsAllowed: PlasmicProductCard__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
