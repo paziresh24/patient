@@ -7,7 +7,20 @@
  * this list only when a DR-09 external document is written for it, so the list
  * and the documents in `slim_clinic` stay in step.
  */
-export const ALLOWED_EXTERNAL_HOSTS = ['rayteb.tamin.ir', 'nobatdisfahan.tamin.ir', 'nobat.tamin.ir'] as const;
+export const ALLOWED_EXTERNAL_HOSTS = [
+  // Social Security's own booking system.
+  'rayteb.tamin.ir',
+  'nobatdisfahan.tamin.ir',
+  'nobat.tamin.ir',
+  // University booking portals. Worth knowing before treating these as
+  // "somewhere else": they are our own white-label — each one is titled
+  // «نوبت دهی … - پذیرش ۲۴». The hospital books through our product on the
+  // university's domain while its page on the consumer site has no doctors.
+  'nobat.qums.ac.ir',
+  'p24.lums.ac.ir',
+  'nobat.mui.ac.ir',
+  'nobat.sums.ac.ir',
+] as const;
 
 /** Suffix match so `sub.host` of an allowed host is allowed, `evil-rayteb.tamin.ir.attacker.com` is not. */
 export const isAllowedExternalUrl = (raw: string): boolean => {
