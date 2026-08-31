@@ -1,11 +1,11 @@
 /**
- * Formats online-visit time as «حدود {clock}-{date}» so «حدود» qualifies the hour, not the date.
+ * Formats online-visit time as «حدود {clock} - {date}» so «حدود» qualifies the hour, not the date.
  * Idempotent when the text is already in the target shape.
  * Note: do not use \b — JS word boundaries do not treat Persian letters as word chars.
  */
 const JALALI_DATE = '([۰-۹0-9]{4}/[۰-۹0-9]{2}/[۰-۹0-9]{2})';
 const CLOCK = '([۰-۹0-9]{1,2}:[۰-۹0-9]{2})';
-const CORRECT_FORMAT = new RegExp(`^حدود\\s+${CLOCK}-${JALALI_DATE}$`);
+const CORRECT_FORMAT = new RegExp(`^حدود\\s+${CLOCK}\\s+-\\s+${JALALI_DATE}$`);
 
 const parseVisitTimeParts = (text: string): { clock: string; date: string } | null => {
   const dateThenClock = text.match(new RegExp(`^${JALALI_DATE}\\s+${CLOCK}$`));
@@ -18,7 +18,7 @@ const parseVisitTimeParts = (text: string): { clock: string; date: string } | nu
     return { date: saatThenDate[2], clock: saatThenDate[1] };
   }
 
-  const clockThenDate = text.match(new RegExp(`^${CLOCK}-${JALALI_DATE}$`));
+  const clockThenDate = text.match(new RegExp(`^${CLOCK}\\s*-\\s*${JALALI_DATE}$`));
   if (clockThenDate) {
     return { date: clockThenDate[2], clock: clockThenDate[1] };
   }
@@ -39,7 +39,7 @@ export const withApproxTimePrefix = (timeText: string | null | undefined): strin
 
   const parts = parseVisitTimeParts(body);
   if (parts) {
-    return `حدود ${parts.clock}-${parts.date}`;
+    return `حدود ${parts.clock} - ${parts.date}`;
   }
 
   return `حدود ${body}`;
