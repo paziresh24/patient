@@ -52,6 +52,12 @@ ai-review:
         exit 1
       fi
       python3 scripts/ci-assert-gitlab-user.py "$GITLAB_API_TOKEN"
+      # ai-review's own schema requires the MR description to be a string, so an
+      # MR opened without one crashes the tool with a pydantic ValidationError
+      # and the job fails for a reason that has nothing to do with the code
+      # (seen on MR !257, 2026-08-31). Fill it from the branch name rather than
+      # letting a missing field block a merge.
+      python3 scripts/ci-ensure-mr-description.py || true
       ai-review run-summary 2>&1 | tee /tmp/ai-review.log
       # Tool often exits 0 even after LLM/VCS failures — treat log errors as job failure.
       if grep -E -q "ERROR \\||Illegal header value|LLM request failed|Failed to fetch|HTTPStatusError|LocalProtocolError" /tmp/ai-review.log; then
