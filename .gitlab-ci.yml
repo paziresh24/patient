@@ -147,7 +147,22 @@ ci-app-image:
   stage: ci-image
   timeout: 25m
   before_script:
-    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        exit 1
+      fi
     - |
       registry_reachable() {
         local url="$1"
@@ -230,7 +245,22 @@ initial-chunks:
   needs:
     - job: ci-app-image
   before_script:
-    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        exit 1
+      fi
     - |
       registry_reachable() {
         local url="$1"
@@ -330,7 +360,22 @@ build-docker-image:
   stage: build
   before_script:
     # apk skipped (alpine CDN unreachable from runner pods)
-    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        exit 1
+      fi
     - |
       # wget treats HTTP 401 from /v2/ as failure — registry is reachable without auth.
       registry_reachable() {
@@ -428,7 +473,22 @@ build-docker-image-next:
     ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
   before_script:
     # apk skipped (alpine CDN unreachable from runner pods)
-    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        exit 1
+      fi
     - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
   script:
     - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
@@ -499,7 +559,22 @@ search-e2e:
   variables:
     E2E_IMAGE: mcr.microsoft.com/playwright:v1.49.1-jammy
   before_script:
-    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        exit 1
+      fi
     - |
       registry_reachable() {
         local url="$1"
