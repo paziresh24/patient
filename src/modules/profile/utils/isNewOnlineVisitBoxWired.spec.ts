@@ -16,6 +16,9 @@ describe('new online visit box wiring', () => {
     expect(services).toContain("data-new-online-visit-box");
     expect(services).toContain('wrapChildren');
     expect(services).toContain('replaceOnlineVisitHeading');
+    expect(services).toContain('isLoading');
+    expect(services).toContain('Loading');
+    expect(services).not.toContain("loading: isLoading");
     expect(heading).toContain('آنلاین ویزیت شوید');
     expect(heading).toContain('همین الان آنلاین ویزیت شوید');
   });
