@@ -8,7 +8,7 @@ type TehranClock = {
 
 type RoundedClock = {
   hour: number;
-  minute: 0 | 30;
+  minute: 0 | 15 | 30 | 45;
 };
 
 export const getTehranClock = (ms: number): TehranClock => {
@@ -30,13 +30,15 @@ export const getTehranClock = (ms: number): TehranClock => {
   };
 };
 
-export const roundUpToHalfHourTehran = (ms: number): RoundedClock => {
+export const roundUpToQuarterHourTehran = (ms: number): RoundedClock => {
   const { hour, minute, second } = getTehranClock(ms);
   const hasRemainder = second > 0 || ms % 1000 !== 0;
+  const onQuarter = minute % 15 === 0 && !hasRemainder;
 
-  if (minute === 0 && !hasRemainder) return { hour, minute: 0 };
-  if (minute === 30 && !hasRemainder) return { hour, minute: 30 };
+  if (onQuarter) return { hour, minute: minute as RoundedClock['minute'] };
+  if (minute < 15) return { hour, minute: 15 };
   if (minute < 30) return { hour, minute: 30 };
+  if (minute < 45) return { hour, minute: 45 };
 
   return { hour: (hour + 1) % 24, minute: 0 };
 };
@@ -81,8 +83,8 @@ export const formatJalaliDayMonthFa = (ms: number): string => {
 };
 
 export const formatRoundedOnlineVisitClock = (ms: number): string => {
-  const { hour, minute } = roundUpToHalfHourTehran(ms);
-  const clock = minute === 0 ? String(hour) : `${hour}:30`;
+  const { hour, minute } = roundUpToQuarterHourTehran(ms);
+  const clock = minute === 0 ? String(hour) : `${hour}:${String(minute).padStart(2, '0')}`;
   return `حدود ساعت ${clock} ${timeOfDayLabelFa(hour)}`;
 };
 
@@ -97,7 +99,7 @@ export const buildOnlineVisitCtaText = (displayName: string, freeturnMs: number 
   const sourceMs = freeturnMs < nowMs ? nowMs : freeturnMs;
   const timeText = formatRoundedOnlineVisitClock(sourceMs);
   if (isSameTehranCalendarDay(sourceMs, nowMs)) {
-    return `${base} ${timeText} ${todayOrTonightLabelFa(roundUpToHalfHourTehran(sourceMs).hour)}`;
+    return `${base} ${timeText} ${todayOrTonightLabelFa(roundUpToQuarterHourTehran(sourceMs).hour)}`;
   }
 
   return `${base} ${timeText} ${formatJalaliDayMonthFa(sourceMs)}`;
