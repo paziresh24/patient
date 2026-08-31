@@ -1,3 +1,4 @@
+import { withApproxTimePrefix } from '@/modules/booking/utils/withApproxTimePrefix';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { Translate } from 'next-translate';
@@ -38,7 +39,7 @@ export const turnDetailsData = ({
         centerType === CenterType.consult
           ? translate('patient/appointments:turnDetails.timeForConsult')
           : translate('patient/appointments:turnDetails.time'),
-      value: bookTime,
+      value: centerType === CenterType.consult ? withApproxTimePrefix(String(bookTime ?? '')) : bookTime,
       shouldShow:
         status !== BookStatus.requested && ([BookStatus.visited, BookStatus.notVisited, BookStatus.expired].includes(status) || isDelete),
     },

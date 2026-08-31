@@ -2,6 +2,7 @@ import Alert from '@/common/components/atom/alert';
 import Skeleton from '@/common/components/atom/skeleton';
 import InfoIcon from '@/common/components/icons/info';
 import { WarningIcon } from '@/common/components/icons/warning';
+import { withApproxTimePrefix } from '@/modules/booking/utils/withApproxTimePrefix';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
@@ -179,7 +180,7 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     {
       id: 1,
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
-      value: bookTime,
+      value: centerType === CenterType.consult ? withApproxTimePrefix(bookTime) : bookTime,
       shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: true,
