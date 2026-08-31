@@ -263,7 +263,7 @@ function PlasmicLauncherBlocksWidgetsNelson__RenderFunc(props: {
                       ? (() => {
                           const actionArgs = {
                             destination:
-                              "https://dr.paziresh24.com/activation/consult/rules"
+                              "https://providers.paziresh24.com/app/activation-page/consult/cost"
                           };
                           return (({ destination }) => {
                             if (

@@ -15,7 +15,7 @@ interface OnlineVisitToggleProps {
   className?: string;
 }
 
-const ACTIVATION_URL = 'https://dr.paziresh24.com/activation/consult/rules';
+const ACTIVATION_URL = 'https://providers.paziresh24.com/app/activation-page/consult/cost';
 
 export const OnlineVisitToggle = ({ userCenterId, hasOnlineVisitCenter, className }: OnlineVisitToggleProps) => {
   const userId = useUserInfoStore(state => state.info?.id);
