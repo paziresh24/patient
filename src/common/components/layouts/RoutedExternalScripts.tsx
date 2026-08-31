@@ -18,6 +18,28 @@ type RoutedExternalScriptsConfig = {
 const EXTERNAL_SCRIPTS_FEATURE_KEY = 'search:external-scripts-config';
 const DEFAULT_CONFIG: RoutedExternalScriptsConfig = { scripts: [] };
 
+/**
+ * اسکریپت‌هایی که کارشان به کدِ همین repo منتقل شده و دیگر نباید تزریق شوند.
+ *
+ * `search-cards-presence.js` متنِ «X پیش آنلاین بوده» و نقطه‌ی سبزِ آنلاین را روی کارتِ نتیجه
+ * می‌نشاند. آن رفتار از 2026-08-31 بومی است (`src/modules/search/components/productCard/
+ * doctorPresence.ts` + هوکِ `useDoctorPresence`) و روی production تأیید شده. نگه‌داشتنِ اسکریپت
+ * یعنی یک درخواستِ اضافه به ازای هر صفحه و یک وابستگیِ نامرئی به نامِ کلاسِ تولیدشده‌ی Plasmic.
+ *
+ * چرا این‌جا و نه در GrowthBook: ردیفِ خودِ فلگ هم باید پاک شود، ولی کلیدِ نوشتنیِ GrowthBook در
+ * دسترسِ این تغییر نبود. این denylist اثرِ کاربر-محور را همین حالا می‌گیرد و بعد از پاک‌شدنِ ردیف
+ * می‌تواند برداشته شود. تطبیق روی مسیر است تا با عوض‌شدنِ هاست یا query string دور نخورد.
+ */
+const RETIRED_SCRIPT_PATHS = ['/scripts/search-cards-presence.js'];
+
+export function isRetiredScript(src: string): boolean {
+  try {
+    return RETIRED_SCRIPT_PATHS.includes(new URL(src).pathname);
+  } catch {
+    return false;
+  }
+}
+
 function shouldLoadRoutedExternalScripts(pathname: string): boolean {
   if (pathname.startsWith('/s/')) return true;
   if (pathname === '/' || pathname === '/apphome') return true;
@@ -34,7 +56,7 @@ function normalizeConfig(config: RoutedExternalScriptsConfig): RoutedExternalScr
   if (!config || !Array.isArray(config.scripts)) return [];
 
   return config.scripts
-    .filter(item => item?.enabled !== false && isValidHttpUrl(item?.src))
+    .filter(item => item?.enabled !== false && isValidHttpUrl(item?.src) && !isRetiredScript(item.src))
     .map(item => ({
       id: item.id,
       src: item.src,
