@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import getConfig from 'next/config';
 
 /**
  * وضعیتِ حضورِ پزشک برای کارتِ نتیجه‌ی جستجو: نقطه‌ی سبزِ «آنلاین در پیام‌رسان» و متنِ
@@ -15,7 +16,22 @@ import { useEffect, useState } from 'react';
  * **یک POST** می‌روند — همان قراردادی که امروز روی production دیده می‌شود.
  */
 
-const PRESENCE_ENDPOINT = 'https://support-n8n.paziresh24.com/webhook/doctor-search-cards';
+/**
+ * آدرسِ سرویسِ حضور. از `publicRuntimeConfig` خوانده می‌شود تا اگر روزی وب‌سرویس جابه‌جا شد،
+ * عوض‌کردنش یک متغیرِ محیطی و یک ری‌استارتِ pod باشد، نه یک buildِ تازه. مقدارِ پیش‌فرض همان
+ * آدرسِ امروز است، پس نبودنِ متغیر چیزی را نمی‌شکند.
+ */
+const DEFAULT_PRESENCE_ENDPOINT = 'https://support-n8n.paziresh24.com/webhook/doctor-search-cards';
+
+export function presenceEndpoint(): string {
+  try {
+    const { publicRuntimeConfig } = getConfig() ?? ({} as { publicRuntimeConfig?: Record<string, string> });
+    return publicRuntimeConfig?.DOCTOR_PRESENCE_API_URL || DEFAULT_PRESENCE_ENDPOINT;
+  } catch {
+    // getConfig بیرون از Next (مثلاً در تست) throw می‌کند؛ آن‌جا هم باید پیش‌فرض کار کند.
+    return DEFAULT_PRESENCE_ENDPOINT;
+  }
+}
 
 /** همان پنجره‌ای که اسکریپتِ قبلی داشت؛ عمداً تغییر نکرد تا الگویِ ترافیک عوض نشود. */
 const BATCH_WINDOW_MS = 300;
@@ -60,7 +76,7 @@ async function flush() {
 
   let list: DoctorPresence[] = [];
   try {
-    const res = await fetch(PRESENCE_ENDPOINT, {
+    const res = await fetch(presenceEndpoint(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slugs }),
