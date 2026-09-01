@@ -2,6 +2,7 @@ import {
   buildOnlineVisitCtaText,
   formatJalaliDayMonthFa,
   formatRoundedOnlineVisitClock,
+  onlineVisitCtaButtonProps,
   roundUpToQuarterHourTehran,
 } from './formatOnlineVisitApproxTime';
 
@@ -45,11 +46,19 @@ describe('formatJalaliDayMonthFa', () => {
   });
 });
 
-describe('buildOnlineVisitCtaText', () => {
-  it('keeps the name-only CTA when time is missing', () => {
-    expect(buildOnlineVisitCtaText('زهرا رجبلی', null)).toBe('شروع ویزیت با زهرا رجبلی');
+describe('onlineVisitCtaButtonProps', () => {
+  it('leaves the original Plasmic CTA until first-available time exists', () => {
+    expect(onlineVisitCtaButtonProps('زهرا رجبلی', null)).toBeUndefined();
   });
 
+  it('overrides the CTA only after a slot time exists', () => {
+    expect(onlineVisitCtaButtonProps('زهرا رجبلی', tehranMs(17, 0), tehranMs(16, 0))).toEqual({
+      children2: 'شروع ویزیت با زهرا رجبلی حدود ساعت 17 عصر امروز',
+    });
+  });
+});
+
+describe('buildOnlineVisitCtaText', () => {
   it('appends امروز or امشب when the slot is today', () => {
     expect(buildOnlineVisitCtaText('زهرا رجبلی', tehranMs(17, 0), tehranMs(16, 0))).toBe(
       'شروع ویزیت با زهرا رجبلی حدود ساعت 17 عصر امروز',
