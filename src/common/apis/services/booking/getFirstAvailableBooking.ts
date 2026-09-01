@@ -8,6 +8,8 @@ export const FIRST_AVAILABLE_BOOKING_STATUS = {
   NO_FREE_TURN: 42,
 } as const;
 
+export const FIRST_AVAILABLE_BOOKING_TYPE = 7;
+
 export interface FirstAvailableBookingParams {
   center_id: string;
   service_id: string;
@@ -32,7 +34,7 @@ export const getFirstAvailableBooking = async (
 ): Promise<FirstAvailableBookingResponse> => {
   const { data } = await apiGatewayClient.post<FirstAvailableBookingResponse>(
     '/api/bookings/first-available',
-    formData(params),
+    formData({ ...params, type: FIRST_AVAILABLE_BOOKING_TYPE }),
     {
       timeout: 5000,
       headers: {
