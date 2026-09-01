@@ -104,3 +104,13 @@ export const buildOnlineVisitCtaText = (displayName: string, freeturnMs: number 
 
   return `${base} ${timeText} ${formatJalaliDayMonthFa(sourceMs)}`;
 };
+
+export const onlineVisitCtaButtonProps = (
+  displayName: string,
+  freeturnMs: number | null,
+  nowMs = Date.now(),
+): { children2: string } | undefined => {
+  if (freeturnMs == null) return undefined;
+  return { children2: buildOnlineVisitCtaText(displayName, freeturnMs, nowMs) };
+};
+

@@ -9,9 +9,8 @@ import { HTMLElementRefOf } from '@plasmicapp/react-web';
 import { useRouter } from 'next/router';
 import { useFeatureIsOn, useFeatureValue, useGrowthBook } from '@growthbook/growthbook-react';
 import { CENTERS } from '@/common/types/centers';
-import Loading from '@/common/components/atom/loading';
 import { useOnlineVisitFirstAvailable } from '@/modules/profile/hooks/useOnlineVisitFirstAvailable';
-import { buildOnlineVisitCtaText } from '@/modules/profile/utils/formatOnlineVisitApproxTime';
+import { onlineVisitCtaButtonProps } from '@/modules/profile/utils/formatOnlineVisitApproxTime';
 import {
   NEW_ONLINE_VISIT_BOX_FEATURE,
   isNewOnlineVisitBoxEnabled,
@@ -54,11 +53,12 @@ function Services_(props: ServicesProps, ref: HTMLElementRefOf<'div'>) {
     props.type === 'onlineVisit' &&
     (qaOverride || isNewOnlineVisitBoxEnabled(featureValue, slug, featureFromHook || featureFromSlugAttr));
   const displayName = typeof props.information?.display_name === 'string' ? props.information.display_name : '';
-  const { freeturnMs, isLoading } = useOnlineVisitFirstAvailable({
+  const { freeturnMs } = useOnlineVisitFirstAvailable({
     enabled: showNewBox,
     serviceId: props.service?.id != null ? String(props.service.id) : undefined,
     userCenterId: props.service?.user_center_id != null ? String(props.service.user_center_id) : undefined,
   });
+  const ctaButton = onlineVisitCtaButtonProps(displayName, freeturnMs);
 
   if (!showNewBox) {
     return <PlasmicServices root={{ ref, 'data-new-online-visit-box': 'off' }} {...props} />;
@@ -73,14 +73,7 @@ function Services_(props: ServicesProps, ref: HTMLElementRefOf<'div'>) {
       }}
       {...props}
       waitingTimeInfo={hideConsultWaitingTime(props.waitingTimeInfo)}
-      button={{
-        children2: (
-          <span className="inline-flex items-center justify-center gap-2">
-            {isLoading ? <Loading width={20} className="h-5 w-5 shrink-0" aria-hidden /> : null}
-            {buildOnlineVisitCtaText(displayName, freeturnMs)}
-          </span>
-        ),
-      }}
+      {...(ctaButton ? { button: ctaButton } : {})}
     />
   );
 }
