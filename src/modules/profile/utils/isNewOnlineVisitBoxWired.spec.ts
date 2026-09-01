@@ -16,6 +16,7 @@ describe('new online visit box wiring', () => {
     expect(services).toContain("data-new-online-visit-box");
     expect(services).toContain('wrapChildren');
     expect(services).toContain('replaceOnlineVisitHeading');
+    expect(services).toContain("props: { ref, 'data-new-online-visit-box': 'on' }");
     expect(services).not.toContain('Loading');
     expect(services).not.toContain('isLoading');
     expect(services).not.toContain("loading: isLoading");
