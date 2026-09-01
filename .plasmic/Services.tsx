@@ -61,14 +61,19 @@ function Services_(props: ServicesProps, ref: HTMLElementRefOf<'div'>) {
   const ctaButton = onlineVisitCtaButtonProps(displayName, freeturnMs);
 
   if (!showNewBox) {
-    return <PlasmicServices root={{ ref, 'data-new-online-visit-box': 'off' }} {...props} />;
+    return (
+      <PlasmicServices
+        root={{ props: { ref, 'data-new-online-visit-box': 'off' } }}
+        {...props}
+      />
+    );
   }
 
   return (
     <PlasmicServices
       root={{
-        ref,
-        'data-new-online-visit-box': 'on',
+        // wrapChildren only applies when override has a `props` key (or only wrap*).
+        props: { ref, 'data-new-online-visit-box': 'on' },
         wrapChildren: replaceOnlineVisitHeading,
       }}
       {...props}
