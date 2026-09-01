@@ -196,10 +196,10 @@ ci-app-image:
         PUSH_HOST="$CI_REGISTRY"
       fi
       echo "$PUSH_HOST" > /tmp/push_host
-      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
     - |
       PUSH_HOST=$(cat /tmp/push_host)
       echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
+      sh scripts/ci-pick-patient-base.sh "$PUSH_HOST" "${CI_COMMIT_BEFORE_SHA:-}" > /tmp/base_image
   script:
     - |
       PUSH_HOST=$(cat /tmp/push_host)
@@ -362,11 +362,14 @@ initial-chunks:
     REGISTRY_PUSH_HOST_INTERNAL: gitlab-app-registry.gitlab.svc:5000
     REGISTRY_PUSH_HOST_TLS: registry-gitlab.mobin.p24cloud.ir
     # Must use the same registry host we docker-login to (private image JWT).
-    PATIENT_BASE_IMAGE: gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:0d479232
+    # Default is :latest; jobs overwrite /tmp/base_image after docker login.
+    PATIENT_BASE_IMAGE: gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:latest
     # Default runner job limit is 2Gi — dind extract of patient image OOMs/kills the pod.
+    # Request is for scheduling (10Gi made the job Unschedulable on all 3 nodes);
+    # limit is the OOM ceiling. Runner must allow request overwrite (platform-gitops).
     KUBERNETES_MEMORY_REQUEST: "1Gi"
     KUBERNETES_MEMORY_LIMIT: "4Gi"
-    KUBERNETES_SERVICE_MEMORY_REQUEST: "10Gi"
+    KUBERNETES_SERVICE_MEMORY_REQUEST: "4Gi"
     KUBERNETES_SERVICE_MEMORY_LIMIT: "24Gi"
     KUBERNETES_EPHEMERAL_STORAGE_REQUEST: "15Gi"
     KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "40Gi"
@@ -451,8 +454,6 @@ build-docker-image:
         SCHEME=https
       fi
       echo "$PUSH_HOST" > /tmp/push_host
-      # Keep BASE_IMAGE on the same host we authenticate to.
-      echo "${PUSH_HOST}/paziresh24/patient:0d479232" > /tmp/base_image
     - |
       # Fast script_failure (~20–40s) after merge is usually registry/login flake, not app code.
       # Retry login a few times so main does not stay red until a manual Retry click.
@@ -470,6 +471,8 @@ build-docker-image:
         echo "FATAL: docker login failed for $PUSH_HOST after retries"
         exit 1
       fi
+      # Pick :latest (or previous main SHA) that still exists — do not pin a GC'd tag.
+      sh scripts/ci-pick-patient-base.sh "$PUSH_HOST" "${CI_COMMIT_BEFORE_SHA:-}" > /tmp/base_image
   script:
     - |
       PUSH_HOST=$(cat /tmp/push_host)
