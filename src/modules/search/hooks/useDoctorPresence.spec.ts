@@ -1,4 +1,7 @@
-import { __resetDoctorPresenceCache, normalizeSlug, useDoctorPresence } from './useDoctorPresence';
+import { __resetDoctorPresenceCache, normalizeSlug, presenceEndpoint, useDoctorPresence } from './useDoctorPresence';
+import getConfig from 'next/config';
+
+jest.mock('next/config', () => ({ __esModule: true, default: jest.fn(() => ({ publicRuntimeConfig: {} })) }));
 import { act, renderHook, waitFor } from '@testing-library/react';
 
 const ENDPOINT = 'https://support-n8n.paziresh24.com/webhook/doctor-search-cards';
@@ -86,5 +89,28 @@ describe('useDoctorPresence', () => {
     });
     expect(fetchMock).not.toHaveBeenCalled();
     expect(result.current.resolved).toBe(false);
+  });
+});
+
+describe('presenceEndpoint', () => {
+  const mocked = getConfig as unknown as jest.Mock;
+
+  afterEach(() => mocked.mockReturnValue({ publicRuntimeConfig: {} }));
+
+  it('بدونِ متغیرِ محیطی، آدرسِ پیش‌فرض را می‌دهد', () => {
+    expect(presenceEndpoint()).toBe(ENDPOINT);
+  });
+
+  it('اگر آدرسِ وب‌سرویس عوض شود، از متغیرِ محیطی خوانده می‌شود', () => {
+    mocked.mockReturnValue({ publicRuntimeConfig: { DOCTOR_PRESENCE_API_URL: 'https://new-host/presence' } });
+    expect(presenceEndpoint()).toBe('https://new-host/presence');
+  });
+
+  it('اگر getConfig در دسترس نباشد، کارت بدونِ خطا کار می‌کند', () => {
+    mocked.mockImplementation(() => {
+      throw new Error('no next runtime');
+    });
+    expect(presenceEndpoint()).toBe(ENDPOINT);
+    mocked.mockImplementation(() => ({ publicRuntimeConfig: {} }));
   });
 });

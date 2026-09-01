@@ -234,6 +234,9 @@ const nextConfig = {
     SENTRY_ORG: process.env.SENTRY_ORG,
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
     SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+    // سرویسِ «حضورِ پزشک» روی کارتِ نتیجه. اگر آدرسِ وب‌سرویس عوض شد همین متغیر را بده؛
+    // publicRuntimeConfig از envِ پروسه در زمانِ استارت خوانده می‌شود ⇒ ری‌استارت، نه rebuild.
+    DOCTOR_PRESENCE_API_URL: process.env.DOCTOR_PRESENCE_API_URL,
     GROWTHBOOK_API_HOST: process.env.GROWTHBOOK_API_HOST,
     GROWTHBOOK_CLIENT_KEY: process.env.GROWTHBOOK_CLIENT_KEY,
     FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
