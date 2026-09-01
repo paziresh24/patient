@@ -1,6 +1,7 @@
-# Rebuild without npm/apk egress: reuse node_modules from last known-good image.
-# package.json / package-lock.json are unchanged vs 0d479232; only app source is rebuilt.
-ARG BASE_IMAGE=gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:0d479232
+# Rebuild without npm/apk egress: reuse node_modules from last successful main image.
+# Never pin a historical SHA here — registry GC deletes old tags and CI then 404s
+# while :latest is still present (2026-09-01, job 34340, tag 0d479232).
+ARG BASE_IMAGE=gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:latest
 FROM ${BASE_IMAGE}
 
 WORKDIR /app
