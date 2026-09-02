@@ -600,6 +600,15 @@ html[dir='rtl'] .PhotoView-Portal .PhotoView-Slider__BannerWrap {
   user-select: none;
 }
 
+/* Single doctor avatar lightbox */
+.PhotoView-Portal.PhotoView--doctor-avatar {
+  z-index: 100000;
+}
+
+.PhotoView-Portal.PhotoView--doctor-avatar .PhotoView-Slider__BannerWrap > .PhotoView-Slider__Counter {
+  display: none;
+}
+
 .loader {
   @apply animate-spin;
 }
