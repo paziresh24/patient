@@ -124,8 +124,15 @@ export const searchClient = axios.create({
   ...baseConfig,
 });
 
+const clinicBaseUrl = () => {
+  if (isServer && serverRuntimeConfig?.CLINIC_BASE_URL) {
+    return serverRuntimeConfig.CLINIC_BASE_URL;
+  }
+  return publicRuntimeConfig.CLINIC_BASE_URL ? publicRuntimeConfig.CLINIC_BASE_URL : 'https://www.paziresh24.com';
+};
+
 export const clinicClient = axios.create({
-  baseURL: publicRuntimeConfig.CLINIC_BASE_URL ? publicRuntimeConfig.CLINIC_BASE_URL : 'https://www.paziresh24.com',
+  baseURL: clinicBaseUrl(),
   withCredentials: true,
   ...baseConfig,
 });

@@ -212,6 +212,9 @@ const nextConfig = {
     PROFILE_API_BASE_URL: process.env.PROFILE_API_BASE_URL || defaultProfileApiBaseUrl,
     PROFILE_API_TOKEN: process.env.PROFILE_API_TOKEN || defaultProfileApiToken,
     PROFILE_API_SOURCE_SLUGS: process.env.PROFILE_API_SOURCE_SLUGS || defaultProfileApiSourceSlugs,
+    // In-cluster clinic for SSR only. Browser keeps publicRuntimeConfig.CLINIC_BASE_URL
+    // (www) so cookies/CORS stay same-origin. Unset → clinicClient falls back to public.
+    CLINIC_BASE_URL: process.env.CLINIC_SSR_BASE_URL || undefined,
   },
   publicRuntimeConfig: {
     IS_PRODUCTION: isProduction,
