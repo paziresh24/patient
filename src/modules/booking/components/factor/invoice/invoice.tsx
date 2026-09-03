@@ -2,6 +2,7 @@ import Accordion from '@/common/components/atom/accordion';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import { addCommas } from '@persian-tools/persian-tools';
+import { ExtraWalletTopupEditor, openExtraWalletTopupAmount } from '../extraWalletTopup';
 
 interface InvoiceProps {
   serviceFeeText?: string;
@@ -12,6 +13,13 @@ interface InvoiceProps {
   discount?: string;
   walletAmount?: number;
   totalPrice?: string;
+  /** Extra wallet top-up in rial — when set, payable = invoice + extra (no partial-wallet subtract). */
+  extraWalletTopupRial?: number;
+  showExtraWalletTopup?: boolean;
+  extraWalletTopupEnabled?: boolean;
+  extraWalletTopupToman?: number;
+  onExtraWalletTopupEnabledChange?: (enabled: boolean) => void;
+  onExtraWalletTopupTomanChange?: (toman: number) => void;
   loading: boolean;
   payment_description_html?: string;
 }
@@ -25,25 +33,38 @@ export const Invoice = (props: InvoiceProps) => {
     tax,
     discount,
     totalPrice,
+    extraWalletTopupRial = 0,
+    showExtraWalletTopup = false,
+    extraWalletTopupEnabled = false,
+    extraWalletTopupToman = 0,
+    onExtraWalletTopupEnabledChange,
+    onExtraWalletTopupTomanChange,
     loading = false,
     payment_description_html,
   } = props;
   const formattedPrice = price ? addCommas(Math.round(+price / 10)) : null;
   const formattedTax = tax ? addCommas(Math.round(+tax / 10)) : null;
   // مبلغ قابل پرداخت:
+  // - شارژ اضافه: کل فاکتور + extra (مسیر _topups؛ کیف کسر نمی‌شود)
   // - موجودی جزئی (۰ < کیف < مبلغ): ماندهٔ درگاه = فاکتور − کیف (مورد ۲ هنوز انتخاب جایگزین ندارد)
   // - کیف کافی یا صفر: همان مبلغ فاکتور (بعد از تخفیف) — وقتی کافی است صفر نشان نده
   const totalPriceRial = totalPrice != null && totalPrice !== '' ? Number(totalPrice) : NaN;
   const walletRial = typeof walletAmount === 'number' && !Number.isNaN(walletAmount) ? walletAmount : 0;
+  const extraRial = Math.max(0, Math.floor(Number(extraWalletTopupRial) || 0));
+  // While extra box is open, payable = invoice + extra (live); don't fall back to partial-wallet subtract
   const payableRial = Number.isFinite(totalPriceRial)
-    ? walletRial > 0 && walletRial < totalPriceRial
-      ? Math.max(0, totalPriceRial - walletRial)
-      : Math.max(0, totalPriceRial)
+    ? extraWalletTopupEnabled || extraRial > 0
+      ? Math.max(0, totalPriceRial) + extraRial
+      : walletRial > 0 && walletRial < totalPriceRial
+        ? Math.max(0, totalPriceRial - walletRial)
+        : Math.max(0, totalPriceRial)
     : NaN;
   const formattedTotalPrice = Number.isFinite(payableRial) ? addCommas(Math.round(payableRial / 10)) : null;
   const formattedWalletAmount =
     (walletAmount == 0 || walletAmount) && typeof walletAmount === 'number' ? addCommas(Math.round(+walletAmount / 10)) : null;
   const formattedDiscount = discount ? addCommas(Math.round(+discount / 10)) : null;
+  const showWalletRow = !!formattedWalletAmount || showExtraWalletTopup;
+  const visitTotalToman = Number.isFinite(totalPriceRial) ? Math.round(totalPriceRial / 10) : 0;
 
   return (
     <div className="border border-solid rounded-lg border-slate-200">
@@ -105,14 +126,47 @@ export const Invoice = (props: InvoiceProps) => {
             </div>
           )}
 
-          {!loading && !!formattedWalletAmount && (
-            <div className="flex justify-between">
-              <Text fontWeight="medium" fontSize="sm">
-                موجودی کیف پول:
-              </Text>
-              <Text fontWeight="medium" fontSize="sm">
-                {formattedWalletAmount} تومان
-              </Text>
+          {!loading && showWalletRow && (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-2">
+                <Text fontWeight="medium" fontSize="sm">
+                  موجودی کیف پول:
+                </Text>
+                <div className="flex items-center gap-1.5">
+                  <Text fontWeight="medium" fontSize="sm">
+                    {formattedWalletAmount ?? '۰'} تومان
+                  </Text>
+                  {showExtraWalletTopup && onExtraWalletTopupEnabledChange && onExtraWalletTopupTomanChange && (
+                    <button
+                      type="button"
+                      aria-label={extraWalletTopupEnabled ? 'بستن شارژ اضافه' : 'افزودن شارژ به کیف پول'}
+                      title={extraWalletTopupEnabled ? 'بستن شارژ اضافه' : 'افزودن شارژ به کیف پول'}
+                      onClick={() => {
+                        if (extraWalletTopupEnabled) {
+                          // Keep last amount so reopen restores it
+                          onExtraWalletTopupEnabledChange(false);
+                          return;
+                        }
+                        onExtraWalletTopupTomanChange(
+                          openExtraWalletTopupAmount(extraWalletTopupToman, visitTotalToman),
+                        );
+                        onExtraWalletTopupEnabledChange(true);
+                      }}
+                      className="shrink-0 px-0.5 text-lg font-bold leading-none text-primary hover:opacity-80"
+                    >
+                      {extraWalletTopupEnabled ? '−' : '+'}
+                    </button>
+                  )}
+                </div>
+              </div>
+              {showExtraWalletTopup && onExtraWalletTopupEnabledChange && onExtraWalletTopupTomanChange && (
+                <ExtraWalletTopupEditor
+                  enabled={extraWalletTopupEnabled}
+                  selectedToman={extraWalletTopupToman}
+                  onEnabledChange={onExtraWalletTopupEnabledChange}
+                  onSelectedTomanChange={onExtraWalletTopupTomanChange}
+                />
+              )}
             </div>
           )}
         </div>
@@ -138,4 +192,3 @@ export const Invoice = (props: InvoiceProps) => {
   );
 };
 export default Invoice;
-

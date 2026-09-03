@@ -19,6 +19,10 @@ import useFirstFreeTime from '../../hooks/selectTime/useFirstFreeTime';
 import useBooking from '../../hooks/booking';
 import { growthbook } from 'src/pages/_app';
 import { useDiscountInquiry } from '@/common/apis/services/factor/discountInquiry';
+import {
+  encodeExtraWalletTopupPaymentMethod,
+  tomanToRial,
+} from '@/modules/booking/utils/encodeExtraWalletTopupPaymentMethod';
 
 interface FactorWrapperProps {
   bookId?: string;
@@ -63,22 +67,37 @@ const FactorWrapper = (props: FactorWrapperProps) => {
   });
   const discountInquiry = useDiscountInquiry();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('');
+  const [extraWalletTopupEnabled, setExtraWalletTopupEnabled] = useState(false);
+  // 0 = not set yet → first open uses visit total (with tax); later reopen uses last amount
+  const [extraWalletTopupToman, setExtraWalletTopupToman] = useState(0);
+
+  const resolvePaymentMethodForGateway = (paymentMethod?: string) => {
+    const method = paymentMethod || selectedPaymentMethod;
+    if (!method) return method;
+    const extraRial = extraWalletTopupEnabled ? tomanToRial(extraWalletTopupToman) : 0;
+    return encodeExtraWalletTopupPaymentMethod(method, extraRial);
+  };
 
   const appendPaymentMethodToUrl = (url: string, paymentMethod?: string) => {
     if (!paymentMethod || !url) return url;
 
     try {
       const u = new URL(url, window.location.origin);
-      if (u.searchParams.has('payment_method')) return url;
-      u.searchParams.set('payment_method', paymentMethod);
-      // Preserve absolute vs relative as backend may rely on it
-      return url.startsWith('http') ? u.toString() : `${u.pathname}${u.search}${u.hash}`;
+      // Literal `+` in payment_method (saman_topups+N) — avoid searchParams.set /
+      // encodeURIComponent / URL.toString() re-encoding (+ → %2B); topups accepts bare +.
+      u.searchParams.delete('payment_method');
+      const rest = u.searchParams.toString();
+      const pmQuery = `payment_method=${paymentMethod}`;
+      const search = rest ? `?${rest}&${pmQuery}` : `?${pmQuery}`;
+      if (url.startsWith('http')) {
+        return `${u.origin}${u.pathname}${search}${u.hash}`;
+      }
+      return `${u.pathname}${search}${u.hash}`;
     } catch {
-      // Fallback for non-standard URLs
-      if (url.includes('payment_method=')) return url;
       const [base, hash = ''] = url.split('#');
-      const joiner = base.includes('?') ? '&' : '?';
-      const withQuery = `${base}${joiner}payment_method=${encodeURIComponent(paymentMethod)}`;
+      const withoutPm = base.replace(/([?&])payment_method=[^&]*(&?)/, (_, p1, p2) => (p2 ? p1 : '')).replace(/[?&]$/, '');
+      const joiner = withoutPm.includes('?') ? '&' : '?';
+      const withQuery = `${withoutPm}${joiner}payment_method=${paymentMethod}`;
       return hash ? `${withQuery}#${hash}` : withQuery;
     }
   };
@@ -122,6 +141,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
     paymentMethod?: string;
     userDataFromLogin?: any;
   }) => {
+    const gatewayPaymentMethod = resolvePaymentMethodForGateway(paymentMethod);
     if (serviceId || bookId) {
       if (!bookId) {
         let reserveId: string | undefined;
@@ -144,7 +164,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
               cell: userDataFromLogin?.cell ?? userInfo?.cell,
               messengerType: 'skip_select_user',
             },
-            paymentMethod: paymentMethod,
+            paymentMethod: gatewayPaymentMethod,
           },
           {
             async onSuccess(data) {
@@ -163,7 +183,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
                 const { data: paymentData } = await [centerId === CENTERS.CONSULT ? consultPayment : centerPayment][0].mutateAsync({
                   book_id: data?.book_info?.id as string,
                   ...(discountToken && { discount_token: discountToken }),
-                  ...(paymentMethod && { payment_method: paymentMethod }),
+                  ...(gatewayPaymentMethod && { payment_method: gatewayPaymentMethod }),
                 });
                 if (paymentData.status) {
                   splunkInstance('booking').sendEvent({
@@ -177,7 +197,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
                       group_expertise: groupExpertise,
                     },
                   });
-                  location.assign(appendPaymentMethodToUrl(paymentData.url, paymentMethod));
+                  location.assign(appendPaymentMethodToUrl(paymentData.url, gatewayPaymentMethod));
                   //location.assign(paymentData.url);
                   return;
                 }
@@ -208,6 +228,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
       const { data } = await [centerId === CENTERS.CONSULT ? consultPayment : centerPayment][0].mutateAsync({
         book_id: bookId,
         ...(discountToken && { discount_token: discountToken }),
+        ...(gatewayPaymentMethod && { payment_method: gatewayPaymentMethod }),
       });
       if (data.status) {
         splunkInstance('booking').sendEvent({
@@ -221,7 +242,7 @@ const FactorWrapper = (props: FactorWrapperProps) => {
             group_expertise: groupExpertise,
           },
         });
-        location.assign(appendPaymentMethodToUrl(data.url, paymentMethod));
+        location.assign(appendPaymentMethodToUrl(data.url, gatewayPaymentMethod));
         //location.assign(data.url);
         return;
       }
@@ -262,6 +283,10 @@ const FactorWrapper = (props: FactorWrapperProps) => {
         onPayment={handlePaymentAction}
         selectedPaymentMethod={selectedPaymentMethod}
         onSelectionChange={handlePaymentMethodSelection}
+        extraWalletTopupEnabled={extraWalletTopupEnabled}
+        extraWalletTopupToman={extraWalletTopupToman}
+        onExtraWalletTopupEnabledChange={setExtraWalletTopupEnabled}
+        onExtraWalletTopupTomanChange={setExtraWalletTopupToman}
         isShowDiscountInput={
           centerId === CENTERS.CONSULT &&
           (checkPremiumUser(userInfo.vip) ? !premiumOnlineVisitDiscountPercentage && !premiumOnlineVistDiscountCode : true)
