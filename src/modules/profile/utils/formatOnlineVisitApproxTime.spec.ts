@@ -48,33 +48,36 @@ describe('formatJalaliDayMonthFa', () => {
 
 describe('onlineVisitCtaButtonProps', () => {
   it('leaves the original Plasmic CTA until first-available time exists', () => {
-    expect(onlineVisitCtaButtonProps('زهرا رجبلی', null)).toBeUndefined();
+    expect(onlineVisitCtaButtonProps(null)).toBeUndefined();
   });
 
   it('overrides the CTA only after a slot time exists', () => {
-    expect(onlineVisitCtaButtonProps('زهرا رجبلی', tehranMs(17, 0), tehranMs(16, 0))).toEqual({
-      children2: 'شروع ویزیت با زهرا رجبلی حدود ساعت 17 عصر امروز',
+    expect(onlineVisitCtaButtonProps(tehranMs(15, 30), tehranMs(14, 0))).toEqual({
+      children2: 'شروع ویزیت آنلاین حدود ساعت 15:30 ظهر امروز',
     });
   });
 });
 
 describe('buildOnlineVisitCtaText', () => {
+  it('uses شروع ویزیت آنلاین without doctor name', () => {
+    expect(buildOnlineVisitCtaText(null)).toBe('شروع ویزیت آنلاین');
+  });
+
   it('appends امروز or امشب when the slot is today', () => {
-    expect(buildOnlineVisitCtaText('زهرا رجبلی', tehranMs(17, 0), tehranMs(16, 0))).toBe(
-      'شروع ویزیت با زهرا رجبلی حدود ساعت 17 عصر امروز',
+    expect(buildOnlineVisitCtaText(tehranMs(15, 30), tehranMs(14, 0))).toBe(
+      'شروع ویزیت آنلاین حدود ساعت 15:30 ظهر امروز',
     );
-    expect(buildOnlineVisitCtaText('زهرا رجبلی', tehranMs(21, 40), tehranMs(16, 0))).toBe(
-      'شروع ویزیت با زهرا رجبلی حدود ساعت 21:45 شب امشب',
+    expect(buildOnlineVisitCtaText(tehranMs(21, 40), tehranMs(16, 0))).toBe(
+      'شروع ویزیت آنلاین حدود ساعت 21:45 شب امشب',
     );
   });
 
   it('appends jalali date when the slot is not today', () => {
     expect(
       buildOnlineVisitCtaText(
-        'زهرا رجبلی',
         Date.parse('2026-09-26T17:10:00+03:30'),
         Date.parse('2026-08-29T16:00:00+03:30'),
       ),
-    ).toBe('شروع ویزیت با زهرا رجبلی حدود ساعت 17:15 عصر 4 مهرماه');
+    ).toBe('شروع ویزیت آنلاین حدود ساعت 17:15 عصر 4 مهرماه');
   });
 });

@@ -91,26 +91,25 @@ export const formatRoundedOnlineVisitClock = (ms: number): string => {
 export const todayOrTonightLabelFa = (hour: number): 'امروز' | 'امشب' =>
   timeOfDayLabelFa(hour) === 'شب' ? 'امشب' : 'امروز';
 
-export const buildOnlineVisitCtaText = (displayName: string, freeturnMs: number | null, nowMs = Date.now()): string => {
-  const name = displayName.trim();
-  const base = name ? `شروع ویزیت با ${name}` : 'شروع ویزیت';
-  if (freeturnMs == null) return base;
+export const ONLINE_VISIT_CTA_BASE = 'شروع ویزیت آنلاین';
+
+export const buildOnlineVisitCtaText = (freeturnMs: number | null, nowMs = Date.now()): string => {
+  if (freeturnMs == null) return ONLINE_VISIT_CTA_BASE;
 
   const sourceMs = freeturnMs < nowMs ? nowMs : freeturnMs;
   const timeText = formatRoundedOnlineVisitClock(sourceMs);
   if (isSameTehranCalendarDay(sourceMs, nowMs)) {
-    return `${base} ${timeText} ${todayOrTonightLabelFa(roundUpToQuarterHourTehran(sourceMs).hour)}`;
+    return `${ONLINE_VISIT_CTA_BASE} ${timeText} ${todayOrTonightLabelFa(roundUpToQuarterHourTehran(sourceMs).hour)}`;
   }
 
-  return `${base} ${timeText} ${formatJalaliDayMonthFa(sourceMs)}`;
+  return `${ONLINE_VISIT_CTA_BASE} ${timeText} ${formatJalaliDayMonthFa(sourceMs)}`;
 };
 
 export const onlineVisitCtaButtonProps = (
-  displayName: string,
   freeturnMs: number | null,
   nowMs = Date.now(),
 ): { children2: string } | undefined => {
   if (freeturnMs == null) return undefined;
-  return { children2: buildOnlineVisitCtaText(displayName, freeturnMs, nowMs) };
+  return { children2: buildOnlineVisitCtaText(freeturnMs, nowMs) };
 };
 

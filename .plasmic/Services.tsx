@@ -52,13 +52,12 @@ function Services_(props: ServicesProps, ref: HTMLElementRefOf<'div'>) {
   const showNewBox =
     props.type === 'onlineVisit' &&
     (qaOverride || isNewOnlineVisitBoxEnabled(featureValue, slug, featureFromHook || featureFromSlugAttr));
-  const displayName = typeof props.information?.display_name === 'string' ? props.information.display_name : '';
   const { freeturnMs } = useOnlineVisitFirstAvailable({
     enabled: showNewBox,
     serviceId: props.service?.id != null ? String(props.service.id) : undefined,
     userCenterId: props.service?.user_center_id != null ? String(props.service.user_center_id) : undefined,
   });
-  const ctaButton = onlineVisitCtaButtonProps(displayName, freeturnMs);
+  const ctaButton = onlineVisitCtaButtonProps(freeturnMs);
 
   if (!showNewBox) {
     return (
