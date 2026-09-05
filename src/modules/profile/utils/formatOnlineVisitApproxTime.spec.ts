@@ -47,11 +47,13 @@ describe('formatJalaliDayMonthFa', () => {
 });
 
 describe('onlineVisitCtaButtonProps', () => {
-  it('leaves the original Plasmic CTA until first-available time exists', () => {
-    expect(onlineVisitCtaButtonProps(null)).toBeUndefined();
+  it('uses شروع ویزیت آنلاین on desktop and mobile until first-available returns', () => {
+    expect(onlineVisitCtaButtonProps(null)).toEqual({
+      children2: 'شروع ویزیت آنلاین',
+    });
   });
 
-  it('overrides the CTA only after a slot time exists', () => {
+  it('appends rounded time after a slot exists', () => {
     expect(onlineVisitCtaButtonProps(tehranMs(15, 30), tehranMs(14, 0))).toEqual({
       children2: 'شروع ویزیت آنلاین حدود ساعت 15:30 ظهر امروز',
     });

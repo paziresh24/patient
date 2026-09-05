@@ -108,8 +108,7 @@ export const buildOnlineVisitCtaText = (freeturnMs: number | null, nowMs = Date.
 export const onlineVisitCtaButtonProps = (
   freeturnMs: number | null,
   nowMs = Date.now(),
-): { children2: string } | undefined => {
-  if (freeturnMs == null) return undefined;
-  return { children2: buildOnlineVisitCtaText(freeturnMs, nowMs) };
-};
+): { children2: string } => ({
+  children2: buildOnlineVisitCtaText(freeturnMs, nowMs),
+});
 

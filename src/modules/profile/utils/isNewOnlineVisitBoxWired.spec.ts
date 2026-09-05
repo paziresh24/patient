@@ -12,6 +12,7 @@ describe('new online visit box wiring', () => {
     expect(services).toContain('NEW_ONLINE_VISIT_BOX_FEATURE');
     expect(services).toContain('setAttributes');
     expect(services).toContain('onlineVisitCtaButtonProps');
+    expect(services).toContain('button={ctaButton}');
     expect(services).toContain('hideConsultWaitingTime');
     expect(services).toContain("data-new-online-visit-box");
     expect(services).toContain('wrapChildren');
