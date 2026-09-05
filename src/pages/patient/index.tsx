@@ -5,6 +5,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
+import CommentIcon from '@/common/components/icons/comment';
 import CenterIcon from '@/common/components/icons/center';
 import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
@@ -109,6 +110,15 @@ export const PatinetProfile = () => {
               <CalenderIcon />
               <Text fontWeight="medium" fontSize="sm">
                 نوبت های من
+              </Text>
+            </div>
+            <div
+              onClick={() => openPrivateLink('/patient/reviews?referrer=profile')}
+              className="flex cursor-pointer items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+            >
+              <CommentIcon />
+              <Text fontWeight="medium" fontSize="sm">
+                نظرات من
               </Text>
             </div>
             {customize.bookMark && (

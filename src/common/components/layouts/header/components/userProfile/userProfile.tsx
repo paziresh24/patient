@@ -96,6 +96,12 @@ export const UserProfile = () => {
       shouldShow: userInfo.provider?.job_title !== 'doctor',
     },
     {
+      name: 'نظرات من',
+      icon: <CommentIcon width={22} height={22} />,
+      link: '/dashboard/my-reviews',
+      shouldShow: userInfo.provider?.job_title !== 'doctor',
+    },
+    {
       name: 'مراجعین من',
       icon: <CalenderIcon width={22} height={22} />,
       link: '/dashboard/apps/drapp/appointments',
@@ -125,6 +131,12 @@ export const UserProfile = () => {
       badge: !!turnsCount.presence && (
         <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
       ),
+      shouldShow: true,
+    },
+    {
+      name: 'نظرات من',
+      icon: <CommentIcon width={22} height={22} />,
+      link: '/patient/reviews',
       shouldShow: true,
     },
     {
