@@ -394,6 +394,7 @@ initial-chunks:
     exit_codes:
       - 75
 
+# retrigger: main build-docker after MR !276 (git fetch 500 flake on pipeline 16726)
 build-docker-image:
   extends: .build-docker-common
   stage: build
