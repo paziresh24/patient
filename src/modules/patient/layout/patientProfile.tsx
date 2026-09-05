@@ -72,16 +72,16 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
             <CalenderIcon />
             <Text fontWeight="medium">{t('menu.myTurns')}</Text>
           </Link>
+          <Link href="/patient/reviews" className="flex items-center py-4 space-s-3 whitespace-nowrap">
+            <CommentIcon />
+            <Text fontWeight="medium">نظرات من</Text>
+          </Link>
           {customize.bookMark && (
             <Link href="/patient/bookmarks" className="flex items-center py-4 space-s-3 whitespace-nowrap">
               <BookmarkIcon />
               <Text fontWeight="medium">{t('menu.bookmarks')}</Text>
             </Link>
           )}
-          <Link href="/patient/reviews" className="flex items-center py-4 space-s-3 whitespace-nowrap">
-            <CommentIcon />
-            <Text fontWeight="medium">نظرات من</Text>
-          </Link>
           <Link href="/patient/subuser" className="flex items-center py-4 space-s-3 whitespace-nowrap">
             <UsersIcon />
             <Text fontWeight="medium">{t('menu.subuser')}</Text>
