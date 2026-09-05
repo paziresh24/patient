@@ -77,7 +77,7 @@ function Services_(props: ServicesProps, ref: HTMLElementRefOf<'div'>) {
       }}
       {...props}
       waitingTimeInfo={hideConsultWaitingTime(props.waitingTimeInfo)}
-      {...(ctaButton ? { button: ctaButton } : {})}
+      button={ctaButton}
     />
   );
 }
