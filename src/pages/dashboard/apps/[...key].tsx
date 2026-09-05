@@ -13,8 +13,7 @@ import { isRaviPatientMyReviewsMenu } from '@/modules/dashboard/constants/raviPa
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { buildRaviMyReviewsUrl } from '@/modules/patient/utils/buildRaviMyReviewsUrl';
-import { getCookie } from 'cookies-next';
+import { buildRaviMyReviewsHandoffSrc } from '@/modules/patient/utils/buildRaviMyReviewsHandoff';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -37,8 +36,7 @@ export const Dashboard = (props: any) => {
 
   const knownEmbedSrc = useMemo(() => {
     if (isPatientMyReviews) {
-      const token = typeof window === 'undefined' ? undefined : getCookie('token');
-      return buildRaviMyReviewsUrl(typeof token === 'string' ? token : undefined);
+      return buildRaviMyReviewsHandoffSrc();
     }
     return getKnownDrappEmbedSrc(appKey, menuKey);
   }, [appKey, menuKey, isPatientMyReviews]);
@@ -149,6 +147,7 @@ export const Dashboard = (props: any) => {
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
                 src={iframeSrc}
+                referrerPolicy={isPatientMyReviews ? 'no-referrer' : undefined}
                 allow="microphone; camera; fullscreen; clipboard-write;"
                 sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />
