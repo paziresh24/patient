@@ -1124,29 +1124,53 @@ const Receipt = () => {
           {bookDetailsData.book_id && growthbook.ready && !userPednding && (
             <div className="p-5">
               {centerType === 'consult' && (
-                <Fragment
-                  name="ReceiptActionButtons"
-                  props={{
-                    bookDetailsData: {
-                      ...bookDetailsData,
-                      doctor: { ...bookDetailsData.doctor, display_name: doctorName },
-                      selected_online_visit_channel: {
-                        ...bookDetailsData?.selected_online_visit_channel,
-                        channel_link: decodeURIComponent(
-                          bookDetailsData?.selected_online_visit_channel?.channel_link.replace(
-                            'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
-                            '',
+                <div className="flex flex-col gap-2">
+                  <Fragment
+                    name="ReceiptActionButtons"
+                    props={{
+                      bookDetailsData: {
+                        ...bookDetailsData,
+                        doctor: { ...bookDetailsData.doctor, display_name: doctorName },
+                        selected_online_visit_channel: {
+                          ...bookDetailsData?.selected_online_visit_channel,
+                          channel_link: decodeURIComponent(
+                            bookDetailsData?.selected_online_visit_channel?.channel_link.replace(
+                              'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+                              '',
+                            ),
                           ),
-                        ),
+                        },
                       },
-                    },
-                    specialities: [],
-                    currentUserId: user.id,
-                  }}
-                  variants={{
-                    type: centerType === 'consult' ? 'visitOnline' : turnStatus.requestedTurn ? 'request' : 'inPerson',
-                  }}
-                />
+                      specialities: [],
+                      currentUserId: user.id,
+                    }}
+                    variants={{
+                      type: centerType === 'consult' ? 'visitOnline' : turnStatus.requestedTurn ? 'request' : 'inPerson',
+                    }}
+                  />
+                  <Button
+                    block
+                    variant="secondary"
+                    onClick={() => {
+                      splunkInstance('booking').sendEvent({
+                        group: 'support-receipt',
+                        type: 'click-support',
+                        event: {
+                          doctor_id: bookDetailsData?.doctor?.id,
+                          slug: bookDetailsData?.doctor?.slug,
+                          server_id: bookDetailsData?.doctor?.server_id,
+                          doctor_name: doctorName,
+                          book_id: bookDetailsData.book_id,
+                          reference_code: bookDetailsData.reference_code,
+                          book_date: bookDetailsData.book_time_strings,
+                        },
+                      });
+                      window.open('https://support.paziresh24.com/', '_blank', 'noopener,noreferrer');
+                    }}
+                  >
+                    پشتیبانی
+                  </Button>
+                </div>
               )}
               {showOptionalButton && (
                 <>

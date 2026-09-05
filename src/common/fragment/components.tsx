@@ -37,7 +37,8 @@ const PlasmicSort = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/Pl
 const PlasmicConsultBanner = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicConsultBanner'));
 const PlasmicResultView = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicResultView'));
 const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
-const PlasmicReceiptActionButtons = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicReceiptActionButtons'));
+// اسکلتِ خودمان — مخفی‌سازی «پیگیری تأخیر / پشتیبانی این نوبت» بدون دست‌کاری فایل auto-generated
+const PlasmicReceiptActionButtons = dynamic(() => import('.plasmic/ReceiptActionButtons'));
 const PlasmicRecentSearch = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch'));
 
 import { PlasmicReviewRateAndReviews__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews';
