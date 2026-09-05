@@ -18,8 +18,17 @@ function ReceiptActionButtons_(props: ReceiptActionButtonsProps, ref: HTMLElemen
   const wrapRef = React.useRef<HTMLDivElement>(null);
 
   React.useLayoutEffect(() => {
-    hideLegacySupportAndDelayButtons(wrapRef.current);
-  });
+    const root = wrapRef.current;
+    hideLegacySupportAndDelayButtons(root);
+    if (!root || typeof MutationObserver === 'undefined') return;
+
+    // Plasmic/Dialog may mount trigger nodes after the first layout pass.
+    const observer = new MutationObserver(() => {
+      hideLegacySupportAndDelayButtons(root);
+    });
+    observer.observe(root, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div ref={wrapRef} data-receipt-action-buttons-owned="">
