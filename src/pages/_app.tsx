@@ -37,7 +37,6 @@ import "react-photo-view/dist/react-photo-view.css";
 import "../styles/globals.css";
 import "../styles/nprogress.css";
 import GlobalContextsProvider from "../../.plasmic/plasmic/paziresh_24/PlasmicGlobalContextsProvider";
-import { VoiceCallHost } from "@/modules/voice-agent";
 import { useUserInfoStore } from "@/modules/login/store/userInfo";
 import axios from "axios";
 import RouteProgress from "@/common/components/layouts/RouteProgress";
@@ -236,7 +235,6 @@ function MyApp(props: AppProps) {
               </Head>
               <Hydrate state={pageProps.dehydratedState}>
                 {getLayout(<Component {...pageProps} />, router)}
-                <VoiceCallHost />
               </Hydrate>
               {!isGtmDisabled && isGtmReady && (
                 <Script
