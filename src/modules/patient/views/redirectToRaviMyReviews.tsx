@@ -1,20 +1,13 @@
 import Loading from '@/common/components/atom/loading';
-import { buildRaviMyReviewsUrl } from '@/modules/patient/utils/buildRaviMyReviewsUrl';
-import { getCookie } from 'cookies-next';
+import { buildRaviMyReviewsHandoffSrc } from '@/modules/patient/utils/buildRaviMyReviewsHandoff';
 import { useLayoutEffect } from 'react';
 
-function readToken(): string | undefined {
-  const token = getCookie('token');
-  return typeof token === 'string' && token.trim() ? token.trim() : undefined;
-}
-
-/** Hard-navigate to ravi-front my-reviews (p24cloud cannot read *.paziresh24.com cookies). */
+/** Same-origin handoff so the httpOnly session cookie reaches Next.js. */
 export function goToRaviMyReviews(): void {
   if (typeof window === 'undefined') return;
-  window.location.replace(buildRaviMyReviewsUrl(readToken()));
+  window.location.replace(buildRaviMyReviewsHandoffSrc());
 }
 
-/** Cross-site: p24cloud cannot read *.paziresh24.com cookies; pass token once. */
 export const RedirectToRaviMyReviews = () => {
   useLayoutEffect(() => {
     goToRaviMyReviews();
