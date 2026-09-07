@@ -2,6 +2,7 @@ import Card from '@/components/atom/card';
 import omit from 'lodash/omit';
 import useTranslation from 'next-translate/useTranslation';
 import { useMemo } from 'react';
+import { useNewOnlineVisitBoxEnabled } from '@/modules/profile/hooks/useNewOnlineVisitBoxEnabled';
 import TurnBody from './body';
 import TurnFooter from './footer';
 import TurnHeader from './header';
@@ -28,6 +29,7 @@ export const Turn: React.FC<TurnProps> = props => {
     currentTime,
   } = props;
   const { t } = useTranslation();
+  const useOnlineVisitDisplayBuffer = useNewOnlineVisitBoxEnabled(doctorInfo?.slug);
 
   const detailsData = useMemo(
     () =>
@@ -39,8 +41,9 @@ export const Turn: React.FC<TurnProps> = props => {
         paymentStatus,
         activePaymentStatus: centerInfo.activePaymentStatus,
         translate: t,
+        useOnlineVisitDisplayBuffer,
       }),
-    [turnDetails, status, centerType],
+    [turnDetails, status, centerType, useOnlineVisitDisplayBuffer],
   );
 
   return (

@@ -9,8 +9,7 @@ describe('new online visit box wiring', () => {
   );
 
   it('keeps the Plasmic Services wrapper gated on new_onlinevisit_box', () => {
-    expect(services).toContain('NEW_ONLINE_VISIT_BOX_FEATURE');
-    expect(services).toContain('setAttributes');
+    expect(services).toContain('useNewOnlineVisitBoxEnabled');
     expect(services).toContain('onlineVisitCtaButtonProps');
     expect(services).toContain('button={ctaButton}');
     expect(services).toContain('hideConsultWaitingTime');

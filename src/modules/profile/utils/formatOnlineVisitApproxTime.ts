@@ -1,14 +1,11 @@
+import { applyOnlineVisitPatientDisplayBufferMs } from '@/modules/booking/utils/onlineVisitPatientDisplayTime';
+
 const TEHRAN_TZ = 'Asia/Tehran';
 
 type TehranClock = {
   hour: number;
   minute: number;
   second: number;
-};
-
-type RoundedClock = {
-  hour: number;
-  minute: 0 | 15 | 30 | 45;
 };
 
 export const getTehranClock = (ms: number): TehranClock => {
@@ -30,17 +27,11 @@ export const getTehranClock = (ms: number): TehranClock => {
   };
 };
 
-export const roundUpToQuarterHourTehran = (ms: number): RoundedClock => {
-  const { hour, minute, second } = getTehranClock(ms);
-  const hasRemainder = second > 0 || ms % 1000 !== 0;
-  const onQuarter = minute % 15 === 0 && !hasRemainder;
-
-  if (onQuarter) return { hour, minute: minute as RoundedClock['minute'] };
-  if (minute < 15) return { hour, minute: 15 };
-  if (minute < 30) return { hour, minute: 30 };
-  if (minute < 45) return { hour, minute: 45 };
-
-  return { hour: (hour + 1) % 24, minute: 0 };
+/** @deprecated Prefer applyOnlineVisitPatientDisplayBufferMs (+15 then ceil to 5). Kept for any leftover callers. */
+export const roundUpToQuarterHourTehran = (ms: number): { hour: number; minute: number } => {
+  const displayMs = applyOnlineVisitPatientDisplayBufferMs(ms);
+  const { hour, minute } = getTehranClock(displayMs);
+  return { hour, minute };
 };
 
 export const timeOfDayLabelFa = (hour: number): 'صبح' | 'ظهر' | 'عصر' | 'شب' => {
@@ -83,7 +74,8 @@ export const formatJalaliDayMonthFa = (ms: number): string => {
 };
 
 export const formatRoundedOnlineVisitClock = (ms: number): string => {
-  const { hour, minute } = roundUpToQuarterHourTehran(ms);
+  const displayMs = applyOnlineVisitPatientDisplayBufferMs(ms);
+  const { hour, minute } = getTehranClock(displayMs);
   const clock = minute === 0 ? String(hour) : `${hour}:${String(minute).padStart(2, '0')}`;
   return `حدود ساعت ${clock} ${timeOfDayLabelFa(hour)}`;
 };
@@ -97,18 +89,19 @@ export const buildOnlineVisitCtaText = (freeturnMs: number | null, nowMs = Date.
   if (freeturnMs == null) return ONLINE_VISIT_CTA_BASE;
 
   const sourceMs = freeturnMs < nowMs ? nowMs : freeturnMs;
+  const displayMs = applyOnlineVisitPatientDisplayBufferMs(sourceMs);
   const timeText = formatRoundedOnlineVisitClock(sourceMs);
-  if (isSameTehranCalendarDay(sourceMs, nowMs)) {
-    return `${ONLINE_VISIT_CTA_BASE} ${timeText} ${todayOrTonightLabelFa(roundUpToQuarterHourTehran(sourceMs).hour)}`;
+  if (isSameTehranCalendarDay(displayMs, nowMs)) {
+    return `${ONLINE_VISIT_CTA_BASE} ${timeText} ${todayOrTonightLabelFa(getTehranClock(displayMs).hour)}`;
   }
 
-  return `${ONLINE_VISIT_CTA_BASE} ${timeText} ${formatJalaliDayMonthFa(sourceMs)}`;
+  return `${ONLINE_VISIT_CTA_BASE} ${timeText} ${formatJalaliDayMonthFa(displayMs)}`;
 };
 
 export const onlineVisitCtaButtonProps = (
   freeturnMs: number | null,
   nowMs = Date.now(),
-): { children2: string } => ({
-  children2: buildOnlineVisitCtaText(freeturnMs, nowMs),
-});
-
+): { children2: string } | undefined => {
+  if (freeturnMs == null) return undefined;
+  return { children2: buildOnlineVisitCtaText(freeturnMs, nowMs) };
+};

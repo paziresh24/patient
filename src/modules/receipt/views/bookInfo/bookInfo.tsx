@@ -3,6 +3,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import useCustomize from '@/common/hooks/useCustomize';
 import BaseRow from '@/modules/booking/components/baseRow/baseRow';
 import { CenterType } from '@/modules/myTurn/types/centerType';
+import { useNewOnlineVisitBoxEnabled } from '@/modules/profile/hooks/useNewOnlineVisitBoxEnabled';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { VisitChannels } from '../../constants/onlineVisitChannels';
 import { turnDetailsData } from './turnDetails';
@@ -31,6 +32,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
   const isConsultReceipt = centerId === '5532';
   const { customize } = useCustomize();
   const useChatLifecycleDuration = useFeatureIsOn('online-visit-chat-lifecycle-duration');
+  const useOnlineVisitDisplayBuffer = useNewOnlineVisitBoxEnabled(turnData?.doctor?.slug);
   // Prefer page-resolved doctor user_id; else bookId → appointment doctor; else slug (may be non-canonical).
   const { days: chatLifecycleDays, isPending: isChatLifecycleDurationPending } = useChatLifecycleAutoCloseHours({
     enabled: useChatLifecycleDuration && isConsultReceipt,
@@ -129,6 +131,7 @@ export const BookInfo = (props: PaymentDetailsProps) => {
             },
             centerType: turnData.is_online_visit ? CenterType.consult : CenterType.clinic,
             metaData: { messengerButtonType, possibilityBeingVisited },
+            useOnlineVisitDisplayBuffer,
           }).map(item => (
             <div key={item.id} className="px-5 py-3">
               <BaseRow data={item as any} key={item.id} />
