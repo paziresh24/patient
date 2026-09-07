@@ -7,14 +7,10 @@ import {
 } from './plasmic/paziresh_24/PlasmicServices';
 import { HTMLElementRefOf } from '@plasmicapp/react-web';
 import { useRouter } from 'next/router';
-import { useFeatureIsOn, useFeatureValue, useGrowthBook } from '@growthbook/growthbook-react';
 import { CENTERS } from '@/common/types/centers';
 import { useOnlineVisitFirstAvailable } from '@/modules/profile/hooks/useOnlineVisitFirstAvailable';
+import { useNewOnlineVisitBoxEnabled } from '@/modules/profile/hooks/useNewOnlineVisitBoxEnabled';
 import { onlineVisitCtaButtonProps } from '@/modules/profile/utils/formatOnlineVisitApproxTime';
-import {
-  NEW_ONLINE_VISIT_BOX_FEATURE,
-  isNewOnlineVisitBoxEnabled,
-} from '@/modules/profile/utils/isNewOnlineVisitBoxEnabled';
 import { replaceOnlineVisitHeading } from '@/modules/profile/utils/replaceOnlineVisitHeading';
 
 export interface ServicesProps extends DefaultServicesProps {}
@@ -29,29 +25,12 @@ const hideConsultWaitingTime = (waitingTimeInfo: unknown) => {
 function Services_(props: ServicesProps, ref: HTMLElementRefOf<'div'>) {
   const slug = typeof props.seo?.slug === 'string' ? props.seo.slug : '';
   const router = useRouter();
-  const growthbook = useGrowthBook();
-  const featureValue = useFeatureValue<unknown>(NEW_ONLINE_VISIT_BOX_FEATURE, { slugs: [] });
-  const featureFromHook = useFeatureIsOn(NEW_ONLINE_VISIT_BOX_FEATURE);
-  const [featureFromSlugAttr, setFeatureFromSlugAttr] = React.useState(false);
+  const featureEnabled = useNewOnlineVisitBoxEnabled(slug);
   const qaOverride =
     process.env.NODE_ENV === 'development' &&
     (router.query.new_onlinevisit_box === '1' || router.query.new_onlinevisit_box === 'true');
 
-  React.useLayoutEffect(() => {
-    if (!growthbook || !slug) {
-      setFeatureFromSlugAttr(false);
-      return;
-    }
-    growthbook.setAttributes({
-      ...growthbook.getAttributes(),
-      slug,
-    });
-    setFeatureFromSlugAttr(growthbook.isOn(NEW_ONLINE_VISIT_BOX_FEATURE));
-  }, [growthbook, slug, growthbook?.ready, featureFromHook]);
-
-  const showNewBox =
-    props.type === 'onlineVisit' &&
-    (qaOverride || isNewOnlineVisitBoxEnabled(featureValue, slug, featureFromHook || featureFromSlugAttr));
+  const showNewBox = props.type === 'onlineVisit' && (qaOverride || featureEnabled);
   const { freeturnMs } = useOnlineVisitFirstAvailable({
     enabled: showNewBox,
     serviceId: props.service?.id != null ? String(props.service.id) : undefined,

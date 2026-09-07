@@ -2,7 +2,7 @@ import Alert from '@/common/components/atom/alert';
 import Skeleton from '@/common/components/atom/skeleton';
 import InfoIcon from '@/common/components/icons/info';
 import { WarningIcon } from '@/common/components/icons/warning';
-import { withApproxTimePrefix } from '@/modules/booking/utils/withApproxTimePrefix';
+import { formatOnlineVisitPatientBookTime } from '@/modules/booking/utils/onlineVisitPatientDisplayTime';
 import MessengerButton from '@/modules/myTurn/components/messengerButton/messengerButton';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
@@ -53,9 +53,11 @@ interface TurnDetailsDataParam {
     messengerButtonType?: string;
     possibilityBeingVisited?: boolean;
   };
+  /** Align with profile `new_onlinevisit_box` — buffer only when enabled for this doctor. */
+  useOnlineVisitDisplayBuffer?: boolean;
 }
 
-export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataParam) => {
+export const turnDetailsData = ({ data, centerType, metaData, useOnlineVisitDisplayBuffer = false }: TurnDetailsDataParam) => {
   const {
     bookTime,
     trackingCode,
@@ -84,11 +86,14 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
   } = data;
 
   if (service?.service_type_id == 9) {
+    const isOnlineVisit = centerType === CenterType.consult;
     return [
       {
         id: 1,
-        name: "زمان دقیق نوبت",
-        value: bookTime,
+        name: isOnlineVisit ? 'زمان ارتباط با پزشک' : 'زمان دقیق نوبت',
+        value: isOnlineVisit
+          ? formatOnlineVisitPatientBookTime(bookTime, { enabled: useOnlineVisitDisplayBuffer })
+          : bookTime,
         type: 'Text',
         isBoldValue: true,
         calendarEvent: bookId ? { bookId, centerId } : undefined,
@@ -180,7 +185,9 @@ export const turnDetailsData = ({ data, centerType, metaData }: TurnDetailsDataP
     {
       id: 1,
       name: centerType === CenterType.consult ? 'زمان ارتباط با پزشک' : 'زمان تقریبی نوبت',
-      value: centerType === CenterType.consult ? withApproxTimePrefix(bookTime) : bookTime,
+      value: centerType === CenterType.consult
+        ? formatOnlineVisitPatientBookTime(bookTime, { enabled: useOnlineVisitDisplayBuffer })
+        : bookTime,
       shouldShow: turnStatus !== BookStatus.requested,
       type: 'Text',
       isBoldValue: true,
