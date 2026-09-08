@@ -3,6 +3,7 @@ export { validateDoctorSlug, type DoctorSlugValidationResponse, type DoctorSlugR
 export { handleDoctorSlug, isDoctorSlugValid, getCorrectDoctorSlug } from './doctorSlugHandler';
 export { getDoctorFullName, type DoctorFullNameResponse } from './getDoctorFullName';
 export { getDoctorBiography, type DoctorBiographyResponse } from './getDoctorBiography';
+export { getDoctorMedicalCode, type DoctorMedicalCodeResponse } from './getDoctorMedicalCode';
 export { getDoctorImage, type DoctorImageResponse } from './getDoctorImage';
 export { getDoctorCenters, type DoctorCentersResponse } from './getDoctorCenters';
 export {
