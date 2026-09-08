@@ -1,6 +1,7 @@
 import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
+import { getDoctorMedicalCode } from '@/common/apis/services/doctor/getDoctorMedicalCode';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
@@ -360,6 +361,10 @@ export async function getAggregatedProfileData(
     options?.useNewDoctorExpertiseAPI ? getDoctorExpertise(validatedSlug) : Promise.resolve(null),
     options?.useNewDoctorImageAPI ? getDoctorImage(validatedSlug) : Promise.resolve(null),
     options?.useNewDoctorBiographyAPI ? getDoctorBiography(validatedSlug) : Promise.resolve(null),
+    getDoctorMedicalCode(validatedSlug, {
+      id: slugInfo?.id ?? slugInfo?.owner_id,
+      server_id: slugInfo?.server_id,
+    }),
     options?.useNewDoctorCentersAPI
       ? getDoctorCenters(validatedSlug, university, { onlyBookable: false })
       : Promise.resolve(null),
@@ -386,6 +391,7 @@ export async function getAggregatedProfileData(
       doctorExpertiseResult,
       doctorImageResult,
       doctorBiographyResult,
+      doctorMedicalCodeResult,
       doctorCentersResult,
     ],
     samanAvailability,
@@ -415,6 +421,9 @@ export async function getAggregatedProfileData(
       doctorBiography = await getDoctorBiography(validatedSlug);
     }
   }
+
+  const doctorMedicalCode =
+    doctorMedicalCodeResult?.status === 'fulfilled' ? doctorMedicalCodeResult.value?.medical_code?.trim() || '' : '';
 
   // Extract doctor centers from API response
   const doctorCenters = options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
@@ -492,6 +501,7 @@ export async function getAggregatedProfileData(
       doctorBiography.biography.trim().length > 0 && {
         biography: doctorBiography.biography,
       }),
+    ...(doctorMedicalCode && { councilMedicalCode: doctorMedicalCode }),
     // Add centers to overwriteData if new API is used and successful
     ...(options?.useNewDoctorCentersAPI &&
       (doctorCenters?.length ?? 0) > 0 && {

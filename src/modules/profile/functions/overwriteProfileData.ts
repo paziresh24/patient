@@ -35,6 +35,7 @@ export type OverwriteProfileData = {
   expertises?: any;
   image?: string;
   biography?: string;
+  councilMedicalCode?: string;
   credentials?: BioCredentials;
   centers?: any;
   gallery?: any;
@@ -107,6 +108,7 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
     family: source?.family,
     biography: pickNonEmptyBiography(overwriteData?.biography, providerBiography, source?.biography),
     employee_id: source?.medical_code,
+    councilMedicalCode: overwriteData?.councilMedicalCode ?? '',
     experience: source?.experience ?? null,
     gender: source?.gender ?? null,
     image: overwriteData?.image ?? source?.image ?? null,
