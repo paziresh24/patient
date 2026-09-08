@@ -16,13 +16,16 @@ interface CenterCardProps extends Center {
 export const CenterCard = (props: CenterCardProps) => {
   const { onClick, ...center } = props;
   const { id, isDisable, name, type, address, freeturn, phoneNumbers, availableTime, isAvailable = true, waitingTimeInfo } = center;
+  const isClickable = !isDisable && isAvailable;
+  const service = center.services?.[0];
 
   return (
     <>
       <div
-        onClick={() => !isDisable && isAvailable && onClick(center)}
-        className={classNames('w-full rounded-lg border-2 border-slate-200 cursor-pointer shadow-sm', {
-          'cursor-default': isDisable || !isAvailable,
+        onClick={() => isClickable && onClick(center)}
+        className={classNames('w-full rounded-lg border-2 border-slate-200 shadow-sm', {
+          'cursor-pointer': isClickable,
+          'cursor-default': !isClickable,
         })}
       >
         <div
@@ -33,8 +36,8 @@ export const CenterCard = (props: CenterCardProps) => {
         >
           <div className="flex items-center w-full">
             <div className={classNames('flex justify-between items-center w-full text-sm')}>
-              <Text className={classNames('line-clamp-1 font-semibold', { 'text-primary': !isDisable })}>{name}</Text>
-              <ChevronIcon dir="left" className="min-w-2" />
+              <Text className={classNames('line-clamp-1 font-semibold', { 'text-primary': isClickable })}>{name}</Text>
+              {isClickable && <ChevronIcon dir="left" className="min-w-2" />}
             </div>
           </div>
           {!!address && (
@@ -43,7 +46,7 @@ export const CenterCard = (props: CenterCardProps) => {
             </Text>
           )}
         </div>
-        {(!!freeturn || !!waitingTimeInfo?.waiting_time_title) && !isDisable && isAvailable && (
+        {(!!freeturn || !!waitingTimeInfo?.waiting_time_title) && isClickable && (
           <div className="pb-3">
             <Divider className="mb-3" />
             {freeturn && (
@@ -66,8 +69,8 @@ export const CenterCard = (props: CenterCardProps) => {
             <Divider />
             <Notification
               centerId={center.id}
-              serviceId={center.services[0].id}
-              userCenterId={center.services[0].user_center_id}
+              serviceId={service?.id}
+              userCenterId={service?.user_center_id ?? (center as any).user_center_id}
               availalbeTime={availableTime}
             />
           </>
