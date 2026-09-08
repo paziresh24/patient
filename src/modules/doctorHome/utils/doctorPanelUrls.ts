@@ -8,5 +8,5 @@ export const DOCTOR_PANEL_URLS = {
   bills: 'https://providers.paziresh24.com/app/financial/bills',
 } as const;
 
-/** داشبورد نظرات بیماران (راوی) */
-export const RAVI_DOCSIDE_URL = 'https://ravi-docs.paziresh24.com/ravi-docside/index.html';
+/** Same-origin bounce → ravi-front docside with the doctor session token */
+export const RAVI_DOCSIDE_URL = '/dashboard/ravi-docside-handoff';

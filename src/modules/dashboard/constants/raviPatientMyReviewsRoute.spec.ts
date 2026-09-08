@@ -1,4 +1,8 @@
-import { isRaviPatientMyReviewsMenu, raviAppParentLink } from './raviPatientMyReviewsRoute';
+import {
+  isRaviDoctorProfileReviewsMenu,
+  isRaviPatientMyReviewsMenu,
+  raviAppParentLink,
+} from './raviPatientMyReviewsRoute';
 
 describe('isRaviPatientMyReviewsMenu', () => {
   it('matches the hamdast ravi my_feedbacks menu', () => {
@@ -13,6 +17,17 @@ describe('isRaviPatientMyReviewsMenu', () => {
   it('does not rewrite the parent نظرات branch itself', () => {
     expect(isRaviPatientMyReviewsMenu('ravi', undefined)).toBe(false);
     expect(isRaviPatientMyReviewsMenu('ravi', '')).toBe(false);
+  });
+});
+
+describe('isRaviDoctorProfileReviewsMenu', () => {
+  it('matches the hamdast doctor profile reviews menu', () => {
+    expect(isRaviDoctorProfileReviewsMenu('ravi', 'my_prifile_feedbacks')).toBe(true);
+  });
+
+  it('does not match patient my-reviews or other apps', () => {
+    expect(isRaviDoctorProfileReviewsMenu('ravi', 'my_feedbacks')).toBe(false);
+    expect(isRaviDoctorProfileReviewsMenu('drapp', 'my_prifile_feedbacks')).toBe(false);
   });
 });
 
