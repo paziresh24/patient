@@ -26,7 +26,7 @@ import {
 } from '../designSystem';
 import { DoctorHomeFeedItem, DoctorHomeFeedReview } from '../types/feed';
 import { sendDoctorHomeEvent } from '../utils/analytics';
-import { appendUserIdToUrl, buildDoctorPanelUrl } from '../utils/iframeUrl';
+import { buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { dsFocusRing } from '../utils/a11y';
 import { getAppointmentTimelineStatuses } from '../utils/timelineStatus';
 import { FeedActionsSection } from './feedActionsSection';
@@ -277,7 +277,7 @@ const ReviewsFeedItem = ({
       >
         {allSheet.open && (
           <iframe
-            src={appendUserIdToUrl(RAVI_DOCSIDE_URL, userId)}
+            src={RAVI_DOCSIDE_URL}
             title="راوی؛ نظرات بیماران"
             className="min-h-0 w-full flex-1 border-0"
           />

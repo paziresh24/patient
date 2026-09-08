@@ -3,6 +3,11 @@ export function isRaviPatientMyReviewsMenu(appKey?: string, menuKey?: string): b
   return appKey === 'ravi' && menuKey === 'my_feedbacks';
 }
 
+/** Hamdast key for doctor profile reviews (typo is live in hamdast). */
+export function isRaviDoctorProfileReviewsMenu(appKey?: string, menuKey?: string): boolean {
+  return appKey === 'ravi' && menuKey === 'my_prifile_feedbacks';
+}
+
 /**
  * Parent «نظرات» must expand only when it has children.
  * Its hamdast home key is my_feedbacks, which hard-redirects to ravi-front and would skip the submenu.

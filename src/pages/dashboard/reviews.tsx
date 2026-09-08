@@ -1,42 +1,34 @@
 import { LayoutWithHeaderAndFooter } from '@/common/components/layouts/layoutWithHeaderAndFooter';
 import Seo from '@/common/components/layouts/seo';
-import Loading from '@/common/components/atom/loading';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import classNames from '@/common/utils/classNames';
 import { LoadingApps } from '@/modules/dashboard/components/loading';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import config from 'next/config';
+import { buildRaviDocsideHandoffSrc } from '@/modules/patient/utils/buildRaviDocsideHandoff';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useRef, useState } from 'react';
-const { publicRuntimeConfig } = config();
 
 export const BazaarPage = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
   const iframe = useRef<any>(null);
-  const user = useUserInfoStore(state => state.info);
-  const doctorSlugPending = useUserInfoStore(state => state.doctorSlugPending);
-  const slug = user.provider?.slug;
-  const waitingForSlug = Boolean(user.provider?.job_title === 'doctor' && !slug && doctorSlugPending);
 
   return (
     <>
-      <Seo title="نظرات من" noIndex />
+      <Seo title="نظرات پروفایل من" noIndex />
       <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
-        {(isAppLoading || waitingForSlug) && (
+        {isAppLoading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-white">
-            {waitingForSlug ? <Loading /> : <LoadingApps />}
+            <LoadingApps />
           </div>
         )}
-        {!waitingForSlug && (
-          <iframe
-            ref={iframe}
-            onLoad={() => setIsAppLoading(false)}
-            className={classNames('w-full h-full', { hidden: isAppLoading })}
-            src={`${publicRuntimeConfig.RAVI_IFRAME_BASE_URL}${slug ? `?slug=${slug}` : ''}`}
-          />
-        )}
+        <iframe
+          ref={iframe}
+          onLoad={() => setIsAppLoading(false)}
+          className={classNames('w-full h-full', { hidden: isAppLoading })}
+          src={buildRaviDocsideHandoffSrc()}
+          referrerPolicy="no-referrer"
+        />
       </div>
     </>
   );
