@@ -30,4 +30,4 @@ export const useDoctorViewModeStore = create<DoctorViewModeStore>(set => ({
   hydrate: () => set({ mode: readStoredMode() }),
 }));
 
-export { hasDoctorIdentity, isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
+export { hasDoctorIdentity, isDoctorUser } from '@/common/utils/doctorIdentity';

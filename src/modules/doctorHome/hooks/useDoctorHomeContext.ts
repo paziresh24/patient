@@ -1,4 +1,4 @@
-import { UserInfo } from '@/modules/login/store/userInfo';
+import type { UserInfo } from '@/modules/login/store/userInfo';
 import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
 import { getDoctorSlug } from '../utils/centers';
