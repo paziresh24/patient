@@ -78,10 +78,6 @@ Jest + React Testing Library, `.spec.tsx` naming, colocated with source. Coverag
 - `README.md`'s "Technologies Used" list is stale (omits Plasmic, Sentry, Firebase, GrowthBook, Storybook). Don't treat it as authoritative.
 - CONTRIBUTING.md has two small inaccuracies: says PRs merge into "master" (actual default branch is `main`), and cites `https://localhost:8766` (actual `server.js` default is port 443/`$PORT`).
 
-## Doctor Voice Agent
-
-Phone-call UI for doctors on `/dashboard` (`src/modules/voice-agent/`). FAB mounts from `SideBar`. Session BFF: `POST /api/voice/session` (cookie → LiveKit JWT). Worker lives in `labs/voice-agent` (LiveKit + Soniox + AvalAI). Server-only env: `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `VOICE_AGENT_NAME`.
-
 ## Persian/RTL responses (from `.cursor/rules/rtl-persian.mdc`)
 
 When the user writes Persian, reply in Persian using `<div dir="rtl" lang="fa">` semantics; keep code blocks, paths, and terminal commands LTR. Respect this project's `dir="rtl"`, `text-right`, and Tailwind `rtl:`/`ltr:` conventions in any UI you touch.

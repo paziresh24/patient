@@ -47,7 +47,12 @@ const formatAppointmentTime = (appointment: UpcomingAppointment) =>
     ? moment.unix(appointment.from).format('HH:mm')
     : appointment.book_time_string || '—';
 
-const AppointmentsFeedItem = ({
+const formatAppointmentMeta = (appointment: UpcomingAppointment) =>
+  [appointment.platform_name, appointment.center_name, appointment.service_name]
+    .filter(Boolean)
+    .join(' · ');
+
+export const AppointmentsFeedItem = ({
   data,
   scheduleExpanded = false,
   widgetShell = false,
@@ -78,12 +83,11 @@ const AppointmentsFeedItem = ({
   const hasItems = data.items.length > 0;
   const expanded = scheduleExpanded || isExpanded;
   const isAppointmentsInitialLoading = data.isAppointmentsLoading ?? false;
-  const isAppointmentsFetching = data.isAppointmentsFetching ?? false;
-  const showTimeline = isScheduleHydrated && expanded && hasItems && !isAppointmentsFetching;
+  const showTimeline = isScheduleHydrated && expanded && hasItems;
   const showTimelineLoading =
-    isScheduleHydrated && expanded && !hasItems && (isAppointmentsInitialLoading || isAppointmentsFetching);
+    isScheduleHydrated && expanded && !hasItems && isAppointmentsInitialLoading;
   const showEmptyState =
-    isScheduleHydrated && expanded && !hasItems && !isAppointmentsInitialLoading && !isAppointmentsFetching;
+    isScheduleHydrated && expanded && !hasItems && !isAppointmentsInitialLoading;
 
   const allSheet = useSheetRoute('appointments-all');
   const appointmentsDrawerProps = useSheetDrawerProps(allSheet);
@@ -118,14 +122,13 @@ const AppointmentsFeedItem = ({
       <AppointmentsCardSkeleton
         embedCenterStrip={embedCenterStrip}
         rows={scheduleExpanded ? 3 : 4}
-        className={widgetShell ? undefined : '-mt-4 md:mt-0'}
         title={sectionTitle}
       />
     );
   }
 
   return (
-    <section dir="rtl" className={widgetShell ? undefined : '-mt-4 md:mt-0'}>
+    <section dir="rtl">
       <DsCard padding="none" variant={widgetShell ? 'widget' : 'default'} className="overflow-hidden">
         {embedCenterStrip && (
           <div className="border-b border-slate-100 px-3 py-2.5">
@@ -179,7 +182,7 @@ const AppointmentsFeedItem = ({
                           })
                         }
                         title={appointment.patient_name}
-                        meta={[appointment.center_name, appointment.service_name].filter(Boolean).join(' · ')}
+                        meta={formatAppointmentMeta(appointment)}
                         trailing={
                           <div className="shrink-0 text-left">
                             <p className={classNames(ds.type.cardTitle, 'tabular-nums')}>
@@ -241,7 +244,7 @@ const AppointmentsFeedItem = ({
   );
 };
 
-const ReviewsFeedItem = ({
+export const ReviewsFeedItem = ({
   data,
 }: {
   data: { items: DoctorHomeFeedReview[]; slug?: string; doctorUserId?: string };
@@ -314,10 +317,10 @@ export const FeedItem = ({ item, scheduleExpanded, widgetShell, hideSectionHeade
       return null;
 
     case 'actions':
-      return <FeedActionsSection onlineVisit={item.data.onlineVisit} widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
+      return <FeedActionsSection widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
 
     case 'online_visit':
-      return <FeedActionsSection onlineVisit={item.data} widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
+      return <FeedActionsSection widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
 
     case 'alert':
     case 'alerts':
@@ -340,7 +343,6 @@ export const FeedItem = ({ item, scheduleExpanded, widgetShell, hideSectionHeade
           <AppointmentsCardSkeleton
             embedCenterStrip={embedCenterStrip}
             rows={scheduleExpanded ? 3 : 4}
-            className="-mt-4 md:mt-0"
           />
         );
       }

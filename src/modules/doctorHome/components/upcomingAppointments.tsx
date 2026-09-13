@@ -27,8 +27,7 @@ const AppointmentRow = ({ item }: { item: UpcomingAppointment }) => (
     <div className="min-w-0 flex-1">
       <p className={ds.type.bodyMedium}>{item.patient_name}</p>
       <p className={classNames(ds.type.caption, 'mt-0.5')}>
-        {item.center_name}
-        {item.service_name ? ` · ${item.service_name}` : ''}
+        {[item.platform_name, item.center_name, item.service_name].filter(Boolean).join(' · ')}
       </p>
     </div>
     <div className="shrink-0 text-left">

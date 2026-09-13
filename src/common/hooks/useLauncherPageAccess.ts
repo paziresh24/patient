@@ -1,6 +1,5 @@
 import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
-import { useClientMounted } from '@/common/hooks/useClientMounted';
-import { isDoctorDeviceCached } from '@/common/utils/doctorDeviceCache';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
@@ -9,15 +8,15 @@ const LAUNCHER_HOME_PATHS = ['/_', '/_/'];
 
 export const useLauncherPageAccess = () => {
   const router = useRouter();
-  const mounted = useClientMounted();
+  const deviceCached = useDoctorDeviceCached();
   const isLogin = useUserInfoStore(state => state.isLogin);
   const user = useUserInfoStore(state => state.info);
   const pending = useUserInfoStore(state => state.pending);
   const doctorProfilePending = useUserInfoStore(state => state.doctorProfilePending);
   const hasRedirected = useRef(false);
 
-  // localStorage is unavailable on SSR — defer cache read until after hydration.
-  const hasDoctorIdentity = (mounted && isDoctorDeviceCached()) || (isLogin && isDoctorUser(user));
+  const hasDoctorIdentity = deviceCached || (isLogin && isDoctorUser(user));
+  // Never block `/_/` on auth splash when this device already hosted a doctor session.
   const isResolving = (pending || doctorProfilePending) && !hasDoctorIdentity;
   const isDoctor = isLogin && isDoctorUser(user);
 

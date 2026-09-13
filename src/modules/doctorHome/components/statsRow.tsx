@@ -6,8 +6,6 @@ import { sendDoctorHomeEvent } from '../utils/analytics';
 import { StatCard } from './statCard';
 
 interface StatsRowProps {
-  performanceScore: number | null;
-  isPerformanceLoading: boolean;
   satisfactionRating: number | null;
   satisfactionReviewCount: number | null;
   isSatisfactionLoading: boolean;
@@ -19,8 +17,6 @@ interface StatsRowProps {
 }
 
 export const StatsRow = ({
-  performanceScore,
-  isPerformanceLoading,
   satisfactionRating,
   satisfactionReviewCount,
   isSatisfactionLoading,
@@ -42,13 +38,6 @@ export const StatsRow = ({
 
   return (
     <div className={ds.layout.statsRowStrip}>
-      <StatCard
-        label="امتیاز عملکرد"
-        value={performanceScore != null ? `${performanceScore} از ۱۰۰` : null}
-        isLoading={isPerformanceLoading}
-        href="/dashboard/apps/sanje/my-performance/"
-        onClick={() => sendDoctorHomeEvent(userId, 'stat_performance', { score: performanceScore })}
-      />
       <StatCard
         label="رضایت مراجعین"
         value={satisfactionRating != null ? `${satisfactionRating} از ۵` : null}

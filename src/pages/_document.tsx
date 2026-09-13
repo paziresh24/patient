@@ -1,4 +1,4 @@
-import { DOCTOR_HOME_INLINE_REDIRECT_SCRIPT } from '@/common/utils/doctorDeviceCache';
+import { DOCTOR_HOME_INLINE_DEVICE_MARK_SCRIPT, DOCTOR_HOME_INLINE_REDIRECT_SCRIPT } from '@/common/utils/doctorDeviceCache';
 import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
@@ -12,6 +12,7 @@ const CustomDocument: NextComponentType = (props: any) => {
   return (
     <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
+        <script dangerouslySetInnerHTML={{ __html: DOCTOR_HOME_INLINE_DEVICE_MARK_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: DOCTOR_HOME_INLINE_REDIRECT_SCRIPT }} />
         {/*
           Google SERP favicon: Googlebot fetches /favicon.ico on the hostname root.
@@ -24,8 +25,6 @@ const CustomDocument: NextComponentType = (props: any) => {
         <link rel="apple-touch-icon" sizes="192x192" href="/logos/icon_x192.png" />
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
-        <link rel="dns-prefetch" href="https://pic.paziresh24.com" />
-        <link rel="preconnect" href="https://pic.paziresh24.com" crossOrigin="" />
         <link rel="preconnect" href="https://growthbook-api.paziresh24.com" />
         {/*
           DR-08 §۱۹: preload the font the page ACTUALLY renders with.

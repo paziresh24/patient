@@ -9,6 +9,7 @@ import { useHamdastAppCatalog } from '@/modules/hamdast/apis/appList';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
 import { useMemo } from 'react';
+import { useInView } from 'react-intersection-observer';
 
 import { DsCard, DsSectionHeader, ds } from '../designSystem';
 
@@ -96,9 +97,13 @@ export const FeedWidgetsSection = ({ widgetShell = false }: { widgetShell?: bool
 
   const toolboxSheet = useSheetRoute('toolbox');
 
-  const { data: apps, isLoading } = useHamdastAppCatalog();
+  const [sectionRef, inView] = useInView({ triggerOnce: true, rootMargin: '200px 0px' });
 
-  const { installedKeys } = useInstalledAppKeys(userId);
+  const shouldFetch = inView || toolboxSheet.open;
+
+  const { data: apps, isLoading } = useHamdastAppCatalog({ enabled: shouldFetch });
+
+  const { installedKeys } = useInstalledAppKeys(userId, { enabled: shouldFetch });
 
 
 
@@ -156,11 +161,11 @@ export const FeedWidgetsSection = ({ widgetShell = false }: { widgetShell?: bool
 
     <>
 
-      <section dir="rtl" className="space-y-2">
+      <section ref={sectionRef} dir="rtl" className="space-y-2">
 
         {sectionHeader}
 
-        {isLoading ? <CardSkeleton /> : groups.length > 0 ? (
+        {isLoading && !apps ? <CardSkeleton /> : groups.length > 0 ? (
 
           <ActiveWidgetsCard groups={groups} onOpenApp={openApp} widgetShell={widgetShell} />
 

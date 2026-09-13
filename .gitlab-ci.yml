@@ -234,7 +234,6 @@ ci-app-image:
         - package.json
         - src/pages/_app.tsx
         - src/firebase/**/*
-        - src/modules/voice-agent/**/*
         - src/common/components/layouts/**/*
         - scripts/check-initial-chunks.js
         # — search-e2e —
@@ -251,10 +250,9 @@ ci-app-image:
 
 # DR-08 §۱۲ — گاردِ «کدِ سنگین در chunkِ initial».
 #
-# چرا لازم شد: دو بار پشتِ سر هم یک کلاسِ باگ رخ داد (Firebase، بعد LiveKit) که در code review
-# نامرئی است: گیتِ runtime دورِ *استفاده* گذاشته می‌شود ولی *import* استاتیک می‌ماند، پس webpack
-# کتابخانه را در گرافِ initialِ هر صفحه نگه می‌دارد. تنها جایی که این باگ دیده می‌شود خروجیِ
-# واقعیِ build است — نه دیف، نه unit test.
+# چرا لازم شد: کلاسِ باگی که در code review نامرئی است (مثلاً Firebase): گیتِ runtime دورِ
+# *استفاده* گذاشته می‌شود ولی *import* استاتیک می‌ماند، پس webpack کتابخانه را در گرافِ initialِ
+# هر صفحه نگه می‌دارد. تنها جایی که این باگ دیده می‌شود خروجیِ واقعیِ build است — نه دیف، نه unit test.
 #
 # برخلافِ `lighthouse-budget` (که علیهِ productionِ زنده اجرا می‌شود و monitor است، نه gate)، این
 # job **کدِ خودِ همین MR را** از ایمیج مشترک `ci-app-image` می‌کشد و گارد را داخلش اجرا می‌کند
@@ -333,7 +331,6 @@ initial-chunks:
         - package.json
         - src/pages/_app.tsx
         - src/firebase/**/*
-        - src/modules/voice-agent/**/*
         - src/common/components/layouts/**/*
         - scripts/check-initial-chunks.js
     - if: $CI_COMMIT_BRANCH == "main"
@@ -342,7 +339,6 @@ initial-chunks:
         - package.json
         - src/pages/_app.tsx
         - src/firebase/**/*
-        - src/modules/voice-agent/**/*
         - src/common/components/layouts/**/*
         - scripts/check-initial-chunks.js
 

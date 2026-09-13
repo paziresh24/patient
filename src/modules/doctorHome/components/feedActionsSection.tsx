@@ -12,7 +12,7 @@ import { useSelectedCenterStore } from '../store/selectedCenter';
 import { useSelectedDateStore } from '../store/selectedDate';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { DOCTOR_PANEL_URLS } from '../utils/doctorPanelUrls';
-import { formatDoctorCenterName, getType1ClinicCenters, isType1Center, ONLINE_VISIT_CENTER_ID, shouldShowClinicSection, shouldShowOnlineVisitSection } from '../utils/centers';
+import { formatDoctorCenterName, getType1ClinicCenters, hasOnlineVisitCenter, isType1Center, ONLINE_VISIT_CENTER_ID, shouldShowClinicSection, shouldShowOnlineVisitSection, getOnlineVisitCenter } from '../utils/centers';
 import { buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { dsFocusRing } from '../utils/a11y';
 import {
@@ -221,16 +221,19 @@ const CompactRow = ({
 );
 
 export const FeedActionsSection = ({
-  onlineVisit,
   widgetShell = false,
   hideSectionHeader = false,
 }: {
-  onlineVisit?: { userCenterId?: string; hasOnlineVisitCenter: boolean };
   widgetShell?: boolean;
   hideSectionHeader?: boolean;
 }) => {
   const user = useUserInfoStore(state => state.info);
   const userId = user?.id;
+  const onlineVisitCenter = getOnlineVisitCenter(user);
+  const onlineVisit = {
+    userCenterId: (onlineVisitCenter as { user_center_id?: string } | undefined)?.user_center_id,
+    hasOnlineVisitCenter: hasOnlineVisitCenter(user),
+  };
   const onlineSheet = useSheetRoute('online-visit-actions');
   const clinicSheet = useSheetRoute('clinic-actions');
   const activationSheet = useSheetRoute('online-visit-activation');
@@ -262,7 +265,8 @@ export const FeedActionsSection = ({
     return clinics[0];
   }, [clinics, selectedCenterId, showClinic]);
 
-  const { data, isLoading } = useOnlineVisitServices(onlineVisit?.userCenterId);
+  const { data, isLoading: isOnlineVisitQueryLoading } = useOnlineVisitServices(onlineVisit?.userCenterId);
+  const isOnlineVisitInitialLoading = isOnlineVisitQueryLoading && data == null;
   const toggleMutation = useToggleOnlineVisit();
   const [isActive, setIsActive] = useState(false);
 
@@ -347,7 +351,7 @@ export const FeedActionsSection = ({
             <p className={ds.type.section}>{sectionTitle}</p>
           </div>
         )}
-        {showOnlineVisit && onlineVisit && (
+        {showOnlineVisit && (
           <CompactRow
             icon={<ChatIcon size="md" />}
             title="ویزیت آنلاین"
@@ -355,7 +359,7 @@ export const FeedActionsSection = ({
             subtitle={
               !onlineVisit.hasOnlineVisitCenter
                 ? 'فعال‌سازی نوبت آنلاین'
-                : isLoading
+                : isOnlineVisitInitialLoading
                   ? 'در حال بررسی…'
                   : isActive
                     ? 'نوبت‌دهی فعال'
@@ -368,7 +372,7 @@ export const FeedActionsSection = ({
                   <Switch
                     checked={isActive}
                     onChange={e => handleToggle(e.target.checked)}
-                    disabled={isLoading || toggleMutation.isLoading}
+                    disabled={isOnlineVisitInitialLoading || toggleMutation.isLoading}
                     aria-label="فعال‌سازی نوبت‌دهی آنلاین"
                   />
                   <button type="button" aria-label="تنظیمات ویزیت آنلاین" onClick={openOnlineSheet} className={classNames('shrink-0 p-1', dsFocusRing)}>

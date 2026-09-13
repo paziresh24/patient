@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { doctorHomeQueryDefaults } from '@/modules/doctorHome/utils/doctorHomeQuery';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useHamdastAppListParams } from '../hooks/usePrefetchHamdastLauncherAppLists';
 
 export interface HamdastCatalogCategory {
   key: string;
@@ -78,15 +78,14 @@ export const getHamdastAppCatalog = async (params: Record<string, unknown>) => {
   return data ?? [];
 };
 
-export const useHamdastAppCatalog = () => {
+export const useHamdastAppCatalog = (options?: { enabled?: boolean }) => {
   const user = useUserInfoStore(state => state.info);
-  const params = useHamdastAppListParams();
+  const enabled = !!user?.id && (options?.enabled ?? true);
 
   return useQuery({
-    queryKey: ['hamdast-app-catalog', user?.id, params],
-    queryFn: () => getHamdastAppCatalog(params),
-    enabled: !!user?.id,
-    staleTime: 60_000,
-    refetchOnWindowFocus: false,
+    queryKey: ['hamdast-app-catalog', user?.id],
+    queryFn: () => getHamdastAppCatalog({}),
+    enabled,
+    ...doctorHomeQueryDefaults,
   });
 };

@@ -22,7 +22,7 @@ import { useSearchStore } from '@/modules/search/store/search';
 
 const HomePageBody = dynamic(() => import('@/modules/home/views/homePageBody'), {
   loading: () => (
-    <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+    <div data-doctor-boot-loading className="flex min-h-[50vh] flex-grow items-center justify-center">
       <Loading />
     </div>
   ),
@@ -40,7 +40,6 @@ const Home = ({ fragmentComponents }: any) => {
     setIsOpenSuggestion(false);
   }, [setIsOpenSuggestion]);
 
-  // New-design rollout doctors always get the view switcher on home.
   const showSwitcher = swapActive || doctorLauncherLoading;
 
   return (
@@ -51,7 +50,7 @@ const Home = ({ fragmentComponents }: any) => {
         </div>
       )}
       {showRedirectLoading ? (
-        <div className="flex min-h-[50vh] flex-grow items-center justify-center">
+        <div data-doctor-boot-loading className="flex min-h-[50vh] flex-grow items-center justify-center">
           <Loading />
         </div>
       ) : (

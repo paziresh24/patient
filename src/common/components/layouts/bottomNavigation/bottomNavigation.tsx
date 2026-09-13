@@ -5,7 +5,6 @@ import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useSearchStore } from '@/modules/search/store/search';
-import { ARASH_VOICE_AGENT_FEATURE, VoiceBottomNavButton } from '@/modules/voice-agent';
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect, useMemo } from 'react';
@@ -33,7 +32,6 @@ export const BottomNavigation = () => {
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
   const isEnabledLauncher = useFeatureIsOn('launcher-flag');
   const launcherAsMainHome = useFeatureIsOn('launcher-as-main-home');
-  const isArashVoiceEnabled = useFeatureIsOn(ARASH_VOICE_AGENT_FEATURE);
 
   const isShowDashboard =
     !customize.partnerKey &&
@@ -214,25 +212,6 @@ export const BottomNavigation = () => {
       </div>
     );
   };
-
-  if (isDoctorShell && isArashVoiceEnabled) {
-    const mid = Math.floor(navItems.length / 2);
-    const left = navItems.slice(0, mid);
-    const right = navItems.slice(mid);
-
-    return (
-      <nav
-        aria-label="منوی اصلی"
-        className="fixed bottom-0 left-0 z-40 flex h-16 min-h-16 w-full items-stretch border-t border-[#d5d8db] bg-[#F9F9F9] px-1 print:hidden md:hidden"
-      >
-        {left.map((item, index) => renderNavItem(item, `left-${index}`, { flex: true }))}
-        <div className="flex min-w-0 flex-1 items-center justify-center self-stretch">
-          <VoiceBottomNavButton />
-        </div>
-        {right.map((item, index) => renderNavItem(item, `right-${index}`, { flex: true }))}
-      </nav>
-    );
-  }
 
   return (
     <div className="fixed bottom-0 left-0 z-40 flex items-center justify-between w-full min-h-16 h-16 px-4 bg-[#F9F9F9] border-t print:hidden md:hidden border-[#d5d8db]">

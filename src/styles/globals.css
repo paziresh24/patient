@@ -600,15 +600,6 @@ html[dir='rtl'] .PhotoView-Portal .PhotoView-Slider__BannerWrap {
   user-select: none;
 }
 
-/* Single doctor avatar lightbox */
-.PhotoView-Portal.PhotoView--doctor-avatar {
-  z-index: 100000;
-}
-
-.PhotoView-Portal.PhotoView--doctor-avatar .PhotoView-Slider__BannerWrap > .PhotoView-Slider__Counter {
-  display: none;
-}
-
 .loader {
   @apply animate-spin;
 }
@@ -644,4 +635,18 @@ html[dir='rtl'] .PhotoView-Portal .PhotoView-Slider__BannerWrap {
     right: -48px !important;
     top: 4px !important;
   }
+}
+
+/* Doctor device boot: hide SSR splash/patient nav before React applies identity (set by inline script). */
+html[data-doctor-device="1"] [data-doctor-boot-loading] {
+  display: none !important;
+}
+
+html[data-doctor-device="1"] [data-boot-patient-nav] {
+  visibility: hidden;
+}
+
+/* Avoid white flash before client paints; match doctor home surface on marked devices. */
+html[data-doctor-device="1"] body {
+  background-color: #F6F7F9;
 }

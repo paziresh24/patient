@@ -58,6 +58,9 @@
       ],
       "@/firebase/*": [
         "./src/firebase/*"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
       ]
     },
     "plugins": [

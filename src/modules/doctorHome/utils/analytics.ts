@@ -1,11 +1,11 @@
 import { splunkInstance } from '@/common/services/splunk';
 
 type DoctorHomeFeature =
-  | 'stat_performance'
   | 'stat_satisfaction'
   | 'stat_appointments'
   | 'stat_page_view'
   | 'stat_wallet'
+  | 'stat_performance'
   | 'online_visit_toggle'
   | 'online_visit_actions_open'
   | 'clinic_actions_open'

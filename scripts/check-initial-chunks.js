@@ -3,8 +3,8 @@
  * DR-08 (ghane/docs/dev-requests/dr-08-listing-pagespeed.md §۱۲) — گاردِ «حملِ کدِ سنگین در
  * chunkِ initial».
  *
- * چرا وجود دارد: دو بار پشتِ سر هم یک کلاسِ باگ تکرار شد — گیتِ runtime دورِ *استفاده* گذاشته شد
- * (isPWA() برای Firebase، فلگ+نقشِ کاربر برای LiveKit) در حالی که *import* استاتیک ماند، پس webpack
+ * چرا وجود دارد: یک کلاسِ باگ تکرار شد — گیتِ runtime دورِ *استفاده* گذاشته شد
+ * (مثلاً isPWA() برای Firebase) در حالی که *import* استاتیک ماند، پس webpack
  * کتابخانه را در گرافِ initialِ هر صفحه نگه داشت و مرورگر آن را eager دانلود/parse کرد. این باگ در
  * code review دیده نمی‌شود (کد کاملاً درست به‌نظر می‌رسد) و فقط در خروجیِ build دیدنی است.
  *
@@ -30,11 +30,6 @@ const DENYLIST = [
     marker: /@firebase\/(analytics|app|installations)/,
     why: 'فقط داخلِ PWA لازم است (src/firebase/analytics.ts پشتِ گیتِ isPWA()) — باید async بماند',
   },
-  {
-    package: 'livekit-client / @livekit',
-    marker: /@livekit\/components-react|livekit-client/,
-    why: 'فقط برای تماسِ صوتیِ دکترها (VoiceCallHost پشتِ فلگ) — باید async بماند',
-  },
 ];
 
 /** صفحاتی که گارد رویشان اعمال می‌شود (پرترافیک‌ترین‌های ورودیِ گوگل + shell مشترک). */
@@ -51,8 +46,7 @@ function parseArgs(argv) {
 
 /**
  * runtimeِ webpack **نامِ همه‌ی chunkها** را نگه می‌دارد — از جمله chunkهای async — تا بتواند
- * هنگامِ نیاز لودشان کند. پس دیدنِ رشته‌ی «lib-livekit-client» در این فایل کاملاً طبیعی است و
- * ربطی به حملِ کدِ کتابخانه ندارد؛ اسکنِ محتوایش false positive می‌دهد.
+ * هنگامِ نیاز لودشان کند. اسکنِ محتوای این فایل برای denylist false positive می‌دهد.
  */
 const RUNTIME_CHUNK = /[\\/]webpack-[^\\/]+\.js$/;
 
