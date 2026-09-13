@@ -32,7 +32,7 @@ export const DsSectionHeader = ({
   const resolvedLinkLabel = linkAriaLabel ?? `${linkLabel} ${title}`;
 
   return (
-    <div className="mb-2.5 flex items-center justify-between gap-4">
+    <div className="mb-1.5 flex items-center justify-between gap-4">
       <div>
         <h2 className={ds.type.section}>{title}</h2>
         {subtitle && <p className={classNames(ds.type.caption, 'mt-0.5')}>{subtitle}</p>}

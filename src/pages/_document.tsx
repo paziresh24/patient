@@ -1,4 +1,4 @@
-import { DOCTOR_HOME_INLINE_REDIRECT_SCRIPT } from '@/common/utils/doctorDeviceCache';
+import { DOCTOR_HOME_INLINE_DEVICE_MARK_SCRIPT, DOCTOR_HOME_INLINE_REDIRECT_SCRIPT } from '@/common/utils/doctorDeviceCache';
 import classNames from '@/common/utils/classNames';
 import type { NextComponentType } from 'next';
 import { Head, Html, Main, NextScript } from 'next/document';
@@ -12,20 +12,12 @@ const CustomDocument: NextComponentType = (props: any) => {
   return (
     <Html lang="fa-IR" dir={dir} className="scroll-smooth">
       <Head>
+        <script dangerouslySetInnerHTML={{ __html: DOCTOR_HOME_INLINE_DEVICE_MARK_SCRIPT }} />
         <script dangerouslySetInnerHTML={{ __html: DOCTOR_HOME_INLINE_REDIRECT_SCRIPT }} />
-        {/*
-          Google SERP favicon: Googlebot fetches /favicon.ico on the hostname root.
-          A 404 there is rendered as the generic globe. Declare a square PNG >48px
-          (Google's current recommendation) plus the root ICO fallback.
-          https://developers.google.com/search/docs/appearance/favicon-in-search
-        */}
-        <link rel="icon" type="image/png" sizes="192x192" href="/logos/icon_x192.png" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="192x192" href="/logos/icon_x192.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" type="image/x-icon" href="/logos/favicon.ico" />
         <link rel="dns-prefetch" href="https://apigw.paziresh24.com" />
         <link rel="preconnect" href="https://apigw.paziresh24.com" />
-        <link rel="dns-prefetch" href="https://pic.paziresh24.com" />
-        <link rel="preconnect" href="https://pic.paziresh24.com" crossOrigin="" />
         <link rel="preconnect" href="https://growthbook-api.paziresh24.com" />
         {/*
           DR-08 §۱۹: preload the font the page ACTUALLY renders with.
@@ -95,20 +87,6 @@ const CustomDocument: NextComponentType = (props: any) => {
                   }
                 }, true);
               `,
-          }}
-        />
-        <Script
-          id="add-manifest-link"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('load', function () {
-                var manifest = document.createElement('link');
-                manifest.rel = 'manifest';
-                manifest.href = '/manifest.json';
-                document.head.appendChild(manifest);
-              });
-            `,
           }}
         />
       </Head>

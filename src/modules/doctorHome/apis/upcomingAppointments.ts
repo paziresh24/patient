@@ -1,5 +1,6 @@
 import { apiGatewayClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
+import { readAppointmentPlatform } from '../utils/appointmentPlatform';
 
 const ONLINE_CENTER_ID = '5532';
 const ALLBOOKS_URL = '/v1/n8n-nelson/webhook/v6/allbooks';
@@ -23,6 +24,8 @@ export interface UpcomingAppointment {
   track_code?: string;
   payment_status?: string;
   source_site?: string;
+  platform_name?: string;
+  platform_icon?: string;
   prescription?: string;
 }
 
@@ -96,7 +99,8 @@ const normalizeBook = (raw: Record<string, unknown>): UpcomingAppointment | null
   );
   const trackCode = str(raw.track_code ?? raw.tracking_code ?? raw.follow_code ?? raw.ref_code);
   const paymentStatus = str(raw.payment_status ?? raw.payment_status_text ?? raw.status_payment);
-  const sourceSite = str(raw.source_site ?? raw.site ?? center?.site ?? raw.site_name);
+  const platform = readAppointmentPlatform(raw);
+  const sourceSite = platform.label;
   const prescription = str(raw.prescription ?? raw.doctor_note ?? raw.recommendation);
 
   return {
@@ -115,6 +119,8 @@ const normalizeBook = (raw: Record<string, unknown>): UpcomingAppointment | null
     track_code: trackCode,
     payment_status: paymentStatus,
     source_site: sourceSite,
+    platform_name: platform.label,
+    platform_icon: platform.icon,
     prescription,
   };
 };

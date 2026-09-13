@@ -1,6 +1,5 @@
 import classNames from '@/common/utils/classNames';
 import {
-  BarChart3,
   Bell,
   Briefcase,
   Calendar,
@@ -53,7 +52,6 @@ const withInheritedColor = ({ className, ...props }: DoctorHomeIconProps, icon: 
   <DsIcon icon={icon} className={classNames('text-current', className)} {...props} />
 );
 
-export const PerformanceIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, BarChart3);
 export const ReviewsIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Star);
 export const WalletIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Wallet);
 export const PageViewIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Eye);

@@ -4,7 +4,8 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useEffect } from 'react';
 import { DsInsightCarousel, ds } from '../designSystem';
 import { useDoctorWalletBalance } from '../apis/walletBalance';
-import { DoctorHomeFeedStats } from '../types/feed';
+import { useDoctorHomeStats } from '../hooks/useDoctorHomeStats';
+import { useReviewWeekDelta } from '../hooks/useReviewWeekDelta';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { appendUserIdToUrl, buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { DOCTOR_PANEL_URLS, RAVI_DOCSIDE_URL } from '../utils/doctorPanelUrls';
@@ -14,7 +15,7 @@ import { DsDrawer } from './DsDrawer';
 import { useSheetDrawerProps } from '../hooks/doctorHomeSheetLayout';
 import { useSheetRoute } from '../hooks/useSheetRoute';
 import { FeedContentSwap } from './feedContentSwap';
-import { PageViewIcon, PerformanceIcon, ReviewsIcon, WalletIcon } from './icons';
+import { PageViewIcon, ReviewsIcon, WalletIcon } from './icons';
 
 const MetricDrawerContent = ({
   value,
@@ -39,22 +40,27 @@ const MetricDrawerContent = ({
 );
 
 export const FeedInsightSection = ({
-  stats,
   className,
   variant = 'responsive',
 }: {
-  stats?: DoctorHomeFeedStats;
   className?: string;
   variant?: 'responsive' | 'grid' | 'stack' | 'carousel';
 }) => {
   const user = useUserInfoStore(state => state.info);
+  const { stats, isDoctor, slug } = useDoctorHomeStats(user);
+  const { percent: reviewWeekDelta } = useReviewWeekDelta(slug, isDoctor);
   const userId = user?.id;
   const selectedCenterId = useSelectedCenterStore(s => s.selectedCenterId);
-  const { data: walletBalance, isLoading: isWalletLoading } = useDoctorWalletBalance(user, !!user?.id, selectedCenterId);
+  const { data: walletBalance, isLoading: isWalletQueryLoading } = useDoctorWalletBalance(
+    user,
+    !!user?.id,
+    selectedCenterId,
+  );
   const isWalletVisible = useWalletBalanceVisibilityStore(state => state.isVisible);
   const isWalletHydrated = useWalletBalanceVisibilityStore(state => state.hydrated);
   const toggleWalletVisibility = useWalletBalanceVisibilityStore(state => state.toggle);
   const hydrateWalletVisibility = useWalletBalanceVisibilityStore(state => state.hydrate);
+  const isWalletInitialLoading = !isWalletHydrated || isWalletQueryLoading;
 
   useEffect(() => {
     hydrateWalletVisibility();
@@ -62,76 +68,66 @@ export const FeedInsightSection = ({
 
   const reviewsSheet = useSheetRoute('stat-reviews');
   const walletSheet = useSheetRoute('stat-wallet');
-  const performanceSheet = useSheetRoute('stat-performance');
   const pageViewSheet = useSheetRoute('stat-pageview');
   const reviewsDrawerProps = useSheetDrawerProps(reviewsSheet);
   const walletDrawerProps = useSheetDrawerProps(walletSheet);
-  const performanceDrawerProps = useSheetDrawerProps(performanceSheet);
   const pageViewDrawerProps = useSheetDrawerProps(pageViewSheet);
 
-  const insightItems = stats
-    ? [
-        {
-          icon: <PerformanceIcon size="sm" />,
-          title: 'امتیاز',
-          description: 'عملکرد در پذیرش۲۴',
-          value: stats.performanceScore ?? null,
-          valueMax: 100,
-          isLoading: stats.isPerformanceLoading,
-          onPress: () => {
-            sendDoctorHomeEvent(userId, 'stat_performance', { score: stats.performanceScore });
-            performanceSheet.openSheet();
-          },
-        },
-        {
-          icon: <ReviewsIcon size="sm" />,
-          title: 'نظرات بیماران',
-          description:
-            stats.satisfactionReviewCount != null
-              ? `${stats.satisfactionReviewCount.toLocaleString('fa-IR')} نظر`
-              : 'میانگین امتیاز',
-          value: stats.satisfactionRating ?? null,
-          valueMax: 5,
-          valueBarClass: ds.progress.fillRating,
-          isLoading: stats.isSatisfactionLoading,
-          onPress: () => {
-            sendDoctorHomeEvent(userId, 'stat_satisfaction', { rating: stats.satisfactionRating, review_count: stats.satisfactionReviewCount });
-            reviewsSheet.openSheet();
-          },
-        },
-        {
-          icon: <WalletIcon size="sm" />,
-          title: 'کیف پول',
-          description: '',
-          value: isWalletHydrated ? (walletBalance != null ? Math.round(walletBalance / 10).toLocaleString('fa-IR') : null) : null,
-          hiddenValue: '••••••',
-          isLoading: isWalletLoading || !isWalletHydrated,
-          onPress: () => {
-            sendDoctorHomeEvent(userId, 'stat_wallet', { balance: walletBalance });
-            walletSheet.openSheet();
-          },
-          visibilityToggle: {
-            isVisible: isWalletVisible,
-            onToggle: toggleWalletVisibility,
-          },
-        },
-        {
-          icon: <PageViewIcon size="sm" />,
-          title: 'بازدید صفحه',
-          description: 'بازدیدکنندگان',
-          value: stats.pageViewCount != null ? convertLongToCompactNumber(stats.pageViewCount) : null,
-          isLoading: stats.isPageViewLoading,
-          onPress: () => {
-            sendDoctorHomeEvent(userId, 'stat_page_view', { count: stats.pageViewCount });
-            pageViewSheet.openSheet();
-          },
-        },
-      ]
-    : [];
+  const insightItems = [
+    {
+      icon: <ReviewsIcon size="sm" />,
+      title: 'نظرات بیماران',
+      description:
+        stats.satisfactionReviewCount != null
+          ? `${stats.satisfactionReviewCount.toLocaleString('fa-IR')} نظر`
+          : 'میانگین امتیاز',
+      value: stats.satisfactionRating ?? null,
+      valueMax: 5,
+      hideBar: true,
+      trendPercent: reviewWeekDelta,
+      isLoading: stats.isSatisfactionLoading,
+      onPress: () => {
+        sendDoctorHomeEvent(userId, 'stat_satisfaction', {
+          rating: stats.satisfactionRating,
+          review_count: stats.satisfactionReviewCount,
+        });
+        reviewsSheet.openSheet();
+      },
+    },
+    {
+      icon: <WalletIcon size="sm" />,
+      title: 'کیف پول',
+      description: 'تومان',
+      value: isWalletHydrated
+        ? walletBalance != null
+          ? Math.trunc(walletBalance / 10).toLocaleString('fa-IR')
+          : null
+        : null,
+      hiddenValue: '••••',
+      isLoading: isWalletInitialLoading,
+      onPress: () => {
+        sendDoctorHomeEvent(userId, 'stat_wallet', { balance: walletBalance });
+        walletSheet.openSheet();
+      },
+      visibilityToggle: {
+        isVisible: isWalletVisible,
+        onToggle: toggleWalletVisibility,
+      },
+    },
+    {
+      icon: <PageViewIcon size="sm" />,
+      title: 'بازدید صفحه',
+      description: 'بازدیدکنندگان',
+      value: stats.pageViewCount != null ? convertLongToCompactNumber(stats.pageViewCount) : null,
+      isLoading: stats.isPageViewLoading,
+      onPress: () => {
+        sendDoctorHomeEvent(userId, 'stat_page_view', { count: stats.pageViewCount });
+        pageViewSheet.openSheet();
+      },
+    },
+  ];
 
-  if (insightItems.length === 0) return null;
-
-  const insightSwapKey = `${selectedCenterId ?? 'all'}-${stats?.performanceScore ?? ''}-${stats?.pageViewCount ?? ''}-${walletBalance ?? ''}`;
+  const insightSwapKey = `${selectedCenterId ?? 'all'}-${stats.pageViewCount ?? ''}-${walletBalance ?? ''}-${reviewWeekDelta ?? ''}`;
 
   return (
     <>
@@ -165,22 +161,9 @@ export const FeedInsightSection = ({
         )}
       </DsDrawer>
 
-      <DsDrawer {...performanceDrawerProps} title="عملکرد من" description="سنجه" fullHeight className="!p-0">
-        {performanceSheet.open && (
-          <iframe
-            src={appendUserIdToUrl(
-              'https://jahannama.paziresh24.com/my-performance/?utm_source=p24portal&utm_medium=internal-link&utm_campaign=sanje-my-performance',
-              userId,
-            )}
-            title="عملکرد من در سنجه"
-            className="min-h-0 w-full flex-1 border-0"
-          />
-        )}
-      </DsDrawer>
-
       <DsDrawer {...pageViewDrawerProps} title="بازدید پروفایل" description="آمار بازدید">
         <MetricDrawerContent
-          value={stats?.pageViewCount != null ? stats.pageViewCount.toLocaleString('fa-IR') : null}
+          value={stats.pageViewCount != null ? stats.pageViewCount.toLocaleString('fa-IR') : null}
           label="بازدید از پروفایل شما"
           description="تعداد کل بازدیدکنندگانی که صفحه پروفایل شما را مشاهده کرده‌اند"
         />

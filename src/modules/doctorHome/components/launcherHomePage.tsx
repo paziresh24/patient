@@ -39,9 +39,9 @@ const AppFrame = dynamic(() => import('@/modules/hamdast/appFrame'), {
 });
 
 /**
- * `/_/` body — doctor-only route. SSG always emits doctor chrome + feed shell.
- * Never gate the feed behind Loading when building new home; persist fills sections.
- * Legacy only after conclusive flag-off (enabled false, not loading, no doctor identity optimism).
+ * `/_/` body — doctor-only route.
+ * New home only when GrowthBook `doctor-home:enable` is on (or trusted persist).
+ * Flag-off doctors get the previous Plasmic launcher.
  */
 export const LauncherHomePage = () => {
   const queryClient = useQueryClient();
@@ -51,16 +51,11 @@ export const LauncherHomePage = () => {
   const swapActive = useDoctorViewSwapActive();
   const doctorLauncherLoading = useIsNewDoctorLauncherLoading();
   const doctorLauncherEnabled = useIsNewDoctorLauncherEnabled();
-  const { isResolving, shouldShowLauncher, isDoctor: launcherDoctorIdentity } = useLauncherPageAccess();
+  const { isResolving, shouldShowLauncher } = useLauncherPageAccess();
   const info = useUserInfoStore(state => state.info);
 
-  const showLegacy =
-    !doctorLauncherLoading &&
-    !doctorLauncherEnabled &&
-    !swapActive &&
-    !launcherDoctorIdentity &&
-    !isResolving &&
-    shouldShowLauncher;
+  const showNewHome = doctorLauncherEnabled || swapActive;
+  const showLegacy = shouldShowLauncher && !isResolving && !doctorLauncherLoading && !showNewHome;
 
   useDoctorViewRouteGuard();
   const { isSupported, hasPermission, showModal, openModal, closeModal, checkPermission } = useNotificationPermission();
@@ -98,19 +93,21 @@ export const LauncherHomePage = () => {
         <LegacyLauncherSection
           onAction={action => {
             if (action.action === 'OPEN_APP') {
-              void prefetchOneApp(queryClient, { appKey: action.appKey, pageKey: 'launcher' }, 0);
+              void prefetchOneApp(queryClient, { appKey: action.appKey, pageKey: 'launcher' }, []);
               setApp(action.appKey);
               handleOpen();
             }
           }}
         />
-      ) : (
+      ) : showNewHome ? (
         <>
           <div className={ds.surface.page}>
             <DoctorViewSwitcher forceShow className="px-0 pb-1 pt-3" />
           </div>
           <DoctorLauncherContent />
         </>
+      ) : (
+        pageLoading
       )}
     </>
   );

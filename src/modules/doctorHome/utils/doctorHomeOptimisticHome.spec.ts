@@ -11,15 +11,20 @@ describe('shouldOptimisticallyShowNewDoctorHome', () => {
     expect(shouldOptimisticallyShowNewDoctorHome('42')).toBe(false);
   });
 
-  it('returns true when deviceCached option is set', () => {
-    expect(shouldOptimisticallyShowNewDoctorHome(null, { deviceCached: true })).toBe(true);
+  it('does not treat device cache as the new-home flag', () => {
+    expect(shouldOptimisticallyShowNewDoctorHome(null, { deviceCached: true })).toBe(false);
+    expect(shouldOptimisticallyShowNewDoctorHome('42', { deviceCached: true })).toBe(false);
   });
 
   it('returns true when memoryEnabledTrue', () => {
     expect(shouldOptimisticallyShowNewDoctorHome('42', { memoryEnabledTrue: true })).toBe(true);
   });
 
-  it('ignores raw localStorage during sync helper (caller must pass deviceCached)', () => {
+  it('returns true when persistedEnabledTrue', () => {
+    expect(shouldOptimisticallyShowNewDoctorHome('42', { persistedEnabledTrue: true })).toBe(true);
+  });
+
+  it('ignores doctor-device localStorage (caller must pass persistedEnabledTrue)', () => {
     localStorage.setItem(DOCTOR_DEVICE_CACHE_KEY, '1');
     expect(shouldOptimisticallyShowNewDoctorHome('42')).toBe(false);
   });

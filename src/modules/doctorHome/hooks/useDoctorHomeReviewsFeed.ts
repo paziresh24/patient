@@ -35,7 +35,12 @@ export const useDoctorHomeReviewsFeed = (user?: UserInfo) => {
   );
 
   const { data: answeredIdList } = useAnsweredFeedbackIds(slug);
-  const answeredIds = useMemo(() => new Set(answeredIdList ?? []), [answeredIdList]);
+  // Tolerate legacy persisted cache shapes (Set → {} after JSON, or Set itself).
+  const answeredIds = useMemo(() => {
+    if (answeredIdList instanceof Set) return answeredIdList as Set<string>;
+    if (Array.isArray(answeredIdList)) return new Set(answeredIdList);
+    return new Set<string>();
+  }, [answeredIdList]);
 
   const items = useMemo(() => {
     if (!isDoctor || !reviews.data?.list) return [] as DoctorHomeFeedReview[];

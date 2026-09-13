@@ -2,9 +2,13 @@
 import { clinicClient } from '@/common/apis/client';
 import { removeCookies } from 'cookies-next';
 import isEmpty from 'lodash/isEmpty';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import { create } from 'zustand';
 import { clearDoctorDeviceCache, setDoctorDeviceCache } from '@/common/utils/doctorDeviceCache';
+import { clearDoctorHomeViewSelection } from '@/modules/doctorHome/store/clearDoctorHomeViewSelection';
+import { clearDoctorHomePersistedCache } from '@/modules/doctorHome/utils/doctorHomeQueryPersist';
+import { clearPersistedLauncherFlag } from '@/modules/doctorHome/utils/doctorHomeLauncherFlag';
+import { clearDoctorHomeShell } from '@/modules/doctorHome/utils/doctorHomeShell';
 
 interface UseUserInfoStore {
   isLogin: boolean;
@@ -134,6 +138,10 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   },
   logout: () => {
     clearDoctorDeviceCache();
+    clearDoctorHomePersistedCache();
+    clearDoctorHomeShell();
+    clearDoctorHomeViewSelection();
+    clearPersistedLauncherFlag();
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       user_id: undefined,

@@ -15,8 +15,6 @@ export type DoctorHomeFeedItemType =
   | 'empty';
 
 export interface DoctorHomeFeedStats {
-  performanceScore: number | null;
-  isPerformanceLoading: boolean;
   satisfactionRating: number | null;
   satisfactionReviewCount: number | null;
   isSatisfactionLoading: boolean;

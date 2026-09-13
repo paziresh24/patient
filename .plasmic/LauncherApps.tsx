@@ -7,27 +7,18 @@ import {
 } from "./plasmic/launcher/PlasmicLauncherApps";
 import { HTMLElementRefOf } from "@plasmicapp/react-web";
 
-// Your component props start with props for variants and slots you defined
-// in Plasmic, but you can add more here, like event handlers that you can
-// attach to named nodes in your component.
-//
-// If you don't want to expose certain variants or slots as a prop, you can use
-// Omit to hide them:
-//
-// interface LauncherAppsProps extends Omit<DefaultLauncherAppsProps, "hideProps1"|"hideProp2"> {
-//   // etc.
-// }
-//
-// You can also stop extending from DefaultLauncherAppsProps altogether and have
-// total control over the props for your component.
 export interface LauncherAppsProps extends DefaultLauncherAppsProps {}
 
+const emptyListParams = {};
+
 function LauncherApps_(props: LauncherAppsProps, ref: HTMLElementRefOf<"div">) {
-  // Skip Reveal fade-in — it left list sections looking unstyled until animation started.
   return (
     <PlasmicLauncherApps
       root={{ ref }}
       {...props}
+      apiRequest2={{
+        params: emptyListParams,
+      }}
       reveal={{
         props: {
           delay: 0,
