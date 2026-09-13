@@ -13,6 +13,7 @@ import { buildDoctorExpertiseChips } from '@/common/utils/buildDoctorExpertiseCh
 import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
 import scrollIntoViewWithOffset from '@/common/utils/scrollIntoViewWithOffset';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { pageViewEvent } from '@/modules/profile/events/pageView';
 import { getProfileServerSideProps } from '@/modules/profile/functions/getProfileServerSideProps';
 import { buildDoctorProfileJsonLds } from '@/modules/profile/functions/buildDoctorProfileJsonLds';
@@ -446,7 +447,7 @@ const DoctorProfile = (props: any) => {
   }, [information?.id, currentSlug]);
 
   useEffect(() => {
-    if (userInfo.provider?.job_title === 'doctor' && slug === userInfo?.provider?.slug && information) {
+    if (hasDoctorIdentity(userInfo) && slug === userInfo?.provider?.slug && information) {
       setEditable(true);
       splunkInstance('doctor-profile').sendEvent({
         group: 'profile',

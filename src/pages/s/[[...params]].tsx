@@ -12,6 +12,7 @@ import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import MobileToolbar from '@/modules/search/components/filters/mobileToolbar';
 import MobileRowFilter from '@/modules/search/components/filters/rowFilter';
@@ -170,7 +171,7 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
               city_id: city.id,
               query_id: search.query_id,
               user_id: userInfo?.id ?? null,
-              user_type: userInfo.provider?.job_title ?? 'normal-user',
+              user_type: hasDoctorIdentity(userInfo) ? 'doctor' : 'normal-user',
               ...(!!search?.semantic_search && { semantic_search: search?.semantic_search }),
               ...(responseData?.query_attributes && { query_attributes: responseData.query_attributes }),
               url: {
@@ -209,7 +210,7 @@ const Search = ({ host, fragmentComponents, isMainSite, error }: any) => {
               city_id: city.id,
               query_id: search.query_id,
               user_id: userInfo?.id ?? null,
-              user_type: userInfo.provider?.job_title ?? 'normal-user',
+              user_type: hasDoctorIdentity(userInfo) ? 'doctor' : 'normal-user',
               url: {
                 href: window.location.href,
                 qurey: { ...queries },

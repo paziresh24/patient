@@ -1,7 +1,13 @@
 import { isDoctorHomeRedirectPath } from './doctorHomePaths';
 import { clearDoctorShellCache, ensureDoctorShellCache, prefetchDoctorShellDocuments } from './doctorShellCache';
 
+export const DOCTOR_DEVICE_CACHE_EVENT = 'p24:doctor-device-cache';
 export const DOCTOR_DEVICE_CACHE_KEY = 'doctor-home-device';
+
+const notifyDoctorDeviceCache = () => {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new Event(DOCTOR_DEVICE_CACHE_EVENT));
+};
 /** Set on <html> before React so CSS can hide boot loading without hydration mismatch. */
 export const DOCTOR_DEVICE_DOM_ATTR = 'data-doctor-device';
 
@@ -21,6 +27,7 @@ export const setDoctorDeviceCache = () => {
   syncDoctorDeviceDomAttr(true);
   ensureDoctorShellCache();
   prefetchDoctorShellDocuments();
+  notifyDoctorDeviceCache();
 };
 
 export const clearDoctorDeviceCache = () => {
@@ -28,6 +35,7 @@ export const clearDoctorDeviceCache = () => {
   localStorage.removeItem(DOCTOR_DEVICE_CACHE_KEY);
   syncDoctorDeviceDomAttr(false);
   void clearDoctorShellCache();
+  notifyDoctorDeviceCache();
 };
 
 export const isDoctorDeviceCached = () =>

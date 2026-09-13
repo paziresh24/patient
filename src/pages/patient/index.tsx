@@ -23,6 +23,7 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
+import { useIsDoctor } from '@/common/hooks/useIsDoctor';
 import usePwa from '@/common/hooks/usePwa';
 import useShare from '@/common/hooks/useShare';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -44,13 +45,14 @@ export const PatinetProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const share = useShare();
   const { customize } = useCustomize();
+  const isDoctor = useIsDoctor();
   const { getRatingAppLink } = usePwa();
 
   useEffect(() => {
-    if (userInfo.id && userInfo.provider?.job_title === 'doctor' && !customize.partnerKey) {
+    if (userInfo.id && isDoctor && !customize.partnerKey) {
       router.replace('/_/');
     }
-  }, [userInfo.id, userInfo.provider?.job_title, customize.partnerKey]);
+  }, [userInfo.id, isDoctor, customize.partnerKey]);
 
   const openLoginForm = (link?: string) => {
     !isLogin &&

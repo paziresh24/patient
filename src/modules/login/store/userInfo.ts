@@ -1,7 +1,6 @@
 /* eslint-disable no-extra-boolean-cast */
 import { clinicClient } from '@/common/apis/client';
 import { removeCookies } from 'cookies-next';
-import isEmpty from 'lodash/isEmpty';
 import { growthbook } from '@/common/growthbook/client';
 import { create } from 'zustand';
 import { clearDoctorDeviceCache, setDoctorDeviceCache } from '@/common/utils/doctorDeviceCache';
@@ -66,12 +65,16 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   },
   setUserInfo: info => {
     set(() => {
+      const prevProvider = get().info?.provider;
+      const incomingProvider = info?.provider;
+      const centers = Array.isArray(incomingProvider?.centers) ? incomingProvider.centers : prevProvider?.centers;
       const mergedProvider = {
-        ...get().info?.provider,
-        ...info?.provider,
+        ...prevProvider,
+        ...incomingProvider,
+        ...(Array.isArray(centers) ? { centers } : {}),
       };
-      // Doctor identity: centers only (not v1/doctor/profile slug/job_title).
-      const isDoctor = !isEmpty(mergedProvider.centers);
+      // Doctor identity: non-empty centers. Missing/null centers must not wipe a prior list.
+      const isDoctor = Array.isArray(centers) && centers.length > 0;
 
       const infoCopy = {
         ...get().info,
@@ -89,12 +92,12 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         ...growthbook.getAttributes(),
         user_id: infoCopy.id != null && infoCopy.id !== '' ? String(infoCopy.id) : undefined,
         loggedIn: true,
-        is_doctor: infoCopy.provider?.job_title === 'doctor',
+        is_doctor: isDoctor,
       });
       void growthbook.refreshFeatures({ skipCache: true });
       window.user = infoCopy;
 
-      if (infoCopy.provider?.job_title === 'doctor') {
+      if (isDoctor) {
         setDoctorDeviceCache();
       }
 

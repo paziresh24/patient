@@ -22,6 +22,8 @@ import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
 import Loading from '@/common/components/atom/loading';
 import useCustomize from '@/common/hooks/useCustomize';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useOpenDoctorPublicProfile } from '@/common/utils/doctorPublicProfile';
 import CreditDuration from '@/modules/bamdad/components/creditDuration';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
@@ -69,6 +71,8 @@ export const UserProfile = () => {
   const loginPopup = useFeatureIsOn('gozargah::popup-login');
   const showSupportMenuButton = useFeatureIsOn('show-support-menu-button');
   const { isMobile } = useResponsive();
+  const deviceCached = useDoctorDeviceCached();
+  const isDoctor = hasDoctorIdentity(userInfo, deviceCached);
 
   const isShowDashboard =
     !customize.partnerKey &&
@@ -93,19 +97,19 @@ export const UserProfile = () => {
       badge: !!turnsCount.presence && (
         <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
       ),
-      shouldShow: userInfo.provider?.job_title !== 'doctor',
+      shouldShow: !isDoctor,
     },
     {
       name: 'نظرات من',
       icon: <CommentIcon width={22} height={22} />,
       link: '/dashboard/my-reviews',
-      shouldShow: userInfo.provider?.job_title !== 'doctor',
+      shouldShow: !isDoctor,
     },
     {
       name: 'مراجعین من',
       icon: <CalenderIcon width={22} height={22} />,
       link: '/dashboard/apps/drapp/appointments',
-      shouldShow: userInfo.provider?.job_title === 'doctor',
+      shouldShow: isDoctor,
     },
     {
       name: 'مشاهده پروفایل عمومی',
@@ -113,7 +117,7 @@ export const UserProfile = () => {
       onClick: () => {
         void openPublicProfile();
       },
-      shouldShow: userInfo.provider?.job_title === 'doctor',
+      shouldShow: isDoctor,
     },
     {
       name: 'پشتیبانی',
@@ -153,7 +157,7 @@ export const UserProfile = () => {
     },
   ];
 
-  const menuItems = (isShowDashboard ? dashboardMenuItems : patientMenuItems).filter(item => item.shouldShow);
+  const menuItems = (isShowDashboard || isDoctor ? dashboardMenuItems : patientMenuItems).filter(item => item.shouldShow);
 
   useEffect(() => {
     open && handleGetTurnsCount();
@@ -176,12 +180,13 @@ export const UserProfile = () => {
   const handlePostLogin = async () => {
     setPending(true);
     const userData = await getMe.mutateAsync();
-    const centersData = userData?.id ? await getCentersByUserId(userData.id.toString()) : [];
+    const centersData = userData?.id ? await getCentersByUserId(userData.id.toString()) : null;
 
     setUserInfo({
       ...userData,
       provider: {
-        ...(Array.isArray(centersData) ? { centers: centersData } : { centers: [] }),
+        ...userData?.provider,
+        ...(Array.isArray(centersData) ? { centers: centersData } : {}),
       },
     });
 

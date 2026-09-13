@@ -10,6 +10,7 @@ import classNames from '@/common/utils/classNames';
 import { buildDashboardEmbedSrc, getKnownDrappEmbedSrc } from '@/modules/dashboard/constants/knownEmbedSrc';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
+import { doctorJobTitleAttr } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useRef, useState } from 'react';
@@ -33,7 +34,7 @@ export const Dashboard = (props: any) => {
         event: {
           data: {
             user_id: user.id,
-            job_title: user.provider?.job_title ?? 'normal',
+            job_title: doctorJobTitleAttr(user),
             menu_key: 'appointments',
             app_key: 'drapp',
             menu_id: '9ctuac0ipcer0l7',
@@ -53,7 +54,7 @@ export const Dashboard = (props: any) => {
           event: {
             data: {
               user_id: user.id,
-              job_title: user.provider?.job_title ?? 'normal',
+              job_title: doctorJobTitleAttr(user),
               menu_key: 'appointments',
               app_key: 'drapp',
               menu_id: '9ctuac0ipcer0l7',

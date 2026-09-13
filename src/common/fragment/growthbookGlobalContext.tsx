@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
-import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
 import { getCookie } from 'cookies-next';
 import getConfig from 'next/config';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -25,8 +26,7 @@ export const GrowthbookGlobalContext = ({
   const [featuresVersion, setFeaturesVersion] = useState(0);
   const [attr, setAttr] = useState({});
   const user = useUserInfoStore(state => state.info);
-
-  const isDoctor = isDoctorUser(user);
+  const isDoctor = hasDoctorIdentity(user, useDoctorDeviceCached());
 
   const getDoctorSpecialties = useMemo(() => {
     if (!isDoctor) return [];

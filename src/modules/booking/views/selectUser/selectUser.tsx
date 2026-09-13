@@ -6,6 +6,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { UserInfo, useUserInfoStore } from '@/modules/login/store/userInfo';
 import { FormFields, PatinetProfileForm } from '@/modules/patient/views/form';
@@ -115,7 +116,7 @@ export const SelectUser = (props: SelectUserProps) => {
               select={userInfo.id === userSelected}
               type="user"
               shouldShowMessengers={shouldShowMessengers}
-              editable={userInfo?.provider?.job_title != 'doctor'}
+              editable={!hasDoctorIdentity(userInfo)}
             />
             {orderBy(data?.data?.result, 'created_at', 'desc')?.map((item: any) => (
               <UserCard
