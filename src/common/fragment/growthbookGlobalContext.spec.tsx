@@ -41,10 +41,11 @@ jest.mock('next/config', () => () => ({
 
 jest.mock('cookies-next', () => ({ getCookie: () => 'terminal-1' }));
 
-jest.mock('@/common/hooks/useDoctorHomeRedirect', () => ({ isDoctorUser: () => false }));
+jest.mock('@/common/utils/doctorIdentity', () => ({ hasDoctorIdentity: () => false }));
+jest.mock('@/common/hooks/useDoctorDeviceCached', () => ({ useDoctorDeviceCached: () => false }));
 
 jest.mock('@/modules/login/store/userInfo', () => ({
-  useUserInfoStore: (selector: any) => selector({ info: undefined }),
+  useUserInfoStore: (selector: any) => selector({ info: {} }),
 }));
 
 const renders: { data: any }[] = [];

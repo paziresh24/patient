@@ -12,6 +12,8 @@ import UsersIcon from '@/common/components/icons/users';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useOpenDoctorPublicProfile } from '@/common/utils/doctorPublicProfile';
+import { useIsDoctor } from '@/common/hooks/useIsDoctor';
+import { doctorJobTitleAttr } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -35,6 +37,7 @@ export type App = {
 
 export const SideBar = ({ children, className, fullWidth }: { children: ReactNode; className?: string; fullWidth?: boolean }) => {
   const user = useUserInfoStore(state => state.info);
+  const isDoctor = useIsDoctor();
   const logout = useUserInfoStore(state => state.logout);
   const appsData = useApps();
   const isUserPending = useUserInfoStore(state => state.pending);
@@ -56,7 +59,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
         event: {
           data: {
             user_id: user.id,
-            job_title: user.provider?.job_title ?? 'normal',
+            job_title: doctorJobTitleAttr(user),
           },
         },
       });
@@ -107,7 +110,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
     () =>
       queryClient.getQueryData([
         'app',
-        { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
+        { user_id: user.id ?? '', phone_number: user.cell, is_doctor: isDoctor },
       ]),
     [appsData?.data],
   );
@@ -121,7 +124,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
           data: [...(currentData?.data ?? []), { ...event.data.manifest, installation_id: event.data?.installation_id, pin: true }],
         };
         queryClient.setQueryData(
-          ['app', { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' }],
+          ['app', { user_id: user.id ?? '', phone_number: user.cell, is_doctor: isDoctor }],
           updatedData,
         );
         // toast.success('hi');
@@ -165,7 +168,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
           data: (currentData?.data ?? [])?.filter((_item: any) => _item.installation_id !== event.data.installation_id),
         };
         queryClient.setQueryData(
-          ['app', { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' }],
+          ['app', { user_id: user.id ?? '', phone_number: user.cell, is_doctor: isDoctor }],
           updatedData,
         );
       }
@@ -177,7 +180,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       icon: <UserEditIcon />,
       label: 'ویرایش پروفایل',
       url: '/dashboard/profile',
-      ...(user.provider?.job_title === 'doctor' && {
+      ...(isDoctor && {
         button: (
           <div
             onClick={e => {
@@ -220,7 +223,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       label: 'پشتیبانی',
       url: 'https://support.paziresh24.com',
       shouldShowDoctor: true,
-      shouldShow: user.provider?.job_title === 'doctor' && showSupportMenuButton,
+      shouldShow: isDoctor && showSupportMenuButton,
     },
   ].filter(item => item.shouldShow);
 
@@ -231,7 +234,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       event: {
         data: {
           user_id: user.id,
-          job_title: user.provider?.job_title ?? 'normal',
+          job_title: doctorJobTitleAttr(user),
           menu_name,
           app_key,
           app_manifest,
@@ -300,7 +303,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
 
                 {((appsData.isSuccess &&
                   (apps[0]?.fragments?.some((item: any) => item.type === 'menu' && item.options?.length > 0) || shouldShowBazaarMenu)) ||
-                  (user.provider?.job_title === 'doctor' || shouldShowBazaarMenu ? appsData.isLoading : false)) && <Divider />}
+                  (isDoctor || shouldShowBazaarMenu ? appsData.isLoading : false)) && <Divider />}
                 {defaultMenuData.map(menu => (
                   <MenuItem
                     key={menu.url}

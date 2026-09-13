@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
-import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
 import { useUserInfoStore, UserInfo } from '@/modules/login/store/userInfo';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 
@@ -8,8 +9,8 @@ interface AuthGlobalContextProps {
   previewToken?: string;
 }
 
-export const normalizeAuthInfo = (info: UserInfo) => {
-  const isDoctor = isDoctorUser(info);
+export const normalizeAuthInfo = (info: UserInfo, deviceCached = false) => {
+  const isDoctor = hasDoctorIdentity(info, deviceCached);
 
   return {
     ...info,
@@ -26,6 +27,7 @@ export const AuthGlobalContext = ({ children, previewToken }: React.PropsWithChi
   const isLogin = useUserInfoStore(state => state.isLogin);
   const isPending = useUserInfoStore(state => state.pending);
   const logout = useUserInfoStore(state => state.logout);
+  const deviceCached = useDoctorDeviceCached();
   const { handleOpenLoginModal } = useLoginModalContext();
 
   useEffect(() => {
@@ -38,9 +40,9 @@ export const AuthGlobalContext = ({ children, previewToken }: React.PropsWithChi
     () => ({
       isLogin,
       isPending,
-      info: normalizeAuthInfo(info),
+      info: normalizeAuthInfo(info, deviceCached),
     }),
-    [info, isLogin, isPending],
+    [info, isLogin, isPending, deviceCached],
   );
 
   const actions = useMemo(

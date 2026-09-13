@@ -8,15 +8,13 @@ import {
 import { isDoctorHomeRedirectPath } from '@/common/utils/doctorHomePaths';
 import { isPatientViewModeStored } from '@/modules/doctorHome/store/viewMode';
 import { isSpaPatientView, useSpaPatientViewStore } from '@/modules/doctorHome/utils/spaPatientView';
-import { useUserInfoStore, UserInfo } from '@/modules/login/store/userInfo';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 import { growthbook } from '@/common/growthbook/client';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 
-export const isDoctorUser = (user: UserInfo) => {
-  const centers = user.provider?.centers;
-  return Array.isArray(centers) && centers.length > 0;
-};
+export { hasDoctorIdentity, isDoctorUser } from '@/common/utils/doctorIdentity';
 
 export const useDoctorHomeRedirect = () => {
   const router = useRouter();
@@ -28,7 +26,7 @@ export const useDoctorHomeRedirect = () => {
   const hasRedirected = useRef(false);
 
   const isCachedDoctor = mounted && isDoctorDeviceCached();
-  const isDoctor = isCachedDoctor || (isLogin && isDoctorUser(user));
+  const isDoctor = isLogin && hasDoctorIdentity(user, isCachedDoctor);
   // Soft SPA patient switch (in-memory or sessionStorage from switcher click).
   const isPatientOptOut = spaPatientView || (mounted && isPatientViewModeStored());
   // Desktop: never. Mobile soft-nav: never bounce if patient opted out.

@@ -52,12 +52,13 @@ const GoogleOneTap = () => {
       });
 
       const userData = await getMe.mutateAsync();
-      const centersData = userData?.id ? await getCentersByUserId(userData.id.toString()) : [];
+      const centersData = userData?.id ? await getCentersByUserId(userData.id.toString()) : null;
 
       setUserInfo({
         ...userData,
         provider: {
-          ...(Array.isArray(centersData) ? { centers: centersData } : { centers: [] }),
+          ...userData?.provider,
+          ...(Array.isArray(centersData) ? { centers: centersData } : {}),
         },
       });
       setPending(false);

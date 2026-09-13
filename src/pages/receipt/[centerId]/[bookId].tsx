@@ -31,6 +31,7 @@ import { isPWA } from '@/common/utils/isPwa';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { OnlineVisitCancelModal } from '@/modules/myTurn/components/onlineVisitCancelModal';
@@ -1003,7 +1004,7 @@ const Receipt = () => {
           book_date: bookDetailsData.book_time_strings,
           center_id: centerId,
           user_id: user?.id,
-          is_doctor: user?.provider?.job_title === 'doctor',
+          is_doctor: hasDoctorIdentity(user),
         },
       });
     }

@@ -1,4 +1,6 @@
 import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import useApplication from '@/common/hooks/useApplication';
 import useCustomize from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
@@ -32,17 +34,19 @@ export const BottomNavigation = () => {
   const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
   const isEnabledLauncher = useFeatureIsOn('launcher-flag');
   const launcherAsMainHome = useFeatureIsOn('launcher-as-main-home');
+  const deviceCached = useDoctorDeviceCached();
+  const isDoctor = hasDoctorIdentity(user, deviceCached);
 
   const isShowDashboard =
     !customize.partnerKey &&
     (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
 
-  const isDoctorShell = user.provider?.job_title === 'doctor' && launcherAsMainHome;
+  const isDoctorShell = isDoctor && launcherAsMainHome;
 
   const servicesMenu = useMemo(() => {
-    if (user.provider?.job_title === 'doctor' && !customize.partnerKey) {
+    if (isDoctor && !customize.partnerKey) {
       return {
-        name: user.provider?.job_title === 'doctor' ? 'داشبورد' : 'پروفایل',
+        name: 'داشبورد',
         icon: <ElementIcon />,
         fillIcon: <ElementIcon isSolid />,
         link: '/_/',
@@ -61,7 +65,7 @@ export const BottomNavigation = () => {
       privateRoute: false,
       exact: false,
     };
-  }, [isShowDashboard, isEnabledLauncher, isEnabledDashboard, customize.partnerKey, user?.id]);
+  }, [isDoctor, customize.partnerKey]);
 
   useEffect(() => {
     isLogin && handleGetTurnsCount();
@@ -141,7 +145,7 @@ export const BottomNavigation = () => {
       privateRoute: true,
       exact: false,
     },
-    user.provider?.job_title === 'doctor' && isShowDashboard
+    isDoctor
       ? {
           name: 'مراجعین من',
           icon: <CalenderIcon />,

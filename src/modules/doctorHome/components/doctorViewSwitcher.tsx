@@ -9,7 +9,8 @@ import {
   modeFromPath,
   normalizeDoctorHomePath,
 } from '../hooks/useDoctorViewUrlSync';
-import { type DoctorViewMode, isDoctorUser, useDoctorViewModeStore } from '../store/viewMode';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
+import { type DoctorViewMode, useDoctorViewModeStore } from '../store/viewMode';
 import { useSpaPatientViewStore } from '../utils/spaPatientView';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { DoctorViewSwitcherChrome } from './doctorViewSwitcherChrome';
@@ -37,7 +38,7 @@ export const DoctorViewSwitcher = ({ className, forceShow = false }: Props) => {
     void router.prefetch('/_/');
   }, [router]);
 
-  const isDoctor = isDoctorUser(user);
+  const isDoctor = hasDoctorIdentity(user, deviceCached);
   // Keep chrome visible across / ↔ /_/ even when centers are briefly missing after remount.
   if (!forceShow && !isDoctor && !deviceCached) return null;
 

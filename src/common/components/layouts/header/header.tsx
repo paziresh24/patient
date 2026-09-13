@@ -22,6 +22,8 @@ const UserProfile = dynamic(() => import('./components/userProfile'));
 const PromoteAppBanner = dynamic(() => import('../promoteAppBanner'));
 import LauncherDesktopApps from '.plasmic/LauncherDesktopApps';
 import GlobalContextsProvider from '.plasmic/plasmic/launcher/PlasmicGlobalContextsProvider';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import LauncherBlockNotifications from '.plasmic/LauncherBlockNotifications';
 import { useRouter } from 'next/router';
@@ -50,6 +52,7 @@ const Header = (props: HeaderProps) => {
   const customize = useCustomize(state => state.customize);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const user = useUserInfoStore(state => state.info);
+  const isDoctor = hasDoctorIdentity(user, useDoctorDeviceCached());
   const router = useRouter();
   const doctorViewHeader = useDoctorViewHeaderSurface();
 
@@ -162,7 +165,7 @@ const Header = (props: HeaderProps) => {
           <div className="flex items-center space-s-4">
             <SupportButtonBamdad />
             {showSearchSuggestionButton && <ButtonSuggestion />}
-            {isLogin && user.provider?.job_title === 'doctor' && (
+            {isLogin && isDoctor && (
               <GlobalContextsProvider>
                 <LauncherDesktopApps />
               </GlobalContextsProvider>

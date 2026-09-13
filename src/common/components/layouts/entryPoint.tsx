@@ -76,12 +76,13 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
 
         const latestInfo = useUserInfoStore.getState().info;
         const slug = doctorProfileData?.slug || existingSlug;
+        const centersList = Array.isArray(centersData) ? centersData : undefined;
 
         setUserInfo({
           ...latestInfo,
           provider: {
             ...latestInfo?.provider,
-            ...(Array.isArray(centersData) ? { centers: centersData } : { centers: [] }),
+            ...(Array.isArray(centersList) ? { centers: centersList } : {}),
             ...(slug ? { slug } : {}),
           },
         });
@@ -112,8 +113,11 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
             syncedDoctorCentersUserId.current = null;
             syncedDoctorSlugUserId.current = null;
           }
-        } else {
+        } else if (Array.isArray(centersData)) {
           clearDoctorDeviceCache();
+          syncedDoctorSlugUserId.current = null;
+        } else {
+          syncedDoctorCentersUserId.current = null;
           syncedDoctorSlugUserId.current = null;
         }
       } catch (error) {
@@ -170,8 +174,6 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
         const updatedInfo = useUserInfoStore.getState().info;
         if (isDoctorUser(updatedInfo)) {
           setDoctorDeviceCache();
-        } else {
-          clearDoctorDeviceCache();
         }
 
         void syncDoctorCentersRef.current(userData.id.toString());

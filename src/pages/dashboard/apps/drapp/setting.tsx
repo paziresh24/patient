@@ -11,6 +11,7 @@ import { useApps } from '@/modules/dashboard/apis/apps';
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
 import { useHamdastGrowthBookEmbedSrc } from '@/modules/hamdast/utils/useHamdastGrowthBookEmbedSrc';
+import { doctorJobTitleAttr } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -42,7 +43,7 @@ export const Dashboard = (props: any) => {
         event: {
           data: {
             user_id: user.id,
-            job_title: user.provider?.job_title ?? 'normal',
+            job_title: doctorJobTitleAttr(user),
             menu_key: 'setting',
             app_key: 'drapp',
             menu_id: selectedMenu.id,
@@ -62,7 +63,7 @@ export const Dashboard = (props: any) => {
           event: {
             data: {
               user_id: user.id,
-              job_title: user.provider?.job_title ?? 'normal',
+              job_title: doctorJobTitleAttr(user),
               menu_key: 'setting',
               app_key: 'drapp',
               menu_id: selectedMenu.id,

@@ -7,8 +7,8 @@ import { VardastWorkflowProvider, useVardastWorkflow } from '@/modules/hami/cont
 import { useHasVardastChatWidget } from '@/modules/hami/hooks/useHasVardastChatWidget';
 import { useVardastTriggerInteraction } from '@/modules/hami/hooks/useVardastTriggerInteraction';
 import { trackVardastDrawerOpen, VardastDrawerOpenSource } from '@/modules/hami/utils/trackVardastDrawerOpen';
-import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
-import { isDoctorDeviceCached } from '@/common/utils/doctorDeviceCache';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { HAMDAST_CLOSE_VARDAST_EVENT } from '@/modules/hamdast/components/close';
 import { CSSProperties, ReactNode, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
@@ -597,9 +597,8 @@ export const ChatAssistantDrawer = (props: ChatAssistantDrawerProps) => {
   }, []);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const doctorProfilePending = useUserInfoStore(state => state.doctorProfilePending);
-  const isDoctor = isDoctorUser(userInfo);
-  const shouldShowVardastUI =
-    isDoctor || doctorProfilePending || isDoctorDeviceCached() || (typeof window !== 'undefined' && window.user?.is_doctor === true);
+  const isDoctor = hasDoctorIdentity(userInfo, useDoctorDeviceCached());
+  const shouldShowVardastUI = isDoctor || doctorProfilePending;
   const shouldFetchWidgets = isLogin && !!userInfo?.id && shouldShowVardastUI;
   const { hasChatWidget, isLoading: isWidgetsLoading } = useHasVardastChatWidget(userInfo?.id, shouldFetchWidgets);
   const vardastEnabled = hasChatWidget && !isWidgetsLoading;

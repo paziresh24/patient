@@ -3,7 +3,7 @@ import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { growthbook } from '@/common/growthbook/client';
-import { isDoctorUser } from '../store/viewMode';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { readTrustedEnabledLauncherFlag, writePersistedLauncherFlag } from '../utils/doctorHomeLauncherFlag';
 import { shouldOptimisticallyShowNewDoctorHome } from '../utils/doctorHomeOptimisticHome';
 
@@ -134,7 +134,7 @@ export const useIsNewDoctorLauncherEnabled = () => {
   const [isResolved, setIsResolved] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
-  const isDoctor = !customize.partnerKey && isDoctorUser(user);
+  const isDoctor = !customize.partnerKey && hasDoctorIdentity(user, deviceCached);
   const canResolve = isLogin && normalizedUserId != null && isReady;
 
   // Hydrate trusted flag from LS before paint (not during render).
@@ -245,7 +245,7 @@ export const useIsNewDoctorLauncherLoading = () => {
   const customize = useCustomize(state => state.customize);
   const deviceCached = useDoctorDeviceCached();
 
-  const isDoctor = !customize.partnerKey && isDoctorUser(user);
+  const isDoctor = !customize.partnerKey && hasDoctorIdentity(user, deviceCached);
   const normalizedUserId = userId != null && userId !== '' ? String(userId) : null;
 
   if (!customize.partnerKey && isOptimisticNewHome(normalizedUserId)) {
