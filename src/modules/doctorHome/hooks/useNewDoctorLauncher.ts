@@ -260,8 +260,8 @@ export const useIsNewDoctorLauncherLoading = () => {
     return false;
   }
 
-  const hasDoctorIdentity = deviceCached || (isDoctor && isLogin && normalizedUserId != null);
-  if (!customize.partnerKey && hasDoctorIdentity) {
+  const shouldHoldDoctorLauncher = deviceCached || (isDoctor && isLogin && normalizedUserId != null);
+  if (!customize.partnerKey && shouldHoldDoctorLauncher) {
     return true;
   }
 
