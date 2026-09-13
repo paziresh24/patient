@@ -24,6 +24,8 @@ import { useQuery } from '@tanstack/react-query';
 import { ReactElement, useEffect, useMemo } from 'react';
 import { growthbook } from 'src/pages/_app';
 import { PIC_USER_IMAGE_FALLBACK_URL, picUserImageUrl } from '@/common/utils/picUserImageUrl';
+import { applyOnlineVisitPatientDisplayBufferMs } from '@/modules/booking/utils/onlineVisitPatientDisplayTime';
+import { useNewOnlineVisitBoxEnabled } from '@/modules/profile/hooks/useNewOnlineVisitBoxEnabled';
 
 const Factor = () => {
   const {
@@ -70,9 +72,12 @@ const Factor = () => {
 
   const doctorSlugFromBook = useMemo(() => {
     if (!bookDetailsData || typeof bookDetailsData !== 'object') return undefined;
-    const s = (bookDetailsData as { doctor_slug?: string }).doctor_slug;
+    const row = bookDetailsData as { doctor_slug?: string; doctor?: { slug?: string }; slug?: string };
+    const s = row.doctor_slug || row.doctor?.slug || row.slug;
     return s && String(s).trim() ? String(s) : undefined;
   }, [bookDetailsData]);
+
+  const useOnlineVisitDisplayBuffer = useNewOnlineVisitBoxEnabled(doctorSlugFromBook);
 
   const { data: doctorSlugForImageResponse, isFetching: isDoctorSlugForImageFetching } = useQuery(
     ['factorDoctorSlugForImage', doctorSlugFromBook],
@@ -98,9 +103,20 @@ const Factor = () => {
 
   const isOnlineVisitTurn = !!bookDetailsData?.book_params?.online_channel;
   const convertTime = (time: string) => {
-    return moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm')?.locale('fa')?.calendar(undefined, {
-      nextWeek: 'YYYY/MM/DD(dddd) ساعت HH:mm',
-      sameElse: 'YYYY/MM/DD ساعت HH:mm',
+    const parsed = moment.from(digitsFaToEn(time), 'fa', 'JYYYY/JMM/JDD HH:mm');
+    if (!parsed?.isValid()) return time;
+    if (!useOnlineVisitDisplayBuffer) {
+      return parsed.locale('fa').calendar(undefined, {
+        nextWeek: 'YYYY/MM/DD(dddd) ساعت HH:mm',
+        sameElse: 'YYYY/MM/DD ساعت HH:mm',
+      });
+    }
+    const displayMs = applyOnlineVisitPatientDisplayBufferMs(parsed.valueOf());
+    return moment(displayMs).locale('fa').calendar(undefined, {
+      nextWeek: 'YYYY/MM/DD(dddd) حدود ساعت HH:mm',
+      sameElse: 'YYYY/MM/DD حدود ساعت HH:mm',
+      sameDay: 'امروز حدود ساعت HH:mm',
+      nextDay: 'فردا حدود ساعت HH:mm',
     });
   };
 

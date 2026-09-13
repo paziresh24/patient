@@ -143,7 +143,7 @@ export const FeedInsightSection = ({
       <DsDrawer {...reviewsDrawerProps} title="نظرات بیماران" description="راوی" fullHeight className="!p-0">
         {reviewsSheet.open && (
           <iframe
-            src={appendUserIdToUrl(RAVI_DOCSIDE_URL, userId)}
+            src={RAVI_DOCSIDE_URL}
             title="راوی؛ نظرات بیماران"
             className="min-h-0 w-full flex-1 border-0"
           />

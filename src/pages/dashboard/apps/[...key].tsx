@@ -9,12 +9,12 @@ import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useApps } from '@/modules/dashboard/apis/apps';
 import { buildDashboardEmbedSrc, getKnownDrappEmbedSrc } from '@/modules/dashboard/constants/knownEmbedSrc';
-import { isRaviPatientMyReviewsMenu } from '@/modules/dashboard/constants/raviPatientMyReviewsRoute';
+import { isRaviDoctorProfileReviewsMenu, isRaviPatientMyReviewsMenu } from '@/modules/dashboard/constants/raviPatientMyReviewsRoute';
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { buildRaviMyReviewsUrl } from '@/modules/patient/utils/buildRaviMyReviewsUrl';
-import { getCookie } from 'cookies-next';
+import { buildRaviDocsideHandoffSrc } from '@/modules/patient/utils/buildRaviDocsideHandoff';
+import { buildRaviMyReviewsHandoffSrc } from '@/modules/patient/utils/buildRaviMyReviewsHandoff';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -34,14 +34,18 @@ export const Dashboard = (props: any) => {
   const appKey = (keys as string[])[0];
   const menuKey = (keys as string[])[1];
   const isPatientMyReviews = isRaviPatientMyReviewsMenu(appKey, menuKey);
+  const isDoctorProfileReviews = isRaviDoctorProfileReviewsMenu(appKey, menuKey);
+  const isRaviSessionHandoff = isPatientMyReviews || isDoctorProfileReviews;
 
   const knownEmbedSrc = useMemo(() => {
     if (isPatientMyReviews) {
-      const token = typeof window === 'undefined' ? undefined : getCookie('token');
-      return buildRaviMyReviewsUrl(typeof token === 'string' ? token : undefined);
+      return buildRaviMyReviewsHandoffSrc();
+    }
+    if (isDoctorProfileReviews) {
+      return buildRaviDocsideHandoffSrc();
     }
     return getKnownDrappEmbedSrc(appKey, menuKey);
-  }, [appKey, menuKey, isPatientMyReviews]);
+  }, [appKey, menuKey, isPatientMyReviews, isDoctorProfileReviews]);
 
   const app = useMemo(() => appsData.data?.data?.find((app: App) => app.key === `${appKey}`), [isReady, appKey, appsData]);
 
@@ -51,7 +55,9 @@ export const Dashboard = (props: any) => {
   );
   const appName = isPatientMyReviews
     ? 'نظرات من'
-    : selctedMenu?.name?.fa ?? app?.display_name?.fa ?? 'داشبورد';
+    : isDoctorProfileReviews
+      ? 'نظرات پروفایل من'
+      : selctedMenu?.name?.fa ?? app?.display_name?.fa ?? 'داشبورد';
   const embedSrc = knownEmbedSrc ?? selctedMenu?.embed_src;
   const waitingForHamdastMenu = !knownEmbedSrc && !appsData.isSuccess;
 
@@ -110,7 +116,7 @@ export const Dashboard = (props: any) => {
 
   const iframeSrc =
     user?.id && embedSrc
-      ? isPatientMyReviews
+      ? isRaviSessionHandoff
         ? embedSrc
         : buildDashboardEmbedSrc(embedSrc, user.id, window?.location?.search)
       : undefined;
@@ -149,6 +155,7 @@ export const Dashboard = (props: any) => {
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
                 src={iframeSrc}
+                referrerPolicy={isRaviSessionHandoff ? 'no-referrer' : undefined}
                 allow="microphone; camera; fullscreen; clipboard-write;"
                 sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />

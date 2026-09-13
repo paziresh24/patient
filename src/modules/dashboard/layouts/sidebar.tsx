@@ -266,7 +266,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                         .filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
                         .map((item: any) => ({
                           name: item.name?.fa,
-                          // Only «نظرات من» — keep «نظرات پروفایل من» on hamdast (ravi-docs)
+                          // «نظرات من» → ravi-front; «نظرات پروفایل من» → same-origin docside handoff
                           link: isRaviPatientMyReviewsMenu(app.key, item.key)
                             ? '/dashboard/my-reviews/'
                             : `/dashboard/apps/${app.key}/${item.key}/`,

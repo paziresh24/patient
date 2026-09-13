@@ -54,17 +54,22 @@ export const mapSamanAvailabilityToCenters = <T extends { id: string }>(
     const availability = findCenterAvailability(samanData, center.id);
     const freeturnText = formatSamanAvailabilityTime(availability?.nearest_time_slot);
     const availableTimeText = formatSamanAvailabilityTime(availability?.nearest_available_time);
+    const hasFutureAvailabilityWindow = !!availability?.nearest_available_time;
+    const bookingAvailableNow = availability?.booking_available ?? false;
+    // Online booking can be "opens later today" without being permanently disabled.
+    // is_active drives the inactive/hatched UI; freeturns_info drives the "opens at" notice.
+    const isActive = bookingAvailableNow || hasFutureAvailabilityWindow;
     const availableTimeUnix = availability?.nearest_available_time
       ? Math.floor(new Date(availability.nearest_available_time).getTime() / 1000)
       : Date.now() / 1000;
 
     return {
       ...center,
-      is_active: availability?.booking_available ?? false,
+      is_active: isActive,
       freeturn: samanTimeToUnixSeconds(availability?.nearest_time_slot),
       freeturn_text: freeturnText,
       freeturns_info:
-        !availability?.booking_available && availability?.nearest_available_time
+        !bookingAvailableNow && hasFutureAvailabilityWindow
           ? [
               {
                 available_time: availableTimeUnix,

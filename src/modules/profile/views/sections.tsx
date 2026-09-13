@@ -7,12 +7,16 @@ import { hasBioCredentials } from '@/common/apis/services/profile-microservice/n
 import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
-import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import classNames from '@/common/utils/classNames';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import ProfileSeoSection from './profileSeoSection';
 import { getImageUrl } from '@/common/utils/getImageUrl';
 import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
+import { ProfileAboutSection } from '@/modules/profile/views/profileAboutSection';
+import {
+  resolveCouncilMedicalCode,
+  stripCouncilMedicalCodeFromBiography,
+} from '@/modules/profile/utils/buildAboutBiographyWithMedicalCode';
 
 const { publicRuntimeConfig } = config();
 
@@ -36,17 +40,11 @@ const ProfileFallback = dynamic(() => import('@/modules/hamdast/profileFallback'
 });
 
 const EditButton = dynamic(() => import('../components/viewAs/editButton'));
-const Biography = dynamic(() => import('./biography'), {
-  loading(loadingProps) {
-    return <Skeleton w="100%" h="16rem" rounded="lg" />;
-  },
-});
 const Credentials = dynamic(() => import('./credentials'), {
   loading() {
     return <Skeleton w="100%" h="12rem" rounded="lg" />;
   },
 });
-const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
 const PlasmicProfileGallery = dynamic(() => import('.plasmic/ProfileGallery'));
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
@@ -104,19 +102,21 @@ export const sections = (data: any) => {
     'user_id',
   ]);
 
+  const councilMedicalCode = resolveCouncilMedicalCode(information?.councilMedicalCode, information?.employee_id);
+  const aboutBiography = stripCouncilMedicalCodeFromBiography(information?.biography);
+  const hasAboutContent = Boolean(councilMedicalCode || aboutBiography);
+
   return [
     // About
     {
       noWrapper: true,
-      ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
-      isShow: information.biography,
-      isShowFallback: !information.biography && editable,
-      children: (props: any) => (
-        <ProfileGlobalContextsProvider>
-          <div className="[&_*]:text-sm [&_*]:tracking-normal [&_*]:leading-normal [&_h1]:font-bold [&_h2]:font-bold [&_p]:font-normal ">
-            <Fragment2 name="ProfileAbout" Component={PlasmicProfileAbout} args={{ ...profileData }} />
-          </div>
-        </ProfileGlobalContextsProvider>
+      ActionButton: editable && aboutBiography && <EditButton onClick={() => handleViewAs('biography')} />,
+      isShow: hasAboutContent,
+      isShowFallback: !hasAboutContent && editable,
+      children: () => (
+        <div className="text-sm tracking-normal leading-normal">
+          <ProfileAboutSection biography={aboutBiography} medicalCode={councilMedicalCode} />
+        </div>
       ),
       fallback: (props: any) => (
         <div

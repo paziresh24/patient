@@ -56,6 +56,7 @@ export const DoctorInvoiceNotice = ({
   const isUserCenterLoading = !consultUserCenterId && !!slug && !userCenterIdProp && centersQuery.isLoading;
 
   const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({
+    slug,
     serviceId,
     userCenterId: consultUserCenterId,
     isUserCenterLoading,

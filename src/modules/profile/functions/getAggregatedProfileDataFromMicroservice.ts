@@ -3,6 +3,7 @@ import { apiGatewayClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { getDoctorMedicalCode } from '@/common/apis/services/doctor/getDoctorMedicalCode';
 import { getDoctorOnlineChannels } from '@/common/apis/services/doctor/getDoctorOnlineChannels';
 import { getProfileMicroserviceBundle } from '@/common/apis/services/profile-microservice/getProfileMicroserviceBundle';
 import { mapMicroserviceToLegacy } from '@/common/apis/services/profile-microservice/mapMicroserviceToLegacy';
@@ -135,7 +136,7 @@ export async function getAggregatedProfileDataFromMicroservice(
   const rismanDoctorId = buildRismanDoctorId(slugInfo.owner_id, slugInfo.server_id);
 
   const parallelStartedAt = Date.now();
-  const [drprofileGallery, rateDetailsResult, rismanResult, averageWaitingTimeResult, doctorCenters] =
+  const [drprofileGallery, rateDetailsResult, rismanResult, averageWaitingTimeResult, doctorCenters, doctorMedicalCode] =
     await Promise.all([
       fetchDoctorGalleryFromDrprofile(validatedSlug, university).catch(error => {
         console.error('Error hydrating gallery from drprofile (microservice path):', error);
@@ -153,11 +154,20 @@ export async function getAggregatedProfileDataFromMicroservice(
         console.error('Error fetching drprofile centers for MS booking hydrate:', error);
         return [] as Awaited<ReturnType<typeof getDoctorCenters>>;
       }),
+      getDoctorMedicalCode(validatedSlug, {
+        id: slugInfo.owner_id,
+        server_id: slugInfo.server_id,
+      }).catch(() => ({ medical_code: '' })),
     ]);
   const parallel_ms = Date.now() - parallelStartedAt;
 
   if (Array.isArray(drprofileGallery) && drprofileGallery.length > 0) {
     overwrite.gallery = drprofileGallery;
+  }
+
+  const councilMedicalCode = doctorMedicalCode?.medical_code?.trim() || '';
+  if (councilMedicalCode) {
+    overwrite.councilMedicalCode = councilMedicalCode;
   }
 
   const bookingCentersOk = Array.isArray(doctorCenters) && doctorCenters.length > 0;

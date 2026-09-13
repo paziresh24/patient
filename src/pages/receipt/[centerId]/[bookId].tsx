@@ -633,6 +633,11 @@ const Receipt = () => {
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
   const canShowBookInPersonBanner = turnStatus.notVisitedTurn || turnStatus.expiredTurn;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn && bookDetailsData?.services?.[0]?.service_type_id !== 9;
+  const showConsultSupportFallback =
+    centerType === 'consult' &&
+    bookDetailsData?.services?.[0]?.service_type_id !== 9 &&
+    !turnStatus?.deletedTurn;
+  const showSecondaryReceiptActions = showConsultSupportFallback || showOptionalButton || turnStatus.requestedTurn;
 
   const handleRemoveBookTurn = () => {
     removeBookApi.mutate(
@@ -827,6 +832,24 @@ const Receipt = () => {
     }
 
     window.open(`https://messaging-back.paziresh24.com/api/external/conversations/${bookId}`);
+  };
+
+  const handleOnlineVisitSupportClick = () => {
+    if (!bookDetailsData) return;
+    splunkInstance('booking').sendEvent({
+      group: 'support-receipt',
+      type: 'click-support',
+      event: {
+        doctor_id: bookDetailsData?.doctor?.id,
+        slug: bookDetailsData?.doctor?.slug,
+        server_id: bookDetailsData?.doctor?.server_id,
+        doctor_name: doctorName,
+        book_id: bookDetailsData.book_id,
+        reference_code: bookDetailsData.reference_code,
+        book_date: bookDetailsData.book_time_strings,
+      },
+    });
+    window.open('https://support.paziresh24.com/chats/new?department=3', '_blank', 'noopener,noreferrer');
   };
 
   const handleSafeCallAction = () => {
@@ -1115,15 +1138,45 @@ const Receipt = () => {
                   <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
                     لغو نوبت
                   </Button>
+                  {centerType === 'consult' && bookDetailsData.book_id && growthbook.ready && !userPednding && (
+                    <>
+                      <Fragment
+                        name="ReceiptActionButtons"
+                        props={{
+                          bookDetailsData: {
+                            ...bookDetailsData,
+                            doctor: { ...bookDetailsData.doctor, display_name: doctorName },
+                            selected_online_visit_channel: {
+                              ...bookDetailsData?.selected_online_visit_channel,
+                              channel_link: decodeURIComponent(
+                                bookDetailsData?.selected_online_visit_channel?.channel_link.replace(
+                                  'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+                                  '',
+                                ),
+                              ),
+                            },
+                          },
+                          specialities: [],
+                          currentUserId: user.id,
+                        }}
+                        variants={{
+                          type: 'visitOnline',
+                        }}
+                      />
+                      <Button block size="sm" variant="secondary" onClick={handleOnlineVisitSupportClick}>
+                        پشتیبانی
+                      </Button>
+                    </>
+                  )}
                 </div>
               ) : (
                 <ReceiptButtonLoading />
               )}
             </>
           )}
-          {bookDetailsData.book_id && growthbook.ready && !userPednding && (
+          {bookDetailsData.book_id && growthbook.ready && !userPednding && showSecondaryReceiptActions && (
             <div className="p-5">
-              {centerType === 'consult' && (
+              {showConsultSupportFallback && (
                 <div className="flex flex-col gap-2">
                   <Fragment
                     name="ReceiptActionButtons"
@@ -1145,29 +1198,10 @@ const Receipt = () => {
                       currentUserId: user.id,
                     }}
                     variants={{
-                      type: centerType === 'consult' ? 'visitOnline' : turnStatus.requestedTurn ? 'request' : 'inPerson',
+                      type: 'visitOnline',
                     }}
                   />
-                  <Button
-                    block
-                    variant="secondary"
-                    onClick={() => {
-                      splunkInstance('booking').sendEvent({
-                        group: 'support-receipt',
-                        type: 'click-support',
-                        event: {
-                          doctor_id: bookDetailsData?.doctor?.id,
-                          slug: bookDetailsData?.doctor?.slug,
-                          server_id: bookDetailsData?.doctor?.server_id,
-                          doctor_name: doctorName,
-                          book_id: bookDetailsData.book_id,
-                          reference_code: bookDetailsData.reference_code,
-                          book_date: bookDetailsData.book_time_strings,
-                        },
-                      });
-                      window.open('https://support.paziresh24.com/', '_blank', 'noopener,noreferrer');
-                    }}
-                  >
+                  <Button block size="sm" variant="secondary" onClick={handleOnlineVisitSupportClick}>
                     پشتیبانی
                   </Button>
                 </div>

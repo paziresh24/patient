@@ -26,8 +26,8 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 interface NotificationProps {
   centerId: string;
-  serviceId: string;
-  userCenterId: string;
+  serviceId?: string;
+  userCenterId?: string;
   availalbeTime: string;
   className?: string;
 }
@@ -35,6 +35,7 @@ interface NotificationProps {
 export const Notification = (props: NotificationProps) => {
   const router = useRouter();
   const { centerId, serviceId, userCenterId, availalbeTime, className } = props;
+  const canSubscribe = !!serviceId && !!userCenterId;
 
   const { handleOpen: handleOpenSubmitModal, handleClose: handleCloseSubmitModal, modalProps: submitModalProps } = useModal();
   const { handleOpen: handleOpenCancelModal, handleClose: handleCloseCancelModal, modalProps: cancelModalProps } = useModal();
@@ -48,11 +49,11 @@ export const Notification = (props: NotificationProps) => {
   const exists = useExistsAvailabilityNotification(
     {
       center_id: centerId,
-      service_id: serviceId,
-      user_center_id: userCenterId,
+      service_id: serviceId!,
+      user_center_id: userCenterId!,
     },
     {
-      enabled: isLogin,
+      enabled: isLogin && canSubscribe,
     },
   );
   const [isExists, setIsExists] = useState(false);
@@ -66,6 +67,7 @@ export const Notification = (props: NotificationProps) => {
   }, [exists.data]);
 
   const handleSubmit = async () => {
+    if (!canSubscribe) return;
     if (!phoneNumberField.current || !phoneNumberValidator(phoneNumberField.current?.value ?? '')) {
       toast.error('شماره همراه را به صورت صحیح وارد نمایید');
       return;
@@ -95,6 +97,7 @@ export const Notification = (props: NotificationProps) => {
   };
 
   const handleCancel = async () => {
+    if (!canSubscribe) return;
     try {
       await cancel.mutateAsync({
         center_id: centerId,
@@ -109,6 +112,7 @@ export const Notification = (props: NotificationProps) => {
   };
 
   const handleClickOpenSubmmitModal = () => {
+    if (!canSubscribe) return;
     if (!isLogin) {
       handleOpenLoginModal({
         state: true,
@@ -139,15 +143,15 @@ export const Notification = (props: NotificationProps) => {
           </Text>
         </div>
 
-        {isShowPremiumFeatures && ((exists.isLoading && isLogin) || loginPending) && (
+        {canSubscribe && isShowPremiumFeatures && ((exists.isLoading && isLogin) || loginPending) && (
           <Loading className="self-center w-8 h-5 fill-slate-400" />
         )}
-        {isShowPremiumFeatures && ((exists.isSuccess && !isExists) || (!isLogin && !loginPending)) && (
+        {canSubscribe && isShowPremiumFeatures && ((exists.isSuccess && !isExists) || (!isLogin && !loginPending)) && (
           <Button onClick={handleClickOpenSubmmitModal} icon={<BellIcon />}>
             نوبت دار شد، به من اطلاع بده
           </Button>
         )}
-        {exists.isSuccess && isExists && (
+        {canSubscribe && exists.isSuccess && isExists && (
           <div className="flex flex-col space-y-1 cursor-pointer" onClick={handleOpenCancelModal}>
             <div className="flex items-center p-3 rounded-md rounded-b-none bg-teal-100/40 space-s-1">
               <BellCheckIcon className="w-6 h-6 text-emerald-500" />
