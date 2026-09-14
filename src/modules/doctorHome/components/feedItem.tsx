@@ -163,7 +163,7 @@ export const AppointmentsFeedItem = ({
 
         <DsCollapsible open={showTimeline} id={schedulePanelId}>
           <div className="border-t border-slate-100 px-3 pb-3 pt-2">
-            <FeedContentSwap swapKey={appointmentsSwapKey} variant="slide">
+            <FeedContentSwap swapKey={appointmentsSwapKey} variant="fade">
               <DsTimeline>
                 {data.items.map((appointment, index) => (
                   <FeedStaggerItem key={appointment.book_id} index={index}>

@@ -145,6 +145,8 @@ export const ds = {
     walletSwap: 'animate-doctor-wallet-swap motion-reduce:animate-none',
     sheetEnter: 'animate-doctor-sheet-in motion-reduce:animate-none opacity-0',
     sheetExit: 'animate-doctor-sheet-out motion-reduce:animate-none',
+    originEnter: 'animate-doctor-origin-in motion-reduce:animate-none opacity-0',
+    originExit: 'animate-doctor-origin-out motion-reduce:animate-none',
     backdropEnter: 'animate-doctor-backdrop-in motion-reduce:animate-none',
     backdropExit: 'animate-doctor-backdrop-out motion-reduce:animate-none',
     collapse: 'transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none',

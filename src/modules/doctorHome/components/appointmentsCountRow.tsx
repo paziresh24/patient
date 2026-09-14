@@ -72,7 +72,7 @@ export const AppointmentsCountRow = ({
             {isLoading ? (
               <Skeleton h="0.75rem" w="3rem" rounded="full" className="mt-0.5" />
             ) : countLabel ? (
-              <FeedContentSwap swapKey={countLabel} variant="pop">
+              <FeedContentSwap swapKey={countLabel} variant="fade">
                 <p className={classNames(ds.type.caption, 'mt-0.5')}>{countLabel}</p>
               </FeedContentSwap>
             ) : (
