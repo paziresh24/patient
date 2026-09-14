@@ -1,13 +1,13 @@
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DsInsightCarousel, ds } from '../designSystem';
 import { useDoctorWalletBalance } from '../apis/walletBalance';
 import { useDoctorHomeStats } from '../hooks/useDoctorHomeStats';
 import { useReviewWeekDelta } from '../hooks/useReviewWeekDelta';
 import { sendDoctorHomeEvent } from '../utils/analytics';
-import { appendUserIdToUrl, buildDoctorPanelUrl } from '../utils/iframeUrl';
+import { buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { DOCTOR_PANEL_URLS, RAVI_DOCSIDE_URL } from '../utils/doctorPanelUrls';
 import { useWalletBalanceVisibilityStore } from '../store/walletBalanceVisibility';
 import { useSelectedCenterStore } from '../store/selectedCenter';
@@ -16,6 +16,7 @@ import { useSheetDrawerProps } from '../hooks/doctorHomeSheetLayout';
 import { useSheetRoute } from '../hooks/useSheetRoute';
 import { FeedContentSwap } from './feedContentSwap';
 import { PageViewIcon, ReviewsIcon, WalletIcon } from './icons';
+import type { OriginRect } from '../utils/sharedElement';
 
 const MetricDrawerContent = ({
   value,
@@ -72,6 +73,16 @@ export const FeedInsightSection = ({
   const reviewsDrawerProps = useSheetDrawerProps(reviewsSheet);
   const walletDrawerProps = useSheetDrawerProps(walletSheet);
   const pageViewDrawerProps = useSheetDrawerProps(pageViewSheet);
+  const [sheetOrigin, setSheetOrigin] = useState<OriginRect | null>(null);
+
+  const openWithOrigin = (origin: DOMRect | undefined, open: () => void) => {
+    if (origin) {
+      setSheetOrigin({ x: origin.left, y: origin.top, width: origin.width, height: origin.height });
+    } else {
+      setSheetOrigin(null);
+    }
+    open();
+  };
 
   const insightItems = [
     {
@@ -82,16 +93,18 @@ export const FeedInsightSection = ({
           ? `${stats.satisfactionReviewCount.toLocaleString('fa-IR')} نظر`
           : 'میانگین امتیاز',
       value: stats.satisfactionRating ?? null,
+      tint: 'border border-amber-100/80 bg-gradient-to-br from-amber-50/90 to-white',
+      valueClassName: 'text-amber-600',
       valueMax: 5,
       hideBar: true,
       trendPercent: reviewWeekDelta,
       isLoading: stats.isSatisfactionLoading,
-      onPress: () => {
+      onPress: origin => {
         sendDoctorHomeEvent(userId, 'stat_satisfaction', {
           rating: stats.satisfactionRating,
           review_count: stats.satisfactionReviewCount,
         });
-        reviewsSheet.openSheet();
+        openWithOrigin(origin, reviewsSheet.openSheet);
       },
     },
     {
@@ -104,10 +117,11 @@ export const FeedInsightSection = ({
           : null
         : null,
       hiddenValue: '••••',
+      tint: 'border border-primary/10 bg-gradient-to-br from-primary/[0.07] to-white',
       isLoading: isWalletInitialLoading,
-      onPress: () => {
+      onPress: origin => {
         sendDoctorHomeEvent(userId, 'stat_wallet', { balance: walletBalance });
-        walletSheet.openSheet();
+        openWithOrigin(origin, walletSheet.openSheet);
       },
       visibilityToggle: {
         isVisible: isWalletVisible,
@@ -119,10 +133,12 @@ export const FeedInsightSection = ({
       title: 'بازدید صفحه',
       description: 'بازدیدکنندگان',
       value: stats.pageViewCount != null ? convertLongToCompactNumber(stats.pageViewCount) : null,
+      tint: 'border border-slate-100 bg-gradient-to-br from-slate-50 to-white',
+      valueClassName: 'text-slate-800',
       isLoading: stats.isPageViewLoading,
-      onPress: () => {
+      onPress: origin => {
         sendDoctorHomeEvent(userId, 'stat_page_view', { count: stats.pageViewCount });
-        pageViewSheet.openSheet();
+        openWithOrigin(origin, pageViewSheet.openSheet);
       },
     },
   ];
@@ -140,33 +156,54 @@ export const FeedInsightSection = ({
         />
       </FeedContentSwap>
 
-      <DsDrawer {...reviewsDrawerProps} title="نظرات بیماران" description="راوی" fullHeight className="!p-0">
+      <DsDrawer
+        {...reviewsDrawerProps}
+        originRect={reviewsSheet.open ? sheetOrigin : null}
+        title="نظرات بیماران"
+        description="راوی"
+        fullHeight
+        className="!p-0"
+      >
         {reviewsSheet.open && (
           <iframe
             src={RAVI_DOCSIDE_URL}
             title="راوی؛ نظرات بیماران"
-            className="min-h-0 w-full flex-1 border-0"
+            className={classNames('min-h-0 w-full flex-1 border-0', ds.motion.contentFade)}
           />
         )}
       </DsDrawer>
 
-      <DsDrawer {...walletDrawerProps} title="کتیبه" description="مدیریت امور مالی" fullHeight className="!p-0">
+      <DsDrawer
+        {...walletDrawerProps}
+        originRect={walletSheet.open ? sheetOrigin : null}
+        title="کتیبه"
+        description="مدیریت امور مالی"
+        fullHeight
+        className="!p-0"
+      >
         {walletSheet.open && (
           <iframe
             key={`wallet-${selectedCenterId ?? 'all'}`}
             src={buildDoctorPanelUrl(DOCTOR_PANEL_URLS.bills, { userId, centerId: selectedCenterId })}
             title="کتیبه، مدیریت امور مالی"
-            className="min-h-0 w-full flex-1 border-0"
+            className={classNames('min-h-0 w-full flex-1 border-0', ds.motion.contentFade)}
           />
         )}
       </DsDrawer>
 
-      <DsDrawer {...pageViewDrawerProps} title="بازدید پروفایل" description="آمار بازدید">
-        <MetricDrawerContent
-          value={stats.pageViewCount != null ? stats.pageViewCount.toLocaleString('fa-IR') : null}
-          label="بازدید از پروفایل شما"
-          description="تعداد کل بازدیدکنندگانی که صفحه پروفایل شما را مشاهده کرده‌اند"
-        />
+      <DsDrawer
+        {...pageViewDrawerProps}
+        originRect={pageViewSheet.open ? sheetOrigin : null}
+        title="بازدید پروفایل"
+        description="آمار بازدید"
+      >
+        <div className={ds.motion.contentFade}>
+          <MetricDrawerContent
+            value={stats.pageViewCount != null ? stats.pageViewCount.toLocaleString('fa-IR') : null}
+            label="بازدید از پروفایل شما"
+            description="تعداد کل بازدیدکنندگانی که صفحه پروفایل شما را مشاهده کرده‌اند"
+          />
+        </div>
       </DsDrawer>
     </>
   );

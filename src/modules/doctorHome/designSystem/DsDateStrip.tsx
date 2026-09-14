@@ -15,7 +15,7 @@ import { ds } from './tokens';
 
 const BUFFER = 30;
 const SNAP_MAX = 7;
-const SNAP_SPRING = { tension: 320, friction: 30, mass: 1 };
+const SNAP_SPRING = { tension: 280, friction: 20, mass: 1 };
 /** Fixed pill around the selected day — must not scale with viewport cell width */
 const SLOT_FRAME_W = 44;
 const SLOT_FRAME_H = 59;
@@ -78,6 +78,8 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string; mark
 
 
   const selectedMoment = useMemo(() => moment(selectedDate, 'YYYY-MM-DD'), [selectedDate]);
+  const [previewDate, setPreviewDate] = useState<string | null>(null);
+  const visualSelectedDate = previewDate ?? selectedDate;
   const [liveMessage, setLiveMessage] = useState('');
 
   useEffect(() => {
@@ -181,6 +183,7 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string; mark
         const newCell = Math.round(spring.x.get() / cellWRef.current);
         if (newCell !== state.lastCell) {
           state.lastCell = newCell;
+          setPreviewDate(selectedMomentRef.current.clone().add(newCell, 'days').format('YYYY-MM-DD'));
           const nowMs = performance.now();
           if (nowMs - lastSoundTimeRef.current > 48) {
             lastSoundTimeRef.current = nowMs;
@@ -230,6 +233,7 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string; mark
             // the new days array is already in place — no visible flash back to old position.
             flushSync(() => setSelectedDate(newDate.format('YYYY-MM-DD')));
           }
+          setPreviewDate(null);
           api.set({ x: 0 });
         },
       });
@@ -251,6 +255,7 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string; mark
     snapCancelledRef.current = true;
     api.stop();
     api.set({ x: 0 });
+    setPreviewDate(null);
     setSelectedDate(today.format('YYYY-MM-DD'));
   };
 
@@ -285,7 +290,7 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string; mark
             >
               {days.map((day, idx) => {
                 const isoDate = day.format('YYYY-MM-DD');
-                const isSelected = isoDate === selectedDate;
+                const isSelected = isoDate === visualSelectedDate;
                 const isDayToday = day.isSame(today, 'day');
                 const isMonthBoundary = idx < TOTAL - 1 && day.jMonth() !== days[idx + 1].jMonth();
                 const isHoliday = holidaySet.has(isoDate) || day.day() === 5;
@@ -299,7 +304,30 @@ export const DsDateStrip = forwardRef<DsDateStripRef, { className?: string; mark
                     aria-pressed={isSelected}
                     aria-label={formatDayAriaLabel(day, { isSelected, isHoliday, isVacation, hasNotification, isDayToday })}
                     onPointerDown={event => event.stopPropagation()}
-                    onClick={() => setSelectedDate(isoDate)}
+                    onClick={() => {
+                      const delta = day.diff(selectedMomentRef.current, 'days');
+                      if (delta === 0) return;
+                      if (prefersReducedMotion()) {
+                        setSelectedDate(isoDate);
+                        return;
+                      }
+                      const cw = cellWRef.current || 53;
+                      snapCancelledRef.current = false;
+                      setPreviewDate(isoDate);
+                      api.start({
+                        x: delta * cw,
+                        config: SNAP_SPRING,
+                        onRest: () => {
+                          if (snapCancelledRef.current) {
+                            setPreviewDate(null);
+                            return;
+                          }
+                          flushSync(() => setSelectedDate(isoDate));
+                          setPreviewDate(null);
+                          api.set({ x: 0 });
+                        },
+                      });
+                    }}
                     className={classNames(
                       'relative flex shrink-0 flex-col items-center gap-0.5 border-0 bg-transparent py-0.5',
                       dsFocusRing,

@@ -62,7 +62,7 @@ const InsightVisibilityToggle = ({
       onToggle();
     }}
     className={classNames(
-      'relative z-20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600',
+      'relative z-20 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600',
       ds.motion.press,
       dsFocusRing,
     )}
@@ -85,7 +85,8 @@ export interface DsInsightItem {
   isLoading?: boolean;
   href?: string;
   onClick?: () => void;
-  onPress?: () => void;
+  onPress?: (origin?: DOMRect) => void;
+  valueClassName?: string;
   visibilityToggle?: {
     isVisible: boolean;
     onToggle: () => void;
@@ -155,6 +156,7 @@ const InsightScaledValue = ({
   compact = false,
   stacked = false,
   showBar = true,
+  valueClassName,
 }: {
   value: string | number;
   max?: number;
@@ -163,6 +165,7 @@ const InsightScaledValue = ({
   compact?: boolean;
   stacked?: boolean;
   showBar?: boolean;
+  valueClassName?: string;
 }) => {
   const fillCompleteRef = useRef(onFillComplete);
   const hasCompletedRef = useRef(false);
@@ -203,7 +206,15 @@ const InsightScaledValue = ({
   return (
     <div className={classNames('flex flex-col', stacked ? 'items-stretch gap-1.5' : compact ? 'items-end gap-1' : 'items-end gap-1.5')}>
       <div className={classNames('flex items-center leading-none', stacked ? 'gap-0.5' : '')} dir={stacked ? undefined : 'ltr'}>
-        <span className={classNames(compact ? 'text-base font-bold tabular-nums text-slate-900' : ds.type.insightValue, 'leading-none')}>
+        <span
+          key={String(value)}
+          className={classNames(
+            compact ? 'text-base font-bold tabular-nums text-slate-900' : ds.type.insightValueLg,
+            'leading-none',
+            ds.motion.walletSwap,
+            valueClassName,
+          )}
+        >
           {value}
         </span>
         {max != null && (
@@ -299,8 +310,8 @@ const InsightCard = ({
         )
       : classNames(
           isWorkstationCompact
-            ? classNames(ds.radius.card, ds.shadow.sm, ds.surface.card, 'min-h-[3.75rem]')
-            : classNames(ds.radius.card, ds.shadow.sm, ds.surface.card),
+            ? classNames(ds.radius.card, ds.shadow.sm, item.tint || ds.surface.card, 'min-h-[3.75rem]')
+            : classNames(ds.radius.card, ds.shadow.sm, item.tint || ds.surface.card),
           isWorkstationCompact ? 'p-3.5' : 'p-3',
           (item.href || item.onPress) && 'cursor-pointer hover:-translate-y-px hover:shadow-md active:scale-[0.98]',
         ),
@@ -311,16 +322,17 @@ const InsightCard = ({
       ? compactRowClassName
       : classNames(
           isWorkstation
-            ? classNames(ds.workstation.widgetSm, 'min-h-[8rem]')
-            : classNames(ds.radius.card, ds.shadow.sm, ds.surface.card),
+            ? classNames(ds.workstation.widgetSm, item.tint, 'min-h-[5.5rem]')
+            : classNames(ds.radius.card, ds.shadow.sm, item.tint || ds.surface.card),
           'relative overflow-hidden',
+          !grouped && 'shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]',
           compact
             ? classNames('flex w-full items-center justify-between', isWorkstationCompact ? 'gap-3 p-3.5' : 'gap-3 p-3')
-            : classNames('flex h-full min-h-[7.5rem] flex-col', isWorkstation ? 'gap-3 p-5' : 'gap-2 p-3'),
+            : classNames('flex h-full flex-col', isWorkstation ? 'gap-2 p-3.5' : 'gap-1 p-2.5'),
         ),
     !grouped && 'relative overflow-hidden',
-    !compact && (isWorkstation ? 'min-h-[8.5rem]' : 'min-h-[7.5rem]'),
-    !compact && (fullWidth ? 'w-full' : 'w-[11.25rem]'),
+    !compact && (isWorkstation ? 'min-h-[5.5rem]' : 'min-h-[4.5rem]'),
+    !compact && (fullWidth ? 'w-full' : 'w-[9.5rem]'),
     !grouped && 'transition-[transform,box-shadow] duration-200 ease-out',
     !grouped &&
       (item.href || item.onPress) &&
@@ -340,8 +352,8 @@ const InsightCard = ({
       'hover:shadow-[0_12px_36px_rgba(15,23,42,0.1)]',
   );
 
-  const iconBoxClass = classNames(compact ? 'h-7 w-7' : 'h-7 w-7', 'shrink-0', ds.icon.containerTile);
-  const iconInnerClass = classNames(ds.icon.color, '[&>svg]:h-3.5 [&>svg]:w-3.5');
+  const iconBoxClass = classNames(compact ? 'h-7 w-7' : 'h-6 w-6', 'shrink-0', ds.icon.containerTile);
+  const iconInnerClass = classNames(ds.icon.color, compact ? '[&>svg]:h-3.5 [&>svg]:w-3.5' : '[&>svg]:h-3 [&>svg]:w-3');
 
   const renderMetricValue = (metricCompact = false, stacked = false) => {
     if (item.isLoading) {
@@ -367,6 +379,7 @@ const InsightCard = ({
           compact={metricCompact}
           stacked={stacked}
           showBar={!item.hideBar}
+          valueClassName={item.valueClassName}
         />
       );
     }
@@ -375,7 +388,7 @@ const InsightCard = ({
       return (
         <span
           className={classNames(
-            metricCompact ? 'text-base font-bold tabular-nums leading-none text-slate-900' : ds.type.insightValue,
+            metricCompact ? 'text-base font-bold tabular-nums leading-none text-slate-900' : ds.type.insightValueLg,
             'leading-none tracking-[0.18em] tabular-nums',
           )}
         >
@@ -390,9 +403,10 @@ const InsightCard = ({
           metricCompact
             ? 'text-base font-bold tabular-nums leading-tight text-slate-900'
             : isWalletCard
-              ? 'whitespace-nowrap text-lg font-bold leading-tight tabular-nums text-slate-900'
-              : ds.type.insightValue,
+              ? 'whitespace-nowrap text-base font-bold leading-tight tabular-nums text-slate-900'
+              : ds.type.insightValueLg,
           'leading-tight tabular-nums',
+          item.valueClassName,
         )}
       >
         {isWalletCard ? (
@@ -404,9 +418,11 @@ const InsightCard = ({
     );
   };
 
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const handleCardPress = useCallback(() => {
     if (shouldIgnorePress?.()) return;
-    item.onPress?.();
+    item.onPress?.(cardRef.current?.getBoundingClientRect());
     item.onClick?.();
   }, [item, shouldIgnorePress]);
 
@@ -451,6 +467,7 @@ const InsightCard = ({
     if (isWalletCard) {
       return (
         <div
+          ref={cardRef}
           className={classNames(cardClassName, item.onPress && 'cursor-pointer')}
           {...walletInteractiveProps}
         >
@@ -480,7 +497,7 @@ const InsightCard = ({
     }
 
     return (
-      <div className={cardClassName}>
+      <div ref={cardRef} className={cardClassName}>
         <div className="flex min-w-0 items-center gap-2.5">
           <div className={iconBoxClass}>
             <span className={iconInnerClass}>{item.icon}</span>
@@ -506,11 +523,12 @@ const InsightCard = ({
 
   return (
     <div
+      ref={cardRef}
       className={classNames(cardClassName, isWalletCard && item.onPress && 'cursor-pointer')}
       {...walletInteractiveProps}
     >
       {glassFlash ? <InsightCardGlassFlash /> : null}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <div className={iconBoxClass}>
           <span className={iconInnerClass}>{item.icon}</span>
         </div>
@@ -520,14 +538,14 @@ const InsightCard = ({
       <div className="mt-auto min-w-0">
         {renderMetricValue(false, true)}
         {item.isLoading ? (
-          <Skeleton h="0.625rem" w="45%" rounded="md" className="mt-1.5" />
+          <Skeleton h="0.5rem" w="40%" rounded="md" className="mt-1" />
         ) : item.description ? (
-          <p className={classNames(ds.type.caption, 'mt-1.5 flex items-center gap-1')}>
+          <p className={classNames(ds.type.captionSm, 'mt-1 flex items-center gap-1')}>
             <span className="truncate">{item.description}</span>
             {item.trendPercent != null ? <InsightTrendChip percent={item.trendPercent} /> : null}
           </p>
         ) : item.trendPercent != null ? (
-          <div className="mt-1.5">
+          <div className="mt-1">
             <InsightTrendChip percent={item.trendPercent} />
           </div>
         ) : null}
@@ -760,9 +778,9 @@ export const DsInsightCarousel = ({
           type="button"
           className={classNames('flex h-full text-start', dsFocusRing, fullWidth && 'w-full')}
           draggable={false}
-          onClick={() => {
+          onClick={event => {
             if (!fullWidth && wasDragged()) return;
-            item.onPress!();
+            item.onPress!(event.currentTarget.getBoundingClientRect());
             item.onClick?.();
           }}
         >
@@ -861,7 +879,7 @@ export const DsInsightCarousel = ({
         >
           <animated.div
             ref={trackRef}
-            className="flex w-max items-stretch gap-2.5 will-change-transform"
+            className="flex w-max items-stretch gap-2 will-change-transform"
             style={{
               x: spring.pull,
             }}

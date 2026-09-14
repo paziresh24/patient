@@ -3,9 +3,12 @@ import ClientOnlyPortal from '@/common/components/layouts/clientOnlyPortal';
 import useResponsive from '@/common/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
 import { X } from 'lucide-react';
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Drawer } from 'vaul';
 import { ds } from '../designSystem/tokens';
+import { prefersReducedMotion } from '../utils/a11y';
+import { originTransformOrigin, type OriginRect } from '../utils/sharedElement';
+import { SharedElementFlight } from './sharedElementFlight';
 
 /**
  * بالاتر از هدر/ناوبری (z-40/50) و پایین‌تر از `z-infinity` (999) —
@@ -34,6 +37,8 @@ interface DsDrawerProps {
    * لبه‌ها به‌خاطر padding دور پنل دیده می‌شوند و کلیک روی پس‌زمینه می‌بندد.
    */
   expanded?: boolean;
+  /** کارت مبدأ برای shared-element و origin-aware دسکتاپ */
+  originRect?: OriginRect | null;
 }
 
 const DesktopDrawerPanel = ({
@@ -46,6 +51,7 @@ const DesktopDrawerPanel = ({
   level,
   closing,
   onClose,
+  originRect,
 }: {
   title?: string;
   description?: string;
@@ -56,11 +62,23 @@ const DesktopDrawerPanel = ({
   level: number;
   closing: boolean;
   onClose: () => void;
+  originRect?: OriginRect | null;
 }) => {
   const isFlush = className?.includes('!p-0');
   const accessibleLabel = title ?? description ?? 'sheet';
   const overlayZ = DRAWER_BASE_Z + level * 10;
   const panelZ = DRAWER_BASE_Z + 1 + level * 10;
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [transformOrigin, setTransformOrigin] = useState('50% 40%');
+  const useOriginPop = !!originRect && !prefersReducedMotion();
+
+  useLayoutEffect(() => {
+    if (!originRect || !panelRef.current) return;
+    const r = panelRef.current.getBoundingClientRect();
+    setTransformOrigin(
+      originTransformOrigin(originRect, { x: r.left, y: r.top, width: r.width, height: r.height }),
+    );
+  }, [originRect]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -91,13 +109,17 @@ const DesktopDrawerPanel = ({
         style={{ zIndex: panelZ }}
       >
         <div
+          ref={panelRef}
           className={classNames(
             'pointer-events-auto flex w-full items-start gap-3 transition-[max-width] duration-300',
-            closing ? ds.motion.sheetExit : ds.motion.sheetEnter,
+            useOriginPop
+              ? closing ? ds.motion.originExit : ds.motion.originEnter
+              : closing ? ds.motion.sheetExit : ds.motion.sheetEnter,
             expanded ? 'max-w-[calc(100vw_-_2.5rem)]'
             : fullHeight ? 'max-w-[min(42rem,calc(100vw_-_2.5rem))]'
             : 'max-w-md',
           )}
+          style={useOriginPop ? { transformOrigin } : undefined}
           dir="rtl"
         >
           <button
@@ -229,6 +251,7 @@ export const DsDrawer = ({
   fullHeight = false,
   nested = false,
   expanded = false,
+  originRect = null,
 }: DsDrawerProps) => {
   const { isDesktop } = useResponsive();
   const [desktopVisible, setDesktopVisible] = useState(false);
@@ -242,6 +265,11 @@ export const DsDrawer = ({
   const dismissPendingRef = useRef(false);
   const dismissSafetyTimer = useRef<ReturnType<typeof setTimeout>>();
   const openRef = useRef(open);
+  const originRef = useRef<OriginRect | null>(originRect);
+  const [flightActive, setFlightActive] = useState(false);
+  const [flightClosing, setFlightClosing] = useState(false);
+
+  if (originRect) originRef.current = originRect;
 
   openRef.current = open;
 
@@ -361,6 +389,16 @@ export const DsDrawer = ({
     return () => clearTimeout(timer);
   }, [isDesktop, mobileMounted, mobileOpen]);
 
+  useEffect(() => {
+    if (!originRef.current || prefersReducedMotion()) return;
+    if (open) {
+      setFlightClosing(false);
+      setFlightActive(true);
+      return;
+    }
+    if (flightActive) setFlightClosing(true);
+  }, [open, flightActive]);
+
   useEffect(
     () => () => {
       clearTimeout(closeTimer.current);
@@ -384,12 +422,26 @@ export const DsDrawer = ({
               expanded={expanded}
               level={level}
               closing={desktopClosing}
+              originRect={originRef.current}
               onClose={requestClose}
             >
               {children}
             </DesktopDrawerPanel>
           </ClientOnlyPortal>
         ) : null}
+        <SharedElementFlight
+          active={flightActive}
+          closing={flightClosing}
+          origin={originRef.current}
+          isDesktop
+          fullHeight={fullHeight}
+          onSettled={() => {
+            if (flightClosing) {
+              setFlightActive(false);
+              setFlightClosing(false);
+            }
+          }}
+        />
       </>
     );
   }
@@ -425,6 +477,19 @@ export const DsDrawer = ({
           />
         </ClientOnlyPortal>
       ) : null}
+      <SharedElementFlight
+        active={flightActive}
+        closing={flightClosing}
+        origin={originRef.current}
+        isDesktop={false}
+        fullHeight={fullHeight}
+        onSettled={() => {
+          if (flightClosing) {
+            setFlightActive(false);
+            setFlightClosing(false);
+          }
+        }}
+      />
     </>
   );
 };
