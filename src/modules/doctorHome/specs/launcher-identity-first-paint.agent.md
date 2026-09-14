@@ -40,7 +40,7 @@ Opening `/_/` directly (mobile or desktop) after a prior doctor session must:
 | Shell hydrate timing | Restore shell into Zustand in **`useLayoutEffect`** (before paint) in `EntryPoint`, not only `useEffect` — so first painted frame can already have centers/`job_title` |
 | `isResolving` splash on `/_/` | Do not show when `hasDoctorIdentity`; keep for true cold non-doctor resolving |
 | Legacy on `/_/` | Only when identity says show launcher **and** new-home flag is conclusively off (safe resolve false + !pending), not while merely “zustand doctor not ready yet” |
-| Bottom nav | After shell hydrate / job_title doctor, doctor shell nav appears; optional: if cheap, treat `isDoctorDeviceCached()` as doctor shell when `launcherAsMainHome` — only if one small change; do not large-refactor bottom nav |
+| Bottom nav | After shell hydrate / doctor identity, doctor shell nav appears (`isDoctor && !partnerKey`) |
 | GB / RQ / shell keys | Unchanged semantics otherwise |
 | Commit | No unless asked |
 | Scope | `apps/patient` only |
@@ -54,7 +54,7 @@ Opening `/_/` directly (mobile or desktop) after a prior doctor session must:
 - `src/modules/doctorHome/hooks/useNewDoctorLauncher.ts` — early `if (!isDoctor \|\| !isLogin \|\| !userId) return false` blocks optimistic
 - `src/modules/doctorHome/utils/doctorHomeOptimisticHome.ts` — requires userId before device-cache check
 - `src/common/components/layouts/entryPoint.tsx` — shell restore in `useEffect` (after paint)
-- Bottom nav: `isDoctorShell = job_title === 'doctor' && launcherAsMainHome`
+- Bottom nav: `isDoctorShell = hasDoctorIdentity && !partnerKey` (no as-main-home flag)
 
 ---
 

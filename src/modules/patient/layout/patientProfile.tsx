@@ -9,7 +9,6 @@ import EditIcon from '@/common/components/icons/edit';
 import { UsersIcon } from '@/common/components/icons/users';
 import useCustomize from '@/common/hooks/useCustomize';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -19,18 +18,12 @@ export const PatientProfileLayout = ({ children }: { children: ReactElement }) =
   const userInfo = useUserInfoStore(state => state.info);
   const loginPending = useUserInfoStore(state => state.pending);
   const { customize } = useCustomize();
-  const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
   const { t } = useTranslation('patient/common');
 
   const router = useRouter();
 
   useEffect(() => {
-    if (
-      userInfo.id &&
-      !customize.partnerKey &&
-      (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'))
-    ) {
+    if (userInfo.id && !customize.partnerKey) {
       const patientPath = router.asPath.replace('/patient', '');
       // /dashboard/reviews is the doctor iframe; patient reviews live at /dashboard/my-reviews
       const dashboardPath = patientPath === '/reviews' || patientPath.startsWith('/reviews?') || patientPath.startsWith('/reviews/')

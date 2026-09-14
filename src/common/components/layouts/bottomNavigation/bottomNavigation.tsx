@@ -7,13 +7,11 @@ import classNames from '@/common/utils/classNames';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useSearchStore } from '@/modules/search/store/search';
-import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/dist/client/router';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import Text from '../../atom/text/text';
 import CalenderIcon from '../../icons/calender';
 import ChatIcon from '../../icons/chat';
-import ElementIcon from '../../icons/element';
 import HomeIcon from '../../icons/home';
 import SearchIcon from '../../icons/search';
 import UserCircle from '../../icons/userCircle';
@@ -29,43 +27,22 @@ export const BottomNavigation = () => {
   const city = useSearchStore(state => state.city);
   const isApplication = useApplication();
   const customize = useCustomize(state => state.customize);
-
-  const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
-  const isEnabledLauncher = useFeatureIsOn('launcher-flag');
-  const launcherAsMainHome = useFeatureIsOn('launcher-as-main-home');
   const deviceCached = useDoctorDeviceCached();
   const isDoctor = hasDoctorIdentity(user, deviceCached);
 
-  const isShowDashboard =
-    !customize.partnerKey &&
-    (isEnabledDashboard || dashboardDoctorList.ids.includes(user?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
+  const isShowDashboard = !customize.partnerKey;
 
-  const isDoctorShell = isDoctor && launcherAsMainHome;
+  const isDoctorShell = isDoctor && !customize.partnerKey;
 
-  const servicesMenu = useMemo(() => {
-    if (isDoctor && !customize.partnerKey) {
-      return {
-        name: 'داشبورد',
-        icon: <ElementIcon />,
-        fillIcon: <ElementIcon isSolid />,
-        link: '/_/',
-        pattern: '/_',
-        privateRoute: true,
-        exact: false,
-      };
-    }
-
-    return {
-      name: 'پروفایل',
-      icon: <UserCircle />,
-      fillIcon: <UserCircle />,
-      link: '/patient',
-      pattern: '/patient',
-      privateRoute: false,
-      exact: false,
-    };
-  }, [isDoctor, customize.partnerKey]);
+  const servicesMenu = {
+    name: 'پروفایل',
+    icon: <UserCircle />,
+    fillIcon: <UserCircle />,
+    link: '/patient',
+    pattern: '/patient',
+    privateRoute: false,
+    exact: false,
+  };
 
   useEffect(() => {
     isLogin && handleGetTurnsCount();

@@ -38,11 +38,7 @@ const AppFrame = dynamic(() => import('@/modules/hamdast/appFrame'), {
   ssr: false,
 });
 
-/**
- * `/_/` body — doctor-only route.
- * New home only when GrowthBook `doctor-home:enable` is on (or trusted persist).
- * Flag-off doctors get the previous Plasmic launcher.
- */
+/** `/_/` body — doctor-only route. All doctors get doctor home. */
 export const LauncherHomePage = () => {
   const queryClient = useQueryClient();
   const { handleOpen, handleClose, modalProps } = useModal();
@@ -54,7 +50,7 @@ export const LauncherHomePage = () => {
   const { isResolving, shouldShowLauncher } = useLauncherPageAccess();
   const info = useUserInfoStore(state => state.info);
 
-  const showNewHome = doctorLauncherEnabled || swapActive;
+  const showNewHome = shouldShowLauncher && (doctorLauncherEnabled || swapActive);
   const showLegacy = shouldShowLauncher && !isResolving && !doctorLauncherLoading && !showNewHome;
 
   useDoctorViewRouteGuard();

@@ -63,8 +63,6 @@ export const UserProfile = () => {
   const [open, setOpen] = useState(false);
   const { customize } = useCustomize();
   const isShowPremiumFeatures = useShowPremiumFeatures();
-  const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
   const redirectToGozargah = useFeatureValue<{
     destination?: string;
   }>('redirect-to-gozargah', {});
@@ -74,9 +72,7 @@ export const UserProfile = () => {
   const deviceCached = useDoctorDeviceCached();
   const isDoctor = hasDoctorIdentity(userInfo, deviceCached);
 
-  const isShowDashboard =
-    !customize.partnerKey &&
-    (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
+  const isShowDashboard = !customize.partnerKey;
 
   const ref = useRef(null);
   useClickAway(ref, () => {

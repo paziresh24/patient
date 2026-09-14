@@ -11,7 +11,6 @@ import { isSpaPatientView, useSpaPatientViewStore } from '@/modules/doctorHome/u
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
-import { growthbook } from '@/common/growthbook/client';
 import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 
 export { hasDoctorIdentity, isDoctorUser } from '@/common/utils/doctorIdentity';
@@ -38,12 +37,6 @@ export const useDoctorHomeRedirect = () => {
     isDoctor &&
     isMobileViewport() &&
     !isPatientOptOut;
-
-  useEffect(() => {
-    if (!growthbook.ready) {
-      growthbook.loadFeatures({ timeout: 300 });
-    }
-  }, []);
 
   useEffect(() => {
     if (isLogin || isCachedDoctor) {
