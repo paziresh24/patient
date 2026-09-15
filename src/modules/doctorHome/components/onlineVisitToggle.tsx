@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useOnlineVisitServices, useToggleOnlineVisit } from '../apis/onlineVisit';
 import { ds } from '../designSystem/tokens';
 import { sendDoctorHomeEvent } from '../utils/analytics';
+import { DOCTOR_PANEL_URLS } from '../utils/doctorPanelUrls';
 import { SectionCard } from './sectionCard';
 
 interface OnlineVisitToggleProps {
@@ -15,7 +16,7 @@ interface OnlineVisitToggleProps {
   className?: string;
 }
 
-const ACTIVATION_URL = 'https://providers.paziresh24.com/app/activation-page/consult/cost';
+const ACTIVATION_URL = DOCTOR_PANEL_URLS.consultActivation;
 
 export const OnlineVisitToggle = ({ userCenterId, hasOnlineVisitCenter, className }: OnlineVisitToggleProps) => {
   const userId = useUserInfoStore(state => state.info?.id);

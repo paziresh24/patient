@@ -143,7 +143,7 @@ export const FeedGreeting = ({
       {!hideDateStrip && (
         <>
           {dateStripBlock}
-          <CenterStrip />
+          <CenterStrip className="px-1" />
           {holidayBanners}
         </>
       )}

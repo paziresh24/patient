@@ -5,7 +5,9 @@ export const DOCTOR_PANEL_URLS = {
   vacation: 'https://providers.paziresh24.com/app/vacation/',
   tariffs: 'https://providers.paziresh24.com/app/services/',
   bookingSettings: 'https://providers.paziresh24.com/app/setting',
+  notifications: 'https://providers.paziresh24.com/app/notifications/',
   bills: 'https://providers.paziresh24.com/app/financial/bills',
+  consultActivation: 'https://providers.paziresh24.com/app/activation-page/consult/cost',
 } as const;
 
 /** Same-origin bounce → ravi-front docside with the doctor session token */

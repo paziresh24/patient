@@ -57,6 +57,7 @@ export const AppointmentsFeedItem = ({
   scheduleExpanded = false,
   widgetShell = false,
   embedCenterStrip = false,
+  nested = false,
 }: {
   data: {
     items: UpcomingAppointment[];
@@ -68,6 +69,7 @@ export const AppointmentsFeedItem = ({
   scheduleExpanded?: boolean;
   widgetShell?: boolean;
   embedCenterStrip?: boolean;
+  nested?: boolean;
 }) => {
   const userId = useUserInfoStore(state => state.info?.id);
   const selectedDate = useSelectedDateStore(state => state.selectedDate);
@@ -127,9 +129,8 @@ export const AppointmentsFeedItem = ({
     );
   }
 
-  return (
-    <section dir="rtl">
-      <DsCard padding="none" variant={widgetShell ? 'widget' : 'default'} className="overflow-hidden">
+  const inner = (
+    <>
         {embedCenterStrip && (
           <div className="border-b border-slate-100 px-3 py-2.5">
             <CenterStrip />
@@ -222,8 +223,10 @@ export const AppointmentsFeedItem = ({
             </div>
           </FeedContentSwap>
         </DsCollapsible>
-      </DsCard>
+    </>
+  );
 
+  const drawer = (
       <DsDrawer
         {...appointmentsDrawerProps}
         title="لیست نوبت‌ها"
@@ -240,6 +243,23 @@ export const AppointmentsFeedItem = ({
           />
         )}
       </DsDrawer>
+  );
+
+  if (nested) {
+    return (
+      <div dir="rtl">
+        {inner}
+        {drawer}
+      </div>
+    );
+  }
+
+  return (
+    <section dir="rtl">
+      <DsCard padding="none" variant={widgetShell ? 'widget' : 'default'} className="overflow-hidden">
+        {inner}
+      </DsCard>
+      {drawer}
     </section>
   );
 };

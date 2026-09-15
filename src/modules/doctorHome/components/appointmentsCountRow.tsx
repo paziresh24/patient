@@ -6,11 +6,6 @@ import { FeedContentSwap } from './feedContentSwap';
 import { dsFocusRing } from '../utils/a11y';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { CalendarIcon } from './icons';
-import { BookingPlatformsActiveHint } from './bookingPlatformsActiveHint';
-import { useDoctorBookingPlatforms } from '../apis/doctorCenters';
-import { useDoctorHomeAppModal } from '../hooks/useDoctorHomeAppModal';
-
-const SHIRAZE_APP_KEY = 'shiraze';
 
 interface AppointmentsCountRowProps {
   title: string;
@@ -33,17 +28,10 @@ export const AppointmentsCountRow = ({
   className,
   widgetShell = false,
 }: AppointmentsCountRowProps) => {
-  const { platforms } = useDoctorBookingPlatforms();
-  const openDoctorHomeApp = useDoctorHomeAppModal();
   const countLabel = count != null ? `${count.toLocaleString('fa-IR')} نوبت` : null;
   const rowAriaLabel = countLabel
     ? `مشاهده همه نوبت‌ها، ${countLabel}`
     : 'مشاهده همه نوبت‌ها';
-
-  const openShiraze = () => {
-    sendDoctorHomeEvent(userId, 'widget_open', { app_key: SHIRAZE_APP_KEY, title: 'شیرازه' });
-    openDoctorHomeApp(SHIRAZE_APP_KEY);
-  };
 
   return (
     <div className={classNames(widgetShell ? 'px-5 py-4' : ds.layout.rowPadding, className)}>
@@ -80,9 +68,6 @@ export const AppointmentsCountRow = ({
             )}
           </span>
         </button>
-        {platforms.length > 0 ? (
-          <BookingPlatformsActiveHint platforms={platforms} onPress={openShiraze} />
-        ) : null}
         {trailing}
       </div>
     </div>

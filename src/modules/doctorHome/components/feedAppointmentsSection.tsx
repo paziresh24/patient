@@ -6,12 +6,14 @@ interface FeedAppointmentsSectionProps {
   scheduleExpanded?: boolean;
   widgetShell?: boolean;
   embedCenterStrip?: boolean;
+  nested?: boolean;
 }
 
 export const FeedAppointmentsSection = ({
   scheduleExpanded = false,
   widgetShell = false,
   embedCenterStrip = false,
+  nested = false,
 }: FeedAppointmentsSectionProps) => {
   const user = useUserInfoStore(state => state.info);
   const appointments = useDoctorHomeAppointments(user);
@@ -28,6 +30,7 @@ export const FeedAppointmentsSection = ({
       scheduleExpanded={scheduleExpanded}
       widgetShell={widgetShell}
       embedCenterStrip={embedCenterStrip}
+      nested={nested}
     />
   );
 };

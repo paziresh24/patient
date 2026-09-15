@@ -3,7 +3,7 @@ import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
 import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 
-/** All logged-in doctors (non-partner) get doctor home. No GrowthBook gate. */
+/** Every doctor (non-partner) gets the new doctor home. No flags. */
 export const useIsNewDoctorLauncherEnabled = () => {
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);

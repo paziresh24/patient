@@ -70,11 +70,9 @@ export const CenterStrip = ({ className }: { className?: string }) => {
                 )}
               >
                 {option.name}
-                {option.addressHint && (
-                  <span className={classNames('font-normal', isSelected ? ds.type.caption : ds.type.captionMuted)}>
-                    {' '}({option.addressHint})
-                  </span>
-                )}
+                {option.addressHint ? (
+                  <span className="ms-2 text-[10px] font-normal text-slate-400">{option.addressHint}</span>
+                ) : null}
               </button>
             </Fragment>
           );

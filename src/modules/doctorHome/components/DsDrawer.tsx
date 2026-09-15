@@ -9,6 +9,7 @@ import { ds } from '../designSystem/tokens';
 import { prefersReducedMotion } from '../utils/a11y';
 import { originTransformOrigin, type OriginRect } from '../utils/sharedElement';
 import { SharedElementFlight } from './sharedElementFlight';
+import { armDismissClickShield } from '../utils/dismissClickShield';
 
 /**
  * بالاتر از هدر/ناوبری (z-40/50) و پایین‌تر از `z-infinity` (999) —
@@ -102,6 +103,7 @@ const DesktopDrawerPanel = ({
           'absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]',
           closing ? ds.motion.backdropExit : ds.motion.backdropEnter,
         )}
+        onPointerDownCapture={() => armDismissClickShield()}
         onClick={onClose}
       />
       <div
@@ -208,6 +210,7 @@ const MobileDrawerPanel = ({
         <Drawer.Overlay
           className="fixed inset-0 bg-black/50"
           style={{ zIndex: DRAWER_BASE_Z + level * 10 }}
+          onPointerDownCapture={() => armDismissClickShield()}
         />
         <Drawer.Content
           className={classNames(
@@ -274,6 +277,7 @@ export const DsDrawer = ({
   openRef.current = open;
 
   const activateClickShield = useCallback(() => {
+    armDismissClickShield(MOBILE_CLICK_SHIELD_MS);
     setClickShield(true);
     clearTimeout(shieldTimer.current);
     shieldTimer.current = setTimeout(() => setClickShield(false), MOBILE_CLICK_SHIELD_MS);
@@ -298,16 +302,18 @@ export const DsDrawer = ({
 
   const requestClose = useCallback(() => {
     if (!onOpenChange || !open) return;
+    activateClickShield();
     onOpenChange(false);
-  }, [onOpenChange, open]);
+  }, [activateClickShield, onOpenChange, open]);
 
   const beginMobileDismiss = useCallback(() => {
     if (!mobileOpen || isClosingRef.current) return;
     isClosingRef.current = true;
     dismissPendingRef.current = true;
+    activateClickShield();
     setMobileOpen(false);
     scheduleDismissSafety();
-  }, [mobileOpen, scheduleDismissSafety]);
+  }, [activateClickShield, mobileOpen, scheduleDismissSafety]);
 
   const handleMobileOpenChange = useCallback(
     (nextOpen: boolean) => {
@@ -429,6 +435,11 @@ export const DsDrawer = ({
             </DesktopDrawerPanel>
           </ClientOnlyPortal>
         ) : null}
+        {clickShield ? (
+          <ClientOnlyPortal selector="body">
+            <div className="fixed inset-0 touch-none" style={{ zIndex: 10000 }} aria-hidden />
+          </ClientOnlyPortal>
+        ) : null}
         <SharedElementFlight
           active={flightActive}
           closing={flightClosing}
@@ -472,7 +483,7 @@ export const DsDrawer = ({
         <ClientOnlyPortal selector="body">
           <div
             className="fixed inset-0 touch-none"
-            style={{ zIndex: DRAWER_BASE_Z + 50 + level * 10 }}
+            style={{ zIndex: 10000 }}
             aria-hidden
           />
         </ClientOnlyPortal>

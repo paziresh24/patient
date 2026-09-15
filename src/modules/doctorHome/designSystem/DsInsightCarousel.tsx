@@ -562,6 +562,7 @@ export const DsInsightCarousel = ({
   footer,
   variant = 'responsive',
   appearance = 'default',
+  compact = false,
 }: {
   items: DsInsightItem[];
   className?: string;
@@ -570,6 +571,7 @@ export const DsInsightCarousel = ({
   /** responsive: کاروسل موبایل + گرید دسکتاپ · grid: فقط گرید · stack: ستون عمودی · carousel: فقط کاروسل */
   variant?: 'responsive' | 'grid' | 'stack' | 'carousel';
   appearance?: 'default' | 'workstation';
+  compact?: boolean;
 }) => {
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -886,7 +888,7 @@ export const DsInsightCarousel = ({
           >
             {items.map((item, index) => (
               <div key={index} className="flex shrink-0 self-stretch">
-                {renderInsightItem(item, index)}
+                {renderInsightItem(item, index, false, compact)}
               </div>
             ))}
           </animated.div>

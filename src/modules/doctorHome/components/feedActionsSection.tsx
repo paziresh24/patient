@@ -12,10 +12,11 @@ import { useSelectedCenterStore } from '../store/selectedCenter';
 import { useSelectedDateStore } from '../store/selectedDate';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { DOCTOR_PANEL_URLS } from '../utils/doctorPanelUrls';
-import { formatDoctorCenterName, getType1ClinicCenters, hasOnlineVisitCenter, isType1Center, ONLINE_VISIT_CENTER_ID, shouldShowClinicSection, shouldShowOnlineVisitSection, getOnlineVisitCenter } from '../utils/centers';
+import { formatDoctorCenterAddressHint, formatDoctorCenterName, getType1ClinicCenters, hasOnlineVisitCenter, isType1Center, ONLINE_VISIT_CENTER_ID, shouldShowClinicSection, shouldShowOnlineVisitSection, getOnlineVisitCenter } from '../utils/centers';
 import { buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { dsFocusRing } from '../utils/a11y';
 import {
+  BellIcon,
   BookingSettingsIcon,
   ChatIcon,
   ClinicIcon,
@@ -26,7 +27,7 @@ import {
 import { FeedStaggerItem } from './feedContentSwap';
 import { RowChevron } from './feedWidgets/widgetListRow';
 
-type ActionId = 'workhours' | 'vacation' | 'tariff' | 'bookingSettings';
+type ActionId = 'workhours' | 'vacation' | 'tariff' | 'bookingSettings' | 'notifications';
 
 const SUB_ACTIONS: {
   id: ActionId;
@@ -34,7 +35,12 @@ const SUB_ACTIONS: {
   hint: string;
   description: string;
   url: string;
-  analyticsFeature: 'shortcut_workhours' | 'shortcut_vacation' | 'shortcut_tariff' | 'shortcut_booking_settings';
+  analyticsFeature:
+    | 'shortcut_workhours'
+    | 'shortcut_vacation'
+    | 'shortcut_tariff'
+    | 'shortcut_booking_settings'
+    | 'shortcut_notifications';
   icon: typeof ClockIcon;
 }[] = [
   {
@@ -72,6 +78,15 @@ const SUB_ACTIONS: {
     url: DOCTOR_PANEL_URLS.bookingSettings,
     analyticsFeature: 'shortcut_booking_settings',
     icon: BookingSettingsIcon,
+  },
+  {
+    id: 'notifications',
+    label: 'اطلاع‌رسانی',
+    hint: 'پیامک به بیمار، پزشک یا منشی',
+    description: 'تنظیم پیامک‌های خودکار نوبت',
+    url: DOCTOR_PANEL_URLS.notifications,
+    analyticsFeature: 'shortcut_notifications',
+    icon: BellIcon,
   },
 ];
 
@@ -178,9 +193,12 @@ const ActionSheetList = ({
   </ul>
 );
 
+const SETTINGS_SCENT = 'ساعات کاری، مرخصی، تعرفه';
+
 const CompactRow = ({
   icon,
   title,
+  titleHint,
   subtitle,
   onPress,
   trailing,
@@ -189,6 +207,7 @@ const CompactRow = ({
 }: {
   icon: ReactNode;
   title: string;
+  titleHint?: string;
   subtitle?: string;
   onPress?: () => void;
   trailing?: ReactNode;
@@ -207,25 +226,34 @@ const CompactRow = ({
       onClick={onPress}
       className={classNames('flex min-w-0 flex-1 items-center gap-3 text-start', ds.motion.listRow)}
     >
-      <ActionIcon size="lg">
-        {icon}
-      </ActionIcon>
+      <ActionIcon size="lg">{icon}</ActionIcon>
       <span className="min-w-0 flex-1">
-        <p className={ds.type.cardTitle}>{title}</p>
+        <p className={classNames(ds.type.cardTitle, 'flex min-w-0 items-baseline gap-2')}>
+          <span className="shrink-0">{title}</span>
+          {titleHint ? (
+            <span className="min-w-0 truncate text-[10px] font-normal text-slate-400">{titleHint}</span>
+          ) : null}
+        </p>
         {subtitle ? <p className={classNames(ds.type.caption, 'mt-0.5 line-clamp-1')}>{subtitle}</p> : null}
       </span>
-      {!trailing ? <RowChevron /> : null}
     </button>
     {trailing}
+    {onPress ? (
+      <button type="button" onClick={onPress} tabIndex={-1} aria-hidden className={ds.motion.listRow}>
+        <RowChevron />
+      </button>
+    ) : null}
   </div>
 );
 
 export const FeedActionsSection = ({
   widgetShell = false,
   hideSectionHeader = false,
+  nested = false,
 }: {
   widgetShell?: boolean;
   hideSectionHeader?: boolean;
+  nested?: boolean;
 }) => {
   const user = useUserInfoStore(state => state.info);
   const userId = user?.id;
@@ -236,12 +264,11 @@ export const FeedActionsSection = ({
   };
   const onlineSheet = useSheetRoute('online-visit-actions');
   const clinicSheet = useSheetRoute('clinic-actions');
-  const activationSheet = useSheetRoute('online-visit-activation');
   const workhoursSheet = useSheetRoute('workhours');
   const vacationSheet = useSheetRoute('vacation');
   const tariffSheet = useSheetRoute('tariff');
   const bookingSettingsSheet = useSheetRoute('bookingSettings');
-  const activationDrawerProps = useSheetDrawerProps(activationSheet);
+  const notificationsSheet = useSheetRoute('notifications');
   const onlineDrawerProps = useSheetDrawerProps(onlineSheet);
   const clinicDrawerProps = useSheetDrawerProps(clinicSheet);
 
@@ -295,6 +322,7 @@ export const FeedActionsSection = ({
     vacation: vacationSheet,
     tariff: tariffSheet,
     bookingSettings: bookingSettingsSheet,
+    notifications: notificationsSheet,
   } as const;
   const actionIds = Object.keys(sheets) as ActionId[];
 
@@ -314,14 +342,29 @@ export const FeedActionsSection = ({
     onlineSheet.openSheet();
   };
 
+  const openActivationPage = () => {
+    sendDoctorHomeEvent(userId, 'online_visit_activation_open');
+    window.open(
+      buildDoctorPanelUrl(DOCTOR_PANEL_URLS.consultActivation, { userId }),
+      '_blank',
+      'noopener,noreferrer',
+    );
+  };
+
   const hasClinic = !!activeClinic;
   const showClinicRow = showClinic && hasClinic;
   const clinicTitle = activeClinic ? formatDoctorCenterName(activeClinic) : '';
-  const clinicAddress = activeClinic?.address?.trim() || activeClinic?.city?.trim();
+  const clinicAddressHint = activeClinic ? formatDoctorCenterAddressHint(activeClinic) : undefined;
   const clinicSubtitle =
     clinics.length > 1 && !selectedCenterId
-      ? `${clinics.length.toLocaleString('fa-IR')} مطب`
-      : clinicAddress;
+      ? `${clinics.length.toLocaleString('fa-IR')} مطب · ${SETTINGS_SCENT}`
+      : SETTINGS_SCENT;
+
+  const onlineSubtitle = !onlineVisit.hasOnlineVisitCenter
+    ? 'فعال‌سازی نوبت آنلاین'
+    : isOnlineVisitInitialLoading
+      ? 'در حال بررسی…'
+      : SETTINGS_SCENT;
 
   const onlineActions = useMemo(
     () =>
@@ -342,11 +385,9 @@ export const FeedActionsSection = ({
 
   if (!showOnlineVisit && !showClinicRow) return null;
 
-  return (
-    <section dir="rtl">
-      {!hideSectionHeader && <DsSectionHeader title={sectionTitle} />}
-      <DsCard padding="none" variant={widgetShell ? 'widget' : 'default'} className="overflow-hidden">
-        {hideSectionHeader && (
+  const rows = (
+    <>
+        {hideSectionHeader && !nested && (
           <div className="border-b border-slate-100 px-3 py-2.5">
             <p className={ds.type.section}>{sectionTitle}</p>
           </div>
@@ -356,38 +397,25 @@ export const FeedActionsSection = ({
             icon={<ChatIcon size="md" />}
             title="ویزیت آنلاین"
             widgetShell={widgetShell}
-            subtitle={
-              !onlineVisit.hasOnlineVisitCenter
-                ? 'فعال‌سازی نوبت آنلاین'
-                : isOnlineVisitInitialLoading
-                  ? 'در حال بررسی…'
-                  : isActive
-                    ? 'نوبت‌دهی فعال'
-                    : 'نوبت‌دهی غیرفعال'
-            }
-            isLast={!showClinicRow}
+            subtitle={onlineSubtitle}
             trailing={
               onlineVisit.hasOnlineVisitCenter ? (
-                <>
-                  <Switch
-                    checked={isActive}
-                    onChange={e => handleToggle(e.target.checked)}
-                    disabled={isOnlineVisitInitialLoading || toggleMutation.isLoading}
-                    aria-label="فعال‌سازی نوبت‌دهی آنلاین"
-                  />
-                  <button type="button" aria-label="تنظیمات ویزیت آنلاین" onClick={openOnlineSheet} className={classNames('shrink-0 p-1', dsFocusRing)}>
-                    <RowChevron />
-                  </button>
-                </>
+                <Switch
+                  checked={isActive}
+                  onChange={e => handleToggle(e.target.checked)}
+                  disabled={isOnlineVisitInitialLoading || toggleMutation.isLoading}
+                  aria-label="فعال‌سازی نوبت‌دهی آنلاین"
+                />
               ) : (
-                <DsButton variant="primary" className="!h-8 !min-h-0 !px-2.5 !py-1" onClick={() => activationSheet.openSheet()}>
+                <DsButton variant="primary" className="!h-8 !min-h-0 !px-2.5 !py-1" onClick={openActivationPage}>
                   شروع
                 </DsButton>
               )
             }
+            isLast={!showClinicRow && !nested}
             onPress={() => {
               if (!onlineVisit.hasOnlineVisitCenter) {
-                activationSheet.openSheet();
+                openActivationPage();
                 return;
               }
               openOnlineSheet();
@@ -399,32 +427,21 @@ export const FeedActionsSection = ({
           <CompactRow
             icon={<ClinicIcon size="md" />}
             title={clinicTitle}
+            titleHint={clinicAddressHint}
             subtitle={clinicSubtitle}
             widgetShell={widgetShell}
-            isLast
+            isLast={!nested}
             onPress={() => {
               sendDoctorHomeEvent(userId, 'clinic_actions_open');
               clinicSheet.openSheet();
             }}
           />
         )}
-      </DsCard>
+    </>
+  );
 
-      <DsDrawer
-        {...activationDrawerProps}
-        title="فعال‌سازی ویزیت آنلاین"
-        description="راهنمای فعال‌سازی"
-      >
-        <div className="flex flex-col items-center gap-4 px-4 pb-10 pt-2 text-center">
-          <ActionIcon size="lg">
-            <ChatIcon size="lg" />
-          </ActionIcon>
-          <p className={classNames(ds.type.cardBody, 'leading-6')}>
-            برای فعال‌سازی ویزیت آنلاین، ابتدا پروفایل خود را در پنل پزشکی پذیرش۲۴ تکمیل کنید.
-          </p>
-        </div>
-      </DsDrawer>
-
+  const drawers = (
+    <>
       <DsDrawer
         {...onlineDrawerProps}
         title="ویزیت آنلاین"
@@ -447,6 +464,7 @@ export const FeedActionsSection = ({
               const clinicId = String(clinic.id);
               const isSelected = String(activeClinic?.id) === clinicId;
               const name = formatDoctorCenterName(clinic);
+              const addressHint = formatDoctorCenterAddressHint(clinic);
 
               return (
                 <button
@@ -470,6 +488,9 @@ export const FeedActionsSection = ({
                 >
                   <ClinicIcon size="xs" />
                   {name}
+                  {addressHint ? (
+                    <span className="text-[10px] font-normal text-slate-400">{addressHint}</span>
+                  ) : null}
                 </button>
               );
             })}
@@ -497,6 +518,25 @@ export const FeedActionsSection = ({
           iframeKey={action.id}
         />
       ))}
+    </>
+  );
+
+  if (nested) {
+    return (
+      <>
+        {rows}
+        {drawers}
+      </>
+    );
+  }
+
+  return (
+    <section dir="rtl">
+      {!hideSectionHeader && <DsSectionHeader title={sectionTitle} />}
+      <DsCard padding="none" variant={widgetShell ? 'widget' : 'default'} className="overflow-hidden">
+        {rows}
+      </DsCard>
+      {drawers}
     </section>
   );
 };

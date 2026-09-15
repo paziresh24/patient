@@ -45,7 +45,7 @@ export const formatDoctorCenterName = (center: ProviderCenter) => {
   return center.name?.trim() || 'مرکز';
 };
 
-const shortenCenterAddress = (center: ProviderCenter): string | undefined => {
+export const formatDoctorCenterAddressHint = (center: ProviderCenter): string | undefined => {
   if (center.id === ONLINE_VISIT_CENTER_ID) return undefined;
 
   const raw = center.address?.trim() || center.city?.trim();
@@ -74,7 +74,7 @@ export const getDoctorCenterOptions = (user?: UserInfo): DoctorCenterOption[] =>
     ...centers.map((center: ProviderCenter) => ({
       id: String(center.id),
       name: formatDoctorCenterName(center),
-      addressHint: shortenCenterAddress(center),
+      addressHint: formatDoctorCenterAddressHint(center),
     })),
   ];
 };

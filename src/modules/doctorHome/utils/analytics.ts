@@ -20,7 +20,8 @@ type DoctorHomeFeature =
   | 'shortcut_workhours'
   | 'shortcut_vacation'
   | 'shortcut_tariff'
-  | 'shortcut_booking_settings';
+  | 'shortcut_booking_settings'
+  | 'shortcut_notifications';
 
 export const sendDoctorHomeEvent = (
   userId: string | undefined,

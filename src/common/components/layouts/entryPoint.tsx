@@ -113,7 +113,7 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
             syncedDoctorCentersUserId.current = null;
             syncedDoctorSlugUserId.current = null;
           }
-        } else if (Array.isArray(centersData)) {
+        } else if (Array.isArray(centersData) && !updatedInfo.is_doctor && updatedInfo.provider?.job_title !== 'doctor') {
           clearDoctorDeviceCache();
           syncedDoctorSlugUserId.current = null;
         } else {

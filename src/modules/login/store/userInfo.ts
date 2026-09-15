@@ -73,8 +73,14 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         ...incomingProvider,
         ...(Array.isArray(centers) ? { centers } : {}),
       };
-      // Doctor identity: non-empty centers. Missing/null centers must not wipe a prior list.
-      const isDoctor = Array.isArray(centers) && centers.length > 0;
+      const hasCenters = Array.isArray(centers) && centers.length > 0;
+      // Empty/missing centers on a later patch must not demote a doctor (me/profile flags).
+      const isDoctor =
+        hasCenters ||
+        info?.is_doctor === true ||
+        get().info?.is_doctor === true ||
+        info?.provider?.job_title === 'doctor' ||
+        prevProvider?.job_title === 'doctor';
 
       const infoCopy = {
         ...get().info,
@@ -84,7 +90,7 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
           ...mergedProvider,
           // Preserve slug from prior profile fetch when callers omit it.
           slug: info?.provider?.slug ?? mergedProvider.slug,
-          job_title: isDoctor ? 'doctor' : null,
+          job_title: isDoctor ? 'doctor' : mergedProvider.job_title ?? null,
         },
       };
 

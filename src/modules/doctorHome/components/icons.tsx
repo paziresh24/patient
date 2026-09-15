@@ -16,6 +16,7 @@ import {
   Settings,
   ShoppingBag,
   Star,
+  TrendingUp,
   Wallet,
 } from 'lucide-react';
 import { DsIcon, type DsIconProps } from '../designSystem/DsIcon';
@@ -75,3 +76,4 @@ export const TodayIcon = (props: DoctorHomeIconProps) => withInheritedColor(prop
 export const TimelineDoneIcon = ({ className, ...props }: DoctorHomeIconProps) => (
   <DsIcon icon={Check} size="xs" className={classNames('text-current', className)} {...props} />
 );
+export const GrowthPathIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, TrendingUp);

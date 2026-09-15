@@ -152,6 +152,7 @@ export const FeedInsightSection = ({
           items={insightItems}
           variant={variant}
           appearance={variant === 'stack' ? 'workstation' : 'default'}
+          compact={variant === 'responsive' || variant === 'carousel'}
           className={className}
         />
       </FeedContentSwap>
