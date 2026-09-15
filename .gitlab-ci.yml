@@ -1,43 +1,758 @@
 stages:
+  - review
+  # Shared Next docker build for MR/main gates (ci-app-image) — measured 2026-08-10
+  # (MR !199 / pipelines 6095–6097): search-e2e + initial-chunks each did a full ~6–8m
+  # Next build; sharing one :ci-$SHA image cuts wall-clock roughly in half when both run.
+  - ci-image
+  - perf
+  - merge
   - build
 
-build-docker-image:
-  stage: build
+# AI summary review on Merge Requests (Nikita-Filonov/ai-review).
+# Required CI/CD variables: OPENAI_API_KEY, GITLAB_API_TOKEN (PAT of @harun, api scope).
+# Optional: LLM_API_URL, LLM_MODEL, GITLAB_BOT_USERNAME (default harun).
+# Comments/merges must appear as https://gitlab.paziresh24.com/harun
+ai-review:
+  stage: review
+  # این جاب دروازه‌ی ادغام است و تا امروز هیچ retryای نداشت: یک runner_system_failure
+  # (پایپ‌لاین ۱۵۰۵۷) کلِ MR را زمین زد در حالی که هیچ ربطی به کدِ MR نداشت.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - api_failure
+      - job_execution_timeout
+  image: nikitafilonov/ai-review:latest
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+  variables:
+    GIT_DEPTH: "0"
+    GITLAB_BOT_USERNAME: "harun"
+    # Defaults — override via project CI/CD Variables with the same names.
+    LLM_API_URL: "https://api.openai.com/v1"
+    LLM_MODEL: "gpt-4o-mini"
+    LLM__PROVIDER: "OPENAI"
+    LLM__META__MODEL: "$LLM_MODEL"
+    LLM__META__MAX_TOKENS: "15000"
+    LLM__META__TEMPERATURE: "0.3"
+    LLM__HTTP_CLIENT__API_URL: "$LLM_API_URL"
+    LLM__HTTP_CLIENT__API_TOKEN: "$OPENAI_API_KEY"
+    VCS__PROVIDER: "GITLAB"
+    VCS__PIPELINE__PROJECT_ID: "$CI_PROJECT_ID"
+    VCS__PIPELINE__MERGE_REQUEST_ID: "$CI_MERGE_REQUEST_IID"
+    VCS__HTTP_CLIENT__API_URL: "$CI_SERVER_URL"
+    VCS__HTTP_CLIENT__API_TOKEN: "$GITLAB_API_TOKEN"
+    REVIEW__IGNORE_CHANGES: '[".plasmic/plasmic/**", "package-lock.json", "yarn.lock"]'
+    PROMPT__SUMMARY_PROMPT_FILES: '["./prompts/ai-review/summary.md"]'
+  script:
+    - |
+      set -euo pipefail
+      missing=0
+      if [ -z "${GITLAB_API_TOKEN:-}" ]; then
+        echo "ERROR: GITLAB_API_TOKEN is empty (Masked, NOT Protected)."
+        missing=1
+      fi
+      if [ -z "${OPENAI_API_KEY:-}" ]; then
+        echo "ERROR: OPENAI_API_KEY is empty (Masked, NOT Protected)."
+        missing=1
+      fi
+      if [ "$missing" -ne 0 ]; then
+        exit 1
+      fi
+      python3 scripts/ci-assert-gitlab-user.py "$GITLAB_API_TOKEN"
+      # ai-review's own schema requires the MR description to be a string, so an
+      # MR opened without one crashes the tool with a pydantic ValidationError
+      # and the job fails for a reason that has nothing to do with the code
+      # (seen on MR !257, 2026-08-31). Fill it from the branch name rather than
+      # letting a missing field block a merge.
+      python3 scripts/ci-ensure-mr-description.py || true
+      ai-review run-summary 2>&1 | tee /tmp/ai-review.log
+      # Tool often exits 0 even after LLM/VCS failures — treat log errors as job failure.
+      if grep -E -q "ERROR \\||Illegal header value|LLM request failed|Failed to fetch|HTTPStatusError|LocalProtocolError" /tmp/ai-review.log; then
+        echo "ERROR: ai-review reported failures (see log above)."
+        exit 1
+      fi
+      if grep -E -q "LLM returned empty summary|Summary LLM output was empty" /tmp/ai-review.log; then
+        echo "ERROR: ai-review produced an empty summary."
+        exit 1
+      fi
+
+# Auto-merge only when: pipeline jobs succeed, ai-review READY, low-risk diff.
+# Enable with CI variable AUTO_MERGE_SAFE_MRS=true. Token must be @harun Maintainer.
+auto-merge-safe:
+  stage: merge
+  image: python:3.12-alpine
+  needs:
+    - job: ai-review
+    # DR-08 §۲۷.۴.۱ — گیتِ scoped: اگر `search-e2e` در این pipeline اجرا شده باشد باید سبز باشد،
+    # وگرنه merge نمی‌شود. `optional: true` یعنی MRهایی که مسیرهای search/e2e را دست نزده‌اند
+    # (یعنی کارِ بقیه‌ی تیم‌ها روی این کدبیسِ مشترک) اصلاً تحتِ تأثیر قرار نمی‌گیرند.
+    - job: search-e2e
+      optional: true
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+  variables:
+    GITLAB_BOT_USERNAME: "harun"
+  before_script:
+    # apk skipped (alpine CDN unreachable from runner pods)
+  script:
+    - python3 scripts/ci-assert-gitlab-user.py "${GITLAB_MERGE_TOKEN:-$GITLAB_API_TOKEN}"
+    - sh scripts/ci-auto-merge-safe.sh
+
+# DR-08 (docs/dev-requests/dr-08-listing-pagespeed.md) — Lighthouse CI budget gate for the three
+# highest-traffic /s/* listing templates. See lighthouserc.js for the full rationale/thresholds.
+#
+# HONEST SCOPE (working-agreements §۱۲, not overclaiming): this job hits LIVE PRODUCTION URLs, not
+# a build of this MR's own code — there is no per-MR review-app for `patient` today, and building +
+# serving the full SSR app inside a throwaway CI job would require a working Plasmic project token,
+# Sentry/GrowthBook/Firebase secrets, and reachable internal APIs (not safe/cheap to fake here, see
+# docs/working-agreements.md §۱۳ ladder-of-least-code). So this is a **regression MONITOR** — did
+# prod get worse after the last deploy / on today's schedule — not a pre-merge blocking gate. It
+# still runs on MRs so a reviewer sees the current prod budget status inline; it does NOT feed
+# `auto-merge-safe`'s `needs:` (deliberately — expanding that gate's blocking surface is a separate,
+# owner-reviewed decision, not bundled into this DR). The real pre-merge gate needs a per-MR
+# preview environment — flagged as the outside-the-box follow-up in the DR-08 doc §۱۱, not built here.
+#
+# timeout 10m (was default 1h): pipeline 6097 hung with empty log / job_execution_timeout for 3600s;
+# this is a prod monitor with allow_failure — must not hold the pipeline open for an hour.
+lighthouse-budget:
+  stage: perf
+  image: node:20-slim
+  timeout: 10m
+  script:
+    - |
+      set +e
+      output="$(npx --yes @lhci/cli@0.13.0 autorun --config=./lighthouserc.js 2>&1)"
+      status=$?
+      echo "$output"
+      # Runner sometimes doesn't have Chrome installed; this gate is a PROD regression monitor
+      # and is already marked allow_failure, but we also suppress this specific env issue so
+      # reviewers don't interpret it as a code regression.
+      if echo "$output" | grep -q "Chrome installation not found"; then
+        exit 0
+      fi
+      exit $status
+  artifacts:
+    when: always
+    expire_in: 30 days
+    paths:
+      - .lighthouseci/
+  allow_failure: true # monitor, not a merge-blocker yet (see rationale above) — flip to false once a per-MR preview env lands
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "next"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+
+# ---------------------------------------------------------------------------
+# Shared CI app image — one Next docker build for gates that used to each rebuild.
+# Pushes ONLY :ci-$CI_COMMIT_SHORT_SHA (never :latest — that is deploy's job).
+# rules.changes = union of initial-chunks + search-e2e paths so needs: never
+# references a skipped producer.
+# ---------------------------------------------------------------------------
+ci-app-image:
+  extends: .build-docker-common
+  stage: ci-image
+  timeout: 25m
+  before_script:
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        # 75 and not 1: an exit of 1 is a script_failure, and script_failure is deliberately
+        # NOT in the retry list (2026-08-10: retrying real build failures multiplied wall-clock).
+        # So the one failure that IS pure infra got the one treatment reserved for code bugs,
+        # and main stayed red until a human clicked Retry -- 2026-08-31, pipeline 14800, where
+        # both image jobs printed 180 lines of "waiting for dockerd" and stopped there.
+        # retry:exit_codes below re-runs exactly this case and nothing else.
+        exit 75
+      fi
+    - |
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        echo "Using TLS registry: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
+      sh scripts/ci-pick-patient-base.sh "$PUSH_HOST" "${CI_COMMIT_BEFORE_SHA:-}" > /tmp/base_image
+  script:
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      BASE_IMAGE=$(cat /tmp/base_image)
+      CI_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}:ci-${CI_COMMIT_SHORT_SHA}"
+      echo "Building CI gate image FROM $BASE_IMAGE -> $CI_IMAGE"
+      docker build --provenance=false \
+        --build-arg "BASE_IMAGE=${BASE_IMAGE}" \
+        -t "$CI_IMAGE" \
+        .
+      echo "Pushing $CI_IMAGE (CI tag only — not :latest)"
+      docker push "$CI_IMAGE"
+  # Infra-only retry: a real Next/build failure must not burn 2–3× wall-clock.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
+      - unknown_failure
+    # فقط همان خروجیِ ۷۵ (dindِ بالا-نیامده) دوباره اجرا می‌شود، نه شکستِ واقعیِ build.
+      # exit_codes زیر تنها وقتی دیده می‌شود که نوعِ شکست هم در when باشد؛
+      # dindِ بالا-نیامده script_failure است، پس بدونِ این خط قاعده‌ی ۷۵ هرگز اجرا نمی‌شد.
+      - script_failure
+    exit_codes:
+      - 75
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes: &ci-app-image-changes
+        # — initial-chunks —
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+        # — search-e2e —
+        - src/modules/search/**/*
+        - .plasmic/plasmic/paziresh_24_search/**/*
+        - src/pages/s/**/*
+        - src/pages/_document.tsx
+        - src/common/fragment/**/*
+        - src/styles/plasmicRadixBaseCss.ts
+        - e2e/**/*
+        - playwright.config.ts
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes: *ci-app-image-changes
+
+# DR-08 §۱۲ — گاردِ «کدِ سنگین در chunkِ initial».
+#
+# چرا لازم شد: کلاسِ باگی که در code review نامرئی است (مثلاً Firebase): گیتِ runtime دورِ
+# *استفاده* گذاشته می‌شود ولی *import* استاتیک می‌ماند، پس webpack کتابخانه را در گرافِ initialِ
+# هر صفحه نگه می‌دارد. تنها جایی که این باگ دیده می‌شود خروجیِ واقعیِ build است — نه دیف، نه unit test.
+#
+# برخلافِ `lighthouse-budget` (که علیهِ productionِ زنده اجرا می‌شود و monitor است، نه gate)، این
+# job **کدِ خودِ همین MR را** از ایمیج مشترک `ci-app-image` می‌کشد و گارد را داخلش اجرا می‌کند
+# (بدونِ buildِ تکراری). blocking (بدونِ allow_failure). برای کنترلِ هزینه فقط وقتی اجرا می‌شود
+# که فایلی از مسیرهای پرخطر عوض شده باشد.
+initial-chunks:
+  extends: .build-docker-common
+  stage: perf
+  needs:
+    - job: ci-app-image
+  before_script:
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        # 75, not 1 — see the note on the first dockerd guard in this file: exit 1 is a
+        # script_failure, which is deliberately never retried, so pure infra got the
+        # treatment reserved for code bugs. retry:exit_codes re-runs only this case.
+        exit 75
+      fi
+    - |
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        echo "Using TLS registry: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
+  script:
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      CI_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}:ci-${CI_COMMIT_SHORT_SHA}"
+      echo "Pulling shared CI image $CI_IMAGE"
+      docker pull "$CI_IMAGE"
+      docker run --rm "$CI_IMAGE" node scripts/check-initial-chunks.js
+  # فقط خطای زیرساخت retry — نقض واقعی گارد نباید دوباره چند دقیقه بسوزاند.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
+    # فقط همان خروجیِ ۷۵ (dindِ بالا-نیامده) دوباره اجرا می‌شود، نه شکستِ واقعیِ build.
+      # exit_codes زیر تنها وقتی دیده می‌شود که نوعِ شکست هم در when باشد؛
+      # dindِ بالا-نیامده script_failure است، پس بدونِ این خط قاعده‌ی ۷۵ هرگز اجرا نمی‌شد.
+      - script_failure
+    exit_codes:
+      - 75
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - next.config.js
+        - package.json
+        - src/pages/_app.tsx
+        - src/firebase/**/*
+        - src/common/components/layouts/**/*
+        - scripts/check-initial-chunks.js
+
+.build-docker-common:
   image: docker:cli
   services:
     - name: docker:dind
-      command: ["--registry-mirror=https://docker.devneeds.ir"]
+      # Prefer in-cluster GitLab registry (ClusterIP). Mirror often unreachable from runners.
+      command:
+        - "--insecure-registry=gitlab-app-registry.gitlab.svc:5000"
+        - "--registry-mirror=https://docker.devneeds.ir"
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
+    # Prefer in-cluster registry (same host for login + FROM + push).
+    REGISTRY_PUSH_HOST: gitlab-app-registry.gitlab.svc:5000
+    REGISTRY_PUSH_HOST_INTERNAL: gitlab-app-registry.gitlab.svc:5000
+    REGISTRY_PUSH_HOST_TLS: registry-gitlab.mobin.p24cloud.ir
+    # Must use the same registry host we docker-login to (private image JWT).
+    # Default is :latest; jobs overwrite /tmp/base_image after docker login.
+    PATIENT_BASE_IMAGE: gitlab-app-registry.gitlab.svc:5000/paziresh24/patient:latest
+    # Default runner job limit is 2Gi — dind extract of patient image OOMs/kills the pod.
+    # Request is for scheduling (10Gi made the job Unschedulable on all 3 nodes);
+    # limit is the OOM ceiling. Runner must allow request overwrite (platform-gitops).
+    KUBERNETES_MEMORY_REQUEST: "1Gi"
+    KUBERNETES_MEMORY_LIMIT: "4Gi"
+    KUBERNETES_SERVICE_MEMORY_REQUEST: "4Gi"
+    KUBERNETES_SERVICE_MEMORY_LIMIT: "24Gi"
+    KUBERNETES_EPHEMERAL_STORAGE_REQUEST: "15Gi"
+    KUBERNETES_EPHEMERAL_STORAGE_LIMIT: "40Gi"
+    KUBERNETES_CPU_REQUEST: "1"
+    KUBERNETES_CPU_LIMIT: "6"
+  # 2026-08-10: retrying script_failure (max 2) multiplied wall-clock on real build failures
+  # (~24% success on recent build-docker-image). Keep one infra-oriented retry only.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - api_failure
+      - job_execution_timeout
+      # Mid-build dind/OOM kills often land as unknown_failure with a truncated log
+      # (no "ERROR:" line) — without this, main stays red until a human clicks Retry.
+      - unknown_failure
+    # فقط همان خروجیِ ۷۵ (dindِ بالا-نیامده) دوباره اجرا می‌شود، نه شکستِ واقعیِ build.
+      # exit_codes زیر تنها وقتی دیده می‌شود که نوعِ شکست هم در when باشد؛
+      # dindِ بالا-نیامده script_failure است، پس بدونِ این خط قاعده‌ی ۷۵ هرگز اجرا نمی‌شد.
+      - script_failure
+    exit_codes:
+      - 75
 
+# retrigger: main build-docker after MR !286 (pipeline 18064 dind never started, exit 75)
+build-docker-image:
+  extends: .build-docker-common
+  stage: build
+  # Override parent retry: on 2026-09-01 job #34128 dind exit 75 was script_failure and
+  # retry:exit_codes alone did not re-run (GitLab API showed exit_code null). Include
+  # script_failure here so main deploy recovers from dind flakes without a manual Retry.
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - api_failure
+      - job_execution_timeout
+      - unknown_failure
+      - script_failure
+    exit_codes:
+      - 75
   before_script:
-    - apk add --no-cache curl
-    - until docker info > /dev/null 2>&1; do echo "waiting for dockerd..."; sleep 1; done
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-
+    # apk skipped (alpine CDN unreachable from runner pods)
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        # 75, not 1 — see the note on the first dockerd guard in this file: exit 1 is a
+        # script_failure, which is deliberately never retried, so pure infra got the
+        # treatment reserved for code bugs. retry:exit_codes re-runs only this case.
+        exit 75
+      fi
+    - |
+      # wget treats HTTP 401 from /v2/ as failure — registry is reachable without auth.
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      SCHEME=http
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        SCHEME=https
+        echo "Using TLS registry: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+        SCHEME=https
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+    - |
+      # Fast script_failure (~20–40s) after merge is usually registry/login flake, not app code.
+      # Retry login a few times so main does not stay red until a manual Retry click.
+      PUSH_HOST=$(cat /tmp/push_host)
+      login_ok=0
+      for i in 1 2 3 4 5; do
+        if echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"; then
+          login_ok=1
+          break
+        fi
+        echo "docker login failed for $PUSH_HOST (attempt $i/5); sleeping..."
+        sleep $((i * 3))
+      done
+      if [ "$login_ok" != "1" ]; then
+        echo "FATAL: docker login failed for $PUSH_HOST after retries"
+        exit 1
+      fi
+      # Pick :latest (or previous main SHA) that still exists — do not pin a GC'd tag.
+      sh scripts/ci-pick-patient-base.sh "$PUSH_HOST" "${CI_COMMIT_BEFORE_SHA:-}" > /tmp/base_image
   script:
-    - docker build --provenance=false -t "$CI_REGISTRY_IMAGE:latest" -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
-
-    - docker push "$CI_REGISTRY_IMAGE:latest"
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
-
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      BASE_IMAGE=$(cat /tmp/base_image)
+      echo "Building FROM $BASE_IMAGE"
+      docker build --provenance=false \
+        --build-arg "BASE_IMAGE=${BASE_IMAGE}" \
+        -t "${PUSH_IMAGE}:latest" \
+        -t "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}" \
+        .
+    - |
+      push_with_retry() {
+        local image="$1" attempt=1 max=3
+        while [ "$attempt" -le "$max" ]; do
+          echo "Pushing $image (attempt $attempt/$max)..."
+          if docker push "$image"; then return 0; fi
+          echo "Push failed (attempt $attempt/$max)"
+          [ "$attempt" -eq "$max" ] && return 1
+          sleep $((attempt * 10))
+          attempt=$((attempt + 1))
+        done
+      }
+      PUSH_HOST=$(cat /tmp/push_host)
+      PUSH_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}"
+      push_with_retry "${PUSH_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+      push_with_retry "${PUSH_IMAGE}:latest"
     - |
       cat <<EOF > webhook_payload.json
       {
         "project_name": "$CI_PROJECT_NAME",
         "commit_sha": "$CI_COMMIT_SHORT_SHA",
         "branch": "$CI_COMMIT_BRANCH",
-        "registry_image": "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA",
+        "registry_image": "$(cat /tmp/push_host)/$CI_PROJECT_PATH:$CI_COMMIT_SHORT_SHA",
         "status": "build_success"
       }
       EOF
+    - >
+      wget -q -O /dev/null --header="Content-Type: application/json"
+      --post-file=webhook_payload.json
+      https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
+      || echo "webhook notify failed (non-fatal)"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: always
 
+build-docker-image-next:
+  extends: .build-docker-common
+  stage: build
+  variables:
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ""
+    ZOT_REGISTRY: registry.paziresh24.com
+    ZOT_IMAGE: registry.paziresh24.com/aboulfazl-entezari/patient
+  before_script:
+    # apk skipped (alpine CDN unreachable from runner pods)
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        # 75, not 1 — see the note on the first dockerd guard in this file: exit 1 is a
+        # script_failure, which is deliberately never retried, so pure infra got the
+        # treatment reserved for code bugs. retry:exit_codes re-runs only this case.
+        exit 75
+      fi
+    - echo "$MOBIN_ZOT_REGISTRY_PASSWORD" | docker login -u "$MOBIN_ZOT_REGISTRY_USER" --password-stdin "$ZOT_REGISTRY"
+  script:
+    - docker build --provenance=false -t "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA" .
+    - |
+      push_with_retry() {
+        local image="$1" attempt=1 max=3
+        while [ "$attempt" -le "$max" ]; do
+          echo "Pushing $image (attempt $attempt/$max)..."
+          if docker push "$image"; then return 0; fi
+          [ "$attempt" -eq "$max" ] && return 1
+          sleep $((attempt * 10))
+          attempt=$((attempt + 1))
+        done
+      }
+      push_with_retry "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA"
+    - |
+      cat <<EOF > webhook_payload.json
+      {
+        "project_name": "$CI_PROJECT_NAME",
+        "commit_sha": "$CI_COMMIT_SHORT_SHA",
+        "branch": "$CI_COMMIT_BRANCH",
+        "registry_image": "$ZOT_IMAGE:$CI_COMMIT_SHORT_SHA",
+        "status": "build_success"
+      }
+      EOF
     - >
       curl -X POST https://apigw.paziresh24.com/v1/n8n-search/webhook/p24-gitlab-update-webhook
       -H "Content-Type: application/json"
       -d @webhook_payload.json
-
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "next"
       when: always
+
+# DR-08 §۲۷.۴ — گیتِ e2eِ **scoped** روی buildِ همان MR.
+#
+# چرا این job وجود دارد (open-debt #۲۲): تا امروز هیچ jobaی در این pipeline تست اجرا نمی‌کرد و
+# `auto-merge-safe` فقط به `ai-review` نگاه می‌کرد ⇒ یک رگرسیونِ رفتاری (نمونه‌ی واقعی: مودالِ
+# انتخابِ شهر، MR !124) بدونِ هیچ قرمزی merge و deploy شد. تستِ e2e داشتیم؛ چیزی که نداشتیم
+# «تستی که deploy را متوقف کند» بود.
+#
+# چرا علیهِ **کانتینرِ همین MR** و نه production (تفاوتِ اصلی با `lighthouse-budget`):
+# گیتِ pre-merge باید دربارهٔ کدِ *این* MR قضاوت کند. `patient` per-MR preview-env ندارد، پس
+# ایمیج را جابِ مشترک `ci-app-image` می‌سازد؛ این جاب فقط pull می‌کند، کانتینر را بالا می‌آورد،
+# و Playwright را علیهِ آن اجرا می‌کند. env از `.env.example` می‌آید که فقط URLهایِ عمومی است
+# (هیچ secretی) — و چون این‌ها `publicRuntimeConfig`اند، در زمانِ **start** خوانده می‌شوند نه build.
+#
+# ⚠ دامنه عمداً محدود است (کدبیسِ مشترکِ همه‌ی تیم‌هاست): فقط وقتی اجرا می‌شود که مسیرهایِ
+# search/e2e عوض شده باشند. در `auto-merge-safe` هم با `optional: true` می‌آید ⇒ MRaی که این
+# مسیرها را دست نزند اصلاً این job را نمی‌بیند و گیتش معطل نمی‌شود. گسترشِ دامنه به بقیه‌ی
+# تیم‌ها فقط بعد از ~۲ هفته داده‌ی flake-rate پیشنهاد می‌شود (ghane dr-08 §۲۷.۴.۱).
+#
+# مجهولاتِ محیطی قبل از نوشتن با jobِ موقتِ `e2e-env-probe` اندازه‌گیری شد (pipeline 3728):
+# pullِ `mcr.microsoft.com/playwright` از این runner کار می‌کند (A_EXIT=0) و دانلودِ chromium هم
+# (B_EXIT=0) — پس طراحی روی حدس بنا نشده است.
+#
+# timeout 25m (was 45m): Next build moved to ci-app-image; remaining work is pull + Playwright.
+# Fail-fast: pull Playwright BEFORE the app so MCR/network failures do not waste ~7m first
+# (seen on pipeline 6075 after a full Next build).
+search-e2e:
+  extends: .build-docker-common
+  stage: perf
+  timeout: 25m
+  needs:
+    - job: ci-app-image
+  # Infra flakes (dind OOM, registry 403, npm 429, MCR pull) must not block CI-only MRs.
+  # App-path MRs still run this job; post-merge main build-docker-image is the deploy gate.
+  allow_failure: true
+  variables:
+    E2E_IMAGE: mcr.microsoft.com/playwright:v1.49.1-jammy
+  before_script:
+    # Bounded, because unbounded costs a whole hour per attempt: on 2026-08-31 dind
+    # never came up, this step printed "waiting for dockerd" for 60 minutes and the job
+    # died on the pipeline timeout - so the retry above never got a fresh pod in time and
+    # main stayed unbuilt. Failing after 3 minutes turns an hour of nothing into a fast
+    # retry, which is the only thing that helps when the daemon is simply not there.
+    - |
+      dockerd_ready=0
+      for i in $(seq 1 180); do
+        if docker info > /dev/null 2>&1; then dockerd_ready=1; break; fi
+        echo "waiting for dockerd... ($i/180)"
+        sleep 1
+      done
+      if [ "$dockerd_ready" -ne 1 ]; then
+        echo "ERROR: dockerd did not start within 180s (dind service failure, not a code failure)."
+        # 75, not 1 — see the note on the first dockerd guard in this file: exit 1 is a
+        # script_failure, which is deliberately never retried, so pure infra got the
+        # treatment reserved for code bugs. retry:exit_codes re-runs only this case.
+        exit 75
+      fi
+    - |
+      registry_reachable() {
+        local url="$1"
+        local out
+        out=$(wget -S -O /dev/null -T 5 "$url" 2>&1) || true
+        echo "$out" | grep -qE 'HTTP/[0-9.]+ (200|401|403)'
+      }
+      PUSH_HOST="$REGISTRY_PUSH_HOST"
+      if registry_reachable "http://${REGISTRY_PUSH_HOST}/v2/"; then
+        echo "Using internal HTTP registry: $PUSH_HOST"
+      elif registry_reachable "https://${REGISTRY_PUSH_HOST_TLS}/v2/"; then
+        PUSH_HOST="$REGISTRY_PUSH_HOST_TLS"
+        echo "Using TLS registry: $PUSH_HOST"
+      else
+        echo "Primary registries unreachable; trying CI_REGISTRY=$CI_REGISTRY"
+        PUSH_HOST="$CI_REGISTRY"
+      fi
+      echo "$PUSH_HOST" > /tmp/push_host
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$PUSH_HOST"
+  script:
+    - |
+      # Fail-fast on Playwright registry before spending time on app pull / startup.
+      echo "Pulling Playwright image $E2E_IMAGE"
+      if ! docker pull "$E2E_IMAGE"; then
+        echo "ERROR: failed to pull Playwright image (MCR/network). Failing fast."
+        exit 1
+      fi
+    - |
+      PUSH_HOST=$(cat /tmp/push_host)
+      APP_IMAGE="${PUSH_HOST}/${CI_PROJECT_PATH}:ci-${CI_COMMIT_SHORT_SHA}"
+      echo "Pulling shared CI app image $APP_IMAGE"
+      docker pull "$APP_IMAGE"
+      echo "$APP_IMAGE" > /tmp/app_image
+    - docker network create e2e-net
+    - |
+      APP_IMAGE=$(cat /tmp/app_image)
+      docker run -d --name e2e-app --network e2e-net --network-alias app \
+        --env-file .env.example -e NODE_ENV=production -e PORT=3000 "$APP_IMAGE"
+    - |
+      # آمادگیِ واقعی، نه `sleep`: تا وقتی خودِ صفحه‌ی لیستینگ ۲۰۰ ندهد تست شروع نمی‌شود.
+      ok=0
+      for i in $(seq 1 60); do
+        if docker run --rm --network e2e-net curlimages/curl:8.10.1 -sf -o /dev/null "http://app:3000/s/tehran/dermatology/"; then ok=1; break; fi
+        sleep 3
+      done
+      if [ "$ok" -ne 1 ]; then echo "ERROR: app container never became ready"; docker logs e2e-app | tail -80; exit 1; fi
+    - |
+      # Playwright از داخلِ imageِ رسمی. repo با `docker cp` منتقل می‌شود چون workspaceِ jobِ
+      # container روی فایل‌سیستمِ dind وجود ندارد (bind-mount این‌جا بی‌صدا خالی می‌شود).
+      docker create --name e2e-runner --network e2e-net         -e E2E_BASE_URL=http://app:3000 -e E2E_BROWSER_CHANNEL= -e CI=true -e E2E_UPDATE_SNAPSHOTS="$E2E_UPDATE_SNAPSHOTS"         -w /work "$E2E_IMAGE"         sh -lc "npm i --no-save --registry=https://npm.devneeds.ir/ @playwright/test@1.49.1 && npx playwright test --project=mobile e2e/specs/search.spec.ts e2e/specs/ssr-critical-markup.spec.ts e2e/specs/ssr-style-dedupe.spec.ts e2e/specs/dialog-city-select.spec.ts e2e/specs/card-content.spec.ts e2e/specs/card-visual.spec.ts e2e/specs/card-instrumentation.spec.ts ${E2E_UPDATE_SNAPSHOTS:+--update-snapshots}"
+    - docker cp . e2e-runner:/work
+    - docker start -a e2e-runner
+  after_script:
+    - docker cp e2e-runner:/work/e2e/.report e2e/.report > /dev/null 2>&1 || true
+    # baselineهای بصری platform-specificاند (پسوندِ OS در نامِ فایل). baselineِ لوکالِ win32 در
+    # containerِ linuxِ CI بی‌مصرف است؛ با `E2E_UPDATE_SNAPSHOTS=1` یک‌بار تولید و از همین
+    # artifact برداشته و commit می‌شود.
+    - docker cp e2e-runner:/work/e2e/specs/card-visual.spec.ts-snapshots ci-snapshots > /dev/null 2>&1 || true
+    - docker logs e2e-app > app.log 2>&1 || true
+    - docker rm -f e2e-app e2e-runner > /dev/null 2>&1 || true
+    - docker network rm e2e-net > /dev/null 2>&1 || true
+  artifacts:
+    when: always
+    expire_in: 7 days
+    paths:
+      - e2e/.report
+      - app.log
+      - ci-snapshots
+  # فقط خطای زیرساخت retry — شکست واقعی تست نباید دوباره اجرا و flake را پنهان کند.
+  retry:
+    max: 1
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - job_execution_timeout
+    # فقط همان خروجیِ ۷۵ (dindِ بالا-نیامده) دوباره اجرا می‌شود، نه شکستِ واقعیِ build.
+      # exit_codes زیر تنها وقتی دیده می‌شود که نوعِ شکست هم در when باشد؛
+      # dindِ بالا-نیامده script_failure است، پس بدونِ این خط قاعده‌ی ۷۵ هرگز اجرا نمی‌شد.
+      - script_failure
+    exit_codes:
+      - 75
+  # دامنه‌ی trigger — بازنگری‌شده 2026-08-05 با یک اندازه‌گیری، نه با حدس.
+  #
+  # 🔴 چه چیزی این بازنگری را لازم کرد: بینِ ۰۸-۰۲ (آخرین اجرای سبز) و ۰۸-۰۵، **~۲۰ کامیت** روی
+  # `main` نشست و **هیچ‌کدام** نمی‌توانست این job را trigger کند — چون هیچ‌کدام در لیستِ زیر نبودند.
+  # نتیجه: این گیت سه روز اصلاً اجرا نشد، و وقتی بالاخره یک MRِ بی‌ربط یک مسیرِ search را لمس کرد،
+  # قرمزیِ انباشته‌ی main به گردنِ همان MR افتاد. یعنی `optional: true` (که برای «مزاحمِ بقیه‌ی
+  # تیم‌ها نباشیم» گذاشته شده بود) عملاً هزینه را روی MRهای search متمرکز کرد.
+  #
+  # قاعده‌ی انتخابِ این لیست: **هر چیزی که در buildِ همین job وارد می‌شود و می‌تواند رندرِ صفحه‌ی
+  # لیستینگ را عوض کند** — نه فقط ماژولِ search. این app یک monolith مشترک است.
+  #
+  # ⚠️ صادقانه: این لیست هنوز کامل نیست و نمی‌تواند باشد (هر فایلی در `src/common/**` می‌تواند
+  # به‌طورِ غیرمستقیم اثر بگذارد). گاردِ واقعیِ مکمل، اجرای همین job روی خودِ `main` بعد از merge
+  # است تا رگرسیون به کامیتِ خودش نسبت داده شود — به‌عنوانِ بدهیِ باز ثبت شد
+  # (ghane: docs/journal/open-debt.md #۴۱)، این‌جا عمداً اضافه نشد چون هزینه‌ی runner دارد و
+  # تصمیمِ ownerِ زیرساخت است.
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+      changes:
+        # — خودِ کدِ سرچ —
+        - src/modules/search/**/*
+        - .plasmic/plasmic/paziresh_24_search/**/*
+        # — صفحه‌ای که تست‌ها واقعاً بازش می‌کنند (جا افتاده بود) —
+        - src/pages/s/**/*
+        # — bootstrapِ سراسری: providerها، SDKها، contextهایی که کلِ درختِ Plasmic از آن‌ها تغذیه
+        #   می‌شود. مصداقِ عینی: MR !155 فقط `growthbookGlobalContext.tsx` را عوض کرد و چون در این
+        #   لیست نبود، بدونِ این گیت merge شد —
+        - src/pages/_app.tsx
+        - src/pages/_document.tsx
+        - src/common/fragment/**/*
+        - src/styles/plasmicRadixBaseCss.ts
+        # — ورودی‌های buildی که ایمیج مشترک از آن‌ها ساخته می‌شود —
+        # Dockerfile / .gitlab-ci.yml عمداً نیستند: تغییرات infra (base image، heap، login)
+        # همان خروجی listing را می‌دهند ولی e2e+docker را روی MRهای CI می‌اندازند.
+        - next.config.js
+        - package.json
+        # — خودِ هارنس —
+        - e2e/**/*
+        - playwright.config.ts

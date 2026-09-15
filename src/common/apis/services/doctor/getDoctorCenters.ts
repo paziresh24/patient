@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { drProfileClient } from '../../client';
 
 export interface DoctorCentersResponse {
@@ -10,6 +9,10 @@ export interface DoctorCentersResponse {
   type_id: number;
   status: number;
   server_id: number;
+  /** Clinic booking id — required by getFreeTurn / book */
+  user_center_id?: string;
+  active_booking?: boolean;
+  description?: string;
   has_bookable_services: boolean;
   city: {
     id: number;
@@ -27,12 +30,25 @@ export interface DoctorCentersResponse {
   };
 }
 
-export const getDoctorCenters = async (slug: string, university?: string): Promise<DoctorCentersResponse[]> => {
-  console.log('🔍 University:', university);
+export type GetDoctorCentersOptions = {
+  /**
+   * When true (default), keep only centers with has_bookable_services.
+   * Profile SSR passes false so address/phone still show for offices that have
+   * schedules in panel but can_booking/has_bookable_services=false.
+   */
+  onlyBookable?: boolean;
+};
+
+export const getDoctorCenters = async (
+  slug: string,
+  university?: string,
+  options?: GetDoctorCentersOptions,
+): Promise<DoctorCentersResponse[]> => {
+  const onlyBookable = options?.onlyBookable !== false;
   const encodedSlug = encodeURIComponent(slug);
   const url = `/api/doctors/${encodedSlug}/centers`;
   const params: Record<string, string> = {
-    check_bookable_services: 'true'
+    check_bookable_services: 'true',
   };
   if (university) {
     params.university = university;
@@ -43,16 +59,13 @@ export const getDoctorCenters = async (slug: string, university?: string): Promi
       params,
     });
 
-    // Filter centers that have bookable services
-    const filteredData = data.filter(center => center.has_bookable_services === true);
+    if (!onlyBookable) {
+      return Array.isArray(data) ? data : [];
+    }
 
-
-    return filteredData;
+    return (Array.isArray(data) ? data : []).filter(center => center.has_bookable_services === true);
   } catch (error) {
     console.error('Error fetching doctor centers:', error);
-
-
-    // Return fallback data in case of error
     return [];
   }
 };

@@ -5,7 +5,9 @@ import Modal from '@/common/components/atom/modal';
 import Text from '@/common/components/atom/text/text';
 import useCustomize from '@/common/hooks/useCustomize';
 import useModal from '@/common/hooks/useModal';
+import buildSubstituteDoctorSearch from '@/common/utils/buildSubstituteDoctorSearch';
 import { splunkInstance } from '@/common/services/splunk';
+import { doctorSlugFromSearchHit, useRaviCardRate } from '@/modules/profile/hooks/useDoctorRateDetails';
 import SearchCard from '@/modules/search/components/card/card';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import random from 'lodash/random';
@@ -14,7 +16,7 @@ import { useEffect, useMemo } from 'react';
 interface SubstituteDoctorButtonProps {
   displayName: string;
   expertises: any;
-  doctorCity: string;
+  doctorCity?: string;
   buttonId?: string;
   buttonText?: string;
   autoOpenDelay?: number;
@@ -30,20 +32,9 @@ const SubstituteDoctorButton = ({
 }: SubstituteDoctorButtonProps) => {
   const { handleOpen, modalProps } = useModal();
   const customize = useCustomize(state => state.customize);
-  const searchData = useSearch(
-    {
-      route: decodeURIComponent(doctorCity),
-      query: {
-        turn_type: 'consult',
-        text: expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-          ? expertises?.expertises.filter((item: any) => item.alias_title)?.[0]?.alias_title
-          : expertises?.expertises.filter((item: any) => item.expertise_id !== 325)?.map((expertise: any) => expertise.expertise_name)[0],
-      },
-    },
-    {
-      enabled: !customize.partnerKey,
-    },
-  );
+  const searchData = useSearch(buildSubstituteDoctorSearch(expertises?.expertises, doctorCity), {
+    enabled: !customize.partnerKey,
+  });
   const { changeRoute } = useSearchRouting();
 
   const handleOpenSubstituteDoctorModal = () => {
@@ -92,6 +83,7 @@ const SubstituteDoctorButton = ({
   };
 
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
+  const raviRate = useRaviCardRate(doctorSlugFromSearchHit(substituteDoctor));
 
   useEffect(() => {
     if (substituteDoctor?.url && autoOpenDelay > 0) {
@@ -134,10 +126,7 @@ const SubstituteDoctorButton = ({
                   expertise: substituteDoctor.display_expertise,
                   isVerify: true,
                   avatar: substituteDoctor.image,
-                  rate: {
-                    count: substituteDoctor.rates_count,
-                    satisfaction: substituteDoctor.satisfaction,
-                  },
+                  rate: raviRate,
                   isOnline: true,
                 }}
                 type="doctor"

@@ -1,9 +1,9 @@
 import Divider from '@/common/components/atom/divider';
+import Loading from '@/common/components/atom/loading';
 import Skeleton from '@/common/components/atom/skeleton';
 import Transition from '@/common/components/atom/transition';
 import BookmarksIcon from '@/common/components/icons/bookmarks';
 import CalenderIcon from '@/common/components/icons/calender';
-import CommentIcon from '@/common/components/icons/comment';
 import EyeIcon from '@/common/components/icons/eye';
 import LogoutIcon from '@/common/components/icons/logout';
 import ShopIcon from '@/common/components/icons/shop';
@@ -11,6 +11,9 @@ import UserEditIcon from '@/common/components/icons/userEdit';
 import UsersIcon from '@/common/components/icons/users';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
+import { useOpenDoctorPublicProfile } from '@/common/utils/doctorPublicProfile';
+import { useIsDoctor } from '@/common/hooks/useIsDoctor';
+import { doctorJobTitleAttr } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,6 +23,7 @@ import { ReactNode, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useApps } from '../apis/apps';
 import { MenuItem } from '../components/menuItem';
+import { isRaviPatientMyReviewsMenu, raviAppParentLink } from '../constants/raviPatientMyReviewsRoute';
 import axios from 'axios';
 import HeadphoneIcon from '@/common/components/icons/headphone';
 
@@ -33,6 +37,7 @@ export type App = {
 
 export const SideBar = ({ children, className, fullWidth }: { children: ReactNode; className?: string; fullWidth?: boolean }) => {
   const user = useUserInfoStore(state => state.info);
+  const isDoctor = useIsDoctor();
   const logout = useUserInfoStore(state => state.logout);
   const appsData = useApps();
   const isUserPending = useUserInfoStore(state => state.pending);
@@ -41,6 +46,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   const showSupportMenuButton = useFeatureIsOn('show-support-menu-button');
   const queryClient = useQueryClient();
   const [unreads, setUnreads] = useState({});
+  const { openPublicProfile, isOpening: isOpeningPublicProfile } = useOpenDoctorPublicProfile();
 
   useEffect(() => {
     if (!user?.id && !isUserPending) {
@@ -53,7 +59,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
         event: {
           data: {
             user_id: user.id,
-            job_title: user.provider?.job_title ?? 'normal',
+            job_title: doctorJobTitleAttr(user),
           },
         },
       });
@@ -97,14 +103,14 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
   };
 
   const openProfileView = () => {
-    window.open(`/dr/${user.provider?.slug}?@timestamp=${new Date().getTime()}`);
+    void openPublicProfile();
   };
 
   const currentData: any = useMemo(
     () =>
       queryClient.getQueryData([
         'app',
-        { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' },
+        { user_id: user.id ?? '', phone_number: user.cell, is_doctor: isDoctor },
       ]),
     [appsData?.data],
   );
@@ -118,7 +124,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
           data: [...(currentData?.data ?? []), { ...event.data.manifest, installation_id: event.data?.installation_id, pin: true }],
         };
         queryClient.setQueryData(
-          ['app', { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' }],
+          ['app', { user_id: user.id ?? '', phone_number: user.cell, is_doctor: isDoctor }],
           updatedData,
         );
         // toast.success('hi');
@@ -162,7 +168,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
           data: (currentData?.data ?? [])?.filter((_item: any) => _item.installation_id !== event.data.installation_id),
         };
         queryClient.setQueryData(
-          ['app', { user_id: user.id ?? '', phone_number: user.cell, is_doctor: user.provider?.job_title === 'doctor' }],
+          ['app', { user_id: user.id ?? '', phone_number: user.cell, is_doctor: isDoctor }],
           updatedData,
         );
       }
@@ -174,7 +180,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       icon: <UserEditIcon />,
       label: 'ویرایش پروفایل',
       url: '/dashboard/profile',
-      ...(user.provider?.job_title === 'doctor' && {
+      ...(isDoctor && {
         button: (
           <div
             onClick={e => {
@@ -184,7 +190,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
             }}
             className="p-1 transition-colors rounded-md hover:bg-slate-200/50"
           >
-            <EyeIcon width={18} height={18} />
+            {isOpeningPublicProfile ? <Loading width={18} height={18} /> : <EyeIcon width={18} height={18} />}
           </div>
         ),
       }),
@@ -217,7 +223,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       label: 'پشتیبانی',
       url: 'https://support.paziresh24.com',
       shouldShowDoctor: true,
-      shouldShow: user.provider?.job_title === 'doctor' && showSupportMenuButton,
+      shouldShow: isDoctor && showSupportMenuButton,
     },
   ].filter(item => item.shouldShow);
 
@@ -228,7 +234,7 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
       event: {
         data: {
           user_id: user.id,
-          job_title: user.provider?.job_title ?? 'normal',
+          job_title: doctorJobTitleAttr(user),
           menu_name,
           app_key,
           app_manifest,
@@ -253,7 +259,25 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                 {appsData.isSuccess &&
                   apps
                     .filter((app: any) => !app.pin && app?.fragments?.some((item: any) => item.type === 'menu' && item.options?.length > 0))
-                    .map((app: any) => (
+                    .map((app: any) => {
+                      const menuOptions =
+                        app.fragments.find((item: any) => item.type === 'menu')?.options ?? [];
+                      const homeKey = menuOptions.find(
+                        (item: any, index: number) => item.rel === 'home' || index === 0,
+                      )?.key;
+                      const subMenu = menuOptions
+                        .filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
+                        .map((item: any) => ({
+                          name: item.name?.fa,
+                          // «نظرات من» → ravi-front; «نظرات پروفایل من» → same-origin docside handoff
+                          link: isRaviPatientMyReviewsMenu(app.key, item.key)
+                            ? '/dashboard/my-reviews/'
+                            : `/dashboard/apps/${app.key}/${item.key}/`,
+                        }));
+                      // Ravi home is my_feedbacks (hard-redirect). Parent must only expand so both children stay selectable.
+                      const parentLink = raviAppParentLink(app.key, homeKey, subMenu.length > 0);
+
+                      return (
                       <MenuItem
                         key={app.key}
                         name={app.display_name.fa}
@@ -261,23 +285,11 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                         pattern={app.key}
                         unread={
                           (unreads as any)[
-                            app.fragments
-                              .find((item: any) => item.type === 'menu')
-                              ?.options?.find((item: any, index: number) => index === 0)?.id as any
+                            menuOptions.find((item: any, index: number) => index === 0)?.id as any
                           ]
                         }
-                        link={`/dashboard/apps/${app.key}/${
-                          app.fragments
-                            .find((item: any) => item.type === 'menu')
-                            ?.options?.find((item: any, index: number) => item.rel === 'home' || index === 0)?.key
-                        }/`}
-                        subMenu={app.fragments
-                          .find((item: any) => item.type === 'menu')
-                          ?.options?.filter((item: any, _: number, items: any[]) => (items.length === 1 ? false : true))
-                          .map((item: any) => ({
-                            name: item.name?.fa,
-                            link: `/dashboard/apps/${app.key}/${item.key}/`,
-                          }))}
+                        link={parentLink}
+                        subMenu={subMenu}
                         onEvent={label =>
                           appClickEvent({
                             app_key: app.key,
@@ -286,18 +298,19 @@ export const SideBar = ({ children, className, fullWidth }: { children: ReactNod
                           })
                         }
                       />
-                    ))}
+                      );
+                    })}
 
                 {((appsData.isSuccess &&
                   (apps[0]?.fragments?.some((item: any) => item.type === 'menu' && item.options?.length > 0) || shouldShowBazaarMenu)) ||
-                  (user.provider?.job_title === 'doctor' || shouldShowBazaarMenu ? appsData.isLoading : false)) && <Divider />}
+                  (isDoctor || shouldShowBazaarMenu ? appsData.isLoading : false)) && <Divider />}
                 {defaultMenuData.map(menu => (
                   <MenuItem
                     key={menu.url}
                     name={menu.label}
                     icon={menu.icon}
                     button={menu?.button}
-                    link={`${menu.url}/`}
+                    link={menu.url.startsWith('http') ? menu.url : `${menu.url}/`}
                     onEvent={label =>
                       appClickEvent({
                         app_key: 'default_app',

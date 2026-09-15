@@ -1,6 +1,6 @@
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { useGetUserActiveTurnsCount } from '@/common/apis/services/booking/getUserActiveTurnsCount';
-import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
+import { getCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
 import Avatar from '@/common/components/atom/avatar';
 import Button from '@/common/components/atom/button';
 import Chips from '@/common/components/atom/chips';
@@ -20,7 +20,11 @@ import HeadphoneIcon from '@/common/components/icons/headphone';
 import LogoutIcon from '@/common/components/icons/logout';
 import UserCircle from '@/common/components/icons/userCircle';
 import UsersIcon from '@/common/components/icons/users';
+import Loading from '@/common/components/atom/loading';
 import useCustomize from '@/common/hooks/useCustomize';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
+import { useOpenDoctorPublicProfile } from '@/common/utils/doctorPublicProfile';
 import CreditDuration from '@/modules/bamdad/components/creditDuration';
 import { useShowPremiumFeatures } from '@/modules/bamdad/hooks/useShowPremiumFeatures';
 import { checkPremiumUser } from '@/modules/bamdad/utils/checkPremiumUser';
@@ -30,11 +34,19 @@ import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import useTranslation from 'next-translate/useTranslation';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import Script from 'next/script';
-import { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
 const Transition = dynamic(() => import('@/common/components/atom/transition'));
 import useResponsive from '@/common/hooks/useResponsive';
+
+type ProfileMenuItem = {
+  name: string;
+  icon: ReactNode;
+  link?: string;
+  badge?: ReactNode;
+  onClick?: () => void;
+  shouldShow: boolean;
+};
 
 export const UserProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
@@ -44,89 +56,104 @@ export const UserProfile = () => {
   const userInfo = useUserInfoStore(state => state.info);
   const pending = useUserInfoStore(state => state.pending);
   const logout = useUserInfoStore(state => state.logout);
+  const { openPublicProfile, isOpening: isOpeningPublicProfile } = useOpenDoctorPublicProfile();
   const getUserActiveTurnsCount = useGetUserActiveTurnsCount();
   const setTurnsCount = useUserInfoStore(state => state.setTurnsCount);
   const turnsCount = useUserInfoStore(state => state.turnsCount);
   const [open, setOpen] = useState(false);
   const { customize } = useCustomize();
   const isShowPremiumFeatures = useShowPremiumFeatures();
-  const dashboardDoctorList = useFeatureValue('dashboard:doctor-list', { ids: [''] });
-  const isEnabledDashboard = useFeatureIsOn('dashboard:enable');
   const redirectToGozargah = useFeatureValue<{
     destination?: string;
   }>('redirect-to-gozargah', {});
   const loginPopup = useFeatureIsOn('gozargah::popup-login');
   const showSupportMenuButton = useFeatureIsOn('show-support-menu-button');
   const { isMobile } = useResponsive();
+  const deviceCached = useDoctorDeviceCached();
+  const isDoctor = hasDoctorIdentity(userInfo, deviceCached);
 
-  const isShowDashboard =
-    !customize.partnerKey &&
-    (isEnabledDashboard || dashboardDoctorList.ids.includes(userInfo?.id?.toString() ?? '') || dashboardDoctorList.ids.includes('*'));
+  const isShowDashboard = !customize.partnerKey;
 
   const ref = useRef(null);
   useClickAway(ref, () => {
     setOpen(false);
   });
 
-  const menuItems = isShowDashboard
-    ? [
-        {
-          name: 'داشبورد',
-          icon: <ElementIcon width={22} height={22} />,
-          link: isMobile ? '/_/' : '/dashboard/',
-          shouldShow: true,
-        },
-        {
-          name: t('patient/common:menu.myTurns'),
-          icon: <CalenderIcon />,
-          link: '/dashboard/appointments',
-          badge: !!turnsCount.presence && (
-            <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
-          ),
-          shouldShow: userInfo.provider?.job_title !== 'doctor',
-        },
-        {
-          name: 'مراجعین من',
-          icon: <CalenderIcon width={22} height={22} />,
-          link: '/dashboard/apps/drapp/appointments',
-          shouldShow: userInfo.provider?.job_title === 'doctor',
-        },
-        {
-          name: 'مشاهده پروفایل عمومی',
-          icon: <EyeIcon width={22} height={22} />,
-          link: `/dr/${userInfo.provider?.slug}?@timestamp=${new Date().getTime()}`,
-          shouldShow: userInfo.provider?.job_title === 'doctor',
-        },
-        {
-          name: 'پشتیبانی',
-          icon: <HeadphoneIcon width={22} height={22} />,
-          link: 'https://support.paziresh24.com',
-          shouldShow: showSupportMenuButton,
-        },
-      ].filter(item => item.shouldShow)
-    : [
-        {
-          name: t('patient/common:menu.myTurns'),
-          icon: <CalenderIcon width={22} height={22} />,
-          link: '/patient/appointments',
-          badge: !!turnsCount.presence && (
-            <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
-          ),
-          shouldShow: true,
-        },
-        {
-          name: t('patient/common:menu.bookmarks'),
-          icon: <BookmarksIcon width={22} height={22} />,
-          link: '/patient/bookmarks',
-          shouldShow: customize.bookMark,
-        },
-        {
-          name: t('patient/common:menu.subuser'),
-          icon: <UsersIcon width={22} height={22} />,
-          link: '/patient/subuser',
-          shouldShow: true,
-        },
-      ].filter(item => item.shouldShow);
+  const dashboardMenuItems: ProfileMenuItem[] = [
+    {
+      name: 'داشبورد',
+      icon: <ElementIcon width={22} height={22} />,
+      link: isMobile ? '/_/' : '/dashboard/',
+      shouldShow: true,
+    },
+    {
+      name: t('patient/common:menu.myTurns'),
+      icon: <CalenderIcon />,
+      link: '/dashboard/appointments',
+      badge: !!turnsCount.presence && (
+        <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
+      ),
+      shouldShow: !isDoctor,
+    },
+    {
+      name: 'نظرات من',
+      icon: <CommentIcon width={22} height={22} />,
+      link: '/dashboard/my-reviews',
+      shouldShow: !isDoctor,
+    },
+    {
+      name: 'مراجعین من',
+      icon: <CalenderIcon width={22} height={22} />,
+      link: '/dashboard/apps/drapp/appointments',
+      shouldShow: isDoctor,
+    },
+    {
+      name: 'مشاهده پروفایل عمومی',
+      icon: isOpeningPublicProfile ? <Loading width={22} height={22} /> : <EyeIcon width={22} height={22} />,
+      onClick: () => {
+        void openPublicProfile();
+      },
+      shouldShow: isDoctor,
+    },
+    {
+      name: 'پشتیبانی',
+      icon: <HeadphoneIcon width={22} height={22} />,
+      link: 'https://support.paziresh24.com',
+      shouldShow: showSupportMenuButton,
+    },
+  ];
+
+  const patientMenuItems: ProfileMenuItem[] = [
+    {
+      name: t('patient/common:menu.myTurns'),
+      icon: <CalenderIcon width={22} height={22} />,
+      link: '/patient/appointments',
+      badge: !!turnsCount.presence && (
+        <Chips className="w-6 h-6 flex justify-center items-center !bg-red-500 !text-white">{turnsCount.presence}</Chips>
+      ),
+      shouldShow: true,
+    },
+    {
+      name: 'نظرات من',
+      icon: <CommentIcon width={22} height={22} />,
+      link: '/patient/reviews',
+      shouldShow: true,
+    },
+    {
+      name: t('patient/common:menu.bookmarks'),
+      icon: <BookmarksIcon width={22} height={22} />,
+      link: '/patient/bookmarks',
+      shouldShow: !!customize.bookMark,
+    },
+    {
+      name: t('patient/common:menu.subuser'),
+      icon: <UsersIcon width={22} height={22} />,
+      link: '/patient/subuser',
+      shouldShow: true,
+    },
+  ];
+
+  const menuItems = (isShowDashboard || isDoctor ? dashboardMenuItems : patientMenuItems).filter(item => item.shouldShow);
 
   useEffect(() => {
     open && handleGetTurnsCount();
@@ -143,18 +170,20 @@ export const UserProfile = () => {
   };
 
   const getMe = useGetMe();
-  const getDoctorProfile = useGetDoctorProfile();
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const setPending = useUserInfoStore(state => state.setPending);
 
   const handlePostLogin = async () => {
     setPending(true);
     const userData = await getMe.mutateAsync();
-    const doctorProfileData = await getDoctorProfile.mutateAsync();
+    const centersData = userData?.id ? await getCentersByUserId(userData.id.toString()) : null;
 
     setUserInfo({
-      provider: doctorProfileData,
       ...userData,
+      provider: {
+        ...userData?.provider,
+        ...(Array.isArray(centersData) ? { centers: centersData } : {}),
+      },
     });
 
     setPending(false);
@@ -235,7 +264,7 @@ export const UserProfile = () => {
                 )}
                 <MenuList className="space-y-1">
                   {menuItems.map(item => (
-                    <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon}>
+                    <MenuItem key={item.name} name={item.name} link={item.link} icon={item.icon} onClick={item.onClick}>
                       {item.badge}
                     </MenuItem>
                   ))}

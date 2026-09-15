@@ -1,0 +1,15 @@
+.root {
+  width: 100% !important;
+  max-width: 100% !important;
+  align-self: stretch !important;
+  display: block !important;
+  box-sizing: border-box;
+}
+
+.scheduleTrigger {
+  width: 100% !important;
+  max-width: 100% !important;
+  align-self: stretch !important;
+  display: flex !important;
+  box-sizing: border-box;
+}

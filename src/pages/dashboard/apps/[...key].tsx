@@ -8,12 +8,17 @@ import useResponsive from '@/common/hooks/useResponsive';
 import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { useApps } from '@/modules/dashboard/apis/apps';
+import { buildDashboardEmbedSrc, getKnownDrappEmbedSrc } from '@/modules/dashboard/constants/knownEmbedSrc';
+import { isRaviDoctorProfileReviewsMenu, isRaviPatientMyReviewsMenu } from '@/modules/dashboard/constants/raviPatientMyReviewsRoute';
 import { App, SideBar } from '@/modules/dashboard/layouts/sidebar';
 import { Report } from '@/modules/hamdast/components/report';
+import { doctorJobTitleAttr } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
+import { buildRaviDocsideHandoffSrc } from '@/modules/patient/utils/buildRaviDocsideHandoff';
+import { buildRaviMyReviewsHandoffSrc } from '@/modules/patient/utils/buildRaviMyReviewsHandoff';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
-import { ReactElement, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export const Dashboard = (props: any) => {
   const user = useUserInfoStore(state => state.info);
@@ -29,6 +34,19 @@ export const Dashboard = (props: any) => {
 
   const appKey = (keys as string[])[0];
   const menuKey = (keys as string[])[1];
+  const isPatientMyReviews = isRaviPatientMyReviewsMenu(appKey, menuKey);
+  const isDoctorProfileReviews = isRaviDoctorProfileReviewsMenu(appKey, menuKey);
+  const isRaviSessionHandoff = isPatientMyReviews || isDoctorProfileReviews;
+
+  const knownEmbedSrc = useMemo(() => {
+    if (isPatientMyReviews) {
+      return buildRaviMyReviewsHandoffSrc();
+    }
+    if (isDoctorProfileReviews) {
+      return buildRaviDocsideHandoffSrc();
+    }
+    return getKnownDrappEmbedSrc(appKey, menuKey);
+  }, [appKey, menuKey, isPatientMyReviews, isDoctorProfileReviews]);
 
   const app = useMemo(() => appsData.data?.data?.find((app: App) => app.key === `${appKey}`), [isReady, appKey, appsData]);
 
@@ -36,7 +54,17 @@ export const Dashboard = (props: any) => {
     () => app?.fragments.find((item: any) => item.type === 'menu')?.options.find((item: any) => item.key === menuKey),
     [app, isReady, menuKey, appKey],
   );
-  const appName = selctedMenu?.name?.fa ?? app?.display_name?.fa ?? 'داشبورد';
+  const appName = isPatientMyReviews
+    ? 'نظرات من'
+    : isDoctorProfileReviews
+      ? 'نظرات پروفایل من'
+      : selctedMenu?.name?.fa ?? app?.display_name?.fa ?? 'داشبورد';
+  const embedSrc = knownEmbedSrc ?? selctedMenu?.embed_src;
+  const waitingForHamdastMenu = !knownEmbedSrc && !appsData.isSuccess;
+
+  useEffect(() => {
+    setIsAppLoading(true);
+  }, [appKey, menuKey]);
 
   useEffect(() => {
     sessionStartTime.current = Date.now();
@@ -48,7 +76,7 @@ export const Dashboard = (props: any) => {
         event: {
           data: {
             user_id: user.id,
-            job_title: user.provider?.job_title ?? 'normal',
+            job_title: doctorJobTitleAttr(user),
             menu_key: menuKey,
             app_key: appKey,
             menu_id: selctedMenu?.id,
@@ -68,7 +96,7 @@ export const Dashboard = (props: any) => {
           event: {
             data: {
               user_id: user.id,
-              job_title: user.provider?.job_title ?? 'normal',
+              job_title: doctorJobTitleAttr(user),
               menu_key: menuKey,
               app_key: appKey,
               menu_id: selctedMenu?.id,
@@ -85,7 +113,14 @@ export const Dashboard = (props: any) => {
     setTimeout(() => {
       setIsAppLoading(false);
     }, 6000);
-  }, []);
+  }, [appKey, menuKey]);
+
+  const iframeSrc =
+    user?.id && embedSrc
+      ? isRaviSessionHandoff
+        ? embedSrc
+        : buildDashboardEmbedSrc(embedSrc, user.id, window?.location?.search)
+      : undefined;
 
   return (
     <LayoutWithHeaderAndFooter
@@ -98,7 +133,7 @@ export const Dashboard = (props: any) => {
       <AppBar
         title={appName}
         className="md:hidden"
-        titleLoading={!appsData.isSuccess}
+        titleLoading={!knownEmbedSrc && !appsData.isSuccess}
         backButton={true}
         actionButton={<Report app_key={appKey as string} page_key={menuKey} />}
       />
@@ -106,21 +141,22 @@ export const Dashboard = (props: any) => {
         <div className="flex flex-grow flex-col w-full">
           <Seo title={appName} noIndex />
           <div
-            key={selctedMenu?.key}
+            key={menuKey ?? selctedMenu?.key}
             className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto h-full flex-col flex-grow w-full relative"
           >
-            {(!appsData.isSuccess || isAppLoading) && (
+            {(waitingForHamdastMenu || isAppLoading) && (
               <div className="w-full bg-white justify-center flex items-center h-full flex-grow">
                 <Loading />
               </div>
             )}
-            {appsData.isSuccess && user?.id && selctedMenu?.embed_src && (
+            {iframeSrc && (
               <iframe
                 ref={iframeRef}
-                key={selctedMenu?.key}
+                key={menuKey ?? selctedMenu?.key}
                 onLoad={() => setIsAppLoading(false)}
                 className={classNames('w-full h-full flex-grow', { hidden: isAppLoading })}
-                src={`${selctedMenu?.embed_src}${window?.location?.search ? window?.location?.search + '&user_id=' + user.id : '?user_id=' + user.id}`}
+                src={iframeSrc}
+                referrerPolicy={isRaviSessionHandoff ? 'no-referrer' : undefined}
                 allow="microphone; camera; fullscreen; clipboard-write;"
                 sandbox="allow-forms allow-modals allow-downloads allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation allow-top-navigation-to-custom-protocols allow-storage-access-by-user-activation"
               />

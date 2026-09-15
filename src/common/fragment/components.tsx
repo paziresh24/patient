@@ -11,7 +11,9 @@ const PlasmicServices = dynamic(() => import('.plasmic/plasmic/paziresh_24/Plasm
 const PlasmicActivity = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicActivity'));
 const PlasmicAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicAbout'));
 const PlasmicLocationSelectionScript = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicLocationSelectionScript'));
-const PlasmicProductCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicProductCard'));
+// اسکلتِ خودمان روی همان کارتِ Plasmic — «حضورِ پزشک» را اضافه می‌کند و بقیه‌ی propها را عیناً پاس می‌دهد.
+// این مسیرِ رندرِ دومِ کارت است (پروفایلِ مرکز)؛ مسیرِ لیستینگ از قبل از همین اسکلت می‌آید.
+const ProductCardWithPresence = dynamic(() => import('.plasmic/ProductCard'));
 const PlasmicSearchResults = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearchResults'));
 const PlasmicBookingSchedules = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingSchedules'));
 const PlasmicSearchRequest = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearchRequest'));
@@ -35,7 +37,8 @@ const PlasmicSort = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/Pl
 const PlasmicConsultBanner = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicConsultBanner'));
 const PlasmicResultView = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicResultView'));
 const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
-const PlasmicReceiptActionButtons = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicReceiptActionButtons'));
+// اسکلتِ خودمان — مخفی‌سازی «پیگیری تأخیر / پشتیبانی این نوبت» بدون دست‌کاری فایل auto-generated
+const PlasmicReceiptActionButtons = dynamic(() => import('.plasmic/ReceiptActionButtons'));
 const PlasmicRecentSearch = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicRecentSearch'));
 
 import { PlasmicReviewRateAndReviews__ArgProps } from '.plasmic/plasmic/ravi_r_r/PlasmicReviewRateAndReviews';
@@ -145,7 +148,7 @@ export const Components = {
     projectId: 'sMdpLWyxbzDCruwMRffW2m',
   },
   ProductCard: {
-    Component: PlasmicProductCard,
+    Component: ProductCardWithPresence,
     id: 'NhMGML-3Q4Pu',
     propsAllowed: PlasmicProductCard__ArgProps,
     projectId: 'sMdpLWyxbzDCruwMRffW2m',

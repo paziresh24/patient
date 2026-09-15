@@ -16,6 +16,12 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import useModal from '@/common/hooks/useModal';
 import Modal from '@/common/components/atom/modal';
 import PaymentMethods from '../../components/factor/paymentMethods';
+import {
+  FACTOR_EXTRA_WALLET_TOPUP_FEATURE,
+  isSnappPaymentMethod,
+} from '@/modules/booking/constants/extraWalletTopup';
+import { tomanToRial } from '@/modules/booking/utils/encodeExtraWalletTopupPaymentMethod';
+
 interface FactorProps {
   bookId: string;
   centerId: string;
@@ -37,6 +43,10 @@ interface FactorProps {
   onPayment: ({ discountToken, bookId, paymentMethod }: { discountToken?: string; bookId: string; paymentMethod?: string }) => void;
   selectedPaymentMethod?: string;
   onSelectionChange?: (paymentMethod: string) => void;
+  extraWalletTopupEnabled?: boolean;
+  extraWalletTopupToman?: number;
+  onExtraWalletTopupEnabledChange?: (enabled: boolean) => void;
+  onExtraWalletTopupTomanChange?: (toman: number) => void;
 }
 export const Factor = (props: FactorProps) => {
   const {
@@ -54,6 +64,10 @@ export const Factor = (props: FactorProps) => {
     loading,
     selectedPaymentMethod: propSelectedPaymentMethod,
     onSelectionChange,
+    extraWalletTopupEnabled = false,
+    extraWalletTopupToman = 0,
+    onExtraWalletTopupEnabledChange,
+    onExtraWalletTopupTomanChange,
   } = props;
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>(propSelectedPaymentMethod || '');
@@ -61,8 +75,10 @@ export const Factor = (props: FactorProps) => {
   const { handleOpen, modalProps } = useModal();
   const newVisitInvoice = useFeatureIsOn('new-visit-invoice');
   const refundTermsBadge = useFeatureIsOn('refund-terms-badge');
+  const showRefundGuarantee = useFeatureIsOn('online-visit-refund-guarantee-copy');
   const useKatibePaymentForEarnestFactor = useFeatureIsOn('use-katibe-payment-for-earnest-factor');
   const isKatibePaymentMethodsEnabled = useFeatureIsOn('katibe-paymentmethods');
+  const isExtraWalletTopupFeatureOn = useFeatureIsOn(FACTOR_EXTRA_WALLET_TOPUP_FEATURE);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const userInfo = useUserInfoStore(state => state.info);
 
@@ -108,6 +124,47 @@ export const Factor = (props: FactorProps) => {
     onSelectionChange?.(paymentMethod);
   };
 
+  const walletBalanceRial =
+    typeof balance?.data?.data?.balance === 'number' ? balance.data.data.balance : 0;
+  const totalPriceRial = totalPrice != null && totalPrice !== '' ? Number(totalPrice) : NaN;
+  const isWalletMethodSelected = String(selectedPaymentMethod || '')
+    .toLowerCase()
+    .startsWith('wallet');
+  const isPayingFullyFromWallet =
+    isWalletMethodSelected &&
+    Number.isFinite(totalPriceRial) &&
+    walletBalanceRial >= totalPriceRial;
+  const extraWalletTopupRial =
+    extraWalletTopupEnabled && !isPayingFullyFromWallet ? tomanToRial(extraWalletTopupToman) : 0;
+  const showExtraWalletTopup =
+    isExtraWalletTopupFeatureOn &&
+    isKatibePaymentMethodsEnabled &&
+    isLogin &&
+    !loading &&
+    Number.isFinite(totalPriceRial) &&
+    totalPriceRial > 0 &&
+    !isPayingFullyFromWallet;
+  const snappDisabledByExtraTopup = extraWalletTopupRial > 0;
+  const disabledPaymentMethods = snappDisabledByExtraTopup
+    ? paymentMethods.filter(m => isSnappPaymentMethod(m.payment_method)).map(m => m.payment_method)
+    : [];
+
+  useEffect(() => {
+    if (isPayingFullyFromWallet && extraWalletTopupEnabled) {
+      onExtraWalletTopupEnabledChange?.(false);
+    }
+  }, [isPayingFullyFromWallet, extraWalletTopupEnabled, onExtraWalletTopupEnabledChange]);
+
+  // Extra wallet top-up: keep Snapp visible but unselectable; if already selected, pick next available
+  useEffect(() => {
+    if (!snappDisabledByExtraTopup) return;
+    if (!isSnappPaymentMethod(selectedPaymentMethod)) return;
+    const next = paymentMethods.find(m => !isSnappPaymentMethod(m.payment_method));
+    if (!next?.payment_method) return;
+    setSelectedPaymentMethod(next.payment_method);
+    onSelectionChange?.(next.payment_method);
+  }, [snappDisabledByExtraTopup, selectedPaymentMethod, paymentMethods, onSelectionChange]);
+
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
 
@@ -133,11 +190,14 @@ export const Factor = (props: FactorProps) => {
 
   useEffect(() => {
     if (paymentMethods.length > 0 && !selectedPaymentMethod) {
-      const firstPaymentMethod = paymentMethods[0].payment_method;
+      const firstSelectable =
+        paymentMethods.find(m => !(snappDisabledByExtraTopup && isSnappPaymentMethod(m.payment_method))) ||
+        paymentMethods[0];
+      const firstPaymentMethod = firstSelectable.payment_method;
       setSelectedPaymentMethod(firstPaymentMethod);
       onSelectionChange?.(firstPaymentMethod);
     }
-  }, [paymentMethods, selectedPaymentMethod, onSelectionChange]);
+  }, [paymentMethods, selectedPaymentMethod, onSelectionChange, snappDisabledByExtraTopup]);
 
   useEffect(() => {
     if (!scrollToPaymentMethods) {
@@ -168,13 +228,19 @@ export const Factor = (props: FactorProps) => {
           priceText={centerId === CENTERS.CONSULT || !useKatibePaymentForEarnestFactor ? 'مبلغ ویزیت' : 'پیش پرداخت حق ویزیت (بیعانه)'}
           price={price}
           totalPrice={totalPrice}
+          extraWalletTopupRial={extraWalletTopupRial}
+          showExtraWalletTopup={showExtraWalletTopup}
+          extraWalletTopupEnabled={extraWalletTopupEnabled}
+          extraWalletTopupToman={extraWalletTopupToman}
+          onExtraWalletTopupEnabledChange={onExtraWalletTopupEnabledChange}
+          onExtraWalletTopupTomanChange={onExtraWalletTopupTomanChange}
           walletAmount={newVisitInvoice || useKatibePaymentForEarnestFactor || isKatibePaymentMethodsEnabled ? balance?.data?.data?.balance : null}
           tax={tax}
           discount={discount}
           payment_description_html={payment_description_html || ''}
           loading={loading || (newVisitInvoice || useKatibePaymentForEarnestFactor || isKatibePaymentMethodsEnabled ? balanceLoading : false)}
         />
-        {centerId === CENTERS.CONSULT && !refundTermsBadge && (
+        {centerId === CENTERS.CONSULT && showRefundGuarantee && !refundTermsBadge && (
           <Chips
             className="self-center !py-2 text-slate-800"
             icon={
@@ -191,7 +257,7 @@ export const Factor = (props: FactorProps) => {
             ضمانت %100 بازگشت وجه در صورت نارضایتی
           </Chips>
         )}
-        {centerId === CENTERS.CONSULT && refundTermsBadge && (
+        {centerId === CENTERS.CONSULT && showRefundGuarantee && refundTermsBadge && (
           <Chips
             className="self-center !py-2 text-slate-800"
             icon={
@@ -228,6 +294,7 @@ export const Factor = (props: FactorProps) => {
               isOpen={paymentMethods.length > 1}
               selectedPaymentMethod={selectedPaymentMethod}
               onSelectionChange={handlePaymentMethodSelection}
+              disabledPaymentMethods={disabledPaymentMethods}
             />
           )
         ))}

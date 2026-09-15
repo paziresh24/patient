@@ -1,12 +1,11 @@
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
+import { useOpenDoctorPublicProfile } from '@/common/utils/doctorPublicProfile';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { ds } from '../designSystem/tokens';
 import { sendDoctorHomeEvent } from '../utils/analytics';
 import { StatCard } from './statCard';
 
 interface StatsRowProps {
-  performanceScore: number | null;
-  isPerformanceLoading: boolean;
   satisfactionRating: number | null;
   satisfactionReviewCount: number | null;
   isSatisfactionLoading: boolean;
@@ -18,8 +17,6 @@ interface StatsRowProps {
 }
 
 export const StatsRow = ({
-  performanceScore,
-  isPerformanceLoading,
   satisfactionRating,
   satisfactionReviewCount,
   isSatisfactionLoading,
@@ -30,16 +27,17 @@ export const StatsRow = ({
   slug,
 }: StatsRowProps) => {
   const userId = useUserInfoStore(state => state.info?.id);
+  const { openPublicProfile } = useOpenDoctorPublicProfile();
+
+  const handlePageViewClick = () => {
+    sendDoctorHomeEvent(userId, 'stat_page_view', { count: pageViewCount });
+    if (!slug) {
+      void openPublicProfile();
+    }
+  };
 
   return (
     <div className={ds.layout.statsRowStrip}>
-      <StatCard
-        label="امتیاز عملکرد"
-        value={performanceScore != null ? `${performanceScore} از ۱۰۰` : null}
-        isLoading={isPerformanceLoading}
-        href="/dashboard/apps/sanje/my-performance/"
-        onClick={() => sendDoctorHomeEvent(userId, 'stat_performance', { score: performanceScore })}
-      />
       <StatCard
         label="رضایت مراجعین"
         value={satisfactionRating != null ? `${satisfactionRating} از ۵` : null}
@@ -69,7 +67,7 @@ export const StatsRow = ({
         value={pageViewCount != null ? convertLongToCompactNumber(pageViewCount) : null}
         isLoading={isPageViewLoading}
         href={slug ? `/dr/${slug}` : undefined}
-        onClick={() => sendDoctorHomeEvent(userId, 'stat_page_view', { count: pageViewCount })}
+        onClick={handlePageViewClick}
       />
     </div>
   );

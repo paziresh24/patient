@@ -5,9 +5,12 @@ import classNames from '@/common/utils/classNames';
 import { useOneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
 import { HamdastPayment } from '@/modules/hamdast/components/paymentModal';
+import { HamdastDoctorServicePayment } from '@/modules/hamdast/components/doctorServicePayment';
 import { Report } from '@/modules/hamdast/components/report';
 import { HamdastWidget } from '@/modules/hamdast/components/widget';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
+import { HamdastRasanActivate } from '@/modules/hamdast/components/smsActivate';
+import { HamdastRasanCharge } from '@/modules/hamdast/components/smsCharge';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
@@ -24,6 +27,8 @@ import { HamdastClose } from './components/close';
 import { HamdastFlow } from './components/flow';
 import Link from 'next/link';
 import { HamdastInvite } from './components/invite';
+import { getPageFromOneAppData } from '@/modules/hamdast/utils/getPageFromOneAppData';
+import { getProfileDoctorUserId } from './stores/profileDoctorInfo';
 
 export const AppFrame = ({
   appKey,
@@ -38,6 +43,7 @@ export const AppFrame = ({
   onReportSubmit,
   onHamdastClose,
   closeVardastOnHamdastClose,
+  onRunFullscreenChange,
 }: {
   appKey: string;
   params: string[];
@@ -51,6 +57,11 @@ export const AppFrame = ({
   onReportSubmit?: () => void;
   onHamdastClose?: () => void;
   closeVardastOnHamdastClose?: boolean;
+  /**
+   * وقتی اپ واقعا در حال اجراست (نه پروفایل لانچر) و صفحه‌اش layout.fullscreen دارد
+   * true می‌شود — والد (مودال/دراور) با آن حالت تقریبا تمام‌صفحهٔ دسکتاپ را فعال می‌کند.
+   */
+  onRunFullscreenChange?: (fullscreen: boolean) => void;
 }) => {
   const router = useRouter();
   const getOneApp = useOneApp({ appKey: appKey, pageKey: params?.[0] as string });
@@ -58,13 +69,7 @@ export const AppFrame = ({
   const page = useMemo(() => {
     if (!app?.fragments) return {};
 
-    return (
-      app.fragments
-        ?.find((item: any) => item.type === 'pages')
-        ?.options?.find(
-          (item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1,
-        ) ?? {}
-    );
+    return getPageFromOneAppData(app, params?.[0] as string, (params?.slice(1) as string[]) ?? []) ?? {};
   }, [app, params]);
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -81,8 +86,18 @@ export const AppFrame = ({
   const isEmbeddedModal = Boolean(dontShowAppBar && dontShowProfile && dontShowNotification);
 
   const embedSrc = useMemo(() => {
-    const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
-    return page?.embed_src ? constructUrlWithQuery(replaceParameters, { ...queries, user_id: user.id, hamdast_embedded: true }) : null;
+    const replaceParameters = page?.embed_src ? replaceKeysInString(page.embed_src, page.parameters ?? [], params?.slice(1) ?? []) : '';
+    const doctorUserId = getProfileDoctorUserId();
+    return page?.embed_src
+      ? constructUrlWithQuery(replaceParameters, {
+          ...queries,
+          user_id: user.id,
+          ...(doctorUserId
+            ? { doctor_user_id: doctorUserId, provider_user_id: doctorUserId }
+            : {}),
+          hamdast_embedded: true,
+        })
+      : null;
   }, [page, params, queries, user.id]);
 
   const isMetadataLoading = !embedSrc && (getOneApp.isLoading || getOneApp.isFetching);
@@ -141,12 +156,21 @@ export const AppFrame = ({
     }
   }, [params?.[0]]);
 
+  /* پروفایل لانچر فول‌اسکرین نمی‌شود؛ فقط بعد از اجرا و اگر توسعه‌دهنده فعالش کرده باشد */
+  const runFullscreen = Boolean(showApp && !showTranslation && page?.layout?.fullscreen);
+  useEffect(() => {
+    onRunFullscreenChange?.(runFullscreen);
+  }, [runFullscreen, onRunFullscreenChange]);
+
   return (
-    <div className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden">
+    <div
+      className="flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden"
+      data-hamdast-run-fullscreen={runFullscreen ? 'true' : undefined}
+    >
       {!dontShowAppBar && (
 
         <AppBar
-          title={page?.name?.fa}
+          title={page?.name?.fa ?? ''}
           backButton={showBackButton}
           titleLoading={!page?.name}
           notification={!dontShowNotification}
@@ -161,7 +185,7 @@ export const AppFrame = ({
                 پشتیبانی ابزارک
               </Button>
             ) : (
-              <Report app_key={appKey as string} page_key={page?.key} openSignal={reportOpenSignal} onSubmit={onReportSubmit} />
+              <Report app_key={appKey as string} page_key={page?.key ?? ''} openSignal={reportOpenSignal} onSubmit={onReportSubmit} />
             )
           }
         />
@@ -174,7 +198,10 @@ export const AppFrame = ({
       {app?.id && isEmbeddedModal && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastDoctorServicePayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastRasanActivate app_name={app.display_name?.fa} iframeRef={iframeRef} />
+          <HamdastRasanCharge iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastFlow iframeRef={iframeRef} />
         </>
@@ -182,7 +209,10 @@ export const AppFrame = ({
       {app?.id && !isEmbeddedModal && (
         <>
           <HamdastPayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastDoctorServicePayment app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
           <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={appKey} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+          <HamdastRasanActivate app_name={app.display_name?.fa} iframeRef={iframeRef} />
+          <HamdastRasanCharge iframeRef={iframeRef} />
           <HamdastAuth app_key={appKey} iframeRef={iframeRef} />
           <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} onChangeWidget={onChangeWidget} />
           <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={appKey} iframeRef={iframeRef} />
@@ -239,6 +269,7 @@ export const AppFrame = ({
                       setShowTranslation(true);
                     }
                   }}
+                  onSubscribeOnly={planKey => subscriptionPaymentRef.current?.open(planKey) ?? Promise.resolve({ success: false })}
                 />
               </GlobalContextsProvider>
             </div>

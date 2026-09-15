@@ -3,28 +3,49 @@ import Text from '@/common/components/atom/text/text';
 import AddIcon from '@/common/components/icons/add';
 import { CENTERS } from '@/common/types/centers';
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
+import { hasBioCredentials } from '@/common/apis/services/profile-microservice/normalizeBioCredentials';
 import pick from 'lodash/pick';
 import config from 'next/config';
 import dynamic from 'next/dynamic';
-import { FragmentRateReview } from './rateReview/fragmentRateReview';
-import ProfileGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_profile/PlasmicGlobalContextsProvider';
 import classNames from '@/common/utils/classNames';
-import Hamdast from '@/modules/hamdast/render';
 import { Fragment2 } from '@/common/fragment/fragment2';
-import ProfileFallback from '@/modules/hamdast/profileFallback';
-import { getProfileSeoSectionData } from '@/modules/profile/functions/buildProfileSeoAboutHtml';
+import ProfileSeoSection from './profileSeoSection';
+import { getImageUrl } from '@/common/utils/getImageUrl';
+import { ensureIframeTitle } from '@/modules/profile/utils/ensureIframeTitle';
+import { ProfileAboutSection } from '@/modules/profile/views/profileAboutSection';
+import {
+  resolveCouncilMedicalCode,
+  stripCouncilMedicalCodeFromBiography,
+} from '@/modules/profile/utils/buildAboutBiographyWithMedicalCode';
 
 const { publicRuntimeConfig } = config();
 
-const EditButton = dynamic(() => import('../components/viewAs/editButton'));
-const Biography = dynamic(() => import('./biography'), {
-  loading(loadingProps) {
-    return <Skeleton w="100%" h="16rem" rounded="lg" />;
+const FragmentRateReview = dynamic(
+  () => import('./rateReview/fragmentRateReview').then(m => ({ default: m.FragmentRateReview })),
+  {
+    loading() {
+      return <Skeleton w="100%" h="30rem" rounded="lg" />;
+    },
+  },
+);
+const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ default: m.Hamdast })), {
+  loading() {
+    return <Skeleton w="100%" h="4rem" rounded="lg" />;
   },
 });
-const PlasmicProfileAbout = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileAbout'));
-const PlasmicProfileSeo = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileSeo'));
-const PlasmicProfileGallery = dynamic(() => import('.plasmic/plasmic/paziresh_24_profile/PlasmicProfileGallery'));
+const ProfileFallback = dynamic(() => import('@/modules/hamdast/profileFallback'), {
+  loading() {
+    return <Skeleton w="100%" h="4rem" rounded="lg" />;
+  },
+});
+
+const EditButton = dynamic(() => import('../components/viewAs/editButton'));
+const Credentials = dynamic(() => import('./credentials'), {
+  loading() {
+    return <Skeleton w="100%" h="12rem" rounded="lg" />;
+  },
+});
+const PlasmicProfileGallery = dynamic(() => import('.plasmic/ProfileGallery'));
 const PlasmicClaim = dynamic(() => import('.plasmic/plasmic/paziresh_24/PlasmicClaim'));
 const WaitingTimeStatistics = dynamic(() => import('./waitingTimeStatistics'), {
   loading(loadingProps) {
@@ -41,8 +62,6 @@ const RateReview = dynamic(() => import('./rateReview'), {
     return <Skeleton w="100%" h="30rem" rounded="lg" />;
   },
 });
-const ProfileSeoBox = dynamic(() => import('./seoBox'));
-
 export const sections = (data: any) => {
   const {
     information,
@@ -62,7 +81,13 @@ export const sections = (data: any) => {
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
+    profile_backend,
+    slug,
   } = data;
+
+  const credentials = information?.credentials;
+  // MS path is allowlist-driven (GrowthBook / PROFILE_API_SOURCE_SLUGS) — not a Sajedi hardcode.
+  const showMsCredentials = profile_backend === 'microservice' && hasBioCredentials(credentials);
 
   const profileData = pick(data, [
     'information',
@@ -77,19 +102,21 @@ export const sections = (data: any) => {
     'user_id',
   ]);
 
+  const councilMedicalCode = resolveCouncilMedicalCode(information?.councilMedicalCode, information?.employee_id);
+  const aboutBiography = stripCouncilMedicalCodeFromBiography(information?.biography);
+  const hasAboutContent = Boolean(councilMedicalCode || aboutBiography);
+
   return [
     // About
     {
       noWrapper: true,
-      ActionButton: editable && information.biography && <EditButton onClick={() => handleViewAs('biography')} />,
-      isShow: information.biography,
-      isShowFallback: !information.biography && editable,
-      children: (props: any) => (
-        <ProfileGlobalContextsProvider>
-          <div className="[&_*]:text-sm [&_*]:tracking-normal [&_*]:leading-normal [&_h1]:font-bold [&_h2]:font-bold [&_p]:font-normal ">
-            <Fragment2 name="ProfileAbout" Component={PlasmicProfileAbout} args={{ ...profileData }} />
-          </div>
-        </ProfileGlobalContextsProvider>
+      ActionButton: editable && aboutBiography && <EditButton onClick={() => handleViewAs('biography')} />,
+      isShow: hasAboutContent,
+      isShowFallback: !hasAboutContent && editable,
+      children: () => (
+        <div className="text-sm tracking-normal leading-normal">
+          <ProfileAboutSection biography={aboutBiography} medicalCode={councilMedicalCode} />
+        </div>
       ),
       fallback: (props: any) => (
         <div
@@ -99,6 +126,18 @@ export const sections = (data: any) => {
           <AddIcon className="w-5 h-5" />
           <Text fontWeight="medium">نوشتن بیوگرافی</Text>
         </div>
+      ),
+    },
+    // Credentials / honors / experience — new profile backend (allowlist)
+    {
+      title: 'سوابق و افتخارات',
+      isShow: showMsCredentials,
+      children: () => (
+        <Credentials
+          degrees={credentials?.degrees ?? []}
+          honors={credentials?.honors ?? []}
+          experiences={credentials?.experiences ?? []}
+        />
       ),
     },
     {
@@ -124,7 +163,17 @@ export const sections = (data: any) => {
     // Video
     {
       isShow: media?.aparat && media?.aparat !== '0',
-      children: (props: any) => <div className="overflow-hidden md:rounded-lg" dangerouslySetInnerHTML={{ __html: media?.aparat }} />,
+      children: () => (
+        <div
+          className="overflow-hidden md:rounded-lg"
+          dangerouslySetInnerHTML={{
+            __html: ensureIframeTitle(
+              media?.aparat,
+              `ویدیو معرفی ${information?.display_name ?? 'پزشک'}`,
+            ),
+          }}
+        />
+      ),
     },
     // Gallery
     {
@@ -133,14 +182,16 @@ export const sections = (data: any) => {
       isShowFallback: editable,
       function: () => {
         const items = media?.gallery;
-        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+        const reformattedItems = items?.map((item: any) => getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)) ?? [];
         return {
           items: reformattedItems,
         };
       },
       children: (props: any) => {
         const items = media?.gallery;
-        const reformattedItems = items?.map((item: any) => publicRuntimeConfig.CDN_BASE_URL + item.image) ?? [];
+        const reformattedItems = items?.map((item: any) => getImageUrl(item.image, publicRuntimeConfig.CDN_BASE_URL)) ?? [];
+        const doctorName = information?.display_name?.trim();
+        const imageAltPrefix = doctorName ? `تصویر گالری ${doctorName}` : 'تصویر گالری پزشک';
 
         return (
           <Fragment2
@@ -148,6 +199,7 @@ export const sections = (data: any) => {
             Component={PlasmicProfileGallery}
             args={{
               gallery: reformattedItems,
+              imageAltPrefix,
             }}
           />
         );
@@ -244,57 +296,18 @@ export const sections = (data: any) => {
     // Seo Box
     {
       isShow: customize.showSeoBoxs,
-      function: () => {
-        const countOfPageView = convertLongToCompactNumber(history?.count_of_page_view);
-        const seoSectionData = getProfileSeoSectionData({
-          information,
-          centers,
-          expertises,
-          feedbacks,
-          history,
-          similarLinks,
-          seo,
-          countOfPageView,
-        });
-
-        return {
-          similarLinks: seoSectionData.similarLinks,
-          about: seoSectionData.about,
-          breadcrumbs: seoSectionData.breadcrumbs,
-        };
-      },
-      children: () => {
-        const countOfPageView = convertLongToCompactNumber(history?.count_of_page_view);
-        const seoSectionData = getProfileSeoSectionData({
-          information,
-          centers,
-          expertises,
-          feedbacks,
-          history,
-          similarLinks,
-          seo,
-          countOfPageView,
-        });
-
-        return (
-          <Fragment2
-            name="ProfileSeo"
-            Component={PlasmicProfileSeo}
-            args={{
-              information,
-              feedbacks,
-              center: seoSectionData.center,
-              isOnlineVisitCenter: seoSectionData.isOnlineVisitCenter,
-              doctorExpertise: seoSectionData.doctorExpertise,
-              countOfPageView,
-              bredcrumbs: seo.breadcrumbs,
-              similarLinks,
-              expertises,
-              about: seoSectionData.about,
-            }}
-          />
-        );
-      },
+      children: () => (
+        <ProfileSeoSection
+          slug={slug}
+          information={information}
+          centers={centers}
+          expertises={expertises}
+          feedbacks={feedbacks}
+          history={history}
+          similarLinks={similarLinks}
+          seo={seo}
+        />
+      ),
     },
   ] as const;
 };

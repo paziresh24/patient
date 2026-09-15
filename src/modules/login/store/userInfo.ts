@@ -1,11 +1,13 @@
 /* eslint-disable no-extra-boolean-cast */
 import { clinicClient } from '@/common/apis/client';
-import axios from 'axios';
-import { getCookie, removeCookies } from 'cookies-next';
-import isEmpty from 'lodash/isEmpty';
-import { growthbook } from 'src/pages/_app';
+import { removeCookies } from 'cookies-next';
+import { growthbook } from '@/common/growthbook/client';
 import { create } from 'zustand';
 import { clearDoctorDeviceCache, setDoctorDeviceCache } from '@/common/utils/doctorDeviceCache';
+import { clearDoctorHomeViewSelection } from '@/modules/doctorHome/store/clearDoctorHomeViewSelection';
+import { clearDoctorHomePersistedCache } from '@/modules/doctorHome/utils/doctorHomeQueryPersist';
+import { clearPersistedLauncherFlag } from '@/modules/doctorHome/utils/doctorHomeLauncherFlag';
+import { clearDoctorHomeShell } from '@/modules/doctorHome/utils/doctorHomeShell';
 
 interface UseUserInfoStore {
   isLogin: boolean;
@@ -15,10 +17,12 @@ interface UseUserInfoStore {
   };
   pending: boolean;
   doctorProfilePending: boolean;
+  doctorSlugPending: boolean;
   setUserInfo: (info: UserInfo) => void;
   removeInfo: () => void;
   setPending: (state: boolean) => void;
   setDoctorProfilePending: (state: boolean) => void;
+  setDoctorSlugPending: (state: boolean) => void;
   setTurnsCount: (turnsCount: { presence: number }) => void;
   logout: () => void;
 }
@@ -55,22 +59,28 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   info: {},
   pending: true,
   doctorProfilePending: false,
+  doctorSlugPending: false,
   turnsCount: {
     presence: 0,
   },
   setUserInfo: info => {
     set(() => {
+      const prevProvider = get().info?.provider;
+      const incomingProvider = info?.provider;
+      const centers = Array.isArray(incomingProvider?.centers) ? incomingProvider.centers : prevProvider?.centers;
       const mergedProvider = {
-        ...get().info?.provider,
-        ...info?.provider,
+        ...prevProvider,
+        ...incomingProvider,
+        ...(Array.isArray(centers) ? { centers } : {}),
       };
-      const isDoctor = !!(
-        mergedProvider.slug ||
-        !isEmpty(mergedProvider.centers) ||
-        mergedProvider.job_title === 'doctor' ||
-        info.is_doctor === true ||
-        get().info?.is_doctor === true
-      );
+      const hasCenters = Array.isArray(centers) && centers.length > 0;
+      // Empty/missing centers on a later patch must not demote a doctor (me/profile flags).
+      const isDoctor =
+        hasCenters ||
+        info?.is_doctor === true ||
+        get().info?.is_doctor === true ||
+        info?.provider?.job_title === 'doctor' ||
+        prevProvider?.job_title === 'doctor';
 
       const infoCopy = {
         ...get().info,
@@ -78,7 +88,9 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         is_doctor: isDoctor,
         provider: {
           ...mergedProvider,
-          job_title: isDoctor ? 'doctor' : null,
+          // Preserve slug from prior profile fetch when callers omit it.
+          slug: info?.provider?.slug ?? mergedProvider.slug,
+          job_title: isDoctor ? 'doctor' : mergedProvider.job_title ?? null,
         },
       };
 
@@ -86,12 +98,12 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
         ...growthbook.getAttributes(),
         user_id: infoCopy.id != null && infoCopy.id !== '' ? String(infoCopy.id) : undefined,
         loggedIn: true,
-        is_doctor: infoCopy.provider?.job_title === 'doctor',
+        is_doctor: isDoctor,
       });
       void growthbook.refreshFeatures({ skipCache: true });
       window.user = infoCopy;
 
-      if (infoCopy.provider?.job_title === 'doctor') {
+      if (isDoctor) {
         setDoctorDeviceCache();
       }
 
@@ -121,6 +133,12 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       doctorProfilePending,
     }));
   },
+  setDoctorSlugPending: doctorSlugPending => {
+    set(state => ({
+      ...state,
+      doctorSlugPending,
+    }));
+  },
   setTurnsCount: turnsCount => {
     set(state => ({
       ...state,
@@ -129,6 +147,10 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
   },
   logout: () => {
     clearDoctorDeviceCache();
+    clearDoctorHomePersistedCache();
+    clearDoctorHomeShell();
+    clearDoctorHomeViewSelection();
+    clearPersistedLauncherFlag();
     growthbook.setAttributes({
       ...growthbook.getAttributes(),
       user_id: undefined,
@@ -139,23 +161,9 @@ export const useUserInfoStore = create<UseUserInfoStore>((set, get) => ({
       info: {},
       isLogin: false,
       doctorProfilePending: false,
+      doctorSlugPending: false,
     }));
-    try {
-      axios
-        .get('https://users.paziresh24.com/webhook/logout', {
-          withCredentials: !getCookie('token'),
-          ...(getCookie('token') && {
-            headers: {
-              Authorization: 'Bearer ' + getCookie('token'),
-            },
-          }),
-        })
-        .then(() => {
-          clinicClient.get('/logout');
-        });
-    } catch (error) {
-      console.error(error);
-    }
+    clinicClient.get('/logout').catch(console.error);
     removeCookies('certificate');
     removeCookies('token');
   },

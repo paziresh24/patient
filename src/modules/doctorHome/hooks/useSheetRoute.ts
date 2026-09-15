@@ -1,7 +1,5 @@
-import { isMobileViewport } from '@/common/hooks/useResponsive';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useSyncExternalStore } from 'react';
-import { useDoctorViewSwapActive } from './useDoctorViewSwapActive';
 
 const STACK_KEY = 'sheets';
 /** جلوگیری از باز شدن مجدد بعد از ghost-click یا URL قدیمی */
@@ -98,55 +96,27 @@ function buildBrowserUrl(query: Record<string, string | string[] | undefined>) {
   return search ? `${pathname}?${search}` : pathname;
 }
 
+/** Next.js ignores popstate unless `state.__N`. Never clone Next state onto sheet entries —
+ * that made history.back() restore `as` without `sheets` and close the whole stack. */
+const P24_SHEETS_HISTORY = { __p24sheets: 1 as const };
+
 function writeBrowserHistory(
   query: Record<string, string | string[] | undefined>,
   method: 'push' | 'replace',
 ) {
   const url = buildBrowserUrl(query);
-  const state = window.history.state;
+  const state = { ...P24_SHEETS_HISTORY };
   if (method === 'push') window.history.pushState(state, '', url);
   else window.history.replaceState(state, '', url);
 }
 
-/** روی موبایل فقط History API — router.push/replace با Vaul تداخل داشت */
-function usesBrowserHistoryOnly() {
-  return typeof window !== 'undefined' && isMobileViewport();
-}
-
-type RouterLike = {
-  pathname: string;
-  query: Record<string, string | string[] | undefined>;
-  isReady: boolean;
-  replace: (
-    url: { pathname: string; query: Record<string, string | string[] | undefined> },
-    as?: string,
-    options?: { shallow?: boolean; scroll?: boolean },
-  ) => void;
-  push: (
-    url: { pathname: string; query: Record<string, string | string[] | undefined> },
-    as?: string,
-    options?: { shallow?: boolean; scroll?: boolean },
-  ) => void;
-};
-
 function commitStackToUrl(
-  router: RouterLike,
-  useHistoryUrl: boolean,
   stack: string[],
   extraParams: Record<string, string>,
   method: 'push' | 'replace',
 ) {
-  const baseQuery = typeof window !== 'undefined' ? queryFromLocation() : router.query;
-  const newQuery = buildLocationQuery(baseQuery, stack, extraParams);
-
-  if (typeof window !== 'undefined') {
-    writeBrowserHistory(newQuery, method);
-  }
-
-  if (usesBrowserHistoryOnly() || useHistoryUrl) return;
-
-  const routeFn = method === 'push' ? router.push : router.replace;
-  routeFn({ pathname: router.pathname, query: newQuery }, undefined, { shallow: true, scroll: false });
+  if (typeof window === 'undefined') return;
+  writeBrowserHistory(buildLocationQuery(queryFromLocation(), stack, extraParams), method);
 }
 
 function isOpenSuppressed(key: string) {
@@ -165,16 +135,17 @@ function syncSheetFromBrowserNavigation(key: string) {
   }
 }
 
+export type CloseSheetHistory = 'auto' | 'back' | 'replace';
+
 /**
  * UI state (store) و URL مستقل ولی هماهنگ:
  * - باز/بسته شدن UI از store
- * - URL با History API (موبایل) یا shallow router (دسکتاپ)
+ * - URL فقط History API با state غیر-Next (`__p24sheets`)
  * - sync از URL فقط در mount و popstate
+ * - بستن شیت بالای استک با history.back تا بک منوی زیرین را برگرداند
  */
 export function useSheetRoute(key: string) {
   const router = useRouter();
-  const swapActive = useDoctorViewSwapActive();
-  const useHistoryUrl = swapActive && router.pathname === '/';
 
   const open = useSyncExternalStore(
     useCallback(onStoreChange => subscribeSheet(key, onStoreChange), [key]),
@@ -212,36 +183,82 @@ export function useSheetRoute(key: string) {
 
       const currentStack = readStack();
       const newStack = [...currentStack.filter(sheetKey => sheetKey !== key), key];
-      commitStackToUrl(router, useHistoryUrl, newStack, extraParams ?? {}, 'push');
+      commitStackToUrl(newStack, extraParams ?? {}, 'push');
     },
-    [router, key, useHistoryUrl],
+    [key],
   );
 
-  const closeSheet = useCallback(() => {
-    const entry = getEntry(key);
-    if (!entry.open) return;
+  /**
+   * شیت‌های هم‌سطح را از استک برمی‌دارد و این شیت را روی والدین باز می‌کند.
+   * - اگر بالای استک یک شیت هم‌سطح بود → replace (تعویض، بدون ورود تاریخچه اضافه)
+   * - اگر بالای استک منوی والد بود → push (بک برمی‌گردد به منو)
+   */
+  const openSheetOver = useCallback(
+    (keysToClose: string[], extraParams?: Record<string, string>) => {
+      if (isOpenSuppressed(key)) return;
 
-    const extraParamsToRemove = { ...entry.lastExtraParams };
+      const closeSet = new Set(keysToClose.filter(sheetKey => sheetKey !== key));
+      const currentStack = readStack();
+      const previousTop = currentStack[currentStack.length - 1];
 
-    patchSheet(key, {
-      lastClosedAt: Date.now(),
-      open: false,
-      lastExtraParams: {},
-    });
+      closeSet.forEach(sheetKey => {
+        const entry = getEntry(sheetKey);
+        if (!entry.open) return;
+        patchSheet(sheetKey, {
+          lastClosedAt: Date.now(),
+          open: false,
+          lastExtraParams: {},
+        });
+      });
 
-    const currentStack = readStack();
-    if (!currentStack.includes(key)) return;
+      patchSheet(key, {
+        lastExtraParams: extraParams ?? {},
+        open: true,
+      });
 
-    const newStack = currentStack.filter(sheetKey => sheetKey !== key);
-    const baseQuery = queryFromLocation();
-    Object.keys(extraParamsToRemove).forEach(param => {
-      delete baseQuery[param];
-    });
+      const newStack = [...currentStack.filter(sheetKey => sheetKey !== key && !closeSet.has(sheetKey)), key];
+      const swappingSibling = !!previousTop && (previousTop === key || closeSet.has(previousTop));
+      commitStackToUrl(newStack, extraParams ?? {}, swappingSibling ? 'replace' : 'push');
+    },
+    [key],
+  );
 
-    commitStackToUrl(router, useHistoryUrl, newStack, {}, 'replace');
-  }, [router, key, useHistoryUrl]);
+  const closeSheet = useCallback(
+    (historyMode: CloseSheetHistory = 'auto') => {
+      const entry = getEntry(key);
+      if (!entry.open) return;
 
-  return { open, openSheet, closeSheet };
+      const extraParamsToRemove = { ...entry.lastExtraParams };
+
+      patchSheet(key, {
+        lastClosedAt: Date.now(),
+        open: false,
+        lastExtraParams: {},
+      });
+
+      const currentStack = readStack();
+      if (!currentStack.includes(key)) return;
+
+      const isTop = currentStack[currentStack.length - 1] === key;
+      const useBack =
+        historyMode === 'back' || (historyMode === 'auto' && isTop && typeof window !== 'undefined');
+
+      if (useBack) {
+        window.history.back();
+        return;
+      }
+
+      const newStack = currentStack.filter(sheetKey => sheetKey !== key);
+      const baseQuery = queryFromLocation();
+      Object.keys(extraParamsToRemove).forEach(param => {
+        delete baseQuery[param];
+      });
+      writeBrowserHistory(buildLocationQuery(baseQuery, newStack, {}), 'replace');
+    },
+    [key],
+  );
+
+  return { open, openSheet, openSheetOver, closeSheet };
 }
 
 /** @deprecated از `useSheetDrawerProps` استفاده کنید */

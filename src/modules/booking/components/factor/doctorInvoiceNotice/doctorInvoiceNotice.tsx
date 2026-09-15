@@ -1,21 +1,42 @@
-import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
+import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
+import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
 import {
   validateDoctorSlug,
   DoctorSlugValidationResponse,
 } from '@/common/apis/services/doctor/validateDoctorSlug';
 import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
+import { useDoctorExpertise } from '@/common/hooks/useDoctorExpertise';
+import { useDoctorFullName } from '@/common/hooks/useDoctorFullName';
+import { useDoctorImage } from '@/common/hooks/useDoctorImage';
 import { CENTERS } from '@/common/types/centers';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { getImageUrl } from '@/common/utils/getImageUrl';
 import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
+import { useInvoiceNoticeFreeturn } from '@/modules/booking/hooks/factor/useInvoiceNoticeFreeturn';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { useQuery } from '@tanstack/react-query';
-import moment from 'jalali-moment';
 import getConfig from 'next/config';
+
 const { publicRuntimeConfig } = getConfig();
 
-export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; serviceId: string }) => {
-  const { isLoading, data: profile } = useGetProfileData({ slug: slug as string });
+export const DoctorInvoiceNotice = ({
+  slug,
+  serviceId,
+  userCenterId: userCenterIdProp,
+}: {
+  slug: string;
+  serviceId: string;
+  userCenterId?: string;
+}) => {
+  const { data: fullName, isLoading: isFullNameLoading } = useDoctorFullName(slug);
+  const { data: expertises, isLoading: isExpertiseLoading } = useDoctorExpertise(slug);
+  const { data: doctorImage } = useDoctorImage(slug);
+  const centersQuery = useQuery([ServerStateKeysEnum.DoctorCenters, slug], () => getDoctorCenters(slug), {
+    enabled: !!slug && !userCenterIdProp,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+  });
   const { data: doctorSlugData } = useQuery(
     ['doctorSlugForFactorImage', slug],
     () => validateDoctorSlug(slug),
@@ -28,33 +49,33 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
     },
   );
 
-  const doctorName = `${profile?.data?.name} ${profile?.data?.family}`;
+  const isLoading = isFullNameLoading || isExpertiseLoading;
+  const consultUserCenterId =
+    userCenterIdProp ??
+    centersQuery.data?.find(center => String(center.id) === String(CENTERS.CONSULT))?.user_center_id;
+  const isUserCenterLoading = !consultUserCenterId && !!slug && !userCenterIdProp && centersQuery.isLoading;
+
+  const { freeturnText, isFreeturnLoading } = useInvoiceNoticeFreeturn({
+    slug,
+    serviceId,
+    userCenterId: consultUserCenterId,
+    isUserCenterLoading,
+  });
+
+  const doctorName = [fullName?.name, fullName?.family].filter(Boolean).join(' ');
   const doctorUserId = (doctorSlugData as DoctorSlugValidationResponse | undefined)?.user_id;
   const doctorAvatar = doctorUserId
     ? picUserImageUrl(doctorUserId)
-    : publicRuntimeConfig.CDN_BASE_URL + profile?.data?.image;
+    : getImageUrl(doctorImage?.image, publicRuntimeConfig.CDN_BASE_URL) || undefined;
 
-  const convertTime = (time: number) => {
-    return moment(time)?.locale('fa')?.calendar(undefined, {
-      nextWeek: 'YYYY/MM/DD(dddd) حدود ساعت HH:mm',
-      sameElse: 'YYYY/MM/DD حدود ساعت HH:mm',
-      sameDay: 'امروز حدود ساعت HH:mm',
-      nextDay: 'فردا حدود ساعت HH:mm',
-    });
-  };
-
-  const freeturnRaw = profile?.data?.centers
-    ?.find((item: any) => item.id == CENTERS.CONSULT)
-    ?.freeturns_info?.find((item: any) => item.service_id == serviceId)?.freeturn;
-
-  const freeturn =
-    typeof freeturnRaw === 'number' && Number.isFinite(freeturnRaw) ? freeturnRaw * 1000 : null;
-
-  const getFreeturnText = () => {
-    if (freeturn === null) return 'در اسرع وقت';
-    if (freeturn < Date.now()) return 'در کمتر از ۱۵ دقیقه آینده';
-    return convertTime(freeturn);
-  };
+  const primaryExpertise = expertises?.[0];
+  const expertiseLabel = primaryExpertise
+    ? getDisplayDoctorExpertise({
+        aliasTitle: primaryExpertise.alias_title ?? '',
+        degree: primaryExpertise.degree?.name ?? '',
+        expertise: primaryExpertise.expertise?.name ?? '',
+      })
+    : '';
 
   return (
     <div className="w-full p-3 mb-2 space-y-3 bg-white md:rounded-lg shadow-card md:mb-0 md:basis-2/6 ">
@@ -62,11 +83,7 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
         className="p-4 rounded-lg bg-slate-100"
         avatar={doctorAvatar}
         fullName={doctorName}
-        expertise={getDisplayDoctorExpertise({
-          aliasTitle: profile?.data?.expertises?.[0]?.alias_title,
-          degree: profile?.data?.expertises?.[0]?.degree?.name,
-          expertise: profile?.data?.expertises?.[0]?.expertise?.name,
-        })}
+        expertise={expertiseLabel}
         isLoading={isLoading}
       />
       {isLoading && <Skeleton w="100%" h="5em" className="!mt-2" rounded="md" />}
@@ -77,9 +94,13 @@ export const DoctorInvoiceNotice = ({ slug, serviceId }: { slug: string; service
           </Text>
           <Text as="p" fontSize="sm" align="justify" className="leading-6">
             پس از نهایی شدن نوبت،{' '}
-            <Text className="text-primary" fontWeight="semiBold">
-              {getFreeturnText()}
-            </Text>{' '}
+            {isFreeturnLoading ? (
+              <Skeleton w="8rem" h="1rem" className="inline-block align-middle" rounded="sm" />
+            ) : (
+              <Text className="text-primary" fontWeight="semiBold">
+                {freeturnText}
+              </Text>
+            )}{' '}
             شما را آنلاین ویزیت خواهم کرد.
           </Text>
         </div>

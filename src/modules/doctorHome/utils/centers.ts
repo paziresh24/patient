@@ -1,7 +1,7 @@
 import { UserInfo } from '@/modules/login/store/userInfo';
 import type { RaviCenter } from '@/modules/rate-and-review';
 
-const ONLINE_VISIT_CENTER_ID = '5532';
+export const ONLINE_VISIT_CENTER_ID = '5532';
 
 export interface DoctorCenterOption {
   id: string | null;
@@ -24,8 +24,19 @@ export const getDoctorSlug = (user?: UserInfo) => user?.provider?.slug;
 export const getOnlineVisitCenter = (user?: UserInfo) =>
   user?.provider?.centers?.find((center: { id?: string }) => center.id === ONLINE_VISIT_CENTER_ID);
 
+/** type 1 = مطب شخصی */
+export const isType1Center = (center?: ProviderCenter | null) => {
+  if (!center) return false;
+  const type = center.type_id ?? center.center_type;
+  return type === 1;
+};
+
 export const getClinicCenters = (user?: UserInfo) =>
   user?.provider?.centers?.filter((center: { id?: string }) => center.id !== ONLINE_VISIT_CENTER_ID) ?? [];
+
+/** فقط مطب‌های شخصی (type 1) — برای منوی اقدامات هوم دکتر */
+export const getType1ClinicCenters = (user?: UserInfo) =>
+  getClinicCenters(user).filter((center: ProviderCenter) => isType1Center(center));
 
 export const hasOnlineVisitCenter = (user?: UserInfo) => !!getOnlineVisitCenter(user);
 
@@ -34,7 +45,7 @@ export const formatDoctorCenterName = (center: ProviderCenter) => {
   return center.name?.trim() || 'مرکز';
 };
 
-const shortenCenterAddress = (center: ProviderCenter): string | undefined => {
+export const formatDoctorCenterAddressHint = (center: ProviderCenter): string | undefined => {
   if (center.id === ONLINE_VISIT_CENTER_ID) return undefined;
 
   const raw = center.address?.trim() || center.city?.trim();
@@ -63,7 +74,7 @@ export const getDoctorCenterOptions = (user?: UserInfo): DoctorCenterOption[] =>
     ...centers.map((center: ProviderCenter) => ({
       id: String(center.id),
       name: formatDoctorCenterName(center),
-      addressHint: shortenCenterAddress(center),
+      addressHint: formatDoctorCenterAddressHint(center),
     })),
   ];
 };
@@ -123,8 +134,17 @@ export const resolveCountCenterId = (user?: UserInfo, selectedCenterId?: string 
 export const shouldShowOnlineVisitSection = (selectedCenterId?: string | null) =>
   !selectedCenterId || selectedCenterId === ONLINE_VISIT_CENTER_ID;
 
-export const shouldShowClinicSection = (selectedCenterId?: string | null) =>
-  !selectedCenterId || selectedCenterId !== ONLINE_VISIT_CENTER_ID;
+/** منوی مطب فقط برای type 1؛ بقیه مراکز فقط فیلتر/مراجعین دارند */
+export const shouldShowClinicSection = (selectedCenterId?: string | null, user?: UserInfo) => {
+  if (selectedCenterId === ONLINE_VISIT_CENTER_ID) return false;
+  if (!selectedCenterId) return getType1ClinicCenters(user).length > 0;
+
+  const center = (user?.provider?.centers ?? []).find(
+    (item: ProviderCenter) => String(item.id) === selectedCenterId,
+  ) as ProviderCenter | undefined;
+
+  return isType1Center(center);
+};
 
 export const matchesSelectedCenter = (
   itemCenterId: string | number | null | undefined,

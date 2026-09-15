@@ -7,11 +7,15 @@ import Text from '@/common/components/atom/text';
 import ChevronIcon from '@/common/components/icons/chevron';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
+import { doctorSlugFromSearchHit, useRaviCardRate } from '@/modules/profile/hooks/useDoctorRateDetails';
 import random from 'lodash/random';
 import { useMemo } from 'react';
 import { useSearch as useSearchUtils } from '../../hooks/useSearch';
 import { useSearchRouting } from '../../hooks/useSearchRouting';
 import SearchCard from '../card/card';
+// import استاتیک (مثل marker.png در atom/map) تا زیر /_next/static/media سرو شود؛
+// مسیر /images/* روی www به اپ Next نمی‌رسد (به یک origin قدیمی می‌رود و 404 می‌دهد) — DR-08.
+import doctorGroupImage from './doctor-group.webp';
 
 export const ConsultBanner = () => {
   const { selectedCategory, selectedSubCategory, isConsult, searchCity } = useSearchUtils();
@@ -32,6 +36,7 @@ export const ConsultBanner = () => {
     },
   );
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
+  const raviRate = useRaviCardRate(doctorSlugFromSearchHit(substituteDoctor));
 
   const handleClick = () => {
     changeRoute({
@@ -185,7 +190,25 @@ export const ConsultBanner = () => {
         </Text>
       </div>
       <div className="flex items-end justify-between w-full">
-        <img src="https://www.paziresh24.com/cp/img/doctor-group.svg" alt="ویزیت آنلاین" height={44} width={144} />
+        {/*
+          DR-08 §۱۹: this used to point at /cp/img/doctor-group.svg — a **1.6MB** SVG (1197KB over
+          the wire) whose entire payload is four base64-embedded full-resolution photographs, drawn
+          into a 144×44 box. Measured on production it started downloading at ~600ms, i.e. it sat in
+          the critical path competing with the render-blocking CSS and the webfont; on a 1.6Mbps
+          connection 1.2MB alone is several seconds of the user's bandwidth.
+          Replaced by a 3x raster of the exact same artwork (432×132 WebP, 21KB — 98% smaller).
+          ⚠️ NOT in public/: requests to /images/* on www never reach this Next app (an Arvan/legacy
+          static origin answers them with a 404), so the file is bundled via static import and served
+          from /_next/static/media/… which provably routes to the app and is edge-cached.
+          `decoding="async"` keeps the decode off the main thread, which already has ~9s of work.
+        */}
+        <img
+          src={doctorGroupImage.src}
+          alt="ویزیت آنلاین"
+          height={44}
+          width={144}
+          decoding="async"
+        />
         <Button size="sm" className="w-32 justify-between items-center">
           <Text>گفتگو با پزشک</Text>
           <ChevronIcon dir="left" />
@@ -212,22 +235,10 @@ export const ConsultBanner = () => {
                   experience: substituteDoctor.experience,
                   isVerify: true,
                   avatar: substituteDoctor.image,
-                  rate: {
-                    count: substituteDoctor.rates_count,
-                    satisfaction: substituteDoctor.satisfaction,
-                  },
+                  rate: raviRate,
                   isOnline: true,
                 }}
                 type="doctor"
-                details={{
-                  badges: [
-                    {
-                      title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
-                      icon: 'shield-icon',
-                      type: 'error',
-                    },
-                  ],
-                }}
                 className="shadow-none !py-0 lg:!py-0 cursor-pointer"
                 actions={[
                   {

@@ -3,26 +3,21 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import classNames from '@/common/utils/classNames';
-import { Wrapper } from '@/modules/dashboard/components/wrapper';
 import { SideBar } from '@/modules/dashboard/layouts/sidebar';
-import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
+import { useIsDoctor } from '@/common/hooks/useIsDoctor';
 import { GetServerSidePropsContext } from 'next/types';
 import { ReactElement, useState } from 'react';
-import PatinetProfile from '../patient/profile';
 import Loading from '@/common/components/atom/loading';
+
+const DOCTOR_PROFILE_IFRAME_SRC = 'https://providers.paziresh24.com/app/profile';
 
 export const AppointmentsPage = () => {
   const [isAppLoading, setIsAppLoading] = useState(true);
-  const user = useUserInfoStore(state => state.info);
-  const useDrappProfile = useFeatureIsOn('hamdast::drapp-profile');
-  const doctorProfileSrc = useDrappProfile
-    ? 'https://providers.paziresh24.com/app/profile'
-    : `https://opium-dashboard.paziresh24.com/profile-page/?user_id=${user.id}`;
+  const isDoctor = useIsDoctor();
 
   return (
     <div className="flex md:h-[calc(100vh-80px)] items-center justify-center overflow-y-auto flex-grow w-full relative">
-      {user.provider?.job_title === 'doctor' ? (
+      {isDoctor ? (
         <>
           <Seo title="ویرایش پروفایل" noIndex />
           {isAppLoading && (
@@ -31,10 +26,9 @@ export const AppointmentsPage = () => {
             </div>
           )}
           <iframe
-            key={doctorProfileSrc}
             onLoad={() => setIsAppLoading(false)}
             className={classNames('w-full h-full', { hidden: isAppLoading })}
-            src={doctorProfileSrc}
+            src={DOCTOR_PROFILE_IFRAME_SRC}
           />
         </>
       ) : (

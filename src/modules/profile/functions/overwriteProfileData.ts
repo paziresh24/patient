@@ -1,4 +1,6 @@
+import type { BioCredentials } from '@/common/apis/services/profile-microservice/normalizeBioCredentials';
 import getDisplayDoctorExpertise from '@/common/utils/getDisplayDoctorExpertise';
+import { joinProfileNameParts } from '@/modules/profile/utils/resolveProfileDisplayName';
 import flatMap from 'lodash/flatMap';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -33,105 +35,139 @@ export type OverwriteProfileData = {
   expertises?: any;
   image?: string;
   biography?: string;
+  councilMedicalCode?: string;
+  credentials?: BioCredentials;
   centers?: any;
   gallery?: any;
 };
 
+const pickNonEmptyBiography = (...candidates: unknown[]): string | null => {
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim()) {
+      return candidate;
+    }
+  }
+  return null;
+};
+
+const normalizeGroupExpertise = (group: any) => ({
+  id: group?.id,
+  en_slug: group?.en_slug ?? group?.slug ?? null,
+  icon: group?.icon ?? null,
+  name: group?.name ?? group?.title ?? null,
+});
+
+const dedupeGroupExpertises = (groups: Array<{ id?: number; en_slug?: string | null; icon?: string | null; name?: string | null }>) =>
+  groups.filter((group, index, array) => {
+    const slug = group?.en_slug;
+    if (slug) {
+      return array.findIndex(item => item?.en_slug === slug) === index;
+    }
+    if (group?.id != null) {
+      return array.findIndex(item => item?.id === group.id) === index;
+    }
+    return false;
+  });
+
+const resolveGroupExpertises = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
+  const fromTaggables = flatMap(overwriteData?.provider?.expertises ?? [], item => get(item, 'speciality.taggables', []))
+    .map((item: any) => item?.tag)
+    .filter(Boolean)
+    .map((item: any) =>
+      normalizeGroupExpertise({
+        id: item.id,
+        slug: item.slug,
+        icon: item.icon,
+        title: item.title,
+      }),
+    );
+
+  if (!isEmpty(fromTaggables)) {
+    return dedupeGroupExpertises(fromTaggables);
+  }
+
+  const fromExpertiseApi = flatMap(overwriteData?.expertises ?? [], item => item?.groups ?? [])
+    .filter(Boolean)
+    .map(normalizeGroupExpertise);
+
+  if (!isEmpty(fromExpertiseApi)) {
+    return dedupeGroupExpertises(fromExpertiseApi);
+  }
+
+  return source?.group_expertises ?? [];
+};
+
 export const overwriteProfileData = (overwriteData: OverwriteProfileData, source: Record<string, any>) => {
+  // Pull biography out of provider so an empty/undefined provider.biography cannot wipe a valid bio.
+  const { biography: providerBiography, ...providerRest } = overwriteData.provider ?? {};
   const information = {
     id: source?.id ?? null,
     server_id: source?.server_id ?? null,
-    display_name: source?.name + ' ' + source?.family,
+    display_name: joinProfileNameParts({ name: source?.name, family: source?.family }) || source?.display_name || '',
     name: source?.name,
     family: source?.family,
-    biography: overwriteData?.biography ?? source?.biography,
+    biography: pickNonEmptyBiography(overwriteData?.biography, providerBiography, source?.biography),
     employee_id: source?.medical_code,
+    councilMedicalCode: overwriteData?.councilMedicalCode ?? '',
     experience: source?.experience ?? null,
     gender: source?.gender ?? null,
     image: overwriteData?.image ?? source?.image ?? null,
     city_en_slug: source?.city_en_slug ?? null,
     should_recommend_other_doctors: source?.should_recommend_other_doctors ?? null,
-    ...overwriteData.provider,
+    ...providerRest,
     prefix: '',
+    ...(overwriteData.credentials ? { credentials: overwriteData.credentials } : {}),
   };
 
-  const group_expertises = flatMap(overwriteData?.provider?.expertises ?? [], item => get(item, 'speciality.taggables', [])).map(
-    (item: any) => item.tag,
-  );
+  const resolvedGroupExpertises = resolveGroupExpertises(overwriteData, source);
 
   const centers =
     overwriteData?.centers?.map((newCenter: any) => {
-      // Find corresponding center in full profile
-      const sourceCenter = source?.centers?.find((sourceCenter: any) => sourceCenter.id === newCenter.id);
-
-      if (sourceCenter) {
-        // Merge new center data with full profile data
-        return {
-          ...sourceCenter, // Start with full profile data
-          // Override with new API data where available
-          id: newCenter.id,
-          name: newCenter.name,
-          display_number: newCenter.display_number,
-          display_number_array: newCenter.display_number, // Map display_number to display_number_array
-          tell: newCenter.tell,
-          tell_array: newCenter.tell, // Map tell to tell_array
-          address: newCenter.address,
-          center_type: newCenter.type_id, // Map type_id to center_type
-          status: newCenter.status,
-          server_id: newCenter.server_id,
-          city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null) || sourceCenter.city,
-          city_en_slug: newCenter.city?.slug,
-          province: newCenter.city?.province?.name || (typeof newCenter.city?.province === 'string' ? newCenter.city.province : null),
-          map: newCenter.location
-            ? {
-                lat: newCenter.location.lat,
-                lon: newCenter.location.lon,
-              }
-            : sourceCenter.map,
-          // Keep services from full profile
-          services: sourceCenter.services,
-          // Keep other full profile fields like freeturn, settings, etc.
-        };
-      } else {
-        // If no matching center in full profile, use new center data with empty services
-        return {
-          ...newCenter,
-          display_number_array: newCenter.display_number, // Map display_number to display_number_array
-          tell_array: newCenter.tell, // Map tell to tell_array
-          center_type: newCenter.type_id, // Map type_id to center_type
-          city: newCenter.city?.name || newCenter.city, // Ensure city is string, not object
-          city_en_slug: newCenter.city?.slug,
-          province: newCenter.city?.province?.name,
-          map: newCenter.location
-            ? {
-                lat: newCenter.location.lat,
-                lon: newCenter.location.lon,
-              }
-            : null,
-          services: [],
-        };
-      }
+      const resolvedCenterType = newCenter.type_id ?? newCenter.center_type ?? null;
+      return {
+        ...newCenter,
+        display_number_array: newCenter.display_number,
+        tell_array: newCenter.tell,
+        center_type: resolvedCenterType,
+        city: newCenter.city?.name || (typeof newCenter.city === 'string' ? newCenter.city : null),
+        city_en_slug: newCenter.city?.slug || newCenter.city_en_slug || null,
+        province:
+          newCenter.city?.province?.name ||
+          (typeof newCenter.province === 'string' ? newCenter.province : null),
+        map: newCenter.location
+          ? {
+              lat: newCenter.location.lat,
+              lon: newCenter.location.lon,
+            }
+          : newCenter.map ?? null,
+        services: newCenter.services ?? [],
+      };
     }) ??
-    source?.centers ??
     [];
 
   const expertises = {
-    group_expertises: isEmpty(group_expertises)
-      ? source?.group_expertises ?? []
-      : group_expertises.map((item: any) => item && { id: item.id, en_slug: item.slug, icon: item.icon, name: item.title }),
+    group_expertises: resolvedGroupExpertises,
     expertises:
-      (overwriteData?.expertises ?? source?.expertises)?.map?.((item: any) => ({
-        alias_title: getDisplayDoctorExpertise({
-          aliasTitle: item.alias_title,
-          degree: item.degree?.name,
-          expertise: item.expertise?.name,
-        }),
-        expertise_id: item.expertise?.id,
-        degree_id: item.degree?.id,
-        degree_name: item?.degree?.name ?? '',
-        expertise_name: item.expertise?.name ?? '',
-        ...((item.expertise?.slug ?? item.slug) && { slug: item.expertise?.slug ?? item.slug }),
-      })) ?? [],
+      (overwriteData?.expertises ?? source?.expertises)?.map?.((item: any) => {
+        // New expertise API may flatten to { name, id, slug }; full-profile keeps { expertise: { name } }.
+        const expertiseName = item.expertise?.name ?? item.name ?? '';
+        const expertiseId = item.expertise?.id ?? item.id;
+        const expertiseSlug = item.expertise?.slug ?? item.slug;
+        const degreeName = item.degree?.name ?? '';
+
+        return {
+          alias_title: getDisplayDoctorExpertise({
+            aliasTitle: item.alias_title,
+            degree: degreeName,
+            expertise: expertiseName,
+          }),
+          expertise_id: expertiseId,
+          degree_id: item.degree?.id,
+          degree_name: degreeName,
+          expertise_name: expertiseName,
+          ...(expertiseSlug && { slug: expertiseSlug }),
+        };
+      }) ?? [],
   };
 
   const feedbacks = {
@@ -184,8 +220,10 @@ export const overwriteProfileData = (overwriteData: OverwriteProfileData, source
   const similarLinks = source?.similar_links ?? null;
 
   const onlineVisit = {
+    // Legacy full-profile gate — still mapped for activity widgets; profile booking uses centers API + Saman.
     enabled: source?.consult_active_booking ?? null,
-    channels: source?.online_visit_channel_types ?? null,
+    // Plasmic Services calls channels.includes(...) — never pass null.
+    channels: source?.online_visit_channel_types ?? [],
   };
 
   const waitingTimeInfo = overwriteData?.feedbacks?.waiting_time_info?.filter((items: any) => !!items?.waiting_time_title) ?? null;

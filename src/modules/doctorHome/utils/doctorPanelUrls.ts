@@ -4,7 +4,11 @@ export const DOCTOR_PANEL_URLS = {
   workhours: 'https://providers.paziresh24.com/app/workhour/',
   vacation: 'https://providers.paziresh24.com/app/vacation/',
   tariffs: 'https://providers.paziresh24.com/app/services/',
+  bookingSettings: 'https://providers.paziresh24.com/app/setting',
+  notifications: 'https://providers.paziresh24.com/app/notifications/',
+  bills: 'https://providers.paziresh24.com/app/financial/bills',
+  consultActivation: 'https://providers.paziresh24.com/app/activation-page/consult/cost',
 } as const;
 
-/** داشبورد نظرات بیماران (راوی) */
-export const RAVI_DOCSIDE_URL = 'https://ravi-docs.paziresh24.com/ravi-docside/index.html';
+/** Same-origin bounce → ravi-front docside with the doctor session token */
+export const RAVI_DOCSIDE_URL = '/dashboard/ravi-docside-handoff';

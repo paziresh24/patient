@@ -5,6 +5,7 @@ import Skeleton from '@/common/components/atom/skeleton';
 import Text from '@/common/components/atom/text';
 import BookmarkIcon from '@/common/components/icons/bookmark';
 import CalenderIcon from '@/common/components/icons/calender';
+import CommentIcon from '@/common/components/icons/comment';
 import CenterIcon from '@/common/components/icons/center';
 import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
@@ -22,6 +23,7 @@ import Seo from '@/common/components/layouts/seo';
 import { withCSR } from '@/common/hoc/withCsr';
 import { withServerUtils } from '@/common/hoc/withServerUtils';
 import useCustomize from '@/common/hooks/useCustomize';
+import { useIsDoctor } from '@/common/hooks/useIsDoctor';
 import usePwa from '@/common/hooks/usePwa';
 import useShare from '@/common/hooks/useShare';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
@@ -43,13 +45,14 @@ export const PatinetProfile = () => {
   const { handleOpenLoginModal } = useLoginModalContext();
   const share = useShare();
   const { customize } = useCustomize();
+  const isDoctor = useIsDoctor();
   const { getRatingAppLink } = usePwa();
 
   useEffect(() => {
-    if (userInfo.id && userInfo.provider?.job_title === 'doctor' && !customize.partnerKey) {
+    if (userInfo.id && isDoctor && !customize.partnerKey) {
       router.replace('/_/');
     }
-  }, [userInfo.id, userInfo.provider?.job_title, customize.partnerKey]);
+  }, [userInfo.id, isDoctor, customize.partnerKey]);
 
   const openLoginForm = (link?: string) => {
     !isLogin &&
@@ -109,6 +112,15 @@ export const PatinetProfile = () => {
               <CalenderIcon />
               <Text fontWeight="medium" fontSize="sm">
                 نوبت های من
+              </Text>
+            </div>
+            <div
+              onClick={() => openPrivateLink('/patient/reviews?referrer=profile')}
+              className="flex cursor-pointer items-center px-5 py-4 border-b space-s-2 whitespace-nowrap border-slate-100"
+            >
+              <CommentIcon />
+              <Text fontWeight="medium" fontSize="sm">
+                نظرات من
               </Text>
             </div>
             {customize.bookMark && (

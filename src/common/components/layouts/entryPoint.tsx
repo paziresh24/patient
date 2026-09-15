@@ -1,72 +1,140 @@
 import { useGetMe } from '@/common/apis/services/auth/me';
 import { getCentersByUserId } from '@/common/apis/services/doctor/centersByUserId';
-import { useGetDoctorProfile } from '@/common/apis/services/doctor/profile';
+import { getDoctorProfile } from '@/common/apis/services/doctor/profile';
 import { useDoctorHomeRedirect, isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
-import { clearDoctorDeviceCache, setDoctorDeviceCache } from '@/common/utils/doctorDeviceCache';
+import { clearDoctorDeviceCache, isDoctorDeviceCached, setDoctorDeviceCache } from '@/common/utils/doctorDeviceCache';
+import { clearDoctorHomeViewSelection } from '@/modules/doctorHome/store/clearDoctorHomeViewSelection';
+import { useSelectedCenterStore } from '@/modules/doctorHome/store/selectedCenter';
+import {
+  clearDoctorHomeShell,
+  readDoctorHomeShell,
+  shellToUserInfoPatch,
+  writeDoctorHomeShell,
+} from '@/modules/doctorHome/utils/doctorHomeShell';
+import { clearPersistedLauncherFlag } from '@/modules/doctorHome/utils/doctorHomeLauncherFlag';
+import { clearDoctorHomePersistedCache } from '@/modules/doctorHome/utils/doctorHomeQueryPersist';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
 import { picUserImageUrl } from '@/common/utils/picUserImageUrl';
-import { ReactElement, useCallback, useEffect, useRef } from 'react';
+import { ReactElement, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
 export const EntryPoint = ({ children }: { children: ReactElement }) => {
   const setUserInfo = useUserInfoStore(state => state.setUserInfo);
   const setPending = useUserInfoStore(state => state.setPending);
   const setDoctorProfilePending = useUserInfoStore(state => state.setDoctorProfilePending);
+  const setDoctorSlugPending = useUserInfoStore(state => state.setDoctorSlugPending);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const info = useUserInfoStore(state => state.info);
   const pending = useUserInfoStore(state => state.pending);
   const getMe = useGetMe();
-  const getDoctorProfile = useGetDoctorProfile();
   const getMeRef = useRef(getMe);
-  const syncDoctorProfileRef = useRef<(userId: string) => Promise<void>>(async () => {});
+  const syncDoctorCentersRef = useRef<(userId: string) => Promise<void>>(async () => {});
   const hasCalledLogin = useRef(false);
-  const syncedDoctorProfileUserId = useRef<string | null>(null);
+  const hasHydratedShell = useRef(false);
+  const syncedDoctorCentersUserId = useRef<string | null>(null);
+  const syncedDoctorSlugUserId = useRef<string | null>(null);
 
   getMeRef.current = getMe;
 
   useDoctorHomeRedirect();
 
-  const syncDoctorProfile = useCallback(
-    async (userId: string) => {
-      if (syncedDoctorProfileUserId.current === userId) return;
+  // Hydrate doctor shell before paint so `/_/` can show new home (centers/job_title) on first frame.
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined' || hasHydratedShell.current) return;
+    hasHydratedShell.current = true;
+    if (!isDoctorDeviceCached()) return;
+    const shell = readDoctorHomeShell();
+    if (shell) {
+      setUserInfo(shellToUserInfoPatch(shell));
+    }
+  }, [setUserInfo]);
 
-      syncedDoctorProfileUserId.current = userId;
+  const syncDoctorCenters = useCallback(
+    async (userId: string) => {
+      if (syncedDoctorCentersUserId.current === userId) return;
+
+      syncedDoctorCentersUserId.current = userId;
       setDoctorProfilePending(true);
 
+      const existingSlug = useUserInfoStore.getState().info.provider?.slug;
+      const needsSlug = !existingSlug;
+      if (needsSlug) {
+        syncedDoctorSlugUserId.current = userId;
+        setDoctorSlugPending(true);
+      }
+
       try {
-        const [doctorProfileData, centersData] = await Promise.all([
-          getDoctorProfile.mutateAsync(),
+        // Always fetch doctor profile so slug (needed for rate/pageView) is available.
+        const [centersData, doctorProfileData] = await Promise.all([
           getCentersByUserId(userId),
+          getDoctorProfile().catch(error => {
+            console.error('Error fetching doctor profile slug:', error);
+            if (needsSlug) syncedDoctorSlugUserId.current = null;
+            return null;
+          }),
         ]);
 
         const latestInfo = useUserInfoStore.getState().info;
+        const slug = doctorProfileData?.slug || existingSlug;
+        const centersList = Array.isArray(centersData) ? centersData : undefined;
 
         setUserInfo({
           ...latestInfo,
           provider: {
             ...latestInfo?.provider,
-            ...doctorProfileData,
-            ...(Array.isArray(centersData) ? { centers: centersData } : {}),
+            ...(Array.isArray(centersList) ? { centers: centersList } : {}),
+            ...(slug ? { slug } : {}),
           },
         });
 
         const updatedInfo = useUserInfoStore.getState().info;
         if (isDoctorUser(updatedInfo)) {
           setDoctorDeviceCache();
-        } else {
+          writeDoctorHomeShell({
+            userId: String(updatedInfo.id),
+            provider: {
+              job_title: 'doctor',
+              slug: updatedInfo.provider?.slug,
+              centers: updatedInfo.provider?.centers ?? [],
+            },
+          });
+
+          const selectedCenterId = useSelectedCenterStore.getState().selectedCenterId;
+          if (selectedCenterId) {
+            const centers = updatedInfo.provider?.centers ?? [];
+            const found = centers.some((center: { id?: string | number }) => String(center?.id) === selectedCenterId);
+            if (!found) {
+              useSelectedCenterStore.getState().setSelectedCenterId(null);
+            }
+          }
+
+          // Slug still missing after profile fetch — allow a later retry.
+          if (!updatedInfo.provider?.slug) {
+            syncedDoctorCentersUserId.current = null;
+            syncedDoctorSlugUserId.current = null;
+          }
+        } else if (Array.isArray(centersData) && !updatedInfo.is_doctor && updatedInfo.provider?.job_title !== 'doctor') {
           clearDoctorDeviceCache();
+          syncedDoctorSlugUserId.current = null;
+        } else {
+          syncedDoctorCentersUserId.current = null;
+          syncedDoctorSlugUserId.current = null;
         }
       } catch (error) {
-        console.error('Error fetching doctor data:', error);
-        syncedDoctorProfileUserId.current = null;
+        console.error('Error fetching doctor centers:', error);
+        syncedDoctorCentersUserId.current = null;
+        syncedDoctorSlugUserId.current = null;
       } finally {
         setDoctorProfilePending(false);
+        if (needsSlug) {
+          setDoctorSlugPending(false);
+        }
       }
     },
-    [getDoctorProfile, setDoctorProfilePending, setUserInfo],
+    [setDoctorProfilePending, setDoctorSlugPending, setUserInfo],
   );
 
-  syncDoctorProfileRef.current = syncDoctorProfile;
+  syncDoctorCentersRef.current = syncDoctorCenters;
 
   useEffect(() => {
     if (typeof window === 'undefined' || hasCalledLogin.current) return;
@@ -83,22 +151,32 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
           throw new Error('User is not authenticated');
         }
 
+        const shell = readDoctorHomeShell();
+        const userMismatch = Boolean(shell && shell.userId !== String(userData.id));
+        if (userMismatch) {
+          clearDoctorHomeShell();
+          clearDoctorHomeViewSelection();
+          clearDoctorHomePersistedCache();
+          clearPersistedLauncherFlag();
+          // Drop shell-hydrated provider before applying the real user.
+          useUserInfoStore.setState({ info: {}, isLogin: false });
+        }
+
         const currentInfo = useUserInfoStore.getState().info;
         setUserInfo({
           ...currentInfo,
           ...userData,
         });
 
+        // Unblock UI immediately after auth — centers/slug sync in background.
         setPending(false);
 
         const updatedInfo = useUserInfoStore.getState().info;
         if (isDoctorUser(updatedInfo)) {
           setDoctorDeviceCache();
-        } else {
-          clearDoctorDeviceCache();
         }
 
-        await syncDoctorProfileRef.current(userData.id.toString());
+        void syncDoctorCentersRef.current(userData.id.toString());
       } catch (error) {
         if (typeof window !== 'undefined' && window.user) {
           window.user = {};
@@ -110,13 +188,19 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
           is_doctor: false,
         });
 
-        syncedDoctorProfileUserId.current = null;
+        clearDoctorHomeShell();
+        clearDoctorHomeViewSelection();
+        clearPersistedLauncherFlag();
+
+        syncedDoctorCentersUserId.current = null;
+        syncedDoctorSlugUserId.current = null;
 
         useUserInfoStore.setState({
           info: {},
           isLogin: false,
           pending: false,
           doctorProfilePending: false,
+          doctorSlugPending: false,
           turnsCount: {
             presence: 0,
           },
@@ -125,17 +209,18 @@ export const EntryPoint = ({ children }: { children: ReactElement }) => {
     };
 
     fetchUserData();
-  }, []);
+  }, [setPending, setUserInfo]);
 
   useEffect(() => {
     if (!isLogin) {
-      syncedDoctorProfileUserId.current = null;
+      syncedDoctorCentersUserId.current = null;
+      syncedDoctorSlugUserId.current = null;
       return;
     }
     if (!info?.id || pending) return;
 
-    void syncDoctorProfile(info.id.toString());
-  }, [isLogin, info?.id, pending, syncDoctorProfile]);
+    void syncDoctorCenters(info.id.toString());
+  }, [isLogin, info?.id, pending, syncDoctorCenters]);
 
   useEffect(() => {
     if (!isLogin || !info?.id) return;

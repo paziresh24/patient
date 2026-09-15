@@ -2,20 +2,31 @@ import { splunkInstance } from '@/common/services/splunk';
 import { CENTERS } from '@/common/types/centers';
 import { getCookie } from 'cookies-next';
 import dynamic from 'next/dynamic';
+import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import Services from './services';
 import pick from 'lodash/pick';
 import BookingGlobalContextsProvider from '../../../../.plasmic/plasmic/paziresh_24_booking/PlasmicGlobalContextsProvider';
-import { FragmentRateReview } from './rateReview/fragmentRateReview';
-import Hamdast from '@/modules/hamdast/render';
-import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { SamanBooking } from '@/modules/samanBooking';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import RismanAsideSection from './rismanAside';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
 const PlasmicBookingAddressesCard = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesCard'));
-const PlasmicRisman = dynamic(() => import('.plasmic/plasmic/risman/PlasmicRisman'));
+const FragmentRateReview = dynamic(
+  () => import('./rateReview/fragmentRateReview').then(m => ({ default: m.FragmentRateReview })),
+  {
+    loading() {
+      return <Skeleton w="100%" h="30rem" rounded="lg" />;
+    },
+  },
+);
+const Hamdast = dynamic(() => import('@/modules/hamdast/render').then(m => ({ default: m.Hamdast })), {
+  loading() {
+    return <Skeleton w="100%" h="4rem" rounded="lg" />;
+  },
+});
 
 export const Aside = (data: any) => {
   const {
@@ -39,9 +50,13 @@ export const Aside = (data: any) => {
     hamdastWidgetsData,
     hamdastWidgets,
     user_id,
+    // Passed from the page so Aside stays a plain function (no hooks after early returns).
+    isSamanBookingEnabled = false,
+    // Set only for allowlist slugs (GrowthBook profile.api-source-by-slug).
+    profile_backend,
   } = data;
 
-  const isSamanBookingEnabled = useFeatureIsOn('saman-booking');
+  const isMicroserviceProfile = profile_backend === 'microservice';
 
   const profileData = pick(data, [
     'information',
@@ -60,18 +75,24 @@ export const Aside = (data: any) => {
   return [
     {
       id: 'saman-booking',
+      // On MS (allowlist) profiles, widget is only for unavailable/inactive messaging.
       isShow: isSamanBookingEnabled,
       function: () => {
         return {
           expertises,
           doctorCity: information.city_en_slug,
+          deferBookableToServices: isMicroserviceProfile,
         };
       },
-      children: (props: any) => <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} {...props} />,
+      children: (props: any) => (
+        <SamanBooking {...props} slug={seo.slug} displayName={information.display_name} centers={centers} />
+      ),
     },
     {
       id: 'book-me',
-      isShow: centers?.length > 0 && !isSamanBookingEnabled,
+      // Legacy: hide when saman-booking owns the slot. MS allowlist: keep Services as CTA
+      // (SamanBooking returns null when bookable via deferBookableToServices).
+      isShow: centers?.length > 0 && (isMicroserviceProfile || !isSamanBookingEnabled),
       function: () => {
         return {
           id: information.id,
@@ -85,27 +106,36 @@ export const Aside = (data: any) => {
           isBulk,
         };
       },
-      children: (props: any) => <Services {...props} enabledWidgets={hamdastWidgets} dontShowDeactiveBox={!!fragmentComponents?.risman} />,
+      children: (props: any) => (
+        <Services
+          {...props}
+          enabledWidgets={hamdastWidgets}
+          hamdastWidgetsData={hamdastWidgetsData}
+          dontShowDeactiveBox={!!fragmentComponents?.risman}
+        />
+      ),
     },
     {
       id: 'risman',
-      isShow: !customize.partnerKey && !!fragmentComponents?.risman && isBulk,
-      children: (props: any) => (
-        <Fragment2
-          name="Risman"
-          Component={PlasmicRisman}
-          args={{
-            data: fragmentComponents?.risman,
-            slug: seo.slug,
-          }}
+      isShow: !customize.partnerKey && !!fragmentComponents?.risman,
+      children: () => (
+        <RismanAsideSection
+          risman={fragmentComponents?.risman}
+          slug={seo.slug}
+          centers={centers ?? []}
+          partnerKey={customize?.partnerKey}
         />
       ),
     },
     {
       isShow: !customize?.partnerKey,
       noWrapper: true,
-      children: () =>
-        hamdastWidgets
+      children: () => {
+        // When book-me/Services is shown, services-placement widgets render there (after online visit).
+        const servicesOwnsWidgets = centers?.length > 0 && (isMicroserviceProfile || !isSamanBookingEnabled);
+        if (servicesOwnsWidgets) return null;
+
+        return hamdastWidgets
           ?.filter((widget: any) => widget?.placement?.includes?.('services'))
           ?.map((widget: any) => (
             <Hamdast
@@ -119,9 +149,10 @@ export const Aside = (data: any) => {
                 placement_metadata: widget.placements_metadata,
               }}
             />
-          )),
+          ));
+      },
     },
-    // Rcommend
+    // Recommend
     {
       isShow: information?.should_recommend_other_doctors && centers[0] && expertises?.expertises?.[0],
       function: () => {
@@ -197,7 +228,7 @@ export const Aside = (data: any) => {
                     server_id: information.server_id,
                     slug: seo.slug,
                     id: information.id,
-                    expertise: expertises.expertises[0].alias_title,
+                    expertise: expertises?.expertises?.[0]?.alias_title,
                     group_expertise: expertises.group_expertises[0].name,
                   },
                   center: {
@@ -225,7 +256,7 @@ export const Aside = (data: any) => {
                     server_id: information.server_id,
                     slug: seo.slug,
                     id: information.id,
-                    expertise: expertises.expertises[0].alias_title,
+                    expertise: expertises?.expertises?.[0]?.alias_title,
                     group_expertise: expertises.group_expertises[0].name,
                   },
                   center: {

@@ -3,13 +3,13 @@ import { toast } from 'react-hot-toast';
 
 // Apis
 import { useBookRequest } from '@/common/apis/services/booking/bookRequest';
-import { useGetProfileData } from '@/common/apis/services/profile/getFullProfile';
 
 // Hooks
 import { useFeatureIsOn, useFeatureValue } from '@growthbook/growthbook-react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { uniqMessengers } from '../functions/uniqMessengers';
+import { useBookingProfileData } from '../hooks/useBookingProfileData';
 
 // Components
 import Autocomplete from '@/common/components/atom/autocomplete';
@@ -60,6 +60,7 @@ import { splunkInstance } from '@/common/services/splunk';
 import classNames from '@/common/utils/classNames';
 import { convertNumberToStringGender } from '@/common/utils/convertNumberToStringGender';
 import SearchCard from '@/modules/search/components/card/card';
+import { doctorSlugFromSearchHit, useRaviCardRate } from '@/modules/profile/hooks/useDoctorRateDetails';
 import { useSearchRouting } from '@/modules/search/hooks/useSearchRouting';
 import axios from 'axios';
 import moment from 'jalali-moment';
@@ -67,6 +68,21 @@ import random from 'lodash/random';
 import { defaultMessengers } from '../constants/defaultMessengers';
 import { reformattedCentersProperty } from '../functions/reformattedCentersProperty';
 import { reformattedServicesProperty } from '../functions/reformattedServicesProperty';
+import {
+  isCenterBookingAvailable,
+  mapSamanAvailabilityToCenters,
+} from '../functions/mapSamanAvailabilityToCenters';
+import { mergeBookableCentersFromDoctorCenters } from '../functions/mergeBookableCentersFromDoctorCenters';
+import { isInvalidProfileServiceId, mapDoctorCenterServices, resolveBookableServiceId } from '../functions/mapDoctorCenterServices';
+import { useSamanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
+import { useSamanCenterBookingSettings } from '@/common/apis/services/booking/samanCenterBookingSettings';
+import { useDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
+import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { isBookingInsuranceEnabled, useCenterInsurances } from '@/common/apis/services/doctor/getCenterInsurances';
+import { useDoctorCenterDescriptions } from '@/common/apis/services/doctor/getDoctorCenterDescriptions';
+import { useDoctorOnlineChannels } from '@/common/apis/services/doctor/getDoctorOnlineChannels';
+import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
+import { useQuery } from '@tanstack/react-query';
 import useBooking from '../hooks/booking';
 import useFirstFreeTime from '../hooks/selectTime/useFirstFreeTime';
 import { Center } from '../types/selectCenter';
@@ -122,19 +138,38 @@ const BookingSteps = (props: BookingStepsProps) => {
   const isApplication = useApplication();
   const { slug, defaultStep, className } = props;
   const { isMobile } = useResponsive();
-  const { data, isLoading } = useGetProfileData(
-    {
-      slug,
-    },
+  const { data, profile, isLoading } = useBookingProfileData(slug, {
+    enabled: !!slug,
+  });
+  const centers = profile?.centers ?? (data && 'data' in data ? data.data?.centers : undefined);
+  const samanAvailability = useSamanDoctorAvailabilityStatus(slug, {
+    enabled: !!slug,
+  });
+  const doctorCentersQuery = useQuery(
+    [ServerStateKeysEnum.DoctorCenters, slug],
+    () => getDoctorCenters(slug),
     {
       enabled: !!slug,
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
     },
   );
-  const centers = data?.data?.centers;
-  const profile = data?.data;
+  const enrichedCenters = useMemo(() => {
+    if (!centers) return centers;
+    let list = samanAvailability.data ? mapSamanAvailabilityToCenters(centers, samanAvailability.data) : centers;
+
+    // getDoctorCenters already returns only centers with has_bookable_services === true.
+    // Allowlist profile centers and add bookable centers missing from full-profile (e.g. online 5532).
+    if (doctorCentersQuery.isSuccess && Array.isArray(doctorCentersQuery.data) && doctorCentersQuery.data.length > 0) {
+      list = mergeBookableCentersFromDoctorCenters(list, doctorCentersQuery.data);
+    }
+
+    return list;
+  }, [centers, samanAvailability.data, doctorCentersQuery.data, doctorCentersQuery.isSuccess]);
   const [center, setCenter] = useState<any>();
   const [service, setService] = useState<any>();
   const [user, setUser] = useState<any>({});
+  const defaultCenterHydratedRef = useRef<string | null>(null);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const bookEvent = useFeatureValue<{
     destination?: string;
@@ -154,7 +189,6 @@ const BookingSteps = (props: BookingStepsProps) => {
   });
   const shouldShowOnlineVistRecommendModal = onlineVisitDoctorList?.slugs?.includes?.(profile?.slug);
 
-  const doctorMessenger = uniqMessengers(profile?.online_visit_channel_types, Object.keys(messengers));
   const shouldShowMessengers = false;
 
   const {
@@ -180,7 +214,7 @@ const BookingSteps = (props: BookingStepsProps) => {
     centerId: center?.id,
     serviceId: service?.id,
     serverId: center?.server_id || '',
-    userCenterId: center?.user_center_id,
+    userCenterId: service?.user_center_id || center?.user_center_id,
   });
   const searchData = useSearch(
     {
@@ -194,35 +228,108 @@ const BookingSteps = (props: BookingStepsProps) => {
     },
   );
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
+  const raviRate = useRaviCardRate(doctorSlugFromSearchHit(substituteDoctor));
   const [step, setStep] = useState<Step>(defaultStep?.step ?? 'SELECT_CENTER');
+  const centerBookingSettingsQuery = useSamanCenterBookingSettings(center?.id, center?.user_center_id, {
+    enabled: !!center?.id && !!center?.user_center_id && step !== 'SELECT_CENTER',
+  });
+  const centerWithSettings = useMemo(() => {
+    if (!center) return center;
+    if (!centerBookingSettingsQuery.data) return center;
+    return { ...center, settings: centerBookingSettingsQuery.data };
+  }, [center, centerBookingSettingsQuery.data]);
+  const insuranceEnabled = isBookingInsuranceEnabled(centerWithSettings?.settings?.booking_enable_insurance);
+  const centerInsurancesQuery = useCenterInsurances(center?.id, {
+    enabled: insuranceEnabled && step === 'SELECT_USER',
+  });
+  const centerDescriptionsQuery = useDoctorCenterDescriptions(slug, center?.id, {
+    enabled: step === 'SELECT_USER' && !!slug && !!center?.id && center?.id !== CENTERS.CONSULT,
+  });
+  const isOnlineVisitSelectUser =
+    step === 'SELECT_USER' && (center?.id === CENTERS.CONSULT || String(defaultStep?.payload?.centerId) === CENTERS.CONSULT);
+  const onlineChannelsQuery = useDoctorOnlineChannels(slug, {
+    enabled: isOnlineVisitSelectUser && !!slug,
+  });
+  const onlineVisitChannelTypes = onlineChannelsQuery.data ?? [];
+  const doctorMessenger = uniqMessengers(onlineVisitChannelTypes, Object.keys(messengers));
+  const userCenterDescription = centerDescriptionsQuery.data?.user_center_description?.trim() || '';
+  const centerWithBookingData = useMemo(() => {
+    if (!centerWithSettings) return centerWithSettings;
+    if (!centerInsurancesQuery.data) return centerWithSettings;
+    return { ...centerWithSettings, insurances: centerInsurancesQuery.data };
+  }, [centerWithSettings, centerInsurancesQuery.data]);
   const { data: services } = useGetServices({ slug, center_id: center?.id }, { enabled: !!center?.id && !!service?.id });
   const checkBookRequestAvailability = useFeatureIsOn('check-book-request-availablility');
 
-  useEffect(() => {
-    if (defaultStep?.payload && centers && step !== 'BOOK_REQUEST') {
-      const selectedCenter = centers?.find((c: any) => c.id === defaultStep.payload.centerId);
-      const selectedService =
-        (defaultStep.step === 'SELECT_TIME' || defaultStep.step === 'SELECT_USER') &&
-        selectedCenter?.services.find((c: any) => c.id.toString() === defaultStep.payload?.serviceId?.toString());
+  const activeCenterId = center?.id ?? defaultStep?.payload?.centerId;
+  const doctorCenterServicesQuery = useDoctorCenterServices(slug, activeCenterId, {
+    enabled: !!slug && !!activeCenterId && step !== 'SELECT_CENTER',
+  });
 
-      setCenter(selectedCenter);
-      setService(selectedService);
-
-      if (defaultStep.step === 'SELECT_USER' && defaultStep.payload.timeId) {
-        setTimeId(defaultStep.payload.timeId);
-      }
-
-      if (defaultStep.step === 'SELECT_TIME' && selectedService?.can_request) {
-        return handleChangeStep('SELECT_USER', { serviceId: selectedService.id, timeId: '-1' }, { replaceUrl: true });
-      }
-
-      if (defaultStep.step === 'SELECT_SERVICES' && selectedCenter.services.length === 1) {
-        return handleChangeStep(defaultStep?.step ?? 'SELECT_TIME', { serviceId: selectedCenter.services?.[0]?.id }, { replaceUrl: true });
-      }
-
-      setStep(defaultStep?.step ?? 'SELECT_CENTER');
+  const centerBookableServices = useMemo(() => {
+    if (!center) return [];
+    if (doctorCenterServicesQuery.isSuccess && doctorCenterServicesQuery.data) {
+      return mapDoctorCenterServices(doctorCenterServicesQuery.data, center.user_center_id);
     }
-  }, [centers, defaultStep]);
+    if (doctorCenterServicesQuery.isError) {
+      return center.services ?? [];
+    }
+    return [];
+  }, [
+    center,
+    doctorCenterServicesQuery.isSuccess,
+    doctorCenterServicesQuery.isError,
+    doctorCenterServicesQuery.data,
+  ]);
+
+  const centerServicesLoading =
+    !!activeCenterId &&
+    step !== 'SELECT_CENTER' &&
+    doctorCenterServicesQuery.isLoading &&
+    !doctorCenterServicesQuery.isError;
+
+  useEffect(() => {
+    defaultCenterHydratedRef.current = null;
+  }, [defaultStep?.payload?.centerId, defaultStep?.step]);
+
+  useEffect(() => {
+    if (!defaultStep?.payload?.centerId || !enrichedCenters || step === 'BOOK_REQUEST') return;
+
+    const selectedCenter = enrichedCenters.find((c: any) => c.id === defaultStep.payload.centerId);
+    if (!selectedCenter) return;
+
+    setCenter(selectedCenter);
+
+    if (defaultStep.step === 'SELECT_USER' && (defaultStep.payload as Payloads)?.timeId) {
+      setTimeId((defaultStep.payload as Payloads).timeId);
+    }
+
+    if (defaultStep.step === 'SELECT_CENTER') {
+      setStep('SELECT_CENTER');
+      return;
+    }
+
+    setStep(defaultStep.step === 'SELECT_TIME' || defaultStep.step === 'SELECT_USER' ? defaultStep.step : 'SELECT_SERVICES');
+  }, [enrichedCenters, defaultStep?.payload?.centerId, defaultStep?.step, (defaultStep?.payload as any)?.timeId]);
+
+  useEffect(() => {
+    if (!samanAvailability.data || !enrichedCenters) return;
+
+    const centerId = defaultStep?.payload?.centerId ?? router.query.centerId?.toString();
+    if (!centerId) return;
+
+    const inList = enrichedCenters.some((c: any) => c.id === centerId);
+    const available = isCenterBookingAvailable(centerId, samanAvailability.data);
+    if (!inList || !available) {
+      router.replace(`/booking/${slug}/`);
+    }
+  }, [
+    samanAvailability.data,
+    enrichedCenters,
+    defaultStep?.payload?.centerId,
+    router.query.centerId,
+    slug,
+  ]);
 
   useEffect(() => {
     growthbook.setAttributes({
@@ -267,7 +374,8 @@ const BookingSteps = (props: BookingStepsProps) => {
           full_date: freeturnData?.full_date,
           status: freeturnData?.status,
           message: freeturnData?.message,
-          difference_freeTurn_profile_by_real: getFirstFreeTime.timeStamp! - (center?.freeturn ?? null),
+          difference_freeTurn_profile_by_real:
+            center?.freeturn != null ? getFirstFreeTime.timeStamp! - center.freeturn : undefined,
         },
         doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, service_id: center?.server_id }, service, doctor: profile }),
       });
@@ -299,7 +407,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         user: {
           ...user,
           insurance_id: insurance_id !== -1 ? insurance_id : null,
-          messengerType: profile?.online_visit_channel_types?.includes('whatsapp') ? 'hami' : 'eitaa',
+          messengerType: onlineVisitChannelTypes.includes('whatsapp') ? 'hami' : 'eitaa',
         },
       },
       {
@@ -396,7 +504,7 @@ const BookingSteps = (props: BookingStepsProps) => {
 
   const bookingAddon = useBookingAddon({
     slug,
-    center,
+    center: centerWithBookingData,
     profile,
     user,
     service,
@@ -457,6 +565,74 @@ const BookingSteps = (props: BookingStepsProps) => {
   };
 
   useEffect(() => {
+    if (!center || centerServicesLoading) return;
+    if (step !== 'SELECT_SERVICES' && step !== 'SELECT_TIME' && step !== 'SELECT_USER') return;
+
+    const payload = defaultStep?.payload as Partial<Payloads> | undefined;
+    const hydrationKey = `${center.id}:${defaultStep?.step ?? step}:${payload?.serviceId ?? ''}`;
+    if (defaultCenterHydratedRef.current === hydrationKey) return;
+
+    const bookableServices = centerBookableServices;
+    if (!doctorCenterServicesQuery.isSuccess && !doctorCenterServicesQuery.isError) return;
+
+    const requestedServiceId = payload?.serviceId ?? service?.id;
+    const resolvedRequestedId = resolveBookableServiceId(
+      requestedServiceId != null ? String(requestedServiceId) : undefined,
+      bookableServices,
+    );
+    const hasValidRequestedId = !isInvalidProfileServiceId(resolvedRequestedId);
+
+    let selectedService =
+      hasValidRequestedId && resolvedRequestedId
+        ? bookableServices.find((item: any) => item.id?.toString() === resolvedRequestedId.toString())
+        : undefined;
+
+    if (!selectedService && bookableServices.length === 1) {
+      selectedService = bookableServices[0];
+    }
+
+    if (step === 'SELECT_SERVICES' || (!selectedService && (step === 'SELECT_TIME' || step === 'SELECT_USER'))) {
+      if (bookableServices.length === 1) {
+        const onlyService = bookableServices[0];
+        defaultCenterHydratedRef.current = hydrationKey;
+        setService(onlyService);
+        if (onlyService?.can_request) {
+          handleChangeStep('SELECT_USER', { centerId: center.id, serviceId: onlyService.id, timeId: '-1' }, { replaceUrl: true });
+        } else {
+          handleChangeStep('SELECT_TIME', { centerId: center.id, serviceId: onlyService.id }, { replaceUrl: true });
+        }
+        return;
+      }
+
+      defaultCenterHydratedRef.current = hydrationKey;
+      setService(undefined);
+      if (step !== 'SELECT_SERVICES') {
+        handleChangeStep('SELECT_SERVICES', { centerId: center.id, serviceId: '' }, { replaceUrl: true });
+      }
+      return;
+    }
+
+    if (selectedService) {
+      defaultCenterHydratedRef.current = hydrationKey;
+      setService(selectedService);
+
+      if ((step === 'SELECT_TIME' || defaultStep?.step === 'SELECT_TIME') && selectedService.can_request) {
+        handleChangeStep('SELECT_USER', { serviceId: selectedService.id, timeId: '-1' }, { replaceUrl: true });
+      }
+    }
+  }, [
+    center,
+    centerBookableServices,
+    centerServicesLoading,
+    doctorCenterServicesQuery.isSuccess,
+    doctorCenterServicesQuery.isError,
+    step,
+    defaultStep?.step,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (defaultStep?.payload as any)?.serviceId,
+  ]);
+
+  useEffect(() => {
     if (step === 'SELECT_TIME') {
       clearTimeout(getTurnTimeout.current);
       getTurnTimeout.current = setTimeout(() => {
@@ -477,7 +653,7 @@ const BookingSteps = (props: BookingStepsProps) => {
         value: insurance.id,
       }));
     } else {
-      insurances = center?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
+      insurances = centerWithBookingData?.insurances?.map((item: any) => ({ label: item.name, value: item.id })) ?? [];
     }
 
     insurances.push({ label: 'آزاد', value: -1 });
@@ -496,7 +672,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       },
       params: {
         city: 'ir',
-        category: profile.expertises[0]?.expertise_groups[0].en_slug,
+        category: profile?.expertises?.[0]?.expertise_groups?.[0]?.en_slug,
       },
       previousQueries: false,
     });
@@ -527,7 +703,7 @@ const BookingSteps = (props: BookingStepsProps) => {
       event: {
         slug: url.replace('/dr/', ''),
         doctor_name: profile?.display_name,
-        doctor_expertice: profile?.expertises[0]?.expertise_groups[0]?.name,
+        doctor_expertice: profile?.expertises?.[0]?.expertise_groups?.[0]?.name,
         center_id: center?.id,
         service_id: service?.id,
       },
@@ -558,27 +734,19 @@ const BookingSteps = (props: BookingStepsProps) => {
           title="انتخاب مرکز درمانی"
           Component={SelectCenter}
           data={{
-            loading: isLoading && !profile,
-            centers: reformattedCentersProperty({ centers, displayName: profile?.display_name }),
+            loading: (isLoading && !profile) || doctorCentersQuery.isLoading,
+            centers: reformattedCentersProperty({ centers: enrichedCenters, displayName: profile?.display_name }),
             doctorName: profile?.display_name,
           }}
           nextStep={(center: Center) => {
-            const selectedCenter = centers.find((c: { id: string }) => c.id === center.id);
+            const selectedCenter = enrichedCenters.find((c: { id: string }) => c.id === center.id);
             sendSelectCenterEvent({
               center: selectedCenter,
               doctorInfo: reformattedDoctorInfoForEvent({ center: selectedCenter, doctor: profile }),
             });
+            defaultCenterHydratedRef.current = null;
+            setService(undefined);
             setCenter(selectedCenter);
-            if (selectedCenter.services.length === 1) {
-              const service = selectedCenter.services[0];
-              const payload = {
-                centerId: center.id,
-                serviceId: service.id,
-              };
-              setService(service);
-              if (service?.can_request) return handleChangeStep('SELECT_USER', payload);
-              return handleChangeStep('SELECT_TIME', payload);
-            }
             handleChangeStep('SELECT_SERVICES', { centerId: center.id });
           }}
         />
@@ -588,13 +756,13 @@ const BookingSteps = (props: BookingStepsProps) => {
           title="انتخاب خدمت"
           Component={SelectService}
           data={{
-            loading: isLoading || !center || !profile,
-            services: reformattedServicesProperty({ services: center?.services, center }),
+            loading: isLoading || centerServicesLoading || !center || !profile,
+            services: reformattedServicesProperty({ services: centerBookableServices, center }),
             doctorName: profile?.display_name,
             center: center,
           }}
           nextStep={(service: Service) => {
-            const selectedService = center?.services?.find((s: any) => s.id === service.id);
+            const selectedService = centerBookableServices?.find((s: any) => s.id === service.id);
             sendSelectServiceEvent(reformattedDoctorInfoForEvent({ center, service: selectedService, doctor: profile }));
             setService(selectedService);
             if (selectedService?.can_request) return handleChangeStep('SELECT_USER', { serviceId: service.id });
@@ -608,7 +776,7 @@ const BookingSteps = (props: BookingStepsProps) => {
           Component={SelectTimeWrapper}
           TopComponent={
             <>
-              {profile?.feedback_visit?.two_weeks_data.some((data: any) => data.center_id === center?.id && data.total_non_personal > 2) &&
+              {profile?.feedback_visit?.two_weeks_data?.some((data: any) => data.center_id === center?.id && data.total_non_personal > 2) &&
                 customize.showRateAndReviews && (
                   <>
                     <Text fontSize="sm" fontWeight="medium" className="text-orange-700">
@@ -619,29 +787,29 @@ const BookingSteps = (props: BookingStepsProps) => {
                     <Divider />
                   </>
                 )}
-              {services?.filter((item: any) => item.service_id === service.id)?.[0]?.description && (
+              {services?.filter((item: any) => item.service_id === service?.id)?.[0]?.description && (
                 <div className="p-3 mb-5 rounded-lg bg-slate-100">
                   <InfoIcon className="inline ml-1 w-6 h-6" />
                   <Text fontSize="sm" fontWeight="semiBold">
-                    {services?.filter((item: any) => item.service_id === service.id)?.[0]?.description}
+                    {services?.filter((item: any) => item.service_id === service?.id)?.[0]?.description}
                   </Text>
                 </div>
               )}
             </>
           }
           data={{
-            loading: isLoading || !center || !service || !profile,
+            loading: isLoading || centerServicesLoading || !center || !service || !profile,
             centerId: center?.id ?? '',
             serviceId: service?.id ?? '',
             serverId: center?.server_id ?? '',
-            userCenterId: service?.user_center_id,
-            showOnlyFirstFreeTime: center?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
+            userCenterId: service?.user_center_id ?? center?.user_center_id,
+            showOnlyFirstFreeTime: centerWithSettings?.settings?.booking_new_turn_suggestion_type === 'only_first_turn',
             onFirstFreeTimeError: (errorText: string) => {
               setFirstFreeTimeErrorText(errorText);
               sendGaEvent({
                 action: 'load-errormodal',
                 category: `${center.city}`,
-                label: `${profile?.expertises?.[0]?.expertise_groups[0].name ?? ''}`,
+                label: `${profile?.expertises?.[0]?.expertise_groups?.[0]?.name ?? ''}`,
               });
               handleOpenRecommendModal();
             },
@@ -653,7 +821,8 @@ const BookingSteps = (props: BookingStepsProps) => {
                     status,
                     message,
                     meta,
-                    difference_freeTurn_profile_by_real: result?.timestamp - center?.freeturn,
+                    difference_freeTurn_profile_by_real:
+                      center?.freeturn != null ? result?.timestamp - center.freeturn : undefined,
                   },
                   doctorInfo: reformattedDoctorInfoForEvent({ center: { ...center, server_id, server_name }, service, doctor: profile }),
                 });
@@ -677,9 +846,9 @@ const BookingSteps = (props: BookingStepsProps) => {
       )}
       {step === 'SELECT_USER' && (
         <>
-          {center?.user_center_desk && center?.id !== CENTERS.CONSULT && (
+          {center?.id !== CENTERS.CONSULT && userCenterDescription && (
             <div className="p-3 mb-5 rounded-lg bg-slate-100">
-              <Text fontSize="sm">{center?.user_center_desk}</Text>
+              <Text fontSize="sm">{userCenterDescription}</Text>
             </div>
           )}
           {/* {center?.id === CENTERS.CONSULT && !shouldShowMessengers && (
@@ -827,7 +996,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 return;
               }
               if (addonResult === 'no_addon' || addonResult === 'error') {
-                if (+center?.settings?.booking_enable_insurance) {
+                if (isBookingInsuranceEnabled(centerWithSettings?.settings?.booking_enable_insurance)) {
                   handleOpenInsuranceModal();
                   return;
                 }
@@ -835,7 +1004,7 @@ const BookingSteps = (props: BookingStepsProps) => {
                 return;
               }
 
-              if (+center?.settings?.booking_enable_insurance) {
+              if (isBookingInsuranceEnabled(centerWithSettings?.settings?.booking_enable_insurance)) {
                 handleOpenInsuranceModal();
                 return;
               }
@@ -849,14 +1018,14 @@ const BookingSteps = (props: BookingStepsProps) => {
           Component={TurnRequest}
           TopComponent={
             <>
-              {services?.find((item: any) => item.service_id === service.id)?.description && (
+              {services?.find((item: any) => item.service_id === service?.id)?.description && (
                 <div className="p-3 mb-5 rounded-lg bg-slate-100">
                   <InfoIcon className="inline ml-1 w-6 h-6" />
                   <Text
                     fontSize="sm"
                     fontWeight="semiBold"
                     dangerouslySetInnerHTML={{
-                      __html: services?.find((item: any) => item.service_id === service.id)?.description?.replace(/\n/g, '<br/>'),
+                      __html: services?.find((item: any) => item.service_id === service?.id)?.description?.replace(/\n/g, '<br/>'),
                     }}
                   />
                 </div>
@@ -869,11 +1038,11 @@ const BookingSteps = (props: BookingStepsProps) => {
             placeholder: 'توضیحات ...',
             uploaderTitle: 'مدارک مورد نیاز خود را بارگذاری کنید',
             rulesBoxTitle: 'شرایط دریافت نوبت از پذیرش24',
-            uploadRequired: services.find((item: any) => item.service_id === service.id)?.upload_required,
+            uploadRequired: services?.find((item: any) => item.service_id === service?.id)?.upload_required,
             getData: () => { },
             loading: bookRequest.isLoading || bookRequestLoading,
-            center_id: center.id,
-            service_id: service.id,
+            center_id: center?.id,
+            service_id: service?.id,
           }}
           nextStep={(data: TurnRequestInformation) => {
             if (!data.description) return toast.error('لطفا توضیحات را تکمیل کنید.');
@@ -898,16 +1067,23 @@ const BookingSteps = (props: BookingStepsProps) => {
       </Modal>
       <Modal title="انتخاب بیمه" {...insuranceModalProps} noScroll>
         <div className="flex flex-col space-y-3">
-          <Autocomplete
-            placeholder="انتخاب کنید."
-            align={isMobile ? 'top' : 'bottom'}
-            onChange={e => setInsuranceName(e.target.value.value)}
-            label="نام بیمه"
-            options={getInsuranceList()}
-          />
+          {insuranceEnabled && centerInsurancesQuery.isLoading ? (
+            <div className="flex justify-center py-6">
+              <Loading />
+            </div>
+          ) : (
+            <Autocomplete
+              placeholder="انتخاب کنید."
+              align={isMobile ? 'top' : 'bottom'}
+              onChange={e => setInsuranceName(e.target.value.value)}
+              label="نام بیمه"
+              options={getInsuranceList()}
+            />
+          )}
           <Button
-            loading={bookLoading}
+            loading={bookLoading || (insuranceEnabled && centerInsurancesQuery.isLoading)}
             block
+            disabled={insuranceEnabled && centerInsurancesQuery.isLoading}
             onClick={() =>
               handleBookAction({
                 ...user,
@@ -1033,20 +1209,8 @@ const BookingSteps = (props: BookingStepsProps) => {
                               experience: substituteDoctor.experience,
                               isVerify: true,
                               avatar: substituteDoctor.image,
-                              rate: {
-                                count: substituteDoctor.rates_count,
-                                satisfaction: substituteDoctor.satisfaction,
-                              },
+                              rate: raviRate,
                               isOnline: true,
-                            }}
-                            details={{
-                              badges: [
-                                {
-                                  title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
-                                  icon: 'shield-icon',
-                                  type: 'error',
-                                },
-                              ],
                             }}
                             className="shadow-none !py-2 lg:!py-2 cursor-pointer"
                             type="doctor"
@@ -1061,14 +1225,14 @@ const BookingSteps = (props: BookingStepsProps) => {
                         )}
                       </div>
                       <Button block size="sm" className="text-xs opacity-70" variant="text" onClick={handleClickMoreDoctors}>
-                        مشاهده سایر سرویس دهندگان آنلاین {profile.expertises[0]?.expertise_groups[0].name}
+                        مشاهده سایر سرویس دهندگان آنلاین {profile?.expertises?.[0]?.expertise_groups?.[0]?.name}
                       </Button>
                     </div>
                   ) : (
                     <Recommend
-                      doctorId={profile.id}
-                      city={profile.city_en_slug}
-                      category={profile.expertises[0].expertise.name}
+                      doctorId={profile?.id}
+                      city={profile?.city_en_slug}
+                      category={profile?.expertises?.[0]?.expertise?.name}
                       centerId={center?.id}
                       limit={3}
                     />

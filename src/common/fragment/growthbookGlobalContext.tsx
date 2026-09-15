@@ -1,9 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { DataProvider, GlobalActionsProvider } from '@plasmicapp/host';
-import { isDoctorUser } from '@/common/hooks/useDoctorHomeRedirect';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
+import { useDoctorDeviceCached } from '@/common/hooks/useDoctorDeviceCached';
 import { getCookie } from 'cookies-next';
+import getConfig from 'next/config';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { growthbook } from 'src/pages/_app';
+import { growthbook } from '@/common/growthbook/client';
+
+const { publicRuntimeConfig } = getConfig();
+const isEnabledGrowthbook =
+  !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
+  !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
 
 interface GrowthbookGlobalContextProps {
   previewAttributes?: Record<string, string>;
@@ -19,8 +26,7 @@ export const GrowthbookGlobalContext = ({
   const [featuresVersion, setFeaturesVersion] = useState(0);
   const [attr, setAttr] = useState({});
   const user = useUserInfoStore(state => state.info);
-
-  const isDoctor = isDoctorUser(user);
+  const isDoctor = hasDoctorIdentity(user, useDoctorDeviceCached());
 
   const getDoctorSpecialties = useMemo(() => {
     if (!isDoctor) return [];
@@ -34,8 +40,9 @@ export const GrowthbookGlobalContext = ({
   }, [isDoctor, user]);
 
   const syncAttributes = (extra: Record<string, unknown> = {}) => {
+    const currentAttributes = growthbook.getAttributes();
     growthbook.setAttributes({
-      ...growthbook.getAttributes(),
+      ...currentAttributes,
       ...attr,
       ...previewAttributes,
       ...extra,
@@ -52,13 +59,15 @@ export const GrowthbookGlobalContext = ({
 
   useEffect(() => {
     syncAttributes();
-    if (growthbook.ready) {
+    if (isEnabledGrowthbook && growthbook.ready) {
       growthbook.refreshFeatures?.();
     }
     setFeaturesVersion(version => version + 1);
   }, [user, isDoctor, getDoctorSpecialties, previewAttributes, attr]);
 
   useEffect(() => {
+    if (!isEnabledGrowthbook) return;
+
     setIsReady(growthbook.ready);
 
     const unsubscribe = growthbook.subscribe(() => {
@@ -78,13 +87,13 @@ export const GrowthbookGlobalContext = ({
       setAttributes: (attributes: Record<string, any>) => {
         setAttr(attributes);
         syncAttributes(attributes);
-        growthbook.refreshFeatures?.();
+        if (isEnabledGrowthbook) growthbook.refreshFeatures?.();
         setFeaturesVersion(version => version + 1);
       },
       setAttributeOverrides: (attributes: Record<string, any>) => {
         setAttr(prev => ({ ...prev, ...attributes }));
         syncAttributes(attributes);
-        growthbook.refreshFeatures?.();
+        if (isEnabledGrowthbook) growthbook.refreshFeatures?.();
         setFeaturesVersion(version => version + 1);
       },
     }),

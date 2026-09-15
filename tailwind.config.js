@@ -49,6 +49,14 @@ module.exports = {
           from: { opacity: '0', transform: 'scale(0.97) translateY(8px)' },
           to: { opacity: '1', transform: 'scale(1) translateY(0)' },
         },
+        'doctor-origin-in': {
+          from: { opacity: '0', transform: 'scale(0.92)' },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
+        'doctor-origin-out': {
+          from: { opacity: '1', transform: 'scale(1)' },
+          to: { opacity: '0', transform: 'scale(0.96)' },
+        },
         'doctor-backdrop-in': {
           from: { opacity: '0' },
           to: { opacity: '1' },
@@ -93,6 +101,8 @@ module.exports = {
         'insight-glass-sweep': 'insight-glass-sweep 0.85s ease-out forwards',
         'doctor-fade-up': 'doctor-fade-up 0.42s ease-out forwards',
         'doctor-sheet-in': 'doctor-sheet-in 0.24s ease-out forwards',
+        'doctor-origin-in': 'doctor-origin-in 0.28s cubic-bezier(0.32,0.72,0,1) forwards',
+        'doctor-origin-out': 'doctor-origin-out 0.2s ease-in forwards',
         'doctor-backdrop-in': 'doctor-backdrop-in 0.2s ease-out forwards',
         'doctor-scale-in': 'doctor-scale-in 0.28s ease-out forwards',
         'doctor-content-in': 'doctor-content-in 0.28s cubic-bezier(0.32,0.72,0,1) forwards',

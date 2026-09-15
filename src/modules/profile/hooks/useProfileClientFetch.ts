@@ -1,12 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAggregatedProfileData } from '@/modules/profile/functions/getAggregatedProfileData';
 import useCustomize from '@/common/hooks/useCustomize';
+import { newApiFeatureFlaggingCondition } from '@/common/helper/newApiFeatureFlaggingCondition';
+import { useFeatureValue } from '@growthbook/growthbook-react';
 
 export const useProfileClientFetch = (slug: string, enabled: boolean) => {
   const university = useCustomize(state => state.customize?.partnerKey);
+  const expertiseChipsConfig = useFeatureValue<{ slugs?: string[] }>('profile.expertise-chips-like-search', { slugs: [] });
+  const fetchExpertiseKeywordTags = newApiFeatureFlaggingCondition(expertiseChipsConfig?.slugs ?? [], slug);
 
   return useQuery(
-    ['profileClientData', slug],
+    ['profileClientData', slug, fetchExpertiseKeywordTags],
     () =>
       getAggregatedProfileData(slug, university, false, {
         useNewDoctorFullNameAPI: true,
@@ -15,6 +19,9 @@ export const useProfileClientFetch = (slug: string, enabled: boolean) => {
         useNewDoctorBiographyAPI: true,
         useNewDoctorCentersAPI: true,
         useNewDoctorGalleryAPI: true,
+        fetchExpertiseKeywordTags,
+        // PROFILE_API is SSR-only (private LAN). Browser CSR always uses legacy.
+        useProfileMicroservice: false,
       }),
     {
       enabled: enabled,

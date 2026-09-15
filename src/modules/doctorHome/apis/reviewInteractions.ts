@@ -1,4 +1,4 @@
-import { apiGatewayClient } from '@/common/apis/client';
+import { apiGatewayClient, raviApisClient } from '@/common/apis/client';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
@@ -126,14 +126,14 @@ export const reportFeedback = async ({
 
 export const useReportFeedback = () => useMutation(reportFeedback);
 
-/** لینک اشتراک‌گذاری نظر — GET /ravi/v1/share_comment?slug={slug}&id={feedbackId} → url */
+/** لینک اشتراک‌گذاری نظر — GET /ravi/v1/share/doctors/{slug}/{commentId} → url */
 export const useShareCommentUrl = (slug?: string, feedbackId?: string, enabled = true) =>
   useQuery(
     ['doctorHome', 'shareComment', slug ?? '', feedbackId ?? ''],
     async (): Promise<string | null> => {
-      const { data } = await apiGatewayClient.get('/ravi/v1/share_comment', {
-        params: { slug, id: feedbackId },
-      });
+      const { data } = await raviApisClient.get(
+        `/ravi/v1/share/doctors/${encodeURIComponent(slug!)}/${encodeURIComponent(feedbackId!)}`,
+      );
       const url = (data?.url ?? data?.data?.url ?? data?.link) as string | undefined;
       return typeof url === 'string' && url ? url : null;
     },
@@ -148,7 +148,8 @@ export const useShareCommentUrl = (slug?: string, feedbackId?: string, enabled =
 export const useAnsweredFeedbackIds = (slug?: string) =>
   useQuery(
     ['doctorHome', 'answeredFeedbackIds', slug ?? ''],
-    async (): Promise<Set<string>> => {
+    // Return string[] (not Set) so RQ localStorage persist round-trips cleanly.
+    async (): Promise<string[]> => {
       const where =
         `(doctor_slug,eq,${slug})` +
         `~and(reply_to_feedback_id,isnot,null)` +
@@ -157,12 +158,12 @@ export const useAnsweredFeedbackIds = (slug?: string) =>
         params: { where, limit: 200, offset: 0, sort: '-created_at' },
       });
       const list = (data?.list as Array<Record<string, unknown>> | undefined) ?? [];
-      const set = new Set<string>();
+      const ids = new Set<string>();
       list.forEach(it => {
         const id = it.reply_to_feedback_id;
-        if (id != null && id !== '') set.add(String(id));
+        if (id != null && id !== '') ids.add(String(id));
       });
-      return set;
+      return Array.from(ids);
     },
     { enabled: !!slug, staleTime: 60 * 1000, retry: 0 },
   );

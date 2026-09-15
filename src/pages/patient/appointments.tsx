@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 
 import { useGetBooks } from '@/common/apis/services/booking/getBooks';
@@ -20,10 +20,12 @@ import isAfterPastDaysFromTimestamp from '@/common/utils/isAfterPastDaysFromTime
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import Turn from '@/modules/myTurn/components/turn';
+import { useReviewedBookIds } from '@/modules/myTurn/hooks/useReviewedBookIds';
 import { useBookStore } from '@/modules/myTurn/store';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { PaymentStatus } from '@/modules/myTurn/types/paymentStatus';
+import { buildRaviSurveyUrl } from '@/modules/myTurn/utils/buildRaviSurveyUrl';
 import { PatientProfileLayout } from '@/modules/patient/layout/patientProfile';
 import { useFeatureValue } from '@growthbook/growthbook-react';
 import axios from 'axios';
@@ -46,6 +48,8 @@ export const Appointments = () => {
   const university = useCustomize(state => state.customize?.partnerKey);
   const currentTime = serverTime?.data?.data?.data.timestamp ?? Date.now();
   const user = useUserInfoStore(state => state.info);
+  const reviewedBookIdsQuery = useReviewedBookIds(user.id);
+  const reviewedBookIds = useMemo(() => new Set(reviewedBookIdsQuery.data ?? []), [reviewedBookIdsQuery.data]);
   const sendEventForLocalTypeBookCenterList = useFeatureValue('appointments.remove-sync|center-list', { centers: [''] });
   const isFromDashboard = router.asPath?.startsWith('/dashboard/appointments') ?? false;
 
@@ -222,7 +226,20 @@ export const Appointments = () => {
                 address: turn.center?.address,
               }}
               serverId={turn.server_id}
-              feedbackUrl={`https://formafzar.com/form/vqi0z?user_id=${user.id}&book_id=${turn.book_id}&doctor_id=${turn.doctor_info?.id}&server_id=${turn.server_id}&center_id=${turn.center_id}`}
+              feedbackUrl={
+                user.id && reviewedBookIdsQuery.isSuccess
+                  ? buildRaviSurveyUrl({
+                      userId: String(user.id),
+                      bookId: turn.book_id,
+                      doctorSlug: turn.doctor_info?.slug,
+                      centerId: turn.center?.id ?? turn.center_id,
+                      doctorId: turn.doctor_info?.id,
+                      serverId: turn.server_id,
+                    })
+                  : null
+              }
+              hasReviewed={reviewedBookIds.has(String(turn.book_id))}
+              currentTime={currentTime}
               prescription={{
                 ...turn.prescription,
               }}

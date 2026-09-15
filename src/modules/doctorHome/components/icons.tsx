@@ -1,6 +1,5 @@
 import classNames from '@/common/utils/classNames';
 import {
-  BarChart3,
   Bell,
   Briefcase,
   Calendar,
@@ -14,8 +13,10 @@ import {
   EyeOff,
   MessageCircle,
   RotateCcw,
+  Settings,
   ShoppingBag,
   Star,
+  TrendingUp,
   Wallet,
 } from 'lucide-react';
 import { DsIcon, type DsIconProps } from '../designSystem/DsIcon';
@@ -52,7 +53,6 @@ const withInheritedColor = ({ className, ...props }: DoctorHomeIconProps, icon: 
   <DsIcon icon={icon} className={classNames('text-current', className)} {...props} />
 );
 
-export const PerformanceIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, BarChart3);
 export const ReviewsIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Star);
 export const WalletIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Wallet);
 export const PageViewIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Eye);
@@ -61,6 +61,7 @@ export const EyeHiddenIcon = (props: DoctorHomeIconProps) => withInheritedColor(
 export const ClockIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Clock);
 export const VacationIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, CalendarDays);
 export const TariffIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, ShoppingBag);
+export const BookingSettingsIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Settings);
 export const ClinicIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Hospital);
 export const ChatIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, MessageCircle);
 export const CalendarIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, Calendar);
@@ -75,3 +76,4 @@ export const TodayIcon = (props: DoctorHomeIconProps) => withInheritedColor(prop
 export const TimelineDoneIcon = ({ className, ...props }: DoctorHomeIconProps) => (
   <DsIcon icon={Check} size="xs" className={classNames('text-current', className)} {...props} />
 );
+export const GrowthPathIcon = (props: DoctorHomeIconProps) => withInheritedColor(props, TrendingUp);

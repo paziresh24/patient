@@ -31,6 +31,7 @@ import { isPWA } from '@/common/utils/isPwa';
 import { sendBookEvent } from '@/modules/booking/events/book';
 import { useBookAction } from '@/modules/booking/hooks/receiptTurn/useBookAction';
 import { useLoginModalContext } from '@/modules/login/context/loginModal';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import DoctorInfo from '@/modules/myTurn/components/doctorInfo';
 import { OnlineVisitCancelModal } from '@/modules/myTurn/components/onlineVisitCancelModal';
@@ -54,7 +55,7 @@ import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next/types';
 import { useQuery } from '@tanstack/react-query';
-import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { growthbook } from 'src/pages/_app';
 import axios from 'axios';
@@ -111,6 +112,7 @@ const Receipt = () => {
   const [widgetApp, setWidgetApp] = useState<string | null>(null);
   const [doctorUserId, setDoctorUserId] = useState<number | string | null>(null);
   const [resolvedDoctorSlug, setResolvedDoctorSlug] = useState<string | null>(null);
+  const [doctorProfileResolved, setDoctorProfileResolved] = useState(false);
   const [doctorFullName, setDoctorFullName] = useState<{ name: string; family: string }>({ name: '', family: '' });
   const [isAccessChatLoading, setIsAccessChatLoading] = useState(true);
   const [isAccessChatReady, setIsAccessChatReady] = useState(false);
@@ -184,6 +186,12 @@ const Receipt = () => {
     },
   );
 
+  const widgetDoctorUserId = useMemo(() => {
+    const uid = receiptAppointmentDoctorForPic?.user_id;
+    if (uid === undefined || uid === null || uid === '') return null;
+    return uid;
+  }, [receiptAppointmentDoctorForPic?.user_id]);
+
   const receiptDoctorAvatar = useMemo(() => {
     if (!bookDetailsData || typeof bookDetailsData !== 'object' || !bookDetailsData.doctor) return undefined;
     const uid = receiptAppointmentDoctorForPic?.user_id;
@@ -203,38 +211,46 @@ const Receipt = () => {
     if (!doctorSlug) {
       setDoctorUserId(null);
       setResolvedDoctorSlug(null);
+      setDoctorProfileResolved(true);
       setDoctorFullName({ name: '', family: '' });
       return;
     }
 
-    const fetchDoctorUserId = async () => {
-      const visitedSlugs = new Set<string>();
-      let currentSlug: string | null = doctorSlug;
+    setDoctorProfileResolved(false);
 
-      const getSlugFromRedirectRoute = (route: string) => {
-        try {
-          const path = route.startsWith('http') ? new URL(route).pathname : route;
-          const match = path.match(/^\/dr\/([^/?#]+)\/?$/);
-          return match?.[1] ?? null;
-        } catch {
-          return null;
-        }
-      };
+    const hasDoctorUserId = (value: unknown) => value !== undefined && value !== null && value !== '';
+    const looksLikeUuid = (value: unknown) =>
+      typeof value === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
 
-      const getRedirectRouteFromData = (data: unknown) => {
-        if (!data || typeof data !== 'object') {
-          return null;
-        }
+    const getSlugFromRedirectRoute = (route: string) => {
+      try {
+        const path = route.startsWith('http') ? new URL(route).pathname : route;
+        const match = path.match(/^\/dr\/([^/?#]+)\/?$/);
+        return match?.[1] ?? null;
+      } catch {
+        return null;
+      }
+    };
 
-        const redirect = (data as { redirect?: { route?: unknown } }).redirect;
-        return typeof redirect?.route === 'string' ? redirect.route : null;
-      };
+    const getRedirectRouteFromData = (data: unknown) => {
+      if (!data || typeof data !== 'object') {
+        return null;
+      }
+
+      const redirect = (data as { redirect?: { route?: unknown } }).redirect;
+      return typeof redirect?.route === 'string' ? redirect.route : null;
+    };
+
+    type DoctorProfileHit = { slug: string; user_id?: number | string | null };
+
+    const fetchProfileBySlug = async (slug: string, visitedSlugs: Set<string>): Promise<DoctorProfileHit | null> => {
+      let currentSlug: string | null = slug;
 
       while (currentSlug && !visitedSlugs.has(currentSlug)) {
         visitedSlugs.add(currentSlug);
 
         try {
-          const doctorProfileResponse = await drProfileClient.get(`/api/doctors/${currentSlug}`);
+          const doctorProfileResponse = await drProfileClient.get(`/api/doctors/${encodeURIComponent(currentSlug)}`);
           const redirectRoute = getRedirectRouteFromData(doctorProfileResponse.data);
           const redirectedSlug = redirectRoute ? getSlugFromRedirectRoute(redirectRoute) : null;
 
@@ -243,24 +259,10 @@ const Receipt = () => {
             continue;
           }
 
-          setDoctorUserId(doctorProfileResponse.data?.user_id ?? null);
-          setResolvedDoctorSlug(currentSlug);
-
-          try {
-            const encodedSlug = encodeURIComponent(currentSlug);
-            const { data: doctorFullNameResponse } = await drProfileClient.get(`/api/doctors/${encodedSlug}/fullname`, {
-              timeout: 5000,
-            });
-
-            setDoctorFullName({
-              name: doctorFullNameResponse?.name ?? '',
-              family: doctorFullNameResponse?.family ?? '',
-            });
-          } catch {
-            setDoctorFullName({ name: '', family: '' });
-          }
-
-          return;
+          return {
+            slug: currentSlug,
+            user_id: doctorProfileResponse.data?.user_id ?? null,
+          };
         } catch (error) {
           const redirectRoute = axios.isAxiosError(error) ? getRedirectRouteFromData(error.response?.data) : null;
           const redirectedSlug = redirectRoute ? getSlugFromRedirectRoute(redirectRoute) : null;
@@ -270,28 +272,98 @@ const Receipt = () => {
             continue;
           }
 
+          return null;
+        }
+      }
+
+      return null;
+    };
+
+    const fetchDoctorUserId = async () => {
+      try {
+        const visitedSlugs = new Set<string>();
+        let hit = await fetchProfileBySlug(doctorSlug, visitedSlugs);
+
+        // Book/receipt often store a short slug (e.g. دکتر-سیامک-رحمانی) that has no user_id and is
+        // not the canonical GB-targeted slug (…-3). Resolve via owner id or numbered suffix.
+        if (!hit || !hasDoctorUserId(hit.user_id)) {
+          const doctorId = bookDetailsData?.doctor?.id;
+          const serverId = bookDetailsData?.doctor?.server_id;
+
+          if (doctorId != null && serverId != null) {
+            try {
+              const { data } = await drProfileClient.get(`/api/doctors/${encodeURIComponent(String(doctorId))}/${serverId}/`, {
+                timeout: 4000,
+              });
+              if (data?.slug && hasDoctorUserId(data?.user_id)) {
+                hit = { slug: data.slug, user_id: data.user_id };
+              }
+            } catch {
+              // ignore — try UUID /1/ or suffix probe below
+            }
+          }
+
+          if ((!hit || !hasDoctorUserId(hit.user_id)) && looksLikeUuid(doctorId)) {
+            try {
+              const { data } = await drProfileClient.get(`/api/doctors/${encodeURIComponent(String(doctorId))}/1/`, {
+                timeout: 4000,
+              });
+              if (data?.slug && hasDoctorUserId(data?.user_id)) {
+                hit = { slug: data.slug, user_id: data.user_id };
+              }
+            } catch {
+              // ignore
+            }
+          }
+        }
+
+        if ((!hit || !hasDoctorUserId(hit.user_id)) && !/-\d+$/.test(doctorSlug)) {
+          for (let n = 0; n <= 9; n += 1) {
+            const candidate = `${doctorSlug}-${n}`;
+            const candidateHit = await fetchProfileBySlug(candidate, visitedSlugs);
+            if (candidateHit && hasDoctorUserId(candidateHit.user_id)) {
+              hit = candidateHit;
+              break;
+            }
+          }
+        }
+
+        if (!hit) {
           setDoctorUserId(null);
           setResolvedDoctorSlug(null);
           setDoctorFullName({ name: '', family: '' });
           return;
         }
-      }
 
-      setDoctorUserId(null);
-      setResolvedDoctorSlug(null);
-      setDoctorFullName({ name: '', family: '' });
+        setDoctorUserId(hit.user_id ?? null);
+        setResolvedDoctorSlug(hit.slug);
+
+        try {
+          const encodedSlug = encodeURIComponent(hit.slug);
+          const { data: doctorFullNameResponse } = await drProfileClient.get(`/api/doctors/${encodedSlug}/fullname`, {
+            timeout: 5000,
+          });
+
+          setDoctorFullName({
+            name: doctorFullNameResponse?.name ?? '',
+            family: doctorFullNameResponse?.family ?? '',
+          });
+        } catch {
+          setDoctorFullName({ name: '', family: '' });
+        }
+      } finally {
+        setDoctorProfileResolved(true);
+      }
     };
 
     fetchDoctorUserId();
-  }, [bookDetailsData?.doctor?.slug]);
+  }, [bookDetailsData?.doctor?.slug, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id]);
 
   const fetchWidgetAndCheckAddons = useCallback(async () => {
     if (
       !centerId ||
       !bookId ||
-      !bookDetailsData?.doctor?.id ||
-      !bookDetailsData?.doctor?.server_id ||
-      !doctorUserId ||
+      !widgetDoctorUserId ||
       hasFetchedWidgetRef.current ||
       isFetchingRef.current ||
       widgetModalProps.isOpen
@@ -305,7 +377,7 @@ const Receipt = () => {
       setIsHamdastReceiptLoading(true);
       try {
         const widgetsResponse = await hamdastClient.get(`/api/v1/widgets/`, {
-          params: { user_id: doctorUserId },
+          params: { user_id: widgetDoctorUserId },
         });
 
         const widgets = widgetsResponse.data || [];
@@ -321,7 +393,7 @@ const Receipt = () => {
               viewer_user_id: user?.id,
               appointment_id: bookId,
               center_id: centerId,
-              doctor_user_id: doctorUserId,
+              doctor_user_id: widgetDoctorUserId,
               widget_app: targetWidget.app,
             },
           });
@@ -332,13 +404,12 @@ const Receipt = () => {
           return;
         }
 
-        void prefetchOneApp(queryClient, { appKey: targetWidget.app, pageKey: 'flows' }, 1);
+        void prefetchOneApp(queryClient, { appKey: targetWidget.app, pageKey: 'flows' }, ['ONLINE_VISIT_CHANNEL_BUTTON']);
 
         const addonsResponse = await apiGatewayClient.get('/v1/hamdast/addons/receipt', {
           params: {
             medical_center_id: centerId,
             appointment_id: bookId,
-            doctor_id: bookDetailsData.doctor.id,
           },
         });
 
@@ -349,7 +420,7 @@ const Receipt = () => {
             viewer_user_id: user?.id,
             appointment_id: bookId,
             center_id: centerId,
-            doctor_user_id: doctorUserId,
+            doctor_user_id: widgetDoctorUserId,
             addon_apps: addonsResponse.data?.apps,
             data: addonsResponse.data
           },
@@ -374,12 +445,11 @@ const Receipt = () => {
   }, [
     centerId,
     bookId,
-    bookDetailsData?.doctor?.id,
-    bookDetailsData?.doctor?.server_id,
-    doctorUserId,
+    widgetDoctorUserId,
     handleOpenWidgetModal,
     widgetModalProps.isOpen,
     user?.id,
+    queryClient,
   ]);
 
   useEffect(() => {
@@ -459,8 +529,8 @@ const Receipt = () => {
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && !turnStatus.expiredTurn && possibilityBeingVisited;
 
   useEffect(() => {
-    if (centerId && bookId && bookDetailsData?.doctor?.id && bookDetailsData?.doctor?.server_id && doctorUserId) {
-      const fetchKey = `${centerId}-${bookId}-${bookDetailsData.doctor.id}-${bookDetailsData.doctor.server_id}`;
+    if (centerId && bookId && widgetDoctorUserId) {
+      const fetchKey = `${centerId}-${bookId}-${widgetDoctorUserId}`;
 
       if (lastFetchedKeyRef.current !== fetchKey) {
         hasFetchedWidgetRef.current = false;
@@ -472,7 +542,7 @@ const Receipt = () => {
         fetchWidgetAndCheckAddons();
       }
     }
-  }, [centerId, bookId, bookDetailsData?.doctor?.id, bookDetailsData?.doctor?.server_id, doctorUserId]);
+  }, [centerId, bookId, widgetDoctorUserId, fetchWidgetAndCheckAddons]);
 
   useEffect(() => {
     const serviceTypeId = bookDetailsData?.services?.[0]?.service_type_id;
@@ -564,6 +634,11 @@ const Receipt = () => {
     !!bookDetailsData && !turnStatus.deletedTurn && !turnStatus.visitedTurn && possibilityBeingVisited;
   const canShowBookInPersonBanner = turnStatus.notVisitedTurn || turnStatus.expiredTurn;
   const showOptionalButton = centerType === 'clinic' && !turnStatus.deletedTurn && !turnStatus.expiredTurn && !turnStatus.requestedTurn && bookDetailsData?.services?.[0]?.service_type_id !== 9;
+  const showConsultSupportFallback =
+    centerType === 'consult' &&
+    bookDetailsData?.services?.[0]?.service_type_id !== 9 &&
+    !turnStatus?.deletedTurn;
+  const showSecondaryReceiptActions = showConsultSupportFallback || showOptionalButton || turnStatus.requestedTurn;
 
   const handleRemoveBookTurn = () => {
     removeBookApi.mutate(
@@ -760,6 +835,24 @@ const Receipt = () => {
     window.open(`https://messaging-back.paziresh24.com/api/external/conversations/${bookId}`);
   };
 
+  const handleOnlineVisitSupportClick = () => {
+    if (!bookDetailsData) return;
+    splunkInstance('booking').sendEvent({
+      group: 'support-receipt',
+      type: 'click-support',
+      event: {
+        doctor_id: bookDetailsData?.doctor?.id,
+        slug: bookDetailsData?.doctor?.slug,
+        server_id: bookDetailsData?.doctor?.server_id,
+        doctor_name: doctorName,
+        book_id: bookDetailsData.book_id,
+        reference_code: bookDetailsData.reference_code,
+        book_date: bookDetailsData.book_time_strings,
+      },
+    });
+    window.open('https://support.paziresh24.com/chats/new?department=3', '_blank', 'noopener,noreferrer');
+  };
+
   const handleSafeCallAction = () => {
     splunkInstance('booking').sendEvent({
       group: 'safe-call',
@@ -862,39 +955,23 @@ const Receipt = () => {
     }
   }, [bookDetailsData?.book_time]);
 
-  useEffect(() => {
-    if (bookDetailsData?.book_id) {
-      {
-        growthbook.loadFeatures({ skipCache: true });
-        growthbook.setAttributes({
-          ...growthbook.getAttributes(),
-          slug: bookDetailsData?.doctor?.slug,
-          book_id: bookId,
-          center_id: centerId,
-          is_book_request: bookDetailsData?.is_book_request,
-          doctor_city: bookDetailsData?.center?.city?.en_slug,
-        });
+  // Prefer canonical resolved slug for GB targeting (book slug can omit suffix like `-3`).
+  useLayoutEffect(() => {
+    const slugForGrowthbook = resolvedDoctorSlug ?? bookDetailsData?.doctor?.slug;
 
-        if (bookDetailsData?.doctor?.id) {
-          splunkInstance('booking').sendEvent({
-            group: 'view-receipt-page',
-            type: 'view-receipt-page',
-            event: {
-              doctor_id: bookDetailsData?.doctor?.id,
-              slug: bookDetailsData?.doctor?.slug,
-              server_id: bookDetailsData?.doctor?.server_id,
-              doctor_name: doctorName,
-              book_id: bookDetailsData.book_id,
-              reference_code: bookDetailsData.reference_code,
-              book_date: bookDetailsData.book_time_strings,
-              center_id: centerId,
-              user_id: user?.id,
-              is_doctor: user?.provider?.job_title === 'doctor',
-            },
-          });
-        }
-      }
+    if (!bookDetailsData?.book_id || !slugForGrowthbook) {
+      return;
     }
+
+    growthbook.loadFeatures({ skipCache: true });
+    growthbook.setAttributes({
+      ...growthbook.getAttributes(),
+      slug: slugForGrowthbook,
+      book_id: bookId,
+      center_id: centerId,
+      is_book_request: bookDetailsData?.is_book_request,
+      doctor_city: bookDetailsData?.center?.city?.en_slug,
+    });
 
     return () => {
       growthbook.setAttributes({
@@ -902,7 +979,36 @@ const Receipt = () => {
         slug: undefined,
       });
     };
-  }, [bookDetailsData?.book_id]);
+  }, [
+    bookDetailsData?.book_id,
+    bookDetailsData?.doctor?.slug,
+    bookDetailsData?.is_book_request,
+    bookDetailsData?.center?.city?.en_slug,
+    resolvedDoctorSlug,
+    bookId,
+    centerId,
+  ]);
+
+  useEffect(() => {
+    if (bookDetailsData?.book_id && bookDetailsData?.doctor?.id) {
+      splunkInstance('booking').sendEvent({
+        group: 'view-receipt-page',
+        type: 'view-receipt-page',
+        event: {
+          doctor_id: bookDetailsData?.doctor?.id,
+          slug: resolvedDoctorSlug ?? bookDetailsData?.doctor?.slug,
+          server_id: bookDetailsData?.doctor?.server_id,
+          doctor_name: doctorName,
+          book_id: bookDetailsData.book_id,
+          reference_code: bookDetailsData.reference_code,
+          book_date: bookDetailsData.book_time_strings,
+          center_id: centerId,
+          user_id: user?.id,
+          is_doctor: hasDoctorIdentity(user),
+        },
+      });
+    }
+  }, [bookDetailsData?.book_id, bookDetailsData?.doctor?.id]);
 
   useEffect(() => {
     if (action && getReceiptDetails?.data) {
@@ -1014,6 +1120,8 @@ const Receipt = () => {
               possibilityBeingVisited={possibilityBeingVisited}
               centerId={centerId?.toString()!}
               bookId={bookId as string}
+              doctorUserId={doctorUserId ?? widgetDoctorUserId}
+              doctorProfilePending={!!bookDetailsData?.doctor?.slug && !doctorProfileResolved}
             />
           </div>
           {bookDetailsData?.services?.[0]?.service_type_id === 9 && !turnStatus?.deletedTurn && (
@@ -1031,38 +1139,73 @@ const Receipt = () => {
                   <Button block variant="secondary" theme="error" icon={<TrashIcon />} onClick={handleRemoveBookClick}>
                     لغو نوبت
                   </Button>
+                  {centerType === 'consult' && bookDetailsData.book_id && growthbook.ready && !userPednding && (
+                    <>
+                      <Fragment
+                        name="ReceiptActionButtons"
+                        props={{
+                          bookDetailsData: {
+                            ...bookDetailsData,
+                            doctor: { ...bookDetailsData.doctor, display_name: doctorName },
+                            selected_online_visit_channel: {
+                              ...bookDetailsData?.selected_online_visit_channel,
+                              channel_link: decodeURIComponent(
+                                bookDetailsData?.selected_online_visit_channel?.channel_link.replace(
+                                  'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+                                  '',
+                                ),
+                              ),
+                            },
+                          },
+                          specialities: [],
+                          currentUserId: user.id,
+                        }}
+                        variants={{
+                          type: 'visitOnline',
+                        }}
+                      />
+                      <Button block size="sm" variant="secondary" onClick={handleOnlineVisitSupportClick}>
+                        پشتیبانی
+                      </Button>
+                    </>
+                  )}
                 </div>
               ) : (
                 <ReceiptButtonLoading />
               )}
             </>
           )}
-          {bookDetailsData.book_id && growthbook.ready && !userPednding && (
+          {bookDetailsData.book_id && growthbook.ready && !userPednding && showSecondaryReceiptActions && (
             <div className="p-5">
-              {centerType === 'consult' && (
-                <Fragment
-                  name="ReceiptActionButtons"
-                  props={{
-                    bookDetailsData: {
-                      ...bookDetailsData,
-                      doctor: { ...bookDetailsData.doctor, display_name: doctorName },
-                      selected_online_visit_channel: {
-                        ...bookDetailsData?.selected_online_visit_channel,
-                        channel_link: decodeURIComponent(
-                          bookDetailsData?.selected_online_visit_channel?.channel_link.replace(
-                            'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
-                            '',
+              {showConsultSupportFallback && (
+                <div className="flex flex-col gap-2">
+                  <Fragment
+                    name="ReceiptActionButtons"
+                    props={{
+                      bookDetailsData: {
+                        ...bookDetailsData,
+                        doctor: { ...bookDetailsData.doctor, display_name: doctorName },
+                        selected_online_visit_channel: {
+                          ...bookDetailsData?.selected_online_visit_channel,
+                          channel_link: decodeURIComponent(
+                            bookDetailsData?.selected_online_visit_channel?.channel_link.replace(
+                              'https://www.paziresh24.com/send-event-handler?openInBrowser=1&url=',
+                              '',
+                            ),
                           ),
-                        ),
+                        },
                       },
-                    },
-                    specialities: [],
-                    currentUserId: user.id,
-                  }}
-                  variants={{
-                    type: centerType === 'consult' ? 'visitOnline' : turnStatus.requestedTurn ? 'request' : 'inPerson',
-                  }}
-                />
+                      specialities: [],
+                      currentUserId: user.id,
+                    }}
+                    variants={{
+                      type: 'visitOnline',
+                    }}
+                  />
+                  <Button block size="sm" variant="secondary" onClick={handleOnlineVisitSupportClick}>
+                    پشتیبانی
+                  </Button>
+                </div>
               )}
               {showOptionalButton && (
                 <>
@@ -1357,7 +1500,7 @@ const Receipt = () => {
                 dontShowNotification
                 appKey={widgetApp}
                 params={['flows', 'ONLINE_VISIT_CHANNEL_BUTTON']}
-                queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_id: bookDetailsData.doctor.id, doctor_user_id: doctorUserId }}
+                queries={{ medical_center_id: centerId, appointment_id: bookId, doctor_user_id: widgetDoctorUserId }}
                 reportOpenSignal={reportOpenSignal}
                 onReportSubmit={() => {
                   handleCloseClosePromptWidgetModal();

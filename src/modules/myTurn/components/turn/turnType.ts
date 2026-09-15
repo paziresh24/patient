@@ -53,6 +53,8 @@ export interface TurnProps {
     pdf?: string;
   };
   isFromDashboard?: boolean;
+  hasReviewed?: boolean;
+  currentTime?: number;
 }
 
 export type OnlineVisitChannel = {

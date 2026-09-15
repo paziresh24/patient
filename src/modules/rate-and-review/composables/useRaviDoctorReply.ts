@@ -2,6 +2,7 @@ import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { trackRaviReviewEvent } from '../analytics/trackRaviReviewEvent';
 import { deleteFeedbackReply, editFeedbackReply, submitFeedbackReply } from '../api';
 import { FEEDBACK_REPLY_KEY, useFeedbackReply } from './useFeedbackReply';
 
@@ -75,6 +76,13 @@ export const useRaviDoctorReply = ({ feedbackId, doctorSlug, doctorUserId }: Use
       }
       setShowForm(false);
       invalidateReplyQueries(queryClient, doctorSlug, feedbackId);
+      void trackRaviReviewEvent({
+        event_type: 'review_reply_submit',
+        slug: doctorSlug,
+        feedback_id: feedbackId,
+        doctor_id: doctorUserId,
+        ok: true,
+      });
     } catch {
       toast.error(reply ? 'ویرایش پاسخ ناموفق بود.' : 'ثبت پاسخ ناموفق بود.');
     }
@@ -94,7 +102,8 @@ export const useRaviDoctorReply = ({ feedbackId, doctorSlug, doctorUserId }: Use
   };
 
   const showReplyButton = isDoctor && !!doctorSlug && !isLoading && !reply && !showForm;
-  const showPanel = isDoctor && !!doctorSlug && (Boolean(reply) || showForm);
+  // Existing replies are public; compose/edit form is doctor-only.
+  const showPanel = !!doctorSlug && (Boolean(reply) || (isDoctor && showForm));
 
   return {
     isDoctor,

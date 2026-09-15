@@ -6,9 +6,11 @@
     "dev": "cross-env node server.js",
     "dev:turbo": "cross-env TURBO=1 node server.js",
     "dev:debug": "cross-env NODE_OPTIONS='--inspect' node server.js",
+    "predev": "node scripts/patch-radix-basestyles.js",
+    "prebuild": "node scripts/patch-radix-basestyles.js",
     "build": "node scripts/remove-google-fonts.js && next build",
     "analyze": "cross-env ANALYZE=true SENTRY_LOG_LEVEL=debug next build",
-    "start": "next start",
+    "start": "node -r ./log-bootstrap.cjs node_modules/next/dist/bin/next start",
     "lint": "next lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
@@ -18,7 +20,15 @@
     "test": "jest --watch",
     "test:ci": "jest --ci",
     "plasmic-sync": "plasmic sync -p sMdpLWyxbzDCruwMRffW2m -p qQzsBf58SqzNJX45iggq96 -p iDYgiKJB9Yi7CUB81stQBK --yes --force",
-    "mkcert-localhost": "mkcert -key-file cert/localhost-key.pem -cert-file cert/localhost.pem localhost 127.0.0.1 local.paziresh24.com local.paziresh24.dev && mkcert -install"
+    "mkcert-localhost": "mkcert -key-file cert/localhost-key.pem -cert-file cert/localhost.pem localhost 127.0.0.1 local.paziresh24.com local.paziresh24.dev && mkcert -install",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:public": "playwright test search doctor-profile booking-public",
+    "e2e:yara": "playwright test yara",
+    "e2e:visual": "playwright test visual",
+    "e2e:visual:update": "playwright test visual --update-snapshots",
+    "e2e:login": "playwright test --project=login --headed",
+    "e2e:report": "playwright show-report e2e/.report"
   },
   "dependencies": {
     "@ant-design/icons": "5.3.7",
@@ -48,6 +58,7 @@
     "@tanstack/react-query": "4.29.5",
     "axios": "1.12.2",
     "chart.js": "3.9.1",
+    "class-variance-authority": "0.7.1",
     "clsx": "^1.1.1",
     "cookies-next": "2.1.1",
     "eventsource": "2.0.2",
@@ -59,6 +70,7 @@
     "lodash": "4.17.21",
     "lucide-react": "0.316.0",
     "md5": "2.3.0",
+    "motion": "12.23.12",
     "nanoid": "5.1.5",
     "next": "14.1.0",
     "next-translate": "1.6.0",
@@ -132,7 +144,11 @@
     "tailwindcss": "3.4.11",
     "tailwindcss-rtl": "^0.9.0",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
-    "typescript": "4.7.4"
+    "typescript": "4.7.4",
+    "@playwright/test": "1.49.1"
+  },
+  "overrides": {
+    "file-saver": "1.3.8"
   },
   "lint-staged": {
     "./src/**/*.{ts,js,jsx,tsx}": [

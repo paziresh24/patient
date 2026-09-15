@@ -8,13 +8,12 @@ import {
 import { isDoctorHomeRedirectPath } from '@/common/utils/doctorHomePaths';
 import { isPatientViewModeStored } from '@/modules/doctorHome/store/viewMode';
 import { isSpaPatientView, useSpaPatientViewStore } from '@/modules/doctorHome/utils/spaPatientView';
-import { useUserInfoStore, UserInfo } from '@/modules/login/store/userInfo';
+import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
-import { growthbook } from 'src/pages/_app';
+import { hasDoctorIdentity } from '@/common/utils/doctorIdentity';
 
-export const isDoctorUser = (user: UserInfo) =>
-  user.provider?.job_title === 'doctor' || user.is_doctor === true || !!user.provider?.slug;
+export { hasDoctorIdentity, isDoctorUser } from '@/common/utils/doctorIdentity';
 
 export const useDoctorHomeRedirect = () => {
   const router = useRouter();
@@ -22,12 +21,11 @@ export const useDoctorHomeRedirect = () => {
   const user = useUserInfoStore(state => state.info);
   const isLogin = useUserInfoStore(state => state.isLogin);
   const pending = useUserInfoStore(state => state.pending);
-  const doctorProfilePending = useUserInfoStore(state => state.doctorProfilePending);
   const spaPatientView = useSpaPatientViewStore(state => state.active);
   const hasRedirected = useRef(false);
 
   const isCachedDoctor = mounted && isDoctorDeviceCached();
-  const isDoctor = isCachedDoctor || (isLogin && isDoctorUser(user));
+  const isDoctor = isLogin && hasDoctorIdentity(user, isCachedDoctor);
   // Soft SPA patient switch (in-memory or sessionStorage from switcher click).
   const isPatientOptOut = spaPatientView || (mounted && isPatientViewModeStored());
   // Desktop: never. Mobile soft-nav: never bounce if patient opted out.
@@ -35,17 +33,10 @@ export const useDoctorHomeRedirect = () => {
   const shouldRedirect =
     mounted &&
     !pending &&
-    !doctorProfilePending &&
     isDoctorHomeRedirectPath(router.pathname) &&
     isDoctor &&
     isMobileViewport() &&
     !isPatientOptOut;
-
-  useEffect(() => {
-    if (!growthbook.ready) {
-      growthbook.loadFeatures({ timeout: 300 });
-    }
-  }, []);
 
   useEffect(() => {
     if (isLogin || isCachedDoctor) {

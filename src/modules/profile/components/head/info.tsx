@@ -3,6 +3,12 @@ import Text from '@/common/components/atom/text/text';
 import DoctorIcon from '@/common/components/icons/doctor';
 import EditIcon from '@/common/components/icons/edit';
 import classNames from '@/common/utils/classNames';
+import DoctorAvatarLightbox from '@/modules/profile/components/head/doctorAvatarLightbox';
+import {
+  canPreviewDoctorProfileImage,
+  toDoctorProfileLightboxSrc,
+} from '@/modules/profile/utils/doctorProfileImageUrl';
+import { KeyboardEvent, useCallback, useState } from 'react';
 import EditButton from '../viewAs/editButton';
 
 interface InfoProps {
@@ -17,6 +23,16 @@ interface InfoProps {
 
 export const Info = (props: InfoProps) => {
   const { image, imageAlt, displayName, title, subTitle, editable, editAction } = props;
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const lightboxSrc = toDoctorProfileLightboxSrc(image);
+  const canPreview = !editable && canPreviewDoctorProfileImage(lightboxSrc);
+
+  const openLightbox = useCallback(() => {
+    if (!canPreview) return;
+    setLightboxOpen(true);
+  }, [canPreview]);
+
   return (
     <div
       className={classNames('relative flex p-4 rounded-lg bg-slate-50', {
@@ -26,11 +42,24 @@ export const Info = (props: InfoProps) => {
       <div className="flex items-center space-s-3">
         <div
           className={classNames('relative', {
-            'cursor-pointer': editable,
+            'cursor-pointer touch-manipulation': editable || canPreview,
           })}
-          {...(editable && {
-            onClick: editAction,
-          })}
+          {...(editable
+            ? { onClick: editAction }
+            : canPreview
+              ? {
+                  role: 'button',
+                  tabIndex: 0,
+                  'aria-label': `بزرگ‌نمایی عکس ${displayName}`,
+                  onClick: openLightbox,
+                  onKeyDown: (event: KeyboardEvent) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault();
+                      openLightbox();
+                    }
+                  },
+                }
+              : {})}
         >
           <Avatar width={85} height={85} className="border-2 border-slate-200" src={image} alt={imageAlt ?? displayName} />
           {editable && (
@@ -57,6 +86,14 @@ export const Info = (props: InfoProps) => {
         </div>
       </div>
       {editable && <EditButton className="md:absolute left-4" onClick={editAction} />}
+      {canPreview && (
+        <DoctorAvatarLightbox
+          src={lightboxSrc}
+          visible={lightboxOpen}
+          onClose={() => setLightboxOpen(false)}
+          displayName={displayName}
+        />
+      )}
     </div>
   );
 };

@@ -33,6 +33,8 @@ interface SearchCardProps {
     rate?: {
       satisfaction: number;
       count: number;
+      /** When set, shown instead of `{satisfaction}٪` (profile-style "5.0 از ۵"). */
+      text?: string;
     };
   };
   type: 'center' | 'doctor';
@@ -58,9 +60,12 @@ interface SearchCardProps {
 export const SearchCard = (props: SearchCardProps) => {
   const { baseInfo, details, actions, type, sendEventWhenClick, avatarSize = 'md', className, avatarPriority = false, alt } = props;
 
-  const fullName = useMemo(() => baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`, [baseInfo]);
+  const fullName = useMemo(
+    () => baseInfo?.displayName?.trim() || [baseInfo?.name, baseInfo?.family].filter(Boolean).join(' '),
+    [baseInfo],
+  );
 
-  const imageAlt = useMemo(() => `${fullName} ${baseInfo?.expertise}`, [fullName, baseInfo.expertise]);
+  const imageAlt = useMemo(() => [fullName, baseInfo?.expertise].filter(Boolean).join(' '), [fullName, baseInfo?.expertise]);
 
   const LinkInhance = baseInfo?.url ? (Link as any) : 'div';
 
@@ -90,13 +95,11 @@ export const SearchCard = (props: SearchCardProps) => {
           <div className="flex items-start justify-between">
             <LinkInhance
               className="w-4/5"
-              onClick={() =>
-                sendEventWhenClick?.({ element: 'display_name', content: baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}` })
-              }
+              onClick={() => sendEventWhenClick?.({ element: 'display_name', content: fullName })}
               {...(baseInfo?.url && { href: baseInfo?.url, title: alt })}
             >
               <Text as="h2" fontWeight="bold" className="text-base md:text-lg">
-                {baseInfo?.displayName ?? `${baseInfo?.name} ${baseInfo?.family}`}
+                {fullName}
               </Text>
             </LinkInhance>
             {!!baseInfo?.viewCount && (
@@ -116,7 +119,7 @@ export const SearchCard = (props: SearchCardProps) => {
               <div className="flex items-center space-s-1">
                 <LikeIcon width={22} height={22} className="text-primary" />
                 <Text fontWeight="medium" className="text-primary">
-                  {baseInfo?.rate?.satisfaction}٪
+                  {baseInfo?.rate?.text ?? `${baseInfo?.rate?.satisfaction}٪`}
                 </Text>
                 <Text>({baseInfo?.rate?.count} نظر)</Text>
               </div>

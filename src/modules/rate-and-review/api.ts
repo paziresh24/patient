@@ -1,4 +1,5 @@
 import { apiGatewayClient, raviApisClient } from '@/common/apis/client';
+import { fetchDoctorRate } from '@/common/apis/services/reviews/rateDoctor';
 import { enrichReviewResponseWithRelativeTime } from '@/common/utils/formatRelativeFeedbackTime';
 import axios from 'axios';
 import { RaviFeedbackReply, RaviRateSummary, RaviReviewPage, RaviReviewQuery } from './types';
@@ -23,18 +24,15 @@ interface RaviFeedbacksResponse {
 
 export const fetchRateSummary = async (doctorSlug: string): Promise<RaviRateSummary | null> => {
   try {
-    const { data } = await raviApisClient.get<Record<string, unknown>>(
-      `/ravi/v1/rate/doctor/${encodeURIComponent(doctorSlug)}`,
-      { timeout: 12_000 },
-    );
+    const data = await fetchDoctorRate(doctorSlug);
 
     return {
       hideRates: Boolean(data?.hide_rates ?? data?.hide),
-      count: Number(data?.comments_count ?? data?.count_rates ?? 0),
+      count: Number(data?.count_rates ?? 0),
       items: [
         { label: 'برخورد مناسب', value: Number(data?.doctor_encounter) || 0 },
         { label: 'توضیح در هنگام ویزیت', value: Number(data?.explanation_of_issue) || 0 },
-        { label: 'مهارت و تخصص', value: Number(data?.quality_of_treatment) || 0 },
+        { label: 'رسیدگی پزشک و مشخص بودن مسیر درمان', value: Number(data?.quality_of_treatment) || 0 },
       ],
     };
   } catch (error) {
@@ -133,10 +131,71 @@ export const submitLikeRate = async ({
   );
 
 export const editFeedback = async ({ feedbackId, description }: { feedbackId: string; description: string }) =>
-  raviApisClient.patch(`/ravi/v2/feedbacks?id=${encodeURIComponent(feedbackId)}`, { description }, { withCredentials: true });
+  raviApisClient.patch(
+    `/ravi/v1/feedbacks/${encodeURIComponent(feedbackId)}/description`,
+    { description },
+    { withCredentials: true },
+  );
 
 export const deleteFeedback = async (feedbackId: string) =>
   raviApisClient.delete(`/ravi/v1/feedbacks/${encodeURIComponent(feedbackId)}`, { withCredentials: true });
+
+export interface MyFeedbackReply {
+  id: number | string;
+  description?: string;
+  user_id?: number | string;
+  user_display_name?: string | null;
+  created_at?: string | null;
+}
+
+export interface MyFeedbackItem {
+  id: number | string;
+  book_id?: number | string | null;
+  doctor_slug?: string;
+  description?: string;
+  center_name?: string | null;
+  center_id?: number | string | null;
+  avg_rate_value?: number | null;
+  created_at?: string | null;
+  show?: number | null;
+  delete?: number | null;
+  replies?: MyFeedbackReply[];
+}
+
+export interface MyFeedbacksPage {
+  data: MyFeedbackItem[];
+  meta: {
+    userId: number;
+    count: number;
+    limit: number;
+    offset: number;
+    total: number;
+    hasNext: boolean;
+    nextOffset: number | null;
+  };
+}
+
+export const fetchMyFeedbacks = async (params: { limit?: number; offset?: number } = {}): Promise<MyFeedbacksPage> => {
+  const { data } = await raviApisClient.get<MyFeedbacksPage>('/ravi/v1/feedbacks/patients/me', {
+    params: {
+      limit: params.limit ?? 20,
+      offset: params.offset ?? 0,
+    },
+    withCredentials: true,
+  });
+  return {
+    data: data?.data ?? [],
+    meta: data?.meta ?? {
+      userId: 0,
+      count: 0,
+      limit: params.limit ?? 20,
+      offset: params.offset ?? 0,
+      total: 0,
+      hasNext: false,
+      nextOffset: null,
+    },
+  };
+};
 
 export const reportFeedback = async ({
   feedbackId,
@@ -195,3 +254,12 @@ export const editFeedbackReply = async ({ replyId, description }: { replyId: str
 
 export const deleteFeedbackReply = async (replyId: string) =>
   apiGatewayClient.delete(`/ravi/v1/feedbacks/${replyId}`, { withCredentials: true });
+
+/** GET /ravi/v1/share/doctors/{slug}/{commentId} → { url } */
+export const fetchShareCommentUrl = async (doctorSlug: string, commentId: string): Promise<string | null> => {
+  const { data } = await raviApisClient.get(
+    `/ravi/v1/share/doctors/${encodeURIComponent(doctorSlug)}/${encodeURIComponent(commentId)}`,
+  );
+  const url = (data?.url ?? data?.data?.url ?? data?.link) as string | undefined;
+  return typeof url === 'string' && url ? url : null;
+};

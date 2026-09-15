@@ -1,20 +1,22 @@
 import { convertLongToCompactNumber } from '@/common/utils/convertLongToCompactNumber';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DsInsightCarousel, ds } from '../designSystem';
 import { useDoctorWalletBalance } from '../apis/walletBalance';
-import { DoctorHomeFeedStats } from '../types/feed';
+import { useDoctorHomeStats } from '../hooks/useDoctorHomeStats';
+import { useReviewWeekDelta } from '../hooks/useReviewWeekDelta';
 import { sendDoctorHomeEvent } from '../utils/analytics';
-import { appendUserIdToUrl } from '../utils/iframeUrl';
-import { RAVI_DOCSIDE_URL } from '../utils/doctorPanelUrls';
+import { buildDoctorPanelUrl } from '../utils/iframeUrl';
+import { DOCTOR_PANEL_URLS, RAVI_DOCSIDE_URL } from '../utils/doctorPanelUrls';
 import { useWalletBalanceVisibilityStore } from '../store/walletBalanceVisibility';
 import { useSelectedCenterStore } from '../store/selectedCenter';
 import { DsDrawer } from './DsDrawer';
 import { useSheetDrawerProps } from '../hooks/doctorHomeSheetLayout';
 import { useSheetRoute } from '../hooks/useSheetRoute';
 import { FeedContentSwap } from './feedContentSwap';
-import { PageViewIcon, PerformanceIcon, ReviewsIcon, WalletIcon } from './icons';
+import { PageViewIcon, ReviewsIcon, WalletIcon } from './icons';
+import type { OriginRect } from '../utils/sharedElement';
 
 const MetricDrawerContent = ({
   value,
@@ -39,22 +41,27 @@ const MetricDrawerContent = ({
 );
 
 export const FeedInsightSection = ({
-  stats,
   className,
   variant = 'responsive',
 }: {
-  stats?: DoctorHomeFeedStats;
   className?: string;
   variant?: 'responsive' | 'grid' | 'stack' | 'carousel';
 }) => {
   const user = useUserInfoStore(state => state.info);
+  const { stats, isDoctor, slug } = useDoctorHomeStats(user);
+  const { percent: reviewWeekDelta } = useReviewWeekDelta(slug, isDoctor);
   const userId = user?.id;
   const selectedCenterId = useSelectedCenterStore(s => s.selectedCenterId);
-  const { data: walletBalance, isLoading: isWalletLoading } = useDoctorWalletBalance(user, !!user?.id, selectedCenterId);
+  const { data: walletBalance, isLoading: isWalletQueryLoading } = useDoctorWalletBalance(
+    user,
+    !!user?.id,
+    selectedCenterId,
+  );
   const isWalletVisible = useWalletBalanceVisibilityStore(state => state.isVisible);
   const isWalletHydrated = useWalletBalanceVisibilityStore(state => state.hydrated);
   const toggleWalletVisibility = useWalletBalanceVisibilityStore(state => state.toggle);
   const hydrateWalletVisibility = useWalletBalanceVisibilityStore(state => state.hydrate);
+  const isWalletInitialLoading = !isWalletHydrated || isWalletQueryLoading;
 
   useEffect(() => {
     hydrateWalletVisibility();
@@ -62,119 +69,142 @@ export const FeedInsightSection = ({
 
   const reviewsSheet = useSheetRoute('stat-reviews');
   const walletSheet = useSheetRoute('stat-wallet');
-  const performanceSheet = useSheetRoute('stat-performance');
   const pageViewSheet = useSheetRoute('stat-pageview');
   const reviewsDrawerProps = useSheetDrawerProps(reviewsSheet);
   const walletDrawerProps = useSheetDrawerProps(walletSheet);
-  const performanceDrawerProps = useSheetDrawerProps(performanceSheet);
   const pageViewDrawerProps = useSheetDrawerProps(pageViewSheet);
+  const [sheetOrigin, setSheetOrigin] = useState<OriginRect | null>(null);
 
-  const insightItems = stats
-    ? [
-        {
-          icon: <PerformanceIcon size="sm" />,
-          title: 'امتیاز',
-          description: 'عملکرد در پذیرش۲۴',
-          value: stats.performanceScore ?? null,
-          valueMax: 100,
-          isLoading: stats.isPerformanceLoading,
-          onPress: () => {
-            sendDoctorHomeEvent(userId, 'stat_performance', { score: stats.performanceScore });
-            performanceSheet.openSheet();
-          },
-        },
-        {
-          icon: <ReviewsIcon size="sm" />,
-          title: 'نظرات بیماران',
-          description: stats.satisfactionReviewCount != null ? `${stats.satisfactionReviewCount} نظر` : 'میانگین امتیاز',
-          value: stats.satisfactionRating ?? null,
-          valueMax: 5,
-          valueBarClass: ds.progress.fillRating,
-          isLoading: stats.isSatisfactionLoading,
-          onPress: () => {
-            sendDoctorHomeEvent(userId, 'stat_satisfaction', { rating: stats.satisfactionRating, review_count: stats.satisfactionReviewCount });
-            reviewsSheet.openSheet();
-          },
-        },
-        {
-          icon: <WalletIcon size="sm" />,
-          title: 'کیف پول',
-          description: '',
-          value: isWalletHydrated ? (walletBalance != null ? Math.round(walletBalance / 10).toLocaleString('fa-IR') : null) : null,
-          hiddenValue: '••••••',
-          isLoading: isWalletLoading || !isWalletHydrated,
-          onPress: () => {
-            sendDoctorHomeEvent(userId, 'stat_wallet', { balance: walletBalance });
-            walletSheet.openSheet();
-          },
-          visibilityToggle: {
-            isVisible: isWalletVisible,
-            onToggle: toggleWalletVisibility,
-          },
-        },
-        {
-          icon: <PageViewIcon size="sm" />,
-          title: 'بازدید صفحه',
-          description: 'بازدیدکنندگان',
-          value: stats.pageViewCount != null ? convertLongToCompactNumber(stats.pageViewCount) : null,
-          isLoading: stats.isPageViewLoading,
-          onPress: () => {
-            sendDoctorHomeEvent(userId, 'stat_page_view', { count: stats.pageViewCount });
-            pageViewSheet.openSheet();
-          },
-        },
-      ]
-    : [];
+  const openWithOrigin = (origin: DOMRect | undefined, open: () => void) => {
+    if (origin) {
+      setSheetOrigin({ x: origin.left, y: origin.top, width: origin.width, height: origin.height });
+    } else {
+      setSheetOrigin(null);
+    }
+    open();
+  };
 
-  if (insightItems.length === 0) return null;
+  const insightItems = [
+    {
+      icon: <ReviewsIcon size="sm" />,
+      title: 'نظرات بیماران',
+      description:
+        stats.satisfactionReviewCount != null
+          ? `${stats.satisfactionReviewCount.toLocaleString('fa-IR')} نظر`
+          : 'میانگین امتیاز',
+      value: stats.satisfactionRating ?? null,
+      tint: 'border border-amber-100/80 bg-gradient-to-br from-amber-50/90 to-white',
+      valueClassName: 'text-amber-600',
+      valueMax: 5,
+      hideBar: true,
+      trendPercent: reviewWeekDelta,
+      isLoading: stats.isSatisfactionLoading,
+      onPress: origin => {
+        sendDoctorHomeEvent(userId, 'stat_satisfaction', {
+          rating: stats.satisfactionRating,
+          review_count: stats.satisfactionReviewCount,
+        });
+        openWithOrigin(origin, reviewsSheet.openSheet);
+      },
+    },
+    {
+      icon: <WalletIcon size="sm" />,
+      title: 'کیف پول',
+      description: 'تومان',
+      value: isWalletHydrated
+        ? walletBalance != null
+          ? Math.trunc(walletBalance / 10).toLocaleString('fa-IR')
+          : null
+        : null,
+      hiddenValue: '••••',
+      tint: 'border border-primary/10 bg-gradient-to-br from-primary/[0.07] to-white',
+      isLoading: isWalletInitialLoading,
+      onPress: origin => {
+        sendDoctorHomeEvent(userId, 'stat_wallet', { balance: walletBalance });
+        openWithOrigin(origin, walletSheet.openSheet);
+      },
+      visibilityToggle: {
+        isVisible: isWalletVisible,
+        onToggle: toggleWalletVisibility,
+      },
+    },
+    {
+      icon: <PageViewIcon size="sm" />,
+      title: 'بازدید صفحه',
+      description: 'بازدیدکنندگان',
+      value: stats.pageViewCount != null ? convertLongToCompactNumber(stats.pageViewCount) : null,
+      tint: 'border border-slate-100 bg-gradient-to-br from-slate-50 to-white',
+      valueClassName: 'text-slate-800',
+      isLoading: stats.isPageViewLoading,
+      onPress: origin => {
+        sendDoctorHomeEvent(userId, 'stat_page_view', { count: stats.pageViewCount });
+        openWithOrigin(origin, pageViewSheet.openSheet);
+      },
+    },
+  ];
 
-  const insightSwapKey = `${selectedCenterId ?? 'all'}-${stats?.performanceScore ?? ''}-${stats?.pageViewCount ?? ''}-${walletBalance ?? ''}`;
+  const insightSwapKey = `${selectedCenterId ?? 'all'}-${stats.pageViewCount ?? ''}-${walletBalance ?? ''}-${reviewWeekDelta ?? ''}`;
 
   return (
     <>
       <FeedContentSwap swapKey={insightSwapKey} variant="fade">
-        <DsInsightCarousel items={insightItems} variant={variant} className={className} />
+        <DsInsightCarousel
+          items={insightItems}
+          variant={variant}
+          appearance={variant === 'stack' ? 'workstation' : 'default'}
+          compact={variant === 'responsive' || variant === 'carousel'}
+          className={className}
+        />
       </FeedContentSwap>
 
-      <DsDrawer {...reviewsDrawerProps} title="نظرات بیماران" description="راوی" fullHeight className="!p-0">
+      <DsDrawer
+        {...reviewsDrawerProps}
+        originRect={reviewsSheet.open ? sheetOrigin : null}
+        title="نظرات بیماران"
+        description="راوی"
+        fullHeight
+        className="!p-0"
+      >
         {reviewsSheet.open && (
           <iframe
-            src={appendUserIdToUrl(RAVI_DOCSIDE_URL, userId)}
+            src={RAVI_DOCSIDE_URL}
             title="راوی؛ نظرات بیماران"
-            className="min-h-0 w-full flex-1 border-0"
+            className={classNames('min-h-0 w-full flex-1 border-0', ds.motion.contentFade)}
           />
         )}
       </DsDrawer>
 
-      <DsDrawer {...walletDrawerProps} title="کتیبه" description="مدیریت امور مالی" fullHeight className="!p-0">
+      <DsDrawer
+        {...walletDrawerProps}
+        originRect={walletSheet.open ? sheetOrigin : null}
+        title="کتیبه"
+        description="مدیریت امور مالی"
+        fullHeight
+        className="!p-0"
+      >
         {walletSheet.open && (
           <iframe
-            src={appendUserIdToUrl('https://katibe.paziresh24.com/transactions-search/?', userId)}
+            key={`wallet-${selectedCenterId ?? 'all'}`}
+            src={buildDoctorPanelUrl(DOCTOR_PANEL_URLS.bills, { userId, centerId: selectedCenterId })}
             title="کتیبه، مدیریت امور مالی"
-            className="min-h-0 w-full flex-1 border-0"
+            className={classNames('min-h-0 w-full flex-1 border-0', ds.motion.contentFade)}
           />
         )}
       </DsDrawer>
 
-      <DsDrawer {...performanceDrawerProps} title="عملکرد من" description="سنجه" fullHeight className="!p-0">
-        {performanceSheet.open && (
-          <iframe
-            src={appendUserIdToUrl(
-              'https://jahannama.paziresh24.com/my-performance/?utm_source=p24portal&utm_medium=internal-link&utm_campaign=sanje-my-performance',
-              userId,
-            )}
-            title="عملکرد من در سنجه"
-            className="min-h-0 w-full flex-1 border-0"
+      <DsDrawer
+        {...pageViewDrawerProps}
+        originRect={pageViewSheet.open ? sheetOrigin : null}
+        title="بازدید پروفایل"
+        description="آمار بازدید"
+      >
+        <div className={ds.motion.contentFade}>
+          <MetricDrawerContent
+            value={stats.pageViewCount != null ? stats.pageViewCount.toLocaleString('fa-IR') : null}
+            label="بازدید از پروفایل شما"
+            description="تعداد کل بازدیدکنندگانی که صفحه پروفایل شما را مشاهده کرده‌اند"
           />
-        )}
-      </DsDrawer>
-
-      <DsDrawer {...pageViewDrawerProps} title="بازدید پروفایل" description="آمار بازدید">
-        <MetricDrawerContent
-          value={stats?.pageViewCount != null ? stats.pageViewCount.toLocaleString('fa-IR') : null}
-          label="بازدید از پروفایل شما"
-          description="تعداد کل بازدیدکنندگانی که صفحه پروفایل شما را مشاهده کرده‌اند"
-        />
+        </div>
       </DsDrawer>
     </>
   );

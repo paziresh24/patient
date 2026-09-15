@@ -1,23 +1,36 @@
 import { apiGatewayClient, drProfileClient, hamdastClient } from '@/common/apis/client';
 import { ServerStateKeysEnum } from '@/common/apis/serverStateKeysEnum';
 import { getDoctorBiography } from '@/common/apis/services/doctor/getDoctorBiography';
+import { getDoctorMedicalCode } from '@/common/apis/services/doctor/getDoctorMedicalCode';
 import { getDoctorCenters } from '@/common/apis/services/doctor/getDoctorCenters';
+import { getDoctorCenterServices } from '@/common/apis/services/doctor/getDoctorCenterServices';
 import { getDoctorExpertise } from '@/common/apis/services/doctor/getDoctorExpertise';
 import { getDoctorFullName } from '@/common/apis/services/doctor/getDoctorFullName';
-import { getDoctorGallery } from '@/common/apis/services/doctor/getDoctorGallery';
+import { fetchDoctorGalleryFromDrprofile } from '@/modules/profile/utils/fetchDoctorGalleryFromDrprofile';
 import { getDoctorImage } from '@/common/apis/services/doctor/getDoctorImage';
+import { getDoctorOnlineChannels } from '@/common/apis/services/doctor/getDoctorOnlineChannels';
+import { getDoctorKeywordTags } from '@/common/apis/services/doctor/getDoctorKeywordTags';
 import { validateDoctorSlug } from '@/common/apis/services/doctor/validateDoctorSlug';
+import { samanDoctorAvailabilityStatus } from '@/common/apis/services/booking/samanDoctorAvailabilityStatus';
+import { CENTERS } from '@/common/types/centers';
 import { internalLinks } from '@/common/apis/services/profile/internalLinks';
 import { getReviews } from '@/common/apis/services/reviews/getReviews';
 import { splunkInstance } from '@/common/services/splunk';
 import { QueryClient, dehydrate } from '@tanstack/react-query';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
+import { isProfileMicroserviceEnabledForSlug } from '@/modules/profile/utils/profileApiSourceBySlugFlag';
+import { filterBookableMappedCenterServices, isInvalidProfileServiceId, mapDoctorCenterServices } from '@/modules/booking/functions/mapDoctorCenterServices';
+import { enrichProfileCentersWithSamanAvailability } from '@/modules/booking/functions/mapSamanAvailabilityToCenters';
 import { getAverageWaitingTime } from './getAverageWaitingTime';
 import { formatDoctorCitiesForTitle } from './getDoctorCities';
-import { getProfile } from './getProfileData';
 import { getRateDetailsData } from './getRateDetailsData';
 import { OverwriteProfileData, overwriteProfileData } from './overwriteProfileData';
+import { computeExperienceYearsFromGraduationDate } from '@/modules/profile/utils/computeExperienceYears';
+import { buildDoctorProfileDocumentTitle } from '@/modules/profile/utils/buildDoctorProfileDocumentTitle';
+import { buildRismanDoctorId } from '@/modules/profile/utils/buildRismanDoctorId';
+import { isDoctorProfileSelfRedirect } from '@/modules/profile/utils/isDoctorProfileSelfRedirect';
+import { resolveProfileDisplayName } from '@/modules/profile/utils/resolveProfileDisplayName';
 
 // ================= Constants =================
 const API_ENDPOINTS = {
@@ -68,6 +81,33 @@ const getRelatedSpecialityLinks = ({ centers, group_expertises }: any): string[]
     });
 
   return links;
+};
+
+const getProdLikeRelatedSpecialityLinks = ({ centers, group_expertises }: any): string[] => {
+  const groups = (Array.isArray(group_expertises) ? group_expertises : []).filter((group: any) => {
+    const groupId = group?.group_id ?? group?.id;
+    return groupId !== 35;
+  });
+  const uniqueCitySlugs = (Array.isArray(centers) ? centers : [])
+    .filter((center: any) => center?.city_en_slug && String(center?.id) !== IGNORED_CENTER_ID)
+    .map((center: any) => center.city_en_slug)
+    .filter((slug: string, index: number, array: string[]) => array.indexOf(slug) === index);
+
+  const expertiseLinks: string[] = [];
+  const consultLinks: string[] = [];
+  const cityLinks: string[] = [];
+
+  groups.forEach((group: any) => {
+    const slug = group?.en_slug || group?.slug;
+    if (!slug) return;
+    expertiseLinks.push(`/s/ir/${slug}/`);
+    consultLinks.push(`/consult/${slug}/`);
+  });
+  uniqueCitySlugs.forEach(citySlug => {
+    cityLinks.push(`/s/${citySlug}/doctor/`, `/s/${citySlug}/center/`);
+  });
+
+  return Array.from(new Set([...expertiseLinks, ...cityLinks, ...consultLinks]));
 };
 
 const createBreadcrumb = (links: { orginalLink: string; title: string }[], displayName: string, currentPathName: string) => {
@@ -129,20 +169,77 @@ export async function getAggregatedProfileData(
     useNewDoctorBiographyAPI?: boolean;
     useNewDoctorCentersAPI?: boolean;
     useNewDoctorGalleryAPI?: boolean;
+    prefetchSamanAvailability?: boolean;
+    /** Explicit SSR decision: true = microservice, false = legacy, undefined = resolve (CSR). */
+    useProfileMicroservice?: boolean;
+    fetchExpertiseKeywordTags?: boolean;
   },
 ) {
+  // Only allowlisted slugs leave legacy. Callers should pass an explicit boolean
+  // (SSR from GrowthBook, CSR from useFeatureValue) so this module stays client-safe.
+  let useMicroservice = false;
+  if (options?.useProfileMicroservice === true) {
+    useMicroservice = true;
+  } else if (options?.useProfileMicroservice === false) {
+    useMicroservice = false;
+  } else {
+    // Fallback: env allowlist only (no GrowthBook / no node:crypto in this graph).
+    useMicroservice = isProfileMicroserviceEnabledForSlug(slug);
+  }
+
+  if (useMicroservice) {
+    try {
+      const { getAggregatedProfileDataFromMicroservice } = await import('./getAggregatedProfileDataFromMicroservice');
+      const microserviceResult = await getAggregatedProfileDataFromMicroservice(slug, university, isServer, options);
+      // If MS explicitly returns notFound: sticky SSR must not become legacy.
+      if (microserviceResult && typeof microserviceResult === 'object' && 'notFound' in microserviceResult && (microserviceResult as { notFound?: boolean }).notFound) {
+        if (options?.useProfileMicroservice === true) {
+          const err = new Error('Profile not found in microservice') as Error & { status?: number };
+          err.status = 404;
+          throw err;
+        }
+        console.warn('[profile] microservice profile missing; falling back to legacy', { slug });
+      } else {
+        return microserviceResult;
+      }
+    } catch (error) {
+      // Allowlisted doctors must not silently become full-legacy (ops/managers see coin-flip).
+      // Caller asked for MS explicitly — surface the failure instead of swapping backends.
+      if (options?.useProfileMicroservice === true) {
+        const status = (error as any)?.response?.status ?? (error as any)?.status;
+        console.error('[profile] microservice aggregation failed; NOT falling back to legacy (allowlist sticky)', {
+          slug,
+          status,
+          message: error instanceof Error ? error.message : String(error),
+        });
+        throw error;
+      }
+      const status = (error as any)?.response?.status ?? (error as any)?.status;
+      console.error('[profile] microservice aggregation failed; falling back to legacy', {
+        slug,
+        status,
+        message: error instanceof Error ? error.message : String(error),
+        hint:
+          status === 401
+            ? 'Bearer rejected. For test use API_AUTH_DRIVER=static on profiles-api (token=test|write|admin), or create a db API key.'
+            : status === 404
+              ? 'Slug not in profiles-api DB; using legacy full-profile.'
+              : undefined,
+      });
+    }
+  }
+
   const queryClient = new QueryClient();
 
   let slugInfo = null;
   let validatedSlug = slug;
-  let fullProfileData = null;
+  let skipFullProfile = false;
 
-  // Start both slug validation and full profile calls in parallel
-  // Use retry mechanism for client-side requests
-  const [slugValidationResult, fullProfileResult] = await Promise.allSettled([
-    validateDoctorSlug(slug),
-    getProfile({ slug, university, isServer: isServer }),
-  ]);
+  // Validate slug first — self-redirect slugs must not wait on full-profile (slow + bad merge).
+  const slugValidationResult = await Promise.resolve(validateDoctorSlug(slug)).then(
+    value => ({ status: 'fulfilled' as const, value }),
+    reason => ({ status: 'rejected' as const, reason }),
+  );
 
   // Handle slug validation result first (this handles redirects and errors)
   if (slugValidationResult.status === 'fulfilled') {
@@ -174,7 +271,23 @@ export async function getAggregatedProfileData(
 
     // Handle redirects from slug validation service
     if ('redirect' in result) {
-      if (isServer) {
+      // Backend sometimes returns 301 to the same /dr/{slug}/ path (encoding-only
+      // "canonicalization"). Following that loops forever — skip and render.
+      if (isDoctorProfileSelfRedirect(slug, result.redirect.route)) {
+        splunkInstance('doctor-profile').sendEvent({
+          group: 'doctor_slug_self_redirect_ignored',
+          type: 'self_redirect_ignored',
+          event: {
+            original_slug: slug,
+            redirect_route: result.redirect.route,
+            isServer: isServer,
+            timestamp: new Date().toISOString(),
+          },
+        });
+        slugInfo = null;
+        validatedSlug = slug;
+        skipFullProfile = true;
+      } else if (isServer) {
         return {
           redirect: {
             statusCode: result.redirect.statusCode,
@@ -185,25 +298,25 @@ export async function getAggregatedProfileData(
       } else {
         return location.replace(encodeURI(result.redirect.route));
       }
+    } else {
+      // Valid slug response - use the validated slug
+      slugInfo = result;
+      validatedSlug = result.slug;
+
+      // Log successful slug validation
+      splunkInstance('doctor-profile').sendEvent({
+        group: 'profile_slug_validation_primary',
+        type: 'slug_validation_primary_success',
+        event: {
+          original_slug: slug,
+          validated_slug: validatedSlug,
+          doctor_id: result.id,
+          user_id: result.user_id,
+          isServer: isServer,
+          timestamp: new Date().toISOString(),
+        },
+      });
     }
-
-    // Valid slug response - use the validated slug
-    slugInfo = result;
-    validatedSlug = result.slug;
-
-    // Log successful slug validation
-    splunkInstance('doctor-profile').sendEvent({
-      group: 'profile_slug_validation_primary',
-      type: 'slug_validation_primary_success',
-      event: {
-        original_slug: slug,
-        validated_slug: validatedSlug,
-        doctor_id: result.id,
-        user_id: result.user_id,
-        isServer: isServer,
-        timestamp: new Date().toISOString(),
-      },
-    });
   } else {
     console.error('Error validating doctor slug:', slugValidationResult.reason);
     splunkInstance('doctor-profile').sendEvent({
@@ -221,16 +334,6 @@ export async function getAggregatedProfileData(
     validatedSlug = slug;
   }
 
-  // Handle full profile result (no redirect handling - just get data)
-  if (fullProfileResult.status === 'fulfilled') {
-    const { fullProfileData: data } = fullProfileResult.value;
-    fullProfileData = data;
-  } else {
-    // Full profile failed - log error but continue to show page
-    console.error('Error in full profile:', fullProfileResult.reason);
-    fullProfileData = null;
-  }
-
   const pageSlug = `/dr/${validatedSlug}`;
 
   const rateDetailsResult = await getRateDetailsData({
@@ -239,74 +342,60 @@ export async function getAggregatedProfileData(
 
   const shouldFetchReviews = !!rateDetailsResult && !rateDetailsResult.hide_rates;
 
-  const searchLinks = getSearchLinks({
-    centers: fullProfileData?.centers,
-    group_expertises: fullProfileData?.group_expertises ?? [],
-  });
-
-  const relatedSpecialityLinks = getRelatedSpecialityLinks({
-    centers: fullProfileData?.centers,
-    group_expertises: fullProfileData?.group_expertises ?? [],
-  });
-
-  const apiCalls = [
-    internalLinks({
-      links: searchLinks,
-    }),
-    relatedSpecialityLinks.length
-      ? internalLinks({
-          links: relatedSpecialityLinks,
-        })
-      : Promise.resolve([]),
+  // Phase 1: fetch content APIs in parallel (centers/expertise needed for SEO links)
+  const contentCalls = [
     shouldFetchReviews
       ? queryClient.fetchQuery(
           [ServerStateKeysEnum.Feedbacks, { slug: validatedSlug, sort: 'default_order' }],
           () => getReviews({ slug: validatedSlug, sort: 'default_order' }),
         )
       : Promise.resolve(null),
-    getAverageWaitingTime({
-      slug: validatedSlug,
+    getAverageWaitingTime({ slug: validatedSlug }),
+    buildRismanDoctorId(slugInfo?.owner_id, slugInfo?.server_id)
+      ? axios.get(API_ENDPOINTS.RISMAN_DOCTORS, {
+          params: { doctor_id: buildRismanDoctorId(slugInfo?.owner_id, slugInfo?.server_id) },
+          timeout: 1500,
+        })
+      : Promise.resolve({ data: null }),
+    options?.useNewDoctorFullNameAPI ? getDoctorFullName(validatedSlug) : Promise.resolve(null),
+    options?.useNewDoctorExpertiseAPI ? getDoctorExpertise(validatedSlug) : Promise.resolve(null),
+    options?.useNewDoctorImageAPI ? getDoctorImage(validatedSlug) : Promise.resolve(null),
+    options?.useNewDoctorBiographyAPI ? getDoctorBiography(validatedSlug) : Promise.resolve(null),
+    getDoctorMedicalCode(validatedSlug, {
+      id: slugInfo?.id ?? slugInfo?.owner_id,
+      server_id: slugInfo?.server_id,
     }),
-    axios.get(API_ENDPOINTS.RISMAN_DOCTORS, { params: { doctor_id: slugInfo?.owner_id }, timeout: 1500 }),
-  ];
+    options?.useNewDoctorCentersAPI
+      ? getDoctorCenters(validatedSlug, university, { onlyBookable: false })
+      : Promise.resolve(null),
+  ] as const;
 
-  // Conditionally add doctor full name API call
-  if (options?.useNewDoctorFullNameAPI) {
-    apiCalls.push(getDoctorFullName(validatedSlug));
-  }
-
-  // Conditionally add doctor expertise API call
-  if (options?.useNewDoctorExpertiseAPI) {
-    apiCalls.push(getDoctorExpertise(validatedSlug));
-  }
-
-  // Conditionally add doctor image API call
-  if (options?.useNewDoctorImageAPI) {
-    apiCalls.push(getDoctorImage(validatedSlug));
-  }
-
-  // Conditionally add doctor biography API call
-  if (options?.useNewDoctorBiographyAPI) {
-    apiCalls.push(getDoctorBiography(validatedSlug));
-  }
-
-  // Conditionally add doctor centers API call
-  if (options?.useNewDoctorCentersAPI) {
-    apiCalls.push(getDoctorCenters(validatedSlug, university));
-  }
+  const samanAvailabilityPromise =
+    isServer && options?.prefetchSamanAvailability
+      ? queryClient
+          .fetchQuery([ServerStateKeysEnum.SamanDoctorAvailabilityStatus, validatedSlug], () =>
+            samanDoctorAvailabilityStatus(validatedSlug),
+          )
+          .catch(error => {
+            console.error('Error prefetching Saman availability status:', error);
+            return null;
+          })
+      : Promise.resolve(null);
 
   const [
-    internalLinksBreadcrumbResult,
-    internalLinksRelatedResult,
-    reviewsResult,
-    averageWaitingTimeResult,
-    rismanResult,
-    doctorFullNameResult,
-    doctorExpertiseResult,
-    doctorImageResult,
-    doctorBiographyResult,
-    doctorCentersResult,
-  ] = await Promise.allSettled(apiCalls);
+    [
+      reviewsResult,
+      averageWaitingTimeResult,
+      rismanResult,
+      doctorFullNameResult,
+      doctorExpertiseResult,
+      doctorImageResult,
+      doctorBiographyResult,
+      doctorMedicalCodeResult,
+      doctorCentersResult,
+    ],
+    samanAvailability,
+  ] = await Promise.all([Promise.allSettled(contentCalls), samanAvailabilityPromise]);
 
   // Extract doctor full name from API response
   const doctorFullName =
@@ -320,62 +409,72 @@ export async function getAggregatedProfileData(
   const doctorImage = options?.useNewDoctorImageAPI && doctorImageResult?.status === 'fulfilled' ? doctorImageResult.value : null;
 
   // Extract doctor biography from API response
-  const doctorBiography =
+  let doctorBiography =
     options?.useNewDoctorBiographyAPI && doctorBiographyResult?.status === 'fulfilled' ? doctorBiographyResult.value : null;
+
+  // Parallel fan-out to drprofile can drop biography on prod (timeout/connection reset) while
+  // image/expertise succeed. If bio is still empty, do one dedicated follow-up outside the pool.
+  if (options?.useNewDoctorBiographyAPI) {
+    const hasBiography =
+      typeof doctorBiography?.biography === 'string' && doctorBiography.biography.trim().length > 0;
+    if (!hasBiography) {
+      doctorBiography = await getDoctorBiography(validatedSlug);
+    }
+  }
+
+  const doctorMedicalCode =
+    doctorMedicalCodeResult?.status === 'fulfilled' ? doctorMedicalCodeResult.value?.medical_code?.trim() || '' : '';
 
   // Extract doctor centers from API response
   const doctorCenters = options?.useNewDoctorCentersAPI && doctorCentersResult?.status === 'fulfilled' ? doctorCentersResult.value : null;
 
+  const processedName = doctorFullName?.name;
+  const processedFamily = doctorFullName?.family;
+  const finalName = processedName === null ? '' : processedName ?? '';
+  const finalFamily = processedFamily === null ? '' : processedFamily ?? '';
+
+  const keywordSearchText = [finalName, finalFamily].filter(Boolean).join(' ').trim();
+  const keywordCitySlug =
+    doctorCenters?.find?.((center: any) => center?.id !== '5532' && center?.city?.slug)?.city?.slug ||
+    (doctorCenters as any[])?.find?.((center: any) => center?.id !== '5532' && center?.city_en_slug)?.city_en_slug ||
+    'ir';
+  const keywordTags = options?.fetchExpertiseKeywordTags
+    ? await getDoctorKeywordTags({
+        slug: validatedSlug,
+        searchText: keywordSearchText || undefined,
+        cityEnSlug: typeof keywordCitySlug === 'string' ? keywordCitySlug : 'ir',
+      }).catch(() => [])
+    : [];
+
   // Handle gallery API call after all other requests (depends on centers)
-  let doctorGallery = null;
+  let doctorGallery: Awaited<ReturnType<typeof fetchDoctorGalleryFromDrprofile>> | null = null;
   if (options?.useNewDoctorGalleryAPI) {
-    const centersForGallery = Array.isArray(doctorCenters) ? doctorCenters : [];
-
-    if (centersForGallery.length > 0) {
-      try {
-        const galleryPromises = centersForGallery.map((center: any) => getDoctorGallery(center.id));
-        const galleryResults = await Promise.allSettled(galleryPromises);
-
-        doctorGallery = galleryResults
-          .filter(result => result.status === 'fulfilled')
-          .map((result: any) => result.value)
-          .flat()
-          .filter(Boolean);
-      } catch (error) {
-        console.error('Error fetching doctor gallery:', error);
-        doctorGallery = null;
-      }
+    try {
+      doctorGallery = await fetchDoctorGalleryFromDrprofile(validatedSlug, university);
+    } catch (error) {
+      console.error('Error fetching doctor gallery:', error);
+      doctorGallery = null;
     }
   }
 
-  // Transform expertise data to match expected format
+  // Keep nested degree/expertise so overwriteProfileData can read *.name fields.
   const transformedExpertise =
     doctorExpertise?.map((exp: any) => ({
-      id: exp.expertise.id,
-      name: exp.expertise.name,
-      slug: exp.expertise.slug,
       alias_title: exp.alias_title,
       degree: exp.degree,
+      expertise: exp.expertise,
       groups: exp.groups,
       graduation_date: exp.graduation_date ?? null,
     })) ?? [];
 
-  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص)
+  // محاسبه سال تجربه از تاریخ فارغ‌التحصیلی (اولین تخصص) — جلالی/میلادی
   const firstGraduationDate = doctorExpertise?.[0]?.graduation_date;
-  const experienceYears =
-    firstGraduationDate &&
-    (() => {
-      const year = parseInt(firstGraduationDate.slice(0, 4), 10);
-      if (Number.isNaN(year)) return null;
-      const currentYear = new Date().getFullYear();
-      const years = currentYear - year;
-      return years >= 0 ? String(years) : null;
-    })();
+  const experienceYears = computeExperienceYearsFromGraduationDate(firstGraduationDate);
 
   // Step 3: Overwrite and assemble data
   const overwriteData: OverwriteProfileData = {
     provider: {
-      user_id: slugInfo?.user_id ?? null,
+      user_id: slugInfo?.user_id != null ? String(slugInfo.user_id) : undefined,
       ...(experienceYears && { experience: experienceYears }),
     },
     feedbacks: {
@@ -383,11 +482,12 @@ export async function getAggregatedProfileData(
       hideRates: rateDetailsResult?.hide_rates,
       reviews: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
       waiting_time_info: averageWaitingTimeResult?.status === 'fulfilled' ? averageWaitingTimeResult.value : [],
+      countOfFeedbacks: rateDetailsResult?.countOfFeedbacks ?? undefined,
     },
     history: {},
     // Add expertises to overwriteData if new API is used and successful
     ...(options?.useNewDoctorExpertiseAPI &&
-      doctorExpertise?.length > 0 && {
+      (doctorExpertise?.length ?? 0) > 0 && {
         expertises: transformedExpertise,
       }),
     // Add image to overwriteData if new API is used and successful
@@ -395,14 +495,16 @@ export async function getAggregatedProfileData(
       doctorImage?.image && {
         image: doctorImage.image,
       }),
-    // Add biography to overwriteData if new API is used and successful
+    // Add biography to overwriteData if new API returned a non-empty string
     ...(options?.useNewDoctorBiographyAPI &&
-      doctorBiography?.biography && {
+      typeof doctorBiography?.biography === 'string' &&
+      doctorBiography.biography.trim().length > 0 && {
         biography: doctorBiography.biography,
       }),
+    ...(doctorMedicalCode && { councilMedicalCode: doctorMedicalCode }),
     // Add centers to overwriteData if new API is used and successful
     ...(options?.useNewDoctorCentersAPI &&
-      doctorCenters?.length > 0 && {
+      (doctorCenters?.length ?? 0) > 0 && {
         centers: doctorCenters,
       }),
     // Add gallery to overwriteData if new API is used and successful
@@ -449,14 +551,7 @@ export async function getAggregatedProfileData(
     }
   }
 
-  // Handle null values from fullname web service
-  const processedName = doctorFullName?.name;
-  const processedFamily = doctorFullName?.family;
-
-  // Set empty strings if values are null
-  const finalName = processedName === null ? '' : processedName;
-  const finalFamily = processedFamily === null ? '' : processedFamily;
-
+  // Handle null values from fullname web service (finalName/finalFamily computed above)
   // Log to Splunk if fullname values were null
   if (options?.useNewDoctorFullNameAPI && doctorFullName && (doctorFullName.name === null || doctorFullName.family === null)) {
     splunkInstance('doctor-profile').sendEvent({
@@ -473,24 +568,131 @@ export async function getAggregatedProfileData(
     });
   }
 
+  const profileSource = {};
+
+  const resolvedName = finalName?.trim() ? finalName : undefined;
+  const resolvedFamily = finalFamily?.trim() ? finalFamily : undefined;
+
   const {
-    centers,
+    centers: initialCenters,
     expertises,
     feedbacks,
     history,
-    information,
+    information: rawInformation,
     media,
-    onlineVisit,
+    onlineVisit: rawOnlineVisit,
     similarLinks: rawSimilarLinks,
     symptomes,
     waitingTimeInfo,
   } = overwriteProfileData(overwriteData, {
-    ...(fullProfileData ?? {}),
+    ...profileSource,
     id: slugInfo?.owner_id,
     server_id: slugInfo?.server_id,
-    name: finalName,
-    family: finalFamily,
+    name: resolvedName,
+    family: resolvedFamily,
   });
+
+  const centerFallbackName = initialCenters?.[0]?.name;
+  const displayName = resolveProfileDisplayName(
+    { name: rawInformation?.name, family: rawInformation?.family },
+    { centerName: centerFallbackName, slug: validatedSlug },
+  );
+  const information = {
+    ...rawInformation,
+    ...(displayName
+      ? {
+          display_name: displayName,
+          name: rawInformation?.name?.trim() ? rawInformation.name : displayName.split(' ')[0] ?? displayName,
+          family:
+            rawInformation?.family?.trim() ?
+              rawInformation.family
+            : displayName.includes(' ') ?
+              displayName.slice(displayName.indexOf(' ') + 1)
+            : '',
+        }
+      : {}),
+  };
+
+  // When centers API adds 5532 but full-profile has no/invalid services, hydrate from center services API
+  // so profile SSR can render the online-visit card (e.g. Doodangeh).
+  let centers = initialCenters;
+  let onlineVisit = rawOnlineVisit;
+  const consultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
+  // full-profile service ids (5532) can be stale; always hydrate online visit from drprofile.
+  const needsOnlineServices = !!consultCenter;
+
+  let onlineChannels: string[] = [];
+  if (needsOnlineServices) {
+    const [onlineServicesResult, onlineChannelsResult] = await Promise.allSettled([
+      getDoctorCenterServices(validatedSlug, CENTERS.CONSULT),
+      getDoctorOnlineChannels(validatedSlug),
+    ]);
+
+    if (onlineServicesResult.status === 'fulfilled' && onlineServicesResult.value?.length) {
+      const mapped = filterBookableMappedCenterServices(
+        mapDoctorCenterServices(onlineServicesResult.value, consultCenter.user_center_id),
+      );
+      centers = centers.map((center: any) =>
+        String(center?.id) === CENTERS.CONSULT ? { ...center, services: mapped } : center,
+      );
+      if (isServer) {
+        queryClient.setQueryData(
+          [ServerStateKeysEnum.DoctorCenterServices, validatedSlug, CENTERS.CONSULT],
+          onlineServicesResult.value,
+        );
+      }
+    } else if (onlineServicesResult.status === 'rejected') {
+      console.error('Error hydrating online visit center services:', onlineServicesResult.reason);
+    }
+
+    onlineChannels = onlineChannelsResult.status === 'fulfilled' ? onlineChannelsResult.value : [];
+  }
+
+  const hydratedConsultCenter = centers?.find?.((center: any) => String(center?.id) === CENTERS.CONSULT);
+  onlineVisit = {
+    ...onlineVisit,
+    enabled: !!hydratedConsultCenter,
+    channels: onlineChannels,
+  };
+
+  const normalizedGroupExpertisesSource =
+    doctorExpertise?.flatMap((item: any) => item?.groups ?? []) ??
+    expertises?.group_expertises ??
+    [];
+  const normalizedGroupExpertises = normalizedGroupExpertisesSource.filter((group: any, index: number, array: any[]) => {
+    const slug = group?.en_slug || group?.slug;
+    if (!slug) return false;
+    return array.findIndex(item => (item?.en_slug || item?.slug) === slug) === index;
+  });
+
+  const expertisesWithGroups = {
+    ...expertises,
+    group_expertises:
+      expertises?.group_expertises?.length > 0
+        ? expertises.group_expertises
+        : normalizedGroupExpertises.map((group: any) => ({
+            id: group.id,
+            en_slug: group.en_slug ?? group.slug,
+            icon: group.icon ?? null,
+            name: group.name,
+          })),
+  };
+
+  const relatedSpecialityLinks = getProdLikeRelatedSpecialityLinks({
+    centers,
+    group_expertises: expertisesWithGroups.group_expertises?.length
+      ? expertisesWithGroups.group_expertises
+      : normalizedGroupExpertises,
+  });
+
+  const internalLinksRelatedResult = await (
+    relatedSpecialityLinks.length
+      ? Promise.resolve(internalLinks({ links: relatedSpecialityLinks })).then(
+          value => ({ status: 'fulfilled' as const, value }),
+          () => ({ status: 'rejected' as const, reason: null }),
+        )
+      : Promise.resolve({ status: 'fulfilled' as const, value: [] })
+  );
 
   // Prefer internal-links based items for "تخصص های مرتبط" when available
   let similarLinks = rawSimilarLinks;
@@ -527,9 +729,15 @@ export async function getAggregatedProfileData(
     }
   }
 
+  centers = enrichProfileCentersWithSamanAvailability(centers, samanAvailability);
+
   // Step 5: Construct the final props object
   const doctorCitiesLabel = formatDoctorCitiesForTitle(centers);
-  const title = `${information?.display_name}، ${expertises?.expertises?.[0]?.alias_title} ${doctorCitiesLabel} نوبت دهی آنلاین و شماره تلفن`;
+  const title = buildDoctorProfileDocumentTitle({
+    displayName: information?.display_name,
+    expertiseTitle: expertisesWithGroups?.expertises?.[0]?.alias_title,
+    doctorCitiesLabel,
+  });
   const description = `نوبت دهی اینترنتی ${information?.display_name}، آدرس مطب، شماره تلفن و اطلاعات تماس با امکان رزرو وقت و نوبت دهی آنلاین در اپلیکیشن و سایت پذیرش۲۴`;
 
   const finalProps = {
@@ -538,10 +746,10 @@ export async function getAggregatedProfileData(
       description: university ? '' : description,
       information: {
         ...information,
-        user_id: userData?.user_id ?? information?.user_id ?? null,
+        user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
       },
       centers,
-      expertises,
+      expertises: expertisesWithGroups,
       feedbacks: {
         ...feedbacks,
         feedbacks: reviewsResult.status === 'fulfilled' ? reviewsResult.value : {},
@@ -550,16 +758,12 @@ export async function getAggregatedProfileData(
       symptomes,
       history,
       onlineVisit,
-      similarLinks,
+      similarLinks: similarLinks ?? [],
       waitingTimeInfo,
       isBulk: !!(
         centers?.every?.((c: any) => c.status === 2) || centers?.every?.((c: any) => c.services?.every?.((s: any) => !s.hours_of_work))
       ),
-      breadcrumbs: createBreadcrumb(
-        internalLinksBreadcrumbResult.status === 'fulfilled' ? internalLinksBreadcrumbResult.value : [],
-        information?.display_name,
-        pageSlug,
-      ),
+      breadcrumbs: createBreadcrumb([], information?.display_name, pageSlug),
       slug: validatedSlug,
       fragmentComponents: {
         // Note: Flags would need to be handled differently on the client
@@ -568,8 +772,13 @@ export async function getAggregatedProfileData(
       },
       hamdastWidgets: widgets,
       hamdastWidgetsData: widgetsData,
-      user_id: userData?.user_id ?? null,
-      shouldFetchOnClient: !fullProfileData?.id,
+      keywordTags: Array.isArray(keywordTags) ? keywordTags : [],
+      expertiseChipsLikeSearchEnabled: !!options?.fetchExpertiseKeywordTags,
+      user_id: userData?.user_id ?? information?.user_id ?? slugInfo?.user_id ?? null,
+      shouldFetchOnClient: false,
+      useSamanAvailabilityStatus: true,
+      profile_backend: 'legacy',
+      ...(isServer ? { dehydratedState: dehydrate(queryClient) } : {}),
     },
   };
 

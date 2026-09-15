@@ -1,12 +1,13 @@
-import { apiGatewayClient, drProfileClient } from '@/common/apis/client';
+import { drProfileClient } from '@/common/apis/client';
 import { useQuery } from '@tanstack/react-query';
+import { parseDoctorCenters } from './parseDoctorCenters';
 
 export const getCentersByUserId = async (user_id: string) => {
   try {
     const { data } = await drProfileClient.get(`/api/users/${user_id}/centers`);
-    return data;
+    return parseDoctorCenters(data);
   } catch (error) {
-    return {};
+    return null;
   }
 };
 

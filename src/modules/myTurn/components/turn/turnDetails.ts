@@ -1,3 +1,4 @@
+import { formatOnlineVisitPatientBookTime } from '@/modules/booking/utils/onlineVisitPatientDisplayTime';
 import { BookStatus } from '@/modules/myTurn/types/bookStatus';
 import { CenterType } from '@/modules/myTurn/types/centerType';
 import { Translate } from 'next-translate';
@@ -18,6 +19,8 @@ interface TurnDetailsDataParam {
   activePaymentStatus: Boolean;
   centerType: CenterType;
   translate: Translate;
+  /** Align with profile `new_onlinevisit_box` — buffer only when enabled for this doctor. */
+  useOnlineVisitDisplayBuffer?: boolean;
 }
 
 export const turnDetailsData = ({
@@ -28,6 +31,7 @@ export const turnDetailsData = ({
   paymentStatus,
   activePaymentStatus,
   translate,
+  useOnlineVisitDisplayBuffer = false,
 }: TurnDetailsDataParam) => {
   const { bookTime, trackingCode, waitingTime, centerName, patientName } = data;
 
@@ -38,7 +42,10 @@ export const turnDetailsData = ({
         centerType === CenterType.consult
           ? translate('patient/appointments:turnDetails.timeForConsult')
           : translate('patient/appointments:turnDetails.time'),
-      value: bookTime,
+      value:
+        centerType === CenterType.consult
+          ? formatOnlineVisitPatientBookTime(String(bookTime ?? ''), { enabled: useOnlineVisitDisplayBuffer })
+          : bookTime,
       shouldShow:
         status !== BookStatus.requested && ([BookStatus.visited, BookStatus.notVisited, BookStatus.expired].includes(status) || isDelete),
     },

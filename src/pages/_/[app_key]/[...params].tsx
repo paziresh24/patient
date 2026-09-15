@@ -8,6 +8,7 @@ import { ThemeConfig } from '@/common/hooks/useCustomize';
 import classNames from '@/common/utils/classNames';
 import { oneApp } from '@/modules/dashboard/apis/one-app';
 import { HamdastAuth } from '@/modules/hamdast/components/auth';
+import { HamdastDoctorServicePayment } from '@/modules/hamdast/components/doctorServicePayment';
 import { HamdastFlow } from '@/modules/hamdast/components/flow';
 import { HamdastPayment } from '@/modules/hamdast/components/paymentModal';
 import { Report } from '@/modules/hamdast/components/report';
@@ -28,8 +29,11 @@ import Permissions from '@/modules/hamdast/components/permissions';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from '@/modules/hamdast/components/subscription-payment';
 import { HamdastSupport, HamdastSupportRef } from '@/modules/hamdast/components/support';
 import { HamdastInvite } from '@/modules/hamdast/components/invite';
+import { HamdastRasanActivate } from '@/modules/hamdast/components/smsActivate';
+import { HamdastRasanCharge } from '@/modules/hamdast/components/smsCharge';
 import Button from '@/common/components/atom/button';
 import Link from 'next/link';
+import { getPageFromOneAppData } from '@/modules/hamdast/utils/getPageFromOneAppData';
 
 export function replaceKeysInString(template: string, keys: string[], values: string[]) {
   const regex = /{{(.*?)}}/g;
@@ -77,7 +81,7 @@ const Page = ({ page, app }: any) => {
   const [showSupportButton, setShowSupportButton] = useState(false);
 
   const embedSrc = useMemo(() => {
-    const replaceParameters = page?.embed_src ? replaceKeysInString(page?.embed_src, page?.parameters, params?.slice(1) as string[]) : '';
+    const replaceParameters = page?.embed_src ? replaceKeysInString(page.embed_src, page.parameters ?? [], params?.slice(1) ?? []) : '';
     return page?.embed_src ? constructUrlWithQuery(replaceParameters, { ...queries, user_id: user.id, hamdast_embedded: true }) : null;
   }, [page, params, queries, user.id]);
 
@@ -149,9 +153,14 @@ const Page = ({ page, app }: any) => {
   useEffect(() => {
     if (app?.key && page?.key && !userPending) {
       splunkInstance('dashboard').sendEvent({
+        // `data` was never a field the Splunk client read — neither the old @paziresh24/splunk-event
+        // package nor the hand-written client that replaced it in !118 looks at anything but `event`,
+        // so app_key/page_key/user_id have been silently dropped on every one of these events. The
+        // old package was untyped JS, which is why nothing ever complained; !118 added types and
+        // turned the latent data loss into a build error on main.
         group: 'hamdast-insight',
         type: 'pages',
-        data: {
+        event: {
           app_key: app?.key,
           page_key: page?.key,
           user_id: user.id,
@@ -239,7 +248,7 @@ const Page = ({ page, app }: any) => {
                 پشتیبانی ابزارک
               </Button>
             ) : (
-              <Report app_key={app_key as string} page_key={page?.key} />
+              <Report app_key={app_key as string} page_key={page?.key ?? ''} />
             )
           }
         />
@@ -295,14 +304,18 @@ const Page = ({ page, app }: any) => {
                   setShowTranslation(true);
                 }
               }}
+              onSubscribeOnly={planKey => subscriptionPaymentRef.current?.open(planKey) ?? Promise.resolve({ success: false })}
             />
           </GlobalContextsProvider>
         </div>
       )}
       <HamdastPayment app_key={app?.key} app_name={app?.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+      <HamdastDoctorServicePayment app_key={app?.key} app_name={app?.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
       <HamdastAuth app_key={app?.key} iframeRef={iframeRef} />
       <HamdastWidget app_name={app.display_name?.fa} app_id={app?.id} iframeRef={iframeRef} />
       <HamdastSubscriptionPayment ref={subscriptionPaymentRef} app_key={app?.key} app_name={app.display_name?.fa} icon={app?.icon} iframeRef={iframeRef} />
+      <HamdastRasanActivate app_name={app.display_name?.fa} iframeRef={iframeRef} />
+      <HamdastRasanCharge iframeRef={iframeRef} />
       <HamdastSupport app_name={app.display_name?.fa} ref={supportRef} app_key={app?.key} iframeRef={iframeRef} />
       <HamdastInvite app_key={app?.key} />
       <HamdastFlow iframeRef={iframeRef} />
@@ -348,9 +361,11 @@ export const getServerSideProps: GetServerSideProps = withServerUtils(
     const getOneApp = await oneApp({ appKey: app_key as string, pageKey: params?.[0] as string });
 
     const app = getOneApp?.data;
-    const page = app?.fragments
-      ?.find((item: any) => item.type === 'pages')
-      ?.options?.find((item: any) => item.key == params?.[0] && (item.parameters?.length ?? 0) == (params?.length ?? 1) - 1);
+    const page = getPageFromOneAppData(
+      app,
+      params?.[0] as string,
+      ((Array.isArray(params) ? params : []).slice(1) as string[]) ?? [],
+    );
 
     return {
       props: {

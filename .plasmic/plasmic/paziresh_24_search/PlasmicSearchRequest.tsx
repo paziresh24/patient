@@ -224,12 +224,6 @@ function PlasmicSearchRequest__RenderFunc(props: {
                   from: 0,
                   size: 5,
                   query: $props.searchQuery,
-                  semantic_search:
-                    $ctx.Growthbook &&
-                    $ctx.Growthbook.isReady &&
-                    $ctx.Growthbook.features["search-semantic-search"]
-                      ? "true"
-                      : "false",
                   ...(Object.values(
                     $props.searchOptionalFilters
                       ? $props.searchOptionalFilters
@@ -1216,7 +1210,7 @@ function PlasmicSearchRequest__RenderFunc(props: {
                 $props.cityEnSlug +
                 "/?text=" +
                 $props.searchQuery +
-                "&forceAiQueryCodingCacheOnly=true&ref=search_suggestion_box&semantic_search=true&limit=5" +
+                "&forceAiQueryCodingCacheOnly=true&ref=search_suggestion_box&limit=5" +
                 ($props.suggestionExecutionSource
                   ? "&suggestionExecutionSource=true"
                   : "")

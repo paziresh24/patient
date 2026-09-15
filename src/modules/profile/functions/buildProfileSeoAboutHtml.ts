@@ -1,4 +1,5 @@
 import { CENTERS } from '@/common/types/centers';
+import { getAverageRate } from '@/modules/profile/utils/getAverageRate';
 import { formatDoctorCitiesPhrase, getInPersonCenters, getPrimaryInPersonCenter } from './getDoctorCities';
 
 interface BuildProfileSeoAboutHtmlParams {
@@ -73,14 +74,11 @@ export const buildProfileSeoAboutHtml = ({
   const expertiseLabel = doctorExpertise?.trim() || 'سایر';
   const displayName = `${information.prefix ? `${information.prefix} ` : ''}${information.display_name}`;
 
-  const satisfactionText = !feedbacks?.details?.hide_rates
-    ? `؛ همچنین ${+(
-        (+(feedbacks?.details?.average_rates?.average_quality_of_treatment ?? 0) +
-          +(feedbacks?.details?.average_rates?.average_doctor_encounter ?? 0) +
-          +(feedbacks?.details?.average_rates?.average_explanation_of_issue ?? 0)) /
-          3
-      )?.toFixed(1) * 20}٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند. <b>نظرات ${displayName}</b> در پروفایل دکتر در پذیرش۲۴ قابل مشاهده است`
-    : '';
+  const averageRate = getAverageRate(feedbacks?.details?.average_rates);
+  const satisfactionText =
+    !feedbacks?.details?.hide_rates && averageRate != null
+      ? `؛ همچنین ${+(averageRate * 20).toFixed(0)}٪ مراجعین (${feedbacks?.details?.count_of_feedbacks ?? 0} نظر ثبت شده) از ایشان رضایت داشته‌اند. <b>نظرات ${displayName}</b> در پروفایل دکتر در پذیرش۲۴ قابل مشاهده است`
+      : '';
 
   const freeturnBlock = center?.freeturn_text
     ? `<p>زودترین زمان رزرو نوبت از مطب ${displayName} ${center.freeturn_text} می‌باشد که می‌توانید از طریق وبسایت و یا اپلیکیشن نوبت‌دهی پذیرش۲۴ نوبت خود را به صورت اینترنتی و غیرحضوری دریافت کنید.</p>`
@@ -94,10 +92,10 @@ export const buildProfileSeoAboutHtml = ({
         ${freeturnBlock}
         <p>اگر زمان کافی برای مراجعه حضوری به پزشک مورد نظر خود را ندارید، به پروفایل پزشک در <a href="/" class="text-primary">پذیرش۲۴</a> سری بزنید و در صورت فعال بودن خدمات ویزیت آنلاین ایشان، نوبت ویزیت آنلاین خود را دریافت کنید؛ در غیر این‌صورت می‌توانید از سایر پزشکان ${expertiseLabel} <a href="/consult" class="text-primary"> ویزیت آنلاین (تلفنی و متنی)</a> نوبت بگیرید.</p>
         <p>در صورت نیاز به عکس و بیوگرافی و <b>آدرس اینستاگرام ${displayName}</b>، کانال تلگرام و وبسایت ایشان، اطلاعات موجود در پروفایل ایشان را مشاهده نمایید.</p>
-        <ui>
+        <ul>
         ${buildAddressListItems(displayName, inPersonCenters)}
         <li>تخصص ${displayName}: ${expertiseList}</li>
-        </ui>
+        </ul>
         `;
 };
 

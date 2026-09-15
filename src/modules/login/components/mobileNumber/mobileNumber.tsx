@@ -7,6 +7,7 @@ import { ClinicStatus } from '@/common/constants/status/clinicStatus';
 import { phoneNumberValidator } from '@/common/utils/phoneNumberValidator';
 import { getErrorMessage } from '@/common/utils/errorHandler';
 import { normalizeDigitInput } from '@/common/utils/normalizeDigitInput';
+import { sanitizeRedirectUrl } from '@/common/utils/sanitizeRedirectUrl';
 import Trans from 'next-translate/Trans';
 import useTranslation from 'next-translate/useTranslation';
 import config from 'next/config';
@@ -143,18 +144,17 @@ export const MobileNumber = (props: MobileNumberProps) => {
                   type: 'login-with-oidc',
                 });
                 setOidcOauthLoading(true);
-                location.assign(
-                  `https://user.paziresh24.com/realms/paziresh24/protocol/openid-connect/auth?client_id=p24&redirect_uri=https://users.paziresh24.com/webhook/shahrah${
-                    university ? '?university=true' : ''
-                  }&response_type=code&scope=openid&kc_idp_hint=oidc&state=` +
-                    encodeURI(
-                      `${window.location?.origin}/login?redirect_url=${
-                        router.query?.redirect_url
-                          ? encodeURI(router.query?.redirect_url as string)
-                          : encodeURI(`${window.location.pathname}${window.location.search}`)
-                      }`,
-                    ),
-                );
+
+                const origin = window.location.origin;
+                const redirectUrl =
+                  sanitizeRedirectUrl(router.query?.redirect_url) ??
+                  `${window.location.pathname}${window.location.search}`;
+
+                const authServiceUrl = `https://user.paziresh24.com/auth/gov?origin=${encodeURIComponent(
+                  origin,
+                )}&redirect_url=${encodeURIComponent(redirectUrl)}`;
+
+                location.assign(authServiceUrl);
               }}
             >
               ورود از طریق دولت من
@@ -176,9 +176,9 @@ export const MobileNumber = (props: MobileNumberProps) => {
 
                 // ۱. مشخص کردن آدرسی که کاربر الان توش هست و آدرسی که باید بعدا برگرده
                 const origin = window.location.origin; // مثلاً https://www.paziresh24.com
-                const redirectUrl = router.query?.redirect_url
-                  ? (router.query?.redirect_url as string)
-                  : `${window.location.pathname}${window.location.search}`;
+                const redirectUrl =
+                  sanitizeRedirectUrl(router.query?.redirect_url) ??
+                  `${window.location.pathname}${window.location.search}`;
 
                 // ۲. ریدایرکت مستقیم به وب‌سرویس خودت (بک‌اِند کرسر امنیت و ریدایرکت به گوگل را هندل می‌کند)
                 const authServiceUrl = `https://user.paziresh24.com/auth/google?origin=${encodeURIComponent(

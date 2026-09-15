@@ -1,28 +1,16 @@
 import { oneApp } from '@/modules/dashboard/apis/one-app';
+import { getPageFromOneAppData } from '@/modules/hamdast/utils/getPageFromOneAppData';
 import { constructUrlWithQuery, replaceKeysInString } from 'src/pages/_/[app_key]/[...params]';
 import { QueryClient } from '@tanstack/react-query';
 
 export type OneAppParams = { appKey: string; pageKey: string };
 
+export { getPageFromOneAppData, pageParametersMatch } from '@/modules/hamdast/utils/getPageFromOneAppData';
+export type { OneAppPageOption } from '@/modules/hamdast/utils/getPageFromOneAppData';
+
 export const getOneAppQueryKey = (params: OneAppParams) => ['app', params] as const;
 
 const ONE_APP_STALE_TIME_MS = 5 * 60 * 1000;
-
-export const getPageFromOneAppData = (appData: unknown, pageKey: string, routeParamCount = 0) => {
-  const app = appData as {
-    fragments?: Array<{
-      type?: string;
-      options?: Array<{ key?: string; parameters?: string[]; embed_src?: string }>;
-    }>;
-  };
-  return (
-    app?.fragments
-      ?.find(item => item.type === 'pages')
-      ?.options?.find(
-        item => item.key == pageKey && (item.parameters?.length ?? 0) === routeParamCount,
-      ) ?? null
-  );
-};
 
 export const buildHamdastEmbedUrl = ({
   appData,
@@ -33,15 +21,16 @@ export const buildHamdastEmbedUrl = ({
 }: {
   appData: unknown;
   pageKey: string;
+  /** Full route params including page key, e.g. ['flows', 'CHAT'] */
   routeParams: string[];
   queries?: Record<string, string>;
   userId?: string | number;
 }) => {
-  const routeParamCount = Math.max(0, routeParams.length - 1);
-  const page = getPageFromOneAppData(appData, pageKey, routeParamCount);
+  const routeParamValues = routeParams.slice(1);
+  const page = getPageFromOneAppData(appData, pageKey, routeParamValues);
   if (!page?.embed_src) return null;
 
-  const replaced = replaceKeysInString(page.embed_src, page.parameters ?? [], routeParams.slice(1));
+  const replaced = replaceKeysInString(page.embed_src, page.parameters ?? [], routeParamValues);
   return constructUrlWithQuery(replaced, {
     ...queries,
     user_id: userId,
@@ -66,7 +55,11 @@ const preconnectEmbedOrigin = (embedSrcTemplate: string) => {
   }
 };
 
-export const prefetchOneApp = async (queryClient: QueryClient, params: OneAppParams, routeParamCount = 0) => {
+export const prefetchOneApp = async (
+  queryClient: QueryClient,
+  params: OneAppParams,
+  routeParamValues: string[] = [],
+) => {
   if (!params.appKey || !params.pageKey) return null;
 
   try {
@@ -76,7 +69,7 @@ export const prefetchOneApp = async (queryClient: QueryClient, params: OneAppPar
       staleTime: ONE_APP_STALE_TIME_MS,
     });
 
-    const page = getPageFromOneAppData(response?.data, params.pageKey, routeParamCount);
+    const page = getPageFromOneAppData(response?.data, params.pageKey, routeParamValues);
     if (page?.embed_src) {
       preconnectEmbedOrigin(page.embed_src);
     }
@@ -89,10 +82,10 @@ export const prefetchOneApp = async (queryClient: QueryClient, params: OneAppPar
 
 export const prefetchOneApps = (
   queryClient: QueryClient,
-  entries: Array<OneAppParams & { routeParamCount?: number }>,
+  entries: Array<OneAppParams & { routeParamValues?: string[] }>,
 ) => {
-  entries.forEach(({ appKey, pageKey, routeParamCount = 0 }) => {
-    void prefetchOneApp(queryClient, { appKey, pageKey }, routeParamCount);
+  entries.forEach(({ appKey, pageKey, routeParamValues = [] }) => {
+    void prefetchOneApp(queryClient, { appKey, pageKey }, routeParamValues);
   });
 };
 

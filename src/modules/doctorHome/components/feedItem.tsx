@@ -3,7 +3,7 @@ import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { RaviCard } from '@/modules/rate-and-review';
 import moment from 'jalali-moment';
-import { useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { UpcomingAppointment } from '../apis/upcomingAppointments';
 import { DsDrawer } from './DsDrawer';
 import { useSheetDrawerProps } from '../hooks/doctorHomeSheetLayout';
@@ -26,7 +26,7 @@ import {
 } from '../designSystem';
 import { DoctorHomeFeedItem, DoctorHomeFeedReview } from '../types/feed';
 import { sendDoctorHomeEvent } from '../utils/analytics';
-import { appendUserIdToUrl } from '../utils/iframeUrl';
+import { buildDoctorPanelUrl } from '../utils/iframeUrl';
 import { dsFocusRing } from '../utils/a11y';
 import { getAppointmentTimelineStatuses } from '../utils/timelineStatus';
 import { FeedActionsSection } from './feedActionsSection';
@@ -47,11 +47,17 @@ const formatAppointmentTime = (appointment: UpcomingAppointment) =>
     ? moment.unix(appointment.from).format('HH:mm')
     : appointment.book_time_string || '—';
 
-const AppointmentsFeedItem = ({
+const formatAppointmentMeta = (appointment: UpcomingAppointment) =>
+  [appointment.platform_name, appointment.center_name, appointment.service_name]
+    .filter(Boolean)
+    .join(' · ');
+
+export const AppointmentsFeedItem = ({
   data,
   scheduleExpanded = false,
   widgetShell = false,
   embedCenterStrip = false,
+  nested = false,
 }: {
   data: {
     items: UpcomingAppointment[];
@@ -63,6 +69,7 @@ const AppointmentsFeedItem = ({
   scheduleExpanded?: boolean;
   widgetShell?: boolean;
   embedCenterStrip?: boolean;
+  nested?: boolean;
 }) => {
   const userId = useUserInfoStore(state => state.info?.id);
   const selectedDate = useSelectedDateStore(state => state.selectedDate);
@@ -78,23 +85,36 @@ const AppointmentsFeedItem = ({
   const hasItems = data.items.length > 0;
   const expanded = scheduleExpanded || isExpanded;
   const isAppointmentsInitialLoading = data.isAppointmentsLoading ?? false;
-  const isAppointmentsFetching = data.isAppointmentsFetching ?? false;
-  const showTimeline = isScheduleHydrated && expanded && hasItems && !isAppointmentsFetching;
+  const showTimeline = isScheduleHydrated && expanded && hasItems;
   const showTimelineLoading =
-    isScheduleHydrated && expanded && !hasItems && (isAppointmentsInitialLoading || isAppointmentsFetching);
+    isScheduleHydrated && expanded && !hasItems && isAppointmentsInitialLoading;
   const showEmptyState =
-    isScheduleHydrated && expanded && !hasItems && !isAppointmentsInitialLoading && !isAppointmentsFetching;
+    isScheduleHydrated && expanded && !hasItems && !isAppointmentsInitialLoading;
 
   const allSheet = useSheetRoute('appointments-all');
   const appointmentsDrawerProps = useSheetDrawerProps(allSheet);
-  const appointmentsSwapKey = `${selectedDate}-${selectedCenterId ?? 'all'}-${data.todayCount ?? 'x'}`;
+  const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [patientsCenterId, setPatientsCenterId] = useState<string | undefined>(undefined);
+  const appointmentsSwapKey = `${selectedDate}-${patientsCenterId ?? selectedCenterId ?? 'all'}-${data.todayCount ?? 'x'}`;
   const schedulePanelId = 'appointments-schedule-panel';
+  const myPatientsUrl = useMemo(
+    () =>
+      buildDoctorPanelUrl(DOCTOR_PANEL_URLS.myPatients, {
+        userId,
+        date: selectedDate,
+        centerId: patientsCenterId ?? selectedCenterId,
+        bookId: selectedBookId,
+      }),
+    [userId, selectedDate, patientsCenterId, selectedCenterId, selectedBookId],
+  );
 
   useEffect(() => {
     hydrateScheduleExpanded();
   }, [hydrateScheduleExpanded]);
 
-  const openAllAppointments = () => {
+  const openAllAppointments = (options?: { bookId?: string; centerId?: string }) => {
+    setSelectedBookId(options?.bookId ?? null);
+    setPatientsCenterId(options?.centerId);
     sendDoctorHomeEvent(userId, 'appointments_see_all');
     allSheet.openSheet();
   };
@@ -104,15 +124,13 @@ const AppointmentsFeedItem = ({
       <AppointmentsCardSkeleton
         embedCenterStrip={embedCenterStrip}
         rows={scheduleExpanded ? 3 : 4}
-        className={widgetShell ? undefined : '-mt-4 md:mt-0'}
         title={sectionTitle}
       />
     );
   }
 
-  return (
-    <section dir="rtl" className={widgetShell ? undefined : '-mt-4 md:mt-0'}>
-      <DsCard padding="none" variant={widgetShell ? 'widget' : 'default'} className="overflow-hidden">
+  const inner = (
+    <>
         {embedCenterStrip && (
           <div className="border-b border-slate-100 px-3 py-2.5">
             <CenterStrip />
@@ -123,7 +141,7 @@ const AppointmentsFeedItem = ({
           count={data.todayCount}
           isLoading={data.isTodayCountLoading && data.todayCount == null}
           userId={userId}
-          onPress={openAllAppointments}
+          onPress={() => openAllAppointments()}
           widgetShell={widgetShell}
           trailing={
             !scheduleExpanded && isScheduleHydrated ? (
@@ -146,7 +164,7 @@ const AppointmentsFeedItem = ({
 
         <DsCollapsible open={showTimeline} id={schedulePanelId}>
           <div className="border-t border-slate-100 px-3 pb-3 pt-2">
-            <FeedContentSwap swapKey={appointmentsSwapKey} variant="slide">
+            <FeedContentSwap swapKey={appointmentsSwapKey} variant="fade">
               <DsTimeline>
                 {data.items.map((appointment, index) => (
                   <FeedStaggerItem key={appointment.book_id} index={index}>
@@ -158,9 +176,14 @@ const AppointmentsFeedItem = ({
                       <DsTaskCard
                         compact
                         highlighted={isToday && statuses[index] === 'current'}
-                        onClick={openAllAppointments}
+                        onClick={() =>
+                          openAllAppointments({
+                            bookId: appointment.book_id,
+                            centerId: selectedCenterId ?? appointment.center_id,
+                          })
+                        }
                         title={appointment.patient_name}
-                        meta={[appointment.center_name, appointment.service_name].filter(Boolean).join(' · ')}
+                        meta={formatAppointmentMeta(appointment)}
                         trailing={
                           <div className="shrink-0 text-left">
                             <p className={classNames(ds.type.cardTitle, 'tabular-nums')}>
@@ -200,8 +223,10 @@ const AppointmentsFeedItem = ({
             </div>
           </FeedContentSwap>
         </DsCollapsible>
-      </DsCard>
+    </>
+  );
 
+  const drawer = (
       <DsDrawer
         {...appointmentsDrawerProps}
         title="لیست نوبت‌ها"
@@ -211,17 +236,35 @@ const AppointmentsFeedItem = ({
       >
         {allSheet.open && (
           <iframe
-            src={appendUserIdToUrl(DOCTOR_PANEL_URLS.myPatients, userId)}
+            key={`${selectedDate}-${patientsCenterId ?? selectedCenterId ?? 'all'}-${selectedBookId ?? 'all'}`}
+            src={myPatientsUrl}
             title="لیست نوبت‌ها"
             className="min-h-0 w-full flex-1 border-0"
           />
         )}
       </DsDrawer>
+  );
+
+  if (nested) {
+    return (
+      <div dir="rtl">
+        {inner}
+        {drawer}
+      </div>
+    );
+  }
+
+  return (
+    <section dir="rtl">
+      <DsCard padding="none" variant={widgetShell ? 'widget' : 'default'} className="overflow-hidden">
+        {inner}
+      </DsCard>
+      {drawer}
     </section>
   );
 };
 
-const ReviewsFeedItem = ({
+export const ReviewsFeedItem = ({
   data,
 }: {
   data: { items: DoctorHomeFeedReview[]; slug?: string; doctorUserId?: string };
@@ -257,7 +300,7 @@ const ReviewsFeedItem = ({
       >
         {allSheet.open && (
           <iframe
-            src={appendUserIdToUrl(RAVI_DOCSIDE_URL, userId)}
+            src={RAVI_DOCSIDE_URL}
             title="راوی؛ نظرات بیماران"
             className="min-h-0 w-full flex-1 border-0"
           />
@@ -294,10 +337,10 @@ export const FeedItem = ({ item, scheduleExpanded, widgetShell, hideSectionHeade
       return null;
 
     case 'actions':
-      return <FeedActionsSection onlineVisit={item.data.onlineVisit} widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
+      return <FeedActionsSection widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
 
     case 'online_visit':
-      return <FeedActionsSection onlineVisit={item.data} widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
+      return <FeedActionsSection widgetShell={widgetShell} hideSectionHeader={hideSectionHeader} />;
 
     case 'alert':
     case 'alerts':
@@ -320,7 +363,6 @@ export const FeedItem = ({ item, scheduleExpanded, widgetShell, hideSectionHeade
           <AppointmentsCardSkeleton
             embedCenterStrip={embedCenterStrip}
             rows={scheduleExpanded ? 3 : 4}
-            className="-mt-4 md:mt-0"
           />
         );
       }

@@ -1,7 +1,8 @@
 import classNames from '@/common/utils/classNames';
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { KeyboardEvent, ReactNode } from 'react';
 import { ds } from './tokens';
+import { dsFocusRing } from '../utils/a11y';
 
 interface DsCardProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ interface DsCardProps {
   padding?: 'none' | 'sm' | 'md' | 'lg';
   interactive?: boolean;
   variant?: 'default' | 'widget';
+  ariaLabel?: string;
 }
 
 const paddingMap = {
@@ -28,19 +30,33 @@ export const DsCard = ({
   padding = 'lg',
   interactive,
   variant = 'default',
+  ariaLabel,
 }: DsCardProps) => {
   const isInteractive = interactive ?? !!(href || onClick);
   const isWidget = variant === 'widget';
+
+  const onKeyDown =
+    !href && onClick
+      ? (event: KeyboardEvent<HTMLDivElement>) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          onClick();
+        }
+      : undefined;
 
   const card = (
     <div
       className={classNames(
         isWidget ? ds.workstation.widget : classNames(ds.radius.card, ds.surface.card, ds.shadow.sm),
-        isInteractive && classNames('cursor-pointer', ds.motion.surface, ds.motion.press, 'hover:shadow-md'),
+        isInteractive && classNames('cursor-pointer', ds.motion.surface, ds.motion.press, 'hover:shadow-md', dsFocusRing),
         paddingMap[padding],
         className,
       )}
+      role={isInteractive && !href ? 'button' : undefined}
+      tabIndex={isInteractive && !href ? 0 : undefined}
+      aria-label={ariaLabel}
       onClick={!href ? onClick : undefined}
+      onKeyDown={onKeyDown}
     >
       {children}
     </div>

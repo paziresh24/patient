@@ -1,6 +1,8 @@
 import Skeleton from '@/common/components/atom/skeleton/skeleton';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
+import { trackRaviReviewEvent } from '../analytics/trackRaviReviewEvent';
 import { fetchRateSummary } from '../api';
 import { RaviCenter } from '../types';
 import { RaviList } from './RaviList';
@@ -22,12 +24,51 @@ export const RaviWidget = ({
   hideSummary = false,
 }: RaviWidgetProps) => {
   const userId = useUserInfoStore(state => state.info?.id?.toString());
-
+  const viewedRef = useRef(false);
+  const summaryTrackedRef = useRef<string | null>(null);
   const summaryQuery = useQuery(['ravi-rate-summary', doctorSlug], () => fetchRateSummary(doctorSlug), {
     enabled: !!doctorSlug,
     staleTime: 60_000,
   });
   const hideRates = summaryQuery.data?.hideRates;
+
+  useEffect(() => {
+    if (!doctorSlug || viewedRef.current) return;
+    viewedRef.current = true;
+    void trackRaviReviewEvent({
+      event_type: 'review_section_view',
+      slug: doctorSlug,
+      doctor_id: doctorUserId,
+      ok: true,
+    });
+  }, [doctorSlug, doctorUserId]);
+
+  useEffect(() => {
+    if (!doctorSlug || summaryQuery.isLoading) return;
+    const key = `${doctorSlug}:${summaryQuery.isError ? 'err' : summaryQuery.data ? 'ok' : 'empty'}`;
+    if (summaryTrackedRef.current === key) return;
+    summaryTrackedRef.current = key;
+    if (summaryQuery.isError) {
+      void trackRaviReviewEvent({
+        event_type: 'rate_summary_error',
+        slug: doctorSlug,
+        doctor_id: doctorUserId,
+        ok: false,
+        error_code: 'RATE_SUMMARY_ERROR',
+      });
+      return;
+    }
+    if (summaryQuery.data) {
+      void trackRaviReviewEvent({
+        event_type: 'rate_summary_load',
+        slug: doctorSlug,
+        doctor_id: doctorUserId,
+        hide_rates: summaryQuery.data.hideRates,
+        count: summaryQuery.data.count,
+        ok: true,
+      });
+    }
+  }, [doctorSlug, doctorUserId, summaryQuery.data, summaryQuery.isError, summaryQuery.isLoading]);
 
   if (!doctorSlug) {
     return <p className="text-sm text-slate-500">slug پزشک مشخص نشده است.</p>;

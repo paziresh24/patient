@@ -16,14 +16,14 @@ import "../../.plasmic/plasmic/hamdast_cheragh/plasmic.css"; // plasmic-import: 
 import "../../.plasmic/plasmic/hamdast_rahnama/plasmic.css"; // plasmic-import: 5MMYVxpXKV5JuJRaJPvqek/projectcss
 import "../../.plasmic/plasmic/hamdast_khedmat/plasmic.css"; // plasmic-import: 666TdydnqTmUJpihDvjWrt/projectcss
 import ErrorBoundary from "@/common/components/layouts/errorBoundary";
+import PlusHostBootstrap from "@/common/components/layouts/plusHostBootstrap";
 import useApplication from "@/common/hooks/useApplication";
 import useCustomize from "@/common/hooks/useCustomize";
 import { useNetworkStatus } from "@/common/hooks/useNetworkStatus";
 import useServerQuery from "@/common/hooks/useServerQuery";
 import { splunkInstance } from "@/common/services/splunk";
 import Provider from "@/components/layouts/provider";
-import "@/firebase/analytics";
-import { GrowthBook, GrowthBookProvider, configureCache } from "@growthbook/growthbook-react";
+import { GrowthBookProvider } from "@growthbook/growthbook-react";
 import { PlasmicRootProvider } from "@plasmicapp/react-web";
 import { Hydrate } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
@@ -44,24 +44,14 @@ import RouteProgress from "@/common/components/layouts/RouteProgress";
 import { RismanSurveyScript } from "@/common/components/layouts/RismanSurveyScript";
 import { RoutedExternalScripts } from "@/common/components/layouts/RoutedExternalScripts";
 import { useNotificationPermission } from "@/common/hooks/useNotificationPermission";
+import { sendWebVital } from "@/common/services/rum/webVitals";
+import { scheduleGozargahTokenUpgrade } from "@/modules/login/utils/gozargahTokenUpgrade";
+import { growthbook, isEnabledGrowthbook } from "@/common/growthbook/client";
+
+/** Re-export leaf singleton — prefer `@/common/growthbook/client` for SSG-safe imports. */
+export { growthbook };
+
 const { publicRuntimeConfig } = getConfig();
-const isEnabledGrowthbook =
-  !!publicRuntimeConfig.GROWTHBOOK_API_HOST &&
-  !!publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY;
-
-if (isEnabledGrowthbook) {
-  configureCache({
-    staleTTL: 30 * 1000,
-  });
-}
-
-export const growthbook = new GrowthBook({
-  enabled: isEnabledGrowthbook,
-  apiHost: publicRuntimeConfig.GROWTHBOOK_API_HOST,
-  clientKey: publicRuntimeConfig.GROWTHBOOK_CLIENT_KEY,
-  backgroundSync: true,
-  realtimeInterval: 10000
-});
 function updateGrowthBookURL() {
   growthbook.setURL(window.location.href);
 }
@@ -121,6 +111,14 @@ function MyApp(props: AppProps) {
     useServerQuery.getState().setQueries(pageProps?.query);
   }, [pageProps?.query, pageProps?.themeConfing]);
   useEffect(() => {
+    // PERF (DR-08 §۱۱): این side-effect-only import قبلاً بالای فایل و استاتیک بود، یعنی همیشه در
+    // شاخه‌ی مشترکِ webpack هر صفحه bundle/execute می‌شد — حتی برای بازدیدهای غیر-PWA که
+    // src/firebase/analytics.ts هیچ‌وقت واقعاً از آن استفاده نمی‌کند. دینامیک+deferred کردنش (بعد از
+    // mount، نه در مسیرِ رندرِ بحرانی) هزینه‌ی main-thread را از مسیرِ بارگذاریِ اولیه‌ی هر صفحه حذف
+    // می‌کند؛ گیتِ داخلیِ isPWA()/IS_FIREBASE_ENABLE در خودِ ماژول حفظ شده (رفتار عوض نشده).
+    import("@/firebase/analytics");
+  }, []);
+  useEffect(() => {
     if (
       isLogin &&
       (isApplication ||
@@ -142,6 +140,13 @@ function MyApp(props: AppProps) {
   useNotificationPermission({
     autoSubscribe: isLogin // فقط وقتی login است auto-subscribe کند
   });
+
+  // Silent gozargah_token RS256 refresh for sessions that still only have legacy cookies.
+  useEffect(() => {
+    if (!isLogin) return;
+    scheduleGozargahTokenUpgrade();
+  }, [isLogin]);
+
   useEffect(() => {
     if (isGtmDisabled || gtmEnabledRef.current) return;
     const isDoctorPage =
@@ -162,7 +167,6 @@ function MyApp(props: AppProps) {
       window.removeEventListener("keydown", onInteract);
       window.removeEventListener("touchstart", onInteract);
       window.removeEventListener("scroll", onInteract);
-      window.removeEventListener("mousemove", onInteract);
     };
     if (isDoctorPage) {
       window.addEventListener("pointerdown", onInteract, {
@@ -178,10 +182,6 @@ function MyApp(props: AppProps) {
         once: true
       });
       window.addEventListener("scroll", onInteract, {
-        passive: true,
-        once: true
-      });
-      window.addEventListener("mousemove", onInteract, {
         passive: true,
         once: true
       });
@@ -236,6 +236,7 @@ function MyApp(props: AppProps) {
               )}
               <RismanSurveyScript />
               <RoutedExternalScripts />
+              <PlusHostBootstrap />
             </PlasmicRootProvider>
           </GlobalContextsProvider>
         </Provider>
@@ -245,5 +246,8 @@ function MyApp(props: AppProps) {
 }
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   if (metric.label === "custom" || !publicRuntimeConfig.IS_PRODUCTION) return;
+  // DR-08 §۱۷ — تا امروز این تابع خالی بود و متریک‌های CWVِ کاربرانِ واقعی دور ریخته می‌شد.
+  // مقصد و صفحاتِ مجاز در `webVitals.ts` تعریف شده (فعلاً فقط صفحاتِ جستجو).
+  sendWebVital(metric);
 }
 export default MyApp;

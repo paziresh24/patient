@@ -1,0 +1,32 @@
+import { getFreeturnDisplayText } from '@/modules/booking/utils/getFreeturnDisplayText';
+
+describe('getFreeturnDisplayText', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2026-07-15T12:00:00.000Z'));
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it('returns asap text when freeturn is null', () => {
+    expect(getFreeturnDisplayText(null)).toBe('در اسرع وقت');
+  });
+
+  it('returns within 15 minutes when freeturn is in the past', () => {
+    expect(getFreeturnDisplayText(Date.now() - 60_000)).toBe('در کمتر از ۱۵ دقیقه آینده');
+  });
+
+  it('returns formatted time when freeturn is in the future', () => {
+    const text = getFreeturnDisplayText(Date.now() + 2 * 60 * 60 * 1000);
+    expect(text).toContain('حدود ساعت');
+  });
+
+  it('applies +15m then ceil-to-5 display buffer on future freeturn when enabled', () => {
+    // Frozen now is 12:00 UTC = 15:30 Tehran; use 18:00 Tehran → display 18:15
+    const freeturnMs = Date.parse('2026-07-15T18:00:00.000+03:30');
+    expect(getFreeturnDisplayText(freeturnMs, { enabled: true })).toContain('18:15');
+    expect(getFreeturnDisplayText(freeturnMs)).toContain('18:00');
+  });
+});

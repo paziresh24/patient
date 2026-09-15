@@ -8,6 +8,7 @@ interface ServiceCardProps {
   header?: {
     icon?: ReactNode;
     title: string;
+    badge?: ReactNode;
     hint?: ReactNode;
   };
   body?: {
@@ -20,6 +21,7 @@ interface ServiceCardProps {
       text: string;
       onClick: () => void;
       loading?: boolean;
+      disabled?: boolean;
       hint?: string;
       icon?: ReactNode;
       className?: string;
@@ -32,15 +34,16 @@ export const ServiceCard = (props: ServiceCardProps) => {
   return (
     <Card className="!p-0 !py-4 space-y-3 !rounded-none md:!rounded-lg">
       {header && (
-        <div className="flex items-center justify-between px-4 pb-4 border-b-2 border-slate-100">
-          <div className="flex items-center space-s-2">
+        <div className="flex items-center justify-between gap-2 px-4 pb-4 border-b-2 border-slate-100">
+          <div className="flex items-center flex-wrap gap-2">
             {header.icon}
             <Text fontWeight="bold" fontSize="sm">
               {header.title}
             </Text>
+            {header.badge}
           </div>
           {header.hint && (
-            <Text fontWeight="semiBold" fontSize="sm">
+            <Text fontWeight="semiBold" fontSize="sm" className="shrink-0">
               {header.hint}
             </Text>
           )}
@@ -63,6 +66,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
               block
               key={index}
               loading={action.loading}
+              disabled={action.disabled}
               {...(action.icon && { icon: action.icon })}
               onClick={action.onClick}
               className={action.className ?? ''}

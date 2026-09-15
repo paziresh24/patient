@@ -8,6 +8,7 @@ import ChevronIcon from '@/common/components/icons/chevron';
 import useModal from '@/common/hooks/useModal';
 import { splunkInstance } from '@/common/services/splunk';
 import { getImageUrl } from '@/common/utils/getImageUrl';
+import { doctorSlugFromSearchHit, useRaviCardRate } from '@/modules/profile/hooks/useDoctorRateDetails';
 import SearchCard from '@/modules/search/components/card/card';
 import random from 'lodash/random';
 import { useMemo } from 'react';
@@ -26,6 +27,7 @@ export const OnlineVisitPromote = () => {
   });
 
   const substituteDoctor = useMemo(() => searchData.data?.search?.result?.[random(0, 2)] ?? {}, [searchData.data]);
+  const raviRate = useRaviCardRate(doctorSlugFromSearchHit(substituteDoctor));
 
   const handleOpenSubstituteDoctorModal = () => {
     splunkInstance('search').sendEvent({
@@ -101,22 +103,10 @@ export const OnlineVisitPromote = () => {
                   experience: substituteDoctor.experience,
                   isVerify: true,
                   avatar: substituteDoctor.image,
-                  rate: {
-                    count: substituteDoctor.rates_count,
-                    satisfaction: substituteDoctor.satisfaction,
-                  },
+                  rate: raviRate,
                   isOnline: true,
                 }}
                 type="doctor"
-                details={{
-                  badges: [
-                    {
-                      title: 'تضمین بازپرداخت مبلغ ویزیت در صورت نارضایتی',
-                      icon: 'shield-icon',
-                      type: 'error',
-                    },
-                  ],
-                }}
                 className="shadow-none !py-0 lg:!py-0 cursor-pointer"
                 actions={[
                   {

@@ -4,6 +4,7 @@ import {
   getFeedbackCreatedAtValue,
   getFeedbackLocalDateKey,
 } from '@/common/utils/formatRelativeFeedbackTime';
+import { toPatientFirstName } from '@/modules/rate-and-review/utils/patientFirstName';
 import { DoctorHomeFeedReview } from '../types/feed';
 import { matchesSelectedCenter } from './centers';
 
@@ -47,6 +48,7 @@ export const mapRawReviewToFeed = (
   const rateNum = rateRaw != null && rateRaw !== '' ? Number(rateRaw) : null;
 
   const nameRaw =
+    item.user_display_name ??
     item.user_name ??
     item.name ??
     item.display_name ??
@@ -64,7 +66,8 @@ export const mapRawReviewToFeed = (
     recommended: item.recommended as string | number | boolean | undefined,
     relativeCreatedTime: formatReviewCreatedTime(item, options?.selectedDate),
     userId: (item.user_id ?? item.userId) as string | number | undefined,
-    userName: typeof nameRaw === 'string' && nameRaw.trim() ? nameRaw.trim() : undefined,
+    // Public patient label: first name only (user_display_name is often full name).
+    userName: toPatientFirstName(typeof nameRaw === 'string' ? nameRaw : null),
     rate: rateNum != null && Number.isFinite(rateNum) ? rateNum : null,
     centerName: typeof centerName === 'string' && centerName.trim() ? centerName.trim() : undefined,
     visited: item.visit_status === 'visited',

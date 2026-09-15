@@ -6,7 +6,7 @@ import { DsDateStrip, ds } from '../designSystem';
 import type { DsDateStripRef } from '../designSystem';
 import { HOLIDAY_YEAR_END, HOLIDAY_YEAR_START, useHolidays } from '../apis/holidays';
 import { getVacationsOnDate, useDoctorVacations } from '../apis/vacations';
-import { DoctorHomeFeedStats } from '../types/feed';
+import { useDoctorHomeNotifications } from '../hooks/useDoctorHomeNotifications';
 import { CenterStrip } from './centerStrip';
 import { FeedInsightSection } from './feedInsightSection';
 import { useSelectedDateStore } from '../store/selectedDate';
@@ -16,8 +16,6 @@ import { useSheetRoute } from '../hooks/useSheetRoute';
 import { TodayIcon } from './icons';
 
 interface FeedGreetingProps {
-  stats?: DoctorHomeFeedStats;
-  notificationDateSet?: Set<string>;
   className?: string;
   /** دسکتاپ: نوار تاریخ مخفی — تقویم ماهانه جایگزین می‌شود */
   hideDateStrip?: boolean;
@@ -28,8 +26,6 @@ interface FeedGreetingProps {
 }
 
 export const FeedGreeting = ({
-  stats,
-  notificationDateSet,
   className,
   hideDateStrip = false,
   hideStats = false,
@@ -37,6 +33,7 @@ export const FeedGreeting = ({
 }: FeedGreetingProps) => {
   const stripRef = useRef<DsDateStripRef>(null);
   const user = useUserInfoStore(state => state.info);
+  const { notificationDateSet } = useDoctorHomeNotifications(user);
   const selectedDate = useSelectedDateStore(s => s.selectedDate);
   const selectedCenterId = useSelectedCenterStore(s => s.selectedCenterId);
   const selectedMoment = moment(selectedDate, 'YYYY-MM-DD');
@@ -142,20 +139,17 @@ export const FeedGreeting = ({
   if (workstationLayout && hideDateStrip && hideStats && !holidayBanners) return null;
 
   return (
-    <header className={classNames(workstationLayout ? 'space-y-3' : hideDateStrip ? 'space-y-4' : ds.layout.headerStack, className)}>
+    <header className={classNames(workstationLayout ? 'space-y-3' : hideDateStrip ? 'space-y-3' : ds.layout.headerStack, className)}>
       {!hideDateStrip && (
         <>
           {dateStripBlock}
-          <CenterStrip />
+          <CenterStrip className="px-1" />
           {holidayBanners}
         </>
       )}
 
       {!hideStats && (
-        <FeedInsightSection
-          stats={stats}
-          variant={hideDateStrip ? 'grid' : 'responsive'}
-        />
+        <FeedInsightSection variant={hideDateStrip ? 'grid' : 'responsive'} />
       )}
 
       {hideDateStrip && !workstationLayout && (

@@ -3,12 +3,19 @@ import ClientOnlyPortal from '@/common/components/layouts/clientOnlyPortal';
 import useResponsive from '@/common/hooks/useResponsive';
 import classNames from '@/common/utils/classNames';
 import { X } from 'lucide-react';
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Drawer } from 'vaul';
 import { ds } from '../designSystem/tokens';
+import { prefersReducedMotion } from '../utils/a11y';
+import { originTransformOrigin, type OriginRect } from '../utils/sharedElement';
+import { SharedElementFlight } from './sharedElementFlight';
+import { armDismissClickShield } from '../utils/dismissClickShield';
 
-/** هم‌تراز با `z-infinity` در tailwind — بالاتر از هدر و ناوبری پایین */
-const DRAWER_BASE_Z = 999;
+/**
+ * بالاتر از هدر/ناوبری (z-40/50) و پایین‌تر از `z-infinity` (999) —
+ * تا مودال پرداخت و لاگین روی شیت اپ دیده شوند، نه زیر آن.
+ */
+const DRAWER_BASE_Z = 900;
 const DESKTOP_EXIT_MS = 200;
 const MOBILE_CLICK_SHIELD_MS = 500;
 
@@ -26,6 +33,13 @@ interface DsDrawerProps {
   fullHeight?: boolean;
   /** وقتی این شیت داخل یک شیت دیگر باز میشه (nested) — از Drawer.NestedRoot وال استفاده می‌کنه */
   nested?: boolean;
+  /**
+   * فقط دسکتاپ: پنل تقریبا تمام‌صفحه می‌شود (اجرای فول‌اسکرین ابزارک) —
+   * لبه‌ها به‌خاطر padding دور پنل دیده می‌شوند و کلیک روی پس‌زمینه می‌بندد.
+   */
+  expanded?: boolean;
+  /** کارت مبدأ برای shared-element و origin-aware دسکتاپ */
+  originRect?: OriginRect | null;
 }
 
 const DesktopDrawerPanel = ({
@@ -34,23 +48,38 @@ const DesktopDrawerPanel = ({
   children,
   className,
   fullHeight,
+  expanded,
   level,
   closing,
   onClose,
+  originRect,
 }: {
   title?: string;
   description?: string;
   children: ReactNode;
   className?: string;
   fullHeight?: boolean;
+  expanded?: boolean;
   level: number;
   closing: boolean;
   onClose: () => void;
+  originRect?: OriginRect | null;
 }) => {
   const isFlush = className?.includes('!p-0');
   const accessibleLabel = title ?? description ?? 'sheet';
   const overlayZ = DRAWER_BASE_Z + level * 10;
   const panelZ = DRAWER_BASE_Z + 1 + level * 10;
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [transformOrigin, setTransformOrigin] = useState('50% 40%');
+  const useOriginPop = !!originRect && !prefersReducedMotion();
+
+  useLayoutEffect(() => {
+    if (!originRect || !panelRef.current) return;
+    const r = panelRef.current.getBoundingClientRect();
+    setTransformOrigin(
+      originTransformOrigin(originRect, { x: r.left, y: r.top, width: r.width, height: r.height }),
+    );
+  }, [originRect]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -74,6 +103,7 @@ const DesktopDrawerPanel = ({
           'absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]',
           closing ? ds.motion.backdropExit : ds.motion.backdropEnter,
         )}
+        onPointerDownCapture={() => armDismissClickShield()}
         onClick={onClose}
       />
       <div
@@ -81,11 +111,17 @@ const DesktopDrawerPanel = ({
         style={{ zIndex: panelZ }}
       >
         <div
+          ref={panelRef}
           className={classNames(
-            'pointer-events-auto flex w-full items-start gap-3',
-            closing ? ds.motion.sheetExit : ds.motion.sheetEnter,
-            fullHeight ? 'max-w-[min(42rem,calc(100vw-2.5rem))]' : 'max-w-md',
+            'pointer-events-auto flex w-full items-start gap-3 transition-[max-width] duration-300',
+            useOriginPop
+              ? closing ? ds.motion.originExit : ds.motion.originEnter
+              : closing ? ds.motion.sheetExit : ds.motion.sheetEnter,
+            expanded ? 'max-w-[calc(100vw_-_2.5rem)]'
+            : fullHeight ? 'max-w-[min(42rem,calc(100vw_-_2.5rem))]'
+            : 'max-w-md',
           )}
+          style={useOriginPop ? { transformOrigin } : undefined}
           dir="rtl"
         >
           <button
@@ -107,9 +143,10 @@ const DesktopDrawerPanel = ({
             className={classNames(
               'flex min-w-0 flex-1 flex-col overflow-hidden bg-white outline-none',
               'rounded-2xl ring-1 ring-slate-200/80 shadow-[0_24px_64px_rgba(15,23,42,0.14)]',
-              fullHeight
-                ? 'h-[min(88dvh,calc(100dvh-2.5rem))]'
-                : 'max-h-[min(85vh,36rem)]',
+              'transition-[height] duration-300',
+              expanded ? 'h-[calc(100dvh_-_2.5rem)]'
+              : fullHeight ? 'h-[min(88dvh,calc(100dvh_-_2.5rem))]'
+              : 'max-h-[min(85vh,36rem)]',
             )}
           >
             <div
@@ -173,6 +210,7 @@ const MobileDrawerPanel = ({
         <Drawer.Overlay
           className="fixed inset-0 bg-black/50"
           style={{ zIndex: DRAWER_BASE_Z + level * 10 }}
+          onPointerDownCapture={() => armDismissClickShield()}
         />
         <Drawer.Content
           className={classNames(
@@ -215,6 +253,8 @@ export const DsDrawer = ({
   level = 0,
   fullHeight = false,
   nested = false,
+  expanded = false,
+  originRect = null,
 }: DsDrawerProps) => {
   const { isDesktop } = useResponsive();
   const [desktopVisible, setDesktopVisible] = useState(false);
@@ -228,10 +268,16 @@ export const DsDrawer = ({
   const dismissPendingRef = useRef(false);
   const dismissSafetyTimer = useRef<ReturnType<typeof setTimeout>>();
   const openRef = useRef(open);
+  const originRef = useRef<OriginRect | null>(originRect);
+  const [flightActive, setFlightActive] = useState(false);
+  const [flightClosing, setFlightClosing] = useState(false);
+
+  if (originRect) originRef.current = originRect;
 
   openRef.current = open;
 
   const activateClickShield = useCallback(() => {
+    armDismissClickShield(MOBILE_CLICK_SHIELD_MS);
     setClickShield(true);
     clearTimeout(shieldTimer.current);
     shieldTimer.current = setTimeout(() => setClickShield(false), MOBILE_CLICK_SHIELD_MS);
@@ -256,16 +302,18 @@ export const DsDrawer = ({
 
   const requestClose = useCallback(() => {
     if (!onOpenChange || !open) return;
+    activateClickShield();
     onOpenChange(false);
-  }, [onOpenChange, open]);
+  }, [activateClickShield, onOpenChange, open]);
 
   const beginMobileDismiss = useCallback(() => {
     if (!mobileOpen || isClosingRef.current) return;
     isClosingRef.current = true;
     dismissPendingRef.current = true;
+    activateClickShield();
     setMobileOpen(false);
     scheduleDismissSafety();
-  }, [mobileOpen, scheduleDismissSafety]);
+  }, [activateClickShield, mobileOpen, scheduleDismissSafety]);
 
   const handleMobileOpenChange = useCallback(
     (nextOpen: boolean) => {
@@ -315,7 +363,8 @@ export const DsDrawer = ({
     if (isDesktop) return;
 
     if (open) {
-      if (isClosingRef.current) return;
+      // حتی وسط انیمیشن بسته‌شدن، اگر store دوباره open شد باید باز شود
+      clearTimeout(dismissSafetyTimer.current);
       dismissPendingRef.current = false;
       isClosingRef.current = false;
       setMobileMounted(true);
@@ -346,6 +395,16 @@ export const DsDrawer = ({
     return () => clearTimeout(timer);
   }, [isDesktop, mobileMounted, mobileOpen]);
 
+  useEffect(() => {
+    if (!originRef.current || prefersReducedMotion()) return;
+    if (open) {
+      setFlightClosing(false);
+      setFlightActive(true);
+      return;
+    }
+    if (flightActive) setFlightClosing(true);
+  }, [open, flightActive]);
+
   useEffect(
     () => () => {
       clearTimeout(closeTimer.current);
@@ -366,14 +425,34 @@ export const DsDrawer = ({
               description={description}
               className={className}
               fullHeight={fullHeight}
+              expanded={expanded}
               level={level}
               closing={desktopClosing}
+              originRect={originRef.current}
               onClose={requestClose}
             >
               {children}
             </DesktopDrawerPanel>
           </ClientOnlyPortal>
         ) : null}
+        {clickShield ? (
+          <ClientOnlyPortal selector="body">
+            <div className="fixed inset-0 touch-none" style={{ zIndex: 10000 }} aria-hidden />
+          </ClientOnlyPortal>
+        ) : null}
+        <SharedElementFlight
+          active={flightActive}
+          closing={flightClosing}
+          origin={originRef.current}
+          isDesktop
+          fullHeight={fullHeight}
+          onSettled={() => {
+            if (flightClosing) {
+              setFlightActive(false);
+              setFlightClosing(false);
+            }
+          }}
+        />
       </>
     );
   }
@@ -404,11 +483,24 @@ export const DsDrawer = ({
         <ClientOnlyPortal selector="body">
           <div
             className="fixed inset-0 touch-none"
-            style={{ zIndex: DRAWER_BASE_Z + 50 + level * 10 }}
+            style={{ zIndex: 10000 }}
             aria-hidden
           />
         </ClientOnlyPortal>
       ) : null}
+      <SharedElementFlight
+        active={flightActive}
+        closing={flightClosing}
+        origin={originRef.current}
+        isDesktop={false}
+        fullHeight={fullHeight}
+        onSettled={() => {
+          if (flightClosing) {
+            setFlightActive(false);
+            setFlightClosing(false);
+          }
+        }}
+      />
     </>
   );
 };

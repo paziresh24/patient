@@ -18,6 +18,9 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { Fragment } from '@/common/fragment';
 import { useSearch } from '../../hooks/useSearch';
 const SuggestionContent = dynamic(() => import('../../components/suggestion/suggestionContent'));
+// DR-11: the conversational layer expands *under* the existing search box. Loaded
+// lazily and client-only so a search box on a partner/university host (where it is
+// never allowed to render) does not even pay for the bytes.
 import SearchGlobalContextsProvider from '../../../../../.plasmic/plasmic/paziresh_24_search/PlasmicGlobalContextsProvider';
 import { Fragment2 } from '@/common/fragment/fragment2';
 const PlasmicSearchLazy = dynamic(() => import('.plasmic/plasmic/paziresh_24_search/PlasmicSearch'));

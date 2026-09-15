@@ -1,0 +1,17 @@
+# AI Review config for patient (gitlab.paziresh24.com).
+# LLM + VCS credentials come from GitLab CI variables / job env
+# (see .gitlab-ci.yml ai-review job). This file holds repo policy.
+
+review:
+  mode: FULL_FILE_DIFF
+  dry_run: false
+  ignore_changes:
+    - ".plasmic/plasmic/**"
+    - "package-lock.json"
+    - "yarn.lock"
+  summary_tag: "#ai-review-summary"
+  inline_tag: "#ai-review-inline"
+
+prompt:
+  summary_prompt_files:
+    - "./prompts/ai-review/summary.md"
