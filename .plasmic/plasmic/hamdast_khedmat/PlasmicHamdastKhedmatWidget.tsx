@@ -61,10 +61,12 @@ import {
 } from "@plasmicapp/react-web/lib/host";
 
 import { getCookie } from "cookies-next";
+import { useUserInfoStore } from "@/modules/login/store/userInfo";
 import Card from "../../Card"; // plasmic-import: KIALDnHqraz9/component
 import Paziresh24Button from "../../Paziresh24Button"; // plasmic-import: YOhw5fIQJQgB/component
 import Paziresh24Modal from "../../Paziresh24Modal"; // plasmic-import: ZGdhyEBPJSmH/component
 import { ApiRequest } from "@/common/fragment/components/api-request"; // plasmic-import: RECriOK0iPSM/codeComponent
+import { KhedmatActivation } from "@/modules/hamdast/components/khedmatActivation";
 import { Fetcher } from "@plasmicapp/react-web/lib/data-sources";
 import { _useGlobalVariants } from "./plasmic"; // plasmic-import: 666TdydnqTmUJpihDvjWrt/projectModule
 import { _useStyleTokens } from "./PlasmicStyleTokensProvider"; // plasmic-import: 666TdydnqTmUJpihDvjWrt/styleTokensProvider
@@ -88,11 +90,13 @@ export const PlasmicHamdastKhedmatWidget__VariantProps =
 export type PlasmicHamdastKhedmatWidget__ArgsType = {
   profileData?: any;
   widgetData?: any;
+  isInactiveView?: boolean;
 };
 type ArgPropType = keyof PlasmicHamdastKhedmatWidget__ArgsType;
 export const PlasmicHamdastKhedmatWidget__ArgProps = new Array<ArgPropType>(
   "profileData",
-  "widgetData"
+  "widgetData",
+  "isInactiveView"
 );
 
 export type PlasmicHamdastKhedmatWidget__OverridesType = {
@@ -106,6 +110,7 @@ export type PlasmicHamdastKhedmatWidget__OverridesType = {
 export interface DefaultHamdastKhedmatWidgetProps {
   profileData?: any;
   widgetData?: any;
+  isInactiveView?: boolean;
   className?: string;
 }
 
@@ -205,6 +210,20 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
   const [consultationModalOpen, setConsultationModalOpen] = React.useState(false);
   const [selectedConsultationItem, setSelectedConsultationItem] = React.useState<any>(null);
 
+  const currentUserInfo = useUserInfoStore(state => state.info);
+  const isOwnDoctor = Boolean(
+    (currentUserInfo?.id && $props.profileData?.user_id && String(currentUserInfo.id) === String($props.profileData.user_id)) ||
+    ($ctx.auth?.info?.id && $props.profileData?.user_id && String($ctx.auth.info.id) === String($props.profileData.user_id)) ||
+    (__nextRouter?.query?.preview_khedmat === 'true') ||
+    (__nextRouter?.query?.preview_khedmat_doctor === 'true')
+  );
+
+  const isInactive = Boolean(
+    $props.isInactiveView ||
+    ($state.apiRequest.data?.length > 0 &&
+      ($state.apiRequest.data?.[0]?.plus === false || $state.apiRequest.data?.[0]?.plus === "false"))
+  );
+
   return (
     <div
       data-plasmic-name={"root"}
@@ -224,7 +243,8 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         try {
           return (
             $state.apiRequest.data?.length > 0 &&
-            $state.apiRequest.data?.[0]?.plus == true
+            $state.apiRequest.data?.[0]?.plus == true &&
+            !isInactive
           );
         } catch (e) {
           if (
@@ -438,383 +458,16 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
           })}
         </ScrollContainerComponent>
       ) : null}
-      {(() => {
-        try {
-          return (
-            $state.apiRequest.data?.length > 0 &&
-            !$state.apiRequest.data?.[0]?.plus
-          );
-        } catch (e) {
-          if (
-            e instanceof TypeError ||
-            e?.plasmicType === "PlasmicUndefinedDataError"
-          ) {
-            return true;
-          }
-          throw e;
-        }
-      })() ? (
-        <div className={classNames("all", sty.freeBox__w2Kv8)}>
-          <Paziresh24Button
-            data-plasmic-name={"paziresh24Button"}
-            data-plasmic-override={overrides.paziresh24Button}
-            children2={
-              "\u0645\u0634\u0627\u0647\u062f\u0647 \u062e\u062f\u0645\u0627\u062a \u0648 \u062a\u0639\u0631\u0641\u0647\u200c\u0647\u0627"
-            }
-            className={classNames("__wab_instance", sty.paziresh24Button)}
-            onClick={async event => {
-              const $steps = {};
-
-              $steps["updateModalOpen"] = true
-                ? (() => {
-                    const actionArgs = {
-                      variable: {
-                        objRoot: $state,
-                        variablePath: ["modal", "open"]
-                      },
-                      operation: 0,
-                      value: true
-                    };
-                    return (({ variable, value, startIndex, deleteCount }) => {
-                      if (!variable) {
-                        return;
-                      }
-                      const { objRoot, variablePath } = variable;
-
-                      $stateSet(objRoot, variablePath, value);
-                      return value;
-                    })?.apply(null, [actionArgs]);
-                  })()
-                : undefined;
-              if (
-                $steps["updateModalOpen"] != null &&
-                typeof $steps["updateModalOpen"] === "object" &&
-                typeof $steps["updateModalOpen"].then === "function"
-              ) {
-                $steps["updateModalOpen"] = await $steps["updateModalOpen"];
-              }
-
-              $steps["updateModalNotiff"] = true
-                ? (() => {
-                    const actionArgs = {
-                      args: [
-                        (() => {
-                          try {
-                            return {
-                              event_group: "khedmat_click_button",
-                              doctor_user_id: $props.profileData.user_id,
-                              doctor_slug: $props.profileData.seo.slug,
-                              user_id: $ctx.auth?.info?.id
-                            };
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })(),
-                        "https://splunk-ravi-hec.paziresh24.com",
-                        "3dfb4505-637a-4dfa-8c5d-4e4343d6ba0d"
-                      ]
-                    };
-                    return $globalActions["Splunk.sendLog"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
-                : undefined;
-              if (
-                $steps["updateModalNotiff"] != null &&
-                typeof $steps["updateModalNotiff"] === "object" &&
-                typeof $steps["updateModalNotiff"].then === "function"
-              ) {
-                $steps["updateModalNotiff"] = await $steps["updateModalNotiff"];
-              }
-
-              $steps["updateModalOpen2"] = true
-                ? (() => {
-                    const actionArgs = {
-                      args: [
-                        "POST",
-                        "https://apigw.paziresh24.com/v1/hamdast/widget-data/khedmat/log-webhook",
-                        undefined,
-                        (() => {
-                          try {
-                            return {
-                              event_group: "khedmat_click_button",
-                              doctor_user_id: $props.profileData.user_id,
-                              doctor_slug: $props.profileData.seo.slug,
-                              user_id: $ctx.auth?.info?.id
-                            };
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return undefined;
-                            }
-                            throw e;
-                          }
-                        })()
-                      ]
-                    };
-                    return $globalActions["Fragment.apiRequest"]?.apply(null, [
-                      ...actionArgs.args
-                    ]);
-                  })()
-                : undefined;
-              if (
-                $steps["updateModalOpen2"] != null &&
-                typeof $steps["updateModalOpen2"] === "object" &&
-                typeof $steps["updateModalOpen2"].then === "function"
-              ) {
-                $steps["updateModalOpen2"] = await $steps["updateModalOpen2"];
-              }
-            }}
-            outline={true}
-          />
-        </div>
+      {isInactive && isOwnDoctor ? (
+        // ویجت برای بیماران خاموش است: فقط به خود پزشک، کارت فعال‌سازی با پرداخت همین‌جا روی پروفایل.
+        // در حالت isInactiveView (ویجتی روی پروفایل نیست) خودش خدمات را می‌گیرد، چون `/servises`
+        // برای پزشکی که هرگز نخریده و center_id ندارد خالی برمی‌گردد.
+        <KhedmatActivation
+          profileData={$props.profileData}
+          centerId={$props.widgetData?.center_id}
+          services={$props.isInactiveView ? undefined : $state.apiRequest.data}
+        />
       ) : null}
-      <Paziresh24Modal
-        data-plasmic-name={"modal"}
-        data-plasmic-override={overrides.modal}
-        body={
-          <React.Fragment>
-            {(() => {
-              try {
-                return $state.apiRequest.data?.length > 0;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <div className={classNames("all", sty.freeBox__lk2Ps)}>
-                {(_par => (!_par ? [] : Array.isArray(_par) ? _par : [_par]))(
-                  (() => {
-                    try {
-                      return $state.apiRequest.data;
-                    } catch (e) {
-                      if (
-                        e instanceof TypeError ||
-                        e?.plasmicType === "PlasmicUndefinedDataError"
-                      ) {
-                        return [];
-                      }
-                      throw e;
-                    }
-                  })()
-                ).map((__plasmic_item_0, __plasmic_idx_0) => {
-                  const currentItem = __plasmic_item_0;
-                  const currentIndex = __plasmic_idx_0;
-                  return (
-                    <div
-                      className={classNames("all", sty.freeBox__fGg6M)}
-                      key={currentIndex}
-                    >
-                      <div className={classNames("all", sty.freeBox__bpIu)}>
-                        <div className={classNames("all", sty.freeBox__bo6S4)}>
-                          <div
-                            className={classNames("all", sty.freeBox__y1Y7J)}
-                          >
-                            <div
-                              className={classNames(
-                                "all",
-                                "__wab_text",
-                                sty.text___1EujM
-                              )}
-                            >
-                              <React.Fragment>
-                                {(() => {
-                                  try {
-                                    return currentIndex + 1;
-                                  } catch (e) {
-                                    if (
-                                      e instanceof TypeError ||
-                                      e?.plasmicType ===
-                                        "PlasmicUndefinedDataError"
-                                    ) {
-                                      return "2";
-                                    }
-                                    throw e;
-                                  }
-                                })()}
-                              </React.Fragment>
-                            </div>
-                          </div>
-                          <div
-                            className={classNames(
-                              "all",
-                              "__wab_text",
-                              sty.text__l8Ykl
-                            )}
-                          >
-                            {"\u062a\u0648\u0645\u0627\u0646"}
-                          </div>
-                          <div
-                            className={classNames(
-                              "all",
-                              "__wab_text",
-                              sty.text__oiOQf
-                            )}
-                          >
-                            <React.Fragment>
-                              {(() => {
-                                try {
-                                  return null == currentItem.price_max
-                                    ? Number(
-                                        currentItem.price_min
-                                      ).toLocaleString("en-US")
-                                    : currentItem.price_max == null ||
-                                        currentItem.price_max === ""
-                                      ? Number(
-                                          currentItem.price_min
-                                        ).toLocaleString("en-US")
-                                      : Number(
-                                          currentItem.price_min
-                                        ).toLocaleString("en-US") +
-                                        " تا " +
-                                        Number(
-                                          currentItem.price_max
-                                        ).toLocaleString("en-US");
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return "";
-                                  }
-                                  throw e;
-                                }
-                              })()}
-                            </React.Fragment>
-                          </div>
-                          <div
-                            className={classNames(
-                              "all",
-                              "__wab_text",
-                              sty.text__jhxxi
-                            )}
-                          >
-                            <React.Fragment>
-                              {(() => {
-                                try {
-                                  return currentItem.service;
-                                } catch (e) {
-                                  if (
-                                    e instanceof TypeError ||
-                                    e?.plasmicType ===
-                                      "PlasmicUndefinedDataError"
-                                  ) {
-                                    return "";
-                                  }
-                                  throw e;
-                                }
-                              })()}
-                            </React.Fragment>
-                          </div>
-                        </div>
-                        {(() => {
-                          try {
-                            return $ctx.fetchedData.length > currentIndex + 1;
-                          } catch (e) {
-                            if (
-                              e instanceof TypeError ||
-                              e?.plasmicType === "PlasmicUndefinedDataError"
-                            ) {
-                              return true;
-                            }
-                            throw e;
-                          }
-                        })() ? (
-                          <div
-                            className={classNames("all", sty.freeBox__q7ADd)}
-                          />
-                        ) : null}
-                      </div>
-                    </div>
-                  );
-                })}
-                <div
-                  className={classNames("all", "__wab_text", sty.text__q61L5)}
-                >
-                  <React.Fragment>
-                    {(() => {
-                      try {
-                        return (
-                          "آخرین بروزرسانی: " +
-                          $state.apiRequest.data?.[0]["last-update"]
-                        );
-                      } catch (e) {
-                        if (
-                          e instanceof TypeError ||
-                          e?.plasmicType === "PlasmicUndefinedDataError"
-                        ) {
-                          return "\u0622\u062e\u0631\u06cc\u0646 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc:";
-                        }
-                        throw e;
-                      }
-                    })()}
-                  </React.Fragment>
-                </div>
-              </div>
-            ) : null}
-            {(() => {
-              try {
-                return $state.apiRequest.loading;
-              } catch (e) {
-                if (
-                  e instanceof TypeError ||
-                  e?.plasmicType === "PlasmicUndefinedDataError"
-                ) {
-                  return true;
-                }
-                throw e;
-              }
-            })() ? (
-              <Icon2Icon
-                className={classNames("all", sty.svg__kWpoi)}
-                role={"img"}
-              />
-            ) : null}
-          </React.Fragment>
-        }
-        className={classNames("__wab_instance", sty.modal)}
-        noSpacing={
-          hasVariant(globalVariants, "screen", "mobileOnly") ? true : undefined
-        }
-        noTrigger={true}
-        onOpenChange={async (...eventArgs: any) => {
-          generateStateOnChangeProp($state, ["modal", "open"]).apply(
-            null,
-            eventArgs
-          );
-
-          if (
-            eventArgs.length > 1 &&
-            eventArgs[1] &&
-            eventArgs[1]._plasmic_state_init_
-          ) {
-            return;
-          }
-        }}
-        open={generateStateValueProp($state, ["modal", "open"])}
-        title={
-          <div className={classNames("all", "__wab_text", sty.text__xv2Zs)}>
-            {
-              "\u062e\u062f\u0645\u0627\u062a \u0648 \u062a\u0639\u0631\u0641\u0647"
-            }
-          </div>
-        }
-        trigger={null}
-      />
 
       <Paziresh24Modal
         noTrigger={true}
@@ -994,7 +647,7 @@ function PlasmicHamdastKhedmatWidget__RenderFunc(props: {
         }}
         url={(() => {
           try {
-            return `https://apigw.paziresh24.com/v1/hamdast/widget-data/khedmat/servises?center_id=${$props.widgetData?.center_id}&user_id=${$props.profileData.user_id}`;
+            return `https://n8n.hosseinzr.ir/webhook/servises?center_id=${$props.widgetData?.center_id}&user_id=${$props.profileData.user_id}`;
           } catch (e) {
             if (
               e instanceof TypeError ||

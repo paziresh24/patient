@@ -21,7 +21,9 @@ import { HTMLElementRefOf } from "@plasmicapp/react-web";
 // You can also stop extending from DefaultHamdastKhedmatWidgetProps altogether and have
 // total control over the props for your component.
 export interface HamdastKhedmatWidgetProps
-  extends DefaultHamdastKhedmatWidgetProps {}
+  extends DefaultHamdastKhedmatWidgetProps {
+  isInactiveView?: boolean;
+}
 
 function HamdastKhedmatWidget_(
   props: HamdastKhedmatWidgetProps,

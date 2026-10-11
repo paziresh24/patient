@@ -11,6 +11,7 @@ import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { SamanBooking } from '@/modules/samanBooking';
 import { Fragment2 } from '@/common/fragment/fragment2';
 import { removeHtmlTagInString } from '@/common/utils/removeHtmlTagInString';
+import { HamdastKhedmatInactiveWrapper } from '@/modules/hamdast/components/khedmatInactiveWrapper';
 
 const RecommendWrapper = dynamic(() => import('./recommend'));
 const PlasmicBookingAddressesWrapper = dynamic(() => import('.plasmic/plasmic/paziresh_24_booking/PlasmicBookingAddressesWrapper'));
@@ -273,34 +274,46 @@ export const Aside = (data: any) => {
                       description: removeHtmlTagInString(center.description ?? '').trim(),
                       userCenterId: center.user_center_id,
                       centerName: center.name,
-                      children: hamdastWidgets.some(
-                        (widget: any) =>
-                          widget?.placement?.includes?.('center_info') &&
-                          widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
-                      ) ? (
+                      children: (
                         <div className="flex flex-col w-full gap-2">
-                          {hamdastWidgets
-                            ?.filter(
-                              (widget: any) =>
-                                widget?.placement?.includes?.('center_info') &&
-                                widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
-                            )
-                            ?.map((widget: any) => (
-                              <Hamdast
-                                key={widget.id}
-                                id={widget.id}
-                                app={widget?.app}
-                                backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
-                                profileData={profileData}
-                                widgetData={{
-                                  placement: widget?.placement,
-                                  placement_metadata: widget.placements_metadata,
-                                  center_id: center.id,
-                                }}
-                              />
-                            ))}
+                          {hamdastWidgets.some(
+                            (widget: any) =>
+                              widget?.placement?.includes?.('center_info') &&
+                              widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+                          ) &&
+                            hamdastWidgets
+                              ?.filter(
+                                (widget: any) =>
+                                  widget?.placement?.includes?.('center_info') &&
+                                  widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+                              )
+                              ?.map((widget: any) => (
+                                <Hamdast
+                                  key={widget.id}
+                                  id={widget.id}
+                                  app={widget?.app}
+                                  backendData={hamdastWidgetsData?.[widget.id] ?? undefined}
+                                  profileData={profileData}
+                                  widgetData={{
+                                    placement: widget?.placement,
+                                    placement_metadata: widget.placements_metadata,
+                                    center_id: center.id,
+                                  }}
+                                />
+                              ))}
+                          {!hamdastWidgets?.some(
+                            (widget: any) =>
+                              (widget?.app === 'khedmat' || widget?.id === 'rrr3pbcc8ixyi8p') &&
+                              widget.placements_metadata?.center_info?.center_ids?.includes?.(center.id),
+                          ) && (
+                            <HamdastKhedmatInactiveWrapper
+                              profileData={profileData}
+                              centerId={center.id}
+                              userId={user_id}
+                            />
+                          )}
                         </div>
-                      ) : null,
+                      ),
                     }}
                   />
                 )),
