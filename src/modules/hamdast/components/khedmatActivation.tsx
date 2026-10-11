@@ -1,6 +1,5 @@
 import Button from '@/common/components/atom/button';
 import Modal from '@/common/components/atom/modal';
-import Switch from '@/common/components/atom/switch';
 import useModal from '@/common/hooks/useModal';
 import classNames from '@/common/utils/classNames';
 import { useUserInfoStore } from '@/modules/login/store/userInfo';
@@ -11,8 +10,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { HamdastSubscriptionPayment, HamdastSubscriptionPaymentRef } from './subscription-payment';
 
 // کارت فعال‌سازی «خدمات و تعرفه‌ها» برای وقتی که ویجت برای بیماران خاموش است.
-// فقط خود پزشک آن را می‌بیند (والد این را چک می‌کند) و پرداخت همین‌جا روی پروفایل انجام می‌شود،
-// بدون رفتن به پنل خدمات و تعرفه‌ها.
+// فقط خود پزشک آن را می‌بیند (والد این را چک می‌کند) و پرداخت همین‌جا روی پروفایل انجام می‌شود.
+// بعد از پرداخت موفق پزشک به پنل ابزارک فرستاده می‌شود، چون دسترسی ابزارک فقط با ورود خود پزشک
+// به ابزارک صادر می‌شود.
 
 const APP_KEY = 'khedmat';
 const APP_NAME = 'خدمات و تعرفه‌ها';
@@ -22,18 +22,20 @@ const SERVICES_URL = 'https://n8n.hosseinzr.ir/webhook/servises';
 // `/servises` برایشان خالی است. تا وقتی این endpoint ساخته نشده، به `/servises` برمی‌گردیم.
 const OWNER_PREVIEW_URL = 'https://n8n.hosseinzr.ir/webhook/servises-owner-preview';
 const LAUNCHER_URL = 'https://www.paziresh24.com/_/khedmat/launcher/?direct=true';
+// لانچر پارامترهای اضافه را به خود ابزارک می‌دهد؛ ابزارک با after_pay صفحه‌ی «پرداخت موفق» را نشان می‌دهد.
+const AFTER_PAY_URL = `${LAUNCHER_URL}&after_pay=1`;
+const REDIRECT_SECONDS = 3;
 const HAMDAST_BILLING = `https://hamdast.paziresh24.com/api/v1/apps/${APP_KEY}/billing`;
 
 type Duration = 'monthly' | 'quarterly';
-const PLAN_KEYS: Record<Duration, { plain: string; boost: string }> = {
-  monthly: { plain: 'w8hfc6rhmvsy8hq', boost: 'hydwltqmnkhz1qq' },
-  quarterly: { plain: 'ctnofs131x7fou4', boost: '13ybb2fnk281zis' },
+// فقط یک پلن برای هر مدت فروخته می‌شود (پلن کامل)؛ انتخاب جداگانه‌ای در پاپ‌آپ نیست.
+const PLAN_KEYS: Record<Duration, string> = {
+  monthly: 'hydwltqmnkhz1qq',
+  quarterly: '13ybb2fnk281zis',
 };
 // به تومان؛ اگر دریافت پلن‌ها از همدست شکست بخورد همین‌ها نمایش داده می‌شوند.
 const FALLBACK_PRICES: Record<string, number> = {
-  w8hfc6rhmvsy8hq: 289000,
   hydwltqmnkhz1qq: 387000,
-  ctnofs131x7fou4: 689000,
   '13ybb2fnk281zis': 895000,
 };
 
@@ -81,10 +83,11 @@ export const KhedmatActivation = ({ profileData, centerId, services: givenServic
   const [subscription, setSubscription] = useState<{ active: boolean; hadBefore: boolean } | null>(null);
   const [prices, setPrices] = useState<Record<string, number>>(FALLBACK_PRICES);
   const [duration, setDuration] = useState<Duration>('monthly');
-  const [boost, setBoost] = useState(true);
   const [paymentMounted, setPaymentMounted] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [activated, setActivated] = useState(false);
+  // null = انتقالی در کار نیست؛ عدد = ثانیه‌های مانده تا انتقال به پنل ابزارک
+  const [redirectIn, setRedirectIn] = useState<number | null>(null);
   const paymentRef = useRef<HamdastSubscriptionPaymentRef>(null);
   const noIframe = useRef(null);
   const viewLogged = useRef(false);
@@ -92,7 +95,7 @@ export const KhedmatActivation = ({ profileData, centerId, services: givenServic
   const successSheet = useModal();
 
   const variant: 'never_paid' | 'expired' = subscription?.hadBefore ? 'expired' : 'never_paid';
-  const planKey = PLAN_KEYS[duration][boost ? 'boost' : 'plain'];
+  const planKey = PLAN_KEYS[duration];
 
   const log = (event_group: string, detail?: string) => {
     try {
@@ -180,14 +183,28 @@ export const KhedmatActivation = ({ profileData, centerId, services: givenServic
         log('khedmat_activation_paid', planKey);
         setActivated(true);
         successSheet.handleOpen();
+        setRedirectIn(REDIRECT_SECONDS);
       }
     } finally {
       setIsPaying(false);
     }
   };
 
-  const priceOf = (d: Duration, withBoost: boolean) => prices[PLAN_KEYS[d][withBoost ? 'boost' : 'plain']];
-  const boostExtra = priceOf(duration, true) - priceOf(duration, false);
+  const goToPanel = () => {
+    window.location.href = AFTER_PAY_URL;
+  };
+
+  useEffect(() => {
+    if (redirectIn === null) return;
+    if (redirectIn <= 0) {
+      goToPanel();
+      return;
+    }
+    const timer = setTimeout(() => setRedirectIn(redirectIn - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [redirectIn]);
+
+  const priceOf = (d: Duration) => prices[PLAN_KEYS[d]];
 
   const buttonText = variant === 'expired' ? 'برای فعال‌سازی دوباره کلیک کنید' : 'برای فعال‌سازی کلیک کنید';
 
@@ -252,28 +269,10 @@ export const KhedmatActivation = ({ profileData, centerId, services: givenServic
                     <span className="font-extrabold">{d === 'monthly' ? '۱ ماهه' : '۳ ماهه'}</span>
                     {d === 'quarterly' && <span className="bg-red-100 text-red-700 text-[10px] font-extrabold rounded-full px-2 py-0.5">۲۰٪ تخفیف</span>}
                   </span>
-                  <span className="text-sm text-slate-700">{toFa(priceOf(d, boost))} تومان</span>
+                  <span className="text-sm text-slate-700">{toFa(priceOf(d))} تومان</span>
                 </button>
               ))}
             </div>
-          </div>
-
-          <div
-            className={classNames('flex flex-col gap-2 p-3.5 rounded-xl border-[1.5px]', {
-              'border-primary/40 bg-primary/5': boost,
-              'border-slate-200 bg-slate-50': !boost,
-            })}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <Switch checked={boost} onChange={e => setBoost(e.target.checked)} />
-                <span className="font-extrabold text-sm cursor-pointer" onClick={() => setBoost(prev => !prev)}>
-                  بهبود رتبه‌ی سرچ
-                </span>
-              </div>
-              <span className="text-sm font-bold text-primary">{toFa(boostExtra)}+ تومان</span>
-            </div>
-            <span className="text-xs text-slate-600 leading-6">وقتی بیماران خدمات شما را جستجو کنند، پروفایل شما بالاتر نمایش داده می‌شود.</span>
           </div>
 
           <div className="h-px bg-slate-200" />
@@ -297,19 +296,12 @@ export const KhedmatActivation = ({ profileData, centerId, services: givenServic
           <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
             <CheckIcon className="text-green-700 w-8 h-8" />
           </div>
-          <span className="font-extrabold text-lg">خدمات شما فعال شد</span>
-          <span className="text-sm text-slate-600 leading-7">تا چند دقیقه‌ی دیگر خدمات و تعرفه‌های شما در پروفایلتان به بیماران نمایش داده می‌شود.</span>
-          <div className="w-full flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-right">
-            <span className="flex flex-col gap-0.5">
-              <span className="font-bold text-sm">برای خدماتتان عکس بگذارید</span>
-              <span className="text-xs text-slate-600">کارت‌های عکس‌دار بیشتر دیده می‌شوند.</span>
-            </span>
-          </div>
-          <Button block onClick={() => openEditor('success')} className="!font-extrabold">
-            افزودن عکس و ویرایش خدمات
-          </Button>
-          <Button block variant="text" onClick={successSheet.handleClose}>
-            بستن
+          <span className="font-extrabold text-lg">پرداخت شما با موفقیت انجام شد</span>
+          <span className="text-sm text-slate-600 leading-7">
+            خدمات شما فعال شد. برای تکمیل فعال‌سازی، تا {toFa(Math.max(redirectIn ?? 0, 0))} ثانیه‌ی دیگر به پنل خدمات و تعرفه‌ها منتقل می‌شوید.
+          </span>
+          <Button block onClick={goToPanel} className="!font-extrabold">
+            ادامه
           </Button>
         </div>
       </Modal>
